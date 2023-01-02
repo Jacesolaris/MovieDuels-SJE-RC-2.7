@@ -29,9 +29,9 @@ extern qboolean g_standard_humanoid(gentity_t* ent);
 extern void G_AddVoiceEvent(const gentity_t* self, int event, int speak_debounce_time);
 extern qboolean Q3_TaskIDPending(const gentity_t* ent, taskID_t taskType);
 extern void NPC_AimAdjust(int change);
-extern qboolean WP_LobFire(const gentity_t* self, vec3_t start, vec3_t target, vec3_t mins, vec3_t maxs, int clipmask,
-                           vec3_t velocity, qboolean tracePath, int ignoreEntNum, int enemyNum,
-                           float minSpeed, float maxSpeed, float idealSpeed, qboolean mustHit);
+extern qboolean WP_LobFire(const gentity_t* self, vec3_t start, vec3_t target, vec3_t mins, vec3_t maxs, const int clipmask,
+                           vec3_t velocity, const qboolean trace_path, const int ignore_ent_num, const int enemy_num,
+                           float ideal_speed, const qboolean must_hit);
 extern qboolean InFront(vec3_t spot, vec3_t from, vec3_t fromAngles, float threshHold = 0.0f);
 extern void G_SoundAtSpot(vec3_t org, int sound_index, qboolean broadcast);
 extern void G_SoundOnEnt(const gentity_t* ent, soundChannel_t channel, const char* sound_path);
@@ -1090,7 +1090,7 @@ void NPC_BSGM_Attack()
 		//Find the desired angles
 		const qboolean clearshot = WP_LobFire(NPC, muzzle, target, mins, maxs, MASK_SHOT | CONTENTS_LIGHTSABER,
 		                                      velocity, qtrue, NPC->s.number, NPC->enemy->s.number,
-		                                      300, 1100, 1500, qtrue);
+		                                      1500, qtrue);
 		if (VectorCompare(vec3_origin, velocity) || !clearshot && enemy_los && enemy_cs)
 		{
 			//no clear lob shot and no lob shot that will hit something breakable

@@ -43,6 +43,7 @@ extern qboolean CG_PlayerCanSeeCent(const centity_t* cent);
 extern cvar_t* debug_subdivision;
 extern vmCvar_t cg_SerenityJediEngineMode;
 extern vmCvar_t cg_Bloodmist;
+extern cvar_t* g_saberRealisticCombat;
 
 /*
 ======================
@@ -2380,6 +2381,7 @@ void CG_Limb(const centity_t* cent)
 	if (cent->gent && cent->gent->owner && cent->gent->owner->ghoul2.size())
 	{
 		gentity_t* owner = cent->gent->owner;
+
 		if (cent->gent->aimDebounceTime)
 		{
 			//done with dismemberment, just waiting to mark owner dismemberable again
@@ -2395,9 +2397,8 @@ void CG_Limb(const centity_t* cent)
 		}
 		else
 		{
-			extern cvar_t* g_saberRealisticCombat;
-			//3) turn off w/descendants that surf in original model
-			if (cent->gent->target) //stubTagName )
+
+			if (cent->gent->target)
 			{
 				//add smoke to cap surf, spawn effect
 				if (cent->gent->delay <= cg.time && cg_Bloodmist.integer == 1)
@@ -2417,15 +2418,17 @@ void CG_Limb(const centity_t* cent)
 					{
 						//Only the humanoids bleed
 						const int new_bolt = gi.G2API_AddBolt(&owner->ghoul2[owner->playerModel], cent->gent->target);
+
 						if (new_bolt != -1)
 						{
 							cent->gent->delay = cg.time + 50;
-							CG_PlayEffectBolted("saber/limb_bolton", owner->playerModel, new_bolt, owner->s.number,
-							                    owner->s.origin); //ent origin used to make FX culling work
+							CG_PlayEffectBolted("saber/limb_bolton", owner->playerModel, new_bolt, owner->s.number,owner->s.origin);
 						}
 					}
 				}
 			}
+
+
 			if (cent->gent->target2) //limbName
 			{
 				//turn the limb off

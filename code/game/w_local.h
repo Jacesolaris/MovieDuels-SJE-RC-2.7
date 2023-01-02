@@ -117,8 +117,8 @@ void thermalDetonatorExplode(gentity_t* ent);
 void thermal_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod, int dFlags,
                  int hit_loc);
 qboolean WP_LobFire(const gentity_t* self, vec3_t start, vec3_t target, vec3_t mins, vec3_t maxs, int clipmask,
-                    vec3_t velocity, qboolean tracePath, int ignoreEntNum, int enemyNum,
-                    float minSpeed = 0, float maxSpeed = 0, float idealSpeed = 0, qboolean mustHit = qfalse);
+                    vec3_t velocity, qboolean trace_path, int ignore_ent_num, int enemy_num,
+                    float ideal_speed = 0, qboolean must_hit = qfalse);
 void WP_ThermalThink(gentity_t* ent);
 gentity_t* WP_FireThermalDetonator(gentity_t* ent, qboolean alt_fire);
 gentity_t* WP_DropThermal(gentity_t* ent);

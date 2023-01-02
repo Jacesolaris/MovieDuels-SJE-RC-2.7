@@ -520,14 +520,15 @@ void target_kill_use(gentity_t* self, gentity_t* other, gentity_t* activator)
 	if (self->spawnflags & 1)
 	{
 		//falling death
-		if (PM_InForceFall())
-		{
-			// no forcefall damage
-		}
-		else
-		{
-			G_Damage(activator, nullptr, nullptr, nullptr, nullptr, 100000, DAMAGE_NO_PROTECTION, MOD_FALLING);
-		}
+		//if (PM_InForceFall())
+		//{
+		//	// no forcefall damage
+		//}
+		//else
+		//{
+		//	G_Damage(activator, nullptr, nullptr, nullptr, nullptr, 100000, DAMAGE_NO_PROTECTION, MOD_FALLING);
+		//}
+		G_Damage(activator, nullptr, nullptr, nullptr, nullptr, 100000, DAMAGE_NO_PROTECTION, MOD_FALLING);
 
 		if (!activator->s.number && activator->health <= 0)
 		{

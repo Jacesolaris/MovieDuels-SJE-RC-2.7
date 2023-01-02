@@ -2719,9 +2719,9 @@ gentity_t* WP_DropThermal(gentity_t* ent)
 }
 
 //---------------------------------------------------------
-qboolean WP_LobFire(const gentity_t* self, vec3_t start, vec3_t target, vec3_t mins, vec3_t maxs, int clipmask,
-	vec3_t velocity, qboolean tracePath, int ignoreEntNum, int enemyNum,
-	float minSpeed, float maxSpeed, float idealSpeed, qboolean mustHit)
+qboolean WP_LobFire(const gentity_t* self, vec3_t start, vec3_t target, vec3_t mins, vec3_t maxs, const int clipmask,
+                    vec3_t velocity, const qboolean trace_path, const int ignore_ent_num, const int enemy_num,
+                    float ideal_speed, const qboolean must_hit)
 	//---------------------------------------------------------
 { //for the galak mech NPC
 	float speedInc = 100, bestImpactDist = Q3_INFINITE;//fireSpeed,
@@ -2731,24 +2731,16 @@ qboolean WP_LobFire(const gentity_t* self, vec3_t start, vec3_t target, vec3_t m
 	int timeStep = 500, hitCount = 0, maxHits = 7;
 	vec3_t	lastPos, testPos;
 
-	if (!idealSpeed)
+	if (!ideal_speed)
 	{
-		idealSpeed = 300;
+		ideal_speed = 300;
 	}
-	else if (idealSpeed < speedInc)
+	else if (ideal_speed < speedInc)
 	{
-		idealSpeed = speedInc;
+		ideal_speed = speedInc;
 	}
-	float shotSpeed = idealSpeed;
-	const int skipNum = (idealSpeed - speedInc) / speedInc;
-	if (!minSpeed)
-	{
-		minSpeed = 100;
-	}
-	if (!maxSpeed)
-	{
-		maxSpeed = 900;
-	}
+	float shotSpeed = ideal_speed;
+	const int skipNum = (ideal_speed - speedInc) / speedInc;
 	while (hitCount < maxHits)
 	{
 		VectorSubtract(target, start, targetDir);
@@ -2760,13 +2752,13 @@ qboolean WP_LobFire(const gentity_t* self, vec3_t start, vec3_t target, vec3_t m
 
 		if (!hitCount)
 		{//save the first (ideal) one as the failCase (fallback value)
-			if (!mustHit)
+			if (!must_hit)
 			{//default is fine as a return value
 				VectorCopy(shotVel, failCase);
 			}
 		}
 
-		if (tracePath)
+		if (trace_path)
 		{//do a rough trace of the path
 			qboolean blocked = qfalse;
 
@@ -2785,7 +2777,7 @@ qboolean WP_LobFire(const gentity_t* self, vec3_t start, vec3_t target, vec3_t m
 					elapsedTime = floor(travelTime);
 				}
 				BG_EvaluateTrajectory(&tr, level.time + elapsedTime, testPos);
-				trap->Trace(&trace, lastPos, mins, maxs, testPos, ignoreEntNum, clipmask, qfalse, 0, 0);
+				trap->Trace(&trace, lastPos, mins, maxs, testPos, ignore_ent_num, clipmask, qfalse, 0, 0);
 
 				if (trace.allsolid || trace.startsolid)
 				{
@@ -2795,7 +2787,7 @@ qboolean WP_LobFire(const gentity_t* self, vec3_t start, vec3_t target, vec3_t m
 				if (trace.fraction < 1.0f)
 				{
 					//hit something
-					if (trace.entityNum == enemyNum)
+					if (trace.entityNum == enemy_num)
 					{//hit the enemy, that's perfect!
 						break;
 					}
@@ -2834,7 +2826,7 @@ qboolean WP_LobFire(const gentity_t* self, vec3_t start, vec3_t target, vec3_t m
 			if (blocked)
 			{//hit something, adjust speed (which will change arc)
 				hitCount++;
-				shotSpeed = idealSpeed + ((hitCount - skipNum) * speedInc);//from min to max (skipping ideal)
+				shotSpeed = ideal_speed + ((hitCount - skipNum) * speedInc);//from min to max (skipping ideal)
 				if (hitCount >= skipNum)
 				{//skip ideal since that was the first value we tested
 					shotSpeed += speedInc;

@@ -21,7 +21,6 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "b_local.h"
-#include "g_nav.h"
 #include "../cgame/cg_local.h"
 #include "g_functions.h"
 
@@ -211,27 +210,6 @@ Mark1_die
 */
 void Mark1_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod, int dFlags, int hit_loc)
 {
-	/*
-	int	anim;
-
-	// Is he dead already?
-	anim = self->client->ps.legsAnim;
-	if (((anim==BOTH_DEATH1) || (anim==BOTH_DEATH2)) && (self->client->ps.torsoAnimTimer==0))
-	{	// This is because self->health keeps getting zeroed out. HL_NONE acts as health in this case.
-		self->locationDamage[HL_NONE] += damage;
-		if (self->locationDamage[HL_NONE] > 50)
-		{
-			DeathFX(self);
-			self->client->ps.eFlags |= EF_NODRAW;
-			self->contents = CONTENTS_CORPSE;
-			// G_FreeEntity( self ); // Is this safe?  I can't see why we'd mark it nodraw and then just leave it around??
-			self->e_ThinkFunc = thinkF_G_FreeEntity;
-			self->nextthink = level.time + FRAMETIME;
-		}
-		return;
-	}
-	*/
-
 	G_Sound(self, G_SoundIndex(va("sound/chars/mark1/misc/death%d.wav", Q_irand(1, 2))));
 
 	// Choose a death anim
@@ -276,13 +254,6 @@ void Mark1_dying(gentity_t* self)
 
 			TIMER_Set(self, "dyingExplosion", Q_irand(300, 1000));
 		}
-
-		//		int		dir;
-		//		vec3_t	right;
-
-		// Shove to the side
-		//		AngleVectors( self->client->renderInfo.eyeAngles, NULL, right, NULL );
-		//		VectorMA( self->client->ps.velocity, -80, right, self->client->ps.velocity );
 
 		// See which weapons are there
 		// Randomly fire blaster
@@ -709,14 +680,6 @@ void Mark1_Patrol()
 			NPC_MoveToGoal(qtrue);
 			NPC_UpdateAngles(qtrue, qtrue);
 		}
-
-		//randomly talk
-		//		if (TIMER_Done(NPC,"patrolNoise"))
-		//		{
-		//			G_Sound( NPC, G_SoundIndex(va("sound/chars/mark1/misc/talk%d.wav",	Q_irand(1, 4))));
-		//
-		//			TIMER_Set( NPC, "patrolNoise", Q_irand( 2000, 4000 ) );
-		//		}
 	}
 }
 
@@ -727,7 +690,6 @@ NPC_BSMark1_Default
 */
 void NPC_BSMark1_Default()
 {
-	//NPC->e_DieFunc = dieF_Mark1_die;
 
 	if (NPC->enemy)
 	{

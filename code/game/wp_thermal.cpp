@@ -23,7 +23,6 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #include "g_local.h"
 #include "b_local.h"
 #include "g_functions.h"
-#include "wp_saber.h"
 #include "w_local.h"
 
 //---------------------
@@ -35,7 +34,7 @@ extern cvar_t* g_SerenityJediEngineMode;
 void thermalDetonatorExplode(gentity_t* ent)
 //---------------------------------------------------------
 {
-	const int ThermalEffect = Q_irand(0, 3);
+	const int thermal_effect = Q_irand(0, 3);
 
 	if (ent->s.eFlags & EF_HELD_BY_SAND_CREATURE)
 	{
@@ -68,7 +67,7 @@ void thermalDetonatorExplode(gentity_t* ent)
 
 		if (ent->owner && ent->owner->client->NPC_class == CLASS_GRAN && g_SerenityJediEngineMode->integer == 2)
 		{
-			switch (ThermalEffect)
+			switch (thermal_effect)
 			{
 			case 3:
 				G_PlayEffect("smoke/smokegrenade", ent->currentOrigin);
@@ -105,81 +104,74 @@ void thermal_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int
 
 //---------------------------------------------------------
 qboolean WP_LobFire(const gentity_t* self, vec3_t start, vec3_t target, vec3_t mins, vec3_t maxs, const int clipmask,
-                    vec3_t velocity, const qboolean tracePath, const int ignoreEntNum, const int enemyNum,
-                    float minSpeed, float maxSpeed, float idealSpeed, const qboolean mustHit)
+                    vec3_t velocity, const qboolean trace_path, const int ignore_ent_num, const int enemy_num,
+                    float ideal_speed, const qboolean must_hit)
 //---------------------------------------------------------
 {
-	constexpr float speedInc = 100;
+	constexpr float speed_inc = 100;
 	float best_impact_dist = Q3_INFINITE; //fireSpeed,
-	vec3_t shotVel, failCase = {0.0f};
+	vec3_t shot_vel, fail_case = {0.0f};
 	trace_t trace;
 	trajectory_t tr;
 	int hit_count = 0;
-	constexpr int maxHits = 7;
+	constexpr int max_hits = 7;
 
-	if (!idealSpeed)
+	if (!ideal_speed)
 	{
-		idealSpeed = 300;
+		ideal_speed = 300;
 	}
-	else if (idealSpeed < speedInc)
+	else if (ideal_speed < speed_inc)
 	{
-		idealSpeed = speedInc;
+		ideal_speed = speed_inc;
 	}
-	float shotSpeed = idealSpeed;
-	const int skipNum = (idealSpeed - speedInc) / speedInc;
-	if (!minSpeed)
-	{
-		minSpeed = 100;
-	}
-	if (!maxSpeed)
-	{
-		maxSpeed = 900;
-	}
-	while (hit_count < maxHits)
-	{
-		vec3_t targetDir;
-		VectorSubtract(target, start, targetDir);
-		const float targetDist = VectorNormalize(targetDir);
+	float shot_speed = ideal_speed;
+	const int skip_num = (ideal_speed - speed_inc) / speed_inc;
 
-		VectorScale(targetDir, shotSpeed, shotVel);
-		float travelTime = targetDist / shotSpeed;
-		shotVel[2] += travelTime * 0.5 * g_gravity->value;
+	while (hit_count < max_hits)
+	{
+		vec3_t target_dir;
+		VectorSubtract(target, start, target_dir);
+		const float target_dist = VectorNormalize(target_dir);
+
+		VectorScale(target_dir, shot_speed, shot_vel);
+		float travel_time = target_dist / shot_speed;
+		shot_vel[2] += travel_time * 0.5 * g_gravity->value;
 
 		if (!hit_count)
 		{
 			//save the first (ideal) one as the failCase (fallback value)
-			if (!mustHit)
+			if (!must_hit)
 			{
 				//default is fine as a return value
-				VectorCopy(shotVel, failCase);
+				VectorCopy(shot_vel, fail_case);
 			}
 		}
 
-		if (tracePath)
+		if (trace_path)
 		{
-			vec3_t lastPos;
-			constexpr int timeStep = 500;
+			vec3_t last_pos;
+			constexpr int time_step = 500;
 			//do a rough trace of the path
 			qboolean blocked = qfalse;
 
 			VectorCopy(start, tr.trBase);
-			VectorCopy(shotVel, tr.trDelta);
+			VectorCopy(shot_vel, tr.trDelta);
 			tr.trType = TR_GRAVITY;
 			tr.trTime = level.time;
-			travelTime *= 1000.0f;
-			VectorCopy(start, lastPos);
+			travel_time *= 1000.0f;
+			VectorCopy(start, last_pos);
 
 			//This may be kind of wasteful, especially on long throws... use larger steps?  Divide the travelTime into a certain hard number of slices?  Trace just to apex and down?
-			for (int elapsedTime = timeStep; elapsedTime < floor(travelTime) + timeStep; elapsedTime += timeStep)
+			for (int elapsed_time = time_step; elapsed_time < floor(travel_time) + time_step; elapsed_time += time_step)
 			{
-				vec3_t testPos;
-				if (static_cast<float>(elapsedTime) > travelTime)
+				vec3_t test_pos;
+				if (static_cast<float>(elapsed_time) > travel_time)
 				{
 					//cap it
-					elapsedTime = floor(travelTime);
+					elapsed_time = floor(travel_time);
 				}
-				EvaluateTrajectory(&tr, level.time + elapsedTime, testPos);
-				gi.trace(&trace, lastPos, mins, maxs, testPos, ignoreEntNum, clipmask, static_cast<EG2_Collision>(0),
+				EvaluateTrajectory(&tr, level.time + elapsed_time, test_pos);
+				gi.trace(&trace, last_pos, mins, maxs, test_pos, ignore_ent_num, clipmask, static_cast<EG2_Collision>(0),
 				         0);
 
 				if (trace.allsolid || trace.startsolid)
@@ -190,7 +182,7 @@ qboolean WP_LobFire(const gentity_t* self, vec3_t start, vec3_t target, vec3_t m
 				if (trace.fraction < 1.0f)
 				{
 					//hit something
-					if (trace.entityNum == enemyNum)
+					if (trace.entityNum == enemy_num)
 					{
 						//hit the enemy, that's perfect!
 						break;
@@ -202,11 +194,11 @@ qboolean WP_LobFire(const gentity_t* self, vec3_t start, vec3_t target, vec3_t m
 						break;
 					}
 					//FIXME: maybe find the extents of this brush and go above or below it on next try somehow?
-					const float impactDist = DistanceSquared(trace.endpos, target);
-					if (impactDist < best_impact_dist)
+					const float impact_dist = DistanceSquared(trace.endpos, target);
+					if (impact_dist < best_impact_dist)
 					{
-						best_impact_dist = impactDist;
-						VectorCopy(shotVel, failCase);
+						best_impact_dist = impact_dist;
+						VectorCopy(shot_vel, fail_case);
 					}
 					blocked = qtrue;
 					//see if we should store this as the failCase
@@ -218,28 +210,28 @@ qboolean WP_LobFire(const gentity_t* self, vec3_t start, vec3_t target, vec3_t m
 						{
 							//hit something breakable, so that's okay
 							//we haven't found a clear shot yet so use this as the failcase
-							VectorCopy(shotVel, failCase);
+							VectorCopy(shot_vel, fail_case);
 						}
 					}
 					break;
 				}
-				if (elapsedTime == floor(travelTime))
+				if (elapsed_time == floor(travel_time))
 				{
 					//reached end, all clear
 					break;
 				}
 				//all clear, try next slice
-				VectorCopy(testPos, lastPos);
+				VectorCopy(test_pos, last_pos);
 			}
 			if (blocked)
 			{
 				//hit something, adjust speed (which will change arc)
 				hit_count++;
-				shotSpeed = idealSpeed + (hit_count - skipNum) * speedInc; //from min to max (skipping ideal)
-				if (hit_count >= skipNum)
+				shot_speed = ideal_speed + (hit_count - skip_num) * speed_inc; //from min to max (skipping ideal)
+				if (hit_count >= skip_num)
 				{
 					//skip ideal since that was the first value we tested
-					shotSpeed += speedInc;
+					shot_speed += speed_inc;
 				}
 			}
 			else
@@ -255,14 +247,14 @@ qboolean WP_LobFire(const gentity_t* self, vec3_t start, vec3_t target, vec3_t m
 		}
 	}
 
-	if (hit_count >= maxHits)
+	if (hit_count >= max_hits)
 	{
 		//NOTE: worst case scenario, use the one that impacted closest to the target (or just use the first try...?)
-		assert(failCase[0] + failCase[1] + failCase[2] > 0.0f);
-		VectorCopy(failCase, velocity);
+		assert(fail_case[0] + fail_case[1] + fail_case[2] > 0.0f);
+		VectorCopy(fail_case, velocity);
 		return qfalse;
 	}
-	VectorCopy(shotVel, velocity);
+	VectorCopy(shot_vel, velocity);
 	return qtrue;
 }
 
@@ -345,7 +337,7 @@ gentity_t* WP_FireThermalDetonator(gentity_t* ent, const qboolean alt_fire)
 //---------------------------------------------------------
 {
 	vec3_t dir, start;
-	float damageScale = 1.0f;
+	float damage_scale = 1.0f;
 
 	VectorCopy(forwardVec, dir);
 	VectorCopy(muzzle, start);
@@ -357,7 +349,7 @@ gentity_t* WP_FireThermalDetonator(gentity_t* ent, const qboolean alt_fire)
 	if (ent->s.number != 0)
 	{
 		// If not the player, cut the damage a bit so we don't get pounded on so much
-		damageScale = TD_NPC_DAMAGE_CUT;
+		damage_scale = TD_NPC_DAMAGE_CUT;
 	}
 
 	if (!alt_fire && ent->s.number == 0)
@@ -387,46 +379,46 @@ gentity_t* WP_FireThermalDetonator(gentity_t* ent, const qboolean alt_fire)
 
 	WP_TraceSetStart(ent, start); //make sure our start point isn't on the other side of a wall
 
-	float chargeAmount = 1.0f; // default of full charge
+	float charge_amount = 1.0f; // default of full charge
 
 	if (ent->client)
 	{
-		chargeAmount = level.time - ent->client->ps.weaponChargeTime;
+		charge_amount = level.time - ent->client->ps.weaponChargeTime;
 	}
 
 	// get charge amount
-	chargeAmount = chargeAmount / static_cast<float>(TD_VELOCITY);
+	charge_amount = charge_amount / static_cast<float>(TD_VELOCITY);
 
-	if (chargeAmount > 1.0f)
+	if (charge_amount > 1.0f)
 	{
-		chargeAmount = 1.0f;
+		charge_amount = 1.0f;
 	}
-	else if (chargeAmount < TD_MIN_CHARGE)
+	else if (charge_amount < TD_MIN_CHARGE)
 	{
-		chargeAmount = TD_MIN_CHARGE;
+		charge_amount = TD_MIN_CHARGE;
 	}
 
-	float thrownSpeed = TD_VELOCITY;
-	const auto thisIsAShooter = static_cast<qboolean>(!Q_stricmp("misc_weapon_shooter", ent->classname));
+	float thrown_speed = TD_VELOCITY;
+	const auto this_is_a_shooter = static_cast<qboolean>(!Q_stricmp("misc_weapon_shooter", ent->classname));
 
-	if (thisIsAShooter)
+	if (this_is_a_shooter)
 	{
 		if (ent->delay != 0)
 		{
-			thrownSpeed = ent->delay;
+			thrown_speed = ent->delay;
 		}
 	}
 
 	// normal ones bounce, alt ones explode on impact
 	bolt->s.pos.trType = TR_GRAVITY;
 	bolt->owner = ent;
-	VectorScale(dir, thrownSpeed * chargeAmount, bolt->s.pos.trDelta);
+	VectorScale(dir, thrown_speed * charge_amount, bolt->s.pos.trDelta);
 
 	if (ent->health > 0)
 	{
 		bolt->s.pos.trDelta[2] += 120;
 
-		if ((ent->NPC || ent->s.number && thisIsAShooter)
+		if ((ent->NPC || ent->s.number && this_is_a_shooter)
 			&& ent->enemy)
 		{
 			//NPC or misc_weapon_shooter
@@ -449,7 +441,7 @@ gentity_t* WP_FireThermalDetonator(gentity_t* ent, const qboolean alt_fire)
 			WP_LobFire(ent, start, target, bolt->mins, bolt->maxs, bolt->clipmask, bolt->s.pos.trDelta, qtrue,
 			           ent->s.number, ent->enemy->s.number);
 		}
-		else if (thisIsAShooter && ent->target && !VectorCompare(ent->pos1, vec3_origin))
+		else if (this_is_a_shooter && ent->target && !VectorCompare(ent->pos1, vec3_origin))
 		{
 			//misc_weapon_shooter firing at a position
 			WP_LobFire(ent, start, ent->pos1, bolt->mins, bolt->maxs, bolt->clipmask, bolt->s.pos.trDelta, qtrue,
@@ -468,9 +460,9 @@ gentity_t* WP_FireThermalDetonator(gentity_t* ent, const qboolean alt_fire)
 
 	bolt->s.loopSound = G_SoundIndex("sound/weapons/thermal/thermloop.wav");
 
-	bolt->damage = weaponData[WP_THERMAL].damage * damageScale;
+	bolt->damage = weaponData[WP_THERMAL].damage * damage_scale;
 	bolt->dflags = 0;
-	bolt->splashDamage = weaponData[WP_THERMAL].splashDamage * damageScale;
+	bolt->splashDamage = weaponData[WP_THERMAL].splashDamage * damage_scale;
 	bolt->splashRadius = weaponData[WP_THERMAL].splashRadius;
 
 	bolt->s.eType = ET_MISSILE;

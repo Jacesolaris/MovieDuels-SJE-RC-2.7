@@ -24,7 +24,6 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #include "g_functions.h"
 
 #include "b_local.h"
-#include "g_nav.h"
 
 constexpr auto AMMO_POD_HEALTH = 1;
 constexpr auto TURN_OFF = 0x00000100;
@@ -322,7 +321,6 @@ void Mark2_Patrol()
 {
 	if (NPC_CheckPlayerTeamStealth())
 	{
-		//		G_Sound( NPC, G_SoundIndex("sound/chars/mark1/misc/anger.wav"));
 		NPC_UpdateAngles(qtrue, qtrue);
 		return;
 	}
@@ -340,8 +338,6 @@ void Mark2_Patrol()
 		//randomly talk
 		if (TIMER_Done(NPC, "patrolNoise"))
 		{
-			//			G_Sound( NPC, G_SoundIndex(va("sound/chars/mark1/misc/talk%d.wav",	Q_irand(1, 4))));
-
 			TIMER_Set(NPC, "patrolNoise", Q_irand(2000, 4000));
 		}
 	}
