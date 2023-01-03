@@ -268,7 +268,7 @@ void NPC_MineMonster_Pain(gentity_t* self, gentity_t* inflictor, gentity_t* othe
 NPC_BSMineMonster_Default
 -------------------------
 */
-void NPC_BSMineMonster_Default(void)
+void NPC_BSMineMonster_Default()
 {
 	if (NPC->enemy)
 	{

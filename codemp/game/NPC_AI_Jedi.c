@@ -288,7 +288,7 @@ void WP_ResistForcePush(gentity_t* self, gentity_t* pusher, qboolean noPenalty)
 	jedi_play_blocked_push_sound(self);
 }
 
-qboolean Boba_StopKnockdown(gentity_t* self, gentity_t* pusher, vec3_t pushDir, qboolean forceKnockdown) //forceKnockdown = qfalse
+qboolean Boba_StopKnockdown(gentity_t* self, gentity_t* pusher, vec3_t push_dir, qboolean forceKnockdown) //forceKnockdown = qfalse
 {
 	vec3_t	pDir, fwd, right, ang;
 
@@ -306,7 +306,7 @@ qboolean Boba_StopKnockdown(gentity_t* self, gentity_t* pusher, vec3_t pushDir, 
 	const int strafeTime = Q_irand(1000, 2000);
 
 	AngleVectors(ang, fwd, right, NULL);
-	VectorNormalize2(pushDir, pDir);
+	VectorNormalize2(push_dir, pDir);
 	const float fDot = DotProduct(pDir, fwd);
 	const float rDot = DotProduct(pDir, right);
 
@@ -409,15 +409,15 @@ void Boba_FireFlameThrower(gentity_t* self)
 {
 	const int		damage = Q_irand(20, 30);
 	trace_t		tr;
-	mdxaBone_t	boltMatrix;
+	mdxaBone_t	bolt_matrix;
 	vec3_t		start, end, dir, traceMins = { -4, -4, -4 }, traceMaxs = { 4, 4, 4 };
 
 	trap->G2API_GetBoltMatrix(self->ghoul2, 0, self->client->renderInfo.handLBolt,
-		&boltMatrix, self->r.currentAngles, self->r.currentOrigin, level.time,
+		&bolt_matrix, self->r.currentAngles, self->r.currentOrigin, level.time,
 		NULL, self->modelScale);
 
-	BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, start);
-	BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_Y, dir);
+	BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, start);
+	BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Y, dir);
 	//G_PlayEffect( "boba/fthrw", start, dir );
 	VectorMA(start, 128, dir, end);
 
@@ -434,7 +434,7 @@ void Boba_FireFlameThrower(gentity_t* self)
 void Boba_StartFlameThrower(gentity_t* self)
 {
 	const int	flameTime = 4000;//Q_irand( 1000, 3000 );
-	mdxaBone_t	boltMatrix;
+	mdxaBone_t	bolt_matrix;
 	vec3_t		org, dir;
 
 	self->client->ps.torsoTimer = flameTime;//+1000;
@@ -448,14 +448,14 @@ void Boba_StartFlameThrower(gentity_t* self)
 	gentity_t *fire = G_Spawn();
 	if ( fire != NULL )
 	{
-		mdxaBone_t	boltMatrix;
+		mdxaBone_t	bolt_matrix;
 		vec3_t		org, dir, ang;
 		trap->G2API_GetBoltMatrix( NPC->ghoul2, NPC->playerModel, NPC->handRBolt,
-				&boltMatrix, NPC->r.currentAngles, NPC->r.currentOrigin, (cg.time?cg.time:level.time),
+				&bolt_matrix, NPC->r.currentAngles, NPC->r.currentOrigin, (cg.time?cg.time:level.time),
 				NULL, NPC->s.modelScale );
 
-		trap->G2API_GiveMeVectorFromMatrix( boltMatrix, ORIGIN, org );
-		trap->G2API_GiveMeVectorFromMatrix( boltMatrix, NEGATIVE_Y, dir );
+		trap->G2API_GiveMeVectorFromMatrix( bolt_matrix, ORIGIN, org );
+		trap->G2API_GiveMeVectorFromMatrix( bolt_matrix, NEGATIVE_Y, dir );
 		vectoangles( dir, ang );
 
 		VectorCopy( org, fire->s.origin );
@@ -473,11 +473,11 @@ void Boba_StartFlameThrower(gentity_t* self)
 	*/
 	G_SoundOnEnt(self, CHAN_WEAPON, "sound/effects/combustfire.mp3");
 
-	trap->G2API_GetBoltMatrix(NPCS.NPC->ghoul2, 0, NPCS.NPC->client->renderInfo.handRBolt, &boltMatrix, NPCS.NPC->r.currentAngles,
+	trap->G2API_GetBoltMatrix(NPCS.NPC->ghoul2, 0, NPCS.NPC->client->renderInfo.handRBolt, &bolt_matrix, NPCS.NPC->r.currentAngles,
 		NPCS.NPC->r.currentOrigin, level.time, NULL, NPCS.NPC->modelScale);
 
-	BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, org);
-	BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_Y, dir);
+	BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, org);
+	BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Y, dir);
 
 	G_PlayEffectID(G_EffectIndex("boba/fthrw"), org, dir);
 }
@@ -608,11 +608,11 @@ void Boba_FireDecide(void)
 				else if (enemyInFOV)
 				{//if enemy is FOV, go ahead and check for shooting
 					const int hit = NPC_ShotEntity(NPCS.NPC->enemy, impactPos);
-					const gentity_t* hitEnt = &g_entities[hit];
+					const gentity_t* hit_ent = &g_entities[hit];
 
 					if (hit == NPCS.NPC->enemy->s.number
-						|| (hitEnt && hitEnt->client && hitEnt->client->playerTeam == NPCS.NPC->client->enemyTeam)
-						|| (hitEnt && hitEnt->takedamage && ((hitEnt->r.svFlags & SVF_GLASS_BRUSH) || hitEnt->health < 40 || NPCS.NPC->s.weapon == WP_EMPLACED_GUN)))
+						|| (hit_ent && hit_ent->client && hit_ent->client->playerTeam == NPCS.NPC->client->enemyTeam)
+						|| (hit_ent && hit_ent->takedamage && ((hit_ent->r.svFlags & SVF_GLASS_BRUSH) || hit_ent->health < 40 || NPCS.NPC->s.weapon == WP_EMPLACED_GUN)))
 					{//can hit enemy or enemy ally or will hit glass or other minor breakable (or in emplaced gun), so shoot anyway
 						enemyCS = qtrue;
 						//NPC_AimAdjust( 2 );//adjust aim better longer we have clear shot at enemy
@@ -621,7 +621,7 @@ void Boba_FireDecide(void)
 					else
 					{//Hmm, have to get around this bastard
 						//NPC_AimAdjust( 1 );//adjust aim better longer we can see enemy
-						if (hitEnt && hitEnt->client && hitEnt->client->playerTeam == NPCS.NPC->client->playerTeam)
+						if (hit_ent && hit_ent->client && hit_ent->client->playerTeam == NPCS.NPC->client->playerTeam)
 						{//would hit an ally, don't fire!!!
 							hitAlly = qtrue;
 						}

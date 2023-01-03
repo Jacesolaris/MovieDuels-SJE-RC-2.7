@@ -1489,7 +1489,7 @@ extern void NPC_Remote_Precache();
 extern void NPC_R2D2_Precache();
 extern void NPC_R5D2_Precache();
 extern void NPC_Probe_Precache();
-extern void NPC_Interrogator_Precache(gentity_t* self);
+extern void NPC_Interrogator_Precache();
 extern void NPC_MineMonster_Precache();
 extern void NPC_Howler_Precache();
 extern void NPC_Rancor_Precache();
@@ -1557,7 +1557,7 @@ void NPC_PrecacheByClassName(const char* type)
 	}
 	else if (!Q_stricmp("interrogator", type))
 	{
-		NPC_Interrogator_Precache(nullptr);
+		NPC_Interrogator_Precache();
 	}
 	else if (!Q_stricmp("probe", type))
 	{

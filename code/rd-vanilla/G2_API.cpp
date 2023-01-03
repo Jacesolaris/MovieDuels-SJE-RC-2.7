@@ -1720,7 +1720,7 @@ void G2API_DetachEnt(int* boltInfo)
 
 bool G2_NeedsRecalc(CGhoul2Info* ghlInfo, int frameNum);
 
-qboolean G2API_GetBoltMatrix(CGhoul2Info_v& ghoul2, const int modelIndex, const int boltIndex, mdxaBone_t* matrix, const vec3_t angles,
+qboolean G2API_GetBoltMatrix(CGhoul2Info_v& ghoul2, const int modelIndex, const int bolt_index, mdxaBone_t* matrix, const vec3_t angles,
 	const vec3_t position, const int AframeNum, qhandle_t* modelList, const vec3_t scale)
 {
 	G2ERROR(ghoul2.IsValid(), "Invalid ghlInfo");
@@ -1741,9 +1741,9 @@ qboolean G2API_GetBoltMatrix(CGhoul2Info_v& ghoul2, const int modelIndex, const 
 		{
 			const int frameNum = G2API_GetTime(AframeNum);
 			CGhoul2Info* ghlInfo = &ghoul2[modelIndex];
-			G2ERROR(boltIndex >= 0 && (boltIndex < (int)ghlInfo->mBltlist.size()), va("Invalid Bolt Index (%d:%s)", boltIndex, ghlInfo->mFileName));
+			G2ERROR(bolt_index >= 0 && (bolt_index < (int)ghlInfo->mBltlist.size()), va("Invalid Bolt Index (%d:%s)", bolt_index, ghlInfo->mFileName));
 
-			if (boltIndex >= 0 && ghlInfo && boltIndex < static_cast<int>(ghlInfo->mBltlist.size()))
+			if (bolt_index >= 0 && ghlInfo && bolt_index < static_cast<int>(ghlInfo->mBltlist.size()))
 			{
 				mdxaBone_t bolt;
 
@@ -1752,7 +1752,7 @@ qboolean G2API_GetBoltMatrix(CGhoul2Info_v& ghoul2, const int modelIndex, const 
 					G2_ConstructGhoulSkeleton(ghoul2, frameNum, true, scale);
 				}
 
-				G2_GetBoltMatrixLow(*ghlInfo, boltIndex, scale, bolt);
+				G2_GetBoltMatrixLow(*ghlInfo, bolt_index, scale, bolt);
 				// scale the bolt position by the scale factor for this model since at this point its still in model space
 				if (scale[0])
 				{
@@ -1958,44 +1958,44 @@ int G2API_GetGhoul2ModelFlags(CGhoul2Info* ghlInfo)
 }
 
 // given a boltmatrix, return in vec a normalised vector for the axis requested in flags
-void G2API_GiveMeVectorFromMatrix(mdxaBone_t& boltMatrix, Eorientations flags, vec3_t& vec)
+void G2API_GiveMeVectorFromMatrix(mdxaBone_t& bolt_matrix, Eorientations flags, vec3_t& vec)
 {
 	switch (flags)
 	{
 	case ORIGIN:
-		vec[0] = boltMatrix.matrix[0][3];
-		vec[1] = boltMatrix.matrix[1][3];
-		vec[2] = boltMatrix.matrix[2][3];
+		vec[0] = bolt_matrix.matrix[0][3];
+		vec[1] = bolt_matrix.matrix[1][3];
+		vec[2] = bolt_matrix.matrix[2][3];
 		break;
 	case POSITIVE_Y:
-		vec[0] = boltMatrix.matrix[0][1];
-		vec[1] = boltMatrix.matrix[1][1];
-		vec[2] = boltMatrix.matrix[2][1];
+		vec[0] = bolt_matrix.matrix[0][1];
+		vec[1] = bolt_matrix.matrix[1][1];
+		vec[2] = bolt_matrix.matrix[2][1];
 		break;
 	case POSITIVE_X:
-		vec[0] = boltMatrix.matrix[0][0];
-		vec[1] = boltMatrix.matrix[1][0];
-		vec[2] = boltMatrix.matrix[2][0];
+		vec[0] = bolt_matrix.matrix[0][0];
+		vec[1] = bolt_matrix.matrix[1][0];
+		vec[2] = bolt_matrix.matrix[2][0];
 		break;
 	case POSITIVE_Z:
-		vec[0] = boltMatrix.matrix[0][2];
-		vec[1] = boltMatrix.matrix[1][2];
-		vec[2] = boltMatrix.matrix[2][2];
+		vec[0] = bolt_matrix.matrix[0][2];
+		vec[1] = bolt_matrix.matrix[1][2];
+		vec[2] = bolt_matrix.matrix[2][2];
 		break;
 	case NEGATIVE_Y:
-		vec[0] = -boltMatrix.matrix[0][1];
-		vec[1] = -boltMatrix.matrix[1][1];
-		vec[2] = -boltMatrix.matrix[2][1];
+		vec[0] = -bolt_matrix.matrix[0][1];
+		vec[1] = -bolt_matrix.matrix[1][1];
+		vec[2] = -bolt_matrix.matrix[2][1];
 		break;
 	case NEGATIVE_X:
-		vec[0] = -boltMatrix.matrix[0][0];
-		vec[1] = -boltMatrix.matrix[1][0];
-		vec[2] = -boltMatrix.matrix[2][0];
+		vec[0] = -bolt_matrix.matrix[0][0];
+		vec[1] = -bolt_matrix.matrix[1][0];
+		vec[2] = -bolt_matrix.matrix[2][0];
 		break;
 	case NEGATIVE_Z:
-		vec[0] = -boltMatrix.matrix[0][2];
-		vec[1] = -boltMatrix.matrix[1][2];
-		vec[2] = -boltMatrix.matrix[2][2];
+		vec[0] = -bolt_matrix.matrix[0][2];
+		vec[1] = -bolt_matrix.matrix[1][2];
+		vec[2] = -bolt_matrix.matrix[2][2];
 		break;
 	}
 }
@@ -2080,15 +2080,15 @@ char* G2API_GetGLAName(CGhoul2Info* ghlInfo)
 	return nullptr;
 }
 
-qboolean G2API_SetNewOrigin(CGhoul2Info* ghlInfo, const int boltIndex)
+qboolean G2API_SetNewOrigin(CGhoul2Info* ghlInfo, const int bolt_index)
 {
 	if (G2_SetupModelPointers(ghlInfo))
 	{
-		G2ERROR(boltIndex >= 0 && boltIndex < (int)ghlInfo->mBltlist.size(), "invalid boltIndex");
+		G2ERROR(bolt_index >= 0 && bolt_index < (int)ghlInfo->mBltlist.size(), "invalid bolt_index");
 
-		if (boltIndex >= 0 && boltIndex < static_cast<int>(ghlInfo->mBltlist.size()))
+		if (bolt_index >= 0 && bolt_index < static_cast<int>(ghlInfo->mBltlist.size()))
 		{
-			ghlInfo->mNewOrigin = boltIndex;
+			ghlInfo->mNewOrigin = bolt_index;
 			ghlInfo->mFlags |= GHOUL2_NEWORIGIN;
 		}
 		return qtrue;

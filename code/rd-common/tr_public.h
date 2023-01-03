@@ -306,7 +306,7 @@ using refexport_t = struct
 	                                   float* currentFrame, int* startFrame, int* endFrame, int* flags,
 	                                   float* animSpeed, int*);
 	int (*G2API_GetBoneIndex)(CGhoul2Info* ghlInfo, const char* boneName, qboolean bAddIfNotFound);
-	qboolean (*G2API_GetBoltMatrix)(CGhoul2Info_v& ghoul2, int modelIndex, int boltIndex, mdxaBone_t* matrix,
+	qboolean (*G2API_GetBoltMatrix)(CGhoul2Info_v& ghoul2, int modelIndex, int bolt_index, mdxaBone_t* matrix,
 	                                const vec3_t angles, const vec3_t position, int AframeNum, qhandle_t* modelList,
 	                                const vec3_t scale);
 	int (*G2API_GetGhoul2ModelFlags)(CGhoul2Info* ghlInfo);
@@ -318,7 +318,7 @@ using refexport_t = struct
 	char* (*G2API_GetSurfaceName)(CGhoul2Info* ghlInfo, int surfNumber);
 	int (*G2API_GetSurfaceRenderStatus)(CGhoul2Info* ghlInfo, const char* surfaceName);
 	int (*G2API_GetTime)(int argTime);
-	void (*G2API_GiveMeVectorFromMatrix)(mdxaBone_t& boltMatrix, Eorientations flags, vec3_t& vec);
+	void (*G2API_GiveMeVectorFromMatrix)(mdxaBone_t& bolt_matrix, Eorientations flags, vec3_t& vec);
 	qboolean (*G2API_HaveWeGhoul2Models)(CGhoul2Info_v& ghoul2);
 	qboolean (*G2API_IKMove)(CGhoul2Info_v& ghoul2, int time, sharedIKMoveParams_t* params);
 	int (*G2API_InitGhoul2Model)(CGhoul2Info_v& ghoul2, const char* fileName, int modelIndex,
@@ -366,7 +366,7 @@ using refexport_t = struct
 	qboolean (*G2API_SetGhoul2ModelFlags)(CGhoul2Info* ghlInfo, int flags);
 	void (*G2API_SetGhoul2ModelIndexes)(CGhoul2Info_v& ghoul2, qhandle_t* modelList, qhandle_t* skinList);
 	qboolean (*G2API_SetLodBias)(CGhoul2Info* ghlInfo, int lodBias);
-	qboolean (*G2API_SetNewOrigin)(CGhoul2Info* ghlInfo, int boltIndex);
+	qboolean (*G2API_SetNewOrigin)(CGhoul2Info* ghlInfo, int bolt_index);
 	void (*G2API_SetRagDoll)(CGhoul2Info_v& ghoul2, CRagDollParams* parms);
 	qboolean (*G2API_SetRootSurface)(CGhoul2Info_v& ghlInfo, int modelIndex, const char* surfaceName);
 	qboolean (*G2API_SetShader)(CGhoul2Info* ghlInfo, qhandle_t customShader);

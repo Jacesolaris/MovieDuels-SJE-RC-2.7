@@ -9004,38 +9004,38 @@ void PM_FootSlopeTrace(float* p_diff, float* p_interval)
 #else
 
 	//FIXME: these really should have been gotten on the cgame, but I guess sometimes they're not and we end up with qnan numbers!
-	mdxaBone_t	boltMatrix;
+	mdxaBone_t	bolt_matrix;
 	vec3_t		G2Angles = { 0, pm->gent->client->ps.legsYaw, 0 };
 	//get the feet
 	gi.G2API_GetBoltMatrix(pm->gent->ghoul2, pm->gent->playerModel, pm->gent->footLBolt,
-		&boltMatrix, G2Angles, pm->ps->origin, (cg.time ? cg.time : level.time),
+		&bolt_matrix, G2Angles, pm->ps->origin, (cg.time ? cg.time : level.time),
 		nullptr, pm->gent->s.modelScale);
-	gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, pm->gent->client->renderInfo.footLPoint);
+	gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, pm->gent->client->renderInfo.footLPoint);
 
 	gi.G2API_GetBoltMatrix(pm->gent->ghoul2, pm->gent->playerModel, pm->gent->footRBolt,
-		&boltMatrix, G2Angles, pm->ps->origin, (cg.time ? cg.time : level.time),
+		&bolt_matrix, G2Angles, pm->ps->origin, (cg.time ? cg.time : level.time),
 		nullptr, pm->gent->s.modelScale);
-	gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, pm->gent->client->renderInfo.footRPoint);
+	gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, pm->gent->client->renderInfo.footRPoint);
 #endif
 	//NOTE: on AT-STs, rotating the foot moves this point, so it will wiggle...
 	//		we have to do this extra work (more G2 transforms) to stop the wiggle... is it worth it?
 	/*
 	if ( pm->gent->client->NPC_class == CLASS_ATST )
 	{
-		mdxaBone_t	boltMatrix;
+		mdxaBone_t	bolt_matrix;
 		vec3_t		G2Angles = {0, pm->gent->client->ps.legsYaw, 0};
 		//get the feet
 		gi.G2API_SetBoneAnglesIndex( &pm->gent->ghoul2[0], pm->gent->footLBone, vec3_origin, BONE_ANGLES_POSTMULT, POSITIVE_Z, NEGATIVE_Y, NEGATIVE_X, NULL );
 		gi.G2API_GetBoltMatrix( pm->gent->ghoul2, pm->gent->playerModel, pm->gent->footLBolt,
-				&boltMatrix, G2Angles, pm->ps->origin, (cg.time?cg.time:level.time),
+				&bolt_matrix, G2Angles, pm->ps->origin, (cg.time?cg.time:level.time),
 						NULL, pm->gent->s.modelScale );
-		gi.G2API_GiveMeVectorFromMatrix( boltMatrix, ORIGIN, pm->gent->client->renderInfo.footLPoint );
+		gi.G2API_GiveMeVectorFromMatrix( bolt_matrix, ORIGIN, pm->gent->client->renderInfo.footLPoint );
 
 		gi.G2API_SetBoneAnglesIndex( &pm->gent->ghoul2[0], pm->gent->footRBone, vec3_origin, BONE_ANGLES_POSTMULT, POSITIVE_Z, NEGATIVE_Y, NEGATIVE_X, NULL );
 		gi.G2API_GetBoltMatrix( pm->gent->ghoul2, pm->gent->playerModel, pm->gent->footRBolt,
-						&boltMatrix, G2Angles, pm->ps->origin, (cg.time?cg.time:level.time),
+						&bolt_matrix, G2Angles, pm->ps->origin, (cg.time?cg.time:level.time),
 						NULL, pm->gent->s.modelScale );
-		gi.G2API_GiveMeVectorFromMatrix( boltMatrix, ORIGIN, pm->gent->client->renderInfo.footRPoint );
+		gi.G2API_GiveMeVectorFromMatrix( bolt_matrix, ORIGIN, pm->gent->client->renderInfo.footRPoint );
 	}
 	*/
 	//get these on the cgame and store it, save ourselves a ghoul2 construct skel call

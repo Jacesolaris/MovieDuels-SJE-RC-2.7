@@ -2904,7 +2904,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 	float		dot1;
 	trace_t		tr;
 	int			x;
-	vec3_t		pushDir;
+	vec3_t		push_dir;
 	vec3_t		thispush_org;
 	vec3_t		tfrom, tto, fwd, a;
 	int			powerUse = 0;
@@ -3409,9 +3409,9 @@ void ForceThrow(gentity_t* self, qboolean pull)
 				//shove them
 				if (pull)
 				{
-					VectorSubtract(self->client->ps.origin, thispush_org, pushDir);
+					VectorSubtract(self->client->ps.origin, thispush_org, push_dir);
 
-					if (push_list[x]->client && VectorLength(pushDir) <= 256)
+					if (push_list[x]->client && VectorLength(push_dir) <= 256)
 					{
 						int randfact = 0;
 
@@ -3444,7 +3444,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 				}
 				else
 				{
-					VectorSubtract(thispush_org, self->client->ps.origin, pushDir);
+					VectorSubtract(thispush_org, self->client->ps.origin, push_dir);
 				}
 
 				if ((modPowerLevel > otherPushPower || push_list[x]->client->ps.m_iVehicleNum) && push_list[x]->client)
@@ -3452,7 +3452,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 					if (modPowerLevel == FORCE_LEVEL_3 &&
 						push_list[x]->client->ps.forceHandExtend != HANDEXTEND_KNOCKDOWN)
 					{
-						dirLen = VectorLength(pushDir);
+						dirLen = VectorLength(push_dir);
 
 						if (BG_KnockDownable(&push_list[x]->client->ps) &&
 							dirLen <= (64 * ((modPowerLevel - otherPushPower) - 1)))
@@ -3480,10 +3480,10 @@ void ForceThrow(gentity_t* self, qboolean pull)
 
 				if (!dirLen)
 				{
-					dirLen = VectorLength(pushDir);
+					dirLen = VectorLength(push_dir);
 				}
 
-				VectorNormalize(pushDir);
+				VectorNormalize(push_dir);
 
 				if (push_list[x]->client)
 				{
@@ -3514,12 +3514,12 @@ void ForceThrow(gentity_t* self, qboolean pull)
 					//fullbody push effect
 					push_list[x]->client->pushEffectTime = level.time + 600;
 
-					push_list[x]->client->ps.velocity[0] = pushDir[0] * pushPowerMod;
-					push_list[x]->client->ps.velocity[1] = pushDir[1] * pushPowerMod;
+					push_list[x]->client->ps.velocity[0] = push_dir[0] * pushPowerMod;
+					push_list[x]->client->ps.velocity[1] = push_dir[1] * pushPowerMod;
 
 					if ((int)push_list[x]->client->ps.velocity[2] == 0)
 					{ //if not going anywhere vertically, boost them up a bit
-						push_list[x]->client->ps.velocity[2] = pushDir[2] * pushPowerMod;
+						push_list[x]->client->ps.velocity[2] = push_dir[2] * pushPowerMod;
 
 						if (push_list[x]->client->ps.velocity[2] < 128)
 						{
@@ -3528,7 +3528,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 					}
 					else
 					{
-						push_list[x]->client->ps.velocity[2] = pushDir[2] * pushPowerMod;
+						push_list[x]->client->ps.velocity[2] = push_dir[2] * pushPowerMod;
 					}
 				}
 			}

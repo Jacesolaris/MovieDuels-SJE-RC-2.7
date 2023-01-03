@@ -1658,7 +1658,7 @@ qboolean BG_KnockDownable(playerState_t* ps);
 qboolean BG_LegalizedForcePowers(char* powerOut, size_t powerOutSize, int maxRank, qboolean freeSaber, int teamForce, int gametype, int fpDisabled);
 
 // given a boltmatrix, return in vec a normalised vector for the axis requested in flags
-void BG_GiveMeVectorFromMatrix(mdxaBone_t* boltMatrix, int flags, vec3_t vec);
+void BG_GiveMeVectorFromMatrix(mdxaBone_t* bolt_matrix, int flags, vec3_t vec);
 
 void BG_IK_MoveArm(void* ghoul2, int lHandBolt, int time, entityState_t* ent, int basePose, vec3_t desiredPos, qboolean* ikInProgress,
 	vec3_t origin, vec3_t angles, vec3_t scale, int blendTime, qboolean forceHalt);

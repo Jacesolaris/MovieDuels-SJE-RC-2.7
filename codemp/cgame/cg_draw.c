@@ -5653,18 +5653,18 @@ static void CG_DrawRocketLocking(const int lock_ent_num)
 			}
 			else if (cgs.gametype >= GT_TEAM)
 			{
-				const centity_t* hitEnt = &cg_entities[cg.snap->ps.rocketLockIndex];
-				if (hitEnt->currentState.eType == ET_NPC &&
-					hitEnt->currentState.NPC_class == CLASS_VEHICLE &&
-					hitEnt->currentState.owner < ENTITYNUM_WORLD)
+				const centity_t* hit_ent = &cg_entities[cg.snap->ps.rocketLockIndex];
+				if (hit_ent->currentState.eType == ET_NPC &&
+					hit_ent->currentState.NPC_class == CLASS_VEHICLE &&
+					hit_ent->currentState.owner < ENTITYNUM_WORLD)
 				{ //this is a vehicle, if it has a pilot and that pilot is on my team, then...
-					if (hitEnt->currentState.owner < MAX_CLIENTS)
+					if (hit_ent->currentState.owner < MAX_CLIENTS)
 					{
-						ci = &cgs.clientinfo[hitEnt->currentState.owner];
+						ci = &cgs.clientinfo[hit_ent->currentState.owner];
 					}
 					else
 					{
-						ci = cg_entities[hitEnt->currentState.owner].npcClient;
+						ci = cg_entities[hit_ent->currentState.owner].npcClient;
 					}
 					if (ci && ci->team == cgs.clientinfo[cg.snap->ps.client_num].team)
 					{
@@ -5784,20 +5784,20 @@ qboolean CG_CalcVehicleMuzzlePoint(int entityNum, vec3_t start, vec3_t d_f, vec3
 		start[2] += vehCent->m_pVehicle->m_pVehicleInfo->height - DEFAULT_MINS_2 - 48;
 		AngleVectors(vehCent->lerpAngles, d_f, d_rt, d_up);
 		/*
-		mdxaBone_t		boltMatrix;
+		mdxaBone_t		bolt_matrix;
 		int				bolt;
 		vec3_t			yawOnlyAngles;
 
 		VectorSet( yawOnlyAngles, 0, vehCent->lerpAngles[YAW], 0 );
 
 		bolt = trap->G2API_AddBolt( vehCent->ghoul2, 0, "*flash1");
-		trap->G2API_GetBoltMatrix( vehCent->ghoul2, 0, bolt, &boltMatrix,
+		trap->G2API_GetBoltMatrix( vehCent->ghoul2, 0, bolt, &bolt_matrix,
 									yawOnlyAngles, vehCent->lerpOrigin, cg.time,
 									NULL, vehCent->modelScale );
 
 		// work the matrix axis stuff into the original axis and origins used.
-		BG_GiveMeVectorFromMatrix( &boltMatrix, ORIGIN, start );
-		BG_GiveMeVectorFromMatrix( &boltMatrix, POSITIVE_X, d_f );
+		BG_GiveMeVectorFromMatrix( &bolt_matrix, ORIGIN, start );
+		BG_GiveMeVectorFromMatrix( &bolt_matrix, POSITIVE_X, d_f );
 		VectorClear( d_rt );//don't really need this, do we?
 		VectorClear( d_up );//don't really need this, do we?
 		*/
@@ -5861,11 +5861,11 @@ void CG_CalcEWebMuzzlePoint(centity_t* cent, vec3_t start, vec3_t d_f, vec3_t d_
 
 	if (bolt != -1)
 	{
-		mdxaBone_t boltMatrix;
+		mdxaBone_t bolt_matrix;
 
-		trap->G2API_GetBoltMatrix_NoRecNoRot(cent->ghoul2, 0, bolt, &boltMatrix, cent->lerpAngles, cent->lerpOrigin, cg.time, NULL, cent->modelScale);
-		BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, start);
-		BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_X, d_f);
+		trap->G2API_GetBoltMatrix_NoRecNoRot(cent->ghoul2, 0, bolt, &bolt_matrix, cent->lerpAngles, cent->lerpOrigin, cg.time, NULL, cent->modelScale);
+		BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, start);
+		BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_X, d_f);
 
 		//these things start the shot a little inside the bbox to assure not starting in something solid
 		VectorMA(start, -16.0f, d_f, start);

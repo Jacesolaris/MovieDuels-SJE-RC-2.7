@@ -2761,17 +2761,17 @@ void G_RollMissile(gentity_t* ent)
 		if (trace.entityNum < ENTITYNUM_WORLD)
 		{
 			//hit another ent
-			gentity_t* hitEnt = &g_entities[trace.entityNum];
+			gentity_t* hit_ent = &g_entities[trace.entityNum];
 
-			if (hitEnt && (hitEnt->takedamage || hitEnt->contents & CONTENTS_LIGHTSABER))
+			if (hit_ent && (hit_ent->takedamage || hit_ent->contents & CONTENTS_LIGHTSABER))
 			{
 				if (g_SerenityJediEngineMode->integer)
 				{
-					G_MissileImpact_MD(hitEnt, &trace);
+					G_MissileImpact_MD(hit_ent, &trace);
 				}
 				else
 				{
-					G_MissileImpactJKA(hitEnt, &trace);
+					G_MissileImpactJKA(hit_ent, &trace);
 				}
 
 				if (ent->s.eType == ET_GENERAL)
@@ -2946,17 +2946,17 @@ void G_RunMissile(gentity_t* ent)
 		//in a sand creature's mouth
 		if (ent->activator)
 		{
-			mdxaBone_t boltMatrix;
+			mdxaBone_t bolt_matrix;
 			// Getting the bolt here
 			//in hand
 			vec3_t scAngles = {0};
 			scAngles[YAW] = ent->activator->currentAngles[YAW];
 			gi.G2API_GetBoltMatrix(ent->activator->ghoul2, ent->activator->playerModel, ent->activator->gutBolt,
-			                       &boltMatrix, scAngles, ent->activator->currentOrigin,
+			                       &bolt_matrix, scAngles, ent->activator->currentOrigin,
 			                       cg.time ? cg.time : level.time,
 			                       nullptr, ent->activator->s.modelScale);
 			// Storing ent position, bolt position, and bolt axis
-			gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, ent->currentOrigin);
+			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, ent->currentOrigin);
 			G_SetOrigin(ent, ent->currentOrigin);
 		}
 		// check think function
@@ -3056,11 +3056,11 @@ void G_RunMissile(gentity_t* ent)
 			}
 
 			CCollisionRecord& coll = i;
-			const gentity_t* hitEnt = &g_entities[coll.mEntityNum];
+			const gentity_t* hit_ent = &g_entities[coll.mEntityNum];
 
 			// process collision records here...
 			// make sure we only do this once, not for all the entrance wounds we might generate
-			if (coll.mFlags & G2_FRONTFACE/* && !(hitModel)*/ && hitEnt->health)
+			if (coll.mFlags & G2_FRONTFACE/* && !(hitModel)*/ && hit_ent->health)
 			{
 				if (trHitLoc == HL_NONE)
 				{

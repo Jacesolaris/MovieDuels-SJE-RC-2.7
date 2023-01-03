@@ -837,13 +837,13 @@ void G_VehicleAttachDroidUnit(gentity_t* vehEnt)
 	if (vehEnt && vehEnt->m_pVehicle && vehEnt->m_pVehicle->m_pDroidUnit != NULL)
 	{
 		gentity_t* droidEnt = (gentity_t*)vehEnt->m_pVehicle->m_pDroidUnit;
-		mdxaBone_t boltMatrix;
+		mdxaBone_t bolt_matrix;
 		vec3_t	fwd;
 
-		trap->G2API_GetBoltMatrix(vehEnt->ghoul2, 0, vehEnt->m_pVehicle->m_iDroidUnitTag, &boltMatrix, vehEnt->r.currentAngles, vehEnt->r.currentOrigin, level.time,
+		trap->G2API_GetBoltMatrix(vehEnt->ghoul2, 0, vehEnt->m_pVehicle->m_iDroidUnitTag, &bolt_matrix, vehEnt->r.currentAngles, vehEnt->r.currentOrigin, level.time,
 			NULL, vehEnt->modelScale);
-		BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, droidEnt->r.currentOrigin);
-		BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_Y, fwd);
+		BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, droidEnt->r.currentOrigin);
+		BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Y, fwd);
 		vectoangles(fwd, droidEnt->r.currentAngles);
 
 		if (droidEnt->client)
@@ -2559,7 +2559,7 @@ void ClientThink_real(gentity_t* ent) {
 #endif
 			{
 				float pDif = 40.0f;
-				vec3_t boltOrg, pBoltOrg;
+				vec3_t bolt_org, pBoltOrg;
 				vec3_t tAngles;
 				vec3_t vDif;
 				vec3_t entDir, otherAngles;
@@ -2576,12 +2576,12 @@ void ClientThink_real(gentity_t* ent) {
 
 				//Get the direction between the pelvis and position of the hand
 #if 0
-				mdxaBone_t boltMatrix, pBoltMatrix;
+				mdxaBone_t bolt_matrix, pBoltMatrix;
 
-				trap->G2API_GetBoltMatrix(thrower->ghoul2, 0, lHandBolt, &boltMatrix, tAngles, thrower->client->ps.origin, level.time, 0, thrower->modelScale);
-				boltOrg[0] = boltMatrix.matrix[0][3];
-				boltOrg[1] = boltMatrix.matrix[1][3];
-				boltOrg[2] = boltMatrix.matrix[2][3];
+				trap->G2API_GetBoltMatrix(thrower->ghoul2, 0, lHandBolt, &bolt_matrix, tAngles, thrower->client->ps.origin, level.time, 0, thrower->modelScale);
+				bolt_org[0] = bolt_matrix.matrix[0][3];
+				bolt_org[1] = bolt_matrix.matrix[1][3];
+				bolt_org[2] = bolt_matrix.matrix[2][3];
 
 				trap->G2API_GetBoltMatrix(thrower->ghoul2, 0, pelBolt, &pBoltMatrix, tAngles, thrower->client->ps.origin, level.time, 0, thrower->modelScale);
 				pBoltOrg[0] = pBoltMatrix.matrix[0][3];
@@ -2590,13 +2590,13 @@ void ClientThink_real(gentity_t* ent) {
 #else //above tends to not work once in a while, for various reasons I suppose.
 				VectorCopy(thrower->client->ps.origin, pBoltOrg);
 				AngleVectors(tAngles, fwd, right, 0);
-				boltOrg[0] = pBoltOrg[0] + fwd[0] * 8 + right[0] * pDif;
-				boltOrg[1] = pBoltOrg[1] + fwd[1] * 8 + right[1] * pDif;
-				boltOrg[2] = pBoltOrg[2];
+				bolt_org[0] = pBoltOrg[0] + fwd[0] * 8 + right[0] * pDif;
+				bolt_org[1] = pBoltOrg[1] + fwd[1] * 8 + right[1] * pDif;
+				bolt_org[2] = pBoltOrg[2];
 #endif
-				//G_TestLine(boltOrg, pBoltOrg, 0x0000ff, 50);
+				//G_TestLine(bolt_org, pBoltOrg, 0x0000ff, 50);
 
-				VectorSubtract(ent->client->ps.origin, boltOrg, vDif);
+				VectorSubtract(ent->client->ps.origin, bolt_org, vDif);
 				if (VectorLength(vDif) > 32.0f && (thrower->client->doingThrow - level.time) < 4500)
 				{ //the hand is too far away, and can no longer hold onto us, so escape.
 					ent->client->ps.heldByClient = 0;
@@ -2647,7 +2647,7 @@ void ClientThink_real(gentity_t* ent) {
 					trace_t tr;
 					trace_t tr2;
 
-					VectorSubtract(boltOrg, pBoltOrg, vDif);
+					VectorSubtract(bolt_org, pBoltOrg, vDif);
 					VectorNormalize(vDif);
 
 					VectorClear(ent->client->ps.velocity);

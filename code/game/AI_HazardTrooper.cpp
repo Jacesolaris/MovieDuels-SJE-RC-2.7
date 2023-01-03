@@ -86,14 +86,14 @@ enum
 extern void G_AddVoiceEvent(const gentity_t* self, int event, int speak_debounce_time);
 extern void CG_DrawEdge(vec3_t start, vec3_t end, int type);
 
-static void HT_Speech(const gentity_t* self, const int speechType, const float failChance)
+static void HT_Speech(const gentity_t* self, const int speech_type, const float fail_chance)
 {
-	if (Q_flrand(0.0f, 1.0f) < failChance)
+	if (Q_flrand(0.0f, 1.0f) < fail_chance)
 	{
 		return;
 	}
 
-	if (failChance >= 0)
+	if (fail_chance >= 0)
 	{
 		//a negative failChance makes it always talk
 		if (self->NPC->group)
@@ -103,15 +103,6 @@ static void HT_Speech(const gentity_t* self, const int speechType, const float f
 			{
 				return;
 			}
-			/*
-			else if ( !self->NPC->group->enemy )
-			{
-				if ( groupSpeechDebounceTime[self->client->playerTeam] > level.time )
-				{
-					return;
-				}
-			}
-			*/
 		}
 		else if (!TIMER_Done(self, "chatter"))
 		{
@@ -127,7 +118,7 @@ static void HT_Speech(const gentity_t* self, const int speechType, const float f
 		return;
 	}
 
-	switch (speechType)
+	switch (speech_type)
 	{
 	case SPEECH_CHASE:
 		G_AddVoiceEvent(self, Q_irand(EV_CHASE1, EV_CHASE3), 2000);
@@ -290,19 +281,19 @@ public:
 	{
 		assert(actor->NPC->troop == mTroopHandle);
 		int bestNewLeader = -1;
-		int numEnts = mActors.size();
+		int num_ents = mActors.size();
 		//bool	found = false;
 		mTroopReform = true;
 
 		// Find The Actor
 		//----------------
-		for (int i = 0; i < numEnts; i++)
+		for (int i = 0; i < num_ents; i++)
 		{
 			if (mActors[i] == actor)
 			{
 				//found = true;
 				mActors.erase_swap(i);
-				numEnts--;
+				num_ents--;
 				if (i == 0 && !mActors.empty())
 				{
 					bestNewLeader = 0;
@@ -477,10 +468,10 @@ private:
 			//---------------------------------
 			if (targetDistance < scannerMaxViewDist)
 			{
-				constexpr float scannerMinVisability = 0.1f;
-				float targetVisibility = TargetVisibility(target);
-				targetVisibility *= targetDirection.Dot(scannerFwd);
-				if (targetVisibility > scannerMinVisability)
+				constexpr float scanner_min_visability = 0.1f;
+				float target_visibility = TargetVisibility(target);
+				target_visibility *= targetDirection.Dot(scannerFwd);
+				if (target_visibility > scanner_min_visability)
 				{
 					if (NPC_ClearLOS(targetPos.v))
 					{
@@ -496,9 +487,9 @@ private:
 			if (targetDistance < scannerMaxHearDist)
 			{
 				constexpr float scanner_min_noise_level = 0.3f;
-				float targetNoiseLevel = TargetNoiseLevel(target);
-				targetNoiseLevel *= 1.0f - targetDistance / scannerMaxHearDist; // scale by distance
-				if (targetNoiseLevel > scanner_min_noise_level)
+				float target_noise_level = TargetNoiseLevel(target);
+				target_noise_level *= 1.0f - targetDistance / scannerMaxHearDist; // scale by distance
+				if (target_noise_level > scanner_min_noise_level)
 				{
 					RegisterTarget(target, targetIndex, false);
 					RestoreNPCGlobals();
@@ -585,42 +576,42 @@ private:
 	////////////////////////////////////////////////////////////////////////////////////
 	void LeaderIssueAndUpdateOrders(const ETroopState NextState)
 	{
-		int actorIndex;
-		const int actorCount = mActors.size();
+		int actor_index;
+		const int actor_count = mActors.size();
 
 		// Always Put Guys Closest To The Order Locations In Those Locations
 		//-------------------------------------------------------------------
-		for (int orderIndex = 1; orderIndex < actorCount; orderIndex++)
+		for (int orderIndex = 1; orderIndex < actor_count; orderIndex++)
 		{
 			// Don't re-assign points combat point related orders
 			//----------------------------------------------------
 			if (mOrders[orderIndex].mCombatPoint == -1)
 			{
-				int closestActorIndex = orderIndex;
-				float closestActorDistance = DistanceSquared(mOrders[orderIndex].mPosition.v,
+				int closest_actor_index = orderIndex;
+				float closest_actor_distance = DistanceSquared(mOrders[orderIndex].mPosition.v,
 				                                             mActors[orderIndex]->currentOrigin);
-				for (actorIndex = orderIndex + 1; actorIndex < actorCount; actorIndex++)
+				for (actor_index = orderIndex + 1; actor_index < actor_count; actor_index++)
 				{
 					const float currentDistance = DistanceSquared(mOrders[orderIndex].mPosition.v,
-					                                              mActors[actorIndex]->currentOrigin);
-					if (currentDistance < closestActorDistance)
+					                                              mActors[actor_index]->currentOrigin);
+					if (currentDistance < closest_actor_distance)
 					{
-						closestActorDistance = currentDistance;
-						closestActorIndex = actorIndex;
+						closest_actor_distance = currentDistance;
+						closest_actor_index = actor_index;
 					}
 				}
-				if (orderIndex != closestActorIndex)
+				if (orderIndex != closest_actor_index)
 				{
-					mActors.swap(orderIndex, closestActorIndex);
+					mActors.swap(orderIndex, closest_actor_index);
 				}
 			}
 		}
 
 		// Now Copy The Orders Out To The Actors
 		//---------------------------------------
-		for (actorIndex = 1; actorIndex < actorCount; actorIndex++)
+		for (actor_index = 1; actor_index < actor_count; actor_index++)
 		{
-			VectorCopy(mOrders[actorIndex].mPosition.v, mActors[actorIndex]->pos1);
+			VectorCopy(mOrders[actor_index].mPosition.v, mActors[actor_index]->pos1);
 		}
 
 		// PHASE I - VOICE COMMANDS & ANIMATIONS
@@ -718,8 +709,8 @@ private:
 		{
 			if (!mTroopReform)
 			{
-				const int FwdNum = actorCount / 2 + 1;
-				for (int i = 0; i < FwdNum; i++)
+				const int fwd_num = actor_count / 2 + 1;
+				for (int i = 0; i < fwd_num; i++)
 				{
 					mFormHead -= mFormFwd;
 				}
@@ -764,19 +755,19 @@ private:
 
 		// PHASE III - USE FORMATION VECTORS TO COMPUTE ORDERS FOR ALL ACTORS
 		//====================================================================
-		for (actorIndex = 1; actorIndex < actorCount; actorIndex++)
+		for (actor_index = 1; actor_index < actor_count; actor_index++)
 		{
 			SaveNPCGlobals();
-			SetNPCGlobals(mActors[actorIndex]);
+			SetNPCGlobals(mActors[actor_index]);
 
-			SActorOrder& Order = mOrders[actorIndex];
-			const float FwdScale = static_cast<float>(((actorIndex + 1) / 2));
-			const float SideScale = actorIndex % 2 == 0 ? -1.0f : 1.0f;
+			SActorOrder& Order = mOrders[actor_index];
+			const float fwd_scale = static_cast<float>(((actor_index + 1) / 2));
+			const float side_scale = actor_index % 2 == 0 ? -1.0f : 1.0f;
 
-			if (mActors[actorIndex]->NPC->combatPoint != -1)
+			if (mActors[actor_index]->NPC->combatPoint != -1)
 			{
-				NPC_FreeCombatPoint(mActors[actorIndex]->NPC->combatPoint, qfalse);
-				mActors[actorIndex]->NPC->combatPoint = -1;
+				NPC_FreeCombatPoint(mActors[actor_index]->NPC->combatPoint, qfalse);
+				mActors[actor_index]->NPC->combatPoint = -1;
 			}
 
 			Order.mPosition = mFormHead;
@@ -790,14 +781,14 @@ private:
 				if (NextState == TS_ADVANCE_REGROUP || NextState == TS_ADVANCE_SEARCH || NextState ==
 					TS_ADVANCE_FORMATION)
 				{
-					Order.mPosition.ScaleAdd(mFormFwd, FwdScale);
-					Order.mPosition.ScaleAdd(mFormRight, SideScale);
+					Order.mPosition.ScaleAdd(mFormFwd, fwd_scale);
+					Order.mPosition.ScaleAdd(mFormRight, side_scale);
 				}
 				else if (NextState == TS_ADVANCE_COVER)
 				{
 					// TODO: Take Turns Switching Who Is In Front
-					Order.mPosition.ScaleAdd(mFormFwd, FwdScale);
-					Order.mPosition.ScaleAdd(mFormRight, SideScale);
+					Order.mPosition.ScaleAdd(mFormFwd, fwd_scale);
+					Order.mPosition.ScaleAdd(mFormRight, side_scale);
 				}
 			}
 
@@ -805,20 +796,20 @@ private:
 			//-----------------------------
 			else
 			{
-				if (NextState == TS_ATTACK_LINE || NextState == TS_ATTACK_FLANK && actorIndex < 4)
+				if (NextState == TS_ATTACK_LINE || NextState == TS_ATTACK_FLANK && actor_index < 4)
 				{
-					Order.mPosition.ScaleAdd(mFormFwd, FwdScale);
-					Order.mPosition.ScaleAdd(mFormRight, SideScale);
+					Order.mPosition.ScaleAdd(mFormFwd, fwd_scale);
+					Order.mPosition.ScaleAdd(mFormRight, side_scale);
 				}
-				else if (NextState == TS_ATTACK_FLANK && actorIndex >= 4)
+				else if (NextState == TS_ATTACK_FLANK && actor_index >= 4)
 				{
 					int cpFlags = CP_HAS_ROUTE | CP_AVOID_ENEMY | CP_CLEAR | CP_COVER | CP_FLANK | CP_APPROACH_ENEMY;
 					constexpr float avoid_dist = 128.0f;
 
 					Order.mCombatPoint = NPC_FindCombatPointRetry(
-						mActors[actorIndex]->currentOrigin,
-						mActors[actorIndex]->currentOrigin,
-						mActors[actorIndex]->currentOrigin,
+						mActors[actor_index]->currentOrigin,
+						mActors[actor_index]->currentOrigin,
+						mActors[actor_index]->currentOrigin,
 						&cpFlags,
 						avoid_dist,
 						0);
@@ -830,14 +821,14 @@ private:
 					}
 					else
 					{
-						Order.mPosition.ScaleAdd(mFormFwd, FwdScale);
-						Order.mPosition.ScaleAdd(mFormRight, SideScale);
+						Order.mPosition.ScaleAdd(mFormFwd, fwd_scale);
+						Order.mPosition.ScaleAdd(mFormRight, side_scale);
 					}
 				}
 				else if (NextState == TS_ATTACK_SURROUND)
 				{
-					Order.mPosition.ScaleAdd(mFormFwd, FwdScale);
-					Order.mPosition.ScaleAdd(mFormRight, SideScale);
+					Order.mPosition.ScaleAdd(mFormFwd, fwd_scale);
+					Order.mPosition.ScaleAdd(mFormRight, side_scale);
 
 					/*					CVec3	FanAngles = BaseAngleToHead;
 										FanAngles[YAW] += (SideScale * (WidestAngle-(FwdScale*FORMATION_SURROUND_FAN)));
@@ -849,8 +840,8 @@ private:
 				}
 				else if (NextState == TS_ATTACK_COVER)
 				{
-					Order.mPosition.ScaleAdd(mFormFwd, FwdScale);
-					Order.mPosition.ScaleAdd(mFormRight, SideScale);
+					Order.mPosition.ScaleAdd(mFormFwd, fwd_scale);
+					Order.mPosition.ScaleAdd(mFormRight, side_scale);
 				}
 			}
 
@@ -862,10 +853,10 @@ private:
 
 				gi.trace(&trace,
 				         Order.mPosition.v,
-				         mActors[actorIndex]->mins,
-				         mActors[actorIndex]->maxs,
+				         mActors[actor_index]->mins,
+				         mActors[actor_index]->maxs,
 				         OrderUp.v,
-				         mActors[actorIndex]->s.number,
+				         mActors[actor_index]->s.number,
 				         CONTENTS_SOLID | CONTENTS_TERRAIN | CONTENTS_MONSTERCLIP | CONTENTS_BOTCLIP,
 				         static_cast<EG2_Collision>(0),
 				         0);
@@ -876,9 +867,9 @@ private:
 					constexpr float avoid_dist = 128.0f;
 
 					Order.mCombatPoint = NPC_FindCombatPointRetry(
-						mActors[actorIndex]->currentOrigin,
-						mActors[actorIndex]->currentOrigin,
-						mActors[actorIndex]->currentOrigin,
+						mActors[actor_index]->currentOrigin,
+						mActors[actor_index]->currentOrigin,
+						mActors[actor_index]->currentOrigin,
 						&cpFlags,
 						avoid_dist,
 						0);
@@ -971,8 +962,8 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////
 	void MergeInto(c_troop& Other)
 	{
-		const int numEnts = mActors.size();
-		for (int i = 0; i < numEnts; i++)
+		const int num_ents = mActors.size();
+		for (int i = 0; i < num_ents; i++)
 		{
 			mActors[i]->client->leader = nullptr;
 			mActors[i]->NPC->troop = 0;

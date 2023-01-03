@@ -1263,9 +1263,9 @@ int NPC_FindNearestEnemy(gentity_t* ent)
 	}
 
 	//Get a number of entities in a given space
-	const int numEnts = trap->EntitiesInBox(mins, maxs, iradiusEnts, MAX_RADIUS_ENTS);
+	const int num_ents = trap->EntitiesInBox(mins, maxs, iradiusEnts, MAX_RADIUS_ENTS);
 
-	for (i = 0; i < numEnts; i++)
+	for (i = 0; i < num_ents; i++)
 	{
 		gentity_t* radEnt = &g_entities[iradiusEnts[i]];
 		//Don't consider self
@@ -1690,9 +1690,9 @@ void NPC_CheckCharmed(void)
 	}
 }
 
-void G_GetBoltPosition(gentity_t* self, int boltIndex, vec3_t pos, int modelIndex)
+void G_GetBoltPosition(gentity_t* self, int bolt_index, vec3_t pos, int modelIndex)
 {
-	mdxaBone_t	boltMatrix;
+	mdxaBone_t	bolt_matrix;
 	vec3_t		result, angles;
 
 	if (!self || !self->inuse)
@@ -1715,17 +1715,17 @@ void G_GetBoltPosition(gentity_t* self, int boltIndex, vec3_t pos, int modelInde
 	}
 
 	trap->G2API_GetBoltMatrix(self->ghoul2, modelIndex,
-		boltIndex,
-		&boltMatrix, angles, self->r.currentOrigin, level.time,
+		bolt_index,
+		&bolt_matrix, angles, self->r.currentOrigin, level.time,
 		NULL, self->modelScale);
 	if (pos)
 	{
-		BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, result);
+		BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, result);
 		VectorCopy(result, pos);
 	}
 }
 
-float NPC_EntRangeFromBolt(gentity_t* targEnt, int boltIndex)
+float NPC_EntRangeFromBolt(gentity_t* targEnt, int bolt_index)
 {
 	vec3_t	org;
 
@@ -1734,34 +1734,34 @@ float NPC_EntRangeFromBolt(gentity_t* targEnt, int boltIndex)
 		return Q3_INFINITE;
 	}
 
-	G_GetBoltPosition(NPCS.NPC, boltIndex, org, 0);
+	G_GetBoltPosition(NPCS.NPC, bolt_index, org, 0);
 
 	return (Distance(targEnt->r.currentOrigin, org));
 }
 
-float NPC_EnemyRangeFromBolt(int boltIndex)
+float NPC_EnemyRangeFromBolt(int bolt_index)
 {
-	return (NPC_EntRangeFromBolt(NPCS.NPC->enemy, boltIndex));
+	return (NPC_EntRangeFromBolt(NPCS.NPC->enemy, bolt_index));
 }
 
-int NPC_GetEntsNearBolt(int* radiusEnts, float radius, int boltIndex, vec3_t boltOrg)
+int NPC_GetEntsNearBolt(int* radius_ents, float radius, int bolt_index, vec3_t bolt_org)
 {
 	vec3_t		mins, maxs;
 
 	//get my handRBolt's position
 	vec3_t	org;
 
-	G_GetBoltPosition(NPCS.NPC, boltIndex, org, 0);
+	G_GetBoltPosition(NPCS.NPC, bolt_index, org, 0);
 
-	VectorCopy(org, boltOrg);
+	VectorCopy(org, bolt_org);
 
 	//Setup the bbox to search in
 	for (int i = 0; i < 3; i++)
 	{
-		mins[i] = boltOrg[i] - radius;
-		maxs[i] = boltOrg[i] + radius;
+		mins[i] = bolt_org[i] - radius;
+		maxs[i] = bolt_org[i] + radius;
 	}
 
 	//Get the number of entities in a given space
-	return (trap->EntitiesInBox(mins, maxs, radiusEnts, 128));
+	return (trap->EntitiesInBox(mins, maxs, radius_ents, 128));
 }

@@ -186,14 +186,14 @@ extern void trigger_always_think(gentity_t* ent);
 extern void AimAtTarget(gentity_t* ent);
 extern void func_timer_think(gentity_t* ent);
 extern void NPC_RemoveBody(gentity_t* ent);
-extern void Disappear(gentity_t* ent);
+extern void Disappear(gentity_t* self);
 extern void NPC_Think(gentity_t* ent);
 extern void NPC_Spawn_Go(gentity_t* ent);
 extern void NPC_Begin(gentity_t* ent);
 extern void moverCallback(gentity_t* ent);
 extern void anglerCallback(gentity_t* ent);
 extern void RemoveOwner(gentity_t* ent);
-extern void MakeOwnerInvis(gentity_t* ent);
+extern void MakeOwnerInvis(gentity_t* self);
 extern void MakeOwnerEnergy(gentity_t* ent);
 extern void func_usable_think(gentity_t* self);
 extern void misc_dlight_think(gentity_t* ent);
@@ -625,7 +625,7 @@ extern void NPC_GM_Pain(gentity_t* self, gentity_t* inflictor, gentity_t* attack
                         int mod, int hit_loc = HL_NONE);
 extern void NPC_Sentry_Pain(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, const vec3_t point, int damage,
                             int mod, int hit_loc = HL_NONE);
-extern void NPC_Mark2_Pain(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, const vec3_t point, int damage,
+extern void NPC_Mark2_Pain(gentity_t* self, gentity_t* inflictor, gentity_t* other, const vec3_t point, int damage,
                            int mod, int hit_loc = HL_NONE);
 extern void PlayerPain(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, const vec3_t point, int damage,
                        int mod, int hit_loc = HL_NONE);

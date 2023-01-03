@@ -111,7 +111,7 @@ void G_VehicleSpawn(gentity_t* self)
 // Attachs an entity to the vehicle it's riding (it's owner).
 void G_AttachToVehicle(gentity_t* pEnt, usercmd_t** ucmd)
 {
-	mdxaBone_t		boltMatrix;
+	mdxaBone_t		bolt_matrix;
 
 	if (!pEnt || !ucmd)
 		return;
@@ -127,10 +127,10 @@ void G_AttachToVehicle(gentity_t* pEnt, usercmd_t** ucmd)
 	const int crotchBolt = trap->G2API_AddBolt(vehEnt->ghoul2, 0, "*driver");
 
 	// Get the driver tag.
-	trap->G2API_GetBoltMatrix(vehEnt->ghoul2, 0, crotchBolt, &boltMatrix,
+	trap->G2API_GetBoltMatrix(vehEnt->ghoul2, 0, crotchBolt, &bolt_matrix,
 		vehEnt->m_pVehicle->m_vOrientation, vehEnt->r.currentOrigin,
 		level.time, NULL, vehEnt->modelScale);
-	BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, ent->client->ps.origin);
+	BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, ent->client->ps.origin);
 	G_SetOrigin(ent, ent->client->ps.origin);
 	trap->LinkEntity((sharedEntity_t*)ent);
 }
@@ -1800,7 +1800,7 @@ static void AttachRiders(Vehicle_t* pVeh)
 	{
 		if (pVeh->m_ppPassengers[i])
 		{
-			mdxaBone_t boltMatrix;
+			mdxaBone_t bolt_matrix;
 			vec3_t	yawOnlyAngles;
 			gentity_t* parent = (gentity_t*)pVeh->m_pParentEntity;
 			gentity_t* pilot = (gentity_t*)pVeh->m_ppPassengers[i];
@@ -1813,10 +1813,10 @@ static void AttachRiders(Vehicle_t* pVeh)
 			VectorSet(yawOnlyAngles, 0, parent->client->ps.viewangles[YAW], 0);
 
 			// Get the driver tag.
-			trap->G2API_GetBoltMatrix(parent->ghoul2, 0, crotchBolt, &boltMatrix,
+			trap->G2API_GetBoltMatrix(parent->ghoul2, 0, crotchBolt, &bolt_matrix,
 				yawOnlyAngles, parent->client->ps.origin,
 				level.time, NULL, parent->modelScale);
-			BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, pilot->client->ps.origin);
+			BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, pilot->client->ps.origin);
 
 			G_SetOrigin(pilot, pilot->client->ps.origin);
 			trap->LinkEntity((sharedEntity_t*)pilot);
@@ -1828,7 +1828,7 @@ static void AttachRiders(Vehicle_t* pVeh)
 	if (pVeh->m_pDroidUnit
 		&& pVeh->m_iDroidUnitTag != -1)
 	{
-		mdxaBone_t boltMatrix;
+		mdxaBone_t bolt_matrix;
 		vec3_t	yawOnlyAngles, fwd;
 		gentity_t* parent = (gentity_t*)pVeh->m_pParentEntity;
 		gentity_t* droid = (gentity_t*)pVeh->m_pDroidUnit;
@@ -1842,11 +1842,11 @@ static void AttachRiders(Vehicle_t* pVeh)
 			VectorSet(yawOnlyAngles, 0, parent->client->ps.viewangles[YAW], 0);
 
 			// Get the droid tag.
-			trap->G2API_GetBoltMatrix(parent->ghoul2, 0, pVeh->m_iDroidUnitTag, &boltMatrix,
+			trap->G2API_GetBoltMatrix(parent->ghoul2, 0, pVeh->m_iDroidUnitTag, &bolt_matrix,
 				yawOnlyAngles, parent->r.currentOrigin,
 				level.time, NULL, parent->modelScale);
-			BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, droid->client->ps.origin);
-			BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_Y, fwd);
+			BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, droid->client->ps.origin);
+			BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Y, fwd);
 			vectoangles(fwd, droid->client->ps.viewangles);
 
 			G_SetOrigin(droid, droid->client->ps.origin);

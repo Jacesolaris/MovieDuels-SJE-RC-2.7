@@ -180,11 +180,11 @@ void TurretClientRun(centity_t* ent)
 	if (ent->currentState.fireflag && ent->bolt4 != ent->currentState.fireflag)
 	{
 		vec3_t muzzleOrg, muzzleDir;
-		mdxaBone_t boltMatrix;
+		mdxaBone_t bolt_matrix;
 
-		trap->G2API_GetBoltMatrix(ent->ghoul2, 0, ent->torsoBolt, &boltMatrix, /*ent->lerpAngles*/vec3_origin, ent->lerpOrigin, cg.time, cgs.gameModels, ent->modelScale);
-		BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, muzzleOrg);
-		BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_X, muzzleDir);
+		trap->G2API_GetBoltMatrix(ent->ghoul2, 0, ent->torsoBolt, &bolt_matrix, /*ent->lerpAngles*/vec3_origin, ent->lerpOrigin, cg.time, cgs.gameModels, ent->modelScale);
+		BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, muzzleOrg);
+		BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_X, muzzleDir);
 
 		trap->FX_PlayEffectID(cgs.effects.mTurretMuzzleFlash, muzzleOrg, muzzleDir, -1, -1, qfalse);
 

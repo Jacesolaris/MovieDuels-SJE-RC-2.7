@@ -53,7 +53,7 @@ extern void NPC_Remote_Precache(void);
 extern void	NPC_R2D2_Precache(void);
 extern void	NPC_R5D2_Precache(void);
 extern void NPC_Probe_Precache(void);
-extern void NPC_Interrogator_Precache(gentity_t* self);
+extern void NPC_Interrogator_Precache();
 extern void NPC_MineMonster_Precache(void);
 extern void NPC_Howler_Precache(void);
 extern void NPC_ATST_Precache(void);
@@ -3658,7 +3658,7 @@ void SP_NPC_Droid_Interrogator(gentity_t* self)
 
 	SP_NPC_spawner(self);
 
-	NPC_Interrogator_Precache(self);
+	NPC_Interrogator_Precache();
 }
 
 /*QUAKED NPC_Droid_Probe (1 0 0) (-12 -12 -24) (12 12 40) x x x x DROPTOFLOOR CINEMATIC NOTSOLID STARTINSOLID SHY
@@ -4022,7 +4022,7 @@ gentity_t* NPC_SpawnType(gentity_t* ent, char* npc_type, char* targetname, qbool
 	}
 	else if (!Q_stricmp("interrogator", NPCspawner->NPC_type))
 	{
-		NPC_Interrogator_Precache(NULL);
+		NPC_Interrogator_Precache();
 	}
 	else if (!Q_stricmp("probe", NPCspawner->NPC_type))
 	{

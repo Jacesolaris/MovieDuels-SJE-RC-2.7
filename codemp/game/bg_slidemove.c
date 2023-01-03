@@ -71,12 +71,12 @@ void PM_VehicleImpact(bgEntity_t* pEnt, trace_t* trace)
 	float magnitude = VectorLength(pm->ps->velocity) * pSelfVeh->m_pVehicleInfo->mass / 50.0f;
 	qboolean forceSurfDestruction = qfalse;
 #ifdef _GAME
-	gentity_t* hitEnt = trace != NULL ? &g_entities[trace->entityNum] : NULL;
+	gentity_t* hit_ent = trace != NULL ? &g_entities[trace->entityNum] : NULL;
 
-	if (!hitEnt ||
+	if (!hit_ent ||
 		(pSelfVeh && pSelfVeh->m_pPilot &&
-			hitEnt && hitEnt->s.eType == ET_MISSILE && hitEnt->inuse &&
-			hitEnt->r.ownerNum == pSelfVeh->m_pPilot->s.number)
+			hit_ent && hit_ent->s.eType == ET_MISSILE && hit_ent->inuse &&
+			hit_ent->r.ownerNum == pSelfVeh->m_pPilot->s.number)
 		)
 	{
 		return;
@@ -86,7 +86,7 @@ void PM_VehicleImpact(bgEntity_t* pEnt, trace_t* trace)
 		&& pSelfVeh->m_iRemovedSurfaces)//vehicle has bits removed
 	{
 		//spiralling to our deaths, explode on any solid impact
-		if (hitEnt->s.NPC_class == CLASS_VEHICLE)
+		if (hit_ent->s.NPC_class == CLASS_VEHICLE)
 		{//hit another vehicle, explode!
 			//Give credit to whoever got me into this death spiral state
 			const gentity_t* parent = (gentity_t*)pSelfVeh->m_pParentEntity;
@@ -101,12 +101,12 @@ void PM_VehicleImpact(bgEntity_t* pEnt, trace_t* trace)
 					killer = potentialKiller;
 				}
 			}
-			//FIXME: damage hitEnt, some, too?  Our explosion should hurt them some, but...
+			//FIXME: damage hit_ent, some, too?  Our explosion should hurt them some, but...
 			G_Damage((gentity_t*)pEnt, killer, killer, NULL, pm->ps->origin, 999999, DAMAGE_NO_ARMOR, MOD_FALLING);//FIXME: MOD_IMPACT
 			return;
 		}
 		if (!VectorCompare(trace->plane.normal, vec3_origin)
-			&& (trace->entityNum == ENTITYNUM_WORLD || hitEnt->r.bmodel))
+			&& (trace->entityNum == ENTITYNUM_WORLD || hit_ent->r.bmodel))
 		{//have a valid hit plane and we hit a solid brush
 			vec3_t	moveDir;
 			VectorCopy(pm->ps->velocity, moveDir);
@@ -134,10 +134,10 @@ void PM_VehicleImpact(bgEntity_t* pEnt, trace_t* trace)
 	}
 
 	if (trace->entityNum < ENTITYNUM_WORLD
-		&& hitEnt->s.eType == ET_MOVER
-		&& hitEnt->s.apos.trType != TR_STATIONARY//rotating
-		&& (hitEnt->spawnflags & 16) //IMPACT
-		&& Q_stricmp("func_rotating", hitEnt->classname) == 0)
+		&& hit_ent->s.eType == ET_MOVER
+		&& hit_ent->s.apos.trType != TR_STATIONARY//rotating
+		&& (hit_ent->spawnflags & 16) //IMPACT
+		&& Q_stricmp("func_rotating", hit_ent->classname) == 0)
 	{//hit a func_rotating that is supposed to destroy anything it touches!
 		//guarantee the hit will happen, thereby taking off a piece of the ship
 		forceSurfDestruction = qtrue;
@@ -169,7 +169,7 @@ void PM_VehicleImpact(bgEntity_t* pEnt, trace_t* trace)
 		//this was annoying me -rww
 		//FIXME: this shouldn't even be getting called when the vehicle is at rest!
 #ifdef _GAME
-		if (hitEnt && (hitEnt->s.eType == ET_PLAYER || hitEnt->s.eType == ET_NPC) && pSelfVeh->m_pVehicleInfo->type == VH_FIGHTER)
+		if (hit_ent && (hit_ent->s.eType == ET_PLAYER || hit_ent->s.eType == ET_NPC) && pSelfVeh->m_pVehicleInfo->type == VH_FIGHTER)
 		{ //always smack players
 		}
 		else
@@ -189,7 +189,7 @@ void PM_VehicleImpact(bgEntity_t* pEnt, trace_t* trace)
 			//FIXME: should pass in trace.endpos and trace.plane.normal
 			vec3_t	vehUp;
 #ifdef _CGAME
-			bgEntity_t* hitEnt;
+			bgEntity_t* hit_ent;
 #endif
 
 			if (trace && !pSelfVeh->m_iRemovedSurfaces && !forceSurfDestruction)
@@ -198,9 +198,9 @@ void PM_VehicleImpact(bgEntity_t* pEnt, trace_t* trace)
 				float l = pm->ps->speed * 0.5f;
 				vec3_t	bounceDir;
 #ifdef _CGAME
-				bgEntity_t* hitEnt = PM_BGEntForNum(trace->entityNum);
+				bgEntity_t* hit_ent = PM_BGEntForNum(trace->entityNum);
 #endif
-				if ((trace->entityNum == ENTITYNUM_WORLD || hitEnt->s.solid == SOLID_BMODEL)//bounce off any brush
+				if ((trace->entityNum == ENTITYNUM_WORLD || hit_ent->s.solid == SOLID_BMODEL)//bounce off any brush
 					&& !VectorCompare(trace->plane.normal, vec3_origin))//have a valid plane to bounce off of
 				{ //bounce off in the opposite direction of the impact
 					if (pSelfVeh->m_pVehicleInfo->type == VH_SPEEDER)
@@ -226,49 +226,49 @@ void PM_VehicleImpact(bgEntity_t* pEnt, trace_t* trace)
 				else if (pSelfVeh->m_pVehicleInfo->type == VH_FIGHTER)
 				{//check for impact with another fighter
 #ifdef _CGAME
-					bgEntity_t* hitEnt = PM_BGEntForNum(trace->entityNum);
+					bgEntity_t* hit_ent = PM_BGEntForNum(trace->entityNum);
 #endif
-					if (hitEnt->s.NPC_class == CLASS_VEHICLE
-						&& hitEnt->m_pVehicle
-						&& hitEnt->m_pVehicle->m_pVehicleInfo
-						&& hitEnt->m_pVehicle->m_pVehicleInfo->type == VH_FIGHTER)
+					if (hit_ent->s.NPC_class == CLASS_VEHICLE
+						&& hit_ent->m_pVehicle
+						&& hit_ent->m_pVehicle->m_pVehicleInfo
+						&& hit_ent->m_pVehicle->m_pVehicleInfo->type == VH_FIGHTER)
 					{//two vehicles hit each other, turn away from the impact
 						turnFromImpact = qtrue;
 						turnHitEnt = qtrue;
 #ifdef _GAME
-						VectorSubtract(pm->ps->origin, hitEnt->r.currentOrigin, bounceDir);
+						VectorSubtract(pm->ps->origin, hit_ent->r.currentOrigin, bounceDir);
 #else
-						VectorSubtract(pm->ps->origin, hitEnt->s.origin, bounceDir);
+						VectorSubtract(pm->ps->origin, hit_ent->s.origin, bounceDir);
 #endif
 						VectorNormalize(bounceDir);
 					}
 				}
 				if (turnFromImpact)
 				{//bounce off impact surf and turn away
-					vec3_t	pushDir = { 0 }, turnAwayAngles, turnDelta;
+					vec3_t	push_dir = { 0 }, turnAwayAngles, turnDelta;
 					float pitchTurnStrength, yawTurnStrength;
 					vec3_t	moveDir;
 					//bounce
 					if (!turnHitEnt)
 					{//hit wall
-						VectorScale(bounceDir, (pm->ps->speed * 0.25f / pSelfVeh->m_pVehicleInfo->mass), pushDir);
+						VectorScale(bounceDir, (pm->ps->speed * 0.25f / pSelfVeh->m_pVehicleInfo->mass), push_dir);
 					}
 					else
 					{//hit another fighter
 #ifdef _GAME
-						if (hitEnt->client)
+						if (hit_ent->client)
 						{
-							VectorScale(bounceDir, (pm->ps->speed + hitEnt->client->ps.speed) * 0.5f, pushDir);
+							VectorScale(bounceDir, (pm->ps->speed + hit_ent->client->ps.speed) * 0.5f, push_dir);
 						}
 						else
 						{
-							VectorScale(bounceDir, (pm->ps->speed + hitEnt->s.speed) * 0.5f, pushDir);
+							VectorScale(bounceDir, (pm->ps->speed + hit_ent->s.speed) * 0.5f, push_dir);
 						}
 #else
-						VectorScale(bounceDir, (pm->ps->speed + hitEnt->s.speed) * 0.5f, bounceDir);
+						VectorScale(bounceDir, (pm->ps->speed + hit_ent->s.speed) * 0.5f, bounceDir);
 #endif
-						VectorScale(pushDir, (l / pSelfVeh->m_pVehicleInfo->mass), pushDir);
-						VectorScale(pushDir, 0.1f, pushDir);
+						VectorScale(push_dir, (l / pSelfVeh->m_pVehicleInfo->mass), push_dir);
+						VectorScale(push_dir, 0.1f, push_dir);
 					}
 					VectorNormalize2(pm->ps->velocity, moveDir);
 					float bounceDot = DotProduct(moveDir, bounceDir) * -1;
@@ -276,8 +276,8 @@ void PM_VehicleImpact(bgEntity_t* pEnt, trace_t* trace)
 					{
 						bounceDot = 0.1f;
 					}
-					VectorScale(pushDir, bounceDot, pushDir);
-					VectorAdd(pm->ps->velocity, pushDir, pm->ps->velocity);
+					VectorScale(push_dir, bounceDot, push_dir);
+					VectorAdd(pm->ps->velocity, push_dir, pm->ps->velocity);
 					//turn
 					float turnDivider = (pSelfVeh->m_pVehicleInfo->mass / 400.0f);
 					if (turnHitEnt)
@@ -352,27 +352,27 @@ void PM_VehicleImpact(bgEntity_t* pEnt, trace_t* trace)
 					*/
 #ifdef _GAME//server-side, turn the guy we hit away from us, too
 					if (turnHitEnt//make the other guy turn and get pushed
-						&& hitEnt->client //must be a valid client
-						&& !FighterIsLanded(hitEnt->m_pVehicle, &hitEnt->client->ps)//but not if landed
-						&& !(hitEnt->spawnflags & 2))//and not if suspended
+						&& hit_ent->client //must be a valid client
+						&& !FighterIsLanded(hit_ent->m_pVehicle, &hit_ent->client->ps)//but not if landed
+						&& !(hit_ent->spawnflags & 2))//and not if suspended
 					{
-						l = hitEnt->client->ps.speed;
+						l = hit_ent->client->ps.speed;
 						//now bounce *them* away and turn them
 						//flip the bounceDir
 						VectorScale(bounceDir, -1, bounceDir);
 						//do bounce
-						VectorScale(bounceDir, (pm->ps->speed + l) * 0.5f, pushDir);
-						VectorScale(pushDir, (l * 0.5f / hitEnt->m_pVehicle->m_pVehicleInfo->mass), pushDir);
-						VectorNormalize2(hitEnt->client->ps.velocity, moveDir);
+						VectorScale(bounceDir, (pm->ps->speed + l) * 0.5f, push_dir);
+						VectorScale(push_dir, (l * 0.5f / hit_ent->m_pVehicle->m_pVehicleInfo->mass), push_dir);
+						VectorNormalize2(hit_ent->client->ps.velocity, moveDir);
 						bounceDot = DotProduct(moveDir, bounceDir) * -1;
 						if (bounceDot < 0.1f)
 						{
 							bounceDot = 0.1f;
 						}
-						VectorScale(pushDir, bounceDot, pushDir);
-						VectorAdd(hitEnt->client->ps.velocity, pushDir, hitEnt->client->ps.velocity);
+						VectorScale(push_dir, bounceDot, push_dir);
+						VectorAdd(hit_ent->client->ps.velocity, push_dir, hit_ent->client->ps.velocity);
 						//turn
-						turnDivider = (hitEnt->m_pVehicle->m_pVehicleInfo->mass / 400.0f);
+						turnDivider = (hit_ent->m_pVehicle->m_pVehicleInfo->mass / 400.0f);
 						if (turnHitEnt)
 						{//don't turn as much when hit another ship
 							turnDivider *= 4.0f;
@@ -384,7 +384,7 @@ void PM_VehicleImpact(bgEntity_t* pEnt, trace_t* trace)
 						//get the angles we are going to turn towards
 						vectoangles(bounceDir, turnAwayAngles);
 						//get the delta from our current angles to those new angles
-						AnglesSubtract(turnAwayAngles, hitEnt->m_pVehicle->m_vOrientation, turnDelta);
+						AnglesSubtract(turnAwayAngles, hit_ent->m_pVehicle->m_vOrientation, turnDelta);
 						//now do pitch
 						if (!bounceDir[2])
 						{//shouldn't be any pitch
@@ -400,8 +400,8 @@ void PM_VehicleImpact(bgEntity_t* pEnt, trace_t* trace)
 							{
 								pitchTurnStrength = -MAX_IMPACT_TURN_ANGLE;
 							}
-							//hitEnt->m_pVehicle->m_vOrientation[PITCH] = AngleNormalize180(hitEnt->m_pVehicle->m_vOrientation[PITCH]+pitchTurnStrength/turnDivider*pSelfVeh->m_fTimeModifier);
-							hitEnt->m_pVehicle->m_vFullAngleVelocity[PITCH] = AngleNormalize180(hitEnt->m_pVehicle->m_vOrientation[PITCH] + pitchTurnStrength / turnDivider * pSelfVeh->m_fTimeModifier);
+							//hit_ent->m_pVehicle->m_vOrientation[PITCH] = AngleNormalize180(hit_ent->m_pVehicle->m_vOrientation[PITCH]+pitchTurnStrength/turnDivider*pSelfVeh->m_fTimeModifier);
+							hit_ent->m_pVehicle->m_vFullAngleVelocity[PITCH] = AngleNormalize180(hit_ent->m_pVehicle->m_vOrientation[PITCH] + pitchTurnStrength / turnDivider * pSelfVeh->m_fTimeModifier);
 						}
 						//now do yaw
 						if (!bounceDir[0]
@@ -419,19 +419,19 @@ void PM_VehicleImpact(bgEntity_t* pEnt, trace_t* trace)
 							{
 								yawTurnStrength = -MAX_IMPACT_TURN_ANGLE;
 							}
-							//hitEnt->m_pVehicle->m_vOrientation[ROLL] = AngleNormalize180(hitEnt->m_pVehicle->m_vOrientation[ROLL]-yawTurnStrength/turnDivider*pSelfVeh->m_fTimeModifier);
-							hitEnt->m_pVehicle->m_vFullAngleVelocity[ROLL] = AngleNormalize180(hitEnt->m_pVehicle->m_vOrientation[ROLL] - yawTurnStrength / turnDivider * pSelfVeh->m_fTimeModifier);
+							//hit_ent->m_pVehicle->m_vOrientation[ROLL] = AngleNormalize180(hit_ent->m_pVehicle->m_vOrientation[ROLL]-yawTurnStrength/turnDivider*pSelfVeh->m_fTimeModifier);
+							hit_ent->m_pVehicle->m_vFullAngleVelocity[ROLL] = AngleNormalize180(hit_ent->m_pVehicle->m_vOrientation[ROLL] - yawTurnStrength / turnDivider * pSelfVeh->m_fTimeModifier);
 						}
 						//NOTE: will these angle changes stick or will they be stomped
 						//		when the vehicle goes through its own update and re-grabs
 						//		its angles from its pilot...?  Should we do a
 						//		SetClientViewAngles on the pilot?
 						/*
-						SetClientViewAngle( hitEnt, hitEnt->m_pVehicle->m_vOrientation );
-						if ( hitEnt->m_pVehicle->m_pPilot
-							&& ((gentity_t *)hitEnt->m_pVehicle->m_pPilot)->client )
+						SetClientViewAngle( hit_ent, hit_ent->m_pVehicle->m_vOrientation );
+						if ( hit_ent->m_pVehicle->m_pPilot
+							&& ((gentity_t *)hit_ent->m_pVehicle->m_pPilot)->client )
 						{
-							SetClientViewAngle( (gentity_t *)hitEnt->m_pVehicle->m_pPilot, hitEnt->m_pVehicle->m_vOrientation );
+							SetClientViewAngle( (gentity_t *)hit_ent->m_pVehicle->m_pPilot, hit_ent->m_pVehicle->m_vOrientation );
 						}
 						*/
 					}
@@ -440,7 +440,7 @@ void PM_VehicleImpact(bgEntity_t* pEnt, trace_t* trace)
 			}
 
 #ifdef _GAME
-			if (!hitEnt)
+			if (!hit_ent)
 			{
 				return;
 			}
@@ -455,7 +455,7 @@ void PM_VehicleImpact(bgEntity_t* pEnt, trace_t* trace)
 			pEnt->m_pVehicle->m_iHitDebounce = pm->cmd.serverTime + 200;
 			magnitude /= pSelfVeh->m_pVehicleInfo->toughness * 50.0f;
 
-			if (hitEnt && (hitEnt->s.eType != ET_TERRAIN || !(hitEnt->spawnflags & 1) || pSelfVeh->m_pVehicleInfo->type == VH_FIGHTER))
+			if (hit_ent && (hit_ent->s.eType != ET_TERRAIN || !(hit_ent->spawnflags & 1) || pSelfVeh->m_pVehicleInfo->type == VH_FIGHTER))
 			{ //don't damage the vehicle from terrain that doesn't want to damage vehicles
 				if (pSelfVeh->m_pVehicleInfo->type == VH_FIGHTER)
 				{ //increase the damage...
@@ -464,12 +464,12 @@ void PM_VehicleImpact(bgEntity_t* pEnt, trace_t* trace)
 					{
 						mult = 1.0f;
 					}
-					if (hitEnt->inuse && hitEnt->takedamage)
+					if (hit_ent->inuse && hit_ent->takedamage)
 					{ //if the other guy takes damage, don't hurt us a lot for ramming him
 						//unless it's a vehicle, then we get 1.5 times damage
-						if (hitEnt->s.eType == ET_NPC &&
-							hitEnt->s.NPC_class == CLASS_VEHICLE &&
-							hitEnt->m_pVehicle)
+						if (hit_ent->s.eType == ET_NPC &&
+							hit_ent->s.NPC_class == CLASS_VEHICLE &&
+							hit_ent->m_pVehicle)
 						{
 							mult = 1.5f;
 						}
@@ -494,15 +494,15 @@ void PM_VehicleImpact(bgEntity_t* pEnt, trace_t* trace)
 				pSelfVeh->m_ulFlags |= VEH_CRASHING;
 			}
 
-			if (hitEnt &&
-				hitEnt->inuse &&
-				hitEnt->takedamage)
+			if (hit_ent &&
+				hit_ent->inuse &&
+				hit_ent->takedamage)
 			{ //damage this guy because we hit him
 				float pmult = 1.0f;
 				gentity_t* attackEnt;
 
-				if ((hitEnt->s.eType == ET_PLAYER && hitEnt->s.number < MAX_CLIENTS) ||
-					(hitEnt->s.eType == ET_NPC && hitEnt->s.NPC_class != CLASS_VEHICLE))
+				if ((hit_ent->s.eType == ET_PLAYER && hit_ent->s.number < MAX_CLIENTS) ||
+					(hit_ent->s.eType == ET_NPC && hit_ent->s.NPC_class != CLASS_VEHICLE))
 				{ //probably a humanoid, or something
 					if (pSelfVeh->m_pVehicleInfo->type == VH_FIGHTER)
 					{ //player die good.. if me fighter
@@ -513,25 +513,25 @@ void PM_VehicleImpact(bgEntity_t* pEnt, trace_t* trace)
 						pmult = 40.0f;
 					}
 
-					if (hitEnt->client &&
-						BG_KnockDownable(&hitEnt->client->ps) &&
-						G_CanBeEnemy((gentity_t*)pEnt, hitEnt))
+					if (hit_ent->client &&
+						BG_KnockDownable(&hit_ent->client->ps) &&
+						G_CanBeEnemy((gentity_t*)pEnt, hit_ent))
 					{ //smash!
-						if (hitEnt->client->ps.forceHandExtend != HANDEXTEND_KNOCKDOWN)
+						if (hit_ent->client->ps.forceHandExtend != HANDEXTEND_KNOCKDOWN)
 						{
-							hitEnt->client->ps.forceHandExtend = HANDEXTEND_KNOCKDOWN;
-							hitEnt->client->ps.forceHandExtendTime = pm->cmd.serverTime + 1100;
-							hitEnt->client->ps.forceDodgeAnim = 0; //this toggles between 1 and 0, when it's 1 we should play the get up anim
+							hit_ent->client->ps.forceHandExtend = HANDEXTEND_KNOCKDOWN;
+							hit_ent->client->ps.forceHandExtendTime = pm->cmd.serverTime + 1100;
+							hit_ent->client->ps.forceDodgeAnim = 0; //this toggles between 1 and 0, when it's 1 we should play the get up anim
 						}
 
-						hitEnt->client->ps.otherKiller = pEnt->s.number;
-						hitEnt->client->ps.otherKillerTime = pm->cmd.serverTime + 5000;
-						hitEnt->client->ps.otherKillerDebounceTime = pm->cmd.serverTime + 100;
+						hit_ent->client->ps.otherKiller = pEnt->s.number;
+						hit_ent->client->ps.otherKillerTime = pm->cmd.serverTime + 5000;
+						hit_ent->client->ps.otherKillerDebounceTime = pm->cmd.serverTime + 100;
 
 						//add my velocity into his to force him along in the correct direction from impact
-						VectorAdd(hitEnt->client->ps.velocity, pm->ps->velocity, hitEnt->client->ps.velocity);
+						VectorAdd(hit_ent->client->ps.velocity, pm->ps->velocity, hit_ent->client->ps.velocity);
 						//upward thrust
-						hitEnt->client->ps.velocity[2] += 200.0f;
+						hit_ent->client->ps.velocity[2] += 200.0f;
 					}
 				}
 
@@ -549,13 +549,13 @@ void PM_VehicleImpact(bgEntity_t* pEnt, trace_t* trace)
 				{
 					finalD = 1;
 				}
-				G_Damage(hitEnt, attackEnt, attackEnt, NULL, pm->ps->origin, finalD, 0, MOD_MELEE);//FIXME: MOD_IMPACT
+				G_Damage(hit_ent, attackEnt, attackEnt, NULL, pm->ps->origin, finalD, 0, MOD_MELEE);//FIXME: MOD_IMPACT
 			}
 #else	//this is gonna result in "double effects" for the client doing the prediction.
 			//it doesn't look bad though. could just use predicted events, but I'm too lazy.
-			hitEnt = PM_BGEntForNum(trace->entityNum);
+			hit_ent = PM_BGEntForNum(trace->entityNum);
 
-			if (!hitEnt || hitEnt->s.owner != pEnt->s.number)
+			if (!hit_ent || hit_ent->s.owner != pEnt->s.number)
 			{ //don't hit your own missiles!
 				AngleVectors(pSelfVeh->m_vOrientation, NULL, NULL, vehUp);
 				pEnt->m_pVehicle->m_iHitDebounce = pm->cmd.serverTime + 200;

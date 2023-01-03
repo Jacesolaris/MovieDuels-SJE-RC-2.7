@@ -119,16 +119,16 @@ static void GM_CreateExplosion(gentity_t* self, const int bolt_id, qboolean do_s
 {
 	if (bolt_id >= 0)
 	{
-		mdxaBone_t	boltMatrix;
+		mdxaBone_t	bolt_matrix;
 		vec3_t		org, dir;
 
 		trap->G2API_GetBoltMatrix(self->ghoul2, 0,
 			bolt_id,
-			&boltMatrix, self->r.currentAngles, self->r.currentOrigin, level.time,
+			&bolt_matrix, self->r.currentAngles, self->r.currentOrigin, level.time,
 			NULL, self->modelScale);
 
-		BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, org);
-		BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_Y, dir);
+		BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, org);
+		BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Y, dir);
 
 		if (do_small)
 		{
@@ -853,10 +853,10 @@ void NPC_BSGM_Attack(void)
 			else
 			{
 				const int hit = NPC_ShotEntity(NPCS.NPC->enemy, impactPos4);
-				const gentity_t* hitEnt = &g_entities[hit];
+				const gentity_t* hit_ent = &g_entities[hit];
 				if (hit == NPCS.NPC->enemy->s.number
-					|| (hitEnt && hitEnt->client && hitEnt->client->playerTeam == NPCS.NPC->client->enemyTeam)
-					|| (hitEnt && hitEnt->takedamage))
+					|| (hit_ent && hit_ent->client && hit_ent->client->playerTeam == NPCS.NPC->client->enemyTeam)
+					|| (hit_ent && hit_ent->takedamage))
 				{//can hit enemy or will hit glass or other breakable, so shoot anyway
 					enemyCS4 = qtrue;
 					NPC_AimAdjust(2);//adjust aim better longer we have clear shot at enemy
@@ -865,7 +865,7 @@ void NPC_BSGM_Attack(void)
 				else
 				{//Hmm, have to get around this bastard
 					NPC_AimAdjust(1);//adjust aim better longer we can see enemy
-					if (hitEnt && hitEnt->client && hitEnt->client->playerTeam == NPCS.NPC->client->playerTeam)
+					if (hit_ent && hit_ent->client && hit_ent->client->playerTeam == NPCS.NPC->client->playerTeam)
 					{//would hit an ally, don't fire!!!
 						hitAlly4 = qtrue;
 					}
@@ -912,10 +912,10 @@ void NPC_BSGM_Attack(void)
 		NPCS.NPCInfo->enemyLastSeenTime = level.time;
 
 		const int hit = NPC_ShotEntity(NPCS.NPC->enemy, impactPos4);
-		const gentity_t* hitEnt = &g_entities[hit];
+		const gentity_t* hit_ent = &g_entities[hit];
 		if (hit == NPCS.NPC->enemy->s.number
-			|| (hitEnt && hitEnt->client && hitEnt->client->playerTeam == NPCS.NPC->client->enemyTeam)
-			|| (hitEnt && hitEnt->takedamage))
+			|| (hit_ent && hit_ent->client && hit_ent->client->playerTeam == NPCS.NPC->client->enemyTeam)
+			|| (hit_ent && hit_ent->takedamage))
 		{//can hit enemy or will hit glass or other breakable, so shoot anyway
 			enemyCS4 = qtrue;
 		}

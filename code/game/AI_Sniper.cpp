@@ -173,13 +173,13 @@ static qboolean Sniper_Move()
 		{
 			//we were running after enemy
 			//Try to find a combat point that can hit the enemy
-			int cpFlags = CP_CLEAR | CP_HAS_ROUTE;
+			int cp_flags = CP_CLEAR | CP_HAS_ROUTE;
 			if (NPCInfo->scriptFlags & SCF_USE_CP_NEAREST)
 			{
-				cpFlags &= ~(CP_FLANK | CP_APPROACH_ENEMY | CP_CLOSEST);
-				cpFlags |= CP_NEAREST;
+				cp_flags &= ~(CP_FLANK | CP_APPROACH_ENEMY | CP_CLOSEST);
+				cp_flags |= CP_NEAREST;
 			}
-			int cp = NPC_FindCombatPoint(NPC->currentOrigin, NPC->currentOrigin, NPC->currentOrigin, cpFlags, 32);
+			int cp = NPC_FindCombatPoint(NPC->currentOrigin, NPC->currentOrigin, NPC->currentOrigin, cp_flags, 32);
 			if (cp == -1 && !(NPCInfo->scriptFlags & SCF_USE_CP_NEAREST))
 			{
 				//okay, try one by the enemy

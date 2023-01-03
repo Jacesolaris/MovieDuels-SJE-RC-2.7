@@ -85,7 +85,7 @@ typedef struct npcStatic_s {
 extern npcStatic_t NPCS;
 
 //AI_Default
-extern qboolean NPC_CheckInvestigate(int alertEventNum);
+extern qboolean NPC_CheckInvestigate(int alert_event_num);
 extern qboolean NPC_StandTrackAndShoot(const gentity_t* npc, qboolean can_duck);
 extern void NPC_BSIdle(void);
 extern void NPC_BSPointShoot(qboolean shoot);
@@ -109,8 +109,8 @@ extern void NPC_BSSearch(void);
 extern void NPC_BSSearchStart(int	homeWp, bState_t b_state);
 extern void NPC_BSWander(void);
 extern void NPC_BSFlee(void);
-extern void NPC_StartFlee(gentity_t* enemy, vec3_t dangerPoint, int dangerLevel, int fleeTimeMin, int fleeTimeMax);
-extern void G_StartFlee(gentity_t* self, gentity_t* enemy, vec3_t dangerPoint, int dangerLevel, int fleeTimeMin, int fleeTimeMax);
+extern void NPC_StartFlee(gentity_t* enemy, vec3_t danger_point, int danger_level, int flee_time_min, int flee_time_max);
+extern void G_StartFlee(gentity_t* self, gentity_t* enemy, vec3_t danger_point, int danger_level, int flee_time_min, int flee_time_max);
 
 //NPC_combat
 extern int ChooseBestWeapon(void);

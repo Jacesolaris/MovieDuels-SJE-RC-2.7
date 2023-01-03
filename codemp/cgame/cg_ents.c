@@ -580,7 +580,7 @@ void G2_BoltToGhoul2Model(centity_t* cent, refEntity_t* ent)
 	int modelNum = cent->boltInfo >> MODEL_SHIFT;
 	int boltNum = cent->boltInfo >> BOLT_SHIFT;
 	int	entNum = cent->boltInfo >> ENTITY_SHIFT;
-	mdxaBone_t 		boltMatrix;
+	mdxaBone_t 		bolt_matrix;
 
 	modelNum &= MODEL_AND;
 	boltNum &= BOLT_AND;
@@ -590,24 +590,24 @@ void G2_BoltToGhoul2Model(centity_t* cent, refEntity_t* ent)
 	assert(0);
 
 	// go away and get me the bolt position for this frame please
-	trap->G2API_GetBoltMatrix(cent->ghoul2, modelNum, boltNum, &boltMatrix, cg_entities[entNum].currentState.angles, cg_entities[entNum].currentState.origin, cg.time, cgs.gameModels, cent->modelScale);
+	trap->G2API_GetBoltMatrix(cent->ghoul2, modelNum, boltNum, &bolt_matrix, cg_entities[entNum].currentState.angles, cg_entities[entNum].currentState.origin, cg.time, cgs.gameModels, cent->modelScale);
 
 	// set up the axis and origin we need for the actual effect spawning
-	ent->origin[0] = boltMatrix.matrix[0][3];
-	ent->origin[1] = boltMatrix.matrix[1][3];
-	ent->origin[2] = boltMatrix.matrix[2][3];
+	ent->origin[0] = bolt_matrix.matrix[0][3];
+	ent->origin[1] = bolt_matrix.matrix[1][3];
+	ent->origin[2] = bolt_matrix.matrix[2][3];
 
-	ent->axis[0][0] = boltMatrix.matrix[0][0];
-	ent->axis[0][1] = boltMatrix.matrix[1][0];
-	ent->axis[0][2] = boltMatrix.matrix[2][0];
+	ent->axis[0][0] = bolt_matrix.matrix[0][0];
+	ent->axis[0][1] = bolt_matrix.matrix[1][0];
+	ent->axis[0][2] = bolt_matrix.matrix[2][0];
 
-	ent->axis[1][0] = boltMatrix.matrix[0][1];
-	ent->axis[1][1] = boltMatrix.matrix[1][1];
-	ent->axis[1][2] = boltMatrix.matrix[2][1];
+	ent->axis[1][0] = bolt_matrix.matrix[0][1];
+	ent->axis[1][1] = bolt_matrix.matrix[1][1];
+	ent->axis[1][2] = bolt_matrix.matrix[2][1];
 
-	ent->axis[2][0] = boltMatrix.matrix[0][2];
-	ent->axis[2][1] = boltMatrix.matrix[1][2];
-	ent->axis[2][2] = boltMatrix.matrix[2][2];
+	ent->axis[2][0] = bolt_matrix.matrix[0][2];
+	ent->axis[2][1] = bolt_matrix.matrix[1][2];
+	ent->axis[2][2] = bolt_matrix.matrix[2][2];
 }
 
 void ScaleModelAxis(refEntity_t* ent)
@@ -682,14 +682,14 @@ void CG_Disintegration(centity_t* cent, refEntity_t* ent)
 	if (cg.time - ent->endTime < 1000 && (timescale.value * timescale.value * Q_flrand(0.0f, 1.0f)) > 0.05f)
 	{
 		vec3_t fxOrg, fxDir;
-		mdxaBone_t	boltMatrix;
+		mdxaBone_t	bolt_matrix;
 		const int torsoBolt = trap->G2API_AddBolt(cent->ghoul2, 0, "lower_lumbar");
 
 		VectorSet(fxDir, 0, 1, 0);
 
-		trap->G2API_GetBoltMatrix(cent->ghoul2, 0, torsoBolt, &boltMatrix, cent->lerpAngles, cent->lerpOrigin, cg.time,
+		trap->G2API_GetBoltMatrix(cent->ghoul2, 0, torsoBolt, &bolt_matrix, cent->lerpAngles, cent->lerpOrigin, cg.time,
 			cgs.gameModels, cent->modelScale);
-		BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, fxOrg);
+		BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, fxOrg);
 
 		VectorMA(fxOrg, -18, cg.refdef.viewaxis[0], fxOrg);
 		fxOrg[2] += Q_flrand(-1.0f, 1.0f) * 20;
@@ -707,7 +707,7 @@ static qboolean CG_RenderTimeEntBolt(centity_t* cent)
 {
 	const int client_num = cent->currentState.boltToPlayer - 1;
 	mdxaBone_t matrix;
-	vec3_t boltOrg, boltAng;
+	vec3_t bolt_org, boltAng;
 
 	if (client_num >= MAX_CLIENTS || client_num < 0)
 	{
@@ -734,12 +734,12 @@ static qboolean CG_RenderTimeEntBolt(centity_t* cent)
 
 	trap->G2API_GetBoltMatrix(cl->ghoul2, 0, getBolt, &matrix, cl->turAngles, cl->lerpOrigin, cg.time, cgs.gameModels, cl->modelScale);
 
-	BG_GiveMeVectorFromMatrix(&matrix, ORIGIN, boltOrg);
+	BG_GiveMeVectorFromMatrix(&matrix, ORIGIN, bolt_org);
 	BG_GiveMeVectorFromMatrix(&matrix, NEGATIVE_Y, boltAng);
 	vectoangles(boltAng, boltAng);
 	boltAng[PITCH] = boltAng[ROLL] = 0;
 
-	VectorCopy(boltOrg, cent->lerpOrigin);
+	VectorCopy(bolt_org, cent->lerpOrigin);
 	VectorCopy(boltAng, cent->lerpAngles);
 
 	return qtrue;
@@ -1179,14 +1179,14 @@ static void CG_General(centity_t* cent) {
 			newBolt = trap->G2API_AddBolt(cent->ghoul2, 0, limbTagName);
 			if (newBolt != -1)
 			{
-				vec3_t boltOrg, boltAng;
+				vec3_t bolt_org, boltAng;
 
 				trap->G2API_GetBoltMatrix(cent->ghoul2, 0, newBolt, &matrix, cent->lerpAngles, cent->lerpOrigin, cg.time, cgs.gameModels, cent->modelScale);
 
-				BG_GiveMeVectorFromMatrix(&matrix, ORIGIN, boltOrg);
+				BG_GiveMeVectorFromMatrix(&matrix, ORIGIN, bolt_org);
 				BG_GiveMeVectorFromMatrix(&matrix, NEGATIVE_Y, boltAng);
 
-				trap->FX_PlayEffectID(cgs.effects.mBlasterSmoke, boltOrg, boltAng, -1, -1, qfalse);
+				trap->FX_PlayEffectID(cgs.effects.mBlasterSmoke, bolt_org, boltAng, -1, -1, qfalse);
 			}
 
 			cent->bolt4 = newBolt;
@@ -1203,14 +1203,14 @@ static void CG_General(centity_t* cent) {
 			newBolt = trap->G2API_AddBolt(clEnt->ghoul2, 0, stubTagName);
 			if (newBolt != -1)
 			{
-				vec3_t boltOrg, boltAng;
+				vec3_t bolt_org, boltAng;
 
 				trap->G2API_GetBoltMatrix(clEnt->ghoul2, 0, newBolt, &matrix, clEnt->lerpAngles, clEnt->lerpOrigin, cg.time, cgs.gameModels, clEnt->modelScale);
 
-				BG_GiveMeVectorFromMatrix(&matrix, ORIGIN, boltOrg);
+				BG_GiveMeVectorFromMatrix(&matrix, ORIGIN, bolt_org);
 				BG_GiveMeVectorFromMatrix(&matrix, NEGATIVE_Y, boltAng);
 
-				trap->FX_PlayEffectID(cgs.effects.mBlasterSmoke, boltOrg, boltAng, -1, -1, qfalse);
+				trap->FX_PlayEffectID(cgs.effects.mBlasterSmoke, bolt_org, boltAng, -1, -1, qfalse);
 			}
 
 			if (cent->currentState.modelGhoul2 == G2_MODELPART_RARM || cent->currentState.modelGhoul2 == G2_MODELPART_RHAND || cent->currentState.modelGhoul2 == G2_MODELPART_WAIST)
@@ -1260,18 +1260,18 @@ static void CG_General(centity_t* cent) {
 			if (cent->bolt4 != -1 &&
 				(cent->currentState.pos.trDelta[0] || cent->currentState.pos.trDelta[1] || cent->currentState.pos.trDelta[2]))
 			{
-				vec3_t boltOrg, boltAng;
+				vec3_t bolt_org, boltAng;
 
 				trap->G2API_GetBoltMatrix(cent->ghoul2, 0, cent->bolt4, &matrix, cent->lerpAngles, cent->lerpOrigin, cg.time, cgs.gameModels, cent->modelScale);
 
-				BG_GiveMeVectorFromMatrix(&matrix, ORIGIN, boltOrg);
+				BG_GiveMeVectorFromMatrix(&matrix, ORIGIN, bolt_org);
 				BG_GiveMeVectorFromMatrix(&matrix, NEGATIVE_Y, boltAng);
 
 				if (!boltAng[0] && !boltAng[1] && !boltAng[2])
 				{
 					boltAng[1] = 1;
 				}
-				trap->FX_PlayEffectID(cgs.effects.mBlasterSmoke, boltOrg, boltAng, -1, -1, qfalse);
+				trap->FX_PlayEffectID(cgs.effects.mBlasterSmoke, bolt_org, boltAng, -1, -1, qfalse);
 
 				cent->trailTime = cg.time + 400;
 			}

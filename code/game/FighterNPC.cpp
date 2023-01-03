@@ -602,15 +602,15 @@ static void ProcessMoveCommands(Vehicle_t* pVeh)
 						pVeh->m_pParentEntity->ghoul2 &&
 						pVeh->m_pParentEntity->playerState)
 					{ //fine, I'll use a tempent for this, but only because it's played only once at the start of a turbo.
-						vec3_t boltOrg, boltDir;
-						mdxaBone_t boltMatrix;
+						vec3_t bolt_org, boltDir;
+						mdxaBone_t bolt_matrix;
 
 						VectorSet(boltDir, 0.0f, pVeh->m_pParentEntity->playerState->viewangles[YAW], 0.0f);
 
-						trap_G2API_GetBoltMatrix(pVeh->m_pParentEntity->ghoul2, 0, pVeh->m_iExhaustTag[i], &boltMatrix, boltDir, pVeh->m_pParentEntity->playerState->origin, level.time, nullptr, pVeh->m_pParentEntity->modelScale);
-						BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, boltOrg);
-						BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, boltDir);
-						G_PlayEffectID(pVeh->m_pVehicleInfo->iTurboStartFX, boltOrg, boltDir);
+						trap_G2API_GetBoltMatrix(pVeh->m_pParentEntity->ghoul2, 0, pVeh->m_iExhaustTag[i], &bolt_matrix, boltDir, pVeh->m_pParentEntity->playerState->origin, level.time, nullptr, pVeh->m_pParentEntity->modelScale);
+						BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, bolt_org);
+						BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, boltDir);
+						G_PlayEffectID(pVeh->m_pVehicleInfo->iTurboStartFX, bolt_org, boltDir);
 					}
 #endif
 #endif

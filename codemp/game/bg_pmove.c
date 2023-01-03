@@ -1105,18 +1105,18 @@ static void PM_Accelerate(vec3_t wishdir, float wishspeed, float accel)
 	else
 	{ //use the proper way for siege
 		vec3_t		wishVelocity;
-		vec3_t		pushDir;
+		vec3_t		push_dir;
 
 		VectorScale(wishdir, wishspeed, wishVelocity);
-		VectorSubtract(wishVelocity, pm->ps->velocity, pushDir);
-		const float pushLen = VectorNormalize(pushDir);
+		VectorSubtract(wishVelocity, pm->ps->velocity, push_dir);
+		const float pushLen = VectorNormalize(push_dir);
 
 		float canPush = accel * pml.frametime * wishspeed;
 		if (canPush > pushLen) {
 			canPush = pushLen;
 		}
 
-		VectorMA(pm->ps->velocity, canPush, pushDir, pm->ps->velocity);
+		VectorMA(pm->ps->velocity, canPush, push_dir, pm->ps->velocity);
 	}
 }
 
@@ -4588,22 +4588,22 @@ void PM_FootSlopeTrace(float* p_diff, float* p_interval)
 
 	trace_t	trace;
 
-	mdxaBone_t	boltMatrix;
+	mdxaBone_t	bolt_matrix;
 	vec3_t		G2Angles;
 
 	VectorSet(G2Angles, 0, pm->ps->viewangles[YAW], 0);
 
 	const float interval = 4;//?
 
-	trap->G2API_GetBoltMatrix(pm->ghoul2, 0, pm->g2Bolts_LFoot, &boltMatrix, G2Angles, pm->ps->origin, pm->cmd.serverTime, NULL, pm->modelScale);
-	footLPoint[0] = boltMatrix.matrix[0][3];
-	footLPoint[1] = boltMatrix.matrix[1][3];
-	footLPoint[2] = boltMatrix.matrix[2][3];
+	trap->G2API_GetBoltMatrix(pm->ghoul2, 0, pm->g2Bolts_LFoot, &bolt_matrix, G2Angles, pm->ps->origin, pm->cmd.serverTime, NULL, pm->modelScale);
+	footLPoint[0] = bolt_matrix.matrix[0][3];
+	footLPoint[1] = bolt_matrix.matrix[1][3];
+	footLPoint[2] = bolt_matrix.matrix[2][3];
 
-	trap->G2API_GetBoltMatrix(pm->ghoul2, 0, pm->g2Bolts_RFoot, &boltMatrix, G2Angles, pm->ps->origin, pm->cmd.serverTime, NULL, pm->modelScale);
-	footRPoint[0] = boltMatrix.matrix[0][3];
-	footRPoint[1] = boltMatrix.matrix[1][3];
-	footRPoint[2] = boltMatrix.matrix[2][3];
+	trap->G2API_GetBoltMatrix(pm->ghoul2, 0, pm->g2Bolts_RFoot, &bolt_matrix, G2Angles, pm->ps->origin, pm->cmd.serverTime, NULL, pm->modelScale);
+	footRPoint[0] = bolt_matrix.matrix[0][3];
+	footRPoint[1] = bolt_matrix.matrix[1][3];
+	footRPoint[2] = bolt_matrix.matrix[2][3];
 
 	//get these on the cgame and store it, save ourselves a ghoul2 construct skel call
 	VectorCopy(footLPoint, footLOrg);
@@ -8842,22 +8842,22 @@ static void BG_G2ClientSpineAngles(void* ghoul2, int motionBolt, vec3_t cent_ler
 	if (doCorr)
 	{//FIXME: no need to do this if legs and torso on are same frame
 		//adjust for motion offset
-		mdxaBone_t	boltMatrix;
+		mdxaBone_t	bolt_matrix;
 		vec3_t		motionFwd, motionAngles;
 		vec3_t		motionRt, tempAng;
 
-		trap->G2API_GetBoltMatrix_NoRecNoRot(ghoul2, 0, motionBolt, &boltMatrix, vec3_origin, cent_lerpOrigin, time, 0, modelScale);
-		//BG_GiveMeVectorFromMatrix( &boltMatrix, NEGATIVE_Y, motionFwd );
-		motionFwd[0] = -boltMatrix.matrix[0][1];
-		motionFwd[1] = -boltMatrix.matrix[1][1];
-		motionFwd[2] = -boltMatrix.matrix[2][1];
+		trap->G2API_GetBoltMatrix_NoRecNoRot(ghoul2, 0, motionBolt, &bolt_matrix, vec3_origin, cent_lerpOrigin, time, 0, modelScale);
+		//BG_GiveMeVectorFromMatrix( &bolt_matrix, NEGATIVE_Y, motionFwd );
+		motionFwd[0] = -bolt_matrix.matrix[0][1];
+		motionFwd[1] = -bolt_matrix.matrix[1][1];
+		motionFwd[2] = -bolt_matrix.matrix[2][1];
 
 		vectoangles(motionFwd, motionAngles);
 
-		//BG_GiveMeVectorFromMatrix( &boltMatrix, NEGATIVE_X, motionRt );
-		motionRt[0] = -boltMatrix.matrix[0][0];
-		motionRt[1] = -boltMatrix.matrix[1][0];
-		motionRt[2] = -boltMatrix.matrix[2][0];
+		//BG_GiveMeVectorFromMatrix( &bolt_matrix, NEGATIVE_X, motionRt );
+		motionRt[0] = -bolt_matrix.matrix[0][0];
+		motionRt[1] = -bolt_matrix.matrix[1][0];
+		motionRt[2] = -bolt_matrix.matrix[2][0];
 
 		vectoangles(motionRt, tempAng);
 		motionAngles[ROLL] = -tempAng[PITCH];

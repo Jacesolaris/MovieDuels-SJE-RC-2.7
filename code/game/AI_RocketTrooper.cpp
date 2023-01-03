@@ -526,17 +526,17 @@ void RT_Flying_MaintainHeight()
 		{
 			TIMER_Set(NPC, "heightChange", Q_irand(1000, 3000));
 
-			float enemyZHeight = NPC->enemy->currentOrigin[2];
+			float enemy_z_height = NPC->enemy->currentOrigin[2];
 			if (NPC->enemy->client
 				&& NPC->enemy->client->ps.groundEntityNum == ENTITYNUM_NONE
 				&& NPC->enemy->client->ps.forcePowersActive & 1 << FP_LEVITATION)
 			{
 				//so we don't go up when they force jump up at us
-				enemyZHeight = NPC->enemy->client->ps.forceJumpZStart;
+				enemy_z_height = NPC->enemy->client->ps.forceJumpZStart;
 			}
 
 			// Find the height difference
-			dif = enemyZHeight + Q_flrand(NPC->enemy->maxs[2] / 2, NPC->enemy->maxs[2] + 8) - NPC->currentOrigin[2];
+			dif = enemy_z_height + Q_flrand(NPC->enemy->maxs[2] / 2, NPC->enemy->maxs[2] + 8) - NPC->currentOrigin[2];
 
 			constexpr float dif_factor = 10.0f;
 

@@ -1014,7 +1014,7 @@ extern gentity_t* G_CheckControlledTurretEnemy(const gentity_t* self, gentity_t*
 
 int NPC_FindNearestEnemy(const gentity_t* ent)
 {
-	gentity_t* radiusEnts[MAX_RADIUS_ENTS];
+	gentity_t* radius_ents[MAX_RADIUS_ENTS];
 	vec3_t mins, maxs;
 	int nearestEntID = -1;
 	float nearestDist = static_cast<float>(WORLD_SIZE) * static_cast<float>(WORLD_SIZE);
@@ -1029,11 +1029,11 @@ int NPC_FindNearestEnemy(const gentity_t* ent)
 	}
 
 	//Get a number of entities in a given space
-	const int numEnts = gi.EntitiesInBox(mins, maxs, radiusEnts, MAX_RADIUS_ENTS);
+	const int num_ents = gi.EntitiesInBox(mins, maxs, radius_ents, MAX_RADIUS_ENTS);
 
-	for (i = 0; i < numEnts; i++)
+	for (i = 0; i < num_ents; i++)
 	{
-		const gentity_t* nearest = G_CheckControlledTurretEnemy(ent, radiusEnts[i], qtrue);
+		const gentity_t* nearest = G_CheckControlledTurretEnemy(ent, radius_ents[i], qtrue);
 
 		//Don't consider self
 		if (nearest == ent)
@@ -1454,28 +1454,28 @@ void G_CheckCharmed(gentity_t* self)
 	}
 }
 
-void G_GetBoltPosition(gentity_t* self, const int boltIndex, vec3_t pos, const int modelIndex = 0)
+void G_GetBoltPosition(gentity_t* self, const int bolt_index, vec3_t pos, const int modelIndex = 0)
 {
 	if (!self || !self->ghoul2.size())
 	{
 		return;
 	}
-	mdxaBone_t boltMatrix;
+	mdxaBone_t bolt_matrix;
 	const vec3_t angles = {0, self->currentAngles[YAW], 0};
 
 	gi.G2API_GetBoltMatrix(self->ghoul2, modelIndex,
-	                       boltIndex,
-	                       &boltMatrix, angles, self->currentOrigin, cg.time ? cg.time : level.time,
+	                       bolt_index,
+	                       &bolt_matrix, angles, self->currentOrigin, cg.time ? cg.time : level.time,
 	                       nullptr, self->s.modelScale);
 	if (pos)
 	{
 		vec3_t result;
-		gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, result);
+		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, result);
 		VectorCopy(result, pos);
 	}
 }
 
-float NPC_EntRangeFromBolt(const gentity_t* targEnt, const int boltIndex)
+float NPC_EntRangeFromBolt(const gentity_t* targEnt, const int bolt_index)
 {
 	vec3_t org = {0.0f};
 
@@ -1484,41 +1484,41 @@ float NPC_EntRangeFromBolt(const gentity_t* targEnt, const int boltIndex)
 		return Q3_INFINITE;
 	}
 
-	G_GetBoltPosition(NPC, boltIndex, org);
+	G_GetBoltPosition(NPC, bolt_index, org);
 
 	return Distance(targEnt->currentOrigin, org);
 }
 
-float NPC_EnemyRangeFromBolt(const int boltIndex)
+float NPC_EnemyRangeFromBolt(const int bolt_index)
 {
-	return NPC_EntRangeFromBolt(NPC->enemy, boltIndex);
+	return NPC_EntRangeFromBolt(NPC->enemy, bolt_index);
 }
 
-int G_GetEntsNearBolt(gentity_t* self, gentity_t** radiusEnts, const float radius, const int boltIndex, vec3_t boltOrg)
+int G_GetEntsNearBolt(gentity_t* self, gentity_t** radius_ents, const float radius, const int bolt_index, vec3_t bolt_org)
 {
 	vec3_t mins, maxs;
 
 	//get my handRBolt's position
 	vec3_t org = {0.0f};
 
-	G_GetBoltPosition(self, boltIndex, org);
+	G_GetBoltPosition(self, bolt_index, org);
 
-	VectorCopy(org, boltOrg);
+	VectorCopy(org, bolt_org);
 
 	//Setup the bbox to search in
 	for (int i = 0; i < 3; i++)
 	{
-		mins[i] = boltOrg[i] - radius;
-		maxs[i] = boltOrg[i] + radius;
+		mins[i] = bolt_org[i] - radius;
+		maxs[i] = bolt_org[i] + radius;
 	}
 
 	//Get the number of entities in a given space
-	return gi.EntitiesInBox(mins, maxs, radiusEnts, 128);
+	return gi.EntitiesInBox(mins, maxs, radius_ents, 128);
 }
 
-int NPC_GetEntsNearBolt(gentity_t** radiusEnts, const float radius, const int boltIndex, vec3_t boltOrg)
+int NPC_GetEntsNearBolt(gentity_t** radius_ents, const float radius, const int bolt_index, vec3_t bolt_org)
 {
-	return G_GetEntsNearBolt(NPC, radiusEnts, radius, boltIndex, boltOrg);
+	return G_GetEntsNearBolt(NPC, radius_ents, radius, bolt_index, bolt_org);
 }
 
 extern qboolean RT_Flying(const gentity_t* self);

@@ -1413,46 +1413,46 @@ qboolean CG_CheckPassengerTurretView(void)
 				{// valid turret
 					if (vehCent->m_pVehicle->m_pVehicleInfo->turret[turretNum].passengerNum == cg.predictedPlayerState.generic1)
 					{//I control this turret
-						int boltIndex = -1;
+						int bolt_index = -1;
 						qboolean hackPosAndAngle = qfalse;
 						if (vehCent->m_pVehicle->m_iGunnerViewTag[turretNum] != -1)
 						{
-							boltIndex = vehCent->m_pVehicle->m_iGunnerViewTag[turretNum];
+							bolt_index = vehCent->m_pVehicle->m_iGunnerViewTag[turretNum];
 						}
 						else
 						{//crap... guess?
 							hackPosAndAngle = qtrue;
 							if (vehCent->m_pVehicle->m_pVehicleInfo->turret[turretNum].yawBone)
 							{
-								boltIndex = trap->G2API_AddBolt(vehCent->ghoul2, 0, vehCent->m_pVehicle->m_pVehicleInfo->turret[turretNum].yawBone);
+								bolt_index = trap->G2API_AddBolt(vehCent->ghoul2, 0, vehCent->m_pVehicle->m_pVehicleInfo->turret[turretNum].yawBone);
 							}
 							else if (vehCent->m_pVehicle->m_pVehicleInfo->turret[turretNum].pitchBone)
 							{
-								boltIndex = trap->G2API_AddBolt(vehCent->ghoul2, 0, vehCent->m_pVehicle->m_pVehicleInfo->turret[turretNum].pitchBone);
+								bolt_index = trap->G2API_AddBolt(vehCent->ghoul2, 0, vehCent->m_pVehicle->m_pVehicleInfo->turret[turretNum].pitchBone);
 							}
 							else
 							{//well, no way of knowing, so screw it
 								return qfalse;
 							}
 						}
-						if (boltIndex != -1)
+						if (bolt_index != -1)
 						{
-							mdxaBone_t boltMatrix;
+							mdxaBone_t bolt_matrix;
 							vec3_t fwd, up;
-							trap->G2API_GetBoltMatrix_NoRecNoRot(vehCent->ghoul2, 0, boltIndex, &boltMatrix, vehCent->lerpAngles,
+							trap->G2API_GetBoltMatrix_NoRecNoRot(vehCent->ghoul2, 0, bolt_index, &bolt_matrix, vehCent->lerpAngles,
 								vehCent->lerpOrigin, cg.time, NULL, vehCent->modelScale);
-							BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, cg.refdef.vieworg);
+							BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, cg.refdef.vieworg);
 							if (hackPosAndAngle)
 							{
 								//FIXME: these are assumptions, externalize?  BETTER YET: give me a controller view bolt/tag for each turret
-								BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_X, fwd);
-								BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_Y, up);
+								BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_X, fwd);
+								BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Y, up);
 								VectorMA(cg.refdef.vieworg, 8.0f, fwd, cg.refdef.vieworg);
 								VectorMA(cg.refdef.vieworg, 4.0f, up, cg.refdef.vieworg);
 							}
 							else
 							{
-								BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_Y, fwd);
+								BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Y, fwd);
 							}
 							{
 								vec3_t	newAngles, deltaAngles;

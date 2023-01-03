@@ -38,7 +38,7 @@ constexpr auto TURN_OFF = 0x00000100;
 
 extern qboolean rosh_twin_present();
 extern void G_CheckCharmed(gentity_t* self);
-extern qboolean Wampa_CheckDropVictim(gentity_t* self, qboolean excludeMe);
+extern qboolean Wampa_CheckDropVictim(gentity_t* self, qboolean exclude_me);
 extern qboolean rocket_trooper_player(const gentity_t* self);
 
 extern int G_ShipSurfaceForSurfName(const char* surfaceName);
@@ -652,7 +652,7 @@ void G_AlertTeam(const gentity_t* victim, gentity_t* attacker, const float radiu
 		if (radius_ents[i]->NPC->scriptFlags & SCF_NO_GROUPS)
 			continue;
 
-		//Skip the requested avoid radiusEnts[i] if present
+		//Skip the requested avoid radius_ents[i] if present
 		if (radius_ents[i] == victim)
 			continue;
 
@@ -733,7 +733,7 @@ void DeathFX(const gentity_t* ent)
 	if (ent->m_pVehicle && ent->m_pVehicle->m_pVehicleInfo->type == VH_FIGHTER &&
 		ent->client && ent->client->ps.m_iVehicleNum)
 	{
-		//go into "die in ship" mode with flag todo
+		//go into "die in ship" mode with flag
 	}
 
 	if (jedi_cultist_destroyer(NPC))

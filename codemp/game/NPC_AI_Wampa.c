@@ -192,19 +192,19 @@ void Wampa_Move(qboolean visible)
 //---------------------------------------------------------
 extern void G_Knockdown(gentity_t* victim);
 extern void G_Dismember(gentity_t* ent, gentity_t* enemy, vec3_t point, int limbType, float limbRollBase, float limbPitchBase, int deathAnim, qboolean postDeath);
-extern int NPC_GetEntsNearBolt(int* radiusEnts, float radius, int boltIndex, vec3_t boltOrg);
+extern int NPC_GetEntsNearBolt(int* radius_ents, float radius, int bolt_index, vec3_t bolt_org);
 
-void Wampa_Slash(int boltIndex, qboolean backhand)
+void Wampa_Slash(int bolt_index, qboolean backhand)
 {
 	int			radiusEntNums[128];
 	const float	radius = 88;
 	const float	radiusSquared = (radius * radius);
-	vec3_t		boltOrg;
+	vec3_t		bolt_org;
 	const int			damage = (backhand) ? Q_irand(10, 15) : Q_irand(20, 30);
 
-	const int numEnts = NPC_GetEntsNearBolt(radiusEntNums, radius, boltIndex, boltOrg);
+	const int num_ents = NPC_GetEntsNearBolt(radiusEntNums, radius, bolt_index, bolt_org);
 
-	for (int i = 0; i < numEnts; i++)
+	for (int i = 0; i < num_ents; i++)
 	{
 		gentity_t* radiusEnt = &g_entities[radiusEntNums[i]];
 		if (!radiusEnt->inuse)
@@ -222,24 +222,24 @@ void Wampa_Slash(int boltIndex, qboolean backhand)
 			continue;
 		}
 
-		if (DistanceSquared(radiusEnt->r.currentOrigin, boltOrg) <= radiusSquared)
+		if (DistanceSquared(radiusEnt->r.currentOrigin, bolt_org) <= radiusSquared)
 		{
 			//smack
 			G_Damage(radiusEnt, NPCS.NPC, NPCS.NPC, vec3_origin, radiusEnt->r.currentOrigin, damage, ((backhand) ? DAMAGE_NO_ARMOR : (DAMAGE_NO_ARMOR | DAMAGE_NO_KNOCKBACK)), MOD_MELEE);
 			if (backhand)
 			{
 				//actually push the enemy
-				vec3_t pushDir;
+				vec3_t push_dir;
 				vec3_t angs;
 				VectorCopy(NPCS.NPC->client->ps.viewangles, angs);
 				angs[YAW] += flrand(25, 50);
 				angs[PITCH] = flrand(-25, -15);
-				AngleVectors(angs, pushDir, NULL, NULL);
+				AngleVectors(angs, push_dir, NULL, NULL);
 				if (radiusEnt->client->NPC_class != CLASS_WAMPA
 					&& radiusEnt->client->NPC_class != CLASS_RANCOR
 					&& radiusEnt->client->NPC_class != CLASS_ATST)
 				{
-					G_Throw(radiusEnt, pushDir, 65);
+					G_Throw(radiusEnt, push_dir, 65);
 					if (BG_KnockDownable(&radiusEnt->client->ps) &&
 						radiusEnt->health > 0 && Q_irand(0, 1))
 					{//do pain on enemy
@@ -268,12 +268,12 @@ void Wampa_Slash(int boltIndex, qboolean backhand)
 			}
 			else if (!Q_irand(0, 3) && radiusEnt->health > 0)
 			{//one out of every 4 normal hits does a knockdown, too
-				vec3_t pushDir;
+				vec3_t push_dir;
 				vec3_t angs;
 				VectorCopy(NPCS.NPC->client->ps.viewangles, angs);
 				angs[YAW] += flrand(25, 50);
 				angs[PITCH] = flrand(-25, -15);
-				AngleVectors(angs, pushDir, NULL, NULL);
+				AngleVectors(angs, push_dir, NULL, NULL);
 				G_Knockdown(radiusEnt);
 			}
 			G_Sound(radiusEnt, CHAN_WEAPON, G_SoundIndex("sound/chars/rancor/swipehit.wav"));
@@ -282,16 +282,16 @@ void Wampa_Slash(int boltIndex, qboolean backhand)
 }
 
 //------------------------------
-void Wampa_Attack(float distance, qboolean doCharge)
+void Wampa_Attack(float distance, qboolean do_charge)
 {
 	if (!TIMER_Exists(NPCS.NPC, "attacking"))
 	{
-		if (Q_irand(0, 2) && !doCharge)
+		if (Q_irand(0, 2) && !do_charge)
 		{//double slash
 			NPC_SetAnim(NPCS.NPC, SETANIM_BOTH, BOTH_ATTACK1, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 			TIMER_Set(NPCS.NPC, "attack_dmg", 750);
 		}
-		else if (doCharge || (distance > 270 && distance < 430 && !Q_irand(0, 1)))
+		else if (do_charge || (distance > 270 && distance < 430 && !Q_irand(0, 1)))
 		{//leap
 			vec3_t	fwd, yawAng;
 			VectorSet(yawAng, 0, NPCS.NPC->client->ps.viewangles[YAW], 0);

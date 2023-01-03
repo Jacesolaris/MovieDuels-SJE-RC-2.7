@@ -254,8 +254,8 @@ void multi_trigger(gentity_t* ent, gentity_t* activator)
 		}
 
 		//Count up the number of clients standing within the bounds of the trigger and the number of them on each team
-		const int numEnts = trap->EntitiesInBox(ent->r.absmin, ent->r.absmax, entityList, MAX_GENTITIES);
-		while (i < numEnts)
+		const int num_ents = trap->EntitiesInBox(ent->r.absmin, ent->r.absmax, entityList, MAX_GENTITIES);
+		while (i < num_ents)
 		{
 			if (entityList[i] < MAX_CLIENTS)
 			{

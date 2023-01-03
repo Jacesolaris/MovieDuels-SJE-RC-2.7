@@ -41,11 +41,11 @@ AI_GetGroupSize
 -------------------------
 */
 
-int AI_GetGroupSize(vec3_t origin, const int radius, const team_t playerTeam, const gentity_t* avoid)
+int AI_GetGroupSize(vec3_t origin, const int radius, const team_t player_team, const gentity_t* avoid)
 {
-	gentity_t* radiusEnts[MAX_RADIUS_ENTS];
+	gentity_t* radius_ents[MAX_RADIUS_ENTS];
 	vec3_t mins, maxs;
-	int realCount = 0;
+	int real_count = 0;
 
 	//Setup the bbox to search in
 	for (int i = 0; i < 3; i++)
@@ -55,31 +55,31 @@ int AI_GetGroupSize(vec3_t origin, const int radius, const team_t playerTeam, co
 	}
 
 	//Get the number of entities in a given space
-	const int numEnts = gi.EntitiesInBox(mins, maxs, radiusEnts, MAX_RADIUS_ENTS);
+	const int num_ents = gi.EntitiesInBox(mins, maxs, radius_ents, MAX_RADIUS_ENTS);
 
 	//Cull this list
-	for (int j = 0; j < numEnts; j++)
+	for (int j = 0; j < num_ents; j++)
 	{
 		//Validate clients
-		if (radiusEnts[j]->client == nullptr)
+		if (radius_ents[j]->client == nullptr)
 			continue;
 
 		//Skip the requested avoid ent if present
-		if (avoid != nullptr && radiusEnts[j] == avoid)
+		if (avoid != nullptr && radius_ents[j] == avoid)
 			continue;
 
 		//Must be on the same team
-		if (radiusEnts[j]->client->playerTeam != playerTeam)
+		if (radius_ents[j]->client->playerTeam != player_team)
 			continue;
 
 		//Must be alive
-		if (radiusEnts[j]->health <= 0)
+		if (radius_ents[j]->health <= 0)
 			continue;
 
-		realCount++;
+		real_count++;
 	}
 
-	return realCount;
+	return real_count;
 }
 
 //Overload
@@ -98,14 +98,14 @@ void AI_SetClosestBuddy(AIGroupInfo_t* group)
 	{
 		group->member[i].closestBuddy = ENTITYNUM_NONE;
 
-		int bestDist = Q3_INFINITE;
+		int best_dist = Q3_INFINITE;
 		for (int j = 0; j < group->numGroup; j++)
 		{
 			const int dist = DistanceSquared(g_entities[group->member[i].number].currentOrigin,
 			                                 g_entities[group->member[j].number].currentOrigin);
-			if (dist < bestDist)
+			if (dist < best_dist)
 			{
-				bestDist = dist;
+				best_dist = dist;
 				group->member[i].closestBuddy = group->member[j].number;
 			}
 		}
@@ -155,35 +155,35 @@ void AI_SortGroupByPathCostToEnemy(AIGroupInfo_t* group)
 	if (sort)
 	{
 		int j;
-		AIGroupMember_t bestMembers[MAX_GROUP_MEMBERS];
+		AIGroupMember_t best_members[MAX_GROUP_MEMBERS];
 		//initialize bestMembers data
 		for (j = 0; j < group->numGroup; j++)
 		{
-			bestMembers[j].number = ENTITYNUM_NONE;
+			best_members[j].number = ENTITYNUM_NONE;
 		}
 
 		for (i = 0; i < group->numGroup; i++)
 		{
 			for (j = 0; j < group->numGroup; j++)
 			{
-				if (bestMembers[j].number != ENTITYNUM_NONE)
+				if (best_members[j].number != ENTITYNUM_NONE)
 				{
 					//slot occupied
-					if (group->member[i].pathCostToEnemy < bestMembers[j].pathCostToEnemy)
+					if (group->member[i].pathCostToEnemy < best_members[j].pathCostToEnemy)
 					{
 						//this guy has a shorter path than the one currenly in this spot, bump him and put myself in here
 						for (int k = group->numGroup; k > j; k++)
 						{
-							memcpy(&bestMembers[k], &bestMembers[k - 1], sizeof bestMembers[k]);
+							memcpy(&best_members[k], &best_members[k - 1], sizeof best_members[k]);
 						}
-						memcpy(&bestMembers[j], &group->member[i], sizeof bestMembers[j]);
+						memcpy(&best_members[j], &group->member[i], sizeof best_members[j]);
 						break;
 					}
 				}
 				else
 				{
 					//slot unoccupied, reached end of list, throw self in here
-					memcpy(&bestMembers[j], &group->member[i], sizeof bestMembers[j]);
+					memcpy(&best_members[j], &group->member[i], sizeof best_members[j]);
 					break;
 				}
 			}
@@ -192,7 +192,7 @@ void AI_SortGroupByPathCostToEnemy(AIGroupInfo_t* group)
 		//Okay, now bestMembers is a sorted list, just copy it into group->members
 		for (i = 0; i < group->numGroup; i++)
 		{
-			memcpy(&group->member[i], &bestMembers[i], sizeof group->member[i]);
+			memcpy(&group->member[i], &best_members[i], sizeof group->member[i]);
 		}
 	}
 }
@@ -531,25 +531,6 @@ void AI_GetGroup(gentity_t* self)
 		}
 	}
 
-	/*
-	//now go through waiters and see if any should join the group
-	//NOTE:  Some should hang back and probably not attack, so we can ambush
-	//NOTE: only do this if calling for reinforcements?
-	for ( i = 0; i < numWaiters; i++ )
-	{
-		waiter = &g_entities[waiters[i]];
-
-		for ( j = 0; j < self->NPC->group->numGroup; j++ )
-		{
-			member = &g_entities[self->NPC->group->member[j];
-
-			if ( gi.inPVS( waiter->currentOrigin, member->currentOrigin ) )
-			{//this waiter is within PVS of a current member
-			}
-		}
-	}
-	*/
-
 	if (self->NPC->group->numGroup <= 0)
 	{
 		//none in group
@@ -577,21 +558,21 @@ void AI_SetNewGroupCommander(AIGroupInfo_t* group)
 	}
 }
 
-void AI_DeleteGroupMember(AIGroupInfo_t* group, const int memberNum)
+void AI_DeleteGroupMember(AIGroupInfo_t* group, const int member_num)
 {
-	if (group->commander && group->commander->s.number == group->member[memberNum].number)
+	if (group->commander && group->commander->s.number == group->member[member_num].number)
 	{
 		group->commander = nullptr;
 	}
-	if (g_entities[group->member[memberNum].number].NPC)
+	if (g_entities[group->member[member_num].number].NPC)
 	{
-		g_entities[group->member[memberNum].number].NPC->group = nullptr;
+		g_entities[group->member[member_num].number].NPC->group = nullptr;
 	}
-	for (int i = memberNum; i < group->numGroup - 1; i++)
+	for (int i = member_num; i < group->numGroup - 1; i++)
 	{
 		memcpy(&group->member[i], &group->member[i + 1], sizeof group->member[i]);
 	}
-	if (memberNum < group->activeMemberNum)
+	if (member_num < group->activeMemberNum)
 	{
 		group->activeMemberNum--;
 		if (group->activeMemberNum < 0)
@@ -732,11 +713,11 @@ void AI_GroupUpdateClearShotTime(AIGroupInfo_t* group)
 	group->lastClearShotTime = level.time;
 }
 
-void AI_GroupUpdateSquadstates(AIGroupInfo_t* group, const gentity_t* member, const int newSquadState)
+void AI_GroupUpdateSquadstates(AIGroupInfo_t* group, const gentity_t* member, const int new_squad_state)
 {
 	if (!group)
 	{
-		member->NPC->squadState = newSquadState;
+		member->NPC->squadState = new_squad_state;
 		return;
 	}
 
@@ -745,7 +726,7 @@ void AI_GroupUpdateSquadstates(AIGroupInfo_t* group, const gentity_t* member, co
 		if (group->member[i].number == member->s.number)
 		{
 			group->numState[member->NPC->squadState]--;
-			member->NPC->squadState = newSquadState;
+			member->NPC->squadState = new_squad_state;
 			group->numState[member->NPC->squadState]++;
 			return;
 		}
@@ -949,7 +930,7 @@ qboolean AI_RefreshGroup(AIGroupInfo_t* group)
 	return static_cast<qboolean>(group->numGroup > 0);
 }
 
-void AI_UpdateGroups(void)
+void AI_UpdateGroups()
 {
 	if (d_noGroupAI->integer)
 	{
@@ -965,7 +946,7 @@ void AI_UpdateGroups(void)
 	}
 }
 
-qboolean AI_GroupContainsEntNum(const AIGroupInfo_t* group, const int entNum)
+qboolean AI_GroupContainsEntNum(const AIGroupInfo_t* group, const int ent_num)
 {
 	if (!group)
 	{
@@ -973,7 +954,7 @@ qboolean AI_GroupContainsEntNum(const AIGroupInfo_t* group, const int entNum)
 	}
 	for (int i = 0; i < group->numGroup; i++)
 	{
-		if (group->member[i].number == entNum)
+		if (group->member[i].number == ent_num)
 		{
 			return qtrue;
 		}
@@ -1019,7 +1000,7 @@ gentity_t* AI_DistributeAttack(const gentity_t* attacker, gentity_t* enemy, cons
 	if (NPC->svFlags & SVF_LOCKEDENEMY)
 		return enemy;
 
-	const int numSurrounding = AI_GetGroupSize(enemy->currentOrigin, 48, team, attacker);
+	const int num_surrounding = AI_GetGroupSize(enemy->currentOrigin, 48, team, attacker);
 
 	//First, see if we should look for the player
 	if (enemy != &g_entities[0])
@@ -1034,7 +1015,7 @@ gentity_t* AI_DistributeAttack(const gentity_t* attacker, gentity_t* enemy, cons
 	}
 
 	//See if our current enemy is still ok
-	if (numSurrounding < threshold)
+	if (num_surrounding < threshold)
 		return enemy;
 
 	//Otherwise we need to take a new enemy if possible
@@ -1048,34 +1029,34 @@ gentity_t* AI_DistributeAttack(const gentity_t* attacker, gentity_t* enemy, cons
 	}
 
 	//Get the number of entities in a given space
-	gentity_t* radiusEnts[MAX_RADIUS_ENTS];
+	gentity_t* radius_ents[MAX_RADIUS_ENTS];
 
-	const int numEnts = gi.EntitiesInBox(mins, maxs, radiusEnts, MAX_RADIUS_ENTS);
+	const int num_ents = gi.EntitiesInBox(mins, maxs, radius_ents, MAX_RADIUS_ENTS);
 
 	//Cull this list
-	for (int j = 0; j < numEnts; j++)
+	for (int j = 0; j < num_ents; j++)
 	{
 		//Validate clients
-		if (radiusEnts[j]->client == nullptr)
+		if (radius_ents[j]->client == nullptr)
 			continue;
 
 		//Skip the requested avoid ent if present
-		if (radiusEnts[j] == enemy)
+		if (radius_ents[j] == enemy)
 			continue;
 
 		//Must be on the same team
-		if (radiusEnts[j]->client->playerTeam != enemy->client->playerTeam)
+		if (radius_ents[j]->client->playerTeam != enemy->client->playerTeam)
 			continue;
 
 		//Must be alive
-		if (radiusEnts[j]->health <= 0)
+		if (radius_ents[j]->health <= 0)
 			continue;
 
 		//Must not be overwhelmed
-		if (AI_GetGroupSize(radiusEnts[j]->currentOrigin, 48, team, attacker) > threshold)
+		if (AI_GetGroupSize(radius_ents[j]->currentOrigin, 48, team, attacker) > threshold)
 			continue;
 
-		return radiusEnts[j];
+		return radius_ents[j];
 	}
 
 	return nullptr;

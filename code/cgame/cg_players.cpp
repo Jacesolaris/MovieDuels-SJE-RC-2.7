@@ -3797,11 +3797,11 @@ static qboolean CG_PlayerShadow(const centity_t* cent, float* const shadow_plane
 	//If it has an animOffset it's a cinematic anim
 	{
 		//i might be running out of my bounding box, so get my root origin
-		mdxaBone_t boltMatrix;
+		mdxaBone_t bolt_matrix;
 		gi.G2API_GetBoltMatrix(cent->gent->ghoul2, cent->gent->playerModel, cent->gent->rootBone,
-		                       &boltMatrix, temp_angles, cent->lerpOrigin,
+		                       &bolt_matrix, temp_angles, cent->lerpOrigin,
 		                       cg.time, cgs.model_draw, cent->currentState.modelScale);
-		gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, root_origin);
+		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, root_origin);
 	}
 	else
 	{
@@ -6889,7 +6889,7 @@ void CG_SaberDoWeaponHitMarks(const gclient_t* client, const gentity_t* saber_en
 		float size;
 		int weapon_mark_shader = 0, mark_shader = cgs.media.bdecal_saberglowmark;
 
-		//First: do mark decal on hitEnt
+		//First: do mark decal on hit_ent
 		if (WP_SaberBladeUseSecondBladeStyle(&client->ps.saber[saber_num], blade_num))
 		{
 			if (client->ps.saber[saber_num].g2MarksShader2[0])
@@ -13032,7 +13032,7 @@ static void CG_AddSaberBladeGo(centity_t* cent, centity_t* scent, const int rend
 			CG_PlayEffectIDBolted(cent->gent->client->ps.saber[saber_num].bladeEffect2, model_index, bolt,
 			                      scent->currentState.client_num, scent->lerpOrigin, -1, qfalse);
 		}
-		//get the boltMatrix
+		//get the bolt_matrix
 		gi.G2API_GetBoltMatrix(scent->gent->ghoul2, model_index, bolt, &bolt_matrix, angles, origin, cg.time,
 		                       cgs.model_draw, scent->currentState.modelScale);
 
@@ -14893,11 +14893,11 @@ void CG_Player(centity_t* cent)
 			centity_t* veh_ent = &cg_entities[cent->gent->owner->s.number];
 			CG_CalcEntityLerpPositions(veh_ent);
 			// Get the driver tag.
-			mdxaBone_t boltMatrix;
+			mdxaBone_t bolt_matrix;
 			gi.G2API_GetBoltMatrix(veh_ent->gent->ghoul2, veh_ent->gent->playerModel, veh_ent->gent->crotchBolt,
-			                       &boltMatrix, veh_ent->lerpAngles, veh_ent->lerpOrigin,
+			                       &bolt_matrix, veh_ent->lerpAngles, veh_ent->lerpOrigin,
 			                       cg.time ? cg.time : level.time, nullptr, veh_ent->currentState.modelScale);
-			gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, ent.origin);
+			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, ent.origin);
 
 			float sav_pitch = cent->lerpAngles[PITCH];
 			VectorCopy(veh_ent->lerpAngles, cent->lerpAngles);

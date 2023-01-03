@@ -5111,7 +5111,7 @@ qboolean WP_SaberDamageForTrace(const int ignore, vec3_t start, vec3_t end, floa
 					|| !Q_stricmp("Yoda", hit_ent->NPC_type)
 					|| hit_ent->client->NPC_class == CLASS_LUKE
 					|| hit_ent->client->NPC_class == CLASS_BOBAFETT
-					//|| hitEnt->client->NPC_class == CLASS_MANDALORIAN
+					//|| hit_ent->client->NPC_class == CLASS_MANDALORIAN
 					|| hit_ent->client->NPC_class == CLASS_JANGO
 					|| hit_ent->client->NPC_class == CLASS_JANGODUAL
 					|| hit_ent->client->NPC_class == CLASS_GALAKMECH && hit_ent->client->ps.powerups[PW_GALAK_SHIELD] >
@@ -5167,7 +5167,7 @@ qboolean WP_SaberDamageForTrace(const int ignore, vec3_t start, vec3_t end, floa
 #ifndef FINAL_BUILD
 				if (d_saberCombat->integer > 1)
 				{
-					if (!(hitEnt->contents & CONTENTS_LIGHTSABER))
+					if (!(hit_ent->contents & CONTENTS_LIGHTSABER))
 					{
 						gi.Printf(S_COLOR_GREEN"Hit ent, but no ghoul collisions\n");
 					}
@@ -27127,7 +27127,7 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 					}
 					else
 					{
-						vec3_t pushDir;
+						vec3_t push_dir;
 						//shove them
 						if (push_list[x]->NPC
 							&& push_list[x]->NPC->jumpState == JS_JUMPING)
@@ -27158,7 +27158,7 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 						}
 						if (pull)
 						{
-							VectorSubtract(self->currentOrigin, push_list[x]->currentOrigin, pushDir);
+							VectorSubtract(self->currentOrigin, push_list[x]->currentOrigin, push_dir);
 							if (self->client->ps.forcePowerLevel[FP_PULL] >= FORCE_LEVEL_3
 								&& self->client->NPC_class == CLASS_KYLE
 								&& self->spawnflags & 1
@@ -27170,7 +27170,7 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 								&& !PM_InOnGroundAnim(&push_list[x]->client->ps))
 							{
 								vec3_t throwVec;
-								VectorScale(pushDir, 10.0f, throwVec);
+								VectorScale(push_dir, 10.0f, throwVec);
 								WP_SaberLose(push_list[x], throwVec);
 								NPC_SetAnim(push_list[x], SETANIM_BOTH, BOTH_LOSE_SABER,
 									SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
@@ -27220,10 +27220,10 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 									push_list[x]->client->ps.viewangles, 0.0f))
 								{
 									//enemy has to be facing me, too...
-									WP_DropWeapon(push_list[x], pushDir);
+									WP_DropWeapon(push_list[x], push_dir);
 								}
 							}
-							knockback += VectorNormalize(pushDir);
+							knockback += VectorNormalize(push_dir);
 							if (knockback > 200)
 							{
 								knockback = 200;
@@ -27236,8 +27236,8 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 						}
 						else
 						{
-							VectorSubtract(push_list[x]->currentOrigin, self->currentOrigin, pushDir);
-							knockback -= VectorNormalize(pushDir);
+							VectorSubtract(push_list[x]->currentOrigin, self->currentOrigin, push_dir);
+							knockback -= VectorNormalize(push_dir);
 							if (knockback < 100)
 							{
 								knockback = 100;
@@ -27296,7 +27296,7 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 							}
 						}
 						//actually push/pull the enemy
-						G_Throw(push_list[x], pushDir, knockback);
+						G_Throw(push_list[x], push_dir, knockback);
 						//make it so they don't actually hurt me when pulled at me...
 						push_list[x]->forcePuller = self->s.number;
 

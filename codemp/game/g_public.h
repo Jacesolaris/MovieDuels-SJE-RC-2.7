@@ -1049,9 +1049,9 @@ typedef struct gameImport_s {
 	void		(*G2API_ListModelSurfaces)				(void* ghlInfo);
 	qboolean(*G2API_HaveWeGhoul2Models)				(void* ghoul2);
 	void		(*G2API_SetGhoul2ModelIndexes)			(void* ghoul2, qhandle_t* modelList, qhandle_t* skinList);
-	qboolean(*G2API_GetBoltMatrix)					(void* ghoul2, const int modelIndex, const int boltIndex, mdxaBone_t* matrix, const vec3_t angles, const vec3_t position, const int frameNum, qhandle_t* modelList, vec3_t scale);
-	qboolean(*G2API_GetBoltMatrix_NoReconstruct)	(void* ghoul2, const int modelIndex, const int boltIndex, mdxaBone_t* matrix, const vec3_t angles, const vec3_t position, const int frameNum, qhandle_t* modelList, vec3_t scale);
-	qboolean(*G2API_GetBoltMatrix_NoRecNoRot)		(void* ghoul2, const int modelIndex, const int boltIndex, mdxaBone_t* matrix, const vec3_t angles, const vec3_t position, const int frameNum, qhandle_t* modelList, vec3_t scale);
+	qboolean(*G2API_GetBoltMatrix)					(void* ghoul2, const int modelIndex, const int bolt_index, mdxaBone_t* matrix, const vec3_t angles, const vec3_t position, const int frameNum, qhandle_t* modelList, vec3_t scale);
+	qboolean(*G2API_GetBoltMatrix_NoReconstruct)	(void* ghoul2, const int modelIndex, const int bolt_index, mdxaBone_t* matrix, const vec3_t angles, const vec3_t position, const int frameNum, qhandle_t* modelList, vec3_t scale);
+	qboolean(*G2API_GetBoltMatrix_NoRecNoRot)		(void* ghoul2, const int modelIndex, const int bolt_index, mdxaBone_t* matrix, const vec3_t angles, const vec3_t position, const int frameNum, qhandle_t* modelList, vec3_t scale);
 	int			(*G2API_InitGhoul2Model)				(void** ghoul2Ptr, const char* fileName, int modelIndex, qhandle_t customSkin, qhandle_t customShader, int modelFlags, int lodBias);
 	qboolean(*G2API_SetSkin)						(void* ghoul2, int modelIndex, qhandle_t customSkin, qhandle_t renderSkin);
 	int			(*G2API_Ghoul2Size)						(void* ghlInfo);
@@ -1072,7 +1072,7 @@ typedef struct gameImport_s {
 	void		(*G2API_CollisionDetectCache)			(CollisionRecord_t* collRecMap, void* ghoul2, const vec3_t angles, const vec3_t position, int frameNumber, int entNum, vec3_t rayStart, vec3_t rayEnd, vec3_t scale, int traceFlags, int use_lod, float fRadius);
 	qboolean(*G2API_SetRootSurface)					(void* ghoul2, const int modelIndex, const char* surfaceName);
 	qboolean(*G2API_SetSurfaceOnOff)				(void* ghoul2, const char* surfaceName, const int flags);
-	qboolean(*G2API_SetNewOrigin)					(void* ghoul2, const int boltIndex);
+	qboolean(*G2API_SetNewOrigin)					(void* ghoul2, const int bolt_index);
 	qboolean(*G2API_DoesBoneExist)					(void* ghoul2, int modelIndex, const char* boneName);
 	int			(*G2API_GetSurfaceRenderStatus)			(void* ghoul2, const int modelIndex, const char* surfaceName);
 	void		(*G2API_AbsurdSmoothing)				(void* ghoul2, qboolean status);

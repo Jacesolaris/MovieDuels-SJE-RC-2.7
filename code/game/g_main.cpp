@@ -323,7 +323,7 @@ extern qboolean InFront(vec3_t spot, vec3_t from, vec3_t fromAngles, float thres
 
 void G_RunFrame(int levelTime);
 void ClearNPCGlobals();
-extern void AI_UpdateGroups(void);
+extern void AI_UpdateGroups();
 
 void ClearPlayerAlertEvents();
 extern void NPC_ShowDebugInfo();
@@ -1937,7 +1937,7 @@ qboolean G_RagDoll(gentity_t* ent, vec3_t forcedAngles)
 			vec3_t tAng;
 			//qboolean deathDone = qfalse;
 			trace_t tr;
-			mdxaBone_t boltMatrix;
+			mdxaBone_t bolt_matrix;
 
 			VectorSet(tAng, 0, ent->client->ps.viewangles[YAW], 0);
 
@@ -1959,10 +1959,10 @@ qboolean G_RagDoll(gentity_t* ent, vec3_t forcedAngles)
 			boltChecks[4] = gi.G2API_AddBolt(&ent->ghoul2[ent->playerModel], "ltalus");
 
 			//Do the head first, because the hands reference it anyway.
-			gi.G2API_GetBoltMatrix(ent->ghoul2, ent->playerModel, boltChecks[2], &boltMatrix, tAng,
+			gi.G2API_GetBoltMatrix(ent->ghoul2, ent->playerModel, boltChecks[2], &bolt_matrix, tAng,
 			                       ent->client->ps.origin, cg.time ? cg.time : level.time, nullptr,
 			                       ent->s.modelScale);
-			gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, boltPoints[2]);
+			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, boltPoints[2]);
 
 			while (i < 5)
 			{
@@ -1971,10 +1971,10 @@ qboolean G_RagDoll(gentity_t* ent, vec3_t forcedAngles)
 				if (i < 2)
 				{
 					//when doing hands, trace to the head instead of origin
-					gi.G2API_GetBoltMatrix(ent->ghoul2, ent->playerModel, boltChecks[i], &boltMatrix, tAng,
+					gi.G2API_GetBoltMatrix(ent->ghoul2, ent->playerModel, boltChecks[i], &bolt_matrix, tAng,
 					                       ent->client->ps.origin, cg.time ? cg.time : level.time, nullptr,
 					                       ent->s.modelScale);
-					gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, boltPoints[i]);
+					gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, boltPoints[i]);
 					VectorCopy(boltPoints[i], trStart);
 					VectorCopy(boltPoints[2], trEnd);
 				}
@@ -1983,10 +1983,10 @@ qboolean G_RagDoll(gentity_t* ent, vec3_t forcedAngles)
 					if (i > 2)
 					{
 						//2 is the head, which already has the bolt point.
-						gi.G2API_GetBoltMatrix(ent->ghoul2, ent->playerModel, boltChecks[i], &boltMatrix, tAng,
+						gi.G2API_GetBoltMatrix(ent->ghoul2, ent->playerModel, boltChecks[i], &bolt_matrix, tAng,
 						                       ent->client->ps.origin, cg.time ? cg.time : level.time, nullptr,
 						                       ent->s.modelScale);
-						gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, boltPoints[i]);
+						gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, boltPoints[i]);
 					}
 					VectorCopy(boltPoints[i], trStart);
 					VectorCopy(ent->client->ps.origin, trEnd);

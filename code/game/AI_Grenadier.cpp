@@ -21,8 +21,6 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "b_local.h"
-#include "g_nav.h"
-#include "anims.h"
 #include "g_navigator.h"
 #include "g_functions.h"
 

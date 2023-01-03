@@ -1541,7 +1541,7 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 		{
 			//player driving an AT-ST
 			//SIGH... because we can't anticipate alt-fire, must calc muzzle here and now
-			mdxaBone_t boltMatrix;
+			mdxaBone_t bolt_matrix;
 			int bolt;
 
 			if (ent->client->ps.weapon == WP_ATST_MAIN)
@@ -1584,12 +1584,12 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 			{
 				yawOnlyAngles[YAW] = ent->client->ps.legsYaw;
 			}
-			gi.G2API_GetBoltMatrix(ent->ghoul2, ent->playerModel, bolt, &boltMatrix, yawOnlyAngles, ent->currentOrigin,
+			gi.G2API_GetBoltMatrix(ent->ghoul2, ent->playerModel, bolt, &bolt_matrix, yawOnlyAngles, ent->currentOrigin,
 			                       cg.time ? cg.time : level.time, nullptr, ent->s.modelScale);
 
 			// work the matrix axis stuff into the original axis and origins used.
-			gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, ent->client->renderInfo.muzzlePoint);
-			gi.G2API_GiveMeVectorFromMatrix(boltMatrix, NEGATIVE_Y, ent->client->renderInfo.muzzleDir);
+			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, ent->client->renderInfo.muzzlePoint);
+			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, NEGATIVE_Y, ent->client->renderInfo.muzzleDir);
 			ent->client->renderInfo.mPCalcTime = level.time;
 
 			AngleVectors(ent->client->ps.viewangles, forwardVec, vrightVec, up);

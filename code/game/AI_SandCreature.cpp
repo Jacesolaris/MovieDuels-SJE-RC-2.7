@@ -460,7 +460,7 @@ void SandCreature_CheckMovingEnts()
 			continue;
 		}
 		/*
-		if ( radiusEnts[i]->client && (radiusEnts[i]->client->NPC_class == CLASS_RANCOR || radiusEnts[i]->client->NPC_class == CLASS_ATST ) )
+		if ( radius_ents[i]->client && (radius_ents[i]->client->NPC_class == CLASS_RANCOR || radius_ents[i]->client->NPC_class == CLASS_ATST ) )
 		{//can't grab rancors or atst's
 			continue;
 		}
@@ -524,11 +524,11 @@ float SandCreature_DistSqToGoal(const qboolean goal_is_enemy)
 	}
 	else
 	{
-		vec3_t gOrg;
-		VectorCopy(NPCInfo->goalEntity->currentOrigin, gOrg);
-		gOrg[2] -= NPC->mins[2] - NPCInfo->goalEntity->mins[2];
+		vec3_t g_org;
+		VectorCopy(NPCInfo->goalEntity->currentOrigin, g_org);
+		g_org[2] -= NPC->mins[2] - NPCInfo->goalEntity->mins[2];
 		//moves the gOrg up/down to make it's origin seem at the proper height as if it had my mins
-		goalDistSq = DistanceSquared(NPC->currentOrigin, gOrg);
+		goalDistSq = DistanceSquared(NPC->currentOrigin, g_org);
 	}
 	return goalDistSq;
 }
@@ -587,16 +587,16 @@ void SandCreature_Chase()
 		}
 		else
 		{
-			float moveSpeed;
+			float move_speed;
 			if (NPC->enemy->client)
 			{
-				moveSpeed = VectorLengthSquared(NPC->enemy->client->ps.velocity);
+				move_speed = VectorLengthSquared(NPC->enemy->client->ps.velocity);
 			}
 			else
 			{
-				moveSpeed = VectorLengthSquared(NPC->enemy->s.pos.trDelta);
+				move_speed = VectorLengthSquared(NPC->enemy->s.pos.trDelta);
 			}
-			if (moveSpeed)
+			if (move_speed)
 			{
 				//he's still moving, update my goalEntity's origin
 				SandCreature_SeekEnt(NPC->enemy, 0);

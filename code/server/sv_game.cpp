@@ -526,10 +526,10 @@ static int SV_G2API_GetBoneIndex(CGhoul2Info* ghlInfo, const char* boneName, con
 }
 
 static qboolean SV_G2API_GetBoltMatrix(
-	CGhoul2Info_v& ghoul2, const int modelIndex, const int boltIndex, mdxaBone_t* matrix, const vec3_t angles,
+	CGhoul2Info_v& ghoul2, const int modelIndex, const int bolt_index, mdxaBone_t* matrix, const vec3_t angles,
 	const vec3_t position, const int AframeNum, qhandle_t* modelList, const vec3_t scale)
 {
-	return re.G2API_GetBoltMatrix(ghoul2, modelIndex, boltIndex, matrix, angles,
+	return re.G2API_GetBoltMatrix(ghoul2, modelIndex, bolt_index, matrix, angles,
 	                              position, AframeNum, modelList, scale);
 }
 
@@ -569,9 +569,9 @@ static int SV_G2API_GetSurfaceRenderStatus(CGhoul2Info* ghlInfo, const char* sur
 	return re.G2API_GetSurfaceRenderStatus(ghlInfo, surfaceName);
 }
 
-static void SV_G2API_GiveMeVectorFromMatrix(mdxaBone_t& boltMatrix, const Eorientations flags, vec3_t& vec)
+static void SV_G2API_GiveMeVectorFromMatrix(mdxaBone_t& bolt_matrix, const Eorientations flags, vec3_t& vec)
 {
-	re.G2API_GiveMeVectorFromMatrix(boltMatrix, flags, vec);
+	re.G2API_GiveMeVectorFromMatrix(bolt_matrix, flags, vec);
 }
 
 static qboolean SV_G2API_HaveWeGhoul2Models(CGhoul2Info_v& ghoul2)
@@ -760,9 +760,9 @@ static qboolean SV_G2API_SetLodBias(CGhoul2Info* ghlInfo, const int lodBias)
 	return re.G2API_SetLodBias(ghlInfo, lodBias);
 }
 
-static qboolean SV_G2API_SetNewOrigin(CGhoul2Info* ghlInfo, const int boltIndex)
+static qboolean SV_G2API_SetNewOrigin(CGhoul2Info* ghlInfo, const int bolt_index)
 {
-	return re.G2API_SetNewOrigin(ghlInfo, boltIndex);
+	return re.G2API_SetNewOrigin(ghlInfo, bolt_index);
 }
 
 static void SV_G2API_SetRagDoll(CGhoul2Info_v& ghoul2, CRagDollParams* parms)

@@ -962,19 +962,19 @@ static QINLINE void G_G2PlayerAngles(gentity_t* ent, matrix3_t legs, vec3_t legs
 
 			if (lHandBolt)
 			{
-				mdxaBone_t boltMatrix;
-				vec3_t boltOrg;
+				mdxaBone_t bolt_matrix;
+				vec3_t bolt_org;
 				vec3_t tAngles;
 
 				VectorCopy(other->client->ps.viewangles, tAngles);
 				tAngles[PITCH] = tAngles[ROLL] = 0;
 
-				trap->G2API_GetBoltMatrix(other->ghoul2, 0, lHandBolt, &boltMatrix, tAngles, other->client->ps.origin, level.time, 0, other->modelScale);
-				boltOrg[0] = boltMatrix.matrix[0][3];
-				boltOrg[1] = boltMatrix.matrix[1][3];
-				boltOrg[2] = boltMatrix.matrix[2][3];
+				trap->G2API_GetBoltMatrix(other->ghoul2, 0, lHandBolt, &bolt_matrix, tAngles, other->client->ps.origin, level.time, 0, other->modelScale);
+				bolt_org[0] = bolt_matrix.matrix[0][3];
+				bolt_org[1] = bolt_matrix.matrix[1][3];
+				bolt_org[2] = bolt_matrix.matrix[2][3];
 
-				BG_IK_MoveArm(ent->ghoul2, lHandBolt, level.time, &ent->s, ent->client->ps.torsoAnim/*BOTH_DEAD1*/, boltOrg, &ent->client->ikStatus,
+				BG_IK_MoveArm(ent->ghoul2, lHandBolt, level.time, &ent->s, ent->client->ps.torsoAnim/*BOTH_DEAD1*/, bolt_org, &ent->client->ikStatus,
 					ent->client->ps.origin, ent->client->ps.viewangles, ent->modelScale, 500, qfalse);
 			}
 		}
@@ -3595,7 +3595,7 @@ void WP_SaberRadiusDamage(gentity_t* ent, vec3_t point, float radius, int damage
 		return;
 	}
 	vec3_t		mins, maxs, entDir;
-	int			radiusEnts[128];
+	int			radius_ents[128];
 	int i;
 
 	//Setup the bbox to search in
@@ -3606,11 +3606,11 @@ void WP_SaberRadiusDamage(gentity_t* ent, vec3_t point, float radius, int damage
 	}
 
 	//Get the number of entities in a given space
-	const int numEnts = trap->EntitiesInBox(mins, maxs, radiusEnts, 128);
+	const int num_ents = trap->EntitiesInBox(mins, maxs, radius_ents, 128);
 
-	for (i = 0; i < numEnts; i++)
+	for (i = 0; i < num_ents; i++)
 	{
-		gentity_t* radiusEnt = &g_entities[radiusEnts[i]];
+		gentity_t* radiusEnt = &g_entities[radius_ents[i]];
 		if (!radiusEnt->inuse)
 		{
 			continue;
@@ -6913,7 +6913,7 @@ void saberFirstThrown(gentity_t* saberent);
 
 void thrownSaberTouch(gentity_t* saberent, gentity_t* other, trace_t* trace)
 {
-	gentity_t* hitEnt = other;
+	gentity_t* hit_ent = other;
 
 	if (other && other->s.number == saberent->r.ownerNum)
 	{
@@ -6937,11 +6937,11 @@ void thrownSaberTouch(gentity_t* saberent, gentity_t* other, trace_t* trace)
 		g_entities[other->r.ownerNum].client &&
 		g_entities[other->r.ownerNum].inuse)
 	{
-		hitEnt = &g_entities[other->r.ownerNum];
+		hit_ent = &g_entities[other->r.ownerNum];
 	}
 
 	//we'll skip the dist check, since we don't really care about that (we just hit it physically)
-	CheckThrownSaberDamaged(saberent, &g_entities[saberent->r.ownerNum], hitEnt, 256, 0, qtrue);
+	CheckThrownSaberDamaged(saberent, &g_entities[saberent->r.ownerNum], hit_ent, 256, 0, qtrue);
 
 	saberent->speed = 0;
 }
@@ -7091,7 +7091,7 @@ runMin:
 
 void UpdateClientRenderBolts(gentity_t* self, vec3_t renderOrigin, vec3_t renderAngles)
 {
-	mdxaBone_t boltMatrix;
+	mdxaBone_t bolt_matrix;
 	renderInfo_t* ri = &self->client->renderInfo;
 
 	if (!self->ghoul2)
@@ -7107,46 +7107,46 @@ void UpdateClientRenderBolts(gentity_t* self, vec3_t renderOrigin, vec3_t render
 	else
 	{
 		//head
-		trap->G2API_GetBoltMatrix(self->ghoul2, 0, ri->headBolt, &boltMatrix, renderAngles, renderOrigin, level.time, NULL, self->modelScale);
-		ri->headPoint[0] = boltMatrix.matrix[0][3];
-		ri->headPoint[1] = boltMatrix.matrix[1][3];
-		ri->headPoint[2] = boltMatrix.matrix[2][3];
+		trap->G2API_GetBoltMatrix(self->ghoul2, 0, ri->headBolt, &bolt_matrix, renderAngles, renderOrigin, level.time, NULL, self->modelScale);
+		ri->headPoint[0] = bolt_matrix.matrix[0][3];
+		ri->headPoint[1] = bolt_matrix.matrix[1][3];
+		ri->headPoint[2] = bolt_matrix.matrix[2][3];
 
 		//right hand
-		trap->G2API_GetBoltMatrix(self->ghoul2, 0, ri->handRBolt, &boltMatrix, renderAngles, renderOrigin, level.time, NULL, self->modelScale);
-		ri->handRPoint[0] = boltMatrix.matrix[0][3];
-		ri->handRPoint[1] = boltMatrix.matrix[1][3];
-		ri->handRPoint[2] = boltMatrix.matrix[2][3];
+		trap->G2API_GetBoltMatrix(self->ghoul2, 0, ri->handRBolt, &bolt_matrix, renderAngles, renderOrigin, level.time, NULL, self->modelScale);
+		ri->handRPoint[0] = bolt_matrix.matrix[0][3];
+		ri->handRPoint[1] = bolt_matrix.matrix[1][3];
+		ri->handRPoint[2] = bolt_matrix.matrix[2][3];
 
 		//left hand
-		trap->G2API_GetBoltMatrix(self->ghoul2, 0, ri->handLBolt, &boltMatrix, renderAngles, renderOrigin, level.time, NULL, self->modelScale);
-		ri->handLPoint[0] = boltMatrix.matrix[0][3];
-		ri->handLPoint[1] = boltMatrix.matrix[1][3];
-		ri->handLPoint[2] = boltMatrix.matrix[2][3];
+		trap->G2API_GetBoltMatrix(self->ghoul2, 0, ri->handLBolt, &bolt_matrix, renderAngles, renderOrigin, level.time, NULL, self->modelScale);
+		ri->handLPoint[0] = bolt_matrix.matrix[0][3];
+		ri->handLPoint[1] = bolt_matrix.matrix[1][3];
+		ri->handLPoint[2] = bolt_matrix.matrix[2][3];
 
 		//chest
-		trap->G2API_GetBoltMatrix(self->ghoul2, 0, ri->torsoBolt, &boltMatrix, renderAngles, renderOrigin, level.time, NULL, self->modelScale);
-		ri->torsoPoint[0] = boltMatrix.matrix[0][3];
-		ri->torsoPoint[1] = boltMatrix.matrix[1][3];
-		ri->torsoPoint[2] = boltMatrix.matrix[2][3];
+		trap->G2API_GetBoltMatrix(self->ghoul2, 0, ri->torsoBolt, &bolt_matrix, renderAngles, renderOrigin, level.time, NULL, self->modelScale);
+		ri->torsoPoint[0] = bolt_matrix.matrix[0][3];
+		ri->torsoPoint[1] = bolt_matrix.matrix[1][3];
+		ri->torsoPoint[2] = bolt_matrix.matrix[2][3];
 
 		//crotch
-		trap->G2API_GetBoltMatrix(self->ghoul2, 0, ri->crotchBolt, &boltMatrix, renderAngles, renderOrigin, level.time, NULL, self->modelScale);
-		ri->crotchPoint[0] = boltMatrix.matrix[0][3];
-		ri->crotchPoint[1] = boltMatrix.matrix[1][3];
-		ri->crotchPoint[2] = boltMatrix.matrix[2][3];
+		trap->G2API_GetBoltMatrix(self->ghoul2, 0, ri->crotchBolt, &bolt_matrix, renderAngles, renderOrigin, level.time, NULL, self->modelScale);
+		ri->crotchPoint[0] = bolt_matrix.matrix[0][3];
+		ri->crotchPoint[1] = bolt_matrix.matrix[1][3];
+		ri->crotchPoint[2] = bolt_matrix.matrix[2][3];
 
 		//right foot
-		trap->G2API_GetBoltMatrix(self->ghoul2, 0, ri->footRBolt, &boltMatrix, renderAngles, renderOrigin, level.time, NULL, self->modelScale);
-		ri->footRPoint[0] = boltMatrix.matrix[0][3];
-		ri->footRPoint[1] = boltMatrix.matrix[1][3];
-		ri->footRPoint[2] = boltMatrix.matrix[2][3];
+		trap->G2API_GetBoltMatrix(self->ghoul2, 0, ri->footRBolt, &bolt_matrix, renderAngles, renderOrigin, level.time, NULL, self->modelScale);
+		ri->footRPoint[0] = bolt_matrix.matrix[0][3];
+		ri->footRPoint[1] = bolt_matrix.matrix[1][3];
+		ri->footRPoint[2] = bolt_matrix.matrix[2][3];
 
 		//left foot
-		trap->G2API_GetBoltMatrix(self->ghoul2, 0, ri->footLBolt, &boltMatrix, renderAngles, renderOrigin, level.time, NULL, self->modelScale);
-		ri->footLPoint[0] = boltMatrix.matrix[0][3];
-		ri->footLPoint[1] = boltMatrix.matrix[1][3];
-		ri->footLPoint[2] = boltMatrix.matrix[2][3];
+		trap->G2API_GetBoltMatrix(self->ghoul2, 0, ri->footLBolt, &bolt_matrix, renderAngles, renderOrigin, level.time, NULL, self->modelScale);
+		ri->footLPoint[0] = bolt_matrix.matrix[0][3];
+		ri->footLPoint[1] = bolt_matrix.matrix[1][3];
+		ri->footLPoint[2] = bolt_matrix.matrix[2][3];
 	}
 
 	self->client->renderInfo.boltValidityTime = level.time;
@@ -7222,7 +7222,7 @@ void UpdateClientRenderinfo(gentity_t* self, vec3_t renderOrigin, vec3_t renderA
 			//From now on if we want this data to be valid we're going to have to make a verify call for it before
 			//accessing it. I'm only doing this now if we want to debug the server skel by drawing lines from bolt
 			//positions every frame.
-			mdxaBone_t boltMatrix;
+			mdxaBone_t bolt_matrix;
 
 			if (!self->ghoul2)
 			{
@@ -7237,46 +7237,46 @@ void UpdateClientRenderinfo(gentity_t* self, vec3_t renderOrigin, vec3_t renderA
 			else
 			{
 				//head
-				trap->G2API_GetBoltMatrix(self->ghoul2, 0, ri->headBolt, &boltMatrix, renderAngles, renderOrigin, level.time, NULL, self->modelScale);
-				ri->headPoint[0] = boltMatrix.matrix[0][3];
-				ri->headPoint[1] = boltMatrix.matrix[1][3];
-				ri->headPoint[2] = boltMatrix.matrix[2][3];
+				trap->G2API_GetBoltMatrix(self->ghoul2, 0, ri->headBolt, &bolt_matrix, renderAngles, renderOrigin, level.time, NULL, self->modelScale);
+				ri->headPoint[0] = bolt_matrix.matrix[0][3];
+				ri->headPoint[1] = bolt_matrix.matrix[1][3];
+				ri->headPoint[2] = bolt_matrix.matrix[2][3];
 
 				//right hand
-				trap->G2API_GetBoltMatrix(self->ghoul2, 0, ri->handRBolt, &boltMatrix, renderAngles, renderOrigin, level.time, NULL, self->modelScale);
-				ri->handRPoint[0] = boltMatrix.matrix[0][3];
-				ri->handRPoint[1] = boltMatrix.matrix[1][3];
-				ri->handRPoint[2] = boltMatrix.matrix[2][3];
+				trap->G2API_GetBoltMatrix(self->ghoul2, 0, ri->handRBolt, &bolt_matrix, renderAngles, renderOrigin, level.time, NULL, self->modelScale);
+				ri->handRPoint[0] = bolt_matrix.matrix[0][3];
+				ri->handRPoint[1] = bolt_matrix.matrix[1][3];
+				ri->handRPoint[2] = bolt_matrix.matrix[2][3];
 
 				//left hand
-				trap->G2API_GetBoltMatrix(self->ghoul2, 0, ri->handLBolt, &boltMatrix, renderAngles, renderOrigin, level.time, NULL, self->modelScale);
-				ri->handLPoint[0] = boltMatrix.matrix[0][3];
-				ri->handLPoint[1] = boltMatrix.matrix[1][3];
-				ri->handLPoint[2] = boltMatrix.matrix[2][3];
+				trap->G2API_GetBoltMatrix(self->ghoul2, 0, ri->handLBolt, &bolt_matrix, renderAngles, renderOrigin, level.time, NULL, self->modelScale);
+				ri->handLPoint[0] = bolt_matrix.matrix[0][3];
+				ri->handLPoint[1] = bolt_matrix.matrix[1][3];
+				ri->handLPoint[2] = bolt_matrix.matrix[2][3];
 
 				//chest
-				trap->G2API_GetBoltMatrix(self->ghoul2, 0, ri->torsoBolt, &boltMatrix, renderAngles, renderOrigin, level.time, NULL, self->modelScale);
-				ri->torsoPoint[0] = boltMatrix.matrix[0][3];
-				ri->torsoPoint[1] = boltMatrix.matrix[1][3];
-				ri->torsoPoint[2] = boltMatrix.matrix[2][3];
+				trap->G2API_GetBoltMatrix(self->ghoul2, 0, ri->torsoBolt, &bolt_matrix, renderAngles, renderOrigin, level.time, NULL, self->modelScale);
+				ri->torsoPoint[0] = bolt_matrix.matrix[0][3];
+				ri->torsoPoint[1] = bolt_matrix.matrix[1][3];
+				ri->torsoPoint[2] = bolt_matrix.matrix[2][3];
 
 				//crotch
-				trap->G2API_GetBoltMatrix(self->ghoul2, 0, ri->crotchBolt, &boltMatrix, renderAngles, renderOrigin, level.time, NULL, self->modelScale);
-				ri->crotchPoint[0] = boltMatrix.matrix[0][3];
-				ri->crotchPoint[1] = boltMatrix.matrix[1][3];
-				ri->crotchPoint[2] = boltMatrix.matrix[2][3];
+				trap->G2API_GetBoltMatrix(self->ghoul2, 0, ri->crotchBolt, &bolt_matrix, renderAngles, renderOrigin, level.time, NULL, self->modelScale);
+				ri->crotchPoint[0] = bolt_matrix.matrix[0][3];
+				ri->crotchPoint[1] = bolt_matrix.matrix[1][3];
+				ri->crotchPoint[2] = bolt_matrix.matrix[2][3];
 
 				//right foot
-				trap->G2API_GetBoltMatrix(self->ghoul2, 0, ri->footRBolt, &boltMatrix, renderAngles, renderOrigin, level.time, NULL, self->modelScale);
-				ri->footRPoint[0] = boltMatrix.matrix[0][3];
-				ri->footRPoint[1] = boltMatrix.matrix[1][3];
-				ri->footRPoint[2] = boltMatrix.matrix[2][3];
+				trap->G2API_GetBoltMatrix(self->ghoul2, 0, ri->footRBolt, &bolt_matrix, renderAngles, renderOrigin, level.time, NULL, self->modelScale);
+				ri->footRPoint[0] = bolt_matrix.matrix[0][3];
+				ri->footRPoint[1] = bolt_matrix.matrix[1][3];
+				ri->footRPoint[2] = bolt_matrix.matrix[2][3];
 
 				//left foot
-				trap->G2API_GetBoltMatrix(self->ghoul2, 0, ri->footLBolt, &boltMatrix, renderAngles, renderOrigin, level.time, NULL, self->modelScale);
-				ri->footLPoint[0] = boltMatrix.matrix[0][3];
-				ri->footLPoint[1] = boltMatrix.matrix[1][3];
-				ri->footLPoint[2] = boltMatrix.matrix[2][3];
+				trap->G2API_GetBoltMatrix(self->ghoul2, 0, ri->footLBolt, &bolt_matrix, renderAngles, renderOrigin, level.time, NULL, self->modelScale);
+				ri->footLPoint[0] = bolt_matrix.matrix[0][3];
+				ri->footLPoint[1] = bolt_matrix.matrix[1][3];
+				ri->footLPoint[2] = bolt_matrix.matrix[2][3];
 			}
 
 			//Now draw the skel for debug
@@ -7301,7 +7301,7 @@ void UpdateClientRenderinfo(gentity_t* self, vec3_t renderOrigin, vec3_t renderA
 }
 
 #define STAFF_KICK_RANGE 16
-extern void G_GetBoltPosition(gentity_t* self, int boltIndex, vec3_t pos, int modelIndex); //NPC_utils.c
+extern void G_GetBoltPosition(gentity_t* self, int bolt_index, vec3_t pos, int modelIndex); //NPC_utils.c
 
 extern qboolean BG_InKnockDown(int anim);
 static qboolean G_KickDownable(gentity_t* ent)
@@ -7361,7 +7361,7 @@ static gentity_t* G_KickTrace(gentity_t* ent, vec3_t kickDir, float kickDist, ve
 {
 	vec3_t	traceOrg, traceEnd, kickMins, kickMaxs;
 	trace_t	trace;
-	gentity_t* hitEnt = NULL;
+	gentity_t* hit_ent = NULL;
 	VectorSet(kickMins, -2.0f, -2.0f, -2.0f);
 	VectorSet(kickMaxs, 2.0f, 2.0f, 2.0f);
 	//FIXME: variable kick height?
@@ -7399,7 +7399,7 @@ static gentity_t* G_KickTrace(gentity_t* ent, vec3_t kickDir, float kickDist, ve
 		ent->client->jediKickIndex = trace.entityNum;
 		ent->client->jediKickTime = level.time + ent->client->ps.legsTimer;
 
-		hitEnt = &g_entities[trace.entityNum];
+		hit_ent = &g_entities[trace.entityNum];
 		//FIXME: regardless of what we hit, do kick hit sound and impact effect
 		//G_PlayEffect( "misc/kickHit", trace.endpos, trace.plane.normal );
 		if (ent->client->ps.torsoAnim == BOTH_A7_HILT)
@@ -7410,65 +7410,65 @@ static gentity_t* G_KickTrace(gentity_t* ent, vec3_t kickDir, float kickDist, ve
 		{
 			G_Sound(ent, CHAN_AUTO, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
 		}
-		if (hitEnt->inuse)
+		if (hit_ent->inuse)
 		{//we hit an entity
 			//FIXME: don't hit same ent more than once per kick
-			if (hitEnt->takedamage)
+			if (hit_ent->takedamage)
 			{//hurt it
-				if (hitEnt->client)
+				if (hit_ent->client)
 				{
-					hitEnt->client->ps.otherKiller = ent->s.number;
-					hitEnt->client->ps.otherKillerDebounceTime = level.time + 10000;
-					hitEnt->client->ps.otherKillerTime = level.time + 10000;
+					hit_ent->client->ps.otherKiller = ent->s.number;
+					hit_ent->client->ps.otherKillerDebounceTime = level.time + 10000;
+					hit_ent->client->ps.otherKillerTime = level.time + 10000;
 				}
 
 				if (d_saberKickTweak.integer)
 				{
-					G_Damage(hitEnt, ent, ent, kickDir, trace.endpos, kickDamage * 0.2f, DAMAGE_NO_KNOCKBACK, MOD_MELEE);
+					G_Damage(hit_ent, ent, ent, kickDir, trace.endpos, kickDamage * 0.2f, DAMAGE_NO_KNOCKBACK, MOD_MELEE);
 				}
 				else
 				{
-					G_Damage(hitEnt, ent, ent, kickDir, trace.endpos, kickDamage, DAMAGE_NO_KNOCKBACK, MOD_MELEE);
+					G_Damage(hit_ent, ent, ent, kickDir, trace.endpos, kickDamage, DAMAGE_NO_KNOCKBACK, MOD_MELEE);
 				}
 			}
-			if (hitEnt->client
-				&& !(hitEnt->client->ps.pm_flags & PMF_TIME_KNOCKBACK) //not already flying through air?  Intended to stop multiple hits, but...
-				&& G_CanBeEnemy(ent, hitEnt))
+			if (hit_ent->client
+				&& !(hit_ent->client->ps.pm_flags & PMF_TIME_KNOCKBACK) //not already flying through air?  Intended to stop multiple hits, but...
+				&& G_CanBeEnemy(ent, hit_ent))
 			{//FIXME: this should not always work
-				if (hitEnt->health <= 0)
+				if (hit_ent->health <= 0)
 				{//we kicked a dead guy
 					//throw harder - FIXME: no matter how hard I push them, they don't go anywhere... corpses use less physics???
-				//	G_Throw( hitEnt, kickDir, kickPush*4 );
+				//	G_Throw( hit_ent, kickDir, kickPush*4 );
 					//see if we should play a better looking death on them
-				//	G_ThrownDeathAnimForDeathAnim( hitEnt, trace.endpos );
-					G_TossTheMofo(hitEnt, kickDir, kickPush * 4.0f);
+				//	G_ThrownDeathAnimForDeathAnim( hit_ent, trace.endpos );
+					G_TossTheMofo(hit_ent, kickDir, kickPush * 4.0f);
 				}
 				else
 				{
 					/*
-					G_Throw( hitEnt, kickDir, kickPush );
+					G_Throw( hit_ent, kickDir, kickPush );
 					if ( kickPush >= 75.0f && !Q_irand( 0, 2 ) )
 					{
-						G_Knockdown( hitEnt, ent, kickDir, 300, qtrue );
+						G_Knockdown( hit_ent, ent, kickDir, 300, qtrue );
 					}
 					else
 					{
-						G_Knockdown( hitEnt, ent, kickDir, kickPush, qtrue );
+						G_Knockdown( hit_ent, ent, kickDir, kickPush, qtrue );
 					}
 					*/
 					if (kickPush >= 75.0f && !Q_irand(0, 2))
 					{
-						G_TossTheMofo(hitEnt, kickDir, 300.0f);
+						G_TossTheMofo(hit_ent, kickDir, 300.0f);
 					}
 					else
 					{
-						G_TossTheMofo(hitEnt, kickDir, kickPush);
+						G_TossTheMofo(hit_ent, kickDir, kickPush);
 					}
 				}
 			}
 		}
 	}
-	return (hitEnt);
+	return (hit_ent);
 }
 
 static void G_KickSomeMofos(gentity_t* ent)
@@ -7799,7 +7799,7 @@ static QINLINE qboolean G_PrettyCloseIGuess(float a, float b, float tolerance)
 static void G_GrabSomeMofos(gentity_t* self)
 {
 	const renderInfo_t* ri = &self->client->renderInfo;
-	mdxaBone_t boltMatrix;
+	mdxaBone_t bolt_matrix;
 	vec3_t flatAng;
 	vec3_t pos;
 	vec3_t grabMins, grabMaxs;
@@ -7811,9 +7811,9 @@ static void G_GrabSomeMofos(gentity_t* self)
 	}
 
 	VectorSet(flatAng, 0.0f, self->client->ps.viewangles[1], 0.0f);
-	trap->G2API_GetBoltMatrix(self->ghoul2, 0, ri->handRBolt, &boltMatrix, flatAng, self->client->ps.origin,
+	trap->G2API_GetBoltMatrix(self->ghoul2, 0, ri->handRBolt, &bolt_matrix, flatAng, self->client->ps.origin,
 		level.time, NULL, self->modelScale);
-	BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, pos);
+	BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, pos);
 
 	VectorSet(grabMins, -4.0f, -4.0f, -4.0f);
 	VectorSet(grabMaxs, 4.0f, 4.0f, 4.0f);
@@ -7915,7 +7915,7 @@ void WP_SaberPositionUpdate(gentity_t* self, usercmd_t* ucmd)
 { //rww - keep the saber position as updated as possible on the server so that we can try to do realistic-looking contact stuff
   //Note that this function also does the majority of working in maintaining the server g2 client instance (updating angles/anims/etc)
 	gentity_t* mySaber = NULL;
-	mdxaBone_t	boltMatrix;
+	mdxaBone_t	bolt_matrix;
 	vec3_t properAngles, properOrigin;
 	vec3_t boltAngles, boltOrigin;
 	vec3_t end;
@@ -8394,9 +8394,9 @@ nextStep:
 
 	//We'll get data for blade 0 first no matter what it is and stick them into
 	//the constant ("_Always") values. Later we will handle going through each blade.
-	trap->G2API_GetBoltMatrix(self->ghoul2, 1, 0, &boltMatrix, properAngles, properOrigin, level.time, NULL, self->modelScale);
-	BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, boltOrigin);
-	BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_Y, boltAngles);
+	trap->G2API_GetBoltMatrix(self->ghoul2, 1, 0, &bolt_matrix, properAngles, properOrigin, level.time, NULL, self->modelScale);
+	BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, boltOrigin);
+	BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Y, boltAngles);
 
 	//immediately store these values so we don't have to recalculate this again
 	if (self->client->lastSaberStorageTime && (level.time - self->client->lastSaberStorageTime) < 200)
@@ -8700,17 +8700,17 @@ nextStep:
 						VectorSubtract(self->r.currentOrigin, saberOrg, saberDir);
 						vectoangles(saberDir, saberAngles);
 					}
-					trap->G2API_GetBoltMatrix(saberEnt->ghoul2, 0, rblade_num, &boltMatrix, saberAngles, saberOrg, level.time, NULL, self->modelScale);
-					BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, self->client->saber[rsaber_num].blade[rblade_num].muzzlePoint);
-					BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_Y, self->client->saber[rsaber_num].blade[rblade_num].muzzleDir);
+					trap->G2API_GetBoltMatrix(saberEnt->ghoul2, 0, rblade_num, &bolt_matrix, saberAngles, saberOrg, level.time, NULL, self->modelScale);
+					BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, self->client->saber[rsaber_num].blade[rblade_num].muzzlePoint);
+					BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Y, self->client->saber[rsaber_num].blade[rblade_num].muzzleDir);
 					VectorCopy(self->client->saber[rsaber_num].blade[rblade_num].muzzlePoint, boltOrigin);
 					VectorMA(boltOrigin, self->client->saber[rsaber_num].blade[rblade_num].lengthMax, self->client->saber[rsaber_num].blade[rblade_num].muzzleDir, end);
 				}
 				else
 				{
-					trap->G2API_GetBoltMatrix(self->ghoul2, rsaber_num + 1, rblade_num, &boltMatrix, properAngles, properOrigin, level.time, NULL, self->modelScale);
-					BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, self->client->saber[rsaber_num].blade[rblade_num].muzzlePoint);
-					BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_Y, self->client->saber[rsaber_num].blade[rblade_num].muzzleDir);
+					trap->G2API_GetBoltMatrix(self->ghoul2, rsaber_num + 1, rblade_num, &bolt_matrix, properAngles, properOrigin, level.time, NULL, self->modelScale);
+					BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, self->client->saber[rsaber_num].blade[rblade_num].muzzlePoint);
+					BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Y, self->client->saber[rsaber_num].blade[rblade_num].muzzleDir);
 					VectorCopy(self->client->saber[rsaber_num].blade[rblade_num].muzzlePoint, boltOrigin);
 					VectorMA(boltOrigin, self->client->saber[rsaber_num].blade[rblade_num].lengthMax, self->client->saber[rsaber_num].blade[rblade_num].muzzleDir, end);
 				}

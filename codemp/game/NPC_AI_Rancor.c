@@ -22,7 +22,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #include "b_local.h"
 
-extern void G_GetBoltPosition(gentity_t* self, int boltIndex, vec3_t pos, int modelIndex);
+extern void G_GetBoltPosition(gentity_t* self, int bolt_index, vec3_t pos, int modelIndex);
 
 // These define the working combat range for these suckers
 #define MIN_DISTANCE		128
@@ -147,8 +147,8 @@ void Rancor_Move()
 //---------------------------------------------------------
 extern void G_Knockdown(gentity_t* victim);
 extern void G_Dismember(gentity_t* ent, gentity_t* enemy, vec3_t point, int limbType, float limbRollBase, float limbPitchBase, int deathAnim, qboolean postDeath);
-extern float NPC_EntRangeFromBolt(gentity_t* targEnt, int boltIndex);
-extern int NPC_GetEntsNearBolt(int* radiusEnts, float radius, int boltIndex, vec3_t boltOrg);
+extern float NPC_EntRangeFromBolt(gentity_t* targEnt, int bolt_index);
+extern int NPC_GetEntsNearBolt(int* radius_ents, float radius, int bolt_index, vec3_t bolt_org);
 
 void Rancor_DropVictim(gentity_t* self)
 {
@@ -211,11 +211,11 @@ void Rancor_Swing(qboolean tryGrab)
 	int			radiusEntNums[128];
 	const float	radius = 88;
 	const float	radiusSquared = (radius * radius);
-	vec3_t		boltOrg;
+	vec3_t		bolt_org;
 
-	const int numEnts = NPC_GetEntsNearBolt(radiusEntNums, radius, NPCS.NPC->client->renderInfo.handRBolt, boltOrg);
+	const int num_ents = NPC_GetEntsNearBolt(radiusEntNums, radius, NPCS.NPC->client->renderInfo.handRBolt, bolt_org);
 
-	for (int i = 0; i < numEnts; i++)
+	for (int i = 0; i < num_ents; i++)
 	{
 		gentity_t* radiusEnt = &g_entities[radiusEntNums[i]];
 		if (!radiusEnt->inuse)
@@ -238,7 +238,7 @@ void Rancor_Swing(qboolean tryGrab)
 			continue;
 		}
 
-		if (DistanceSquared(radiusEnt->r.currentOrigin, boltOrg) <= radiusSquared)
+		if (DistanceSquared(radiusEnt->r.currentOrigin, bolt_org) <= radiusSquared)
 		{
 			if (tryGrab
 				&& NPCS.NPC->count != 1 //don't have one in hand or in mouth already - FIXME: allow one in hand and any number in mouth!
@@ -286,29 +286,29 @@ void Rancor_Swing(qboolean tryGrab)
 			}
 			else
 			{//smack
-				vec3_t pushDir;
+				vec3_t push_dir;
 				vec3_t angs;
 
 				G_Sound(radiusEnt, CHAN_AUTO, G_SoundIndex("sound/chars/rancor/swipehit.wav"));
 				//actually push the enemy
 				/*
-				//VectorSubtract( radiusEnt->r.currentOrigin, boltOrg, pushDir );
-				VectorSubtract( radiusEnt->r.currentOrigin, NPC->r.currentOrigin, pushDir );
-				pushDir[2] = Q_flrand( 100, 200 );
-				VectorNormalize( pushDir );
+				//VectorSubtract( radiusEnt->r.currentOrigin, bolt_org, push_dir );
+				VectorSubtract( radiusEnt->r.currentOrigin, NPC->r.currentOrigin, push_dir );
+				push_dir[2] = Q_flrand( 100, 200 );
+				VectorNormalize( push_dir );
 				*/
 				VectorCopy(NPCS.NPC->client->ps.viewangles, angs);
 				angs[YAW] += flrand(25, 50);
 				angs[PITCH] = flrand(-25, -15);
-				AngleVectors(angs, pushDir, NULL, NULL);
+				AngleVectors(angs, push_dir, NULL, NULL);
 				if (radiusEnt->client->NPC_class != CLASS_RANCOR
 					&& radiusEnt->client->NPC_class != CLASS_ATST)
 				{
 					G_Damage(radiusEnt, NPCS.NPC, NPCS.NPC, vec3_origin, radiusEnt->r.currentOrigin, Q_irand(25, 40), DAMAGE_NO_ARMOR | DAMAGE_NO_KNOCKBACK, MOD_MELEE);
-					G_Throw(radiusEnt, pushDir, 250);
+					G_Throw(radiusEnt, push_dir, 250);
 					if (radiusEnt->health > 0)
 					{//do pain on enemy
-						G_Knockdown(radiusEnt);//, NPC, pushDir, 100, qtrue );
+						G_Knockdown(radiusEnt);//, NPC, push_dir, 100, qtrue );
 					}
 				}
 			}
@@ -322,13 +322,13 @@ void Rancor_Smash(void)
 	const float	radius = 128;
 	const float	halfRadSquared = ((radius / 2) * (radius / 2));
 	const float	radiusSquared = (radius * radius);
-	vec3_t		boltOrg;
+	vec3_t		bolt_org;
 
 	AddSoundEvent(NPCS.NPC, NPCS.NPC->r.currentOrigin, 512, AEL_DANGER, qfalse);//, qtrue );
 
-	const int numEnts = NPC_GetEntsNearBolt(radiusEntNums, radius, NPCS.NPC->client->renderInfo.handLBolt, boltOrg);
+	const int num_ents = NPC_GetEntsNearBolt(radiusEntNums, radius, NPCS.NPC->client->renderInfo.handLBolt, bolt_org);
 
-	for (int i = 0; i < numEnts; i++)
+	for (int i = 0; i < num_ents; i++)
 	{
 		gentity_t* radiusEnt = &g_entities[radiusEntNums[i]];
 		if (!radiusEnt->inuse)
@@ -351,7 +351,7 @@ void Rancor_Smash(void)
 			continue;
 		}
 
-		const float distSq = DistanceSquared(radiusEnt->r.currentOrigin, boltOrg);
+		const float distSq = DistanceSquared(radiusEnt->r.currentOrigin, bolt_org);
 		if (distSq <= radiusSquared)
 		{
 			G_Sound(radiusEnt, CHAN_AUTO, G_SoundIndex("sound/chars/rancor/swipehit.wav"));
@@ -379,11 +379,11 @@ void Rancor_Bite(void)
 	int			radiusEntNums[128];
 	const float	radius = 100;
 	const float	radiusSquared = (radius * radius);
-	vec3_t		boltOrg;
+	vec3_t		bolt_org;
 
-	const int numEnts = NPC_GetEntsNearBolt(radiusEntNums, radius, NPCS.NPC->client->renderInfo.crotchBolt, boltOrg);//was gutBolt?
+	const int num_ents = NPC_GetEntsNearBolt(radiusEntNums, radius, NPCS.NPC->client->renderInfo.crotchBolt, bolt_org);//was gutBolt?
 
-	for (int i = 0; i < numEnts; i++)
+	for (int i = 0; i < num_ents; i++)
 	{
 		gentity_t* radiusEnt = &g_entities[radiusEntNums[i]];
 		if (!radiusEnt->inuse)
@@ -406,7 +406,7 @@ void Rancor_Bite(void)
 			continue;
 		}
 
-		if (DistanceSquared(radiusEnt->r.currentOrigin, boltOrg) <= radiusSquared)
+		if (DistanceSquared(radiusEnt->r.currentOrigin, bolt_org) <= radiusSquared)
 		{
 			G_Damage(radiusEnt, NPCS.NPC, NPCS.NPC, vec3_origin, radiusEnt->r.currentOrigin, Q_irand(15, 30), DAMAGE_NO_ARMOR | DAMAGE_NO_KNOCKBACK, MOD_MELEE);
 			if (radiusEnt->health <= 0 && radiusEnt->client)

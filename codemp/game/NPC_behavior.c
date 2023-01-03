@@ -416,15 +416,15 @@ void NPC_BSInvestigate(void)
 				*/
 }
 
-qboolean NPC_CheckInvestigate(int alertEventNum)
+qboolean NPC_CheckInvestigate(int alert_event_num)
 {
-	gentity_t* owner = level.alertEvents[alertEventNum].owner;
-	const int		invAdd = level.alertEvents[alertEventNum].level;
+	gentity_t* owner = level.alertEvents[alert_event_num].owner;
+	const int		invAdd = level.alertEvents[alert_event_num].level;
 	vec3_t	soundPos;
-	const float	soundRad = level.alertEvents[alertEventNum].radius;
+	const float	soundRad = level.alertEvents[alert_event_num].radius;
 	const float	earshot = NPCS.NPCInfo->stats.earshot;
 
-	VectorCopy(level.alertEvents[alertEventNum].position, soundPos);
+	VectorCopy(level.alertEvents[alert_event_num].position, soundPos);
 
 	//NOTE: Trying to preserve previous investigation behavior
 	if (!owner)
@@ -1548,7 +1548,7 @@ void NPC_BSFlee(void)
 	NPC_CheckGetNewWeapon();
 }
 
-void NPC_StartFlee(gentity_t* enemy, vec3_t dangerPoint, int dangerLevel, int fleeTimeMin, int fleeTimeMax)
+void NPC_StartFlee(gentity_t* enemy, vec3_t danger_point, int danger_level, int flee_time_min, int flee_time_max)
 {
 	int cp = -1;
 
@@ -1569,20 +1569,20 @@ void NPC_StartFlee(gentity_t* enemy, vec3_t dangerPoint, int dangerLevel, int fl
 	}
 
 	//FIXME: if don't have a weapon, find nearest one we have a route to and run for it?
-	if (dangerLevel > AEL_DANGER || NPCS.NPC->s.weapon == WP_NONE || ((!NPCS.NPCInfo->group || NPCS.NPCInfo->group->numGroup <= 1) && NPCS.NPC->health <= 10))
+	if (danger_level > AEL_DANGER || NPCS.NPC->s.weapon == WP_NONE || ((!NPCS.NPCInfo->group || NPCS.NPCInfo->group->numGroup <= 1) && NPCS.NPC->health <= 10))
 	{//IF either great danger OR I have no weapon OR I'm alone and low on health, THEN try to find a combat point out of PVS
-		cp = NPC_FindCombatPoint(NPCS.NPC->r.currentOrigin, NPCS.NPC->r.currentOrigin, dangerPoint, CP_COVER | CP_AVOID | CP_HAS_ROUTE | CP_NO_PVS, 128, -1);
+		cp = NPC_FindCombatPoint(NPCS.NPC->r.currentOrigin, NPCS.NPC->r.currentOrigin, danger_point, CP_COVER | CP_AVOID | CP_HAS_ROUTE | CP_NO_PVS, 128, -1);
 	}
 	//FIXME: still happens too often...
 	if (cp == -1)
 	{//okay give up on the no PVS thing
-		cp = NPC_FindCombatPoint(NPCS.NPC->r.currentOrigin, NPCS.NPC->r.currentOrigin, dangerPoint, CP_COVER | CP_AVOID | CP_HAS_ROUTE, 128, -1);
+		cp = NPC_FindCombatPoint(NPCS.NPC->r.currentOrigin, NPCS.NPC->r.currentOrigin, danger_point, CP_COVER | CP_AVOID | CP_HAS_ROUTE, 128, -1);
 		if (cp == -1)
 		{//okay give up on the avoid
-			cp = NPC_FindCombatPoint(NPCS.NPC->r.currentOrigin, NPCS.NPC->r.currentOrigin, dangerPoint, CP_COVER | CP_HAS_ROUTE, 128, -1);
+			cp = NPC_FindCombatPoint(NPCS.NPC->r.currentOrigin, NPCS.NPC->r.currentOrigin, danger_point, CP_COVER | CP_HAS_ROUTE, 128, -1);
 			if (cp == -1)
 			{//okay give up on the cover
-				cp = NPC_FindCombatPoint(NPCS.NPC->r.currentOrigin, NPCS.NPC->r.currentOrigin, dangerPoint, CP_HAS_ROUTE, 128, -1);
+				cp = NPC_FindCombatPoint(NPCS.NPC->r.currentOrigin, NPCS.NPC->r.currentOrigin, danger_point, CP_HAS_ROUTE, 128, -1);
 			}
 		}
 	}
@@ -1604,15 +1604,15 @@ void NPC_StartFlee(gentity_t* enemy, vec3_t dangerPoint, int dangerLevel, int fl
 		//FIXME: other evasion AI?  Duck?  Strafe?  Dodge?
 		NPCS.NPCInfo->tempBehavior = BS_FLEE;
 		//Run straight away from here... FIXME: really want to find farthest waypoint/navgoal from this pos... maybe based on alert event radius?
-		NPC_SetMoveGoal(NPCS.NPC, dangerPoint, 0, qtrue, -1, NULL);
+		NPC_SetMoveGoal(NPCS.NPC, danger_point, 0, qtrue, -1, NULL);
 		//store the danger point
-		VectorCopy(dangerPoint, NPCS.NPCInfo->investigateGoal);//FIXME: make a new field for this?
+		VectorCopy(danger_point, NPCS.NPCInfo->investigateGoal);//FIXME: make a new field for this?
 	}
 	//FIXME: localize this Timer?
 	TIMER_Set(NPCS.NPC, "attackDelay", Q_irand(500, 2500));
 	//FIXME: is this always applicable?
 	NPCS.NPCInfo->squadState = SQUAD_RETREAT;
-	TIMER_Set(NPCS.NPC, "flee", Q_irand(fleeTimeMin, fleeTimeMax));
+	TIMER_Set(NPCS.NPC, "flee", Q_irand(flee_time_min, flee_time_max));
 	TIMER_Set(NPCS.NPC, "panic", Q_irand(1000, 4000));//how long to wait before trying to nav to a dropped weapon
 
 	if (NPCS.NPC->client->NPC_class != CLASS_PROTOCOL)
@@ -1621,7 +1621,7 @@ void NPC_StartFlee(gentity_t* enemy, vec3_t dangerPoint, int dangerLevel, int fl
 	}
 }
 
-void G_StartFlee(gentity_t* self, gentity_t* enemy, vec3_t dangerPoint, int dangerLevel, int fleeTimeMin, int fleeTimeMax)
+void G_StartFlee(gentity_t* self, gentity_t* enemy, vec3_t danger_point, int danger_level, int flee_time_min, int flee_time_max)
 {
 	if (!self->NPC)
 	{//player
@@ -1630,7 +1630,7 @@ void G_StartFlee(gentity_t* self, gentity_t* enemy, vec3_t dangerPoint, int dang
 	SaveNPCGlobals();
 	SetNPCGlobals(self);
 
-	NPC_StartFlee(enemy, dangerPoint, dangerLevel, fleeTimeMin, fleeTimeMax);
+	NPC_StartFlee(enemy, danger_point, danger_level, flee_time_min, flee_time_max);
 
 	RestoreNPCGlobals();
 }
@@ -1675,9 +1675,9 @@ void NPC_BSEmplaced(void)
 		enemyLOS = qtrue;
 
 		const int hit = NPC_ShotEntity(NPCS.NPC->enemy, impactPos);
-		const gentity_t* hitEnt = &g_entities[hit];
+		const gentity_t* hit_ent = &g_entities[hit];
 
-		if (hit == NPCS.NPC->enemy->s.number || (hitEnt && hitEnt->takedamage))
+		if (hit == NPCS.NPC->enemy->s.number || (hit_ent && hit_ent->takedamage))
 		{//can hit enemy or will hit glass or other minor breakable (or in emplaced gun), so shoot anyway
 			enemyCS = qtrue;
 			NPC_AimAdjust(2);//adjust aim better longer we have clear shot at enemy

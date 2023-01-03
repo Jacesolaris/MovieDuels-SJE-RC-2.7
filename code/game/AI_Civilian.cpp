@@ -19,8 +19,6 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, see <http://www.gnu.org/licenses/>.
 ===========================================================================
 */
-
-#include "../cgame/cg_local.h"
 #include "b_local.h"
 #include "Q3_Interface.h"
 

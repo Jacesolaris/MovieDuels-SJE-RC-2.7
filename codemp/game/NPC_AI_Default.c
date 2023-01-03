@@ -621,7 +621,7 @@ void NPC_BSPatrol( void )
 */
 void NPC_BSPatrol(void)
 {
-	//int	alertEventNum;
+	//int	alert_event_num;
 
 	if (level.time > NPCS.NPCInfo->enemyCheckDebounceTime)
 	{
@@ -637,10 +637,10 @@ void NPC_BSPatrol(void)
 
 	//FIXME: Implement generic sound alerts
 	/*
-	alertEventNum = NPC_CheckAlertEvents( qtrue, qtrue );
-	if( alertEventNum != -1 )
+	alert_event_num = NPC_CheckAlertEvents( qtrue, qtrue );
+	if( alert_event_num != -1 )
 	{//If we heard something, see if we should check it out
-		if ( NPC_CheckInvestigate( alertEventNum ) )
+		if ( NPC_CheckInvestigate( alert_event_num ) )
 		{
 			return;
 		}

@@ -498,7 +498,7 @@ static void AnimalTailSwipe(Vehicle_t* pVeh, gentity_t *parent, gentity_t *pilot
 	vec3_t angles;
 	vec3_t vRoot, vTail;
 	vec3_t	lMins, lMaxs;
-	mdxaBone_t	boltMatrix;
+	mdxaBone_t	bolt_matrix;
 	int iRootBone;
 	int iRootTail;
 
@@ -511,28 +511,28 @@ static void AnimalTailSwipe(Vehicle_t* pVeh, gentity_t *parent, gentity_t *pilot
 
 	// Get the positions of the root of the tail and the tail end of it.
 	trap_G2API_GetBoltMatrix( parent->ghoul2, 0, iRootBone,
-				&boltMatrix, angles, parent->currentOrigin, level.time,
+				&bolt_matrix, angles, parent->currentOrigin, level.time,
 				NULL, parent->modelScale );
-	BG_GiveMeVectorFromMatrix( &boltMatrix, ORIGIN, vRoot );
+	BG_GiveMeVectorFromMatrix( &bolt_matrix, ORIGIN, vRoot );
 
 	trap_G2API_GetBoltMatrix( parent->ghoul2, 0, iRootTail,
-				&boltMatrix, angles, parent->currentOrigin, level.time,
+				&bolt_matrix, angles, parent->currentOrigin, level.time,
 				NULL, parent->modelScale );
-	BG_GiveMeVectorFromMatrix( &boltMatrix, ORIGIN, vTail );
+	BG_GiveMeVectorFromMatrix( &bolt_matrix, ORIGIN, vTail );
 #else
 	iRootBone = gi.G2API_GetBoneIndex( &parent->ghoul2[parent->playerModel], "tail_01", qtrue );
 	iRootTail = gi.G2API_GetBoneIndex( &parent->ghoul2[parent->playerModel], "tail_04", qtrue );
 
 	// Get the positions of the root of the tail and the tail end of it.
 	gi.G2API_GetBoltMatrix( parent->ghoul2, parent->playerModel, iRootBone,
-				&boltMatrix, angles, parent->currentOrigin, (cg.time?cg.time:level.time),
+				&bolt_matrix, angles, parent->currentOrigin, (cg.time?cg.time:level.time),
 				NULL, parent->s.modelScale );
-	gi.G2API_GiveMeVectorFromMatrix( boltMatrix, ORIGIN, vRoot );
+	gi.G2API_GiveMeVectorFromMatrix( bolt_matrix, ORIGIN, vRoot );
 
 	gi.G2API_GetBoltMatrix( parent->ghoul2, parent->playerModel, iRootTail,
-				&boltMatrix, angles, parent->currentOrigin, (cg.time?cg.time:level.time),
+				&bolt_matrix, angles, parent->currentOrigin, (cg.time?cg.time:level.time),
 				NULL, parent->s.modelScale );
-	gi.G2API_GiveMeVectorFromMatrix( boltMatrix, ORIGIN, vTail );
+	gi.G2API_GiveMeVectorFromMatrix( bolt_matrix, ORIGIN, vTail );
 #endif
 
 	// Trace from the root of the tail to the very end.
@@ -547,7 +547,7 @@ static void AnimalTailSwipe(Vehicle_t* pVeh, gentity_t *parent, gentity_t *pilot
 #endif
 			g_entities[trace.entityNum].client->NPC_class != CLASS_VEHICLE )
 		{
-			vec3_t pushDir;
+			vec3_t push_dir;
 			vec3_t angs;
 			int iDamage = 10;
 			// Get the direction we're facing.
@@ -555,9 +555,9 @@ static void AnimalTailSwipe(Vehicle_t* pVeh, gentity_t *parent, gentity_t *pilot
 			// Add some fudge.
 			angs[YAW] += Q_flrand( 5, 15 );
 			angs[PITCH] = Q_flrand( -20, -10 );
-			AngleVectors( angs, pushDir, NULL, NULL );
+			AngleVectors( angs, push_dir, NULL, NULL );
 			// Reverse direction.
-			pushDir[YAW] = -pushDir[YAW];
+			push_dir[YAW] = -push_dir[YAW];
 
 			// Smack this ho down.
 #ifdef _JK2MP
@@ -565,7 +565,7 @@ static void AnimalTailSwipe(Vehicle_t* pVeh, gentity_t *parent, gentity_t *pilot
 #else
 			G_Sound( &g_entities[trace.entityNum], G_SoundIndex( "sound/chars/rancor/swipehit.wav" ) );
 #endif
-			G_Throw( &g_entities[trace.entityNum], pushDir, 50 );
+			G_Throw( &g_entities[trace.entityNum], push_dir, 50 );
 
 			if ( g_entities[trace.entityNum].health > 0 )
 			{
@@ -582,12 +582,12 @@ static void AnimalTailSwipe(Vehicle_t* pVeh, gentity_t *parent, gentity_t *pilot
 					hit->client->ps.otherKillerTime = level.time + 5000;
 					hit->client->ps.otherKillerDebounceTime = level.time + 100;
 
-					hit->client->ps.velocity[0] = pushDir[0]*80;
-					hit->client->ps.velocity[1] = pushDir[1]*80;
+					hit->client->ps.velocity[0] = push_dir[0]*80;
+					hit->client->ps.velocity[1] = push_dir[1]*80;
 					hit->client->ps.velocity[2] = 100;
 				}
 #else
-				G_Knockdown( hit, parent, pushDir, 300, qtrue );
+				G_Knockdown( hit, parent, push_dir, 300, qtrue );
 #endif
 				G_Damage( hit, parent, parent, NULL, NULL, iDamage, DAMAGE_NO_KNOCKBACK | DAMAGE_IGNORE_TEAM, MOD_MELEE );
 				//G_PlayEffect( pVeh->m_pVehicleInfo->explodeFX, parent->currentOrigin );

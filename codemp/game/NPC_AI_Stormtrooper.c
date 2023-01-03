@@ -2533,11 +2533,11 @@ void NPC_BSST_Attack(void)
 			else if (enemyInFOV)
 			{//if enemy is FOV, go ahead and check for shooting
 				const int hit = NPC_ShotEntity(NPCS.NPC->enemy, impactPos);
-				const gentity_t* hitEnt = &g_entities[hit];
+				const gentity_t* hit_ent = &g_entities[hit];
 
 				if (hit == NPCS.NPC->enemy->s.number
-					|| (hitEnt && hitEnt->client && hitEnt->client->playerTeam == NPCS.NPC->client->enemyTeam)
-					|| (hitEnt && hitEnt->takedamage && ((hitEnt->r.svFlags & SVF_GLASS_BRUSH) || hitEnt->health < 40 || NPCS.NPC->s.weapon == WP_EMPLACED_GUN)))
+					|| (hit_ent && hit_ent->client && hit_ent->client->playerTeam == NPCS.NPC->client->enemyTeam)
+					|| (hit_ent && hit_ent->takedamage && ((hit_ent->r.svFlags & SVF_GLASS_BRUSH) || hit_ent->health < 40 || NPCS.NPC->s.weapon == WP_EMPLACED_GUN)))
 				{//can hit enemy or enemy ally or will hit glass or other minor breakable (or in emplaced gun), so shoot anyway
 					AI_GroupUpdateClearShotTime(NPCS.NPCInfo->group);
 					enemy_cs = qtrue;
@@ -2548,7 +2548,7 @@ void NPC_BSST_Attack(void)
 				{//Hmm, have to get around this bastard
 					NPC_AimAdjust(1);//adjust aim better longer we can see enemy
 					ST_ResolveBlockedShot(hit);
-					if (hitEnt && hitEnt->client && hitEnt->client->playerTeam == NPCS.NPC->client->playerTeam)
+					if (hit_ent && hit_ent->client && hit_ent->client->playerTeam == NPCS.NPC->client->playerTeam)
 					{//would hit an ally, don't fire!!!
 						hitAlly = qtrue;
 					}

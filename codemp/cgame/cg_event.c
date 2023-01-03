@@ -1171,7 +1171,7 @@ void CG_G2MarkEvent(entityState_t* es)
 
 void CG_CalcVehMuzzle(Vehicle_t* pVeh, centity_t* ent, int muzzleNum)
 {
-	mdxaBone_t boltMatrix;
+	mdxaBone_t bolt_matrix;
 	vec3_t	vehAngles;
 
 	assert(pVeh);
@@ -1196,10 +1196,10 @@ void CG_CalcVehMuzzle(Vehicle_t* pVeh, centity_t* ent, int muzzleNum)
 			vehAngles[PITCH] = 0.0f;
 		}
 	}
-	trap->G2API_GetBoltMatrix_NoRecNoRot(ent->ghoul2, 0, pVeh->m_iMuzzleTag[muzzleNum], &boltMatrix, vehAngles,
+	trap->G2API_GetBoltMatrix_NoRecNoRot(ent->ghoul2, 0, pVeh->m_iMuzzleTag[muzzleNum], &bolt_matrix, vehAngles,
 		ent->lerpOrigin, cg.time, NULL, ent->modelScale);
-	BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, pVeh->m_vMuzzlePos[muzzleNum]);
-	BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_Y, pVeh->m_vMuzzleDir[muzzleNum]);
+	BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, pVeh->m_vMuzzlePos[muzzleNum]);
+	BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Y, pVeh->m_vMuzzleDir[muzzleNum]);
 }
 
 //corresponds to G_VehMuzzleFireFX -rww

@@ -3738,16 +3738,16 @@ static void WP_FireConcussionAlt(gentity_t* ent)
 					//do knockback and knockdown manually
 					if (trace_ent->client)
 					{//only if we hit a client
-						vec3_t pushDir;
-						VectorCopy(forward, pushDir);
-						if (pushDir[2] < 0.2f)
+						vec3_t push_dir;
+						VectorCopy(forward, push_dir);
+						if (push_dir[2] < 0.2f)
 						{
-							pushDir[2] = 0.2f;
+							push_dir[2] = 0.2f;
 						}//hmm, re-normalize?  nah...
 						/*
 						if ( !noKnockBack )
 						{//knock-backable
-							G_Throw( trace_ent, pushDir, 200 );
+							G_Throw( trace_ent, push_dir, 200 );
 						}
 						*/
 						if (trace_ent->health > 0)
@@ -3756,7 +3756,7 @@ static void WP_FireConcussionAlt(gentity_t* ent)
 							if (!noKnockBack && !trace_ent->localAnimIndex && trace_ent->client->ps.forceHandExtend != HANDEXTEND_KNOCKDOWN &&
 								BG_KnockDownable(&trace_ent->client->ps)) //just check for humanoids..
 							{//knock-downable
-								//G_Knockdown( trace_ent, ent, pushDir, 400, qtrue );
+								//G_Knockdown( trace_ent, ent, push_dir, 400, qtrue );
 								vec3_t plPDif;
 
 								//cap it and stuff, base the strength and whether or not we can knockdown on the distance
@@ -3777,8 +3777,8 @@ static void WP_FireConcussionAlt(gentity_t* ent)
 								trace_ent->client->ps.otherKillerTime = level.time + 5000;
 								trace_ent->client->ps.otherKillerDebounceTime = level.time + 100;
 
-								trace_ent->client->ps.velocity[0] += pushDir[0] * pStr;
-								trace_ent->client->ps.velocity[1] += pushDir[1] * pStr;
+								trace_ent->client->ps.velocity[0] += push_dir[0] * pStr;
+								trace_ent->client->ps.velocity[1] += push_dir[1] * pStr;
 								trace_ent->client->ps.velocity[2] = pStr;
 							}
 						}
@@ -4181,7 +4181,7 @@ void WP_TouchVehMissile(gentity_t* ent, gentity_t* other, trace_t* trace)
 void WP_CalcVehMuzzle(gentity_t* ent, int muzzleNum)
 {
 	Vehicle_t* pVeh = ent->m_pVehicle;
-	mdxaBone_t boltMatrix;
+	mdxaBone_t bolt_matrix;
 	vec3_t	vehAngles;
 
 	assert(pVeh);
@@ -4202,10 +4202,10 @@ void WP_CalcVehMuzzle(gentity_t* ent, int muzzleNum)
 		vehAngles[PITCH] = vehAngles[ROLL] = 0;
 	}
 
-	trap->G2API_GetBoltMatrix_NoRecNoRot(ent->ghoul2, 0, pVeh->m_iMuzzleTag[muzzleNum], &boltMatrix, vehAngles,
+	trap->G2API_GetBoltMatrix_NoRecNoRot(ent->ghoul2, 0, pVeh->m_iMuzzleTag[muzzleNum], &bolt_matrix, vehAngles,
 		ent->client->ps.origin, level.time, NULL, ent->modelScale);
-	BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, pVeh->m_vMuzzlePos[muzzleNum]);
-	BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_Y, pVeh->m_vMuzzleDir[muzzleNum]);
+	BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, pVeh->m_vMuzzlePos[muzzleNum]);
+	BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Y, pVeh->m_vMuzzleDir[muzzleNum]);
 }
 
 void WP_VehWeapSetSolidToOwner(gentity_t* self)

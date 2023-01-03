@@ -222,7 +222,7 @@ public:
 	}
 }; // AIGroupInfo_t
 
-int AI_GetGroupSize(vec3_t origin, int radius, team_t playerTeam, const gentity_t* avoid = nullptr);
+int AI_GetGroupSize(vec3_t origin, int radius, team_t player_team, const gentity_t* avoid = nullptr);
 int AI_GetGroupSize(gentity_t* ent, int radius);
 
 void AI_GetGroup(gentity_t* self);

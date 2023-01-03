@@ -48,7 +48,7 @@ extern void InitMover(gentity_t* ent);
 extern void MatchTeam(gentity_t* teamLeader, int moverState, int time);
 extern void ChangeWeapon(const gentity_t* ent, int new_weapon);
 extern char* G_GetLocationForEnt(const gentity_t* ent);
-extern void NPC_BSSearchStart(int homeWp, bState_t b_state);
+extern void NPC_BSSearchStart(int home_wp, bState_t b_state);
 extern void InitMoverTrData(gentity_t* ent);
 extern qboolean SpotWouldTelefrag2(const gentity_t* mover, vec3_t dest);
 extern cvar_t* g_sex;
@@ -72,7 +72,7 @@ extern void G_ChangeModel(gentity_t* ent, const char* newModel);
 extern void WP_SetSaberOrigin(gentity_t* self, vec3_t new_org);
 extern void Rail_LockCenterOfTrack(const char* trackName);
 extern void Rail_UnLockCenterOfTrack(const char* trackName);
-extern void G_GetBoltPosition(gentity_t* self, int boltIndex, vec3_t pos, int modelIndex = 0);
+extern void G_GetBoltPosition(gentity_t* self, int bolt_index, vec3_t pos, int modelIndex = 0);
 extern qboolean G_DoDismembermentcin(gentity_t* self, vec3_t point, int mod, int hit_loc,
                                      qboolean force = qfalse);
 extern void G_ChangeScale(const char* data);

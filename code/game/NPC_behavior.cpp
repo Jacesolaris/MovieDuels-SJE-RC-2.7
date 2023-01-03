@@ -78,9 +78,9 @@ void NPC_BSAdvanceFight()
 
 		VectorSubtract(enemy_org, muzzle, delta);
 		vectoangles(delta, angle_to_enemy);
-		const float distanceToEnemy = VectorNormalize(delta);
+		const float distance_to_enemy = VectorNormalize(delta);
 
-		if (!NPC_EnemyTooFar(NPC->enemy, distanceToEnemy * distanceToEnemy, qtrue))
+		if (!NPC_EnemyTooFar(NPC->enemy, distance_to_enemy * distance_to_enemy, qtrue))
 		{
 			attack_ok = qtrue;
 		}
@@ -159,7 +159,7 @@ void NPC_BSAdvanceFight()
 						//We're not going to hit him directly, try a suppressing fire
 						//see if where we're going to shoot is too far from his origin
 						AngleVectors(NPCInfo->shootAngles, forward, nullptr, nullptr);
-						VectorMA(muzzle, distanceToEnemy, forward, hitspot);
+						VectorMA(muzzle, distance_to_enemy, forward, hitspot);
 						VectorSubtract(hitspot, enemy_org, diff);
 						float aim_off = VectorLength(diff);
 						if (aim_off > Q_flrand(0.0f, 1.0f) * max_aim_off) //FIXME: use aim value to allow poor aim?
@@ -216,15 +216,6 @@ void MakeOwnerInvis(gentity_t* self);
 
 void BeamOut(gentity_t* self)
 {
-	//	gentity_t *tent = G_Spawn();
-
-	/*
-		tent->owner = self;
-		tent->think = MakeOwnerInvis;
-		tent->nextthink = level.time + 1800;
-		//G_AddEvent( ent, EV_PLAYER_TELEPORT, 0 );
-		tent = G_TempEntity( self->client->pcurrentOrigin, EV_PLAYER_TELEPORT );
-	*/
 	//fixme: doesn't actually go away!
 	self->nextthink = level.time + 1500;
 	self->e_ThinkFunc = thinkF_Disappear;
@@ -232,7 +223,7 @@ void BeamOut(gentity_t* self)
 	self->svFlags |= SVF_BEAMING;
 }
 
-void NPC_BSCinematic(void)
+void NPC_BSCinematic()
 {
 	if (NPCInfo->scriptFlags & SCF_FIRE_WEAPON)
 	{
@@ -274,12 +265,12 @@ void NPC_BSCinematic(void)
 	NPC_UpdateAngles(qtrue, qtrue);
 }
 
-void NPC_BSWait(void)
+void NPC_BSWait()
 {
 	NPC_UpdateAngles(qtrue, qtrue);
 }
 
-void NPC_BSInvestigate(void)
+void NPC_BSInvestigate()
 {
 	/*
 		//FIXME: maybe allow this to be set as a tempBState in a script?  Just specify the
@@ -431,15 +422,15 @@ void NPC_BSInvestigate(void)
 		*/
 }
 
-qboolean NPC_CheckInvestigate(const int alertEventNum)
+qboolean NPC_CheckInvestigate(const int alert_event_num)
 {
-	gentity_t* owner = level.alertEvents[alertEventNum].owner;
-	const int invAdd = level.alertEvents[alertEventNum].level;
+	gentity_t* owner = level.alertEvents[alert_event_num].owner;
+	const int invAdd = level.alertEvents[alert_event_num].level;
 	vec3_t soundPos;
-	const float soundRad = level.alertEvents[alertEventNum].radius;
+	const float soundRad = level.alertEvents[alert_event_num].radius;
 	const float earshot = NPCInfo->stats.earshot;
 
-	VectorCopy(level.alertEvents[alertEventNum].position, soundPos);
+	VectorCopy(level.alertEvents[alert_event_num].position, soundPos);
 
 	//NOTE: Trying to preserve previous investigation behavior
 	if (!owner)
@@ -523,9 +514,9 @@ qboolean NPC_CheckInvestigate(const int alertEventNum)
 }
 
 /*
-void NPC_BSSleep( void )
+void NPC_BSSleep()
 */
-void NPC_BSSleep(void)
+void NPC_BSSleep()
 {
 	const int alert_event = NPC_CheckAlertEvents(qtrue, qfalse);
 
@@ -534,22 +525,11 @@ void NPC_BSSleep(void)
 	{
 		G_ActivateBehavior(NPC, BSET_AWAKE);
 	}
-
-	/*
-	if ( level.time > NPCInfo->enemyCheckDebounceTime )
-	{
-		if ( NPC_CheckSoundEvents() != -1 )
-		{//only 1 alert per second per 0.1 of vigilance
-			NPCInfo->enemyCheckDebounceTime = level.time + (NPCInfo->stats.vigilance * 10000);
-			G_ActivateBehavior(NPC, BSET_AWAKE);
-		}
-	}
-	*/
 }
 
 extern qboolean npc_move_dir_clear(int forwardmove, int rightmove, qboolean reset);
 
-bool NPC_BSFollowLeader_UpdateLeader(void)
+bool NPC_BSFollowLeader_UpdateLeader()
 {
 	if (NPC->client->leader //have a leader
 		&& NPC->client->leader->s.number < MAX_CLIENTS //player
@@ -590,7 +570,7 @@ bool NPC_BSFollowLeader_UpdateLeader(void)
 	return true;
 }
 
-void NPC_BSFollowLeader_UpdateEnemy(void)
+void NPC_BSFollowLeader_UpdateEnemy()
 {
 	if (!NPC->enemy)
 	{
@@ -606,22 +586,22 @@ void NPC_BSFollowLeader_UpdateEnemy(void)
 		{
 			if (!(NPCInfo->scriptFlags & SCF_IGNORE_ALERTS))
 			{
-				const int eventID = NPC_CheckAlertEvents(qtrue, qtrue);
-				if (eventID > -1 && level.alertEvents[eventID].level >= AEL_SUSPICIOUS && NPCInfo->scriptFlags &
+				const int event_id = NPC_CheckAlertEvents(qtrue, qtrue);
+				if (event_id > -1 && level.alertEvents[event_id].level >= AEL_SUSPICIOUS && NPCInfo->scriptFlags &
 					SCF_LOOK_FOR_ENEMIES)
 				{
 					//NPCInfo->lastAlertID = level.alertEvents[eventID].ID;
-					if (!level.alertEvents[eventID].owner ||
-						!level.alertEvents[eventID].owner->client ||
-						level.alertEvents[eventID].owner->health <= 0 ||
-						level.alertEvents[eventID].owner->client->playerTeam != NPC->client->enemyTeam)
+					if (!level.alertEvents[event_id].owner ||
+						!level.alertEvents[event_id].owner->client ||
+						level.alertEvents[event_id].owner->health <= 0 ||
+						level.alertEvents[event_id].owner->client->playerTeam != NPC->client->enemyTeam)
 					{
 						//not an enemy
 					}
 					else
 					{
 						//FIXME: what if can't actually see enemy, don't know where he is... should we make them just become very alert and start looking for him?  Or just let combat AI handle this... (act as if you lost him)
-						G_SetEnemy(NPC, level.alertEvents[eventID].owner);
+						G_SetEnemy(NPC, level.alertEvents[event_id].owner);
 						NPCInfo->enemyCheckDebounceTime = level.time + Q_irand(3000, 10000);
 						NPCInfo->enemyLastSeenTime = level.time;
 						TIMER_Set(NPC, "attackDelay", Q_irand(500, 1000));
@@ -665,7 +645,7 @@ void NPC_BSFollowLeader_UpdateEnemy(void)
 	}
 }
 
-bool NPC_BSFollowLeader_AttackEnemy(void)
+bool NPC_BSFollowLeader_AttackEnemy()
 {
 	if (NPC->client->ps.weapon == WP_SABER) //|| NPCInfo->confusionTime>level.time )
 	{
@@ -727,7 +707,7 @@ bool NPC_BSFollowLeader_AttackEnemy(void)
 	return false;
 }
 
-bool NPC_BSFollowLeader_CanAttack(void)
+bool NPC_BSFollowLeader_CanAttack()
 {
 	return NPC->enemy
 		&& NPC->client->ps.weapon
@@ -735,7 +715,7 @@ bool NPC_BSFollowLeader_CanAttack(void)
 		;
 }
 
-bool NPC_BSFollowLeader_InFullBodyAttack(void)
+bool NPC_BSFollowLeader_InFullBodyAttack()
 {
 	return NPC->client->ps.legsAnim == BOTH_ATTACK1 ||
 		NPC->client->ps.legsAnim == BOTH_ATTACK2 ||
@@ -744,22 +724,22 @@ bool NPC_BSFollowLeader_InFullBodyAttack(void)
 		NPC->client->ps.legsAnim == BOTH_MELEE2;
 }
 
-void NPC_BSFollowLeader_LookAtLeader(void)
+void NPC_BSFollowLeader_LookAtLeader()
 {
-	vec3_t head, leaderHead, delta, angleToLeader;
+	vec3_t head, leader_head, delta, angle_to_leader;
 
-	CalcEntitySpot(NPC->client->leader, SPOT_HEAD, leaderHead);
+	CalcEntitySpot(NPC->client->leader, SPOT_HEAD, leader_head);
 	CalcEntitySpot(NPC, SPOT_HEAD, head);
-	VectorSubtract(leaderHead, head, delta);
-	vectoangles(delta, angleToLeader);
+	VectorSubtract(leader_head, head, delta);
+	vectoangles(delta, angle_to_leader);
 	VectorNormalize(delta);
-	NPC->NPC->desiredYaw = angleToLeader[YAW];
-	NPC->NPC->desiredPitch = angleToLeader[PITCH];
+	NPC->NPC->desiredYaw = angle_to_leader[YAW];
+	NPC->NPC->desiredPitch = angle_to_leader[PITCH];
 
 	NPC_UpdateAngles(qtrue, qtrue);
 }
 
-void NPC_BSFollowLeader(void)
+void NPC_BSFollowLeader()
 {
 	// If In A Jump, Return
 	//----------------------
@@ -800,7 +780,7 @@ void NPC_BSFollowLeader(void)
 		NPC_BSFollowLeader_LookAtLeader();
 	}
 
-	const float followDist = NPCInfo->followDist ? NPCInfo->followDist : 110.0f;
+	const float follow_dist = NPCInfo->followDist ? NPCInfo->followDist : 110.0f;
 
 	STEER::Activate(NPC);
 	{
@@ -816,14 +796,14 @@ void NPC_BSFollowLeader(void)
 			{
 				// Attempt To Steer Directly To Our Goal
 				//---------------------------------------
-				bool moveSuccess = STEER::GoTo(NPC, NPC->client->leader, followDist);
+				bool move_success = STEER::GoTo(NPC, NPC->client->leader, follow_dist);
 
 				// Perhaps Not Close Enough?  Try To Use The Navigation Grid
 				//-----------------------------------------------------------
-				if (!moveSuccess)
+				if (!move_success)
 				{
-					moveSuccess = NAV::GoTo(NPC, NPC->client->leader);
-					if (!moveSuccess)
+					move_success = NAV::GoTo(NPC, NPC->client->leader);
+					if (!move_success)
 					{
 						STEER::Stop(NPC);
 					}
@@ -842,7 +822,7 @@ constexpr auto APEX_HEIGHT = 200.0f;
 #define	PARA_WIDTH		(sqrt(APEX_HEIGHT)+sqrt(APEX_HEIGHT))
 constexpr auto JUMP_SPEED = 200.0f;
 
-void NPC_BSJump(void)
+void NPC_BSJump()
 {
 	vec3_t dir, p1, p2, apex;
 	float time, height, forward, z, xy, dist, apexHeight;
@@ -864,13 +844,13 @@ void NPC_BSJump(void)
 	}
 
 	NPC_UpdateAngles(qtrue, qtrue);
-	const float yawError = AngleDelta(NPC->client->ps.viewangles[YAW], NPCInfo->desiredYaw);
+	const float yaw_error = AngleDelta(NPC->client->ps.viewangles[YAW], NPCInfo->desiredYaw);
 	//We don't really care about pitch here
 
 	switch (NPCInfo->jumpState)
 	{
 	case JS_FACING:
-		if (yawError < MIN_ANGLE_ERROR)
+		if (yaw_error < MIN_ANGLE_ERROR)
 		{
 			//Facing it, Start crouching
 			NPC_SetAnim(NPC, SETANIM_LEGS, BOTH_CROUCH1, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
@@ -911,18 +891,6 @@ void NPC_BSJump(void)
 		z = p1[2] - p2[2];
 
 		apexHeight = APEX_HEIGHT / 2;
-	/*
-	//Determine most desirable apex height
-	apexHeight = (APEX_HEIGHT * PARA_WIDTH/xy) + (APEX_HEIGHT * z/128);
-	if ( apexHeight < APEX_HEIGHT * 0.5 )
-	{
-		apexHeight = APEX_HEIGHT*0.5;
-	}
-	else if ( apexHeight > APEX_HEIGHT * 2 )
-	{
-		apexHeight = APEX_HEIGHT*2;
-	}
-	*/
 
 	//FIXME: length of xy will change curve of parabola, need to account for this
 	//somewhere... PARA_WIDTH
@@ -1029,7 +997,7 @@ void NPC_BSJump(void)
 	}
 }
 
-void NPC_BSRemove(void)
+void NPC_BSRemove()
 {
 	NPC_UpdateAngles(qtrue, qtrue);
 	if (!gi.inPVS(NPC->currentOrigin, g_entities[0].currentOrigin)) //FIXME: use cg.vieworg?
@@ -1048,7 +1016,7 @@ void NPC_BSRemove(void)
 	} //FIXME: else allow for out of FOV???
 }
 
-void NPC_BSSearch(void)
+void NPC_BSSearch()
 {
 	NPC_CheckAlertEvents(qtrue, qtrue, -1, qfalse, AEL_DANGER, qfalse);
 	//FIXME: do something with these alerts...?
@@ -1085,7 +1053,7 @@ void NPC_BSSearch(void)
 	if (!NPCInfo->investigateDebounceTime)
 	{
 		//On our way to a tempGoal
-		float minGoalReachedDistSquared = 32 * 32;
+		float min_goal_reached_dist_squared = 32 * 32;
 		vec3_t vec;
 
 		//Keep moving toward our tempGoal
@@ -1108,10 +1076,10 @@ void NPC_BSSearch(void)
 			}
 			*/
 
-			minGoalReachedDistSquared = 32 * 32; //12*12;
+			min_goal_reached_dist_squared = 32 * 32; //12*12;
 		}
 
-		if (VectorLengthSquared(vec) < minGoalReachedDistSquared)
+		if (VectorLengthSquared(vec) < min_goal_reached_dist_squared)
 		{
 			//Close enough, just got there
 			NPC->waypoint = NAV::GetNearestNode(NPC);
@@ -1172,12 +1140,12 @@ void NPC_BSSearch(void)
 				if (!Q_irand(0, 30))
 				{
 					// NAV_TODO: What if there are no neighbors?
-					vec3_t branchPos, lookDir;
+					vec3_t branch_pos, look_dir;
 
-					NAV::GetNodePosition(NAV::ChooseRandomNeighbor(NPCInfo->tempGoal->waypoint), branchPos);
+					NAV::GetNodePosition(NAV::ChooseRandomNeighbor(NPCInfo->tempGoal->waypoint), branch_pos);
 
-					VectorSubtract(branchPos, NPCInfo->tempGoal->currentOrigin, lookDir);
-					NPCInfo->desiredYaw = AngleNormalize360(vectoyaw(lookDir) + Q_flrand(-45, 45));
+					VectorSubtract(branch_pos, NPCInfo->tempGoal->currentOrigin, look_dir);
+					NPCInfo->desiredYaw = AngleNormalize360(vectoyaw(look_dir) + Q_flrand(-45, 45));
 				}
 			}
 			//gi.Printf(".");
@@ -1191,9 +1159,9 @@ void NPC_BSSearch(void)
 			{
 				// NAV_TODO: What if there are no neighbors?
 
-				const int nextWp = NAV::ChooseRandomNeighbor(NPCInfo->tempGoal->waypoint);
-				NAV::GetNodePosition(nextWp, NPCInfo->tempGoal->currentOrigin);
-				NPCInfo->tempGoal->waypoint = nextWp;
+				const int next_wp = NAV::ChooseRandomNeighbor(NPCInfo->tempGoal->waypoint);
+				NAV::GetNodePosition(next_wp, NPCInfo->tempGoal->currentOrigin);
+				NPCInfo->tempGoal->waypoint = next_wp;
 			}
 			else
 			{
@@ -1218,15 +1186,15 @@ NPC_BSSearchStart
 -------------------------
 */
 
-void NPC_BSSearchStart(const int homeWp, const bState_t b_state)
+void NPC_BSSearchStart(const int home_wp, const bState_t b_state)
 {
 	//FIXME: Reimplement
-	NPCInfo->homeWp = homeWp;
+	NPCInfo->homeWp = home_wp;
 	NPCInfo->tempBehavior = b_state;
 	NPCInfo->aiFlags |= NPCAI_ENROUTE_TO_HOMEWP;
 	NPCInfo->investigateDebounceTime = 0;
-	NAV::GetNodePosition(homeWp, NPCInfo->tempGoal->currentOrigin);
-	NPCInfo->tempGoal->waypoint = homeWp;
+	NAV::GetNodePosition(home_wp, NPCInfo->tempGoal->currentOrigin);
+	NPCInfo->tempGoal->waypoint = home_wp;
 	//gi.Printf("\nHeading for wp %d...\n", NPCInfo->homeWp);
 }
 
@@ -1238,7 +1206,7 @@ NPC_BSNoClip
 -------------------------
 */
 
-void NPC_BSNoClip(void)
+void NPC_BSNoClip()
 {
 	if (UpdateGoal())
 	{
@@ -1254,13 +1222,13 @@ void NPC_BSNoClip(void)
 
 		VectorNormalize(dir);
 
-		const float fDot = DotProduct(forward, dir) * 127;
-		const float rDot = DotProduct(right, dir) * 127;
-		const float uDot = DotProduct(up, dir) * 127;
+		const float f_dot = DotProduct(forward, dir) * 127;
+		const float r_dot = DotProduct(right, dir) * 127;
+		const float u_dot = DotProduct(up, dir) * 127;
 
-		ucmd.forwardmove = floor(fDot);
-		ucmd.rightmove = floor(rDot);
-		ucmd.upmove = floor(uDot);
+		ucmd.forwardmove = floor(f_dot);
+		ucmd.rightmove = floor(r_dot);
+		ucmd.upmove = floor(u_dot);
 	}
 	else
 	{
@@ -1271,7 +1239,7 @@ void NPC_BSNoClip(void)
 	NPC_UpdateAngles(qtrue, qtrue);
 }
 
-void NPC_BSWander(void)
+void NPC_BSWander()
 {
 	//FIXME: don't actually go all the way to the next waypoint, just move in fits and jerks...?
 	NPC_CheckAlertEvents(qtrue, qtrue, -1, qfalse, AEL_DANGER, qfalse);
@@ -1303,23 +1271,23 @@ void NPC_BSWander(void)
 
 	// Are We Doing A Path?
 	//----------------------
-	bool HasPath = NAV::HasPath(NPC);
-	if (HasPath)
+	bool has_path = NAV::HasPath(NPC);
+	if (has_path)
 	{
-		HasPath = NAV::UpdatePath(NPC);
-		if (HasPath)
+		has_path = NAV::UpdatePath(NPC);
+		if (has_path)
 		{
 			STEER::Path(NPC); // Follow The Path
 			STEER::AvoidCollisions(NPC);
 
 			if (NPCInfo->aiFlags & NPCAI_BLOCKED && level.time - NPCInfo->blockedDebounceTime > 1000)
 			{
-				HasPath = false; // find a new one
+				has_path = false; // find a new one
 			}
 		}
 	}
 
-	if (!HasPath)
+	if (!has_path)
 	{
 		// If Debounce Time Has Expired, Choose A New Sub State
 		//------------------------------------------------------
@@ -1333,13 +1301,13 @@ void NPC_BSWander(void)
 
 			// Pick Another Spot
 			//-------------------
-			const int NEXTSUBSTATE = Q_irand(0, 10);
+			const int nextsubstate = Q_irand(0, 10);
 
-			const bool RandomPathNode = NEXTSUBSTATE < 9; //(NEXTSUBSTATE<4);
+			const bool random_path_node = nextsubstate < 9; //(NEXTSUBSTATE<4);
 
 			// Random Path Node
 			//------------------
-			if (RandomPathNode)
+			if (random_path_node)
 			{
 				// Sometimes, Walk
 				//-----------------
@@ -1414,7 +1382,7 @@ extern void WP_DropWeapon(gentity_t* dropper, vec3_t velocity);
 extern void ChangeWeapon(const gentity_t* ent, int new_weapon);
 extern int g_crosshairEntNum;
 
-qboolean NPC_CanSurrender(void)
+qboolean NPC_CanSurrender()
 {
 	if (NPC->client)
 	{
@@ -1520,7 +1488,7 @@ qboolean NPC_CanSurrender(void)
 	return qtrue;
 }
 
-void NPC_Surrender(void)
+void NPC_Surrender()
 {
 	//FIXME: say "don't shoot!" if we weren't already surrendering
 	if (NPC->client->ps.weaponTime || PM_InKnockDown(&NPC->client->ps))
@@ -1702,9 +1670,9 @@ qboolean NPC_CheckSurrender()
 						if (InFOV(NPC, NPC->enemy, 30, 30))
 						{
 							//they're looking at me
-							float maxDist = 64 + NPC->maxs[0] * 1.5 + NPC->enemy->maxs[0] * 1.5;
-							maxDist *= maxDist;
-							if (DistanceSquared(NPC->currentOrigin, NPC->enemy->currentOrigin) < maxDist)
+							float max_dist = 64 + NPC->maxs[0] * 1.5 + NPC->enemy->maxs[0] * 1.5;
+							max_dist *= max_dist;
+							if (DistanceSquared(NPC->currentOrigin, NPC->enemy->currentOrigin) < max_dist)
 							{
 								//they're close
 								if (gi.inPVS(NPC->currentOrigin, NPC->enemy->currentOrigin))
@@ -1725,7 +1693,7 @@ qboolean NPC_CheckSurrender()
 	return qfalse;
 }
 
-void NPC_JawaFleeSound(void)
+void NPC_JawaFleeSound()
 {
 	if (NPC
 		&& NPC->client
@@ -1744,11 +1712,11 @@ void NPC_JawaFleeSound(void)
 extern gentity_t* NPC_SearchForWeapons();
 extern qboolean G_CanPickUpWeapons(const gentity_t* other);
 
-qboolean NPC_BSFlee(void)
+qboolean NPC_BSFlee()
 {
-	float enemyTooCloseDist = 50.0f;
-	bool reachedEscapePoint = false;
-	const bool inSurrender = level.time < NPCInfo->surrenderTime;
+	float enemy_too_close_dist = 50.0f;
+	bool reached_escape_point = false;
+	const bool in_surrender = level.time < NPCInfo->surrenderTime;
 
 	// Check For Enemies And Alert Events
 	//------------------------------------
@@ -1758,19 +1726,19 @@ qboolean NPC_BSFlee(void)
 	{
 		NPCInfo->enemyLastSeenTime = level.time;
 	}
-	const bool enemyRecentlySeen = NPC->enemy && level.time - NPCInfo->enemyLastSeenTime < 3000;
-	if (enemyRecentlySeen)
+	const bool enemy_recently_seen = NPC->enemy && level.time - NPCInfo->enemyLastSeenTime < 3000;
+	if (enemy_recently_seen)
 	{
 		if (NPC->enemy->client && NPC->enemy->client->NPC_class == CLASS_RANCOR)
 		{
-			enemyTooCloseDist = 400.0f;
+			enemy_too_close_dist = 400.0f;
 		}
-		enemyTooCloseDist += NPC->maxs[0] + NPC->enemy->maxs[0];
+		enemy_too_close_dist += NPC->maxs[0] + NPC->enemy->maxs[0];
 	}
 
 	// Look For Weapons To Pick Up
 	//-----------------------------
-	if (enemyRecentlySeen && // Is There An Enemy Near?
+	if (enemy_recently_seen && // Is There An Enemy Near?
 		NPC->client->NPC_class != CLASS_PRISONER && // Prisoners can't pickup weapons
 		NPCInfo->rank > RANK_CIVILIAN && // Neither can civilians
 		TIMER_Done(NPC, "panic") && // Panic causes him to run for a bit, don't pickup weapons
@@ -1778,16 +1746,16 @@ qboolean NPC_BSFlee(void)
 		G_CanPickUpWeapons(NPC) //Allowed To Pick Up Dropped Weapons
 	)
 	{
-		gentity_t* foundWeap = NPC_SearchForWeapons();
+		gentity_t* found_weap = NPC_SearchForWeapons();
 
 		// Ok, There Is A Weapon!  Try Going To It!
 		//------------------------------------------
-		if (foundWeap && NAV::SafePathExists(NPC->currentOrigin, foundWeap->currentOrigin,
+		if (found_weap && NAV::SafePathExists(NPC->currentOrigin, found_weap->currentOrigin,
 		                                     NPC->enemy->currentOrigin, 150.0f))
 		{
 			NAV::ClearPath(NPC); // Remove Any Old Path
 
-			NPCInfo->goalEntity = foundWeap; // Change Our Target Goal
+			NPCInfo->goalEntity = found_weap; // Change Our Target Goal
 			NPCInfo->goalRadius = 30.0f; // 30 good enough?
 
 			TIMER_Set(NPC, "CheckForWeaponToPickup", Q_irand(10000, 50000));
@@ -1806,7 +1774,7 @@ qboolean NPC_BSFlee(void)
 	if (NPCInfo->goalEntity
 		&& !Q3_TaskIDPending(NPC, TID_MOVE_NAV)
 		&& NPC->enemy
-		&& Distance(NPCInfo->goalEntity->currentOrigin, NPC->enemy->currentOrigin) < enemyTooCloseDist)
+		&& Distance(NPCInfo->goalEntity->currentOrigin, NPC->enemy->currentOrigin) < enemy_too_close_dist)
 	{
 		//our goal is too close to our enemy, dump it...
 		NPCInfo->goalEntity = nullptr;
@@ -1815,25 +1783,25 @@ qboolean NPC_BSFlee(void)
 	{
 		NPCInfo->goalEntity = nullptr;
 	}
-	const bool hasEscapePoint = NPCInfo->goalEntity && NPCInfo->goalRadius != 0.0f;
+	const bool has_escape_point = NPCInfo->goalEntity && NPCInfo->goalRadius != 0.0f;
 
 	STEER::Activate(NPC);
 	{
 		// Have We Reached The Escape Point?
 		//-----------------------------------
-		if (hasEscapePoint && STEER::Reached(NPC, NPCInfo->goalEntity, NPCInfo->goalRadius, false))
+		if (has_escape_point && STEER::Reached(NPC, NPCInfo->goalEntity, NPCInfo->goalRadius, false))
 		{
 			if (Q3_TaskIDPending(NPC, TID_MOVE_NAV))
 			{
 				Q3_TaskIDComplete(NPC, TID_MOVE_NAV);
 			}
-			reachedEscapePoint = true;
+			reached_escape_point = true;
 		}
 
 		// If Super Close To The Enemy, Run In The Other Direction
 		//---------------------------------------------------------
-		if (enemyRecentlySeen &&
-			Distance(NPC->enemy->currentOrigin, NPC->currentOrigin) < enemyTooCloseDist)
+		if (enemy_recently_seen &&
+			Distance(NPC->enemy->currentOrigin, NPC->currentOrigin) < enemy_too_close_dist)
 		{
 			STEER::Evade(NPC, NPC->enemy);
 			STEER::AvoidCollisions(NPC);
@@ -1841,44 +1809,44 @@ qboolean NPC_BSFlee(void)
 
 		// If Already At The Escape Point, Or Surrendering, Don't Move
 		//-------------------------------------------------------------
-		else if (reachedEscapePoint || inSurrender)
+		else if (reached_escape_point || in_surrender)
 		{
 			STEER::Stop(NPC);
 		}
 		else
 		{
-			bool moveSuccess = false;
+			bool move_success = false;
 			// Try To Get To The Escape Point
 			//--------------------------------
-			if (hasEscapePoint)
+			if (has_escape_point)
 			{
-				moveSuccess = STEER::GoTo(NPC, NPCInfo->goalEntity, true);
-				if (!moveSuccess)
+				move_success = STEER::GoTo(NPC, NPCInfo->goalEntity, true);
+				if (!move_success)
 				{
-					moveSuccess = NAV::GoTo(NPC, NPCInfo->goalEntity, 0.3f);
+					move_success = NAV::GoTo(NPC, NPCInfo->goalEntity, 0.3f);
 				}
 			}
 
 			// Cant Get To The Escape Point, So If There Is An Enemy
 			//-------------------------------------------------------
-			if (!moveSuccess && enemyRecentlySeen)
+			if (!move_success && enemy_recently_seen)
 			{
 				// Try To Get To The Farthest Combat Point From Him
 				//--------------------------------------------------
-				const NAV::TNodeHandle Nbr = NAV::ChooseFarthestNeighbor(NPC, NPC->enemy->currentOrigin, 0.25f);
-				if (Nbr > 0)
+				const NAV::TNodeHandle nbr = NAV::ChooseFarthestNeighbor(NPC, NPC->enemy->currentOrigin, 0.25f);
+				if (nbr > 0)
 				{
-					moveSuccess = STEER::GoTo(NPC, NAV::GetNodePosition(Nbr), true);
-					if (!moveSuccess)
+					move_success = STEER::GoTo(NPC, NAV::GetNodePosition(nbr), true);
+					if (!move_success)
 					{
-						moveSuccess = NAV::GoTo(NPC, Nbr, 0.3f);
+						move_success = NAV::GoTo(NPC, nbr, 0.3f);
 					}
 				}
 			}
 
 			// If We Still Can't (Or Don't Need To) Move, Just Stop
 			//------------------------------------------------------
-			if (!moveSuccess)
+			if (!move_success)
 			{
 				STEER::Stop(NPC);
 			}
@@ -1888,7 +1856,7 @@ qboolean NPC_BSFlee(void)
 
 	// Is There An Enemy Around?
 	//---------------------------
-	if (enemyRecentlySeen)
+	if (enemy_recently_seen)
 	{
 		// Time To Surrender?
 		//--------------------
@@ -1905,21 +1873,21 @@ qboolean NPC_BSFlee(void)
 
 		// Time To Choose A New Escape Point?
 		//------------------------------------
-		if ((!hasEscapePoint || reachedEscapePoint) && TIMER_Done(NPC, "FindNewEscapePointDebounce"))
+		if ((!has_escape_point || reached_escape_point) && TIMER_Done(NPC, "FindNewEscapePointDebounce"))
 		{
 			TIMER_Set(NPC, "FindNewEscapePointDebounce", 2500);
 
-			const int escapePoint = NPC_FindCombatPoint(
+			const int escape_point = NPC_FindCombatPoint(
 				NPC->currentOrigin,
 				NPC->enemy->currentOrigin,
 				NPC->currentOrigin,
 				CP_COVER | CP_AVOID_ENEMY | CP_HAS_ROUTE,
 				128);
-			if (escapePoint != -1)
+			if (escape_point != -1)
 			{
 				NPC_JawaFleeSound();
-				NPC_SetCombatPoint(escapePoint);
-				NPC_SetMoveGoal(NPC, level.combatPoints[escapePoint].origin, 8, qtrue, escapePoint);
+				NPC_SetCombatPoint(escape_point);
+				NPC_SetMoveGoal(NPC, level.combatPoints[escape_point].origin, 8, qtrue, escape_point);
 			}
 		}
 	}
@@ -1938,15 +1906,15 @@ qboolean NPC_BSFlee(void)
 	// Always Update Angles
 	//----------------------
 	NPC_UpdateAngles(qtrue, qtrue);
-	if (reachedEscapePoint)
+	if (reached_escape_point)
 	{
 		return qtrue;
 	}
 	return qfalse;
 }
 
-void NPC_StartFlee(gentity_t* enemy, vec3_t dangerPoint, const int dangerLevel, const int fleeTimeMin,
-                   const int fleeTimeMax)
+void NPC_StartFlee(gentity_t* enemy, vec3_t danger_point, const int danger_level, const int flee_time_min,
+                   const int flee_time_max)
 {
 	if (Q3_TaskIDPending(NPC, TID_MOVE_NAV))
 	{
@@ -1974,28 +1942,28 @@ void NPC_StartFlee(gentity_t* enemy, vec3_t dangerPoint, const int dangerLevel, 
 
 	//FIXME: if don't have a weapon, find nearest one we have a route to and run for it?
 	int cp = -1;
-	if (dangerLevel > AEL_DANGER || NPC->s.weapon == WP_NONE || (!NPCInfo->group || NPCInfo->group->numGroup <= 1)
+	if (danger_level > AEL_DANGER || NPC->s.weapon == WP_NONE || (!NPCInfo->group || NPCInfo->group->numGroup <= 1)
 		&& NPC->health <= 10)
 	{
 		//IF either great danger OR I have no weapon OR I'm alone and low on health, THEN try to find a combat point out of PVS
-		cp = NPC_FindCombatPoint(NPC->currentOrigin, dangerPoint, NPC->currentOrigin,
+		cp = NPC_FindCombatPoint(NPC->currentOrigin, danger_point, NPC->currentOrigin,
 		                         CP_COVER | CP_AVOID | CP_HAS_ROUTE | CP_NO_PVS, 128);
 	}
 	//FIXME: still happens too often...
 	if (cp == -1)
 	{
 		//okay give up on the no PVS thing
-		cp = NPC_FindCombatPoint(NPC->currentOrigin, dangerPoint, NPC->currentOrigin,
+		cp = NPC_FindCombatPoint(NPC->currentOrigin, danger_point, NPC->currentOrigin,
 		                         CP_COVER | CP_AVOID | CP_HAS_ROUTE, 128);
 		if (cp == -1)
 		{
 			//okay give up on the avoid
-			cp = NPC_FindCombatPoint(NPC->currentOrigin, dangerPoint, NPC->currentOrigin, CP_COVER | CP_HAS_ROUTE,
+			cp = NPC_FindCombatPoint(NPC->currentOrigin, danger_point, NPC->currentOrigin, CP_COVER | CP_HAS_ROUTE,
 			                         128);
 			if (cp == -1)
 			{
 				//okay give up on the cover
-				cp = NPC_FindCombatPoint(NPC->currentOrigin, dangerPoint, NPC->currentOrigin, CP_HAS_ROUTE, 128);
+				cp = NPC_FindCombatPoint(NPC->currentOrigin, danger_point, NPC->currentOrigin, CP_HAS_ROUTE, 128);
 			}
 		}
 	}
@@ -2019,12 +1987,12 @@ void NPC_StartFlee(gentity_t* enemy, vec3_t dangerPoint, const int dangerLevel, 
 		//FIXME: other evasion AI?  Duck?  Strafe?  Dodge?
 		NPCInfo->tempBehavior = BS_FLEE;
 		//Run straight away from here... FIXME: really want to find farthest waypoint/navgoal from this pos... maybe based on alert event radius?
-		NPC_SetMoveGoal(NPC, dangerPoint, 0, qtrue);
+		NPC_SetMoveGoal(NPC, danger_point, 0, qtrue);
 		//store the danger point
-		VectorCopy(dangerPoint, NPCInfo->investigateGoal); //FIXME: make a new field for this?
+		VectorCopy(danger_point, NPCInfo->investigateGoal); //FIXME: make a new field for this?
 	}
 
-	if (dangerLevel > AEL_DANGER //geat danger always makes people turn and run
+	if (danger_level > AEL_DANGER //geat danger always makes people turn and run
 		|| NPC->s.weapon == WP_NONE //melee/unarmed guys turn and run, others keep facing you and shooting
 		|| NPC->s.weapon == WP_MELEE
 		|| NPC->s.weapon == WP_TUSKEN_STAFF)
@@ -2036,14 +2004,14 @@ void NPC_StartFlee(gentity_t* enemy, vec3_t dangerPoint, const int dangerLevel, 
 	TIMER_Set(NPC, "attackDelay", Q_irand(500, 2500));
 	//FIXME: is this always applicable?
 	NPCInfo->squadState = SQUAD_RETREAT;
-	TIMER_Set(NPC, "flee", Q_irand(fleeTimeMin, fleeTimeMax));
+	TIMER_Set(NPC, "flee", Q_irand(flee_time_min, flee_time_max));
 	TIMER_Set(NPC, "panic", Q_irand(1000, 4000)); //how long to wait before trying to nav to a dropped weapon
 	TIMER_Set(NPC, "duck", 0);
 }
 
-void G_StartFlee(gentity_t* self, gentity_t* enemy, vec3_t dangerPoint, const int dangerLevel,
-                 const int fleeTimeMin,
-                 const int fleeTimeMax)
+void G_StartFlee(gentity_t* self, gentity_t* enemy, vec3_t danger_point, const int danger_level,
+                 const int flee_time_min,
+                 const int flee_time_max)
 {
 	if (!self->NPC)
 	{
@@ -2053,7 +2021,7 @@ void G_StartFlee(gentity_t* self, gentity_t* enemy, vec3_t dangerPoint, const in
 	SaveNPCGlobals();
 	SetNPCGlobals(self);
 
-	NPC_StartFlee(enemy, dangerPoint, dangerLevel, fleeTimeMin, fleeTimeMax);
+	NPC_StartFlee(enemy, danger_point, danger_level, flee_time_min, flee_time_max);
 
 	RestoreNPCGlobals();
 }
@@ -2087,23 +2055,23 @@ void NPC_BSEmplaced()
 		return;
 	}
 
-	qboolean enemyLOS = qfalse;
-	qboolean enemyCS = qfalse;
-	qboolean faceEnemy = qfalse;
+	qboolean enemy_los = qfalse;
+	qboolean enemy_cs = qfalse;
+	qboolean face_enemy = qfalse;
 	qboolean shoot = qfalse;
 
 	if (NPC_ClearLOS(NPC->enemy))
 	{
-		vec3_t impactPos;
-		enemyLOS = qtrue;
+		vec3_t impact_pos;
+		enemy_los = qtrue;
 
-		const int hit = NPC_ShotEntity(NPC->enemy, impactPos);
-		const gentity_t* hitEnt = &g_entities[hit];
+		const int hit = NPC_ShotEntity(NPC->enemy, impact_pos);
+		const gentity_t* hit_ent = &g_entities[hit];
 
-		if (hit == NPC->enemy->s.number || hitEnt && hitEnt->takedamage)
+		if (hit == NPC->enemy->s.number || hit_ent && hit_ent->takedamage)
 		{
 			//can hit enemy or will hit glass or other minor breakable (or in emplaced gun), so shoot anyway
-			enemyCS = qtrue;
+			enemy_cs = qtrue;
 			NPC_AimAdjust(2); //adjust aim better longer we have clear shot at enemy
 			VectorCopy(NPC->enemy->currentOrigin, NPCInfo->enemyLastSeenLocation);
 		}
@@ -2117,17 +2085,17 @@ void NPC_BSEmplaced()
 		}
 	*/
 
-	if (enemyLOS)
+	if (enemy_los)
 	{
 		//FIXME: no need to face enemy if we're moving to some other goal and he's too far away to shoot?
-		faceEnemy = qtrue;
+		face_enemy = qtrue;
 	}
-	if (enemyCS)
+	if (enemy_cs)
 	{
 		shoot = qtrue;
 	}
 
-	if (faceEnemy)
+	if (face_enemy)
 	{
 		//face the enemy
 		NPC_FaceEnemy(qtrue);
