@@ -256,7 +256,7 @@ using mdxmSurface_t = struct
 
 	int ofsHeader; // this will be a negative number, pointing back to main header
 
-	int numVerts;
+	int num_verts;
 	int ofsVerts;
 
 	int numTriangles;
@@ -284,7 +284,7 @@ using mdxmTriangle_t = struct
 };
 // }
 
-// for each vert... (mdxmSurface_t->numVerts)
+// for each vert... (mdxmSurface_t->num_verts)
 // {
 // mdxVertex_t - this is an array with number of verts from the surface definition as its bounds. It contains normal info, texture coors and number of weightings for this bone
 // (this is now kept at 32 bytes for cache-aligning)
@@ -348,7 +348,7 @@ static inline float G2_GetVertBoneWeight(const mdxmVertex_t* pVert, const int iW
 	return fBoneWeight;
 }
 #endif
-// for each vert... (mdxmSurface_t->numVerts)  (seperated from mdxmVertex_t struct for cache reasons)
+// for each vert... (mdxmSurface_t->num_verts)  (seperated from mdxmVertex_t struct for cache reasons)
 // {
 // mdxVertex_t - this is an array with number of verts from the surface definition as its bounds. It contains normal info, texture coors and number of weightings for this bone
 

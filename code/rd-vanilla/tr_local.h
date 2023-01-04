@@ -582,7 +582,7 @@ using srfPoly_t = struct srfPoly_s {
 	surfaceType_t	surfaceType;
 	qhandle_t		hShader;
 	int				fogIndex;
-	int				numVerts;
+	int				num_verts;
 	polyVert_t* verts;
 };
 
@@ -656,10 +656,10 @@ using srfTriangles_t = struct {
 	//	float			radius;
 
 		// triangle definitions
-	int				numIndexes;
+	int				num_indexes;
 	int* indexes;
 
-	int				numVerts;
+	int				num_verts;
 	drawVert_t* verts;
 };
 
@@ -1278,14 +1278,14 @@ byte* RE_TempRawImage_ReadFromFile(const char* psLocalFilename, int* piWidth, in
 void	RE_TempRawImage_CleanUp();
 
 void		RE_BeginRegistration(glconfig_t* glconfig);
-void		RE_LoadWorldMap(const char* mapname);
+void		RE_LoadWorldMap(const char* name);
 void		RE_SetWorldVisData(const byte* vis);
 qhandle_t	RE_RegisterModel(const char* name);
 qhandle_t	RE_RegisterSkin(const char* name);
 int			RE_GetAnimationCFG(const char* psCFGFilename, char* psDest, int iDestSize);
 void		RE_Shutdown(qboolean destroyWindow);
 
-void		RE_RegisterMedia_LevelLoadBegin(const char* psMapName, ForceReload_e eForceReload, qboolean bAllowScreenDissolve);
+void		RE_RegisterMedia_LevelLoadBegin(const char* psMapName, ForceReload_e e_force_reload, qboolean bAllowScreenDissolve);
 void		RE_RegisterMedia_LevelLoadEnd(void);
 int			RE_RegisterMedia_GetLevel(void);
 qboolean	RE_RegisterModels_LevelLoadEnd(qboolean bDeleteEverythingNotUsedThisLevel = qfalse);
@@ -1386,7 +1386,7 @@ struct shaderCommands_s
 
 	int			dlightBits;	// or together of all vertexDlightBits
 
-	int			numIndexes;
+	int			num_indexes;
 	int			numVertexes;
 
 	// info extracted from current shader
@@ -1416,7 +1416,7 @@ extern	bool		styleUpdated[MAX_LIGHT_STYLES];
 void RB_BeginSurface(shader_t* shader, int fog_num);
 void RB_EndSurface();
 void RB_CheckOverflow(int verts, int indexes);
-#define RB_CHECKOVERFLOW(v,i) if (tess.numVertexes + (v) >= SHADER_MAX_VERTEXES || tess.numIndexes + (i) >= SHADER_MAX_INDEXES ) {RB_CheckOverflow(v,i);}
+#define RB_CHECKOVERFLOW(v,i) if (tess.numVertexes + (v) >= SHADER_MAX_VERTEXES || tess.num_indexes + (i) >= SHADER_MAX_INDEXES ) {RB_CheckOverflow(v,i);}
 
 void RB_StageIteratorGeneric();
 void RB_StageIteratorSky(void);
@@ -1516,7 +1516,7 @@ void R_InitNextFrame(void);
 
 void RE_ClearScene(void);
 void RE_AddRefEntityToScene(const refEntity_t* ent);
-void RE_AddPolyToScene(qhandle_t hShader, int numVerts, const polyVert_t* verts);
+void RE_AddPolyToScene(qhandle_t hShader, int num_verts, const polyVert_t* verts);
 void RE_AddLightToScene(const vec3_t org, float intensity, float r, float g, float b);
 void RE_RenderScene(const refdef_t* fd);
 

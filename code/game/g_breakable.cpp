@@ -32,8 +32,8 @@ extern void CG_Chunks(int owner, vec3_t origin, const vec3_t mins, const vec3_t 
                       int custom_sound = 0);
 extern void G_SetEnemy(gentity_t* self, gentity_t* enemy);
 
-extern gentity_t* G_CreateObject(gentity_t* owner, vec3_t origin, vec3_t angles, int modelIndex, int frame,
-                                 trType_t trType, int effectID);
+extern gentity_t* G_CreateObject(gentity_t* owner, vec3_t origin, vec3_t angles, int model_index, int frame,
+                                 trType_t tr_type, int effect_id);
 
 extern qboolean player_locked;
 
@@ -1047,7 +1047,7 @@ void TieBomberThink(gentity_t* self)
 	}
 }
 
-void misc_model_breakable_gravity_init(gentity_t* ent, const qboolean dropToFloor)
+void misc_model_breakable_gravity_init(gentity_t* ent, const qboolean drop_to_floor)
 {
 	//G_SoundIndex( "sound/movers/objects/objectHurt.wav" );
 	G_EffectIndex("melee/kick_impact");
@@ -1072,7 +1072,7 @@ void misc_model_breakable_gravity_init(gentity_t* ent, const qboolean dropToFloo
 	//drop to floor
 	trace_t tr;
 
-	if (dropToFloor)
+	if (drop_to_floor)
 	{
 		vec3_t bottom;
 		vec3_t top;

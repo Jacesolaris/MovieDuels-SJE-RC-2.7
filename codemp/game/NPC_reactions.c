@@ -1021,24 +1021,24 @@ void NPC_Use(gentity_t* self, gentity_t* other, gentity_t* activator)
 		// If this is a vehicle, let the other guy board it. Added 12/14/02 by AReis.
 		if (self->client->NPC_class == CLASS_VEHICLE)
 		{
-			Vehicle_t* pVeh = self->m_pVehicle;
+			Vehicle_t* p_veh = self->m_pVehicle;
 
-			if (pVeh && pVeh->m_pVehicleInfo)
+			if (p_veh && p_veh->m_pVehicleInfo)
 			{
 				//if I used myself, eject everyone on me
 				if (other == self)
 				{
-					pVeh->m_pVehicleInfo->EjectAll(pVeh);
+					p_veh->m_pVehicleInfo->EjectAll(p_veh);
 				}
 				// If other is already riding this vehicle (self), eject him.
 				else if (other->s.owner == self->s.number)
 				{
-					pVeh->m_pVehicleInfo->Eject(pVeh, (bgEntity_t*)other, qfalse);
+					p_veh->m_pVehicleInfo->Eject(p_veh, (bgEntity_t*)other, qfalse);
 				}
 				// Otherwise board this vehicle.
 				else
 				{
-					pVeh->m_pVehicleInfo->Board(pVeh, (bgEntity_t*)other);
+					p_veh->m_pVehicleInfo->Board(p_veh, (bgEntity_t*)other);
 				}
 			}
 		}

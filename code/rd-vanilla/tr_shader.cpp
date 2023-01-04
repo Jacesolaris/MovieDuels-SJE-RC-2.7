@@ -89,7 +89,7 @@ const byte stylesDefault[MAXLIGHTMAPS] =
 	LS_NONE
 };
 
-static void ClearGlobalShader(void)
+static void ClearGlobalShader()
 {
 	memset(&shader, 0, sizeof shader);
 	memset(&stages, 0, sizeof stages);
@@ -125,14 +125,14 @@ This should really only be used for explicit shaders, because there is no
 way to ask for different implicit lighting modes (vertex, lightmap, etc)
 ====================
 */
-qhandle_t RE_RegisterShaderLightMap(const char* name, const int* lightmapIndex, const byte* styles)
+qhandle_t RE_RegisterShaderLightMap(const char* name, const int* lightmap_index, const byte* styles)
 {
 	if (strlen(name) >= MAX_QPATH) {
 		Com_Printf("Shader name exceeds MAX_QPATH\n");
 		return 0;
 	}
 
-	const shader_t* sh = R_FindShader(name, lightmapIndex, styles, qtrue);
+	const shader_t* sh = R_FindShader(name, lightmap_index, styles, qtrue);
 
 	// we want to return 0 if the shader failed to
 	// load for some reason, but R_FindShader should
@@ -155,15 +155,15 @@ default shader if the real one can't be found.
 ==================
 */
 shader_t* R_FindShaderByName(const char* name) {
-	char		strippedName[MAX_QPATH];
+	char		stripped_name[MAX_QPATH];
 
 	if (name == nullptr || name[0] == 0) {  // bk001205
 		return tr.defaultShader;
 	}
 
-	COM_StripExtension(name, strippedName, sizeof strippedName);
+	COM_StripExtension(name, stripped_name, sizeof stripped_name);
 
-	const int hash = generateHashValue(strippedName);
+	const int hash = generateHashValue(stripped_name);
 
 	//
 	// see if the shader is already loaded
@@ -173,7 +173,7 @@ shader_t* R_FindShaderByName(const char* name) {
 		// then a default shader is created with lightmapIndex == LIGHTMAP_NONE, so we
 		// have to check all default shaders otherwise for every call to R_FindShader
 		// with that same strippedName a new default shader is created.
-		if (Q_stricmp(sh->name, strippedName) == 0) {
+		if (Q_stricmp(sh->name, stripped_name) == 0) {
 			// match found
 			return sh;
 		}
@@ -234,7 +234,7 @@ void R_RemapShader(const char *shaderName, const char *newShaderName, const char
 ParseVector
 ===============
 */
-qboolean ParseVector(const char** text, int count, float* v) {
+qboolean ParseVector(const char** text, const int count, float* v) {
 	// FIXME: spaces are currently required after parens, should change parseext...
 	const char* token = COM_ParseExt(text, qfalse);
 	if (strcmp(token, "(") != 0) {
@@ -1169,8 +1169,8 @@ ParseStage
 */
 static qboolean ParseStage(shaderStage_t* stage, const char** text)
 {
-	int depthMaskBits = GLS_DEPTHMASK_TRUE, blendSrcBits = 0, blendDstBits = 0, atestBits = 0, depthFuncBits = 0;
-	qboolean depthMaskExplicit = qfalse;
+	int depth_mask_bits = GLS_DEPTHMASK_TRUE, blend_src_bits = 0, blend_dst_bits = 0, atest_bits = 0, depth_func_bits = 0;
+	qboolean depth_mask_explicit = qfalse;
 
 	stage->active = true;
 
@@ -1261,17 +1261,17 @@ static qboolean ParseStage(shaderStage_t* stage, const char** text)
 		{
 			constexpr auto MAX_IMAGE_ANIMATIONS = 32;
 			image_t* images[MAX_IMAGE_ANIMATIONS];
-			const bool bClamp = !Q_stricmp(token, "clampanimMap");
-			const bool oneShot = !Q_stricmp(token, "oneshotanimMap");
+			const bool b_clamp = !Q_stricmp(token, "clampanimMap");
+			const bool one_shot = !Q_stricmp(token, "oneshotanimMap");
 
 			token = COM_ParseExt(text, qfalse);
 			if (!token[0])
 			{
-				ri.Printf(PRINT_WARNING, "WARNING: missing parameter for '%s' keyword in shader '%s'\n", bClamp ? "animMap" : "clampanimMap", shader.name);
+				ri.Printf(PRINT_WARNING, "WARNING: missing parameter for '%s' keyword in shader '%s'\n", b_clamp ? "animMap" : "clampanimMap", shader.name);
 				return qfalse;
 			}
 			stage->bundle[0].imageAnimationSpeed = atof(token);
-			stage->bundle[0].oneShotAnimMap = oneShot;
+			stage->bundle[0].oneShotAnimMap = one_shot;
 
 			// parse up to MAX_IMAGE_ANIMATIONS animations
 			while (true) {
@@ -1286,7 +1286,7 @@ static qboolean ParseStage(shaderStage_t* stage, const char** text)
 						static_cast<qboolean>(!shader.noMipMaps),
 						static_cast<qboolean>(!shader.noPicMip),
 						static_cast<qboolean>(!shader.noTC),
-						bClamp ? GL_CLAMP : GL_REPEAT);
+						b_clamp ? GL_CLAMP : GL_REPEAT);
 					if (!images[num])
 					{
 						ri.Printf(PRINT_WARNING, "WARNING: R_FindImageFile could not find '%s' in shader '%s'\n", token, shader.name);
@@ -1325,7 +1325,7 @@ static qboolean ParseStage(shaderStage_t* stage, const char** text)
 				return qfalse;
 			}
 
-			atestBits = NameToAFunc(token);
+			atest_bits = NameToAFunc(token);
 		}
 		//
 		// depthFunc <func>
@@ -1342,15 +1342,15 @@ static qboolean ParseStage(shaderStage_t* stage, const char** text)
 
 			if (!Q_stricmp(token, "lequal"))
 			{
-				depthFuncBits = 0;
+				depth_func_bits = 0;
 			}
 			else if (!Q_stricmp(token, "equal"))
 			{
-				depthFuncBits = GLS_DEPTHFUNC_EQUAL;
+				depth_func_bits = GLS_DEPTHFUNC_EQUAL;
 			}
 			else if (!Q_stricmp(token, "disable"))
 			{
-				depthFuncBits = GLS_DEPTHTEST_DISABLE;
+				depth_func_bits = GLS_DEPTHTEST_DISABLE;
 			}
 			else
 			{
@@ -1378,20 +1378,20 @@ static qboolean ParseStage(shaderStage_t* stage, const char** text)
 			}
 			// check for "simple" blends first
 			if (!Q_stricmp(token, "add")) {
-				blendSrcBits = GLS_SRCBLEND_ONE;
-				blendDstBits = GLS_DSTBLEND_ONE;
+				blend_src_bits = GLS_SRCBLEND_ONE;
+				blend_dst_bits = GLS_DSTBLEND_ONE;
 			}
 			else if (!Q_stricmp(token, "filter")) {
-				blendSrcBits = GLS_SRCBLEND_DST_COLOR;
-				blendDstBits = GLS_DSTBLEND_ZERO;
+				blend_src_bits = GLS_SRCBLEND_DST_COLOR;
+				blend_dst_bits = GLS_DSTBLEND_ZERO;
 			}
 			else if (!Q_stricmp(token, "blend")) {
-				blendSrcBits = GLS_SRCBLEND_SRC_ALPHA;
-				blendDstBits = GLS_DSTBLEND_ONE_MINUS_SRC_ALPHA;
+				blend_src_bits = GLS_SRCBLEND_SRC_ALPHA;
+				blend_dst_bits = GLS_DSTBLEND_ONE_MINUS_SRC_ALPHA;
 			}
 			else {
 				// complex double blends
-				blendSrcBits = NameToSrcBlendMode(token);
+				blend_src_bits = NameToSrcBlendMode(token);
 
 				token = COM_ParseExt(text, qfalse);
 				if (token[0] == 0)
@@ -1399,13 +1399,13 @@ static qboolean ParseStage(shaderStage_t* stage, const char** text)
 					ri.Printf(PRINT_WARNING, "WARNING: missing parm for blendFunc in shader '%s'\n", shader.name);
 					continue;
 				}
-				blendDstBits = NameToDstBlendMode(token);
+				blend_dst_bits = NameToDstBlendMode(token);
 			}
 
 			// clear depth mask for blended surfaces
-			if (!depthMaskExplicit)
+			if (!depth_mask_explicit)
 			{
-				depthMaskBits = 0;
+				depth_mask_bits = 0;
 			}
 		}
 		//
@@ -1629,8 +1629,8 @@ static qboolean ParseStage(shaderStage_t* stage, const char** text)
 		//
 		else if (!Q_stricmp(token, "depthwrite"))
 		{
-			depthMaskBits = GLS_DEPTHMASK_TRUE;
-			depthMaskExplicit = qtrue;
+			depth_mask_bits = GLS_DEPTHMASK_TRUE;
+			depth_mask_explicit = qtrue;
 		}
 		// If this stage has glow...
 		else if (Q_stricmp(token, "glow") == 0)
@@ -1697,8 +1697,8 @@ static qboolean ParseStage(shaderStage_t* stage, const char** text)
 	//
 	if (stage->rgbGen == CGEN_BAD) {
 		if ( //blendSrcBits == 0 ||
-			blendSrcBits == GLS_SRCBLEND_ONE ||
-			blendSrcBits == GLS_SRCBLEND_SRC_ALPHA) {
+			blend_src_bits == GLS_SRCBLEND_ONE ||
+			blend_src_bits == GLS_SRCBLEND_SRC_ALPHA) {
 			stage->rgbGen = CGEN_IDENTITY_LIGHTING;
 		}
 		else {
@@ -1709,11 +1709,11 @@ static qboolean ParseStage(shaderStage_t* stage, const char** text)
 	//
 	// implicitly assume that a GL_ONE GL_ZERO blend mask disables blending
 	//
-	if (blendSrcBits == GLS_SRCBLEND_ONE &&
-		blendDstBits == GLS_DSTBLEND_ZERO)
+	if (blend_src_bits == GLS_SRCBLEND_ONE &&
+		blend_dst_bits == GLS_DSTBLEND_ZERO)
 	{
-		blendDstBits = blendSrcBits = 0;
-		depthMaskBits = GLS_DEPTHMASK_TRUE;
+		blend_dst_bits = blend_src_bits = 0;
+		depth_mask_bits = GLS_DEPTHMASK_TRUE;
 	}
 
 	// decide which agens we can skip
@@ -1727,10 +1727,10 @@ static qboolean ParseStage(shaderStage_t* stage, const char** text)
 	//
 	// compute state bits
 	//
-	stage->stateBits = depthMaskBits |
-		blendSrcBits | blendDstBits |
-		atestBits |
-		depthFuncBits;
+	stage->stateBits = depth_mask_bits |
+		blend_src_bits | blend_dst_bits |
+		atest_bits |
+		depth_func_bits;
 
 	return qtrue;
 }
@@ -2051,14 +2051,19 @@ ParseSurfaceParm
 surfaceparm <name>
 ===============
 */
-static void ParseSurfaceParm(const char** text)
+static void parse_surface_parm(const char** text)
 {
+	constexpr int		num_info_parms = std::size(infoParms);
+
 	const char* token = COM_ParseExt(text, qfalse);
-	for (const auto& infoParm : infoParms) {
-		if (!Q_stricmp(token, infoParm.name)) {
-			shader.surfaceFlags |= infoParm.surfaceFlags;
-			shader.contentFlags |= infoParm.contents;
-			shader.contentFlags &= infoParm.clearSolid;
+
+	for (int i = 0; i < num_info_parms; i++)
+	{
+		if (!Q_stricmp(token, infoParms[i].name)) 
+		{
+			shader.surfaceFlags |= infoParms[i].surfaceFlags;
+			shader.contentFlags |= infoParms[i].contents;
+			shader.contentFlags &= infoParms[i].clearSolid;
 			break;
 		}
 	}
@@ -2228,7 +2233,7 @@ static qboolean ParseShader(const char** text)
 		}
 		// skip stuff that only q3map or the server needs
 		else if (!Q_stricmp(token, "surfaceParm")) {
-			ParseSurfaceParm(text);
+			parse_surface_parm(text);
 		}
 		// no mip maps
 		else if (!Q_stricmp(token, "nomipmaps"))
@@ -2379,8 +2384,8 @@ static qboolean ParseShader(const char** text)
 	// We match against the retail version of gfx/2d/wedge by calculating the
 	// hash value of the shader text, and comparing it against a precalculated
 	// value.
-	const uint32_t shaderHash = generateHashValueForText(begin, *text - begin);
-	if (shaderHash == RETAIL_ROCKET_WEDGE_SHADER_HASH &&
+	const uint32_t shader_hash = generateHashValueForText(begin, *text - begin);
+	if (shader_hash == RETAIL_ROCKET_WEDGE_SHADER_HASH &&
 		Q_stricmp(shader.name, "gfx/2d/wedge") == 0)
 	{
 		stages[0].stateBits &= ~(GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS);
@@ -2395,7 +2400,7 @@ static qboolean ParseShader(const char** text)
 	// We match against retail version of gfx/menus/radar/arrow_w by calculating
 	// the hash value of the shader text, and comparing it against a
 	// precalculated value.
-	if (shaderHash == RETAIL_ARROW_W_SHADER_HASH &&
+	if (shader_hash == RETAIL_ARROW_W_SHADER_HASH &&
 		Q_stricmp(shader.name, "gfx/menus/radar/arrow_w") == 0)
 	{
 		stages[0].rgbGen = CGEN_VERTEX;
@@ -2461,7 +2466,7 @@ Attempt to combine two stages into a single multitexture stage
 FIXME: I think modulated add + modulated add collapses incorrectly
 =================
 */
-static qboolean CollapseMultitexture(void) {
+static qboolean CollapseMultitexture() {
 	int i;
 
 	if (!qglActiveTextureARB) {

@@ -85,7 +85,7 @@ extern int WP_SaberBoltBlockCost(gentity_t* defender, const gentity_t* attacker)
 extern void PM_AddBlockFatigue(playerState_t* ps, int fatigue);
 extern void jedi_decloak(gentity_t* self);
 extern void player_decloak(gentity_t* self);
-extern qboolean FighterIsLanded(const Vehicle_t* pVeh, playerState_t* parentPS);
+extern qboolean FighterIsLanded(const Vehicle_t* p_veh, playerState_t* parent_ps);
 extern void G_BlastDown(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, float strength);
 constexpr auto MISSILE_PRESTEP_TIME = 50;
 //-------------------------------------------------------------------------
@@ -1654,7 +1654,7 @@ void G_MissileImpacted(gentity_t* ent, gentity_t* other, vec3_t impactPos, vec3_
 					npc_class == CLASS_PROBE || npc_class == CLASS_PROTOCOL ||
 					npc_class == CLASS_R2D2 || npc_class == CLASS_R5D2 ||
 					npc_class == CLASS_SEEKER || npc_class == CLASS_SENTRY ||
-					npc_class == CLASS_SBD || npc_class == CLASS_BATTLEDROID ||
+					//npc_class == CLASS_SBD || npc_class == CLASS_BATTLEDROID ||
 					npc_class == CLASS_DROIDEKA || npc_class == CLASS_OBJECT ||
 					npc_class == CLASS_ASSASSIN_DROID || npc_class == CLASS_SABER_DROID)
 				{

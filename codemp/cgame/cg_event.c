@@ -1169,64 +1169,64 @@ void CG_G2MarkEvent(entityState_t* es)
 	}
 }
 
-void CG_CalcVehMuzzle(Vehicle_t* pVeh, centity_t* ent, int muzzleNum)
+void CG_CalcVehMuzzle(Vehicle_t* p_veh, centity_t* ent, int muzzleNum)
 {
 	mdxaBone_t bolt_matrix;
 	vec3_t	vehAngles;
 
-	assert(pVeh);
+	assert(p_veh);
 
-	if (pVeh->m_iMuzzleTime[muzzleNum] == cg.time)
+	if (p_veh->m_iMuzzleTime[muzzleNum] == cg.time)
 	{ //already done for this frame, don't need to do it again
 		return;
 	}
 	//Uh... how about we set this, hunh...?  :)
-	pVeh->m_iMuzzleTime[muzzleNum] = cg.time;
+	p_veh->m_iMuzzleTime[muzzleNum] = cg.time;
 
 	VectorCopy(ent->lerpAngles, vehAngles);
-	if (pVeh->m_pVehicleInfo)
+	if (p_veh->m_pVehicleInfo)
 	{
-		if (pVeh->m_pVehicleInfo->type == VH_ANIMAL
-			|| pVeh->m_pVehicleInfo->type == VH_WALKER)
+		if (p_veh->m_pVehicleInfo->type == VH_ANIMAL
+			|| p_veh->m_pVehicleInfo->type == VH_WALKER)
 		{
 			vehAngles[PITCH] = vehAngles[ROLL] = 0.0f;
 		}
-		else if (pVeh->m_pVehicleInfo->type == VH_SPEEDER)
+		else if (p_veh->m_pVehicleInfo->type == VH_SPEEDER)
 		{
 			vehAngles[PITCH] = 0.0f;
 		}
 	}
-	trap->G2API_GetBoltMatrix_NoRecNoRot(ent->ghoul2, 0, pVeh->m_iMuzzleTag[muzzleNum], &bolt_matrix, vehAngles,
+	trap->G2API_GetBoltMatrix_NoRecNoRot(ent->ghoul2, 0, p_veh->m_iMuzzleTag[muzzleNum], &bolt_matrix, vehAngles,
 		ent->lerpOrigin, cg.time, NULL, ent->modelScale);
-	BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, pVeh->m_vMuzzlePos[muzzleNum]);
-	BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Y, pVeh->m_vMuzzleDir[muzzleNum]);
+	BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, p_veh->m_vMuzzlePos[muzzleNum]);
+	BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Y, p_veh->m_vMuzzleDir[muzzleNum]);
 }
 
 //corresponds to G_VehMuzzleFireFX -rww
 void CG_VehMuzzleFireFX(centity_t* veh, entityState_t* broadcaster)
 {
-	const Vehicle_t* pVeh = veh->m_pVehicle;
+	const Vehicle_t* p_veh = veh->m_pVehicle;
 
-	if (!pVeh || !veh->ghoul2)
+	if (!p_veh || !veh->ghoul2)
 	{
 		return;
 	}
 
 	for (int curMuz = 0; curMuz < MAX_VEHICLE_MUZZLES; curMuz++)
 	{//go through all muzzles and
-		if (pVeh->m_iMuzzleTag[curMuz] != -1//valid muzzle bolt
+		if (p_veh->m_iMuzzleTag[curMuz] != -1//valid muzzle bolt
 			&& (broadcaster->trickedentindex & (1 << curMuz)))//fired
 		{//this muzzle fired
 			int muzFX = 0;
-			if (pVeh->m_pVehicleInfo->weapMuzzle[curMuz] == 0)
+			if (p_veh->m_pVehicleInfo->weapMuzzle[curMuz] == 0)
 			{//no weaopon for this muzzle?  check turrets
 				for (int i = 0; i < MAX_VEHICLE_TURRETS; i++)
 				{
 					for (int j = 0; j < MAX_VEHICLE_TURRETS; j++)
 					{
-						if (pVeh->m_pVehicleInfo->turret[i].iMuzzle[j] - 1 == curMuz)
+						if (p_veh->m_pVehicleInfo->turret[i].iMuzzle[j] - 1 == curMuz)
 						{//this muzzle belongs to this turret
-							muzFX = g_vehWeaponInfo[pVeh->m_pVehicleInfo->turret[i].iWeapon].iMuzzleFX;
+							muzFX = g_vehWeaponInfo[p_veh->m_pVehicleInfo->turret[i].iWeapon].iMuzzleFX;
 							break;
 						}
 					}
@@ -1234,13 +1234,13 @@ void CG_VehMuzzleFireFX(centity_t* veh, entityState_t* broadcaster)
 			}
 			else
 			{
-				muzFX = g_vehWeaponInfo[pVeh->m_pVehicleInfo->weapMuzzle[curMuz]].iMuzzleFX;
+				muzFX = g_vehWeaponInfo[p_veh->m_pVehicleInfo->weapMuzzle[curMuz]].iMuzzleFX;
 			}
 			if (muzFX)
 			{
-				//CG_CalcVehMuzzle(pVeh, veh, curMuz);
-				//trap->FX_PlayEffectID(muzFX, pVeh->m_vMuzzlePos[curMuz], pVeh->m_vMuzzleDir[curMuz], -1, -1, qfalse);
-				trap->FX_PlayBoltedEffectID(muzFX, veh->currentState.origin, veh->ghoul2, pVeh->m_iMuzzleTag[curMuz], veh->currentState.number, 0, 0, qtrue);
+				//CG_CalcVehMuzzle(p_veh, veh, curMuz);
+				//trap->FX_PlayEffectID(muzFX, p_veh->m_vMuzzlePos[curMuz], p_veh->m_vMuzzleDir[curMuz], -1, -1, qfalse);
+				trap->FX_PlayBoltedEffectID(muzFX, veh->currentState.origin, veh->ghoul2, p_veh->m_iMuzzleTag[curMuz], veh->currentState.number, 0, 0, qtrue);
 			}
 		}
 	}

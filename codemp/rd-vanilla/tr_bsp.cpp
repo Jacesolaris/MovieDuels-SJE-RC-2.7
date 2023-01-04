@@ -154,13 +154,13 @@ R_LoadLightmaps
 ===============
 */
 #define	LIGHTMAP_SIZE	128
-static	void R_LoadLightmaps(lump_t* l, const char* psMapName, world_t& worldData) {
+static	void R_LoadLightmaps(lump_t* l, const char* psMapName, world_t& world_data) {
 	byte		image[LIGHTMAP_SIZE * LIGHTMAP_SIZE * 4];
 	int j;
 	float maxIntensity = 0;
 	double sumIntensity = 0;
 
-	if (&worldData == &s_worldData)
+	if (&world_data == &s_worldData)
 	{
 		tr.numLightmaps = 0;
 	}
@@ -255,10 +255,10 @@ void		RE_SetWorldVisData(const byte* vis) {
 R_LoadVisibility
 =================
 */
-static	void R_LoadVisibility(lump_t* l, world_t& worldData) {
-	int len = (worldData.numClusters + 63) & ~63;
-	worldData.novis = static_cast<unsigned char*>(Hunk_Alloc(len, h_low));
-	memset(worldData.novis, 0xff, len);
+static	void R_LoadVisibility(lump_t* l, world_t& world_data) {
+	int len = (world_data.numClusters + 63) & ~63;
+	world_data.novis = static_cast<unsigned char*>(Hunk_Alloc(len, h_low));
+	memset(world_data.novis, 0xff, len);
 
 	len = l->filelen;
 	if (!len) {
@@ -266,18 +266,18 @@ static	void R_LoadVisibility(lump_t* l, world_t& worldData) {
 	}
 	byte* buf = fileBase + l->fileofs;
 
-	worldData.numClusters = LittleLong(((int*)buf)[0]);
-	worldData.clusterBytes = LittleLong(((int*)buf)[1]);
+	world_data.numClusters = LittleLong(((int*)buf)[0]);
+	world_data.clusterBytes = LittleLong(((int*)buf)[1]);
 
 	// CM_Load should have given us the vis data to share, so
 	// we don't need to allocate another copy
 	if (tr.externalVisData) {
-		worldData.vis = tr.externalVisData;
+		world_data.vis = tr.externalVisData;
 	}
 	else {
 		byte* dest = static_cast<unsigned char*>(Hunk_Alloc(len - 8, h_low));
 		memcpy(dest, buf + 8, len - 8);
-		worldData.vis = dest;
+		world_data.vis = dest;
 	}
 }
 
@@ -288,28 +288,28 @@ static	void R_LoadVisibility(lump_t* l, world_t& worldData) {
 ShaderForShaderNum
 ===============
 */
-static shader_t* ShaderForShaderNum(int shaderNum, const int* lightmapNum, const byte* lightmapStyles, const byte* vertexStyles, world_t& worldData)
+static shader_t* ShaderForShaderNum(int shader_num, const int* lightmap_num, const byte* lightmapStyles, const byte* vertexStyles, world_t& world_data)
 {
 	const byte* styles = lightmapStyles;
 
-	LL(shaderNum);
-	if (shaderNum < 0 || shaderNum >= worldData.numShaders) {
-		Com_Error(ERR_DROP, "ShaderForShaderNum: bad num %i", shaderNum);
+	LL(shader_num);
+	if (shader_num < 0 || shader_num >= world_data.numShaders) {
+		Com_Error(ERR_DROP, "ShaderForShaderNum: bad num %i", shader_num);
 	}
-	const dshader_t* dsh = &worldData.shaders[shaderNum];
+	const dshader_t* dsh = &world_data.shaders[shader_num];
 
-	if (lightmapNum[0] == LIGHTMAP_BY_VERTEX)
+	if (lightmap_num[0] == LIGHTMAP_BY_VERTEX)
 	{
 		styles = vertexStyles;
 	}
 
 	if (r_vertexLight->integer)
 	{
-		lightmapNum = lightmapsVertex;
+		lightmap_num = lightmapsVertex;
 		styles = vertexStyles;
 	}
 
-	shader_t* shader = R_FindShader(dsh->shader, lightmapNum, styles, qtrue);
+	shader_t* shader = R_FindShader(dsh->shader, lightmap_num, styles, qtrue);
 
 	// if the shader had errors, just use default shader
 	if (shader->defaultShader) {
@@ -324,46 +324,46 @@ static shader_t* ShaderForShaderNum(int shaderNum, const int* lightmapNum, const
 ParseFace
 ===============
 */
-static void ParseFace(dsurface_t* ds, mapVert_t* verts, msurface_t* surf, int* indexes, world_t& worldData, int index) {
+static void ParseFace(dsurface_t* ds, mapVert_t* verts, msurface_t* surf, int* indexes, world_t& world_data, int index) {
 	int					i, j, k;
-	int					lightmapNum[MAXLIGHTMAPS];
+	int					lightmap_num[MAXLIGHTMAPS];
 
 	for (i = 0; i < MAXLIGHTMAPS; i++)
 	{
-		lightmapNum[i] = LittleLong(ds->lightmapNum[i]);
+		lightmap_num[i] = LittleLong(ds->lightmap_num[i]);
 	}
 
 	// get fog volume
 	surf->fogIndex = LittleLong(ds->fogNum) + 1;
 	if (index && !surf->fogIndex && tr.world->globalFog != -1)
 	{
-		surf->fogIndex = worldData.globalFog;
+		surf->fogIndex = world_data.globalFog;
 	}
 
 	// get shader value
-	surf->shader = ShaderForShaderNum(ds->shaderNum, lightmapNum, ds->lightmapStyles, ds->vertexStyles, worldData);
+	surf->shader = ShaderForShaderNum(ds->shader_num, lightmap_num, ds->lightmapStyles, ds->vertexStyles, world_data);
 	if (r_singleShader->integer && !surf->shader->sky) {
 		surf->shader = tr.defaultShader;
 	}
 
-	int numPoints = (ds->numVerts);
+	int numPoints = (ds->num_verts);
 	if (numPoints > MAX_FACE_POINTS) {
 		ri->Printf(PRINT_ALL, S_COLOR_YELLOW  "WARNING: MAX_FACE_POINTS exceeded: %i\n", numPoints);
 		numPoints = MAX_FACE_POINTS;
 		surf->shader = tr.defaultShader;
 	}
 
-	const int numIndexes = (ds->numIndexes);
+	const int num_indexes = (ds->num_indexes);
 
 	// create the srfSurfaceFace_t
 	int sfaceSize = (size_t) & static_cast<srfSurfaceFace_t*>(0)->points[numPoints];
 	const int ofsIndexes = sfaceSize;
-	sfaceSize += sizeof(int) * numIndexes;
+	sfaceSize += sizeof(int) * num_indexes;
 
 	srfSurfaceFace_t* cv = static_cast<srfSurfaceFace_t*>(Hunk_Alloc(sfaceSize, h_low));
 	cv->surfaceType = SF_FACE;
 	cv->numPoints = numPoints;
-	cv->numIndices = numIndexes;
+	cv->numIndices = num_indexes;
 	cv->ofsIndices = ofsIndexes;
 
 	verts += LittleLong(ds->firstVert);
@@ -385,7 +385,7 @@ static void ParseFace(dsurface_t* ds, mapVert_t* verts, msurface_t* surf, int* i
 	}
 
 	indexes += LittleLong(ds->firstIndex);
-	for (i = 0; i < numIndexes; i++) {
+	for (i = 0; i < num_indexes; i++) {
 		((int*)((byte*)cv + cv->ofsIndices))[i] = LittleLong(indexes[i]);
 	}
 
@@ -405,35 +405,35 @@ static void ParseFace(dsurface_t* ds, mapVert_t* verts, msurface_t* surf, int* i
 ParseMesh
 ===============
 */
-static void ParseMesh(dsurface_t* ds, mapVert_t* verts, msurface_t* surf, world_t& worldData, int index) {
+static void ParseMesh(dsurface_t* ds, mapVert_t* verts, msurface_t* surf, world_t& world_data, int index) {
 	int						i, j, k;
 	drawVert_t				points[MAX_PATCH_SIZE * MAX_PATCH_SIZE];
-	int						lightmapNum[MAXLIGHTMAPS];
+	int						lightmap_num[MAXLIGHTMAPS];
 	vec3_t					bounds[2];
 	vec3_t					tmpVec;
 	static surfaceType_t	skipData = SF_SKIP;
 
 	for (i = 0; i < MAXLIGHTMAPS; i++)
 	{
-		lightmapNum[i] = LittleLong(ds->lightmapNum[i]);
+		lightmap_num[i] = LittleLong(ds->lightmap_num[i]);
 	}
 
 	// get fog volume
 	surf->fogIndex = LittleLong(ds->fogNum) + 1;
 	if (index && !surf->fogIndex && tr.world->globalFog != -1)
 	{
-		surf->fogIndex = worldData.globalFog;
+		surf->fogIndex = world_data.globalFog;
 	}
 
 	// get shader value
-	surf->shader = ShaderForShaderNum(ds->shaderNum, lightmapNum, ds->lightmapStyles, ds->vertexStyles, worldData);
+	surf->shader = ShaderForShaderNum(ds->shader_num, lightmap_num, ds->lightmapStyles, ds->vertexStyles, world_data);
 	if (r_singleShader->integer && !surf->shader->sky) {
 		surf->shader = tr.defaultShader;
 	}
 
 	// we may have a nodraw surface, because they might still need to
 	// be around for movement clipping
-	if (worldData.shaders[LittleLong(ds->shaderNum)].surfaceFlags & SURF_NODRAW) {
+	if (world_data.shaders[LittleLong(ds->shader_num)].surfaceFlags & SURF_NODRAW) {
 		surf->data = &skipData;
 		return;
 	}
@@ -483,46 +483,46 @@ static void ParseMesh(dsurface_t* ds, mapVert_t* verts, msurface_t* surf, world_
 ParseTriSurf
 ===============
 */
-static void ParseTriSurf(dsurface_t* ds, mapVert_t* verts, msurface_t* surf, int* indexes, world_t& worldData, int index) {
+static void ParseTriSurf(dsurface_t* ds, mapVert_t* verts, msurface_t* surf, int* indexes, world_t& world_data, int index) {
 	int				i, j, k;
 
 	// get fog volume
 	surf->fogIndex = LittleLong(ds->fogNum) + 1;
 	if (index && !surf->fogIndex && tr.world->globalFog != -1)
 	{
-		surf->fogIndex = worldData.globalFog;
+		surf->fogIndex = world_data.globalFog;
 	}
 
 	// get shader
-	surf->shader = ShaderForShaderNum(ds->shaderNum, lightmapsVertex, ds->lightmapStyles, ds->vertexStyles, worldData);
+	surf->shader = ShaderForShaderNum(ds->shader_num, lightmapsVertex, ds->lightmapStyles, ds->vertexStyles, world_data);
 	if (r_singleShader->integer && !surf->shader->sky) {
 		surf->shader = tr.defaultShader;
 	}
 
-	const int numVerts = (ds->numVerts);
-	const int numIndexes = (ds->numIndexes);
+	const int num_verts = (ds->num_verts);
+	const int num_indexes = (ds->num_indexes);
 
-	if (numVerts >= SHADER_MAX_VERTEXES) {
-		Com_Error(ERR_DROP, "ParseTriSurf: verts > MAX (%d > %d) on misc_model %s", numVerts, SHADER_MAX_VERTEXES, surf->shader->name);
+	if (num_verts >= SHADER_MAX_VERTEXES) {
+		Com_Error(ERR_DROP, "ParseTriSurf: verts > MAX (%d > %d) on misc_model %s", num_verts, SHADER_MAX_VERTEXES, surf->shader->name);
 	}
-	if (numIndexes >= SHADER_MAX_INDEXES) {
-		Com_Error(ERR_DROP, "ParseTriSurf: indices > MAX (%d > %d) on misc_model %s", numIndexes, SHADER_MAX_INDEXES, surf->shader->name);
+	if (num_indexes >= SHADER_MAX_INDEXES) {
+		Com_Error(ERR_DROP, "ParseTriSurf: indices > MAX (%d > %d) on misc_model %s", num_indexes, SHADER_MAX_INDEXES, surf->shader->name);
 	}
 
-	srfTriangles_t* tri = static_cast<srfTriangles_t*>(Hunk_Alloc(sizeof(*tri) + numVerts * sizeof(tri->verts[0])
-		+ numIndexes * sizeof(tri->indexes[0]), h_low));
+	srfTriangles_t* tri = static_cast<srfTriangles_t*>(Hunk_Alloc(sizeof(*tri) + num_verts * sizeof(tri->verts[0])
+		+ num_indexes * sizeof(tri->indexes[0]), h_low));
 	tri->surfaceType = SF_TRIANGLES;
-	tri->numVerts = numVerts;
-	tri->numIndexes = numIndexes;
+	tri->num_verts = num_verts;
+	tri->num_indexes = num_indexes;
 	tri->verts = (drawVert_t*)(tri + 1);
-	tri->indexes = (int*)(tri->verts + tri->numVerts);
+	tri->indexes = (int*)(tri->verts + tri->num_verts);
 
 	surf->data = (surfaceType_t*)tri;
 
 	// copy vertexes
 	ClearBounds(tri->bounds[0], tri->bounds[1]);
 	verts += LittleLong(ds->firstVert);
-	for (i = 0; i < numVerts; i++) {
+	for (i = 0; i < num_verts; i++) {
 		for (j = 0; j < 3; j++) {
 			tri->verts[i].xyz[j] = LittleFloat(verts[i].xyz[j]);
 			tri->verts[i].normal[j] = LittleFloat(verts[i].normal[j]);
@@ -544,9 +544,9 @@ static void ParseTriSurf(dsurface_t* ds, mapVert_t* verts, msurface_t* surf, int
 
 	// copy indexes
 	indexes += LittleLong(ds->firstIndex);
-	for (i = 0; i < numIndexes; i++) {
+	for (i = 0; i < num_indexes; i++) {
 		tri->indexes[i] = LittleLong(indexes[i]);
-		if (tri->indexes[i] < 0 || tri->indexes[i] >= numVerts) {
+		if (tri->indexes[i] < 0 || tri->indexes[i] >= num_verts) {
 			Com_Error(ERR_DROP, "Bad index in triangle surface");
 		}
 	}
@@ -557,18 +557,18 @@ static void ParseTriSurf(dsurface_t* ds, mapVert_t* verts, msurface_t* surf, int
 ParseFlare
 ===============
 */
-static void ParseFlare(dsurface_t* ds, mapVert_t* verts, msurface_t* surf, int* indexes, world_t& worldData, int index) {
+static void ParseFlare(dsurface_t* ds, mapVert_t* verts, msurface_t* surf, int* indexes, world_t& world_data, int index) {
 	const int				lightmaps[MAXLIGHTMAPS] = { LIGHTMAP_BY_VERTEX };
 
 	// get fog volume
 	surf->fogIndex = LittleLong(ds->fogNum) + 1;
 	if (index && !surf->fogIndex && tr.world->globalFog != -1)
 	{
-		surf->fogIndex = worldData.globalFog;
+		surf->fogIndex = world_data.globalFog;
 	}
 
 	// get shader
-	surf->shader = ShaderForShaderNum(ds->shaderNum, lightmaps, ds->lightmapStyles, ds->vertexStyles, worldData);
+	surf->shader = ShaderForShaderNum(ds->shader_num, lightmaps, ds->lightmapStyles, ds->vertexStyles, world_data);
 	if (r_singleShader->integer && !surf->shader->sky) {
 		surf->shader = tr.defaultShader;
 	}
@@ -632,12 +632,12 @@ NOTE: never sync LoD through grid edges with merged points!
 FIXME: write generalized version that also avoids cracks between a patch and one that meets half way?
 =================
 */
-void R_FixSharedVertexLodError_r(int start, srfGridMesh_t* grid1, world_t& worldData) {
+void R_FixSharedVertexLodError_r(int start, srfGridMesh_t* grid1, world_t& world_data) {
 	int k, l, m, n, offset1, offset2;
 
-	for (int j = start; j < worldData.numsurfaces; j++) {
+	for (int j = start; j < world_data.numsurfaces; j++) {
 		//
-		srfGridMesh_t* grid2 = (srfGridMesh_t*)worldData.surfaces[j].data;
+		srfGridMesh_t* grid2 = (srfGridMesh_t*)world_data.surfaces[j].data;
 		// if this surface is not a grid
 		if (grid2->surfaceType != SF_GRID) continue;
 		// if the LOD errors are already fixed for this patch
@@ -724,7 +724,7 @@ void R_FixSharedVertexLodError_r(int start, srfGridMesh_t* grid1, world_t& world
 		}
 		if (touch) {
 			grid2->lodFixed = 2;
-			R_FixSharedVertexLodError_r(start, grid2, worldData);
+			R_FixSharedVertexLodError_r(start, grid2, world_data);
 			//NOTE: this would be correct but makes things really slow
 			//grid2->lodFixed = 1;
 		}
@@ -739,10 +739,10 @@ This function assumes that all patches in one group are nicely stitched together
 If this is not the case this function will still do its job but won't fix the highest LoD cracks.
 =================
 */
-void R_FixSharedVertexLodError(world_t& worldData) {
-	for (int i = 0; i < worldData.numsurfaces; i++) {
+void R_FixSharedVertexLodError(world_t& world_data) {
+	for (int i = 0; i < world_data.numsurfaces; i++) {
 		//
-		srfGridMesh_t* grid1 = (srfGridMesh_t*)worldData.surfaces[i].data;
+		srfGridMesh_t* grid1 = (srfGridMesh_t*)world_data.surfaces[i].data;
 		// if this surface is not a grid
 		if (grid1->surfaceType != SF_GRID)
 			continue;
@@ -752,7 +752,7 @@ void R_FixSharedVertexLodError(world_t& worldData) {
 		//
 		grid1->lodFixed = 2;
 		// recursively fix other patches in the same LOD group
-		R_FixSharedVertexLodError_r(i + 1, grid1, worldData);
+		R_FixSharedVertexLodError_r(i + 1, grid1, world_data);
 	}
 }
 
@@ -761,13 +761,13 @@ void R_FixSharedVertexLodError(world_t& worldData) {
 R_StitchPatches
 ===============
 */
-int R_StitchPatches(int grid1num, int grid2num, world_t& worldData) {
+int R_StitchPatches(int grid1num, int grid2num, world_t& world_data) {
 	int k, l, m, n, offset1, offset2, row, column;
 	srfGridMesh_t* grid1, * grid2;
 	float* v1, * v2;
 
-	grid1 = (srfGridMesh_t*)worldData.surfaces[grid1num].data;
-	grid2 = (srfGridMesh_t*)worldData.surfaces[grid2num].data;
+	grid1 = (srfGridMesh_t*)world_data.surfaces[grid1num].data;
+	grid2 = (srfGridMesh_t*)world_data.surfaces[grid2num].data;
 	for (n = 0; n < 2; n++) {
 		//
 		if (n) offset1 = (grid1->height - 1) * grid1->width;
@@ -816,7 +816,7 @@ int R_StitchPatches(int grid1num, int grid2num, world_t& worldData) {
 					grid2 = R_GridInsertColumn(grid2, l + 1, row,
 						grid1->verts[k + 1 + offset1].xyz, grid1->widthLodError[k + 1]);
 					grid2->lodStitched = qfalse;
-					worldData.surfaces[grid2num].data = (surfaceType_t*)grid2;
+					world_data.surfaces[grid2num].data = (surfaceType_t*)grid2;
 					return qtrue;
 				}
 			}
@@ -861,7 +861,7 @@ int R_StitchPatches(int grid1num, int grid2num, world_t& worldData) {
 					grid2 = R_GridInsertRow(grid2, l + 1, column,
 						grid1->verts[k + 1 + offset1].xyz, grid1->widthLodError[k + 1]);
 					grid2->lodStitched = qfalse;
-					worldData.surfaces[grid2num].data = (surfaceType_t*)grid2;
+					world_data.surfaces[grid2num].data = (surfaceType_t*)grid2;
 					return qtrue;
 				}
 			}
@@ -915,7 +915,7 @@ int R_StitchPatches(int grid1num, int grid2num, world_t& worldData) {
 					grid2 = R_GridInsertColumn(grid2, l + 1, row,
 						grid1->verts[grid1->width * (k + 1) + offset1].xyz, grid1->heightLodError[k + 1]);
 					grid2->lodStitched = qfalse;
-					worldData.surfaces[grid2num].data = (surfaceType_t*)grid2;
+					world_data.surfaces[grid2num].data = (surfaceType_t*)grid2;
 					return qtrue;
 				}
 			}
@@ -960,7 +960,7 @@ int R_StitchPatches(int grid1num, int grid2num, world_t& worldData) {
 					grid2 = R_GridInsertRow(grid2, l + 1, column,
 						grid1->verts[grid1->width * (k + 1) + offset1].xyz, grid1->heightLodError[k + 1]);
 					grid2->lodStitched = qfalse;
-					worldData.surfaces[grid2num].data = (surfaceType_t*)grid2;
+					world_data.surfaces[grid2num].data = (surfaceType_t*)grid2;
 					return qtrue;
 				}
 			}
@@ -1014,7 +1014,7 @@ int R_StitchPatches(int grid1num, int grid2num, world_t& worldData) {
 					grid2 = R_GridInsertColumn(grid2, l + 1, row,
 						grid1->verts[k - 1 + offset1].xyz, grid1->widthLodError[k + 1]);
 					grid2->lodStitched = qfalse;
-					worldData.surfaces[grid2num].data = (surfaceType_t*)grid2;
+					world_data.surfaces[grid2num].data = (surfaceType_t*)grid2;
 					return qtrue;
 				}
 			}
@@ -1061,7 +1061,7 @@ int R_StitchPatches(int grid1num, int grid2num, world_t& worldData) {
 					if (!grid2)
 						break;
 					grid2->lodStitched = qfalse;
-					worldData.surfaces[grid2num].data = (surfaceType_t*)grid2;
+					world_data.surfaces[grid2num].data = (surfaceType_t*)grid2;
 					return qtrue;
 				}
 			}
@@ -1115,7 +1115,7 @@ int R_StitchPatches(int grid1num, int grid2num, world_t& worldData) {
 					grid2 = R_GridInsertColumn(grid2, l + 1, row,
 						grid1->verts[grid1->width * (k - 1) + offset1].xyz, grid1->heightLodError[k + 1]);
 					grid2->lodStitched = qfalse;
-					worldData.surfaces[grid2num].data = (surfaceType_t*)grid2;
+					world_data.surfaces[grid2num].data = (surfaceType_t*)grid2;
 					return qtrue;
 				}
 			}
@@ -1160,7 +1160,7 @@ int R_StitchPatches(int grid1num, int grid2num, world_t& worldData) {
 					grid2 = R_GridInsertRow(grid2, l + 1, column,
 						grid1->verts[grid1->width * (k - 1) + offset1].xyz, grid1->heightLodError[k + 1]);
 					grid2->lodStitched = qfalse;
-					worldData.surfaces[grid2num].data = (surfaceType_t*)grid2;
+					world_data.surfaces[grid2num].data = (surfaceType_t*)grid2;
 					return qtrue;
 				}
 			}
@@ -1182,12 +1182,12 @@ of the patch (on the same row or column) the vertices will not be joined and cra
 might still appear at that side.
 ===============
 */
-int R_TryStitchingPatch(int grid1num, world_t& worldData) {
+int R_TryStitchingPatch(int grid1num, world_t& world_data) {
 	int numstitches = 0;
-	const srfGridMesh_t* grid1 = (srfGridMesh_t*)worldData.surfaces[grid1num].data;
-	for (int j = 0; j < worldData.numsurfaces; j++) {
+	const srfGridMesh_t* grid1 = (srfGridMesh_t*)world_data.surfaces[grid1num].data;
+	for (int j = 0; j < world_data.numsurfaces; j++) {
 		//
-		const srfGridMesh_t* grid2 = (srfGridMesh_t*)worldData.surfaces[j].data;
+		const srfGridMesh_t* grid2 = (srfGridMesh_t*)world_data.surfaces[j].data;
 		// if this surface is not a grid
 		if (grid2->surfaceType != SF_GRID) continue;
 		// grids in the same LOD group should have the exact same lod radius
@@ -1197,7 +1197,7 @@ int R_TryStitchingPatch(int grid1num, world_t& worldData) {
 		if (grid1->lodOrigin[1] != grid2->lodOrigin[1]) continue;
 		if (grid1->lodOrigin[2] != grid2->lodOrigin[2]) continue;
 		//
-		while (R_StitchPatches(grid1num, j, worldData))
+		while (R_StitchPatches(grid1num, j, world_data))
 		{
 			numstitches++;
 		}
@@ -1210,16 +1210,16 @@ int R_TryStitchingPatch(int grid1num, world_t& worldData) {
 R_StitchAllPatches
 ===============
 */
-void R_StitchAllPatches(world_t& worldData) {
+void R_StitchAllPatches(world_t& world_data) {
 	int stitched;
 
 	int numstitches = 0;
 	do
 	{
 		stitched = qfalse;
-		for (int i = 0; i < worldData.numsurfaces; i++) {
+		for (int i = 0; i < world_data.numsurfaces; i++) {
 			//
-			srfGridMesh_t* grid1 = (srfGridMesh_t*)worldData.surfaces[i].data;
+			srfGridMesh_t* grid1 = (srfGridMesh_t*)world_data.surfaces[i].data;
 			// if this surface is not a grid
 			if (grid1->surfaceType != SF_GRID)
 				continue;
@@ -1230,7 +1230,7 @@ void R_StitchAllPatches(world_t& worldData) {
 			grid1->lodStitched = qtrue;
 			stitched = qtrue;
 			//
-			numstitches += R_TryStitchingPatch(i, worldData);
+			numstitches += R_TryStitchingPatch(i, world_data);
 		}
 	} while (stitched);
 	//	ri->Printf( PRINT_ALL, "stitched %d LoD cracks\n", numstitches );
@@ -1241,10 +1241,10 @@ void R_StitchAllPatches(world_t& worldData) {
 R_MovePatchSurfacesToHunk
 ===============
 */
-void R_MovePatchSurfacesToHunk(world_t& worldData) {
-	for (int i = 0; i < worldData.numsurfaces; i++) {
+void R_MovePatchSurfacesToHunk(world_t& world_data) {
+	for (int i = 0; i < world_data.numsurfaces; i++) {
 		//
-		srfGridMesh_t* grid = (srfGridMesh_t*)worldData.surfaces[i].data;
+		srfGridMesh_t* grid = (srfGridMesh_t*)world_data.surfaces[i].data;
 		// if this surface is not a grid
 		if (grid->surfaceType != SF_GRID)
 			continue;
@@ -1261,7 +1261,7 @@ void R_MovePatchSurfacesToHunk(world_t& worldData) {
 
 		R_FreeSurfaceGridMesh(grid);
 
-		worldData.surfaces[i].data = (surfaceType_t*)hunkgrid;
+		world_data.surfaces[i].data = (surfaceType_t*)hunkgrid;
 	}
 }
 
@@ -1270,7 +1270,7 @@ void R_MovePatchSurfacesToHunk(world_t& worldData) {
 R_LoadSurfaces
 ===============
 */
-static	void R_LoadSurfaces(lump_t* surfs, lump_t* verts, lump_t* indexLump, world_t& worldData, int index) {
+static	void R_LoadSurfaces(lump_t* surfs, lump_t* verts, lump_t* index_lump, world_t& world_data, int index) {
 	int numFaces = 0;
 	int numMeshes = 0;
 	int numTriSurfs = 0;
@@ -1278,38 +1278,38 @@ static	void R_LoadSurfaces(lump_t* surfs, lump_t* verts, lump_t* indexLump, worl
 
 	dsurface_t* in = (dsurface_t*)(fileBase + surfs->fileofs);
 	if (surfs->filelen % sizeof(*in))
-		Com_Error(ERR_DROP, "LoadMap: funny lump size in %s", worldData.name);
+		Com_Error(ERR_DROP, "LoadMap: funny lump size in %s", world_data.name);
 	const int count = surfs->filelen / sizeof(*in);
 
 	mapVert_t* dv = (mapVert_t*)(fileBase + verts->fileofs);
 	if (verts->filelen % sizeof(*dv))
-		Com_Error(ERR_DROP, "LoadMap: funny lump size in %s", worldData.name);
+		Com_Error(ERR_DROP, "LoadMap: funny lump size in %s", world_data.name);
 
-	int* indexes = (int*)(fileBase + indexLump->fileofs);
-	if (indexLump->filelen % sizeof(*indexes))
-		Com_Error(ERR_DROP, "LoadMap: funny lump size in %s", worldData.name);
+	int* indexes = (int*)(fileBase + index_lump->fileofs);
+	if (index_lump->filelen % sizeof(*indexes))
+		Com_Error(ERR_DROP, "LoadMap: funny lump size in %s", world_data.name);
 
 	msurface_t* out = static_cast<msurface_s*>(Hunk_Alloc(count * sizeof(*out), h_low));
 
-	worldData.surfaces = out;
-	worldData.numsurfaces = count;
+	world_data.surfaces = out;
+	world_data.numsurfaces = count;
 
 	for (int i = 0; i < count; i++, in++, out++) {
 		switch (LittleLong(in->surfaceType)) {
 		case MST_PATCH:
-			ParseMesh(in, dv, out, worldData, index);
+			ParseMesh(in, dv, out, world_data, index);
 			numMeshes++;
 			break;
 		case MST_TRIANGLE_SOUP:
-			ParseTriSurf(in, dv, out, indexes, worldData, index);
+			ParseTriSurf(in, dv, out, indexes, world_data, index);
 			numTriSurfs++;
 			break;
 		case MST_PLANAR:
-			ParseFace(in, dv, out, indexes, worldData, index);
+			ParseFace(in, dv, out, indexes, world_data, index);
 			numFaces++;
 			break;
 		case MST_FLARE:
-			ParseFlare(in, dv, out, indexes, worldData, index);
+			ParseFlare(in, dv, out, indexes, world_data, index);
 			numFlares++;
 			break;
 		default:
@@ -1318,13 +1318,13 @@ static	void R_LoadSurfaces(lump_t* surfs, lump_t* verts, lump_t* indexLump, worl
 	}
 
 #ifdef PATCH_STITCHING
-	R_StitchAllPatches(worldData);
+	R_StitchAllPatches(world_data);
 #endif
 
-	R_FixSharedVertexLodError(worldData);
+	R_FixSharedVertexLodError(world_data);
 
 #ifdef PATCH_STITCHING
-	R_MovePatchSurfacesToHunk(worldData);
+	R_MovePatchSurfacesToHunk(world_data);
 #endif
 
 	ri->Printf(PRINT_ALL, "...loaded %d faces, %i meshes, %i trisurfs, %i flares\n", numFaces, numMeshes, numTriSurfs, numFlares);
@@ -1335,15 +1335,15 @@ static	void R_LoadSurfaces(lump_t* surfs, lump_t* verts, lump_t* indexLump, worl
 R_LoadSubmodels
 =================
 */
-static	void R_LoadSubmodels(lump_t* l, world_t& worldData, int index) {
+static	void R_LoadSubmodels(lump_t* l, world_t& world_data, int index) {
 	bmodel_t* out;
 
 	dmodel_t* in = (dmodel_t*)(fileBase + l->fileofs);
 	if (l->filelen % sizeof(*in))
-		Com_Error(ERR_DROP, "LoadMap: funny lump size in %s", worldData.name);
+		Com_Error(ERR_DROP, "LoadMap: funny lump size in %s", world_data.name);
 	const int count = l->filelen / sizeof(*in);
 
-	worldData.bmodels = out = static_cast<bmodel_t*>(Hunk_Alloc(count * sizeof(*out), h_low));
+	world_data.bmodels = out = static_cast<bmodel_t*>(Hunk_Alloc(count * sizeof(*out), h_low));
 
 	for (int i = 0; i < count; i++, in++, out++) {
 		model_t* model = R_AllocModel();
@@ -1377,7 +1377,7 @@ static	void R_LoadSubmodels(lump_t* l, world_t& worldData, int index) {
 		/*
 		Ghoul2 Insert End
 		*/
-		out->firstSurface = worldData.surfaces + LittleLong(in->firstSurface);
+		out->firstSurface = world_data.surfaces + LittleLong(in->firstSurface);
 		out->numSurfaces = LittleLong(in->numSurfaces);
 	}
 }
@@ -1403,22 +1403,22 @@ static	void R_SetParent(mnode_t* node, mnode_t* parent)
 R_LoadNodesAndLeafs
 =================
 */
-static	void R_LoadNodesAndLeafs(lump_t* nodeLump, lump_t* leafLump, world_t& worldData) {
+static	void R_LoadNodesAndLeafs(lump_t* nodeLump, lump_t* leafLump, world_t& world_data) {
 	int			i, j;
 
 	dnode_t* in = (dnode_t*)(fileBase + nodeLump->fileofs);
 	if (nodeLump->filelen % sizeof(dnode_t) ||
 		leafLump->filelen % sizeof(dleaf_t)) {
-		Com_Error(ERR_DROP, "LoadMap: funny lump size in %s", worldData.name);
+		Com_Error(ERR_DROP, "LoadMap: funny lump size in %s", world_data.name);
 	}
 	const int numNodes = nodeLump->filelen / sizeof(dnode_t);
 	const int numLeafs = leafLump->filelen / sizeof(dleaf_t);
 
 	mnode_t* out = static_cast<mnode_s*>(Hunk_Alloc((numNodes + numLeafs) * sizeof(*out), h_low));
 
-	worldData.nodes = out;
-	worldData.numnodes = numNodes + numLeafs;
-	worldData.numDecisionNodes = numNodes;
+	world_data.nodes = out;
+	world_data.numnodes = numNodes + numLeafs;
+	world_data.numDecisionNodes = numNodes;
 
 	// load nodes
 	for (i = 0; i < numNodes; i++, in++, out++)
@@ -1430,7 +1430,7 @@ static	void R_LoadNodesAndLeafs(lump_t* nodeLump, lump_t* leafLump, world_t& wor
 		}
 
 		int p = (in->planeNum);
-		out->plane = worldData.planes + p;
+		out->plane = world_data.planes + p;
 
 		out->contents = CONTENTS_NODE;	// differentiate from leafs
 
@@ -1438,9 +1438,9 @@ static	void R_LoadNodesAndLeafs(lump_t* nodeLump, lump_t* leafLump, world_t& wor
 		{
 			p = LittleLong(in->children[j]);
 			if (p >= 0)
-				out->children[j] = worldData.nodes + p;
+				out->children[j] = world_data.nodes + p;
 			else
-				out->children[j] = worldData.nodes + numNodes + (-1 - p);
+				out->children[j] = world_data.nodes + numNodes + (-1 - p);
 		}
 	}
 
@@ -1457,17 +1457,17 @@ static	void R_LoadNodesAndLeafs(lump_t* nodeLump, lump_t* leafLump, world_t& wor
 		out->cluster = LittleLong(inLeaf->cluster);
 		out->area = LittleLong(inLeaf->area);
 
-		if (out->cluster >= worldData.numClusters) {
-			worldData.numClusters = out->cluster + 1;
+		if (out->cluster >= world_data.numClusters) {
+			world_data.numClusters = out->cluster + 1;
 		}
 
-		out->firstmarksurface = worldData.marksurfaces +
+		out->firstmarksurface = world_data.marksurfaces +
 			LittleLong(inLeaf->firstLeafSurface);
 		out->nummarksurfaces = LittleLong(inLeaf->numLeafSurfaces);
 	}
 
 	// chain decendants
-	R_SetParent(worldData.nodes, NULL);
+	R_SetParent(world_data.nodes, NULL);
 }
 
 //=============================================================================
@@ -1477,15 +1477,15 @@ static	void R_LoadNodesAndLeafs(lump_t* nodeLump, lump_t* leafLump, world_t& wor
 R_LoadShaders
 =================
 */
-static	void R_LoadShaders(lump_t* l, world_t& worldData) {
+static	void R_LoadShaders(lump_t* l, world_t& world_data) {
 	const dshader_t* in = (dshader_t*)(fileBase + l->fileofs);
 	if (l->filelen % sizeof(*in))
-		Com_Error(ERR_DROP, "LoadMap: funny lump size in %s", worldData.name);
+		Com_Error(ERR_DROP, "LoadMap: funny lump size in %s", world_data.name);
 	const int count = l->filelen / sizeof(*in);
 	dshader_t* out = static_cast<dshader_t*>(Hunk_Alloc(count * sizeof(*out), h_low));
 
-	worldData.shaders = out;
-	worldData.numShaders = count;
+	world_data.shaders = out;
+	world_data.numShaders = count;
 
 	memcpy(out, in, count * sizeof(*out));
 
@@ -1500,21 +1500,21 @@ static	void R_LoadShaders(lump_t* l, world_t& worldData) {
 R_LoadMarksurfaces
 =================
 */
-static	void R_LoadMarksurfaces(lump_t* l, world_t& worldData)
+static	void R_LoadMarksurfaces(lump_t* l, world_t& world_data)
 {
 	const int* in = (int*)(fileBase + l->fileofs);
 	if (l->filelen % sizeof(*in))
-		Com_Error(ERR_DROP, "LoadMap: funny lump size in %s", worldData.name);
+		Com_Error(ERR_DROP, "LoadMap: funny lump size in %s", world_data.name);
 	const int count = l->filelen / sizeof(*in);
 	msurface_t** out = static_cast<msurface_s**>(Hunk_Alloc(count * sizeof(*out), h_low));
 
-	worldData.marksurfaces = out;
-	worldData.nummarksurfaces = count;
+	world_data.marksurfaces = out;
+	world_data.nummarksurfaces = count;
 
 	for (int i = 0; i < count; i++)
 	{
 		const int j = (in[i]);
-		out[i] = worldData.surfaces + j;
+		out[i] = world_data.surfaces + j;
 	}
 }
 
@@ -1523,15 +1523,15 @@ static	void R_LoadMarksurfaces(lump_t* l, world_t& worldData)
 R_LoadPlanes
 =================
 */
-static	void R_LoadPlanes(lump_t* l, world_t& worldData) {
+static	void R_LoadPlanes(lump_t* l, world_t& world_data) {
 	dplane_t* in = (dplane_t*)(fileBase + l->fileofs);
 	if (l->filelen % sizeof(*in))
-		Com_Error(ERR_DROP, "LoadMap: funny lump size in %s", worldData.name);
+		Com_Error(ERR_DROP, "LoadMap: funny lump size in %s", world_data.name);
 	const int count = l->filelen / sizeof(*in);
 	cplane_t* out = static_cast<cplane_s*>(Hunk_Alloc(count * 2 * sizeof(*out), h_low));
 
-	worldData.planes = out;
-	worldData.numplanes = count;
+	world_data.planes = out;
+	world_data.numplanes = count;
 
 	for (int i = 0; i < count; i++, in++, out++) {
 		int bits = 0;
@@ -1554,7 +1554,7 @@ R_LoadFogs
 
 =================
 */
-static	void R_LoadFogs(lump_t* l, lump_t* brushesLump, lump_t* sidesLump, world_t& worldData, int index) {
+static	void R_LoadFogs(lump_t* l, lump_t* brushesLump, lump_t* sidesLump, world_t& world_data, int index) {
 	fog_t* out;
 	int			sideNum;
 	int			planeNum;
@@ -1563,15 +1563,15 @@ static	void R_LoadFogs(lump_t* l, lump_t* brushesLump, lump_t* sidesLump, world_
 
 	dfog_t* fogs = (dfog_t*)(fileBase + l->fileofs);
 	if (l->filelen % sizeof(*fogs)) {
-		Com_Error(ERR_DROP, "LoadMap: funny lump size in %s", worldData.name);
+		Com_Error(ERR_DROP, "LoadMap: funny lump size in %s", world_data.name);
 	}
 	const int count = l->filelen / sizeof(*fogs);
 
 	// create fog strucutres for them
-	worldData.numfogs = count + 1;
-	worldData.fogs = static_cast<fog_t*>(Hunk_Alloc(worldData.numfogs * sizeof(*out), h_low));
-	worldData.globalFog = -1;
-	out = worldData.fogs + 1;
+	world_data.numfogs = count + 1;
+	world_data.fogs = static_cast<fog_t*>(Hunk_Alloc(world_data.numfogs * sizeof(*out), h_low));
+	world_data.globalFog = -1;
+	out = world_data.fogs + 1;
 
 	// Copy the global fog from the main world into the bsp instance
 	if (index)
@@ -1579,9 +1579,9 @@ static	void R_LoadFogs(lump_t* l, lump_t* brushesLump, lump_t* sidesLump, world_
 		if (tr.world && (tr.world->globalFog != -1))
 		{
 			// Use the nightvision fog slot
-			worldData.fogs[worldData.numfogs] = tr.world->fogs[tr.world->globalFog];
-			worldData.globalFog = worldData.numfogs;
-			worldData.numfogs++;
+			world_data.fogs[world_data.numfogs] = tr.world->fogs[tr.world->globalFog];
+			world_data.globalFog = world_data.numfogs;
+			world_data.numfogs++;
 		}
 	}
 
@@ -1591,13 +1591,13 @@ static	void R_LoadFogs(lump_t* l, lump_t* brushesLump, lump_t* sidesLump, world_
 
 	const dbrush_t* brushes = (dbrush_t*)(fileBase + brushesLump->fileofs);
 	if (brushesLump->filelen % sizeof(*brushes)) {
-		Com_Error(ERR_DROP, "LoadMap: funny lump size in %s", worldData.name);
+		Com_Error(ERR_DROP, "LoadMap: funny lump size in %s", world_data.name);
 	}
 	const int brushesCount = brushesLump->filelen / sizeof(*brushes);
 
 	const dbrushside_t* sides = (dbrushside_t*)(fileBase + sidesLump->fileofs);
 	if (sidesLump->filelen % sizeof(*sides)) {
-		Com_Error(ERR_DROP, "LoadMap: funny lump size in %s", worldData.name);
+		Com_Error(ERR_DROP, "LoadMap: funny lump size in %s", world_data.name);
 	}
 	const int sidesCount = sidesLump->filelen / sizeof(*sides);
 
@@ -1609,7 +1609,7 @@ static	void R_LoadFogs(lump_t* l, lump_t* brushesLump, lump_t* sidesLump, world_
 			out->bounds[0][0] = out->bounds[0][1] = out->bounds[0][2] = MIN_WORLD_COORD;
 			out->bounds[1][0] = out->bounds[1][1] = out->bounds[1][2] = MAX_WORLD_COORD;
 			firstSide = -1;
-			worldData.globalFog = i + 1;
+			world_data.globalFog = i + 1;
 		}
 		else
 		{
@@ -1627,27 +1627,27 @@ static	void R_LoadFogs(lump_t* l, lump_t* brushesLump, lump_t* sidesLump, world_
 			// brushes are always sorted with the axial sides first
 			sideNum = firstSide + 0;
 			planeNum = LittleLong(sides[sideNum].planeNum);
-			out->bounds[0][0] = -worldData.planes[planeNum].dist;
+			out->bounds[0][0] = -world_data.planes[planeNum].dist;
 
 			sideNum = firstSide + 1;
 			planeNum = LittleLong(sides[sideNum].planeNum);
-			out->bounds[1][0] = worldData.planes[planeNum].dist;
+			out->bounds[1][0] = world_data.planes[planeNum].dist;
 
 			sideNum = firstSide + 2;
 			planeNum = LittleLong(sides[sideNum].planeNum);
-			out->bounds[0][1] = -worldData.planes[planeNum].dist;
+			out->bounds[0][1] = -world_data.planes[planeNum].dist;
 
 			sideNum = firstSide + 3;
 			planeNum = LittleLong(sides[sideNum].planeNum);
-			out->bounds[1][1] = worldData.planes[planeNum].dist;
+			out->bounds[1][1] = world_data.planes[planeNum].dist;
 
 			sideNum = firstSide + 4;
 			planeNum = LittleLong(sides[sideNum].planeNum);
-			out->bounds[0][2] = -worldData.planes[planeNum].dist;
+			out->bounds[0][2] = -world_data.planes[planeNum].dist;
 
 			sideNum = firstSide + 5;
 			planeNum = LittleLong(sides[sideNum].planeNum);
-			out->bounds[1][2] = worldData.planes[planeNum].dist;
+			out->bounds[1][2] = world_data.planes[planeNum].dist;
 		}
 
 		// get information from the shader for fog parameters
@@ -1682,8 +1682,8 @@ static	void R_LoadFogs(lump_t* l, lump_t* brushesLump, lump_t* sidesLump, world_
 		else {
 			out->hasSurface = qtrue;
 			planeNum = LittleLong(sides[firstSide + sideNum].planeNum);
-			VectorSubtract(vec3_origin, worldData.planes[planeNum].normal, out->surface);
-			out->surface[3] = -worldData.planes[planeNum].dist;
+			VectorSubtract(vec3_origin, world_data.planes[planeNum].normal, out->surface);
+			out->surface[3] = -world_data.planes[planeNum].dist;
 		}
 
 		out++;
@@ -1696,11 +1696,11 @@ R_LoadLightGrid
 
 ================
 */
-void R_LoadLightGrid(lump_t* l, world_t& worldData) {
+void R_LoadLightGrid(lump_t* l, world_t& world_data) {
 	int		i;
 	vec3_t	maxs;
 
-	world_t* w = &worldData;
+	world_t* w = &world_data;
 
 	w->lightGridInverseSize[0] = 1.0 / w->lightGridSize[0];
 	w->lightGridInverseSize[1] = 1.0 / w->lightGridSize[1];
@@ -1737,13 +1737,13 @@ R_LoadLightGridArray
 
 ================
 */
-void R_LoadLightGridArray(lump_t* l, world_t& worldData) {
+void R_LoadLightGridArray(lump_t* l, world_t& world_data) {
 	world_t* w;
 #ifdef Q3_BIG_ENDIAN
 	int		i;
 #endif
 
-	w = &worldData;
+	w = &world_data;
 
 	w->numGridArrayElements = w->lightGridBounds[0] * w->lightGridBounds[1] * w->lightGridBounds[2];
 
@@ -1767,13 +1767,13 @@ void R_LoadLightGridArray(lump_t* l, world_t& worldData) {
 R_LoadEntities
 ================
 */
-void R_LoadEntities(lump_t* l, world_t& worldData) {
+void R_LoadEntities(lump_t* l, world_t& world_data) {
 	const char* p;
 	char keyname[MAX_TOKEN_CHARS];
 	char value[MAX_TOKEN_CHARS];
 	float ambient = 1;
 
-	world_t* w = &worldData;
+	world_t* w = &world_data;
 	w->lightGridSize[0] = 64;
 	w->lightGridSize[1] = 64;
 	w->lightGridSize[2] = 128;
@@ -1888,7 +1888,7 @@ RE_LoadWorldMap
 Called directly from cgame
 =================
 */
-void RE_LoadWorldMap_Actual(const char* name, world_t& worldData, int index)
+void RE_LoadWorldMap_Actual(const char* name, world_t& world_data, int index)
 {
 	byte* buffer;
 
@@ -1931,12 +1931,12 @@ void RE_LoadWorldMap_Actual(const char* name, world_t& worldData, int index)
 		}
 	}
 
-	memset(&worldData, 0, sizeof(worldData));
-	Q_strncpyz(worldData.name, name, sizeof(worldData.name));
+	memset(&world_data, 0, sizeof(world_data));
+	Q_strncpyz(world_data.name, name, sizeof(world_data.name));
 	Q_strncpyz(tr.worldDir, name, sizeof(tr.worldDir));
-	Q_strncpyz(worldData.baseName, COM_SkipPath(worldData.name), sizeof(worldData.name));
+	Q_strncpyz(world_data.baseName, COM_SkipPath(world_data.name), sizeof(world_data.name));
 
-	COM_StripExtension(worldData.baseName, worldData.baseName, sizeof(worldData.baseName));
+	COM_StripExtension(world_data.baseName, world_data.baseName, sizeof(world_data.baseName));
 	COM_StripExtension(tr.worldDir, tr.worldDir, sizeof(tr.worldDir));
 
 	const byte* startMarker = static_cast<byte*>(Hunk_Alloc(0, h_low));
@@ -1957,26 +1957,26 @@ void RE_LoadWorldMap_Actual(const char* name, world_t& worldData, int index)
 	}
 
 	// load into heap
-	R_LoadShaders(&header->lumps[LUMP_SHADERS], worldData);
-	R_LoadLightmaps(&header->lumps[LUMP_LIGHTMAPS], name, worldData);
-	R_LoadPlanes(&header->lumps[LUMP_PLANES], worldData);
-	R_LoadFogs(&header->lumps[LUMP_FOGS], &header->lumps[LUMP_BRUSHES], &header->lumps[LUMP_BRUSHSIDES], worldData, index);
-	R_LoadSurfaces(&header->lumps[LUMP_SURFACES], &header->lumps[LUMP_DRAWVERTS], &header->lumps[LUMP_DRAWINDEXES], worldData, index);
-	R_LoadMarksurfaces(&header->lumps[LUMP_LEAFSURFACES], worldData);
-	R_LoadNodesAndLeafs(&header->lumps[LUMP_NODES], &header->lumps[LUMP_LEAFS], worldData);
-	R_LoadSubmodels(&header->lumps[LUMP_MODELS], worldData, index);
-	R_LoadVisibility(&header->lumps[LUMP_VISIBILITY], worldData);
+	R_LoadShaders(&header->lumps[LUMP_SHADERS], world_data);
+	R_LoadLightmaps(&header->lumps[LUMP_LIGHTMAPS], name, world_data);
+	R_LoadPlanes(&header->lumps[LUMP_PLANES], world_data);
+	R_LoadFogs(&header->lumps[LUMP_FOGS], &header->lumps[LUMP_BRUSHES], &header->lumps[LUMP_BRUSHSIDES], world_data, index);
+	R_LoadSurfaces(&header->lumps[LUMP_SURFACES], &header->lumps[LUMP_DRAWVERTS], &header->lumps[LUMP_DRAWINDEXES], world_data, index);
+	R_LoadMarksurfaces(&header->lumps[LUMP_LEAFSURFACES], world_data);
+	R_LoadNodesAndLeafs(&header->lumps[LUMP_NODES], &header->lumps[LUMP_LEAFS], world_data);
+	R_LoadSubmodels(&header->lumps[LUMP_MODELS], world_data, index);
+	R_LoadVisibility(&header->lumps[LUMP_VISIBILITY], world_data);
 
-	worldData.dataSize = static_cast<byte*>(Hunk_Alloc(0, h_low)) - startMarker;
+	world_data.dataSize = static_cast<byte*>(Hunk_Alloc(0, h_low)) - startMarker;
 
 	if (!index)
 	{
-		R_LoadEntities(&header->lumps[LUMP_ENTITIES], worldData);
-		R_LoadLightGrid(&header->lumps[LUMP_LIGHTGRID], worldData);
-		R_LoadLightGridArray(&header->lumps[LUMP_LIGHTARRAY], worldData);
+		R_LoadEntities(&header->lumps[LUMP_ENTITIES], world_data);
+		R_LoadLightGrid(&header->lumps[LUMP_LIGHTGRID], world_data);
+		R_LoadLightGridArray(&header->lumps[LUMP_LIGHTARRAY], world_data);
 
 		// only set tr.world now that we know the entire level has loaded properly
-		tr.world = &worldData;
+		tr.world = &world_data;
 	}
 
 	if (ri->CM_GetCachedMapDiskImage())

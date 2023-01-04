@@ -593,7 +593,7 @@ void CM_TraceThroughBrush(traceWork_t * tw, trace_t & trace, cbrush_t * brush, b
 			{
 				trace.fraction = tw->enterFrac;
 				trace.plane = *tw->clipplane;
-				trace.surfaceFlags = cmg.shaders[tw->leadside->shaderNum].surfaceFlags;
+				trace.surfaceFlags = cmg.shaders[tw->leadside->shader_num].surfaceFlags;
 				trace.contents = brush->contents;
 			}
 		}

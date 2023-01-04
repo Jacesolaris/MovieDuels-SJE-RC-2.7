@@ -5774,7 +5774,7 @@ static void CG_DrawRocketLocking(const int lock_ent_num)
 	}
 }
 
-extern void CG_CalcVehMuzzle(Vehicle_t* pVeh, centity_t* ent, int muzzleNum);
+extern void CG_CalcVehMuzzle(Vehicle_t* p_veh, centity_t* ent, int muzzleNum);
 qboolean CG_CalcVehicleMuzzlePoint(int entityNum, vec3_t start, vec3_t d_f, vec3_t d_rt, vec3_t d_up)
 {
 	centity_t* vehCent = &cg_entities[entityNum];

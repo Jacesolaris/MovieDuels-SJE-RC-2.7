@@ -60,11 +60,11 @@ typedef struct cmodel_s {
 
 typedef struct cbrushside_s {
 	cplane_t* plane;
-	int			shaderNum;
+	int			shader_num;
 } cbrushside_t;
 
 typedef struct cbrush_s {
-	int					shaderNum;		// the shader that determined the contents
+	int					shader_num;		// the shader that determined the contents
 	int					contents;
 	vec3_t				bounds[2];
 	cbrushside_t* sides;
@@ -224,7 +224,7 @@ void CM_ClearLevelPatches(void);
 void CM_SetupShaderProperties(void);
 void CM_ShutdownShaderProperties(void);
 CCMShader* CM_GetShaderInfo(const char* name);
-CCMShader* CM_GetShaderInfo(int shaderNum);
+CCMShader* CM_GetShaderInfo(int shader_num);
 void		CM_GetModelFormalName(const char* model, const char* skin, char* name, int size);
 
 // cm_load.cpp

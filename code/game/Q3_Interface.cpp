@@ -72,7 +72,7 @@ extern void G_ChangeModel(gentity_t* ent, const char* newModel);
 extern void WP_SetSaberOrigin(gentity_t* self, vec3_t new_org);
 extern void Rail_LockCenterOfTrack(const char* trackName);
 extern void Rail_UnLockCenterOfTrack(const char* trackName);
-extern void G_GetBoltPosition(gentity_t* self, int bolt_index, vec3_t pos, int modelIndex = 0);
+extern void G_GetBoltPosition(gentity_t* self, int bolt_index, vec3_t pos, int model_index = 0);
 extern qboolean G_DoDismembermentcin(gentity_t* self, vec3_t point, int mod, int hit_loc,
                                      qboolean force = qfalse);
 extern void G_ChangeScale(const char* data);
@@ -1520,7 +1520,7 @@ moverCallback
 Utility function
 =============
 */
-extern void misc_model_breakable_gravity_init(gentity_t* ent, qboolean dropToFloor);
+extern void misc_model_breakable_gravity_init(gentity_t* ent, qboolean drop_to_floor);
 
 void moverCallback(gentity_t* ent)
 {
@@ -7003,10 +7003,10 @@ static void Q3_RemoveEnt(gentity_t* victim)
 		if (victim->client->NPC_class == CLASS_VEHICLE)
 		{
 			//eject everyone out of a vehicle that's about to remove itself
-			Vehicle_t* pVeh = victim->m_pVehicle;
-			if (pVeh && pVeh->m_pVehicleInfo)
+			Vehicle_t* p_veh = victim->m_pVehicle;
+			if (p_veh && p_veh->m_pVehicleInfo)
 			{
-				pVeh->m_pVehicleInfo->EjectAll(pVeh);
+				p_veh->m_pVehicleInfo->EjectAll(p_veh);
 			}
 		}
 		//ClientDisconnect(ent);

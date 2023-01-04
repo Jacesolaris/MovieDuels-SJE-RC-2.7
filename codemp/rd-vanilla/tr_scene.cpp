@@ -121,7 +121,7 @@ RE_AddPolyToScene
 
 =====================
 */
-void RE_AddPolyToScene(qhandle_t hShader, int numVerts, const polyVert_t* verts, int numPolys) {
+void RE_AddPolyToScene(qhandle_t hShader, int num_verts, const polyVert_t* verts, int numPolys) {
 	int			fogIndex;
 	vec3_t		bounds[2];
 
@@ -135,7 +135,7 @@ void RE_AddPolyToScene(qhandle_t hShader, int numVerts, const polyVert_t* verts,
 	}
 
 	for (int j = 0; j < numPolys; j++) {
-		if (r_numpolyverts + numVerts >= max_polyverts || r_numpolys >= max_polys) {
+		if (r_numpolyverts + num_verts >= max_polyverts || r_numpolys >= max_polys) {
 			/*
 			NOTE TTimo this was initially a PRINT_WARNING
 			but it happens a lot with high fighting scenes and particles
@@ -149,14 +149,14 @@ void RE_AddPolyToScene(qhandle_t hShader, int numVerts, const polyVert_t* verts,
 		srfPoly_t* poly = &backEndData->polys[r_numpolys];
 		poly->surfaceType = SF_POLY;
 		poly->hShader = hShader;
-		poly->numVerts = numVerts;
+		poly->num_verts = num_verts;
 		poly->verts = &backEndData->polyVerts[r_numpolyverts];
 
-		memcpy(poly->verts, &verts[numVerts * j], numVerts * sizeof(*verts));
+		memcpy(poly->verts, &verts[num_verts * j], num_verts * sizeof(*verts));
 
 		// done.
 		r_numpolys++;
-		r_numpolyverts += numVerts;
+		r_numpolyverts += num_verts;
 
 		// if no world is loaded
 		if (tr.world == NULL) {
@@ -170,7 +170,7 @@ void RE_AddPolyToScene(qhandle_t hShader, int numVerts, const polyVert_t* verts,
 			// find which fog volume the poly is in
 			VectorCopy(poly->verts[0].xyz, bounds[0]);
 			VectorCopy(poly->verts[0].xyz, bounds[1]);
-			for (int i = 1; i < poly->numVerts; i++) {
+			for (int i = 1; i < poly->num_verts; i++) {
 				AddPointToBounds(poly->verts[i].xyz, bounds[0], bounds[1]);
 			}
 			for (fogIndex = 1; fogIndex < tr.world->numfogs; fogIndex++) {

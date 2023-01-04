@@ -1002,14 +1002,14 @@ void NPC_SetBoneAngles(gentity_t* ent, char* bone, vec3_t angles)
 #define TURN_ON				0x00000000
 #define TURN_OFF			0x00000100
 
-void NPC_SetSurfaceOnOff(gentity_t* ent, const char* surfaceName, int surfaceFlags)
+void NPC_SetSurfaceOnOff(gentity_t* ent, const char* surface_name, int surfaceFlags)
 {
 	int i = 0;
 	qboolean foundIt = qfalse;
 
 	while (i < BG_NUM_TOGGLEABLE_SURFACES && bgToggleableSurfaces[i])
 	{
-		if (!Q_stricmp(surfaceName, bgToggleableSurfaces[i]))
+		if (!Q_stricmp(surface_name, bgToggleableSurfaces[i]))
 		{ //got it
 			foundIt = qtrue;
 			break;
@@ -1019,7 +1019,7 @@ void NPC_SetSurfaceOnOff(gentity_t* ent, const char* surfaceName, int surfaceFla
 
 	if (!foundIt)
 	{
-		Com_Printf("WARNING: Tried to toggle NPC surface that isn't in toggleable surface list (%s)\n", surfaceName);
+		Com_Printf("WARNING: Tried to toggle NPC surface that isn't in toggleable surface list (%s)\n", surface_name);
 		return;
 	}
 
@@ -1039,7 +1039,7 @@ void NPC_SetSurfaceOnOff(gentity_t* ent, const char* surfaceName, int surfaceFla
 		return;
 	}
 
-	trap->G2API_SetSurfaceOnOff(ent->ghoul2, surfaceName, surfaceFlags);
+	trap->G2API_SetSurfaceOnOff(ent->ghoul2, surface_name, surfaceFlags);
 }
 
 //rww - cheap check to see if an armed client is looking in our general direction
@@ -1049,14 +1049,14 @@ qboolean NPC_SomeoneLookingAtMe(gentity_t* ent)
 
 	while (i < MAX_CLIENTS)
 	{
-		gentity_t* pEnt = &g_entities[i];
+		gentity_t* p_ent = &g_entities[i];
 
-		if (pEnt && pEnt->inuse && pEnt->client && pEnt->client->sess.sessionTeam != TEAM_SPECTATOR &&
-			pEnt->client->tempSpectate < level.time && !(pEnt->client->ps.pm_flags & PMF_FOLLOW) && pEnt->s.weapon != WP_NONE)
+		if (p_ent && p_ent->inuse && p_ent->client && p_ent->client->sess.sessionTeam != TEAM_SPECTATOR &&
+			p_ent->client->tempSpectate < level.time && !(p_ent->client->ps.pm_flags & PMF_FOLLOW) && p_ent->s.weapon != WP_NONE)
 		{
-			if (trap->InPVS(ent->r.currentOrigin, pEnt->r.currentOrigin))
+			if (trap->InPVS(ent->r.currentOrigin, p_ent->r.currentOrigin))
 			{
-				if (InFOV(ent, pEnt, 30, 30))
+				if (InFOV(ent, p_ent, 30, 30))
 				{ //I'm in a 30 fov or so cone from this player.. that's enough I guess.
 					return qtrue;
 				}
@@ -1690,7 +1690,7 @@ void NPC_CheckCharmed(void)
 	}
 }
 
-void G_GetBoltPosition(gentity_t* self, int bolt_index, vec3_t pos, int modelIndex)
+void G_GetBoltPosition(gentity_t* self, int bolt_index, vec3_t pos, int model_index)
 {
 	mdxaBone_t	bolt_matrix;
 	vec3_t		result, angles;
@@ -1714,7 +1714,7 @@ void G_GetBoltPosition(gentity_t* self, int bolt_index, vec3_t pos, int modelInd
 		return;
 	}
 
-	trap->G2API_GetBoltMatrix(self->ghoul2, modelIndex,
+	trap->G2API_GetBoltMatrix(self->ghoul2, model_index,
 		bolt_index,
 		&bolt_matrix, angles, self->r.currentOrigin, level.time,
 		NULL, self->modelScale);

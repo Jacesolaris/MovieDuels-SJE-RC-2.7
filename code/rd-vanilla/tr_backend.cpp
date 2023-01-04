@@ -1009,7 +1009,7 @@ const void* RB_StretchPic(const void* data)
 
 	shader_t* shader = cmd->shader;
 	if (shader != tess.shader) {
-		if (tess.numIndexes) {
+		if (tess.num_indexes) {
 			RB_EndSurface();
 		}
 		backEnd.currentEntity = &backEnd.entity2D;
@@ -1018,10 +1018,10 @@ const void* RB_StretchPic(const void* data)
 
 	RB_CHECKOVERFLOW(4, 6);
 	const int num_verts = tess.numVertexes;
-	const int num_indexes = tess.numIndexes;
+	const int num_indexes = tess.num_indexes;
 
 	tess.numVertexes += 4;
-	tess.numIndexes += 6;
+	tess.num_indexes += 6;
 
 	tess.indexes[num_indexes] = num_verts + 3;
 	tess.indexes[num_indexes + 1] = num_verts + 0;
@@ -1082,7 +1082,7 @@ const void* RB_RotatePic(const void* data)
 
 	shader_t* shader = cmd->shader;
 	if (shader != tess.shader) {
-		if (tess.numIndexes) {
+		if (tess.num_indexes) {
 			RB_EndSurface();
 		}
 		backEnd.currentEntity = &backEnd.entity2D;
@@ -1091,7 +1091,7 @@ const void* RB_RotatePic(const void* data)
 
 	RB_CHECKOVERFLOW(4, 6);
 	const int num_verts = tess.numVertexes;
-	const int num_indexes = tess.numIndexes;
+	const int num_indexes = tess.num_indexes;
 
 	const float angle = DEG2RAD(cmd->a);
 	const float s = sinf(angle);
@@ -1104,7 +1104,7 @@ const void* RB_RotatePic(const void* data)
 	};
 
 	tess.numVertexes += 4;
-	tess.numIndexes += 6;
+	tess.num_indexes += 6;
 
 	tess.indexes[num_indexes] = num_verts + 3;
 	tess.indexes[num_indexes + 1] = num_verts + 0;
@@ -1170,7 +1170,7 @@ const void* RB_RotatePic2(const void* data)
 
 		shader = cmd->shader;
 		if (shader != tess.shader) {
-			if (tess.numIndexes) {
+			if (tess.num_indexes) {
 				RB_EndSurface();
 			}
 			backEnd.currentEntity = &backEnd.entity2D;
@@ -1179,7 +1179,7 @@ const void* RB_RotatePic2(const void* data)
 
 		RB_CHECKOVERFLOW(4, 6);
 		const int num_verts = tess.numVertexes;
-		const int num_indexes = tess.numIndexes;
+		const int num_indexes = tess.num_indexes;
 
 		const float angle = DEG2RAD(cmd->a);
 		const float s = sinf(angle);
@@ -1192,7 +1192,7 @@ const void* RB_RotatePic2(const void* data)
 		};
 
 		tess.numVertexes += 4;
-		tess.numIndexes += 6;
+		tess.num_indexes += 6;
 
 		tess.indexes[num_indexes] = num_verts + 3;
 		tess.indexes[num_indexes + 1] = num_verts + 0;
@@ -1273,7 +1273,7 @@ RB_DrawSurfs
 */
 const void* RB_DrawSurfs(const void* data) {
 	// finish any 2D drawing if needed
-	if (tess.numIndexes) {
+	if (tess.num_indexes) {
 		RB_EndSurface();
 	}
 
@@ -1485,7 +1485,7 @@ RB_SwapBuffers
 extern void RB_RenderWorldEffects();
 const void* RB_SwapBuffers(const void* data) {
 	// finish any 2D drawing if needed
-	if (tess.numIndexes) {
+	if (tess.num_indexes) {
 		RB_EndSurface();
 	}
 
@@ -1531,7 +1531,7 @@ const void* RB_WorldEffects(const void* data)
 	const auto cmd = static_cast<const setModeCommand_t*>(data);
 
 	// Always flush the tess buffer
-	if (tess.shader && tess.numIndexes)
+	if (tess.shader && tess.num_indexes)
 	{
 		RB_EndSurface();
 	}

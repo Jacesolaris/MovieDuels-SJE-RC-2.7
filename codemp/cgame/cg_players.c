@@ -3394,7 +3394,7 @@ PLAYER ANGLES
 #if 0
 typedef struct boneAngleParms_s {
 	void* ghoul2;
-	int modelIndex;
+	int model_index;
 	char* boneName;
 	vec3_t angles;
 	int flags;
@@ -3411,7 +3411,7 @@ typedef struct boneAngleParms_s {
 boneAngleParms_t cgBoneAnglePostSet;
 #endif
 
-void CG_G2SetBoneAngles(void* ghoul2, int modelIndex, const char* boneName, const vec3_t angles, const int flags,
+void CG_G2SetBoneAngles(void* ghoul2, int model_index, const char* boneName, const vec3_t angles, const int flags,
 	const int up, const int right, const int forward, qhandle_t* modelList,
 	int blendTime, int currentTime)
 { //we want to hold off on setting the bone angles until the end of the frame, because every time we set
@@ -3421,7 +3421,7 @@ void CG_G2SetBoneAngles(void* ghoul2, int modelIndex, const char* boneName, cons
 	//At the end of the frame we will check to use this information to call SetBoneAngles
 	memset(&cgBoneAnglePostSet, 0, sizeof(cgBoneAnglePostSet));
 	cgBoneAnglePostSet.ghoul2 = ghoul2;
-	cgBoneAnglePostSet.modelIndex = modelIndex;
+	cgBoneAnglePostSet.model_index = model_index;
 	cgBoneAnglePostSet.boneName = (char*)boneName;
 
 	cgBoneAnglePostSet.angles[0] = angles[0];
@@ -3440,7 +3440,7 @@ void CG_G2SetBoneAngles(void* ghoul2, int modelIndex, const char* boneName, cons
 #endif
 	//We don't want to go with the delayed approach, we want out bolt points and everything to be updated in realtime.
 	//We'll just take the reconstructs and live with them.
-	trap->G2API_SetBoneAngles(ghoul2, modelIndex, boneName, angles, flags, up, right, forward, modelList,
+	trap->G2API_SetBoneAngles(ghoul2, model_index, boneName, angles, flags, up, right, forward, modelList,
 		blendTime, currentTime);
 }
 
@@ -5167,7 +5167,7 @@ void CG_PlayerHitFX(centity_t* cent)
 CG_LightVerts
 =================
 */
-int CG_LightVerts(vec3_t normal, int numVerts, polyVert_t* verts)
+int CG_LightVerts(vec3_t normal, int num_verts, polyVert_t* verts)
 {
 	vec3_t			ambientLight;
 	vec3_t			lightDir;
@@ -5175,7 +5175,7 @@ int CG_LightVerts(vec3_t normal, int numVerts, polyVert_t* verts)
 
 	trap->R_LightForPoint(verts[0].xyz, ambientLight, directedLight, lightDir);
 
-	for (int i = 0; i < numVerts; i++) {
+	for (int i = 0; i < num_verts; i++) {
 		const float incoming = DotProduct(normal, lightDir);
 		if (incoming <= 0) {
 			verts[i].modulate[0] = ambientLight[0];
@@ -6155,7 +6155,7 @@ void CG_CreateSaberMarks(vec3_t start, vec3_t end, vec3_t normal)
 				return;
 			}
 
-			apArgs.numVerts = mf->numPoints;
+			apArgs.num_verts = mf->numPoints;
 			VectorCopy(vec3_origin, apArgs.vel);
 			VectorCopy(vec3_origin, apArgs.accel);
 
@@ -6197,7 +6197,7 @@ void CG_CreateSaberMarks(vec3_t start, vec3_t end, vec3_t normal)
 			mark->time = cg.time;
 			mark->alphaFade = qtrue;
 			mark->markShader = cgs.media.rivetMarkShader;
-			mark->poly.numVerts = mf->numPoints;
+			mark->poly.num_verts = mf->numPoints;
 			mark->color[0] = mark->color[1] = mark->color[2] = mark->color[3] = 255;
 			memcpy(mark->verts, verts, mf->numPoints * sizeof(verts[0]));
 
@@ -6207,7 +6207,7 @@ void CG_CreateSaberMarks(vec3_t start, vec3_t end, vec3_t normal)
 			mark->time = cg.time - 8500;
 			mark->alphaFade = qfalse;
 			mark->markShader = cgs.media.mSaberDamageGlow;
-			mark->poly.numVerts = mf->numPoints;
+			mark->poly.num_verts = mf->numPoints;
 			mark->color[0] = 215 + Q_flrand(0.0f, 1.0f) * 40.0f;
 			mark->color[1] = 96 + Q_flrand(0.0f, 1.0f) * 32.0f;
 			mark->color[2] = mark->color[3] = Q_flrand(0.0f, 1.0f) * 15.0f;
@@ -6567,7 +6567,7 @@ void CG_SaberCompWork(vec3_t start, vec3_t end, centity_t* owner, int saber_num,
 
 qboolean BG_SuperBreakWinAnim(int anim);
 
-void CG_AddSaberBlade(centity_t* cent, centity_t* scent, refEntity_t* saber, int renderfx, int modelIndex, int saber_num, int blade_num, vec3_t origin, vec3_t angles, qboolean fromSaber, qboolean dontDraw)
+void CG_AddSaberBlade(centity_t* cent, centity_t* scent, refEntity_t* saber, int renderfx, int model_index, int saber_num, int blade_num, vec3_t origin, vec3_t angles, qboolean fromSaber, qboolean dontDraw)
 {
 	vec3_t	org_, end, v,
 		axis_[3] = { {0,0,0}, {0,0,0}, {0,0,0} };	// shut the compiler up
@@ -7727,59 +7727,59 @@ void CG_CacheG2AnimInfo(char* modelName)
 	}
 }
 
-static void CG_RegisterVehicleAssets(Vehicle_t* pVeh)
+static void CG_RegisterVehicleAssets(Vehicle_t* p_veh)
 {
 	/*
-	if ( pVeh->m_pVehicleInfo->exhaustFX )
+	if ( p_veh->m_pVehicleInfo->exhaustFX )
 	{
-		pVeh->m_pVehicleInfo->iExhaustFX = trap->FX_RegisterEffect( pVeh->m_pVehicleInfo->exhaustFX );
+		p_veh->m_pVehicleInfo->iExhaustFX = trap->FX_RegisterEffect( p_veh->m_pVehicleInfo->exhaustFX );
 	}
-	if ( pVeh->m_pVehicleInfo->trailFX )
+	if ( p_veh->m_pVehicleInfo->trailFX )
 	{
-		pVeh->m_pVehicleInfo->iTrailFX = trap->FX_RegisterEffect( pVeh->m_pVehicleInfo->trailFX );
+		p_veh->m_pVehicleInfo->iTrailFX = trap->FX_RegisterEffect( p_veh->m_pVehicleInfo->trailFX );
 	}
-	if ( pVeh->m_pVehicleInfo->impactFX )
+	if ( p_veh->m_pVehicleInfo->impactFX )
 	{
-		pVeh->m_pVehicleInfo->iImpactFX = trap->FX_RegisterEffect( pVeh->m_pVehicleInfo->impactFX );
+		p_veh->m_pVehicleInfo->iImpactFX = trap->FX_RegisterEffect( p_veh->m_pVehicleInfo->impactFX );
 	}
-	if ( pVeh->m_pVehicleInfo->explodeFX )
+	if ( p_veh->m_pVehicleInfo->explodeFX )
 	{
-		pVeh->m_pVehicleInfo->iExplodeFX = trap->FX_RegisterEffect( pVeh->m_pVehicleInfo->explodeFX );
+		p_veh->m_pVehicleInfo->iExplodeFX = trap->FX_RegisterEffect( p_veh->m_pVehicleInfo->explodeFX );
 	}
-	if ( pVeh->m_pVehicleInfo->wakeFX )
+	if ( p_veh->m_pVehicleInfo->wakeFX )
 	{
-		pVeh->m_pVehicleInfo->iWakeFX = trap->FX_RegisterEffect( pVeh->m_pVehicleInfo->wakeFX );
+		p_veh->m_pVehicleInfo->iWakeFX = trap->FX_RegisterEffect( p_veh->m_pVehicleInfo->wakeFX );
 	}
 
-	if ( pVeh->m_pVehicleInfo->dmgFX )
+	if ( p_veh->m_pVehicleInfo->dmgFX )
 	{
-		pVeh->m_pVehicleInfo->iDmgFX = trap->FX_RegisterEffect( pVeh->m_pVehicleInfo->dmgFX );
+		p_veh->m_pVehicleInfo->iDmgFX = trap->FX_RegisterEffect( p_veh->m_pVehicleInfo->dmgFX );
 	}
-	if ( pVeh->m_pVehicleInfo->wpn1FX )
+	if ( p_veh->m_pVehicleInfo->wpn1FX )
 	{
-		pVeh->m_pVehicleInfo->iWpn1FX = trap->FX_RegisterEffect( pVeh->m_pVehicleInfo->wpn1FX );
+		p_veh->m_pVehicleInfo->iWpn1FX = trap->FX_RegisterEffect( p_veh->m_pVehicleInfo->wpn1FX );
 	}
-	if ( pVeh->m_pVehicleInfo->wpn2FX )
+	if ( p_veh->m_pVehicleInfo->wpn2FX )
 	{
-		pVeh->m_pVehicleInfo->iWpn2FX = trap->FX_RegisterEffect( pVeh->m_pVehicleInfo->wpn2FX );
+		p_veh->m_pVehicleInfo->iWpn2FX = trap->FX_RegisterEffect( p_veh->m_pVehicleInfo->wpn2FX );
 	}
-	if ( pVeh->m_pVehicleInfo->wpn1FireFX )
+	if ( p_veh->m_pVehicleInfo->wpn1FireFX )
 	{
-		pVeh->m_pVehicleInfo->iWpn1FireFX = trap->FX_RegisterEffect( pVeh->m_pVehicleInfo->wpn1FireFX );
+		p_veh->m_pVehicleInfo->iWpn1FireFX = trap->FX_RegisterEffect( p_veh->m_pVehicleInfo->wpn1FireFX );
 	}
-	if ( pVeh->m_pVehicleInfo->wpn2FireFX )
+	if ( p_veh->m_pVehicleInfo->wpn2FireFX )
 	{
-		pVeh->m_pVehicleInfo->iWpn2FireFX = trap->FX_RegisterEffect( pVeh->m_pVehicleInfo->wpn2FireFX );
+		p_veh->m_pVehicleInfo->iWpn2FireFX = trap->FX_RegisterEffect( p_veh->m_pVehicleInfo->wpn2FireFX );
 	}
 	*/
 }
 
 extern void CG_HandleNPCSounds(centity_t* cent);
 
-extern void G_CreateAnimalNPC(Vehicle_t** pVeh, const char* strAnimalType);
-extern void G_CreateSpeederNPC(Vehicle_t** pVeh, const char* strType);
-extern void G_CreateWalkerNPC(Vehicle_t** pVeh, const char* strAnimalType);
-extern void G_CreateFighterNPC(Vehicle_t** pVeh, const char* strType);
+extern void G_CreateAnimalNPC(Vehicle_t** p_veh, const char* strAnimalType);
+extern void G_CreateSpeederNPC(Vehicle_t** p_veh, const char* strType);
+extern void G_CreateWalkerNPC(Vehicle_t** p_veh, const char* strAnimalType);
+extern void G_CreateFighterNPC(Vehicle_t** p_veh, const char* strType);
 
 extern playerState_t* cgSendPS[MAX_GENTITIES];
 void CG_G2AnimEntModelLoad(centity_t* cent)
@@ -11612,10 +11612,10 @@ stillDoSaber:
 	if (CG_VehicleShouldDrawShields(cent) //vehicle
 		|| (checkDroidShields && CG_VehicleShouldDrawShields(&cg_entities[cent->currentState.m_iVehicleNum])))//droid in vehicle
 	{//Vehicles have form-fitting shields
-		Vehicle_t* pVeh = cent->m_pVehicle;
+		Vehicle_t* p_veh = cent->m_pVehicle;
 		if (checkDroidShields)
 		{
-			pVeh = cg_entities[cent->currentState.m_iVehicleNum].m_pVehicle;
+			p_veh = cg_entities[cent->currentState.m_iVehicleNum].m_pVehicle;
 		}
 		legs.shaderRGBA[0] = 255;
 		legs.shaderRGBA[1] = 255;
@@ -11625,11 +11625,11 @@ stillDoSaber:
 		legs.renderfx &= ~RF_RGB_TINT;
 		legs.renderfx &= ~RF_FORCE_ENT_ALPHA;
 
-		if (pVeh
-			&& pVeh->m_pVehicleInfo
-			&& pVeh->m_pVehicleInfo->shieldShaderHandle)
+		if (p_veh
+			&& p_veh->m_pVehicleInfo
+			&& p_veh->m_pVehicleInfo->shieldShaderHandle)
 		{//use the vehicle-specific shader
-			legs.customShader = pVeh->m_pVehicleInfo->shieldShaderHandle;
+			legs.customShader = p_veh->m_pVehicleInfo->shieldShaderHandle;
 		}
 		else
 		{
@@ -11841,7 +11841,7 @@ stillDoSaber:
 
 	if (cgBoneAnglePostSet.refreshSet)
 	{
-		trap->G2API_SetBoneAngles(cgBoneAnglePostSet.ghoul2, cgBoneAnglePostSet.modelIndex, cgBoneAnglePostSet.boneName,
+		trap->G2API_SetBoneAngles(cgBoneAnglePostSet.ghoul2, cgBoneAnglePostSet.model_index, cgBoneAnglePostSet.boneName,
 			cgBoneAnglePostSet.angles, cgBoneAnglePostSet.flags, cgBoneAnglePostSet.up, cgBoneAnglePostSet.right,
 			cgBoneAnglePostSet.forward, cgBoneAnglePostSet.modelList, cgBoneAnglePostSet.blendTime, cgBoneAnglePostSet.currentTime);
 

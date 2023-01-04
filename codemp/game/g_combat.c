@@ -26,7 +26,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #include "b_local.h"
 #include "bg_saga.h"
 
-extern int G_ShipSurfaceForSurfName(const char* surfaceName);
+extern int G_ShipSurfaceForSurfName(const char* surface_name);
 extern qboolean G_FlyVehicleDestroySurface(gentity_t* veh, int surface);
 extern void G_VehicleSetDamageLocFlags(gentity_t* veh, int impactDir, int deathPoint);
 extern void G_VehUpdateShields(gentity_t* targ);
@@ -5001,10 +5001,10 @@ void G_Damage(gentity_t* targ, gentity_t* inflictor, gentity_t* attacker, vec3_t
 				/*
 				if ( targ->m_pVehicle->m_iArmor <= 0 )
 				{//vehicle all out of armor
-					Vehicle_t *pVeh = targ->m_pVehicle;
-					if ( pVeh->m_iDieTime == 0 )
+					Vehicle_t *p_veh = targ->m_pVehicle;
+					if ( p_veh->m_iDieTime == 0 )
 					{//just start the flaming effect and explosion delay, if it's not going already...
-						pVeh->m_pVehicleInfo->StartDeathDelay( pVeh, 0 );
+						p_veh->m_pVehicleInfo->StartDeathDelay( p_veh, 0 );
 					}
 				}
 				else*/

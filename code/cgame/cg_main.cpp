@@ -36,7 +36,7 @@ using namePrecache_m = std::map<sstring_t, unsigned char>;
 extern namePrecache_m* as_preCacheMap;
 extern void CG_RegisterNPCCustomSounds(clientInfo_t* ci);
 
-extern Vehicle_t* G_IsRidingVehicle(const gentity_t* pEnt);
+extern Vehicle_t* G_IsRidingVehicle(const gentity_t* p_ent);
 extern int G_ParseAnimFileSet(const char* skeleton_name, const char* model_name = nullptr);
 extern void CG_DrawDataPadInventorySelect(void);
 
@@ -618,7 +618,7 @@ static cvarTable_t cvarTable[] = {
 	{&cg_ignitionSpeedstaff, "cg_ignitionSpeedstaff", "1.0", CVAR_ARCHIVE},
 
 	{&cg_SerenityJediEngineMode, "g_SerenityJediEngineMode", "1", CVAR_ARCHIVE},
-	{&cg_SerenityJediEngineHudMode, "g_SerenityJediEngineHudMode", "4", CVAR_ARCHIVE},
+	{&cg_SerenityJediEngineHudMode, "g_SerenityJediEngineHudMode", "5", CVAR_ARCHIVE},
 	{&cg_SaberInnonblockableAttackWarning, "g_SaberInnonblockableAttackWarning", "0", CVAR_ARCHIVE},
 	{&cg_IsSaberDoingAttackDamage, "g_IsSaberDoingAttackDamage", "0", CVAR_ARCHIVE},
 

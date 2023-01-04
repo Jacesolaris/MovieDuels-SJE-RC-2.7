@@ -36,7 +36,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 // The vertigons are applied as part of the renderer backend.  That is, they access OpenGL calls directly.
 
 unsigned char randomindex, randominterval;
-const float randomchart[256] = {
+constexpr float randomchart[256] = {
 	0.6554f, 0.6909f, 0.4806f, 0.6218f, 0.5717f, 0.3896f, 0.0677f, 0.7356f,
 	0.8333f, 0.1105f, 0.4445f, 0.8161f, 0.4689f, 0.0433f, 0.7152f, 0.0336f,
 	0.0186f, 0.9140f, 0.1626f, 0.6553f, 0.8340f, 0.7094f, 0.2020f, 0.8087f,
@@ -75,19 +75,19 @@ const float randomchart[256] = {
 #define WIND_GUST_TIME 2500.0
 #define WIND_GUST_DECAY (1.0 / WIND_GUST_TIME)
 
-int		lastSSUpdateTime = 0;
-float	curWindSpeed = 0;
-float	curWindGust = 5;
-float	curWeatherAmount = 1;
-vec3_t	curWindBlowVect = { 0,0,0 }, targetWindBlowVect = { 0,0,0 };
-vec3_t	curWindGrassDir = { 0,0,0 }, targetWindGrassDir = { 0,0,0 };
+int		last_ss_update_time = 0;
+float	cur_wind_speed = 0;
+float	cur_wind_gust = 5;
+float	cur_weather_amount = 1;
+vec3_t	cur_wind_blow_vect = { 0,0,0 }, target_wind_blow_vect = { 0,0,0 };
+vec3_t	cur_wind_grass_dir = { 0,0,0 }, target_wind_grass_dir = { 0,0,0 };
 int		totalsurfsprites = 0, sssurfaces = 0;
 
-qboolean curWindPointActive = qfalse;
-float curWindPointForce = 0;
-vec3_t curWindPoint;
-int nextGustTime = 0;
-float gustLeft = 0;
+qboolean cur_wind_point_active = qfalse;
+float cur_wind_point_force = 0;
+vec3_t cur_wind_point;
+int next_gust_time = 0;
+float gust_left = 0;
 
 qboolean standardfovinitialized = qfalse;
 float	standardfovx = 90, standardscalex = 1.0;
@@ -98,7 +98,7 @@ vec3_t  ssfwdvector;
 int		rightvectorcount;
 
 trRefEntity_t* ssLastEntityDrawn = NULL;
-vec3_t	ssViewOrigin, ssViewRight, ssViewUp;
+vec3_t	ss_view_origin, ss_view_right, ss_view_up;
 
 static void R_SurfaceSpriteFrameUpdate(void)
 {
@@ -106,15 +106,15 @@ static void R_SurfaceSpriteFrameUpdate(void)
 	float targetspeed;
 	const vec3_t up = { 0,0,1 };
 
-	if (backEnd.refdef.time == lastSSUpdateTime)
+	if (backEnd.refdef.time == last_ss_update_time)
 		return;
 
-	if (backEnd.refdef.time < lastSSUpdateTime)
+	if (backEnd.refdef.time < last_ss_update_time)
 	{	// Time is BEFORE the last update time, so reset everything.
-		curWindGust = 5;
-		curWindSpeed = r_windSpeed->value;
-		nextGustTime = 0;
-		gustLeft = 0;
+		cur_wind_gust = 5;
+		cur_wind_speed = r_windSpeed->value;
+		next_gust_time = 0;
+		gust_left = 0;
 	}
 
 	// Reset the last entity drawn, since this is a new frame.
@@ -156,33 +156,33 @@ static void R_SurfaceSpriteFrameUpdate(void)
 
 	// Create a set of four right vectors so that vertical sprites aren't always facing the same way.
 	// First generate a HORIZONTAL forward vector (important).
-	CrossProduct(ssViewRight, up, ssfwdvector);
+	CrossProduct(ss_view_right, up, ssfwdvector);
 
 	// Right Zero has a nudge forward (10 degrees).
-	VectorScale(ssViewRight, 0.985f, ssrightvectors[0]);
+	VectorScale(ss_view_right, 0.985f, ssrightvectors[0]);
 	VectorMA(ssrightvectors[0], 0.174f, ssfwdvector, ssrightvectors[0]);
 
 	// Right One has a big nudge back (30 degrees).
-	VectorScale(ssViewRight, 0.866f, ssrightvectors[1]);
+	VectorScale(ss_view_right, 0.866f, ssrightvectors[1]);
 	VectorMA(ssrightvectors[1], -0.5f, ssfwdvector, ssrightvectors[1]);
 
 	// Right two has a big nudge forward (30 degrees).
-	VectorScale(ssViewRight, 0.866f, ssrightvectors[2]);
+	VectorScale(ss_view_right, 0.866f, ssrightvectors[2]);
 	VectorMA(ssrightvectors[2], 0.5f, ssfwdvector, ssrightvectors[2]);
 
 	// Right three has a nudge back (10 degrees).
-	VectorScale(ssViewRight, 0.985f, ssrightvectors[3]);
+	VectorScale(ss_view_right, 0.985f, ssrightvectors[3]);
 	VectorMA(ssrightvectors[3], -0.174f, ssfwdvector, ssrightvectors[3]);
 
 	// Update the wind.
 	// If it is raining, get the windspeed from the rain system rather than the cvar
 	if (R_IsRaining() || R_IsPuffing())
 	{
-		curWeatherAmount = 1.0;
+		cur_weather_amount = 1.0;
 	}
 	else
 	{
-		curWeatherAmount = r_surfaceWeather->value;
+		cur_weather_amount = r_surfaceWeather->value;
 	}
 
 	if (R_GetWindSpeed(targetspeed))
@@ -191,36 +191,36 @@ static void R_SurfaceSpriteFrameUpdate(void)
 		targetspeed *= 0.3f;
 		if (targetspeed >= 1.0)
 		{
-			curWindGust = 300 / targetspeed;
+			cur_wind_gust = 300 / targetspeed;
 		}
 		else
 		{
-			curWindGust = 0;
+			cur_wind_gust = 0;
 		}
 	}
 	else
 	{	// Use the cvar.
 		targetspeed = r_windSpeed->value;	// Minimum gust delay, in seconds.
-		curWindGust = r_windGust->value;
+		cur_wind_gust = r_windGust->value;
 	}
 
-	if (targetspeed > 0 && curWindGust)
+	if (targetspeed > 0 && cur_wind_gust)
 	{
-		if (gustLeft > 0)
+		if (gust_left > 0)
 		{	// We are gusting
 			// Add an amount to the target wind speed
-			targetspeed *= 1.0 + gustLeft;
+			targetspeed *= 1.0 + gust_left;
 
-			gustLeft -= static_cast<float>(backEnd.refdef.time - lastSSUpdateTime) * WIND_GUST_DECAY;
-			if (gustLeft <= 0)
+			gust_left -= static_cast<float>(backEnd.refdef.time - last_ss_update_time) * WIND_GUST_DECAY;
+			if (gust_left <= 0)
 			{
-				nextGustTime = backEnd.refdef.time + (curWindGust * 1000) * flrand(1.0f, 4.0f);
+				next_gust_time = backEnd.refdef.time + (cur_wind_gust * 1000) * flrand(1.0f, 4.0f);
 			}
 		}
-		else if (backEnd.refdef.time >= nextGustTime)
+		else if (backEnd.refdef.time >= next_gust_time)
 		{	// See if there is another right now
 			// Gust next time, mano
-			gustLeft = flrand(0.75f, 1.5f);
+			gust_left = flrand(0.75f, 1.5f);
 		}
 	}
 
@@ -250,47 +250,47 @@ static void R_SurfaceSpriteFrameUpdate(void)
 	}
 
 	// Get the grass wind vector first
-	AngleVectors(ang, targetWindGrassDir, NULL, NULL);
-	targetWindGrassDir[2] -= 1.0;
+	AngleVectors(ang, target_wind_grass_dir, NULL, NULL);
+	target_wind_grass_dir[2] -= 1.0;
 	//		VectorScale(targetWindGrassDir, targetspeed, targetWindGrassDir);
 
 		// Now get the general wind vector (no pitch)
 	ang[PITCH] = 0;
-	AngleVectors(ang, targetWindBlowVect, NULL, NULL);
+	AngleVectors(ang, target_wind_blow_vect, NULL, NULL);
 
 	// Start calculating a smoothing factor so wind doesn't change abruptly between speeds.
 	const float dampfactor = 1.0 - r_windDampFactor->value;	// We must exponent the amount LEFT rather than the amount bled off
-	const float dtime = static_cast<float>(backEnd.refdef.time - lastSSUpdateTime) * (1.0 / static_cast<float>(WIND_DAMP_INTERVAL));	// Our dampfactor is geared towards a time interval equal to "1".
+	const float dtime = static_cast<float>(backEnd.refdef.time - last_ss_update_time) * (1.0 / static_cast<float>(WIND_DAMP_INTERVAL));	// Our dampfactor is geared towards a time interval equal to "1".
 
 	// Note that since there are a finite number of "practical" delta millisecond values possible,
 	// the ratio should be initialized into a chart ultimately.
 	const float ratio = pow(dampfactor, dtime);
 
 	// Apply this ratio to the windspeed...
-	curWindSpeed = targetspeed - (ratio * (targetspeed - curWindSpeed));
+	cur_wind_speed = targetspeed - (ratio * (targetspeed - cur_wind_speed));
 
 	// Use the curWindSpeed to calculate the final target wind vector (with speed)
-	VectorScale(targetWindBlowVect, curWindSpeed, targetWindBlowVect);
-	VectorSubtract(targetWindBlowVect, curWindBlowVect, diff);
-	VectorMA(targetWindBlowVect, -ratio, diff, curWindBlowVect);
+	VectorScale(target_wind_blow_vect, cur_wind_speed, target_wind_blow_vect);
+	VectorSubtract(target_wind_blow_vect, cur_wind_blow_vect, diff);
+	VectorMA(target_wind_blow_vect, -ratio, diff, cur_wind_blow_vect);
 
 	// Update the grass vector now
-	VectorSubtract(targetWindGrassDir, curWindGrassDir, diff);
-	VectorMA(targetWindGrassDir, -ratio, diff, curWindGrassDir);
+	VectorSubtract(target_wind_grass_dir, cur_wind_grass_dir, diff);
+	VectorMA(target_wind_grass_dir, -ratio, diff, cur_wind_grass_dir);
 
-	lastSSUpdateTime = backEnd.refdef.time;
+	last_ss_update_time = backEnd.refdef.time;
 
-	curWindPointForce = r_windPointForce->value - (ratio * (r_windPointForce->value - curWindPointForce));
-	if (curWindPointForce < 0.01)
+	cur_wind_point_force = r_windPointForce->value - (ratio * (r_windPointForce->value - cur_wind_point_force));
+	if (cur_wind_point_force < 0.01)
 	{
-		curWindPointActive = qfalse;
+		cur_wind_point_active = qfalse;
 	}
 	else
 	{
-		curWindPointActive = qtrue;
-		curWindPoint[0] = r_windPointX->value;
-		curWindPoint[1] = r_windPointY->value;
-		curWindPoint[2] = 0;
+		cur_wind_point_active = qtrue;
+		cur_wind_point[0] = r_windPointX->value;
+		cur_wind_point[1] = r_windPointY->value;
+		cur_wind_point[2] = 0;
 	}
 
 	if (r_surfaceSprites->integer >= 2)
@@ -309,12 +309,12 @@ static void R_SurfaceSpriteFrameUpdate(void)
 #define FADE_RANGE			250.0
 #define WINDPOINT_RADIUS	750.0
 
-float SSVertAlpha[SHADER_MAX_VERTEXES];
-float SSVertWindForce[SHADER_MAX_VERTEXES];
-vec2_t SSVertWindDir[SHADER_MAX_VERTEXES];
+float ss_vert_alpha[SHADER_MAX_VERTEXES];
+float ss_vert_wind_force[SHADER_MAX_VERTEXES];
+vec2_t ss_vert_wind_dir[SHADER_MAX_VERTEXES];
 
-qboolean SSAdditiveTransparency = qfalse;
-qboolean SSUsingFog = qfalse;
+qboolean ss_additive_transparency = qfalse;
+qboolean ss_using_fog = qfalse;
 
 /////////////////////////////////////////////
 // Vertical surface sprites
@@ -358,16 +358,16 @@ static void RB_VerticalSurfaceSprite(vec3_t loc, float width, float height, byte
 		}
 	}
 
-	if (wind > 0.0 && curWindSpeed > 0.001)
+	if (wind > 0.0 && cur_wind_speed > 0.001)
 	{
 		windsway = (height * wind * 0.075);
 
 		// Add the angle
-		VectorMA(loc2, height * wind, curWindGrassDir, loc2);
+		VectorMA(loc2, height * wind, cur_wind_grass_dir, loc2);
 		// Bob up and down
-		if (curWindSpeed < 40.0)
+		if (cur_wind_speed < 40.0)
 		{
-			windsway *= curWindSpeed * (1.0 / 100.0);
+			windsway *= cur_wind_speed * (1.0 / 100.0);
 		}
 		else
 		{
@@ -439,7 +439,7 @@ static void RB_VerticalSurfaceSpriteWindPoint(vec3_t loc, float width, float hei
 
 	const float angle = (loc[0] + loc[1]) * 0.02 + (tr.refdef.time * 0.0015);
 
-	if (curWindSpeed < 80.0)
+	if (cur_wind_speed < 80.0)
 	{
 		const float windsway = (height * windidle * 0.1) * (1.0 + windforce);
 		loc2[0] = loc[0] + skew[0] + cos(angle) * windsway;
@@ -459,10 +459,10 @@ static void RB_VerticalSurfaceSpriteWindPoint(vec3_t loc, float width, float hei
 		loc2[2] = loc[2] + height;
 	}
 
-	if (curWindSpeed > 0.001)
+	if (cur_wind_speed > 0.001)
 	{
 		// Add the angle
-		VectorMA(loc2, height * wind, curWindGrassDir, loc2);
+		VectorMA(loc2, height * wind, cur_wind_grass_dir, loc2);
 	}
 
 	loc2[0] += height * winddiff[0] * windforce;
@@ -545,7 +545,7 @@ static void RB_DrawVerticalSurfaceSprites(shaderStage_t* stage, shaderCommands_t
 	vec2_t fogv;
 	vec2_t winddiffv;
 	float windforce = 0;
-	qboolean usewindpoint = static_cast<qboolean>(!!(curWindPointActive && stage->ss->wind > 0));
+	qboolean usewindpoint = static_cast<qboolean>(!!(cur_wind_point_active && stage->ss->wind > 0));
 
 	float cutdist = stage->ss->fadeMax * rangescalefactor, cutdist2 = cutdist * cutdist;
 	float fadedist = stage->ss->fadeDist * rangescalefactor, fadedist2 = fadedist * fadedist;
@@ -564,8 +564,8 @@ static void RB_DrawVerticalSurfaceSprites(shaderStage_t* stage, shaderCommands_t
 	// Quickly calc all the alphas and windstuff for each vertex
 	for (curvert = 0; curvert < input->numVertexes; curvert++)
 	{
-		VectorSubtract(ssViewOrigin, input->xyz[curvert], dist);
-		SSVertAlpha[curvert] = 1.0 - (VectorLengthSquared(dist) - fadedist2) * inv_fadediff;
+		VectorSubtract(ss_view_origin, input->xyz[curvert], dist);
+		ss_vert_alpha[curvert] = 1.0 - (VectorLengthSquared(dist) - fadedist2) * inv_fadediff;
 	}
 
 	// Wind only needs initialization once per tess.
@@ -573,38 +573,38 @@ static void RB_DrawVerticalSurfaceSprites(shaderStage_t* stage, shaderCommands_t
 	{
 		for (curvert = 0; curvert < input->numVertexes; curvert++)
 		{	// Calc wind at each point
-			dist[0] = input->xyz[curvert][0] - curWindPoint[0];
-			dist[1] = input->xyz[curvert][1] - curWindPoint[1];
+			dist[0] = input->xyz[curvert][0] - cur_wind_point[0];
+			dist[1] = input->xyz[curvert][1] - cur_wind_point[1];
 			step = (dist[0] * dist[0] + dist[1] * dist[1]);	// dist squared
 
 			if (step >= static_cast<float>((WINDPOINT_RADIUS * WINDPOINT_RADIUS)))
 			{	// No wind
-				SSVertWindDir[curvert][0] = 0;
-				SSVertWindDir[curvert][1] = 0;
-				SSVertWindForce[curvert] = 0;		// Should be < 1
+				ss_vert_wind_dir[curvert][0] = 0;
+				ss_vert_wind_dir[curvert][1] = 0;
+				ss_vert_wind_force[curvert] = 0;		// Should be < 1
 			}
 			else
 			{
 				if (step < 1)
 				{	// Don't want to divide by zero
-					SSVertWindDir[curvert][0] = 0;
-					SSVertWindDir[curvert][1] = 0;
-					SSVertWindForce[curvert] = curWindPointForce * stage->ss->wind;
+					ss_vert_wind_dir[curvert][0] = 0;
+					ss_vert_wind_dir[curvert][1] = 0;
+					ss_vert_wind_force[curvert] = cur_wind_point_force * stage->ss->wind;
 				}
 				else
 				{
 					step = Q_rsqrt(step);		// Equals 1 over the distance.
-					SSVertWindDir[curvert][0] = dist[0] * step;
-					SSVertWindDir[curvert][1] = dist[1] * step;
+					ss_vert_wind_dir[curvert][0] = dist[0] * step;
+					ss_vert_wind_dir[curvert][1] = dist[1] * step;
 					step = 1.0 - (1.0 / (step * WINDPOINT_RADIUS));	// 1- (dist/maxradius) = a scale from 0 to 1 linearly dropping off
-					SSVertWindForce[curvert] = curWindPointForce * stage->ss->wind * step;	// *step means divide by the distance.
+					ss_vert_wind_force[curvert] = cur_wind_point_force * stage->ss->wind * step;	// *step means divide by the distance.
 				}
 			}
 		}
 		tess.SSInitializedWind = qtrue;
 	}
 
-	for (curindex = 0; curindex < input->numIndexes - 2; curindex += 3)
+	for (curindex = 0; curindex < input->num_indexes - 2; curindex += 3)
 	{
 		curvert = input->indexes[curindex];
 		VectorCopy(input->xyz[curvert], v1);
@@ -623,12 +623,12 @@ static void RB_DrawVerticalSurfaceSprites(shaderStage_t* stage, shaderCommands_t
 			}
 		}
 		l1 = input->vertexColors[curvert][2];
-		a1 = SSVertAlpha[curvert];
+		a1 = ss_vert_alpha[curvert];
 		fog1[0] = *((float*)(tess.svars.texcoords[0]) + (curvert << 1));
 		fog1[1] = *((float*)(tess.svars.texcoords[0]) + (curvert << 1) + 1);
-		winddiff1[0] = SSVertWindDir[curvert][0];
-		winddiff1[1] = SSVertWindDir[curvert][1];
-		windforce1 = SSVertWindForce[curvert];
+		winddiff1[0] = ss_vert_wind_dir[curvert][0];
+		winddiff1[1] = ss_vert_wind_dir[curvert][1];
+		windforce1 = ss_vert_wind_force[curvert];
 
 		curvert = input->indexes[curindex + 1];
 		VectorCopy(input->xyz[curvert], v2);
@@ -647,12 +647,12 @@ static void RB_DrawVerticalSurfaceSprites(shaderStage_t* stage, shaderCommands_t
 			}
 		}
 		l2 = input->vertexColors[curvert][2];
-		a2 = SSVertAlpha[curvert];
+		a2 = ss_vert_alpha[curvert];
 		fog2[0] = *((float*)(tess.svars.texcoords[0]) + (curvert << 1));
 		fog2[1] = *((float*)(tess.svars.texcoords[0]) + (curvert << 1) + 1);
-		winddiff2[0] = SSVertWindDir[curvert][0];
-		winddiff2[1] = SSVertWindDir[curvert][1];
-		windforce2 = SSVertWindForce[curvert];
+		winddiff2[0] = ss_vert_wind_dir[curvert][0];
+		winddiff2[1] = ss_vert_wind_dir[curvert][1];
+		windforce2 = ss_vert_wind_force[curvert];
 
 		curvert = input->indexes[curindex + 2];
 		VectorCopy(input->xyz[curvert], v3);
@@ -671,12 +671,12 @@ static void RB_DrawVerticalSurfaceSprites(shaderStage_t* stage, shaderCommands_t
 			}
 		}
 		l3 = input->vertexColors[curvert][2];
-		a3 = SSVertAlpha[curvert];
+		a3 = ss_vert_alpha[curvert];
 		fog3[0] = *((float*)(tess.svars.texcoords[0]) + (curvert << 1));
 		fog3[1] = *((float*)(tess.svars.texcoords[0]) + (curvert << 1) + 1);
-		winddiff3[0] = SSVertWindDir[curvert][0];
-		winddiff3[1] = SSVertWindDir[curvert][1];
-		windforce3 = SSVertWindForce[curvert];
+		winddiff3[0] = ss_vert_wind_dir[curvert][0];
+		winddiff3[1] = ss_vert_wind_dir[curvert][1];
+		windforce3 = ss_vert_wind_force[curvert];
 
 		if (a1 <= 0.0 && a2 <= 0.0 && a3 <= 0.0)
 		{
@@ -736,7 +736,7 @@ static void RB_DrawVerticalSurfaceSprites(shaderStage_t* stage, shaderCommands_t
 					if (alpha > 1.0)
 						alpha = 1.0;
 
-					if (SSUsingFog)
+					if (ss_using_fog)
 					{
 						fogv[0] = fog1[0] * fa + fog2[0] * fb + fog3[0] * fc;
 						fogv[1] = fog1[1] * fa + fog2[1] * fb + fog3[1] * fc;
@@ -754,7 +754,7 @@ static void RB_DrawVerticalSurfaceSprites(shaderStage_t* stage, shaderCommands_t
 					VectorMA(curpoint, fc, v3, curpoint);
 
 					light = l1 * fa + l2 * fb + l3 * fc;
-					if (SSAdditiveTransparency)
+					if (ss_additive_transparency)
 					{	// Additive transparency, scale light value
 //						light *= alpha;
 						light = (128 + (light * 0.5)) * alpha;
@@ -781,7 +781,7 @@ static void RB_DrawVerticalSurfaceSprites(shaderStage_t* stage, shaderCommands_t
 
 					if (usewindpoint && windforce > 0 && stage->ss->wind > 0.0)
 					{
-						if (SSUsingFog)
+						if (ss_using_fog)
 						{
 							RB_VerticalSurfaceSpriteWindPoint(curpoint, width, height, static_cast<byte>(light), static_cast<byte>(alpha * 255.0),
 								stage->ss->wind, stage->ss->windIdle, fogv, stage->ss->facing, skew,
@@ -796,7 +796,7 @@ static void RB_DrawVerticalSurfaceSprites(shaderStage_t* stage, shaderCommands_t
 					}
 					else
 					{
-						if (SSUsingFog)
+						if (ss_using_fog)
 						{
 							RB_VerticalSurfaceSprite(curpoint, width, height, static_cast<byte>(light), static_cast<byte>(alpha * 255.0),
 								stage->ss->wind, stage->ss->windIdle, fogv, stage->ss->facing, skew, SURFSPRITE_FLATTENED == stage->ss->surfaceSpriteType);
@@ -864,8 +864,8 @@ static void RB_OrientedSurfaceSprite(vec3_t loc, float width, float height, byte
 	}
 	else
 	{
-		VectorMA(loc, height, ssViewUp, loc2);
-		VectorScale(ssViewRight, width * 0.5, right);
+		VectorMA(loc, height, ss_view_up, loc2);
+		VectorScale(ss_view_right, width * 0.5, right);
 
 		// Bottom right
 	//	VectorAdd(loc, right, point);
@@ -940,11 +940,11 @@ static void RB_DrawOrientedSurfaceSprites(shaderStage_t* stage, shaderCommands_t
 	for (curvert = 0; curvert < input->numVertexes; curvert++)
 	{
 		// Calc alpha at each point
-		VectorSubtract(ssViewOrigin, input->xyz[curvert], dist);
-		SSVertAlpha[curvert] = 1.0 - (VectorLengthSquared(dist) - fadedist2) * inv_fadediff;
+		VectorSubtract(ss_view_origin, input->xyz[curvert], dist);
+		ss_vert_alpha[curvert] = 1.0 - (VectorLengthSquared(dist) - fadedist2) * inv_fadediff;
 	}
 
-	for (int curindex = 0; curindex < input->numIndexes - 2; curindex += 3)
+	for (int curindex = 0; curindex < input->num_indexes - 2; curindex += 3)
 	{
 		curvert = input->indexes[curindex];
 		VectorCopy(input->xyz[curvert], v1);
@@ -953,7 +953,7 @@ static void RB_DrawOrientedSurfaceSprites(shaderStage_t* stage, shaderCommands_t
 			continue;
 		}
 		const float l1 = input->vertexColors[curvert][2];
-		const float a1 = SSVertAlpha[curvert];
+		const float a1 = ss_vert_alpha[curvert];
 		fog1[0] = *((float*)(tess.svars.texcoords[0]) + (curvert << 1));
 		fog1[1] = *((float*)(tess.svars.texcoords[0]) + (curvert << 1) + 1);
 
@@ -964,7 +964,7 @@ static void RB_DrawOrientedSurfaceSprites(shaderStage_t* stage, shaderCommands_t
 			continue;
 		}
 		const float l2 = input->vertexColors[curvert][2];
-		const float a2 = SSVertAlpha[curvert];
+		const float a2 = ss_vert_alpha[curvert];
 		fog2[0] = *((float*)(tess.svars.texcoords[0]) + (curvert << 1));
 		fog2[1] = *((float*)(tess.svars.texcoords[0]) + (curvert << 1) + 1);
 
@@ -975,7 +975,7 @@ static void RB_DrawOrientedSurfaceSprites(shaderStage_t* stage, shaderCommands_t
 			continue;
 		}
 		const float l3 = input->vertexColors[curvert][2];
-		const float a3 = SSVertAlpha[curvert];
+		const float a3 = ss_vert_alpha[curvert];
 		fog3[0] = *((float*)(tess.svars.texcoords[0]) + (curvert << 1));
 		fog3[1] = *((float*)(tess.svars.texcoords[0]) + (curvert << 1) + 1);
 
@@ -1034,7 +1034,7 @@ static void RB_DrawOrientedSurfaceSprites(shaderStage_t* stage, shaderCommands_t
 					if (alpha > 1.0)
 						alpha = 1.0;
 
-					if (SSUsingFog)
+					if (ss_using_fog)
 					{
 						fogv[0] = fog1[0] * fa + fog2[0] * fb + fog3[0] * fc;
 						fogv[1] = fog1[1] * fa + fog2[1] * fb + fog3[1] * fc;
@@ -1045,7 +1045,7 @@ static void RB_DrawOrientedSurfaceSprites(shaderStage_t* stage, shaderCommands_t
 					VectorMA(curpoint, fc, v3, curpoint);
 
 					float light = l1 * fa + l2 * fb + l3 * fc;
-					if (SSAdditiveTransparency)
+					if (ss_additive_transparency)
 					{	// Additive transparency, scale light value
 //						light *= alpha;
 						light = (128 + (light * 0.5)) * alpha;
@@ -1064,7 +1064,7 @@ static void RB_DrawOrientedSurfaceSprites(shaderStage_t* stage, shaderCommands_t
 						width *= 1.0 + (stage->ss->fadeScale * (1.0 - alphapos));
 					}
 
-					if (SSUsingFog)
+					if (ss_using_fog)
 					{
 						RB_OrientedSurfaceSprite(curpoint, width, height, static_cast<byte>(light), static_cast<byte>(alpha * 255.0), fogv, stage->ss->facing);
 					}
@@ -1083,7 +1083,7 @@ static void RB_DrawOrientedSurfaceSprites(shaderStage_t* stage, shaderCommands_t
 /////////////////////////////////////////////
 // Effect surface sprites
 
-static void RB_EffectSurfaceSprite(vec3_t loc, float width, float height, byte light, byte alpha, float life, int faceup)
+static void RB_EffectSurfaceSprite(vec3_t loc, float width, float height, const byte light, const byte alpha, const int faceup)
 {
 	vec3_t loc2, right;
 	float points[16];
@@ -1129,8 +1129,8 @@ static void RB_EffectSurfaceSprite(vec3_t loc, float width, float height, byte l
 	}
 	else
 	{
-		VectorMA(loc, height, ssViewUp, loc2);
-		VectorScale(ssViewRight, width * 0.5, right);
+		VectorMA(loc, height, ss_view_up, loc2);
+		VectorScale(ss_view_right, width * 0.5, right);
 
 		// Bottom right
 	//	VectorAdd(loc, right, point);
@@ -1221,11 +1221,11 @@ static void RB_DrawEffectSurfaceSprites(shaderStage_t* stage, shaderCommands_t* 
 	if (stage->ss->surfaceSpriteType == SURFSPRITE_WEATHERFX)
 	{
 		// This effect is affected by weather settings.
-		if (curWeatherAmount < 0.01)
+		if (cur_weather_amount < 0.01)
 		{	// Don't show these effects
 			return;
 		}
-		density = stage->ss->density / curWeatherAmount;
+		density = stage->ss->density / cur_weather_amount;
 	}
 	else
 	{
@@ -1236,8 +1236,8 @@ static void RB_DrawEffectSurfaceSprites(shaderStage_t* stage, shaderCommands_t* 
 	for (curvert = 0; curvert < input->numVertexes; curvert++)
 	{
 		// Calc alpha at each point
-		VectorSubtract(ssViewOrigin, input->xyz[curvert], dist);
-		SSVertAlpha[curvert] = 1.0f - (VectorLengthSquared(dist) - fadedist2) * inv_fadediff;
+		VectorSubtract(ss_view_origin, input->xyz[curvert], dist);
+		ss_vert_alpha[curvert] = 1.0f - (VectorLengthSquared(dist) - fadedist2) * inv_fadediff;
 
 		// Note this is the proper equation, but isn't used right now because it would be just a tad slower.
 			// Formula for alpha is 1.0f - ((len-fade)/(cut-fade))
@@ -1246,7 +1246,7 @@ static void RB_DrawEffectSurfaceSprites(shaderStage_t* stage, shaderCommands_t* 
 		//	SSVertAlpha[curvert] = fadebase - (VectorLength(dist) * fademult);
 	}
 
-	for (curindex = 0; curindex < input->numIndexes - 2; curindex += 3)
+	for (curindex = 0; curindex < input->num_indexes - 2; curindex += 3)
 	{
 		curvert = input->indexes[curindex];
 		VectorCopy(input->xyz[curvert], v1);
@@ -1255,7 +1255,7 @@ static void RB_DrawEffectSurfaceSprites(shaderStage_t* stage, shaderCommands_t* 
 			continue;
 		}
 		l1 = input->vertexColors[curvert][2];
-		a1 = SSVertAlpha[curvert];
+		a1 = ss_vert_alpha[curvert];
 
 		curvert = input->indexes[curindex + 1];
 		VectorCopy(input->xyz[curvert], v2);
@@ -1264,7 +1264,7 @@ static void RB_DrawEffectSurfaceSprites(shaderStage_t* stage, shaderCommands_t* 
 			continue;
 		}
 		l2 = input->vertexColors[curvert][2];
-		a2 = SSVertAlpha[curvert];
+		a2 = ss_vert_alpha[curvert];
 
 		curvert = input->indexes[curindex + 2];
 		VectorCopy(input->xyz[curvert], v3);
@@ -1273,7 +1273,7 @@ static void RB_DrawEffectSurfaceSprites(shaderStage_t* stage, shaderCommands_t* 
 			continue;
 		}
 		l3 = input->vertexColors[curvert][2];
-		a3 = SSVertAlpha[curvert];
+		a3 = ss_vert_alpha[curvert];
 
 		if (a1 <= 0.0f && a2 <= 0.0f && a3 <= 0.0f)
 		{
@@ -1360,7 +1360,7 @@ static void RB_DrawEffectSurfaceSprites(shaderStage_t* stage, shaderCommands_t* 
 						alpha = alpha * (stage->ss->fxAlphaStart + (fxalpha * effectpos));
 					}
 
-					if (SSAdditiveTransparency)
+					if (ss_additive_transparency)
 					{	// Additive transparency, scale light value
 //						light *= alpha;
 						light = (128 + (light * 0.5)) * alpha;
@@ -1376,16 +1376,16 @@ static void RB_DrawEffectSurfaceSprites(shaderStage_t* stage, shaderCommands_t* 
 						width *= 1.0f + (stage->ss->fadeScale * (1.0 - alphapos));
 					}
 
-					if (stage->ss->wind > 0.0f && curWindSpeed > 0.001)
+					if (stage->ss->wind > 0.0f && cur_wind_speed > 0.001)
 					{
 						vec3_t drawpoint;
 
-						VectorMA(curpoint, effectpos * stage->ss->wind, curWindBlowVect, drawpoint);
-						RB_EffectSurfaceSprite(drawpoint, width, height, static_cast<byte>(light), static_cast<byte>(alpha * 255.0f), stage->ss->fxDuration, stage->ss->facing);
+						VectorMA(curpoint, effectpos * stage->ss->wind, cur_wind_blow_vect, drawpoint);
+						RB_EffectSurfaceSprite(drawpoint, width, height, static_cast<byte>(light), static_cast<byte>(alpha * 255.0f), stage->ss->facing);
 					}
 					else
 					{
-						RB_EffectSurfaceSprite(curpoint, width, height, static_cast<byte>(light), static_cast<byte>(alpha * 255.0f), stage->ss->fxDuration, stage->ss->facing);
+						RB_EffectSurfaceSprite(curpoint, width, height, static_cast<byte>(light), static_cast<byte>(alpha * 255.0f), stage->ss->facing);
 					}
 
 					totalsurfsprites++;
@@ -1410,23 +1410,23 @@ void RB_DrawSurfaceSprites(shaderStage_t* stage, shaderCommands_t* input)
 	//
 	if (tess.fogNum && tess.shader->fogPass && r_drawfog->value)
 	{
-		SSUsingFog = qtrue;
+		ss_using_fog = qtrue;
 		SQuickSprite.StartGroup(&stage->bundle[0], glbits, tess.fogNum);
 	}
 	else
 	{
-		SSUsingFog = qfalse;
+		ss_using_fog = qfalse;
 		SQuickSprite.StartGroup(&stage->bundle[0], glbits);
 	}
 
 	// Special provision in case the transparency is additive.
 	if ((glbits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS)) == (GLS_SRCBLEND_ONE | GLS_DSTBLEND_ONE))
 	{	// Additive transparency, scale light value
-		SSAdditiveTransparency = qtrue;
+		ss_additive_transparency = qtrue;
 	}
 	else
 	{
-		SSAdditiveTransparency = qfalse;
+		ss_additive_transparency = qfalse;
 	}
 
 	//Check if this is a new entity transformation (incl. world entity), and update the appropriate vectors if so.
@@ -1434,16 +1434,16 @@ void RB_DrawSurfaceSprites(shaderStage_t* stage, shaderCommands_t* input)
 	{
 		if (backEnd.currentEntity == &tr.worldEntity)
 		{	// Drawing the world, so our job is dead-easy, in the viewparms
-			VectorCopy(backEnd.viewParms.ori.origin, ssViewOrigin);
-			VectorCopy(backEnd.viewParms.ori.axis[1], ssViewRight);
-			VectorCopy(backEnd.viewParms.ori.axis[2], ssViewUp);
+			VectorCopy(backEnd.viewParms.ori.origin, ss_view_origin);
+			VectorCopy(backEnd.viewParms.ori.axis[1], ss_view_right);
+			VectorCopy(backEnd.viewParms.ori.axis[2], ss_view_up);
 		}
 		else
 		{	// Drawing an entity, so we need to transform the viewparms to the model's coordinate system
 //			R_WorldPointToEntity (backEnd.viewParms.ori.origin, ssViewOrigin);
-			R_WorldNormalToEntity(backEnd.viewParms.ori.axis[1], ssViewRight);
-			R_WorldNormalToEntity(backEnd.viewParms.ori.axis[2], ssViewUp);
-			VectorCopy(backEnd.ori.viewOrigin, ssViewOrigin);
+			R_WorldNormalToEntity(backEnd.viewParms.ori.axis[1], ss_view_right);
+			R_WorldNormalToEntity(backEnd.viewParms.ori.axis[2], ss_view_up);
+			VectorCopy(backEnd.ori.viewOrigin, ss_view_origin);
 			//			R_WorldToLocal(backEnd.viewParms.ori.axis[1], ssViewRight);
 			//			R_WorldToLocal(backEnd.viewParms.ori.axis[2], ssViewUp);
 		}

@@ -390,7 +390,7 @@ void G_FreeFakeClient(gclient_t** cl)
 static Vehicle_t g_vehiclePool[MAX_VEHICLES_AT_A_TIME];
 static qboolean g_vehiclePoolOccupied[MAX_VEHICLES_AT_A_TIME];
 static qboolean g_vehiclePoolInit = qfalse;
-void G_AllocateVehicleObject(Vehicle_t** pVeh)
+void G_AllocateVehicleObject(Vehicle_t** p_veh)
 {
 	int i = 0;
 
@@ -406,7 +406,7 @@ void G_AllocateVehicleObject(Vehicle_t** pVeh)
 		{
 			g_vehiclePoolOccupied[i] = qtrue;
 			memset(&g_vehiclePool[i], 0, sizeof(Vehicle_t));
-			*pVeh = &g_vehiclePool[i];
+			*p_veh = &g_vehiclePool[i];
 			return;
 		}
 		i++;
@@ -415,13 +415,13 @@ void G_AllocateVehicleObject(Vehicle_t** pVeh)
 }
 
 //free the pointer, sort of a lame method
-void G_FreeVehicleObject(Vehicle_t* pVeh)
+void G_FreeVehicleObject(Vehicle_t* p_veh)
 {
 	int i = 0;
 	while (i < MAX_VEHICLES_AT_A_TIME)
 	{
 		if (g_vehiclePoolOccupied[i] &&
-			&g_vehiclePool[i] == pVeh)
+			&g_vehiclePool[i] == p_veh)
 		{ //guess this is it
 			g_vehiclePoolOccupied[i] = qfalse;
 			break;
@@ -1568,10 +1568,10 @@ void TryUse(gentity_t* ent)
 		const gentity_t* currentVeh = &g_entities[ent->client->ps.m_iVehicleNum];
 		if (currentVeh->inuse && currentVeh->m_pVehicle)
 		{
-			Vehicle_t* pVeh = currentVeh->m_pVehicle;
-			if (!pVeh->m_iBoarding)
+			Vehicle_t* p_veh = currentVeh->m_pVehicle;
+			if (!p_veh->m_iBoarding)
 			{
-				pVeh->m_pVehicleInfo->Eject(pVeh, (bgEntity_t*)ent, qfalse);
+				p_veh->m_pVehicleInfo->Eject(p_veh, (bgEntity_t*)ent, qfalse);
 			}
 			return;
 		}
@@ -1647,13 +1647,13 @@ void TryUse(gentity_t* ent)
 		target->s.NPC_class == CLASS_VEHICLE &&
 		!ent->client->ps.zoomMode)
 	{ //if target is a vehicle then perform appropriate checks
-		Vehicle_t* pVeh = target->m_pVehicle;
+		Vehicle_t* p_veh = target->m_pVehicle;
 
-		if (pVeh->m_pVehicleInfo)
+		if (p_veh->m_pVehicleInfo)
 		{
 			if (ent->r.ownerNum == target->s.number)
 			{ //user is already on this vehicle so eject him
-				pVeh->m_pVehicleInfo->Eject(pVeh, (bgEntity_t*)ent, qfalse);
+				p_veh->m_pVehicleInfo->Eject(p_veh, (bgEntity_t*)ent, qfalse);
 			}
 			else
 			{ // Otherwise board this vehicle.
@@ -1661,7 +1661,7 @@ void TryUse(gentity_t* ent)
 					!target->alliedTeam ||
 					(target->alliedTeam == ent->client->sess.sessionTeam))
 				{ //not belonging to a team, or client is on same team
-					pVeh->m_pVehicleInfo->Board(pVeh, (bgEntity_t*)ent);
+					p_veh->m_pVehicleInfo->Board(p_veh, (bgEntity_t*)ent);
 				}
 			}
 			//clear the damn button!

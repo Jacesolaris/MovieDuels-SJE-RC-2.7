@@ -333,6 +333,15 @@ using objectiveNumber_t = enum //# Objective_e
 	EP6_FAS_JEDI_OBJ1,
 	EP6_FAS_SITH_OBJ1,
 
+	DF2_DARKJEDI_OBJ1,
+	DF2_YUN_OBJ1,
+	DF2_BROTHERS_OBJ1,
+	DF2_MAW_OBJ1,
+	DF2_SARISS_OBJ1,
+	DF2_BOC_OBJ1,
+	DF2_JEREC_OBJ1,
+	MOTS_KYLE_OBJ1,
+
 	//# #eol
 	MAX_OBJECTIVES,
 };
@@ -420,8 +429,8 @@ constexpr auto OBJECTIVE_STAT_FAILED = 2;
 
 extern int statusTextIndex;
 
-void OBJ_SaveObjectiveData(void);
-void OBJ_LoadObjectiveData(void);
+void OBJ_SaveObjectiveData();
+void OBJ_LoadObjectiveData();
 extern void OBJ_SetPendingObjectives(const gentity_t* ent);
 
 #ifndef G_OBJECTIVES_CPP
@@ -675,6 +684,15 @@ stringID_table_t objectiveTable[] =
 
 	ENUM2STRING(EP6_FAS_JEDI_OBJ1),
 	ENUM2STRING(EP6_FAS_SITH_OBJ1),
+
+	ENUM2STRING(DF2_DARKJEDI_OBJ1),
+	ENUM2STRING(DF2_YUN_OBJ1),
+	ENUM2STRING(DF2_BROTHERS_OBJ1),
+	ENUM2STRING(DF2_MAW_OBJ1),
+	ENUM2STRING(DF2_SARISS_OBJ1),
+	ENUM2STRING(DF2_BOC_OBJ1),
+	ENUM2STRING(DF2_JEREC_OBJ1),
+	ENUM2STRING(MOTS_KYLE_OBJ1),
 
 	//stringID_table_t Must end with a null entry
 	{ "", 0 }

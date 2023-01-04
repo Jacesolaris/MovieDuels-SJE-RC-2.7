@@ -7301,7 +7301,7 @@ void UpdateClientRenderinfo(gentity_t* self, vec3_t renderOrigin, vec3_t renderA
 }
 
 #define STAFF_KICK_RANGE 16
-extern void G_GetBoltPosition(gentity_t* self, int bolt_index, vec3_t pos, int modelIndex); //NPC_utils.c
+extern void G_GetBoltPosition(gentity_t* self, int bolt_index, vec3_t pos, int model_index); //NPC_utils.c
 
 extern qboolean BG_InKnockDown(int anim);
 static qboolean G_KickDownable(gentity_t* ent)

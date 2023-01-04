@@ -525,12 +525,6 @@ void G_SetEnemy(gentity_t* self, gentity_t* enemy)
 		return;
 	}
 
-	// Don't attack same team
-	/*if (enemy->client && enemy->client->playerTeam == self->client->playerTeam)
-	{
-		return;
-	}*/
-
 	enemy = G_CheckControlledTurretEnemy(self, enemy, qtrue);
 
 	if (!enemy)
@@ -1397,10 +1391,10 @@ void ChangeWeapon(const gentity_t* ent, const int new_weapon)
 
 extern bool in_camera;
 
-void NPC_ChangeWeapon(const int newWeapon)
+void NPC_ChangeWeapon(const int new_weapon)
 {
 	qboolean changing = qfalse;
-	if (newWeapon != NPC->client->ps.weapon)
+	if (new_weapon != NPC->client->ps.weapon)
 	{
 		changing = qtrue;
 	}
@@ -1408,7 +1402,7 @@ void NPC_ChangeWeapon(const int newWeapon)
 	{
 		G_RemoveWeaponModels(NPC);
 	}
-	ChangeWeapon(NPC, newWeapon);
+	ChangeWeapon(NPC, new_weapon);
 	if (changing && NPC->client->ps.weapon != WP_NONE)
 	{
 		if (NPC->client->ps.weapon == WP_SABER)
@@ -1703,7 +1697,7 @@ qboolean CanShoot(const gentity_t* ent, const gentity_t* shooter)
 	trace_t tr;
 	vec3_t muzzle;
 	vec3_t spot, diff;
-	const qboolean IS_BREAKABLE = NPC_EntityIsBreakable(ent);
+	const qboolean is_breakable = NPC_EntityIsBreakable(ent);
 
 	CalcEntitySpot(shooter, SPOT_WEAPON, muzzle);
 	CalcEntitySpot(ent, SPOT_ORIGIN, spot); //FIXME preferred target locations for some weapons (feet for R/L)
@@ -1712,17 +1706,17 @@ qboolean CanShoot(const gentity_t* ent, const gentity_t* shooter)
 	const gentity_t* trace_ent = &g_entities[tr.entityNum];
 
 	// point blank, baby!
-	if (!IS_BREAKABLE && tr.startsolid && shooter->NPC && shooter->NPC->touchedByPlayer)
+	if (!is_breakable && tr.startsolid && shooter->NPC && shooter->NPC->touchedByPlayer)
 	{
 		trace_ent = shooter->NPC->touchedByPlayer;
 	}
 
-	if (!IS_BREAKABLE && ShotThroughGlass(&tr, ent, spot, MASK_SHOT))
+	if (!is_breakable && ShotThroughGlass(&tr, ent, spot, MASK_SHOT))
 	{
 		trace_ent = &g_entities[tr.entityNum];
 	}
 
-	if (IS_BREAKABLE && tr.fraction > 0.8)
+	if (is_breakable && tr.fraction > 0.8)
 	{
 		// Close enough...
 		return qtrue;
@@ -3623,10 +3617,10 @@ void NPC_CheckGetNewWeapon()
 		if (TIMER_Done(NPC, "panic") && NPCInfo->goalEntity == nullptr)
 		{
 			//need a weapon, any lying around?
-			gentity_t* foundWeap = NPC_SearchForWeapons();
-			if (foundWeap)
+			gentity_t* found_weap = NPC_SearchForWeapons();
+			if (found_weap)
 			{
-				NPC_SetPickUpGoal(foundWeap);
+				NPC_SetPickUpGoal(found_weap);
 			}
 		}
 	}

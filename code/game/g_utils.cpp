@@ -2142,7 +2142,7 @@ void removeBoltSurface(gentity_t* self)
 		hit_ent->ghoul2[self->damage].mModelindex != -1 &&
 		hit_ent->ghoul2[self->damage].mSlist.size() > static_cast<unsigned>(self->aimDebounceTime) &&
 		hit_ent->ghoul2[self->damage].mSlist[self->aimDebounceTime].surface != -1 &&
-		hit_ent->ghoul2[self->damage].mSlist[self->aimDebounceTime].offFlags == G2SURFACEFLAG_GENERATED)
+		hit_ent->ghoul2[self->damage].mSlist[self->aimDebounceTime].off_flags == G2SURFACEFLAG_GENERATED)
 	{
 		// remove the bolt
 		gi.G2API_RemoveBolt(&hit_ent->ghoul2[self->damage], self->attackDebounceTime);

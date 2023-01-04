@@ -164,7 +164,7 @@ extern qboolean SaberAttacking(const gentity_t* self);
 void G_SaberBounce(const gentity_t* self, gentity_t* other);
 extern qboolean PM_InGetUp(const playerState_t* ps);
 extern qboolean PM_InForceGetUp(const playerState_t* ps);
-extern Vehicle_t* G_IsRidingVehicle(const gentity_t* pEnt);
+extern Vehicle_t* G_IsRidingVehicle(const gentity_t* p_ent);
 extern int SaberDroid_PowerLevelForSaberAnim(const gentity_t* self);
 extern qboolean G_ValidEnemy(const gentity_t* self, const gentity_t* enemy);
 extern void G_StartMatrixEffect(const gentity_t* ent, int me_flags = 0, int length = 1000, float time_scale = 0.0f,

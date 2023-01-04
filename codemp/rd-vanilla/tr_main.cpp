@@ -863,9 +863,9 @@ static qboolean SurfIsOffscreen(const drawSurf_t* drawSurf, vec4_t clipDest[128]
 	// based on vertex distance isn't 100% correct (we should be checking for
 	// range to the surface), but it's good enough for the types of portals
 	// we have in the game right now.
-	int numTriangles = tess.numIndexes / 3;
+	int numTriangles = tess.num_indexes / 3;
 
-	for (i = 0; i < tess.numIndexes; i += 3)
+	for (i = 0; i < tess.num_indexes; i += 3)
 	{
 		vec3_t normal;
 		float dot;

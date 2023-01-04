@@ -249,12 +249,12 @@ void NPC_BSCinematic()
 	{
 		//have an entity which we want to keep facing
 		//NOTE: this will override any angles set by NPC_MoveToGoal
-		vec3_t eyes, viewSpot, viewvec, viewangles;
+		vec3_t eyes, view_spot, viewvec, viewangles;
 
 		CalcEntitySpot(NPC, SPOT_HEAD_LEAN, eyes);
-		CalcEntitySpot(NPCInfo->watchTarget, SPOT_HEAD_LEAN, viewSpot);
+		CalcEntitySpot(NPCInfo->watchTarget, SPOT_HEAD_LEAN, view_spot);
 
-		VectorSubtract(viewSpot, eyes, viewvec);
+		VectorSubtract(view_spot, eyes, viewvec);
 
 		vectoangles(viewvec, viewangles);
 
@@ -425,12 +425,12 @@ void NPC_BSInvestigate()
 qboolean NPC_CheckInvestigate(const int alert_event_num)
 {
 	gentity_t* owner = level.alertEvents[alert_event_num].owner;
-	const int invAdd = level.alertEvents[alert_event_num].level;
-	vec3_t soundPos;
-	const float soundRad = level.alertEvents[alert_event_num].radius;
+	const int inv_add = level.alertEvents[alert_event_num].level;
+	vec3_t sound_pos;
+	const float sound_rad = level.alertEvents[alert_event_num].radius;
 	const float earshot = NPCInfo->stats.earshot;
 
-	VectorCopy(level.alertEvents[alert_event_num].position, soundPos);
+	VectorCopy(level.alertEvents[alert_event_num].position, sound_pos);
 
 	//NOTE: Trying to preserve previous investigation behavior
 	if (!owner)
@@ -453,13 +453,12 @@ qboolean NPC_CheckInvestigate(const int alert_event_num)
 		return qfalse;
 	}
 
-	if (soundRad < earshot)
+	if (sound_rad < earshot)
 	{
 		return qfalse;
 	}
 
-	//if(!gi.inPVSIgnorePortals(ent->currentOrigin, NPC->currentOrigin))//should we be able to hear through areaportals?
-	if (!gi.inPVS(soundPos, NPC->currentOrigin))
+	if (!gi.inPVS(sound_pos, NPC->currentOrigin))
 	{
 		//can hear through doors?
 		return qfalse;
@@ -483,21 +482,14 @@ qboolean NPC_CheckInvestigate(const int alert_event_num)
 		}
 		else
 		{
-			NPCInfo->investigateCount += invAdd;
+			NPCInfo->investigateCount += inv_add;
 		}
 		//run awakescript
 		G_ActivateBehavior(NPC, BSET_AWAKE);
 
-		/*
-		if ( Q_irand(0, 10) > 7 )
-		{
-			NPC_AngerSound();
-		}
-		*/
-
 		//NPCInfo->hlookCount = NPCInfo->vlookCount = 0;
 		NPCInfo->eventOwner = owner;
-		VectorCopy(soundPos, NPCInfo->investigateGoal);
+		VectorCopy(sound_pos, NPCInfo->investigateGoal);
 		if (NPCInfo->investigateCount > 20)
 		{
 			NPCInfo->investigateDebounceTime = level.time + 10000;
@@ -665,7 +657,7 @@ bool NPC_BSFollowLeader_AttackEnemy()
 	if (enemyVisibility > VIS_PVS)
 	{
 		//face
-		vec3_t enemy_org, muzzle, delta, angleToEnemy;
+		vec3_t enemy_org, muzzle, delta, angle_to_enemy;
 
 		CalcEntitySpot(NPC->enemy, SPOT_HEAD, enemy_org);
 		NPC_AimWiggle(enemy_org);
@@ -673,11 +665,11 @@ bool NPC_BSFollowLeader_AttackEnemy()
 		CalcEntitySpot(NPC, SPOT_WEAPON, muzzle);
 
 		VectorSubtract(enemy_org, muzzle, delta);
-		vectoangles(delta, angleToEnemy);
+		vectoangles(delta, angle_to_enemy);
 		VectorNormalize(delta);
 
-		NPCInfo->desiredYaw = angleToEnemy[YAW];
-		NPCInfo->desiredPitch = angleToEnemy[PITCH];
+		NPCInfo->desiredYaw = angle_to_enemy[YAW];
+		NPCInfo->desiredPitch = angle_to_enemy[PITCH];
 		NPC_UpdateFiringAngles(qtrue, qtrue);
 
 		if (enemyVisibility >= VIS_SHOOT)
@@ -1067,15 +1059,6 @@ void NPC_BSSearch()
 
 		if (NPCInfo->tempGoal->waypoint != WAYPOINT_NONE)
 		{
-			/*
-			//FIXME: can't get the radius...
-			float	wpRadSq = waypoints[NPCInfo->tempGoal->waypoint].radius * waypoints[NPCInfo->tempGoal->waypoint].radius;
-			if ( minGoalReachedDistSquared > wpRadSq )
-			{
-				minGoalReachedDistSquared = wpRadSq;
-			}
-			*/
-
 			min_goal_reached_dist_squared = 32 * 32; //12*12;
 		}
 
@@ -1933,7 +1916,6 @@ void NPC_StartFlee(gentity_t* enemy, vec3_t danger_point, const int danger_level
 		return;
 	}
 
-	//FIXME: play a flee sound?  Appropriate to situation?
 	if (enemy)
 	{
 		NPC_JawaFleeSound();
@@ -2076,14 +2058,6 @@ void NPC_BSEmplaced()
 			VectorCopy(NPC->enemy->currentOrigin, NPCInfo->enemyLastSeenLocation);
 		}
 	}
-	/*
-		else if ( gi.inPVS( NPC->enemy->currentOrigin, NPC->currentOrigin ) )
-		{
-			NPCInfo->enemyLastSeenTime = level.time;
-			faceEnemy = qtrue;
-			NPC_AimAdjust( -1 );//adjust aim worse longer we cannot see enemy
-		}
-	*/
 
 	if (enemy_los)
 	{

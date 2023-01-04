@@ -2021,11 +2021,14 @@ ParseSurfaceParm
 surfaceparm <name>
 ===============
 */
-static void ParseSurfaceParm(const char** text) {
-	const int		numInfoParms = sizeof(infoParms) / sizeof(infoParms[0]);
+static void parse_surface_parm(const char** text)
+{
+	constexpr int		num_info_parms = std::size(infoParms);
 
 	const char* token = COM_ParseExt(text, qfalse);
-	for (int i = 0; i < numInfoParms; i++) {
+
+	for (int i = 0; i < num_info_parms; i++) 
+	{
 		if (!Q_stricmp(token, infoParms[i].name)) {
 			shader.surfaceFlags |= infoParms[i].surfaceFlags;
 			shader.contentFlags |= infoParms[i].contents;
@@ -2167,7 +2170,7 @@ static qboolean ParseShader(const char** text)
 		}
 		// skip stuff that only q3map or the server needs
 		else if (!Q_stricmp(token, "surfaceParm")) {
-			ParseSurfaceParm(text);
+			parse_surface_parm(text);
 		}
 		// no mip maps
 		else if (!Q_stricmp(token, "nomipmaps"))
@@ -3574,14 +3577,14 @@ This should really only be used for explicit shaders, because there is no
 way to ask for different implicit lighting modes (vertex, lightmap, etc)
 ====================
 */
-qhandle_t RE_RegisterShaderLightMap(const char* name, const int* lightmapIndex, const byte* styles)
+qhandle_t RE_RegisterShaderLightMap(const char* name, const int* lightmap_index, const byte* styles)
 {
 	if (strlen(name) >= MAX_QPATH) {
 		ri->Printf(PRINT_ALL, "Shader name exceeds MAX_QPATH\n");
 		return 0;
 	}
 
-	const shader_t* sh = R_FindShader(name, lightmapIndex, styles, qtrue);
+	const shader_t* sh = R_FindShader(name, lightmap_index, styles, qtrue);
 
 	// we want to return 0 if the shader failed to
 	// load for some reason, but R_FindShader should

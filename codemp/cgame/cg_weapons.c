@@ -2324,7 +2324,7 @@ qboolean CG_CalcMuzzlePoint(int entityNum, vec3_t muzzle) {
 	{ //I'm not exactly sure why we'd be rendering someone else's crosshair, but hey.
 		const int weapontype = cg.snap->ps.weapon;
 		vec3_t weaponMuzzle;
-		const centity_t* pEnt = &cg_entities[cg.predictedPlayerState.client_num];
+		const centity_t* p_ent = &cg_entities[cg.predictedPlayerState.client_num];
 
 		VectorCopy(WP_MuzzlePoint[weapontype], weaponMuzzle);
 
@@ -2335,8 +2335,8 @@ qboolean CG_CalcMuzzlePoint(int entityNum, vec3_t muzzle) {
 
 		if (cg.renderingThirdPerson)
 		{
-			VectorCopy(pEnt->lerpOrigin, gunpoint);
-			AngleVectors(pEnt->lerpAngles, forward, right, NULL);
+			VectorCopy(p_ent->lerpOrigin, gunpoint);
+			AngleVectors(p_ent->lerpAngles, forward, right, NULL);
 		}
 		else
 		{
@@ -2357,7 +2357,7 @@ qboolean CG_CalcMuzzlePoint(int entityNum, vec3_t muzzle) {
 
 				if (cg.renderingThirdPerson)
 				{
-					VectorCopy(pEnt->lerpAngles, pitchConstraint);
+					VectorCopy(p_ent->lerpAngles, pitchConstraint);
 				}
 				else
 				{

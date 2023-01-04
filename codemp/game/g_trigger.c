@@ -1553,8 +1553,8 @@ void shipboundary_think(gentity_t* ent)
 			if (listedEnt->s.eType == ET_NPC &&
 				listedEnt->s.NPC_class == CLASS_VEHICLE)
 			{
-				const Vehicle_t* pVeh = listedEnt->m_pVehicle;
-				if (pVeh && pVeh->m_pVehicleInfo->type == VH_FIGHTER)
+				const Vehicle_t* p_veh = listedEnt->m_pVehicle;
+				if (p_veh && p_veh->m_pVehicleInfo->type == VH_FIGHTER)
 				{
 					shipboundary_touch(ent, listedEnt, NULL);
 				}

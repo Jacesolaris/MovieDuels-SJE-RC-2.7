@@ -68,7 +68,7 @@ extern void ItemUse_UseCloak(gentity_t* ent);
 extern void RemoveBarrier(gentity_t* ent);
 extern void ItemUse_Barrier(gentity_t* ent);
 extern void ItemUse_Grapple(gentity_t* ent);
-extern Vehicle_t* G_IsRidingVehicle(const gentity_t* pEnt);
+extern Vehicle_t* G_IsRidingVehicle(const gentity_t* p_ent);
 
 extern void ForceJediRepulse(gentity_t* self);
 extern void ForceGrasp(gentity_t* self);

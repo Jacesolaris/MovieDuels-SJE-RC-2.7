@@ -70,7 +70,7 @@ void OBJ_SaveMissionObjectives(const gclient_t* client)
 OBJ_SaveObjectiveData
 ============
 */
-void OBJ_SaveObjectiveData(void)
+void OBJ_SaveObjectiveData()
 {
 	const gclient_t* client = &level.clients[0];
 
@@ -97,7 +97,7 @@ void OBJ_LoadMissionObjectives(gclient_t* client)
 OBJ_LoadObjectiveData
 ============
 */
-void OBJ_LoadObjectiveData(void)
+void OBJ_LoadObjectiveData()
 {
 	gclient_t* client = &level.clients[0];
 

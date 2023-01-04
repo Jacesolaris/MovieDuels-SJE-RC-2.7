@@ -126,7 +126,7 @@ static const byte FakeGLAFile[] =
 0x00, 0x80, 0x00, 0x80, 0x00, 0x80
 };
 
-void RE_LoadWorldMap_Actual(const char* name, world_t& worldData, int index);
+void RE_LoadWorldMap_Actual(const char* name, world_t& world_data, int index);
 
 // returns qtrue if loaded, and sets the supplied qbool to true if it was from cache (instead of disk)
 //   (which we need to know to avoid LittleLong()ing everything again (well, the Mac needs to know anyway)...
@@ -501,12 +501,12 @@ static void RE_RegisterModels_DeleteAll(void)
 // do not use ri->xxx functions in here, the renderer may not be running (ie. if on a dedicated server)...
 //
 static int giRegisterMedia_CurrentLevel = 0;
-void RE_RegisterMedia_LevelLoadBegin(const char* psMapName, ForceReload_e eForceReload)
+void RE_RegisterMedia_LevelLoadBegin(const char* psMapName, ForceReload_e e_force_reload)
 {
 	// for development purposes we may want to ditch certain media just before loading a map...
 	//
-	const bool bDeleteModels = eForceReload == eForceReload_MODELS || eForceReload == eForceReload_ALL;
-	//	bool bDeleteBSP		= eForceReload == eForceReload_BSP    || eForceReload == eForceReload_ALL;
+	const bool bDeleteModels = e_force_reload == eForceReload_MODELS || e_force_reload == eForceReload_ALL;
+	//	bool bDeleteBSP		= e_force_reload == eForceReload_BSP    || e_force_reload == eForceReload_ALL;
 
 	if (bDeleteModels)
 	{
@@ -793,7 +793,7 @@ qboolean ServerLoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboole
 	int* boneRef;
 	mdxmLODSurfOffset_t* indexes;
 	mdxmVertexTexCoord_t* pTexCoords;
-	mdxmHierarchyOffsets_t* surfIndexes;
+	mdxmHierarchyOffsets_t* surf_indexes;
 #endif
 
 	pinmodel = static_cast<mdxmHeader_t*>(buffer);
@@ -859,7 +859,7 @@ qboolean ServerLoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboole
 
 	surfInfo = (mdxmSurfHierarchy_t*)((byte*)mdxm + mdxm->ofsSurfHierarchy);
 #ifdef Q3_BIG_ENDIAN
-	surfIndexes = (mdxmHierarchyOffsets_t*)((byte*)mdxm + sizeof(mdxmHeader_t));
+	surf_indexes = (mdxmHierarchyOffsets_t*)((byte*)mdxm + sizeof(mdxmHeader_t));
 #endif
 	for (i = 0; i < mdxm->numSurfaces; i++)
 	{
@@ -882,8 +882,8 @@ qboolean ServerLoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboole
 
 #ifdef Q3_BIG_ENDIAN
 		// swap the surface offset
-		LL(surfIndexes->offsets[i]);
-		assert(surfInfo == (mdxmSurfHierarchy_t*)((byte*)surfIndexes + surfIndexes->offsets[i]));
+		LL(surf_indexes->offsets[i]);
+		assert(surfInfo == (mdxmSurfHierarchy_t*)((byte*)surf_indexes + surf_indexes->offsets[i]));
 #endif
 
 		// find the next surface
@@ -903,7 +903,7 @@ qboolean ServerLoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboole
 		{
 			LL(surf->thisSurfaceIndex);
 			LL(surf->ofsHeader);
-			LL(surf->numVerts);
+			LL(surf->num_verts);
 			LL(surf->ofsVerts);
 			LL(surf->numTriangles);
 			LL(surf->ofsTriangles);
@@ -913,7 +913,7 @@ qboolean ServerLoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboole
 
 			triCount += surf->numTriangles;
 
-			if (surf->numVerts > SHADER_MAX_VERTEXES) {
+			if (surf->num_verts > SHADER_MAX_VERTEXES) {
 				return qfalse;
 			}
 			if (surf->numTriangles * 3 > SHADER_MAX_INDEXES) {
@@ -947,9 +947,9 @@ qboolean ServerLoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboole
 
 			// swap all the vertexes
 			v = (mdxmVertex_t*)((byte*)surf + surf->ofsVerts);
-			pTexCoords = (mdxmVertexTexCoord_t*)&v[surf->numVerts];
+			pTexCoords = (mdxmVertexTexCoord_t*)&v[surf->num_verts];
 
-			for (j = 0; j < surf->numVerts; j++)
+			for (j = 0; j < surf->num_verts; j++)
 			{
 				LF(v->normal[0]);
 				LF(v->normal[1]);
@@ -1485,15 +1485,15 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* mod_n
 		LL(surf->numShaders);
 		LL(surf->numTriangles);
 		LL(surf->ofsTriangles);
-		LL(surf->numVerts);
+		LL(surf->num_verts);
 		LL(surf->ofsShaders);
 		LL(surf->ofsSt);
 		LL(surf->ofsXyzNormals);
 		LL(surf->ofsEnd);
 
-		if (surf->numVerts >= SHADER_MAX_VERTEXES) {
+		if (surf->num_verts >= SHADER_MAX_VERTEXES) {
 			Com_Error(ERR_DROP, "R_LoadMD3: %s has more than %i verts on %s (%i)",
-				mod_name, SHADER_MAX_VERTEXES - 1, surf->name[0] ? surf->name : "a surface", surf->numVerts);
+				mod_name, SHADER_MAX_VERTEXES - 1, surf->name[0] ? surf->name : "a surface", surf->num_verts);
 		}
 		if (surf->numTriangles * 3 >= SHADER_MAX_INDEXES) {
 			Com_Error(ERR_DROP, "R_LoadMD3: %s has more than %i triangles on %s (%i)",
@@ -1535,14 +1535,14 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* mod_n
 
 		// swap all the ST
 		st = (md3St_t*)((byte*)surf + surf->ofsSt);
-		for (j = 0; j < surf->numVerts; j++, st++) {
+		for (j = 0; j < surf->num_verts; j++, st++) {
 			LF(st->st[0]);
 			LF(st->st[1]);
 		}
 
 		// swap all the XyzNormals
 		xyz = (md3XyzNormal_t*)((byte*)surf + surf->ofsXyzNormals);
-		for (j = 0; j < surf->numVerts * surf->numFrames; j++, xyz++)
+		for (j = 0; j < surf->num_verts * surf->numFrames; j++, xyz++)
 		{
 			LS(xyz->xyz[0]);
 			LS(xyz->xyz[1]);

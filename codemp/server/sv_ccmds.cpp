@@ -198,22 +198,22 @@ static void SV_Map_f(void) {
 	// and thus nuke the arguments of the map command
 	Q_strncpyz(mapname, map, sizeof(mapname));
 
-	ForceReload_e eForceReload = eForceReload_NOTHING;	// default for normal load
+	ForceReload_e e_force_reload = eForceReload_NOTHING;	// default for normal load
 
 	//	if ( !Q_stricmp( cmd, "devmapbsp") ) {	// not relevant in MP codebase
-	//		eForceReload = eForceReload_BSP;
+	//		e_force_reload = eForceReload_BSP;
 	//	}
 	//	else
 	if (!Q_stricmp(cmd, "devmapmdl")) {
-		eForceReload = eForceReload_MODELS;
+		e_force_reload = eForceReload_MODELS;
 	}
 	else
 		if (!Q_stricmp(cmd, "devmapall")) {
-			eForceReload = eForceReload_ALL;
+			e_force_reload = eForceReload_ALL;
 		}
 
 	// start up the map
-	SV_SpawnServer(mapname, killBots, eForceReload);
+	SV_SpawnServer(mapname, killBots, e_force_reload);
 
 	// set the cheat value
 	// if the level was started with "map <levelname>", then

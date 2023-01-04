@@ -603,7 +603,7 @@ typedef struct srfPoly_s {
 	surfaceType_t	surfaceType;
 	qhandle_t		hShader;
 	int				fogIndex;
-	int				numVerts;
+	int				num_verts;
 	polyVert_t* verts;
 } srfPoly_t;
 
@@ -679,10 +679,10 @@ typedef struct srfTriangles_s {
 	//	float			radius;
 
 		// triangle definitions
-	int				numIndexes;
+	int				num_indexes;
 	int* indexes;
 
-	int				numVerts;
+	int				num_verts;
 	drawVert_t* verts;
 	//	vec3_t			*tangents;
 } srfTriangles_t;
@@ -1283,7 +1283,7 @@ void	RE_UploadCinematic(int cols, int rows, const byte* data, int client, qboole
 
 void		RE_BeginFrame(stereoFrame_t stereoFrame);
 void		RE_BeginRegistration(glconfig_t* glconfig);
-void		RE_LoadWorldMap(const char* mapname);
+void		RE_LoadWorldMap(const char* name);
 
 void		RE_SetWorldVisData(const byte* vis);
 
@@ -1292,7 +1292,7 @@ qhandle_t	RE_RegisterModel(const char* name);
 qhandle_t	RE_RegisterSkin(const char* name);
 void		RE_Shutdown(qboolean destroyWindow);
 
-void		RE_RegisterMedia_LevelLoadBegin(const char* psMapName, ForceReload_e eForceReload);
+void		RE_RegisterMedia_LevelLoadBegin(const char* psMapName, ForceReload_e e_force_reload);
 void		RE_RegisterMedia_LevelLoadEnd(void);
 int			RE_RegisterMedia_GetLevel(void);
 //
@@ -1340,7 +1340,7 @@ extern	const int	lightmapsVertex[MAXLIGHTMAPS];
 extern	const int	lightmapsFullBright[MAXLIGHTMAPS];
 extern	const byte	stylesDefault[MAXLIGHTMAPS];
 
-qhandle_t RE_RegisterShaderLightMap(const char* name, const int* lightmapIndex, const byte* styles);
+qhandle_t RE_RegisterShaderLightMap(const char* name, const int* lightmap_index, const byte* styles);
 qhandle_t		 RE_RegisterShader(const char* name);
 qhandle_t		 RE_RegisterShaderNoMip(const char* name);
 const char* RE_ShaderNameFromIndex(int index);
@@ -1406,7 +1406,7 @@ struct shaderCommands_s
 
 	int			dlightBits;	// or together of all vertexDlightBits
 
-	int			numIndexes;
+	int			num_indexes;
 	int			numVertexes;
 
 	// info extracted from current shader
@@ -1427,7 +1427,7 @@ extern	color4ub_t	styleColors[MAX_LIGHT_STYLES];
 void RB_BeginSurface(shader_t* shader, int fog_num);
 void RB_EndSurface(void);
 void RB_CheckOverflow(int verts, int indexes);
-#define RB_CHECKOVERFLOW(v,i) if (tess.numVertexes + (v) >= SHADER_MAX_VERTEXES || tess.numIndexes + (i) >= SHADER_MAX_INDEXES ) {RB_CheckOverflow(v,i);}
+#define RB_CHECKOVERFLOW(v,i) if (tess.numVertexes + (v) >= SHADER_MAX_VERTEXES || tess.num_indexes + (i) >= SHADER_MAX_INDEXES ) {RB_CheckOverflow(v,i);}
 
 void RB_StageIteratorGeneric(void);
 void RB_StageIteratorSky(void);
@@ -1536,7 +1536,7 @@ void RE_ClearScene(void);
 void RE_ClearDecals(void);
 void RE_AddRefEntityToScene(const refEntity_t* ent);
 void RE_AddMiniRefEntityToScene(const miniRefEntity_t* ent);
-void RE_AddPolyToScene(qhandle_t hShader, int numVerts, const polyVert_t* verts, int num);
+void RE_AddPolyToScene(qhandle_t hShader, int num_verts, const polyVert_t* verts, int num);
 void RE_AddDecalToScene(qhandle_t shader, const vec3_t origin, const vec3_t dir, float orientation, float r, float g, float b, float a, qboolean alphaFade, float radius, qboolean temporary);
 void RE_AddLightToScene(const vec3_t org, float intensity, float r, float g, float b);
 void RE_AddAdditiveLightToScene(const vec3_t org, float intensity, float r, float g, float b);

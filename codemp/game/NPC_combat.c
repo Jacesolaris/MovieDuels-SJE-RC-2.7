@@ -839,7 +839,7 @@ void ChangeWeapon(const gentity_t* ent, int new_weapon)
 	}
 }
 
-void NPC_ChangeWeapon(int newWeapon)
+void NPC_ChangeWeapon(int new_weapon)
 {
 	/*
 	qboolean	changing = qfalse;

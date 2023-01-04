@@ -123,7 +123,7 @@ extern void G_StartFlee(gentity_t* self, gentity_t* enemy, vec3_t danger_point, 
 
 //NPC_combat
 extern int ChooseBestWeapon(void);
-extern void NPC_ChangeWeapon(int newWeapon);
+extern void NPC_ChangeWeapon(int new_weapon);
 extern void WeaponThink();
 extern qboolean HaveWeapon(int weapon);
 extern qboolean CanShoot(const gentity_t* ent, const gentity_t* shooter);

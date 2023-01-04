@@ -437,7 +437,7 @@ clients along with it.
 This is NOT called for map_restart
 ================
 */
-void SV_SpawnServer(char* server, qboolean killBots, ForceReload_e eForceReload) {
+void SV_SpawnServer(char* server, qboolean killBots, ForceReload_e e_force_reload) {
 	int			i;
 	int			checksum;
 	qboolean	isBot;
@@ -448,7 +448,7 @@ void SV_SpawnServer(char* server, qboolean killBots, ForceReload_e eForceReload)
 
 	SV_SendMapChange();
 
-	re->RegisterMedia_LevelLoadBegin(server, eForceReload);
+	re->RegisterMedia_LevelLoadBegin(server, e_force_reload);
 
 	// shut down the existing game if it is running
 	SV_ShutdownGameProgs();

@@ -160,7 +160,7 @@ using thinkFunc_t = enum
 // THINK functions...
 //
 extern void teleporter_think(gentity_t* ent);
-extern void funcBBrushDieGo(gentity_t* ent);
+extern void funcBBrushDieGo(gentity_t* self);
 extern void ExplodeDeath(gentity_t* self);
 extern void RespawnItem(gentity_t* ent);
 extern void G_FreeEntity(gentity_t* ent);

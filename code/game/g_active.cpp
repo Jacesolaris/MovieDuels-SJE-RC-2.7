@@ -89,9 +89,9 @@ extern qboolean PM_SuperBreakWinAnim(int anim);
 extern qboolean PM_CanRollFromSoulCal(const playerState_t* ps);
 extern qboolean BG_FullBodyTauntAnim(int anim);
 extern qboolean FlyingCreature(const gentity_t* ent);
-extern Vehicle_t* G_IsRidingVehicle(const gentity_t* pEnt);
+extern Vehicle_t* G_IsRidingVehicle(const gentity_t* p_ent);
 extern void G_AttachToVehicle(gentity_t* ent, usercmd_t** ucmd);
-extern void G_GetBoltPosition(gentity_t* self, int bolt_index, vec3_t pos, int modelIndex = 0);
+extern void G_GetBoltPosition(gentity_t* self, int bolt_index, vec3_t pos, int model_index = 0);
 extern void G_UpdateEmplacedWeaponData(gentity_t* ent);
 extern void RunEmplacedWeapon(gentity_t* ent, usercmd_t** ucmd);
 extern qboolean G_PointInBounds(const vec3_t point, const vec3_t mins, const vec3_t maxs);
@@ -129,7 +129,7 @@ extern qboolean npc_is_projected(const gentity_t* self);
 extern qboolean Manual_MeleeDodging(const gentity_t* defender);
 extern cvar_t* g_DebugSaberCombat;
 extern int G_FindLocalInterestPoint(gentity_t* self);
-extern float G_CanJumpToEnemyVeh(Vehicle_t* pVeh, const usercmd_t* pUmcd);
+extern float G_CanJumpToEnemyVeh(Vehicle_t* p_veh, const usercmd_t* pUmcd);
 extern qboolean PM_RunningAnim(int anim);
 extern qboolean PM_WalkingAnim(int anim);
 extern qboolean PM_RollingAnim(int anim);
@@ -9329,7 +9329,7 @@ void ClientThink_real(gentity_t* ent, usercmd_t* ucmd)
 	//Had to leave this in, some legacy code must still be using s.angles
 	//Shouldn't interfere with interpolation of angles, should it?
 	VectorCopy(ent->client->ps.viewangles, ent->currentAngles);
-	//	if (pVeh)
+	//	if (p_veh)
 	//	{
 	//		gi.Printf("%d\n", ucmd->angles[2]);
 	//	}

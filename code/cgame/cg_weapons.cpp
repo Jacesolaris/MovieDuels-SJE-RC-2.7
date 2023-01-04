@@ -39,7 +39,7 @@ extern vmCvar_t cg_fallingBob;
 extern vmCvar_t cg_SpinningBarrels;
 extern qboolean PM_ReloadAnim(int anim);
 extern qboolean PM_WeponRestAnim(int anim);
-extern Vehicle_t* G_IsRidingVehicle(const gentity_t* pEnt);
+extern Vehicle_t* G_IsRidingVehicle(const gentity_t* p_ent);
 extern bool G_IsRidingTurboVehicle(const gentity_t* ent);
 extern cvar_t* com_outcast;
 extern void G_StartNextItemEffect(gentity_t* ent, int me_flags = 0, int length = 1000, float time_scale = 0.0f,

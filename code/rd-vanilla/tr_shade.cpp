@@ -341,7 +341,7 @@ static void DrawTris(const shaderCommands_t* input)
 			GLimp_LogComment("glLockArraysEXT\n");
 		}
 
-		R_DrawElements(input->numIndexes, input->indexes);
+		R_DrawElements(input->num_indexes, input->indexes);
 
 		if (qglUnlockArraysEXT)
 		{
@@ -367,7 +367,7 @@ static void DrawTris(const shaderCommands_t* input)
 			GLimp_LogComment("glLockArraysEXT\n");
 		}
 
-		R_DrawElements(input->numIndexes, input->indexes);
+		R_DrawElements(input->num_indexes, input->indexes);
 
 		if (qglUnlockArraysEXT) {
 			qglUnlockArraysEXT();
@@ -417,7 +417,7 @@ void RB_BeginSurface(shader_t* shader, const int fog_num)
 	//	shader_t *state = (shader->remappedShader) ? shader->remappedShader : shader;
 	shader_t* state = shader;
 
-	tess.numIndexes = 0;
+	tess.num_indexes = 0;
 	tess.numVertexes = 0;
 	tess.shader = state;//shader;
 	tess.fogNum = fog_num;
@@ -476,7 +476,7 @@ static void DrawMultitextured(const shaderCommands_t* input, const int stage)
 
 	R_BindAnimatedImage(&p_stage->bundle[1]);
 
-	R_DrawElements(input->numIndexes, input->indexes);
+	R_DrawElements(input->num_indexes, input->indexes);
 
 	//
 	// disable texturing on TEXTURE1, then select TEXTURE0
@@ -512,7 +512,7 @@ static void ProjectDlightTexture( void ) {
 	}
 
 	for ( l = 0 ; l < backEnd.refdef.num_dlights ; l++ ) {
-		int		numIndexes;
+		int		num_indexes;
 		vec3_t	floatColor;
 		float	scale;
 		float	radius, chord;
@@ -600,8 +600,8 @@ static void ProjectDlightTexture( void ) {
 		}
 
 		// build a list of triangles that need light
-		numIndexes = 0;
-		for ( i = 0 ; i < tess.numIndexes ; i += 3 ) {
+		num_indexes = 0;
+		for ( i = 0 ; i < tess.num_indexes ; i += 3 ) {
 			int		a, b, c;
 
 			a = tess.indexes[i];
@@ -610,13 +610,13 @@ static void ProjectDlightTexture( void ) {
 			if ( clipBits[a] & clipBits[b] & clipBits[c] ) {
 				continue;	// not lighted
 			}
-			hitIndexes[numIndexes] = a;
-			hitIndexes[numIndexes+1] = b;
-			hitIndexes[numIndexes+2] = c;
-			numIndexes += 3;
+			hitIndexes[num_indexes] = a;
+			hitIndexes[num_indexes+1] = b;
+			hitIndexes[num_indexes+2] = c;
+			num_indexes += 3;
 		}
 
-		if ( !numIndexes ) {
+		if ( !num_indexes ) {
 			continue;
 		}
 
@@ -632,9 +632,9 @@ static void ProjectDlightTexture( void ) {
 		// where they aren't rendered
 		GL_State( GLS_SRCBLEND_SRC_ALPHA | GLS_DSTBLEND_SRC_COLOR | GLS_DEPTHFUNC_EQUAL);//our way
 //		GL_State( GLS_SRCBLEND_DST_COLOR | GLS_DSTBLEND_ONE | GLS_DEPTHFUNC_EQUAL );	//Id way
-		R_DrawElements( numIndexes, hitIndexes );
-		backEnd.pc.c_totalIndexes += numIndexes;
-		backEnd.pc.c_dlightIndexes += numIndexes;
+		R_DrawElements( num_indexes, hitIndexes );
+		backEnd.pc.c_totalIndexes += num_indexes;
+		backEnd.pc.c_dlightIndexes += num_indexes;
 	}
 }
 */
@@ -727,7 +727,7 @@ static void ProjectDlightTexture2()
 		float_color[2] = dl->color[2] * 255.0f;
 		// build a list of triangles that need light
 		num_indexes = 0;
-		for (i = 0; i < tess.numIndexes; i += 3)
+		for (i = 0; i < tess.num_indexes; i += 3)
 		{
 			vec3_t normal;
 			vec3_t e2;
@@ -875,10 +875,10 @@ static void ProjectDlightTexture2()
 			int i1 = 0;
 			while (i1 < tess.shader->numUnfoggedPasses)
 			{
-				constexpr int blendBits = GLS_SRCBLEND_BITS + GLS_DSTBLEND_BITS;
+				constexpr int blend_bits = GLS_SRCBLEND_BITS + GLS_DSTBLEND_BITS;
 				if ((tess.shader->stages[i1].bundle[0].image && !tess.shader->stages[i1].bundle[0].isLightmap && !tess.shader->stages[i1].bundle[0].numTexMods && tess.shader->stages[i1].bundle[0].tcGen != TCGEN_ENVIRONMENT_MAPPED && tess.shader->stages[i1].bundle[0].tcGen != TCGEN_FOG ||
 					tess.shader->stages[i1].bundle[1].image && !tess.shader->stages[i1].bundle[1].isLightmap && !tess.shader->stages[i1].bundle[1].numTexMods && tess.shader->stages[i1].bundle[1].tcGen != TCGEN_ENVIRONMENT_MAPPED && tess.shader->stages[i1].bundle[1].tcGen != TCGEN_FOG) &&
-					(tess.shader->stages[i1].stateBits & blendBits) == 0)
+					(tess.shader->stages[i1].stateBits & blend_bits) == 0)
 				{ //only use non-lightmap opaque stages
 					d_stage = &tess.shader->stages[i1];
 					break;
@@ -972,7 +972,7 @@ static void ProjectDlightTexture()
 #ifndef JK2_MODE
 	int		fogging;
 #endif
-	vec3_t	floatColor;
+	vec3_t	float_color;
 	shaderStage_t* d_stage;
 
 	if (!backEnd.refdef.num_dlights) {
@@ -994,9 +994,9 @@ static void ProjectDlightTexture()
 		VectorCopy(dl->transformed, origin);
 		radius = dl->radius;
 
-		floatColor[0] = dl->color[0] * 255.0f;
-		floatColor[1] = dl->color[1] * 255.0f;
-		floatColor[2] = dl->color[2] * 255.0f;
+		float_color[0] = dl->color[0] * 255.0f;
+		float_color[1] = dl->color[1] * 255.0f;
+		float_color[2] = dl->color[2] * 255.0f;
 
 		for (i = 0; i < tess.numVertexes; i++, tex_coords += 2, colors += 4) {
 			vec3_t	dist;
@@ -1170,14 +1170,14 @@ static void ProjectDlightTexture()
 			}
 			clip_bits[i] = clip;
 
-			colors[0] = Q_ftol(floatColor[0] * modulate);
-			colors[1] = Q_ftol(floatColor[1] * modulate);
-			colors[2] = Q_ftol(floatColor[2] * modulate);
+			colors[0] = Q_ftol(float_color[0] * modulate);
+			colors[1] = Q_ftol(float_color[1] * modulate);
+			colors[2] = Q_ftol(float_color[2] * modulate);
 			colors[3] = 255;
 		}
 		// build a list of triangles that need light
 		num_indexes = 0;
-		for (i = 0; i < tess.numIndexes; i += 3) {
+		for (i = 0; i < tess.num_indexes; i += 3) {
 			const int a = tess.indexes[i];
 			const int b = tess.indexes[i + 1];
 			const int c = tess.indexes[i + 2];
@@ -1329,7 +1329,7 @@ static void RB_FogPass() {
 		GL_State(GLS_SRCBLEND_SRC_ALPHA | GLS_DSTBLEND_ONE_MINUS_SRC_ALPHA);
 	}
 
-	R_DrawElements(tess.numIndexes, tess.indexes);
+	R_DrawElements(tess.num_indexes, tess.indexes);
 }
 
 /*
@@ -1916,7 +1916,7 @@ static void RB_IterateStagesGeneric(const shaderCommands_t* input)
 				if (p_stage->lightmapStyle == 0)
 				{
 					GL_State(GLS_DSTBLEND_ZERO | GLS_SRCBLEND_ZERO);
-					R_DrawElements(input->numIndexes, input->indexes);
+					R_DrawElements(input->num_indexes, input->indexes);
 				}
 				continue;
 			}
@@ -1981,7 +1981,7 @@ static void RB_IterateStagesGeneric(const shaderCommands_t* input)
 			//
 			// draw
 			//
-			R_DrawElements(input->numIndexes, input->indexes);
+			R_DrawElements(input->num_indexes, input->indexes);
 
 			if (l_stencilled)
 			{ //re-enable the color buffer, disable stencil test
@@ -2152,7 +2152,7 @@ void RB_EndSurface()
 {
 	const shaderCommands_t* input = &tess;
 
-	if (input->numIndexes == 0)
+	if (input->num_indexes == 0)
 	{
 		return;
 	}
@@ -2206,15 +2206,15 @@ void RB_EndSurface()
 	{
 		backEnd.pc.c_shaders++;
 		backEnd.pc.c_vertexes += tess.numVertexes;
-		backEnd.pc.c_indexes += tess.numIndexes;
-		backEnd.pc.c_totalIndexes += tess.numIndexes * tess.numPasses;
+		backEnd.pc.c_indexes += tess.num_indexes;
+		backEnd.pc.c_totalIndexes += tess.num_indexes * tess.numPasses;
 #ifdef JK2_MODE
 		if (tess.fogNum && tess.shader->fogPass && r_drawfog->value)
 #else
 		if (tess.fogNum && tess.shader->fogPass && r_drawfog->value == 1)
 #endif
 		{	// Fogging adds an additional pass
-			backEnd.pc.c_totalIndexes += tess.numIndexes;
+			backEnd.pc.c_totalIndexes += tess.num_indexes;
 		}
 	}
 
@@ -2236,7 +2236,7 @@ void RB_EndSurface()
 	}
 
 	// clear shader so we can tell we don't have any unclosed surfaces
-	tess.numIndexes = 0;
+	tess.num_indexes = 0;
 
 	GLimp_LogComment("----------\n");
 }

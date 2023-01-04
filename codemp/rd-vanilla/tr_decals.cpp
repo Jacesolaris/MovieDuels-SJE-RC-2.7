@@ -234,7 +234,7 @@ void RE_AddDecalToScene(qhandle_t decalShader, const vec3_t origin, const vec3_t
 		decalPoly_t* decal = RE_AllocDecal(DECALPOLY_TYPE_NORMAL);
 		decal->time = tr.refdef.time;
 		decal->shader = decalShader;
-		decal->poly.numVerts = mf->numPoints;
+		decal->poly.num_verts = mf->numPoints;
 		decal->color[0] = red;
 		decal->color[1] = green;
 		decal->color[2] = blue;
@@ -280,12 +280,12 @@ void R_AddDecals(void)
 					{
 						const float fade = 255.0f * (1.0f - (static_cast<float>(t) / DECAL_FADE_TIME));
 
-						for (int j = 0; j < p->poly.numVerts; j++)
+						for (int j = 0; j < p->poly.num_verts; j++)
 						{
 							p->verts[j].modulate[3] = fade;
 						}
 
-						RE_AddPolyToScene(p->shader, p->poly.numVerts, p->verts, 1);
+						RE_AddPolyToScene(p->shader, p->poly.num_verts, p->verts, 1);
 					}
 					else
 					{
@@ -294,7 +294,7 @@ void R_AddDecals(void)
 				}
 				else
 				{
-					RE_AddPolyToScene(p->shader, p->poly.numVerts, p->verts, 1);
+					RE_AddPolyToScene(p->shader, p->poly.num_verts, p->verts, 1);
 				}
 			}
 

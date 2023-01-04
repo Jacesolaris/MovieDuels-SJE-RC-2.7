@@ -692,7 +692,7 @@ void BG_VehicleSetDefaults(vehicleInfo_t* vehicle)
 		}
 		strcpy(vehicle->model, "models/map_objects/ships/swoop.md3");
 
-		vehicle->modelIndex = 0;							//set internally, not until this vehicle is spawned into the level
+		vehicle->model_index = 0;							//set internally, not until this vehicle is spawned into the level
 		vehicle->skin = NULL;								//what skin to use - if make it an NPC's primary model, don't need this?
 		vehicle->riderAnim = BOTH_GUNSIT1;					//what animation the rider uses
 
@@ -1160,9 +1160,9 @@ int VEH_LoadVehicle(const char* vehicleName)
 	if (vehicle->model)
 	{
 #ifdef _GAME
-		vehicle->modelIndex = G_ModelIndex(va("models/players/%s/model.glm", vehicle->model));
+		vehicle->model_index = G_ModelIndex(va("models/players/%s/model.glm", vehicle->model));
 #else
-		vehicle->modelIndex = trap->R_RegisterModel(va("models/players/%s/model.glm", vehicle->model));
+		vehicle->model_index = trap->R_RegisterModel(va("models/players/%s/model.glm", vehicle->model));
 #endif
 	}
 
@@ -1440,15 +1440,15 @@ void BG_GetVehicleSkinName(char* skinname, int len)
 //so cgame can assign the function pointer for the vehicle attachment without having to
 //bother with all the other funcs that don't really exist cgame-side.
 extern int BG_GetTime(void);
-void AttachRidersGeneric(Vehicle_t* pVeh)
+void AttachRidersGeneric(Vehicle_t* p_veh)
 {
 	// If we have a pilot, attach him to the driver tag.
-	if (pVeh->m_pPilot)
+	if (p_veh->m_pPilot)
 	{
 		mdxaBone_t bolt_matrix;
 		vec3_t	yawOnlyAngles;
-		bgEntity_t* parent = pVeh->m_pParentEntity;
-		const bgEntity_t* pilot = pVeh->m_pPilot;
+		bgEntity_t* parent = p_veh->m_pParentEntity;
+		const bgEntity_t* pilot = p_veh->m_pPilot;
 		const int crotchBolt = trap->G2API_AddBolt(parent->ghoul2, 0, "*driver");
 
 		assert(parent->playerState);

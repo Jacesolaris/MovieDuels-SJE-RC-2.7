@@ -302,7 +302,7 @@ static void CG_DoGlassQuad(vec3_t p[4], vec2_t uv[4], qboolean stick, int time, 
 		i++;
 	}
 
-	apArgs.numVerts = 4;
+	apArgs.num_verts = 4;
 	VectorCopy(vel, apArgs.vel);
 	VectorCopy(accel, apArgs.accel);
 

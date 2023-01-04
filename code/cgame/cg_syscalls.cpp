@@ -378,9 +378,9 @@ void cgi_R_GetLighting(const vec3_t origin, vec3_t ambientLight, vec3_t directed
 	Q_syscall(CG_R_GETLIGHTING, origin, ambientLight, directedLight, ligthDir);
 }
 
-void cgi_R_AddPolyToScene(const qhandle_t hShader, const int numVerts, const polyVert_t* verts)
+void cgi_R_AddPolyToScene(const qhandle_t hShader, const int num_verts, const polyVert_t* verts)
 {
-	Q_syscall(CG_R_ADDPOLYTOSCENE, hShader, numVerts, verts);
+	Q_syscall(CG_R_ADDPOLYTOSCENE, hShader, num_verts, verts);
 }
 
 void cgi_R_AddLightToScene(const vec3_t org, const float intensity, const float r, const float g, const float b)

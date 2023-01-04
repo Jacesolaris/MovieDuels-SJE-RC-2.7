@@ -130,8 +130,8 @@ using md3Tag_t = struct md3Tag_s
 ** header			sizeof( md3Surface_t )
 ** shaders			sizeof( md3Shader_t ) * numShaders
 ** triangles[0]		sizeof( md3Triangle_t ) * numTriangles
-** st				sizeof( md3St_t ) * numVerts
-** XyzNormals		sizeof( md3XyzNormal_t ) * numVerts * numFrames
+** st				sizeof( md3St_t ) * num_verts
+** XyzNormals		sizeof( md3XyzNormal_t ) * num_verts * numFrames
 */
 using md3Surface_t = struct
 {
@@ -143,14 +143,14 @@ using md3Surface_t = struct
 	int numFrames; // all surfaces in a model should have the same
 
 	int numShaders; // all surfaces in a model should have the same
-	int numVerts;
+	int num_verts;
 
 	int numTriangles;
 	int ofsTriangles;
 
 	int ofsShaders; // offset from start of
 	int ofsSt; // texture coords are common for all frames
-	int ofsXyzNormals; // numVerts * numFrames
+	int ofsXyzNormals; // num_verts * numFrames
 
 	int ofsEnd; // next surface follows
 };;
@@ -333,7 +333,7 @@ using dleaf_t = struct
 using dbrushside_t = struct
 {
 	int planeNum; // positive plane side faces out of the leaf
-	int shaderNum;
+	int shader_num;
 	int drawSurfNum;
 };
 
@@ -341,7 +341,7 @@ using dbrush_t = struct
 {
 	int firstSide;
 	int numSides;
-	int shaderNum; // the shader that determines the contents flags
+	int shader_num; // the shader that determines the contents flags
 };
 
 using dfog_t = struct
@@ -395,18 +395,18 @@ using mapSurfaceType_t = enum
 
 using dsurface_t = struct
 {
-	int shaderNum;
+	int shader_num;
 	int fogNum;
 	int surfaceType;
 
 	int firstVert;
-	int numVerts;
+	int num_verts;
 
 	int firstIndex;
-	int numIndexes;
+	int num_indexes;
 
 	byte lightmapStyles[MAXLIGHTMAPS], vertexStyles[MAXLIGHTMAPS];
-	int lightmapNum[MAXLIGHTMAPS];
+	int lightmap_num[MAXLIGHTMAPS];
 	int lightmapX[MAXLIGHTMAPS], lightmapY[MAXLIGHTMAPS];
 	int lightmapWidth, lightmapHeight;
 

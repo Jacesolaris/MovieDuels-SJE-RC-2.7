@@ -190,7 +190,7 @@ extern qboolean PM_SaberInTransitionAny(int move);
 extern int PM_GetTurnAnim(const gentity_t* gent, int anim);
 extern int PM_AnimLength(int index, animNumber_t anim);
 extern qboolean PM_InRoll(const playerState_t* ps);
-extern Vehicle_t* G_IsRidingVehicle(const gentity_t* pEnt);
+extern Vehicle_t* G_IsRidingVehicle(const gentity_t* p_ent);
 extern qboolean PM_SuperBreakWinAnim(int anim);
 extern qboolean BG_SaberInPartialDamageMove(gentity_t* self);
 extern qboolean BG_SaberInTransitionDamageMove(const playerState_t* ps);
@@ -12903,7 +12903,7 @@ static void CG_CreateSaberMarks(vec3_t start, vec3_t end, vec3_t normal)
 		mark->time = cg.time;
 		mark->alphaFade = qtrue;
 		mark->markShader = cgs.media.rivetMarkShader;
-		mark->poly.numVerts = mf->numPoints;
+		mark->poly.num_verts = mf->numPoints;
 		mark->color[0] = mark->color[1] = mark->color[2] = mark->color[3] = 255;
 		memcpy(mark->verts, verts, mf->numPoints * sizeof verts[0]);
 
@@ -12913,7 +12913,7 @@ static void CG_CreateSaberMarks(vec3_t start, vec3_t end, vec3_t normal)
 		mark->time = cg.time - 8500;
 		mark->alphaFade = qfalse;
 		mark->markShader = cgs.media.bdecal_saberglow;
-		mark->poly.numVerts = mf->numPoints;
+		mark->poly.num_verts = mf->numPoints;
 		mark->color[0] = 215 + Q_flrand(0.0f, 1.0f) * 40.0f;
 		mark->color[1] = 96 + Q_flrand(0.0f, 1.0f) * 32.0f;
 		mark->color[2] = mark->color[3] = Q_flrand(0.0f, 1.0f) * 15.0f;
@@ -14145,7 +14145,7 @@ static void CG_AddSaberBladeGo(centity_t* cent, centity_t* scent, const int rend
 	}
 }
 
-void CG_AddSaberBlade(centity_t* cent, centity_t* scent, const int renderfx, const int modelIndex, vec3_t origin,
+void CG_AddSaberBlade(centity_t* cent, centity_t* scent, const int renderfx, const int model_index, vec3_t origin,
                       vec3_t angles)
 {
 	//FIXME: if this is a dropped saber, it could be possible that it's the second saber?
@@ -14153,7 +14153,7 @@ void CG_AddSaberBlade(centity_t* cent, centity_t* scent, const int renderfx, con
 	{
 		for (int i = 0; i < cent->gent->client->ps.saber[0].numBlades; i++)
 		{
-			CG_AddSaberBladeGo(cent, scent, renderfx, modelIndex, origin, angles, 0, i);
+			CG_AddSaberBladeGo(cent, scent, renderfx, model_index, origin, angles, 0, i);
 		}
 		if (cent->gent->client->ps.saber[0].numBlades > 2)
 		{

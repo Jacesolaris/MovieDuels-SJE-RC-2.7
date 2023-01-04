@@ -30,7 +30,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 extern void laserTrapStick(gentity_t* ent, vec3_t endpos, vec3_t normal);
 extern void jedi_decloak(gentity_t* self);
 
-extern qboolean FighterIsLanded(Vehicle_t* pVeh, playerState_t* parentPS);
+extern qboolean FighterIsLanded(Vehicle_t* p_veh, playerState_t* parent_ps);
 
 /*
 ================

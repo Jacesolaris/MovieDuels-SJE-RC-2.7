@@ -407,7 +407,7 @@ static void WriteGame(const qboolean autosave)
 	{
 		// write out player ammo level, health, etc...
 		//
-		extern void SV_Player_EndOfLevelSave(void);
+		extern void SV_Player_EndOfLevelSave();
 		SV_Player_EndOfLevelSave(); // this sets up the various cvars needed, so we can then write them to disk
 		//
 		char s[MAX_STRING_CHARS] = {};

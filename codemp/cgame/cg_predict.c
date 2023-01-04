@@ -931,18 +931,18 @@ void CG_PredictPlayerState(void) {
 	cg_pmove.trace = CG_Trace;
 	cg_pmove.pointcontents = CG_PointContents;
 
-	const centity_t* pEnt = &cg_entities[cg.predictedPlayerState.client_num];
+	const centity_t* p_ent = &cg_entities[cg.predictedPlayerState.client_num];
 	//rww - bgghoul2
-	if (cg_pmove.ghoul2 != pEnt->ghoul2) //only update it if the g2 instance has changed
+	if (cg_pmove.ghoul2 != p_ent->ghoul2) //only update it if the g2 instance has changed
 	{
 		if (cg.snap &&
-			pEnt->ghoul2 &&
+			p_ent->ghoul2 &&
 			!(cg.snap->ps.pm_flags & PMF_FOLLOW) &&
 			cg.snap->ps.persistant[PERS_TEAM] != TEAM_SPECTATOR)
 		{
-			cg_pmove.ghoul2 = pEnt->ghoul2;
-			cg_pmove.g2Bolts_LFoot = trap->G2API_AddBolt(pEnt->ghoul2, 0, "*l_leg_foot");
-			cg_pmove.g2Bolts_RFoot = trap->G2API_AddBolt(pEnt->ghoul2, 0, "*r_leg_foot");
+			cg_pmove.ghoul2 = p_ent->ghoul2;
+			cg_pmove.g2Bolts_LFoot = trap->G2API_AddBolt(p_ent->ghoul2, 0, "*l_leg_foot");
+			cg_pmove.g2Bolts_RFoot = trap->G2API_AddBolt(p_ent->ghoul2, 0, "*r_leg_foot");
 		}
 		else
 		{
@@ -953,7 +953,7 @@ void CG_PredictPlayerState(void) {
 	const clientInfo_t* ci = &cgs.clientinfo[cg.predictedPlayerState.client_num];
 
 	//I'll just do this every frame in case the scale changes in realtime (don't need to update the g2 inst for that)
-	VectorCopy(pEnt->modelScale, cg_pmove.modelScale);
+	VectorCopy(p_ent->modelScale, cg_pmove.modelScale);
 	//rww end bgghoul2
 
 	if (cg_pmove.ps->pm_type == PM_DEAD) {
@@ -1195,14 +1195,14 @@ void CG_PredictPlayerState(void) {
 			cg_pmove.cmd.serverTime = ((cg_pmove.cmd.serverTime + pmove_msec.integer - 1) / pmove_msec.integer) * pmove_msec.integer;
 		}
 
-		cg_pmove.animations = bgAllAnims[pEnt->localAnimIndex].anims;
+		cg_pmove.animations = bgAllAnims[p_ent->localAnimIndex].anims;
 		cg_pmove.gametype = cgs.gametype;
 
 		cg_pmove.debugMelee = cgs.debugMelee;
 		cg_pmove.stepSlideFix = cgs.stepSlideFix;
 		cg_pmove.noSpecMove = cgs.noSpecMove;
 
-		cg_pmove.nonHumanoid = (pEnt->localAnimIndex > 0);
+		cg_pmove.nonHumanoid = (p_ent->localAnimIndex > 0);
 
 		if (cg.snap && cg.snap->ps.saberLockTime > cg.time)
 		{

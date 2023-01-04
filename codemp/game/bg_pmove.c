@@ -389,11 +389,11 @@ void PM_pitch_roll_for_slope(bgEntity_t* forwhom, vec3_t pass_slope, vec3_t stor
 
 	if (forwhom->s.NPC_class == CLASS_VEHICLE)
 	{//special code for vehicles
-		const Vehicle_t* pVeh = forwhom->m_pVehicle;
+		const Vehicle_t* p_veh = forwhom->m_pVehicle;
 		vec3_t tempAngles;
 
 		tempAngles[PITCH] = tempAngles[ROLL] = 0;
-		tempAngles[YAW] = pVeh->m_vOrientation[YAW];
+		tempAngles[YAW] = p_veh->m_vOrientation[YAW];
 		AngleVectors(tempAngles, ovf, ovr, NULL);
 	}
 	else
@@ -462,21 +462,21 @@ void PM_SetSpecialMoveValues(void)
 	//default until we decide otherwise
 	pm_flying = FLY_NONE;
 
-	const bgEntity_t* pEnt = pm_entSelf;
+	const bgEntity_t* p_ent = pm_entSelf;
 
-	if (pEnt)
+	if (p_ent)
 	{
 		if ((pm->ps->eFlags2 & EF2_FLYING))// pm->gent->client->moveType == MT_FLYSWIM )
 		{
 			pm_flying = FLY_NORMAL;
 		}
-		else if (pEnt->s.NPC_class == CLASS_VEHICLE)
+		else if (p_ent->s.NPC_class == CLASS_VEHICLE)
 		{
-			if (pEnt->m_pVehicle->m_pVehicleInfo->type == VH_FIGHTER)
+			if (p_ent->m_pVehicle->m_pVehicleInfo->type == VH_FIGHTER)
 			{
 				pm_flying = FLY_VEHICLE;
 			}
-			else if (pEnt->m_pVehicle->m_pVehicleInfo->hoverHeight > 0)
+			else if (p_ent->m_pVehicle->m_pVehicleInfo->hoverHeight > 0)
 			{
 				pm_flying = FLY_HOVER;
 			}
@@ -486,22 +486,22 @@ void PM_SetSpecialMoveValues(void)
 
 static void PM_SetVehicleAngles(vec3_t normal)
 {
-	bgEntity_t* pEnt = pm_entSelf;
+	bgEntity_t* p_ent = pm_entSelf;
 	vec3_t	vAngles;
 	float pitchBias;
 
-	if (!pEnt || pEnt->s.NPC_class != CLASS_VEHICLE)
+	if (!p_ent || p_ent->s.NPC_class != CLASS_VEHICLE)
 	{
 		return;
 	}
 
-	const Vehicle_t* pVeh = pEnt->m_pVehicle;
+	const Vehicle_t* p_veh = p_ent->m_pVehicle;
 
 	//float	curVehicleBankingSpeed;
-	float vehicleBankingSpeed = (pVeh->m_pVehicleInfo->bankingSpeed * 32.0f) * pml.frametime;//0.25f
+	float vehicleBankingSpeed = (p_veh->m_pVehicleInfo->bankingSpeed * 32.0f) * pml.frametime;//0.25f
 
 	if (vehicleBankingSpeed <= 0
-		|| (pVeh->m_pVehicleInfo->pitchLimit == 0 && pVeh->m_pVehicleInfo->rollLimit == 0))
+		|| (p_veh->m_pVehicleInfo->pitchLimit == 0 && p_veh->m_pVehicleInfo->rollLimit == 0))
 	{//don't bother, this vehicle doesn't bank
 		return;
 	}
@@ -509,7 +509,7 @@ static void PM_SetVehicleAngles(vec3_t normal)
 	//pitch_roll_for_slope( pm->gent, normal, vAngles );
 	//FIXME: maybe have some pitch control in water and/or air?
 
-	if (pVeh->m_pVehicleInfo->type == VH_FIGHTER)
+	if (p_veh->m_pVehicleInfo->type == VH_FIGHTER)
 	{
 		pitchBias = 0.0f;
 	}
@@ -517,7 +517,7 @@ static void PM_SetVehicleAngles(vec3_t normal)
 	{
 		//FIXME: gravity does not matter in SPACE!!!
 		//center of gravity affects pitch in air/water (FIXME: what about roll?)
-		pitchBias = 90.0f * pVeh->m_pVehicleInfo->centerOfGravity[0];//if centerOfGravity is all the way back (-1.0f), vehicle pitches up 90 degrees when in air
+		pitchBias = 90.0f * p_veh->m_pVehicleInfo->centerOfGravity[0];//if centerOfGravity is all the way back (-1.0f), vehicle pitches up 90 degrees when in air
 	}
 
 	VectorClear(vAngles);
@@ -529,7 +529,7 @@ static void PM_SetVehicleAngles(vec3_t normal)
 	}
 	else if (normal)
 	{//have a valid surface below me
-		PM_pitch_roll_for_slope(pEnt, normal, vAngles);
+		PM_pitch_roll_for_slope(p_ent, normal, vAngles);
 		if ((pml.groundTrace.contents & (CONTENTS_WATER | CONTENTS_SLIME | CONTENTS_LAVA)))
 		{//on water
 			//view pitch has some influence when on a fluid surface
@@ -546,7 +546,7 @@ static void PM_SetVehicleAngles(vec3_t normal)
 	}
 	//NOTE: if angles are flat and we're moving through air (not on ground),
 	//		then pitch/bank?
-	if (pVeh->m_pVehicleInfo->rollLimit > 0)
+	if (p_veh->m_pVehicleInfo->rollLimit > 0)
 	{
 		//roll when banking
 		vec3_t	velocity;
@@ -565,7 +565,7 @@ static void PM_SetVehicleAngles(vec3_t normal)
 			if (speed > 60)
 				speed = 60;
 
-			VectorCopy(pVeh->m_vOrientation, tempVAngles);
+			VectorCopy(p_veh->m_vOrientation, tempVAngles);
 			tempVAngles[ROLL] = 0;
 			AngleVectors(tempVAngles, NULL, rt, NULL);
 			const float dp = DotProduct(velocity, rt);
@@ -575,25 +575,25 @@ static void PM_SetVehicleAngles(vec3_t normal)
 	}
 
 	//cap
-	if (pVeh->m_pVehicleInfo->pitchLimit != -1)
+	if (p_veh->m_pVehicleInfo->pitchLimit != -1)
 	{
-		if (vAngles[PITCH] > pVeh->m_pVehicleInfo->pitchLimit)
+		if (vAngles[PITCH] > p_veh->m_pVehicleInfo->pitchLimit)
 		{
-			vAngles[PITCH] = pVeh->m_pVehicleInfo->pitchLimit;
+			vAngles[PITCH] = p_veh->m_pVehicleInfo->pitchLimit;
 		}
-		else if (vAngles[PITCH] < -pVeh->m_pVehicleInfo->pitchLimit)
+		else if (vAngles[PITCH] < -p_veh->m_pVehicleInfo->pitchLimit)
 		{
-			vAngles[PITCH] = -pVeh->m_pVehicleInfo->pitchLimit;
+			vAngles[PITCH] = -p_veh->m_pVehicleInfo->pitchLimit;
 		}
 	}
 
-	if (vAngles[ROLL] > pVeh->m_pVehicleInfo->rollLimit)
+	if (vAngles[ROLL] > p_veh->m_pVehicleInfo->rollLimit)
 	{
-		vAngles[ROLL] = pVeh->m_pVehicleInfo->rollLimit;
+		vAngles[ROLL] = p_veh->m_pVehicleInfo->rollLimit;
 	}
-	else if (vAngles[ROLL] < -pVeh->m_pVehicleInfo->rollLimit)
+	else if (vAngles[ROLL] < -p_veh->m_pVehicleInfo->rollLimit)
 	{
-		vAngles[ROLL] = -pVeh->m_pVehicleInfo->rollLimit;
+		vAngles[ROLL] = -p_veh->m_pVehicleInfo->rollLimit;
 	}
 
 	//do it
@@ -607,43 +607,43 @@ static void PM_SetVehicleAngles(vec3_t normal)
 		/*
 		else if ( i == PITCH )
 		{
-			curVehicleBankingSpeed = vehicleBankingSpeed*fabs(AngleNormalize180(AngleSubtract( vAngles[PITCH], pVeh->m_vOrientation[PITCH] )))/(g_vehicleInfo[pm->ps->vehicleIndex].pitchLimit/2.0f);
+			curVehicleBankingSpeed = vehicleBankingSpeed*fabs(AngleNormalize180(AngleSubtract( vAngles[PITCH], p_veh->m_vOrientation[PITCH] )))/(g_vehicleInfo[pm->ps->vehicleIndex].pitchLimit/2.0f);
 		}
 		else if ( i == ROLL )
 		{
-			curVehicleBankingSpeed = vehicleBankingSpeed*fabs(AngleNormalize180(AngleSubtract( vAngles[ROLL], pVeh->m_vOrientation[ROLL] )))/(g_vehicleInfo[pm->ps->vehicleIndex].rollLimit/2.0f);
+			curVehicleBankingSpeed = vehicleBankingSpeed*fabs(AngleNormalize180(AngleSubtract( vAngles[ROLL], p_veh->m_vOrientation[ROLL] )))/(g_vehicleInfo[pm->ps->vehicleIndex].rollLimit/2.0f);
 		}
 
 		if ( curVehicleBankingSpeed )
 		*/
 		{
-			if (pVeh->m_vOrientation[i] >= vAngles[i] + vehicleBankingSpeed)
+			if (p_veh->m_vOrientation[i] >= vAngles[i] + vehicleBankingSpeed)
 			{
-				pVeh->m_vOrientation[i] -= vehicleBankingSpeed;
+				p_veh->m_vOrientation[i] -= vehicleBankingSpeed;
 			}
-			else if (pVeh->m_vOrientation[i] <= vAngles[i] - vehicleBankingSpeed)
+			else if (p_veh->m_vOrientation[i] <= vAngles[i] - vehicleBankingSpeed)
 			{
-				pVeh->m_vOrientation[i] += vehicleBankingSpeed;
+				p_veh->m_vOrientation[i] += vehicleBankingSpeed;
 			}
 			else
 			{
-				pVeh->m_vOrientation[i] = vAngles[i];
+				p_veh->m_vOrientation[i] = vAngles[i];
 			}
 		}
 	}
 }
 
-void BG_VehicleTurnRateForSpeed(Vehicle_t* pVeh, float speed, float* mPitchOverride, float* mYawOverride)
+void BG_VehicleTurnRateForSpeed(Vehicle_t* p_veh, float speed, float* mPitchOverride, float* mYawOverride)
 {
-	if (pVeh && pVeh->m_pVehicleInfo)
+	if (p_veh && p_veh->m_pVehicleInfo)
 	{
 		float speedFrac = 1.0f;
-		if (pVeh->m_pVehicleInfo->speedDependantTurning)
+		if (p_veh->m_pVehicleInfo->speedDependantTurning)
 		{
-			if (pVeh->m_LandTrace.fraction >= 1.0f
-				|| pVeh->m_LandTrace.plane.normal[2] < MIN_LANDING_SLOPE)
+			if (p_veh->m_LandTrace.fraction >= 1.0f
+				|| p_veh->m_LandTrace.plane.normal[2] < MIN_LANDING_SLOPE)
 			{
-				speedFrac = (speed / (pVeh->m_pVehicleInfo->speedMax * 0.75f));
+				speedFrac = (speed / (p_veh->m_pVehicleInfo->speedMax * 0.75f));
 				if (speedFrac < 0.25f)
 				{
 					speedFrac = 0.25f;
@@ -654,13 +654,13 @@ void BG_VehicleTurnRateForSpeed(Vehicle_t* pVeh, float speed, float* mPitchOverr
 				}
 			}
 		}
-		if (pVeh->m_pVehicleInfo->mousePitch)
+		if (p_veh->m_pVehicleInfo->mousePitch)
 		{
-			*mPitchOverride = pVeh->m_pVehicleInfo->mousePitch * speedFrac;
+			*mPitchOverride = p_veh->m_pVehicleInfo->mousePitch * speedFrac;
 		}
-		if (pVeh->m_pVehicleInfo->mouseYaw)
+		if (p_veh->m_pVehicleInfo->mouseYaw)
 		{
-			*mYawOverride = pVeh->m_pVehicleInfo->mouseYaw * speedFrac;
+			*mYawOverride = p_veh->m_pVehicleInfo->mouseYaw * speedFrac;
 		}
 	}
 }
@@ -678,14 +678,14 @@ void PM_HoverTrace(void)
 {
 	vec3_t		point, vAng, fxAxis[3];
 
-	bgEntity_t* pEnt = pm_entSelf;
-	if (!pEnt || pEnt->s.NPC_class != CLASS_VEHICLE)
+	bgEntity_t* p_ent = pm_entSelf;
+	if (!p_ent || p_ent->s.NPC_class != CLASS_VEHICLE)
 	{
 		return;
 	}
 
-	Vehicle_t* pVeh = pEnt->m_pVehicle;
-	const float hoverHeight = pVeh->m_pVehicleInfo->hoverHeight;
+	Vehicle_t* p_veh = p_ent->m_pVehicle;
+	const float hoverHeight = p_veh->m_pVehicleInfo->hoverHeight;
 	trace_t* trace = &pml.groundTrace;
 
 	pml.groundPlane = qfalse;
@@ -694,15 +694,15 @@ void PM_HoverTrace(void)
 	const float relativeWaterLevel = pm->waterlevel; //I.. guess this works
 	if (pm->waterlevel && relativeWaterLevel >= 0)
 	{//in water
-		if (pVeh->m_pVehicleInfo->bouyancy <= 0.0f)
+		if (p_veh->m_pVehicleInfo->bouyancy <= 0.0f)
 		{//sink like a rock
 		}
 		else
 		{//rise up
-			const float floatHeight = (pVeh->m_pVehicleInfo->bouyancy * ((pm->maxs[2] - pm->mins[2]) * 0.5f)) - (hoverHeight * 0.5f);//1.0f should make you float half-in, half-out of water
+			const float floatHeight = (p_veh->m_pVehicleInfo->bouyancy * ((pm->maxs[2] - pm->mins[2]) * 0.5f)) - (hoverHeight * 0.5f);//1.0f should make you float half-in, half-out of water
 			if (relativeWaterLevel > floatHeight)
 			{//too low, should rise up
-				pm->ps->velocity[2] += (relativeWaterLevel - floatHeight) * pVeh->m_fTimeModifier;
+				pm->ps->velocity[2] += (relativeWaterLevel - floatHeight) * p_veh->m_fTimeModifier;
 			}
 		}
 		//if ( pm->ps->waterheight < pm->ps->origin[2]+pm->maxs[2] )
@@ -715,7 +715,7 @@ void PM_HoverTrace(void)
 					vec3_t wakeOrg;
 
 					vAng[PITCH] = vAng[ROLL] = 0;
-					vAng[YAW] = pVeh->m_vOrientation[YAW];
+					vAng[YAW] = p_veh->m_vOrientation[YAW];
 					AngleVectors(vAng, fxAxis[2], fxAxis[1], fxAxis[0]);
 					VectorCopy(pm->ps->origin, wakeOrg);
 					//wakeOrg[2] = pm->ps->waterheight;
@@ -728,11 +728,11 @@ void PM_HoverTrace(void)
 						wakeOrg[2] = pm->ps->origin[2];
 					}
 #ifdef _GAME //yeah, this is kind of crappy and makes no use of prediction whatsoever
-					if (pVeh->m_pVehicleInfo->iWakeFX)
+					if (p_veh->m_pVehicleInfo->iWakeFX)
 					{
-						//G_PlayEffectID( pVeh->m_pVehicleInfo->iWakeFX, wakeOrg, fxAxis[0] );
+						//G_PlayEffectID( p_veh->m_pVehicleInfo->iWakeFX, wakeOrg, fxAxis[0] );
 						//tempent use bad!
-						G_AddEvent((gentity_t*)pEnt, EV_PLAY_EFFECT_ID, pVeh->m_pVehicleInfo->iWakeFX);
+						G_AddEvent((gentity_t*)p_ent, EV_PLAY_EFFECT_ID, p_veh->m_pVehicleInfo->iWakeFX);
 					}
 #endif
 				}
@@ -741,7 +741,7 @@ void PM_HoverTrace(void)
 	}
 	else
 	{
-		const float minNormal = pVeh->m_pVehicleInfo->maxSlope;
+		const float minNormal = p_veh->m_pVehicleInfo->maxSlope;
 
 		point[0] = pm->ps->origin[0];
 		point[1] = pm->ps->origin[1];
@@ -753,7 +753,7 @@ void PM_HoverTrace(void)
 		//NOTE: if bouyancy is 2.0f or higher, you float over water like it's solid ground.
 		//		if it's 1.0f, you sink halfway into water.  If it's 0, you sink...
 		int traceContents = pm->tracemask;
-		if (pVeh->m_pVehicleInfo->bouyancy >= 2.0f)
+		if (p_veh->m_pVehicleInfo->bouyancy >= 2.0f)
 		{//sit on water
 			traceContents |= (CONTENTS_WATER | CONTENTS_SLIME | CONTENTS_LAVA);
 		}
@@ -773,14 +773,14 @@ void PM_HoverTrace(void)
 		{//not a steep slope, so push us up
 			if (trace->fraction < 1.0f)
 			{//push up off ground
-				const float hoverForce = pVeh->m_pVehicleInfo->hoverStrength;
+				const float hoverForce = p_veh->m_pVehicleInfo->hoverStrength;
 				if (trace->fraction > 0.5f)
 				{
-					pm->ps->velocity[2] += (1.0f - trace->fraction) * hoverForce * pVeh->m_fTimeModifier;
+					pm->ps->velocity[2] += (1.0f - trace->fraction) * hoverForce * p_veh->m_fTimeModifier;
 				}
 				else
 				{
-					pm->ps->velocity[2] += (0.5f - (trace->fraction * trace->fraction)) * hoverForce * 2.0f * pVeh->m_fTimeModifier;
+					pm->ps->velocity[2] += (0.5f - (trace->fraction * trace->fraction)) * hoverForce * 2.0f * p_veh->m_fTimeModifier;
 				}
 				if ((trace->contents & (CONTENTS_WATER | CONTENTS_SLIME | CONTENTS_LAVA)))
 				{//hovering on water, make a spash if moving
@@ -789,12 +789,12 @@ void PM_HoverTrace(void)
 						if (Q_irand(pml.frametime, 100) >= 50)
 						{//splash
 							vAng[PITCH] = vAng[ROLL] = 0;
-							vAng[YAW] = pVeh->m_vOrientation[YAW];
+							vAng[YAW] = p_veh->m_vOrientation[YAW];
 							AngleVectors(vAng, fxAxis[2], fxAxis[1], fxAxis[0]);
 #ifdef _GAME
-							if (pVeh->m_pVehicleInfo->iWakeFX)
+							if (p_veh->m_pVehicleInfo->iWakeFX)
 							{
-								G_PlayEffectID(pVeh->m_pVehicleInfo->iWakeFX, trace->endpos, fxAxis[0]);
+								G_PlayEffectID(p_veh->m_pVehicleInfo->iWakeFX, trace->endpos, fxAxis[0]);
 							}
 #endif
 						}
@@ -808,44 +808,44 @@ void PM_HoverTrace(void)
 	{
 		PM_SetVehicleAngles(pml.groundTrace.plane.normal);
 		// We're on the ground.
-		pVeh->m_ulFlags &= ~VEH_FLYING;
+		p_veh->m_ulFlags &= ~VEH_FLYING;
 
-		pVeh->m_vAngularVelocity = 0.0f;
+		p_veh->m_vAngularVelocity = 0.0f;
 	}
 	else
 	{
 		PM_SetVehicleAngles(NULL);
 		// We're flying in the air.
-		pVeh->m_ulFlags |= VEH_FLYING;
+		p_veh->m_ulFlags |= VEH_FLYING;
 		//groundTrace
 
-		if (pVeh->m_vAngularVelocity == 0.0f)
+		if (p_veh->m_vAngularVelocity == 0.0f)
 		{
-			pVeh->m_vAngularVelocity = pVeh->m_vOrientation[YAW] - pVeh->m_vPrevOrientation[YAW];
-			if (pVeh->m_vAngularVelocity < -15.0f)
+			p_veh->m_vAngularVelocity = p_veh->m_vOrientation[YAW] - p_veh->m_vPrevOrientation[YAW];
+			if (p_veh->m_vAngularVelocity < -15.0f)
 			{
-				pVeh->m_vAngularVelocity = -15.0f;
+				p_veh->m_vAngularVelocity = -15.0f;
 			}
-			if (pVeh->m_vAngularVelocity > 15.0f)
+			if (p_veh->m_vAngularVelocity > 15.0f)
 			{
-				pVeh->m_vAngularVelocity = 15.0f;
-			}
-		}
-		//pVeh->m_vAngularVelocity *= 0.95f;		// Angular Velocity Decays Over Time
-		if (pVeh->m_vAngularVelocity > 0.0f)
-		{
-			pVeh->m_vAngularVelocity -= pml.frametime;
-			if (pVeh->m_vAngularVelocity < 0.0f)
-			{
-				pVeh->m_vAngularVelocity = 0.0f;
+				p_veh->m_vAngularVelocity = 15.0f;
 			}
 		}
-		else if (pVeh->m_vAngularVelocity < 0.0f)
+		//p_veh->m_vAngularVelocity *= 0.95f;		// Angular Velocity Decays Over Time
+		if (p_veh->m_vAngularVelocity > 0.0f)
 		{
-			pVeh->m_vAngularVelocity += pml.frametime;
-			if (pVeh->m_vAngularVelocity > 0.0f)
+			p_veh->m_vAngularVelocity -= pml.frametime;
+			if (p_veh->m_vAngularVelocity < 0.0f)
 			{
-				pVeh->m_vAngularVelocity = 0.0f;
+				p_veh->m_vAngularVelocity = 0.0f;
+			}
+		}
+		else if (p_veh->m_vAngularVelocity < 0.0f)
+		{
+			p_veh->m_vAngularVelocity += pml.frametime;
+			if (p_veh->m_vAngularVelocity > 0.0f)
+			{
+				p_veh->m_vAngularVelocity = 0.0f;
 			}
 		}
 	}
@@ -941,7 +941,7 @@ Handles both ground friction and water friction
 static void PM_Friction(void) {
 	vec3_t	vec;
 	float control;
-	const bgEntity_t* pEnt = NULL;
+	const bgEntity_t* p_ent = NULL;
 
 	float* vel = pm->ps->velocity;
 
@@ -966,19 +966,19 @@ static void PM_Friction(void) {
 
 	if (pm->ps->client_num >= MAX_CLIENTS)
 	{
-		pEnt = pm_entSelf;
+		p_ent = pm_entSelf;
 	}
 
 	// apply ground friction, even if on ladder
 	if (pm_flying != FLY_VEHICLE &&
-		pEnt &&
-		pEnt->s.NPC_class == CLASS_VEHICLE &&
-		pEnt->m_pVehicle &&
-		pEnt->m_pVehicle->m_pVehicleInfo->type != VH_ANIMAL &&
-		pEnt->m_pVehicle->m_pVehicleInfo->type != VH_WALKER &&
-		pEnt->m_pVehicle->m_pVehicleInfo->friction)
+		p_ent &&
+		p_ent->s.NPC_class == CLASS_VEHICLE &&
+		p_ent->m_pVehicle &&
+		p_ent->m_pVehicle->m_pVehicleInfo->type != VH_ANIMAL &&
+		p_ent->m_pVehicle->m_pVehicleInfo->type != VH_WALKER &&
+		p_ent->m_pVehicle->m_pVehicleInfo->friction)
 	{
-		const float friction = pEnt->m_pVehicle->m_pVehicleInfo->friction;
+		const float friction = p_ent->m_pVehicle->m_pVehicleInfo->friction;
 		if (!(pm->ps->pm_flags & PMF_TIME_KNOCKBACK) /*&& !(pm->ps->pm_flags & PMF_TIME_NOFRICTION)*/)
 		{
 			control = speed < pm_stopspeed ? pm_stopspeed : speed;
@@ -1726,10 +1726,10 @@ static qboolean PM_CheckJump(void)
 
 	if (pm->ps->client_num >= MAX_CLIENTS)
 	{
-		bgEntity_t* pEnt = pm_entSelf;
+		bgEntity_t* p_ent = pm_entSelf;
 
-		if (pEnt->s.eType == ET_NPC &&
-			pEnt->s.NPC_class == CLASS_VEHICLE)
+		if (p_ent->s.eType == ET_NPC &&
+			p_ent->s.NPC_class == CLASS_VEHICLE)
 		{ //no!
 			return qfalse;
 		}
@@ -2984,15 +2984,15 @@ static void PM_AirMove(void) {
 	vec3_t		wishdir;
 	float		wishspeed;
 	usercmd_t	cmd;
-	Vehicle_t* pVeh = NULL;
+	Vehicle_t* p_veh = NULL;
 
 	if (pm->ps->client_num >= MAX_CLIENTS)
 	{
-		const bgEntity_t* pEnt = pm_entSelf;
+		const bgEntity_t* p_ent = pm_entSelf;
 
-		if (pEnt && pEnt->s.NPC_class == CLASS_VEHICLE)
+		if (p_ent && p_ent->s.NPC_class == CLASS_VEHICLE)
 		{
-			pVeh = pEnt->m_pVehicle;
+			p_veh = p_ent->m_pVehicle;
 		}
 	}
 
@@ -3025,7 +3025,7 @@ static void PM_AirMove(void) {
 	VectorNormalize(pml.forward);
 	VectorNormalize(pml.right);
 
-	if (pVeh && pVeh->m_pVehicleInfo->hoverHeight > 0)
+	if (p_veh && p_veh->m_pVehicleInfo->hoverHeight > 0)
 	{//in a hovering vehicle, have air control
 		if (1)
 		{
@@ -3046,7 +3046,7 @@ static void PM_AirMove(void) {
 			vec3_t	vfwd, vrt;
 			vec3_t	vAngles;
 
-			VectorCopy(pVeh->m_vOrientation, vAngles);
+			VectorCopy(p_veh->m_vOrientation, vAngles);
 			vAngles[ROLL] = 0;//since we're a hovercraft, we really don't want to stafe up into the air if we're banking
 			AngleVectors(vAngles, vfwd, vrt, NULL);
 
@@ -3079,12 +3079,12 @@ static void PM_AirMove(void) {
 			{//do normal adding to wishvel
 				VectorScale(vfwd, speed * controlMod * (fmove / 127.0f), wishvel);
 				//just add strafing
-				if (pVeh->m_pVehicleInfo->strafePerc)
+				if (p_veh->m_pVehicleInfo->strafePerc)
 				{//we can strafe
 					if (smove)
 					{//trying to strafe
-						float minSpeed = pVeh->m_pVehicleInfo->speedMax * 0.5f * pVeh->m_pVehicleInfo->strafePerc;
-						strafeSpeed = fabs(DotProduct(pm->ps->velocity, vfwd)) * pVeh->m_pVehicleInfo->strafePerc;
+						float minSpeed = p_veh->m_pVehicleInfo->speedMax * 0.5f * p_veh->m_pVehicleInfo->strafePerc;
+						strafeSpeed = fabs(DotProduct(pm->ps->velocity, vfwd)) * p_veh->m_pVehicleInfo->strafePerc;
 						if (strafeSpeed < minSpeed)
 						{
 							strafeSpeed = minSpeed;
@@ -3096,13 +3096,13 @@ static void PM_AirMove(void) {
 							VectorScale(vrt, -1, vrt);
 						}
 						//now just add it to actual velocity
-						PM_Accelerate(vrt, strafeSpeed, pVeh->m_pVehicleInfo->traction);
+						PM_Accelerate(vrt, strafeSpeed, p_veh->m_pVehicleInfo->traction);
 					}
 				}
 			}
 			else
 			{
-				if (pVeh->m_pVehicleInfo->strafePerc)
+				if (p_veh->m_pVehicleInfo->strafePerc)
 				{//we can strafe
 					if (pm->ps->client_num)
 					{//alternate control scheme: can strafe
@@ -3123,10 +3123,10 @@ static void PM_AirMove(void) {
 					}
 				}
 				//strafing takes away from forward speed
-				VectorScale(vfwd, (fmove / 127.0f) * (1.0f - pVeh->m_pVehicleInfo->strafePerc), wishvel);
+				VectorScale(vfwd, (fmove / 127.0f) * (1.0f - p_veh->m_pVehicleInfo->strafePerc), wishvel);
 				if (strafeSpeed)
 				{
-					VectorMA(wishvel, strafeSpeed * pVeh->m_pVehicleInfo->strafePerc, vrt, wishvel);
+					VectorMA(wishvel, strafeSpeed * p_veh->m_pVehicleInfo->strafePerc, vrt, wishvel);
 				}
 				VectorNormalize(wishvel);
 				VectorScale(wishvel, speed * controlMod, wishvel);
@@ -3169,10 +3169,10 @@ static void PM_AirMove(void) {
 	wishspeed *= scale;
 
 	float accelerate = pm_airaccelerate;
-	if (pVeh && pVeh->m_pVehicleInfo->type == VH_SPEEDER)
+	if (p_veh && p_veh->m_pVehicleInfo->type == VH_SPEEDER)
 	{//speeders have more control in air
 		//in mid-air
-		accelerate = pVeh->m_pVehicleInfo->traction;
+		accelerate = p_veh->m_pVehicleInfo->traction;
 		if (pml.groundPlane)
 		{//on a slope of some kind, shouldn't have much control and should slide a lot
 			accelerate *= 0.5f;
@@ -3267,9 +3267,9 @@ static void PM_WalkMove(void) {
 	//-------------------------------
 	if (pm->ps->client_num >= MAX_CLIENTS && !VectorCompare(pm->ps->moveDir, vec3_origin))
 	{//NPC
-		const bgEntity_t* pEnt = pm_entSelf;
+		const bgEntity_t* p_ent = pm_entSelf;
 
-		if (pEnt && pEnt->s.NPC_class == CLASS_VEHICLE)
+		if (p_ent && p_ent->s.NPC_class == CLASS_VEHICLE)
 		{
 			// If The UCmds Were Set, But Never Converted Into A MoveDir, Then Make The WishDir From UCmds
 			//--------------------------------------------------------------------------------------------
@@ -4034,11 +4034,11 @@ static void PM_GroundTrace(void) {
 
 	if (pm->ps->client_num >= MAX_CLIENTS)
 	{
-		const bgEntity_t* pEnt = pm_entSelf;
+		const bgEntity_t* p_ent = pm_entSelf;
 
-		if (pEnt && pEnt->s.NPC_class == CLASS_VEHICLE)
+		if (p_ent && p_ent->s.NPC_class == CLASS_VEHICLE)
 		{
-			minNormal = pEnt->m_pVehicle->m_pVehicleInfo->maxSlope;
+			minNormal = p_ent->m_pVehicle->m_pVehicleInfo->maxSlope;
 		}
 	}
 
@@ -6348,10 +6348,10 @@ void PM_VehicleWeaponAnimate(void)
 		return;
 	}
 
-	const Vehicle_t* pVeh = veh->m_pVehicle;
+	const Vehicle_t* p_veh = veh->m_pVehicle;
 
-	if (pVeh->m_pVehicleInfo->type == VH_WALKER ||
-		pVeh->m_pVehicleInfo->type == VH_FIGHTER)
+	if (p_veh->m_pVehicleInfo->type == VH_WALKER ||
+		p_veh->m_pVehicleInfo->type == VH_FIGHTER)
 	{ //slightly hacky I guess, but whatever.
 		return;
 	}
@@ -6445,12 +6445,12 @@ backAgain:
 		}
 	}
 	else if (veh->playerState && veh->playerState->speed < 0 &&
-		pVeh->m_pVehicleInfo->type == VH_ANIMAL)
+		p_veh->m_pVehicleInfo->type == VH_ANIMAL)
 	{ //tauntaun is going backwards
 		Anim = BOTH_VT_WALK_REV;
 	}
 	else if (veh->playerState && veh->playerState->speed < 0 &&
-		pVeh->m_pVehicleInfo->type == VH_SPEEDER)
+		p_veh->m_pVehicleInfo->type == VH_SPEEDER)
 	{ //speeder is going backwards
 		Anim = BOTH_VS_REV;
 	}
@@ -6467,7 +6467,7 @@ backAgain:
 				Anim = BOTH_VS_IDLE;
 			}
 			// In the Air.
-			//else if ( pVeh->m_ulFlags & VEH_FLYING )
+			//else if ( p_veh->m_ulFlags & VEH_FLYING )
 			else
 			{
 				Anim = BOTH_VS_IDLE_SR;
@@ -6476,7 +6476,7 @@ backAgain:
 
 		case WP_BLASTER:
 			// In the Air.
-			//if ( pVeh->m_ulFlags & VEH_FLYING )
+			//if ( p_veh->m_ulFlags & VEH_FLYING )
 		{
 			Anim = BOTH_VS_IDLE_G;
 		}
@@ -6490,14 +6490,14 @@ backAgain:
 
 	if (Anim != -1)
 	{ //override it
-		if (pVeh->m_pVehicleInfo->type == VH_ANIMAL)
+		if (p_veh->m_pVehicleInfo->type == VH_ANIMAL)
 		{ //agh.. remap anims for the tauntaun
 			switch (Anim)
 			{
 			case BOTH_VS_IDLE:
 				if (veh->playerState && veh->playerState->speed > 0)
 				{
-					if (veh->playerState->speed > pVeh->m_pVehicleInfo->speedMax)
+					if (veh->playerState->speed > p_veh->m_pVehicleInfo->speedMax)
 					{ //turbo
 						Anim = BOTH_VT_TURBO;
 					}
@@ -7697,14 +7697,14 @@ static void PM_DropTimers(void) {
 // sure we only get one copy in the linker, though.
 
 extern	vmCvar_t	bg_fighterAltControl;
-qboolean BG_UnrestrainedPitchRoll(playerState_t* ps, Vehicle_t* pVeh)
+qboolean BG_UnrestrainedPitchRoll(playerState_t* ps, Vehicle_t* p_veh)
 {
 	if (bg_fighterAltControl.integer
 		&& ps->client_num < MAX_CLIENTS //real client
 		&& ps->m_iVehicleNum//in a vehicle
-		&& pVeh //valid vehicle data pointer
-		&& pVeh->m_pVehicleInfo//valid vehicle info
-		&& pVeh->m_pVehicleInfo->type == VH_FIGHTER)//fighter
+		&& p_veh //valid vehicle data pointer
+		&& p_veh->m_pVehicleInfo//valid vehicle info
+		&& p_veh->m_pVehicleInfo->type == VH_FIGHTER)//fighter
 		//FIXME: specify per vehicle instead of assuming true for all fighters
 		//FIXME: map/server setting?
 	{//can roll and pitch without limitation!
@@ -7830,22 +7830,22 @@ void PM_UpdateViewAngles( playerState_t *ps, const usercmd_t *cmd ) {
 		}
 		if ( vehEnt )
 		{//there is a vehicle
-			Vehicle_t *pVeh = vehEnt->m_pVehicle;
-			if ( pVeh && pVeh->m_pVehicleInfo )
+			Vehicle_t *p_veh = vehEnt->m_pVehicle;
+			if ( p_veh && p_veh->m_pVehicleInfo )
 			{
 				// There is a vehicle...
-				if ( pVeh->m_pVehicleInfo->type != VH_ANIMAL )
+				if ( p_veh->m_pVehicleInfo->type != VH_ANIMAL )
 				{//animals just turn normally, no clamping
-					if ( pVeh->m_pVehicleInfo->type == VH_FIGHTER )
+					if ( p_veh->m_pVehicleInfo->type == VH_FIGHTER )
 					{
-						rootPitch = pVeh->m_vOrientation[PITCH];//gent->owner->client->ps.vehicleAngles[PITCH];//???  what if goes over 90 when add the min/max?
-						if ( pVeh->m_pVehicleInfo->pitchLimit == -1 )
+						rootPitch = p_veh->m_vOrientation[PITCH];//gent->owner->client->ps.vehicleAngles[PITCH];//???  what if goes over 90 when add the min/max?
+						if ( p_veh->m_pVehicleInfo->pitchLimit == -1 )
 						{
 							pitchMax = 180;
 						}
 						else
 						{
-							pitchMax = pVeh->m_pVehicleInfo->pitchLimit;
+							pitchMax = p_veh->m_pVehicleInfo->pitchLimit;
 						}
 						pitchMin = -pitchMax;
 					}
@@ -7853,10 +7853,10 @@ void PM_UpdateViewAngles( playerState_t *ps, const usercmd_t *cmd ) {
 					{
 						lockedYawValue = 0;//gent->owner->client->ps.vehicleAngles[YAW];
 						lockedYaw = qtrue;
-						yawMax = pVeh->m_pVehicleInfo->lookYaw;
+						yawMax = p_veh->m_pVehicleInfo->lookYaw;
 						yawMin = -yawMax;
 						rootPitch = 0;//gent->owner->client->ps.vehicleAngles[PITCH];//???  what if goes over 90 when add the min/max?
-						pitchMax = pVeh->m_pVehicleInfo->lookPitch;
+						pitchMax = p_veh->m_pVehicleInfo->lookPitch;
 						pitchMin = -pitchMax;
 					}
 				}
@@ -9526,7 +9526,7 @@ static QINLINE void PM_CmdForSaberMoves(usercmd_t* ucmd)
 //constrain him based on the angles of his vehicle and the caps
 void PM_VehicleViewAngles(playerState_t* ps, bgEntity_t* veh, usercmd_t* ucmd)
 {
-	const Vehicle_t* pVeh = veh->m_pVehicle;
+	const Vehicle_t* p_veh = veh->m_pVehicle;
 	qboolean setAngles = qfalse;
 	vec3_t clampMin;
 	vec3_t clampMax;
@@ -9542,8 +9542,8 @@ void PM_VehicleViewAngles(playerState_t* ps, bgEntity_t* veh, usercmd_t* ucmd)
 #endif //VEH_CONTROL_SCHEME_4
 		{//only if not if doing special free-roll/pitch control
 			setAngles = qtrue;
-			clampMin[PITCH] = -pVeh->m_pVehicleInfo->lookPitch;
-			clampMax[PITCH] = pVeh->m_pVehicleInfo->lookPitch;
+			clampMin[PITCH] = -p_veh->m_pVehicleInfo->lookPitch;
+			clampMax[PITCH] = p_veh->m_pVehicleInfo->lookPitch;
 			clampMin[YAW] = clampMax[YAW] = 0;
 			clampMin[ROLL] = clampMax[ROLL] = -1;
 		}
@@ -9597,25 +9597,25 @@ void PM_VehicleViewAngles(playerState_t* ps, bgEntity_t* veh, usercmd_t* ucmd)
 //constrain him based on the angles of his vehicle and the caps
 void PM_VehicleViewAngles(playerState_t *ps, bgEntity_t *veh, usercmd_t *ucmd)
 {
-	Vehicle_t *pVeh = veh->m_pVehicle;
+	Vehicle_t *p_veh = veh->m_pVehicle;
 
 	//now set the viewangles to the vehicle's directly
 	ps->viewangles[YAW] = veh->playerState->viewangles[YAW];
 
 	//constrain the viewangles pitch based on the vehicle properties
-	if ( !pVeh->m_pVehicleInfo->lookPitch )
+	if ( !p_veh->m_pVehicleInfo->lookPitch )
 	{//not allowed to look up & down!  ....???
 		ps->viewangles[PITCH] = veh->playerState->viewangles[PITCH];
 	}
 	else
 	{//clamp
-		if (ps->viewangles[PITCH] > pVeh->m_pVehicleInfo->lookPitch)
+		if (ps->viewangles[PITCH] > p_veh->m_pVehicleInfo->lookPitch)
 		{
-			ps->viewangles[PITCH] = pVeh->m_pVehicleInfo->lookPitch;
+			ps->viewangles[PITCH] = p_veh->m_pVehicleInfo->lookPitch;
 		}
-		else if (ps->viewangles[PITCH] < -pVeh->m_pVehicleInfo->lookPitch)
+		else if (ps->viewangles[PITCH] < -p_veh->m_pVehicleInfo->lookPitch)
 		{
-			ps->viewangles[PITCH] = -pVeh->m_pVehicleInfo->lookPitch;
+			ps->viewangles[PITCH] = -p_veh->m_pVehicleInfo->lookPitch;
 		}
 	}
 
@@ -9950,7 +9950,7 @@ PmoveSingle
 ================
 */
 extern int BG_EmplacedView(vec3_t base_angles, vec3_t angles, float* new_yaw, float constraint);
-extern qboolean BG_FighterUpdate(Vehicle_t* pVeh, const usercmd_t* pUcmd, vec3_t trMins, vec3_t trMaxs, float gravity,
+extern qboolean BG_FighterUpdate(Vehicle_t* p_veh, const usercmd_t* pUcmd, vec3_t trMins, vec3_t trMaxs, float gravity,
 	void (*traceFunc)(trace_t* results, const vec3_t start, const vec3_t lmins, const vec3_t lmaxs, const vec3_t end, int pass_entity_num, int content_mask)); //FighterNPC.c
 
 #define JETPACK_HOVER_HEIGHT	64
@@ -10755,10 +10755,10 @@ void PmoveSingle(pmove_t* pmove) {
 		pm->ps->groundEntityNum < ENTITYNUM_WORLD &&
 		pm->ps->groundEntityNum >= MAX_CLIENTS)
 	{ //I am a player client, not riding on a vehicle, and potentially standing on an NPC
-		bgEntity_t* pEnt = PM_BGEntForNum(pm->ps->groundEntityNum);
+		bgEntity_t* p_ent = PM_BGEntForNum(pm->ps->groundEntityNum);
 
-		if (pEnt && pEnt->s.eType == ET_NPC &&
-			pEnt->s.NPC_class != CLASS_VEHICLE) //don't bounce on vehicles
+		if (p_ent && p_ent->s.eType == ET_NPC &&
+			p_ent->s.NPC_class != CLASS_VEHICLE) //don't bounce on vehicles
 		{ //this is actually an NPC, let's try to bounce of its head to make sure we can't just stand around on top of it.
 			if (pm->ps->velocity[2] < 270)
 			{ //try forcing velocity up and also force him to jump
@@ -10769,15 +10769,15 @@ void PmoveSingle(pmove_t* pmove) {
 #ifdef _GAME
 		else if (!pm->ps->zoomMode &&
 			pm_entSelf //I exist
-			&& pEnt->m_pVehicle)//ent has a vehicle
+			&& p_ent->m_pVehicle)//ent has a vehicle
 		{
-			const gentity_t* gEnt = (gentity_t*)pEnt;
+			const gentity_t* gEnt = (gentity_t*)p_ent;
 			if (gEnt->client
 				&& !gEnt->client->ps.m_iVehicleNum //vehicle is empty
 				&& (gEnt->spawnflags & 2))//SUSPENDED
 			{//it's a vehicle, see if we should get in it
 				//if land on an empty, suspended vehicle, get in it
-				pEnt->m_pVehicle->m_pVehicleInfo->Board(pEnt->m_pVehicle, (bgEntity_t*)pm_entSelf);
+				p_ent->m_pVehicle->m_pVehicleInfo->Board(p_ent->m_pVehicle, (bgEntity_t*)pm_entSelf);
 			}
 		}
 #endif

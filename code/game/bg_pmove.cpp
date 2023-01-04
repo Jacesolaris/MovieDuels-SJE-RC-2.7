@@ -225,7 +225,7 @@ extern void DoImpact(gentity_t* self, gentity_t* other, qboolean damageSelf, con
 constexpr auto PHASER_RECHARGE_TIME = 100;
 extern saberMoveName_t transitionMove[Q_NUM_QUADS][Q_NUM_QUADS];
 
-extern Vehicle_t* G_IsRidingVehicle(const gentity_t* pEnt);
+extern Vehicle_t* G_IsRidingVehicle(const gentity_t* p_ent);
 
 Vehicle_t* PM_RidingVehicle()
 {
@@ -6211,9 +6211,9 @@ void PM_HoverTrace()
 	{
 		PM_SetVehicleAngles(pml.groundTrace.plane.normal);
 		// We're on the ground.
-		//		if (pVeh->m_ulFlags&VEH_FLYING && level.time<pVeh->m_iTurboTime)
+		//		if (p_veh->m_ulFlags&VEH_FLYING && level.time<p_veh->m_iTurboTime)
 		//		{
-		//			pVeh->m_iTurboTime = 0;	// stop turbo
+		//			p_veh->m_iTurboTime = 0;	// stop turbo
 		//		}
 		p_veh->m_ulFlags &= ~VEH_FLYING;
 		p_veh->m_vAngularVelocity = 0.0f;

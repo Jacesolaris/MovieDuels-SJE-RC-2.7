@@ -45,11 +45,11 @@ extern vmCvar_t r_ratiofix;
 //=========================================================
 // don't call this directly, it should only be called from SV_Map_f() or SV_MapTransition_f()
 //
-static bool SV_Map_(const ForceReload_e eForceReload)
+static bool SV_Map_(const ForceReload_e e_force_reload)
 {
 	char expanded[MAX_QPATH] = {0};
 
-	char* JKO_Maps[] =
+	char* jko_maps[] =
 	{
 		"kejim_post",
 		"kejim_base",
@@ -82,7 +82,7 @@ static bool SV_Map_(const ForceReload_e eForceReload)
 		"pit"
 	};
 
-	char* JKA_Maps[] =
+	char* jka_maps[] =
 	{
 		"academy1",
 		"academy2",
@@ -136,7 +136,7 @@ static bool SV_Map_(const ForceReload_e eForceReload)
 		return false;
 	}
 
-	Com_sprintf(expanded, sizeof(expanded), "maps/%s.bsp", map);
+	Com_sprintf(expanded, sizeof expanded, "maps/%s.bsp", map);
 
 	if (FS_ReadFile(expanded, nullptr) == -1)
 	{
@@ -150,47 +150,47 @@ static bool SV_Map_(const ForceReload_e eForceReload)
 		return false;
 	}
 
-	if (!(com_outcast->integer == 0))
+	if (com_outcast->integer != 0)
 	{
-		for (auto& JKA_Map : JKA_Maps)
+		for (auto& jka_map : jka_maps)
 		{
-			if (strcmp(map, JKA_Map) == 0)
+			if (strcmp(map, jka_map) == 0)
 			{
 				Cvar_Set("com_outcast", "0");
 			}
 		}
 	}
 
-	if (!(com_outcast->integer == 1))
+	if (com_outcast->integer != 1)
 	{
-		for (auto& JKO_Map : JKO_Maps)
+		for (auto& jko_map : jko_maps)
 		{
-			if (strcmp(map, JKO_Map) == 0)
+			if (strcmp(map, jko_map) == 0)
 			{
 				Cvar_Set("com_outcast", "1");
 			}
 		}
 	}
 
-	bool notJKMap = true;
+	bool not_jk_map = true;
 
-	for (auto& JKO_Map : JKO_Maps)
+	for (auto& jko_map : jko_maps)
 	{
-		if (strcmp(map, JKO_Map) == 0)
+		if (strcmp(map, jko_map) == 0)
 		{
-			notJKMap = false;
+			not_jk_map = false;
 		}
 	}
 
-	for (auto& JKA_Map : JKA_Maps)
+	for (auto& jka_map : jka_maps)
 	{
-		if (strcmp(map, JKA_Map) == 0)
+		if (strcmp(map, jka_map) == 0)
 		{
-			notJKMap = false;
+			not_jk_map = false;
 		}
 	}
 
-	if (notJKMap) //then it must be a MD or MP Map so just to be sure go to "0".
+	if (not_jk_map) //then it must be a MD or MP Map so just to be sure go to "0".
 	{
 		Cvar_Set("com_outcast", "0");
 	}
@@ -205,14 +205,14 @@ static bool SV_Map_(const ForceReload_e eForceReload)
 		SG_WipeSavegame("auto");
 	}
 
-	SV_SpawnServer(map, eForceReload, qtrue); // start up the map
+	SV_SpawnServer(map, e_force_reload, qtrue); // start up the map
 	return true;
 }
 
 // Save out some player data for later restore if this is a spawn point with KEEP_PREV (spawnflags&1) set...
 //
 // (now also called by auto-save code to setup the cvars correctly
-void SV_Player_EndOfLevelSave(void)
+void SV_Player_EndOfLevelSave()
 {
 	// I could just call GetClientState() but that's in sv_bot.cpp, and I'm not sure if that's going to be deleted for
 	//	the single player build, so here's the guts again...
@@ -352,7 +352,7 @@ void SV_Player_EndOfLevelSave(void)
 
 // Restart the server on a different map
 //
-static void SV_MapTransition_f(void)
+static void SV_MapTransition_f()
 {
 	const char* spawntarget;
 
@@ -396,15 +396,15 @@ static void SV_Map_f(void)
 	SCR_UnprecacheScreenshot();
 #endif
 
-	ForceReload_e eForceReload = eForceReload_NOTHING; // default for normal load
+	ForceReload_e e_force_reload = eForceReload_NOTHING; // default for normal load
 
 	const char* cmd = Cmd_Argv(0);
 	if (!Q_stricmp(cmd, "devmapbsp"))
-		eForceReload = eForceReload_BSP;
+		e_force_reload = eForceReload_BSP;
 	else if (!Q_stricmp(cmd, "devmapmdl"))
-		eForceReload = eForceReload_MODELS;
+		e_force_reload = eForceReload_MODELS;
 	else if (!Q_stricmp(cmd, "devmapall"))
-		eForceReload = eForceReload_ALL;
+		e_force_reload = eForceReload_ALL;
 
 	auto cheat = static_cast<qboolean>(!Q_stricmpn(cmd, "devmap", 6));
 
@@ -412,7 +412,7 @@ static void SV_Map_f(void)
 	if (!cheat && Cvar_VariableIntegerValue("helpUsObi"))
 		cheat = qtrue;
 
-	if (SV_Map_(eForceReload))
+	if (SV_Map_(e_force_reload))
 	{
 		// set the cheat value
 		// if the level was started with "map <levelname>", then
@@ -478,7 +478,7 @@ char* ivtos(const vec3_t v)
 
 	// use an array so that multiple vtos won't collide
 	char* s = str[index];
-	index = (index + 1) & 7;
+	index = index + 1 & 7;
 
 	Com_sprintf(s, 32, "( %i %i %i )", static_cast<int>(v[0]), static_cast<int>(v[1]), static_cast<int>(v[2]));
 

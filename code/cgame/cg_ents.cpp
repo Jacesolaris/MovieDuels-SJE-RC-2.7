@@ -32,7 +32,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #include "../game/wp_saber.h"
 #include "../game/g_vehicles.h"
 
-extern void CG_AddSaberBlade(centity_t* cent, centity_t* scent, int renderfx, int modelIndex,
+extern void CG_AddSaberBlade(centity_t* cent, centity_t* scent, int renderfx, int model_index,
                              vec3_t origin, vec3_t angles);
 extern void CG_CheckSaberInWater(const centity_t* cent, const centity_t* scent, int saber_num, int model_index,
                                  vec3_t origin,
@@ -2421,9 +2421,20 @@ void CG_Limb(const centity_t* cent)
 
 						if (new_bolt != -1)
 						{
-							cent->gent->delay = cg.time + 50;
+							cent->gent->delay = cg.time + 1500;
 							CG_PlayEffectBolted("saber/limb_bolton", owner->playerModel, new_bolt, owner->s.number,owner->s.origin);
 						}
+					}
+					else
+					{
+						//Only the humanoids bleed
+						const int new_bolt = gi.G2API_AddBolt(&owner->ghoul2[owner->playerModel], cent->gent->target);
+						if (new_bolt != -1)
+						{
+							cent->gent->delay = cg.time + 2500;
+							CG_PlayEffectBolted("env/small_fire", owner->playerModel, new_bolt, owner->s.number, owner->s.origin); //ent origin used to make FX culling work
+						}
+
 					}
 				}
 			}
@@ -2466,7 +2477,7 @@ void CG_Limb(const centity_t* cent)
 	}
 }
 
-extern Vehicle_t* G_IsRidingVehicle(const gentity_t* pEnt);
+extern Vehicle_t* G_IsRidingVehicle(const gentity_t* p_ent);
 qboolean MatrixMode = qfalse;
 extern cvar_t* g_skippingcin;
 
@@ -2505,8 +2516,8 @@ void CG_MatrixEffect(const centity_t* cent)
 		}
 		else if (g_entities[cent->currentState.otherEntityNum].client->NPC_class == CLASS_VEHICLE)
 		{
-			const Vehicle_t* pVeh = g_entities[cent->currentState.otherEntityNum].m_pVehicle;
-			if (pVeh && !(pVeh->m_ulFlags & VEH_FLYING))
+			const Vehicle_t* p_veh = g_entities[cent->currentState.otherEntityNum].m_pVehicle;
+			if (p_veh && !(p_veh->m_ulFlags & VEH_FLYING))
 			{
 				stop_effect = true;
 			}
@@ -2694,8 +2705,8 @@ void CG_StasisEffect(const centity_t* cent)
 		}
 		else if (g_entities[cent->currentState.otherEntityNum].client->NPC_class == CLASS_VEHICLE)
 		{
-			const Vehicle_t* pVeh = g_entities[cent->currentState.otherEntityNum].m_pVehicle;
-			if (pVeh && !(pVeh->m_ulFlags & VEH_FLYING))
+			const Vehicle_t* p_veh = g_entities[cent->currentState.otherEntityNum].m_pVehicle;
+			if (p_veh && !(p_veh->m_ulFlags & VEH_FLYING))
 			{
 				stop_effect = true;
 			}

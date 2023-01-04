@@ -607,7 +607,7 @@ CG_OffsetThirdPersonView
 ===============
 */
 extern vmCvar_t cg_thirdPersonHorzOffset;
-extern qboolean BG_UnrestrainedPitchRoll(playerState_t* ps, Vehicle_t* pVeh);
+extern qboolean BG_UnrestrainedPitchRoll(playerState_t* ps, Vehicle_t* p_veh);
 static void CG_OffsetThirdPersonView(void)
 {
 	vec3_t diff;
@@ -1527,14 +1527,14 @@ static int CG_CalcViewValues(void) {
 #ifdef VEH_CONTROL_SCHEME_4
 		if (cg.predictedPlayerState.m_iVehicleNum)//in a vehicle
 		{
-			Vehicle_t* pVeh = cg_entities[cg.predictedPlayerState.m_iVehicleNum].m_pVehicle;
-			if (BG_UnrestrainedPitchRoll(&cg.predictedPlayerState, pVeh))//can roll/pitch without restriction
+			Vehicle_t* p_veh = cg_entities[cg.predictedPlayerState.m_iVehicleNum].m_pVehicle;
+			if (BG_UnrestrainedPitchRoll(&cg.predictedPlayerState, p_veh))//can roll/pitch without restriction
 			{//use the vehicle's viewangles to render view!
 				VectorCopy(cg.predictedVehicleState.viewangles, cg.refdef.viewangles);
 			}
-			else if (pVeh //valid vehicle data pointer
-				&& pVeh->m_pVehicleInfo//valid vehicle info
-				&& pVeh->m_pVehicleInfo->type == VH_FIGHTER)//fighter
+			else if (p_veh //valid vehicle data pointer
+				&& p_veh->m_pVehicleInfo//valid vehicle info
+				&& p_veh->m_pVehicleInfo->type == VH_FIGHTER)//fighter
 			{
 				VectorCopy(cg.predictedVehicleState.viewangles, cg.refdef.viewangles);
 				cg.refdef.viewangles[PITCH] = AngleNormalize180(cg.refdef.viewangles[PITCH]);
@@ -2337,7 +2337,7 @@ Generates and draws a game scene and status information at the given time.
 static qboolean cg_rangedFogging = qfalse; //so we know if we should go back to normal fog
 float cg_linearFogOverride = 0.0f; //designer-specified override for linear fogging style
 
-extern void BG_VehicleTurnRateForSpeed(Vehicle_t* pVeh, float speed, float* mPitchOverride, float* mYawOverride);
+extern void BG_VehicleTurnRateForSpeed(Vehicle_t* p_veh, float speed, float* mPitchOverride, float* mYawOverride);
 extern qboolean PM_InKnockDown(playerState_t* ps);
 
 extern qboolean cgQueueLoad;

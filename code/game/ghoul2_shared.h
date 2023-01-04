@@ -41,7 +41,7 @@ int G2API_GetTime(int argTime); // this may or may not return arg depending on g
 // we save the whole surfaceInfo_t struct
 struct surfaceInfo_t
 {
-	int offFlags; // what the flags are for this model
+	int off_flags; // what the flags are for this model
 	int surface;
 	// index into array held inside the model definition of pointers to the actual surface data loaded in - used by both client and game
 	float genBarycentricJ; // point 0 barycentric coors
@@ -50,7 +50,7 @@ struct surfaceInfo_t
 	int genLod; // used to determine original lod of original surface and poly hit location
 
 	surfaceInfo_t() :
-		offFlags(0),
+		off_flags(0),
 		surface(0),
 		genBarycentricJ(0),
 		genBarycentricI(0),
@@ -62,7 +62,7 @@ struct surfaceInfo_t
 	void sg_export(
 		ojk::SavedGameHelper& saved_game) const
 	{
-		saved_game.write<int32_t>(offFlags);
+		saved_game.write<int32_t>(off_flags);
 		saved_game.write<int32_t>(surface);
 		saved_game.write<float>(genBarycentricJ);
 		saved_game.write<float>(genBarycentricI);
@@ -73,7 +73,7 @@ struct surfaceInfo_t
 	void sg_import(
 		ojk::SavedGameHelper& saved_game)
 	{
-		saved_game.read<int32_t>(offFlags);
+		saved_game.read<int32_t>(off_flags);
 		saved_game.read<int32_t>(surface);
 		saved_game.read<float>(genBarycentricJ);
 		saved_game.read<float>(genBarycentricI);
@@ -413,13 +413,13 @@ struct boneInfo_t
 struct boltInfo_t
 {
 	int boneNumber; // bone number bolt attaches to
-	int surfaceNumber; // surface number bolt attaches to
+	int surface_number; // surface number bolt attaches to
 	int surfaceType;
 	// if we attach to a surface, this tells us if it is an original surface or a generated one - doesn't go across the network
 	int boltUsed; // nor does this
 	boltInfo_t() :
 		boneNumber(-1),
-		surfaceNumber(-1),
+		surface_number(-1),
 		surfaceType(0),
 		boltUsed(0)
 	{
@@ -429,7 +429,7 @@ struct boltInfo_t
 		ojk::SavedGameHelper& saved_game) const
 	{
 		saved_game.write<int32_t>(boneNumber);
-		saved_game.write<int32_t>(surfaceNumber);
+		saved_game.write<int32_t>(surface_number);
 		saved_game.write<int32_t>(surfaceType);
 		saved_game.write<int32_t>(boltUsed);
 	}
@@ -438,7 +438,7 @@ struct boltInfo_t
 		ojk::SavedGameHelper& saved_game)
 	{
 		saved_game.read<int32_t>(boneNumber);
-		saved_game.read<int32_t>(surfaceNumber);
+		saved_game.read<int32_t>(surface_number);
 		saved_game.read<int32_t>(surfaceType);
 		saved_game.read<int32_t>(boltUsed);
 	}

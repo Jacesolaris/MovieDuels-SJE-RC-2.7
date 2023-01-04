@@ -135,7 +135,7 @@ void R_RenderShadowEdges(void) {
 #ifdef _STENCIL_REVERSE
 	//Carmack Reverse<tm> method requires that volumes
 	//be capped properly -rww
-	numTris = tess.numIndexes / 3;
+	numTris = tess.num_indexes / 3;
 
 	for (i = 0; i < numTris; i++)
 	{
@@ -272,7 +272,7 @@ void RB_DoShadowTessEnd(vec3_t light_pos)
 	// decide which triangles face the light
 	memset(numEdgeDefs, 0, 4 * tess.numVertexes);
 
-	numTris = tess.numIndexes / 3;
+	numTris = tess.num_indexes / 3;
 	for (i = 0; i < numTris; i++) {
 		vec3_t	d1, d2, normal;
 		float	d;

@@ -38,8 +38,8 @@ void G_BounceObject(gentity_t* ent, const trace_t* trace)
 	vec3_t velocity;
 
 	// reflect the velocity on the trace plane
-	const int hitTime = level.previousTime + (level.time - level.previousTime) * trace->fraction;
-	EvaluateTrajectoryDelta(&ent->s.pos, hitTime, velocity);
+	const int hit_time = level.previousTime + (level.time - level.previousTime) * trace->fraction;
+	EvaluateTrajectoryDelta(&ent->s.pos, hit_time, velocity);
 	const float dot = DotProduct(velocity, trace->plane.normal);
 	float bounceFactor = 60 / ent->mass;
 	if (bounceFactor > 1.0f)
@@ -72,7 +72,7 @@ void G_BounceObject(gentity_t* ent, const trace_t* trace)
 	//	and set the trTime to the actual time of impact....
 	//	FIXME: Should we still consider adding the normal though??
 	VectorCopy(trace->endpos, ent->currentOrigin);
-	ent->s.pos.trTime = hitTime;
+	ent->s.pos.trTime = hit_time;
 
 	VectorCopy(ent->currentOrigin, ent->s.pos.trBase);
 	VectorCopy(trace->plane.normal, ent->pos1); //???
@@ -87,7 +87,7 @@ extern void DoImpact(gentity_t* self, gentity_t* other, qboolean damage_self, co
 
 void G_RunObject(gentity_t* ent)
 {
-	vec3_t origin, oldOrg;
+	vec3_t origin, old_org;
 	trace_t tr;
 
 	//FIXME: floaters need to stop floating up after a while, even if gravity stays negative?
@@ -104,7 +104,7 @@ void G_RunObject(gentity_t* ent)
 
 	ent->nextthink = level.time + FRAMETIME;
 
-	VectorCopy(ent->currentOrigin, oldOrg);
+	VectorCopy(ent->currentOrigin, old_org);
 	// get current position
 	EvaluateTrajectory(&ent->s.pos, level.time, origin);
 	//Get current angles?
@@ -130,7 +130,7 @@ void G_RunObject(gentity_t* ent)
 		tr.fraction = 0;
 	}
 
-	G_MoverTouchPushTriggers(ent, oldOrg);
+	G_MoverTouchPushTriggers(ent, old_org);
 
 	if (tr.fraction == 1)
 	{
@@ -169,16 +169,16 @@ void G_RunObject(gentity_t* ent)
 	gentity_t* trace_ent = &g_entities[tr.entityNum];
 	if (tr.fraction || trace_ent && trace_ent->takedamage)
 	{
-		if (!VectorCompare(ent->currentOrigin, oldOrg))
+		if (!VectorCompare(ent->currentOrigin, old_org))
 		{
 			//moved and impacted
 			if (trace_ent && trace_ent->takedamage)
 			{
 				//hurt someone
-				vec3_t fxDir;
-				VectorNormalize2(ent->s.pos.trDelta, fxDir);
-				VectorScale(fxDir, -1, fxDir);
-				G_PlayEffect(G_EffectIndex("melee/kick_impact"), tr.endpos, fxDir);
+				vec3_t fx_dir;
+				VectorNormalize2(ent->s.pos.trDelta, fx_dir);
+				VectorScale(fx_dir, -1, fx_dir);
+				G_PlayEffect(G_EffectIndex("melee/kick_impact"), tr.endpos, fx_dir);
 				//G_Sound( ent, G_SoundIndex( va( "sound/weapons/melee/punch%d", Q_irand( 1, 4 ) ) ) );
 			}
 			else
@@ -265,12 +265,12 @@ void G_StopObjectMoving(gentity_t* object)
 	VectorClear(object->s.pos.trDelta);
 }
 
-void G_StartObjectMoving(gentity_t* object, vec3_t dir, const float speed, const trType_t trType)
+void G_StartObjectMoving(gentity_t* object, vec3_t dir, const float speed, const trType_t tr_type)
 {
 	VectorNormalize(dir);
 
 	//object->s.eType = ET_GENERAL;
-	object->s.pos.trType = trType;
+	object->s.pos.trType = tr_type;
 	VectorCopy(object->currentOrigin, object->s.pos.trBase);
 	VectorScale(dir, speed, object->s.pos.trDelta);
 	object->s.pos.trTime = level.time;
@@ -287,9 +287,9 @@ void G_StartObjectMoving(gentity_t* object, vec3_t dir, const float speed, const
 	}
 }
 
-gentity_t* G_CreateObject(gentity_t* owner, vec3_t origin, vec3_t angles, const int modelIndex, const int frame,
-                          const trType_t trType,
-                          const int effectID = 0)
+gentity_t* G_CreateObject(gentity_t* owner, vec3_t origin, vec3_t angles, const int model_index, const int frame,
+                          const trType_t tr_type,
+                          const int effect_id = 0)
 {
 	gentity_t* object = G_Spawn();
 
@@ -303,7 +303,7 @@ gentity_t* G_CreateObject(gentity_t* owner, vec3_t origin, vec3_t angles, const 
 	object->e_ThinkFunc = thinkF_G_RunObject;
 	object->s.eType = ET_GENERAL;
 	object->s.eFlags |= EF_AUTO_SIZE; //CG_Ents will create the mins & max itself based on model bounds
-	object->s.modelindex = modelIndex;
+	object->s.modelindex = model_index;
 	//FIXME: allow to set a targetname/script_targetname and animation info?
 	object->s.frame = object->startFrame = object->endFrame = frame;
 	object->owner = owner;
@@ -316,7 +316,7 @@ gentity_t* G_CreateObject(gentity_t* owner, vec3_t origin, vec3_t angles, const 
 	//object->e_TouchFunc = touchF_charge_stick;
 
 	// The effect to play.
-	object->count = effectID;
+	object->count = effect_id;
 
 	//Give it SOME size for now
 	VectorSet(object->mins, -4, -4, -4);
@@ -324,7 +324,7 @@ gentity_t* G_CreateObject(gentity_t* owner, vec3_t origin, vec3_t angles, const 
 
 	//Origin
 	G_SetOrigin(object, origin);
-	object->s.pos.trType = trType;
+	object->s.pos.trType = tr_type;
 	VectorCopy(origin, object->s.pos.trBase);
 	//Velocity
 	VectorClear(object->s.pos.trDelta);

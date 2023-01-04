@@ -51,23 +51,23 @@ extern void G_FlyVehicleSurfaceDestruction(gentity_t* veh, trace_t* trace, int m
 extern qboolean G_CanBeEnemy(gentity_t* self, gentity_t* enemy); //w_saber.c
 #endif
 
-extern qboolean BG_UnrestrainedPitchRoll(playerState_t* ps, Vehicle_t* pVeh);
+extern qboolean BG_UnrestrainedPitchRoll(playerState_t* ps, Vehicle_t* p_veh);
 
 extern bgEntity_t* pm_entSelf;
 extern bgEntity_t* pm_entVeh;
 
 //vehicle impact stuff continued...
 #ifdef _GAME
-extern qboolean FighterIsLanded(Vehicle_t* pVeh, playerState_t* parentPS);
+extern qboolean FighterIsLanded(Vehicle_t* p_veh, playerState_t* parent_ps);
 #endif
 
 extern void PM_SetPMViewAngle(playerState_t* ps, vec3_t angle, usercmd_t* ucmd);
 
 #define MAX_IMPACT_TURN_ANGLE 45.0f
-void PM_VehicleImpact(bgEntity_t* pEnt, trace_t* trace)
+void PM_VehicleImpact(bgEntity_t* p_ent, trace_t* trace)
 {
 	// See if the vehicle has crashed into the ground.
-	Vehicle_t* pSelfVeh = pEnt->m_pVehicle;
+	Vehicle_t* pSelfVeh = p_ent->m_pVehicle;
 	float magnitude = VectorLength(pm->ps->velocity) * pSelfVeh->m_pVehicleInfo->mass / 50.0f;
 	qboolean forceSurfDestruction = qfalse;
 #ifdef _GAME
@@ -102,7 +102,7 @@ void PM_VehicleImpact(bgEntity_t* pEnt, trace_t* trace)
 				}
 			}
 			//FIXME: damage hit_ent, some, too?  Our explosion should hurt them some, but...
-			G_Damage((gentity_t*)pEnt, killer, killer, NULL, pm->ps->origin, 999999, DAMAGE_NO_ARMOR, MOD_FALLING);//FIXME: MOD_IMPACT
+			G_Damage((gentity_t*)p_ent, killer, killer, NULL, pm->ps->origin, 999999, DAMAGE_NO_ARMOR, MOD_FALLING);//FIXME: MOD_IMPACT
 			return;
 		}
 		if (!VectorCompare(trace->plane.normal, vec3_origin)
@@ -127,7 +127,7 @@ void PM_VehicleImpact(bgEntity_t* pEnt, trace_t* trace)
 						killer = potentialKiller;
 					}
 				}
-				G_Damage((gentity_t*)pEnt, killer, killer, NULL, pm->ps->origin, 999999, DAMAGE_NO_ARMOR, MOD_FALLING);//FIXME: MOD_IMPACT
+				G_Damage((gentity_t*)p_ent, killer, killer, NULL, pm->ps->origin, 999999, DAMAGE_NO_ARMOR, MOD_FALLING);//FIXME: MOD_IMPACT
 				return;
 			}
 		}
@@ -182,7 +182,7 @@ void PM_VehicleImpact(bgEntity_t* pEnt, trace_t* trace)
 		(pSelfVeh->m_pVehicleInfo->type == VH_SPEEDER || pSelfVeh->m_pVehicleInfo->type == VH_FIGHTER) && //this is kind of weird on tauntauns and atst's..
 		(magnitude >= 100 || forceSurfDestruction))
 	{
-		if (pEnt->m_pVehicle->m_iHitDebounce < pm->cmd.serverTime
+		if (p_ent->m_pVehicle->m_iHitDebounce < pm->cmd.serverTime
 			|| forceSurfDestruction)
 		{//a bit of a hack, may conflict with getting shot, but...
 			//FIXME: impact sound and effect should be gotten from g_vehicleInfo...?
@@ -450,9 +450,9 @@ void PM_VehicleImpact(bgEntity_t* pEnt, trace_t* trace)
 			{
 				//G_PlayEffectID( pSelfVeh->m_pVehicleInfo->iImpactFX, pm->ps->origin, vehUp );
 				//tempent use bad!
-				G_AddEvent((gentity_t*)pEnt, EV_PLAY_EFFECT_ID, pSelfVeh->m_pVehicleInfo->iImpactFX);
+				G_AddEvent((gentity_t*)p_ent, EV_PLAY_EFFECT_ID, pSelfVeh->m_pVehicleInfo->iImpactFX);
 			}
-			pEnt->m_pVehicle->m_iHitDebounce = pm->cmd.serverTime + 200;
+			p_ent->m_pVehicle->m_iHitDebounce = pm->cmd.serverTime + 200;
 			magnitude /= pSelfVeh->m_pVehicleInfo->toughness * 50.0f;
 
 			if (hit_ent && (hit_ent->s.eType != ET_TERRAIN || !(hit_ent->spawnflags & 1) || pSelfVeh->m_pVehicleInfo->type == VH_FIGHTER))
@@ -484,11 +484,11 @@ void PM_VehicleImpact(bgEntity_t* pEnt, trace_t* trace)
 				pSelfVeh->m_iLastImpactDmg = magnitude;
 				//FIXME: what about proper death credit to the guy who shot you down?
 				//FIXME: actually damage part of the ship that impacted?
-				G_Damage((gentity_t*)pEnt, NULL, NULL, NULL, pm->ps->origin, magnitude * 5, DAMAGE_NO_ARMOR, MOD_FALLING);//FIXME: MOD_IMPACT
+				G_Damage((gentity_t*)p_ent, NULL, NULL, NULL, pm->ps->origin, magnitude * 5, DAMAGE_NO_ARMOR, MOD_FALLING);//FIXME: MOD_IMPACT
 
 				if (pSelfVeh->m_pVehicleInfo->surfDestruction)
 				{
-					G_FlyVehicleSurfaceDestruction((gentity_t*)pEnt, trace, magnitude, forceSurfDestruction);
+					G_FlyVehicleSurfaceDestruction((gentity_t*)p_ent, trace, magnitude, forceSurfDestruction);
 				}
 
 				pSelfVeh->m_ulFlags |= VEH_CRASHING;
@@ -515,7 +515,7 @@ void PM_VehicleImpact(bgEntity_t* pEnt, trace_t* trace)
 
 					if (hit_ent->client &&
 						BG_KnockDownable(&hit_ent->client->ps) &&
-						G_CanBeEnemy((gentity_t*)pEnt, hit_ent))
+						G_CanBeEnemy((gentity_t*)p_ent, hit_ent))
 					{ //smash!
 						if (hit_ent->client->ps.forceHandExtend != HANDEXTEND_KNOCKDOWN)
 						{
@@ -524,7 +524,7 @@ void PM_VehicleImpact(bgEntity_t* pEnt, trace_t* trace)
 							hit_ent->client->ps.forceDodgeAnim = 0; //this toggles between 1 and 0, when it's 1 we should play the get up anim
 						}
 
-						hit_ent->client->ps.otherKiller = pEnt->s.number;
+						hit_ent->client->ps.otherKiller = p_ent->s.number;
 						hit_ent->client->ps.otherKillerTime = pm->cmd.serverTime + 5000;
 						hit_ent->client->ps.otherKillerDebounceTime = pm->cmd.serverTime + 100;
 
@@ -541,7 +541,7 @@ void PM_VehicleImpact(bgEntity_t* pEnt, trace_t* trace)
 				}
 				else
 				{
-					attackEnt = (gentity_t*)pEnt;
+					attackEnt = (gentity_t*)p_ent;
 				}
 
 				int finalD = magnitude * pmult;
@@ -555,10 +555,10 @@ void PM_VehicleImpact(bgEntity_t* pEnt, trace_t* trace)
 			//it doesn't look bad though. could just use predicted events, but I'm too lazy.
 			hit_ent = PM_BGEntForNum(trace->entityNum);
 
-			if (!hit_ent || hit_ent->s.owner != pEnt->s.number)
+			if (!hit_ent || hit_ent->s.owner != p_ent->s.number)
 			{ //don't hit your own missiles!
 				AngleVectors(pSelfVeh->m_vOrientation, NULL, NULL, vehUp);
-				pEnt->m_pVehicle->m_iHitDebounce = pm->cmd.serverTime + 200;
+				p_ent->m_pVehicle->m_iHitDebounce = pm->cmd.serverTime + 200;
 				trap->FX_PlayEffectID(pSelfVeh->m_pVehicleInfo->iImpactFX, pm->ps->origin, vehUp, -1, -1, qfalse);
 
 				pSelfVeh->m_ulFlags |= VEH_CRASHING;
@@ -720,12 +720,12 @@ qboolean	PM_SlideMove(qboolean gravity) {
 
 		if (pm->ps->client_num >= MAX_CLIENTS)
 		{
-			bgEntity_t* pEnt = pm_entSelf;
+			bgEntity_t* p_ent = pm_entSelf;
 
-			if (pEnt && pEnt->s.eType == ET_NPC && pEnt->s.NPC_class == CLASS_VEHICLE &&
-				pEnt->m_pVehicle)
+			if (p_ent && p_ent->s.eType == ET_NPC && p_ent->s.NPC_class == CLASS_VEHICLE &&
+				p_ent->m_pVehicle)
 			{ //do vehicle impact stuff then
-				PM_VehicleImpact(pEnt, &trace);
+				PM_VehicleImpact(p_ent, &trace);
 			}
 		}
 #ifdef _GAME
@@ -887,12 +887,12 @@ void PM_StepSlideMove(qboolean gravity) {
 		return;		// we got exactly where we wanted to go first try
 	}
 
-	const bgEntity_t* pEnt = pm_entSelf;
+	const bgEntity_t* p_ent = pm_entSelf;
 
 	if (pm->ps->client_num >= MAX_CLIENTS)
 	{
-		if (pEnt && pEnt->s.NPC_class == CLASS_VEHICLE &&
-			pEnt->m_pVehicle && pEnt->m_pVehicle->m_pVehicleInfo->hoverHeight > 0)
+		if (p_ent && p_ent->s.NPC_class == CLASS_VEHICLE &&
+			p_ent->m_pVehicle && p_ent->m_pVehicle->m_pVehicleInfo->hoverHeight > 0)
 		{
 			return;
 		}
@@ -917,14 +917,14 @@ void PM_StepSlideMove(qboolean gravity) {
 	if (pm->ps->client_num >= MAX_CLIENTS)
 	{
 		// apply ground friction, even if on ladder
-		if (pEnt &&
-			(pEnt->s.NPC_class == CLASS_ATST ||
-				(pEnt->s.NPC_class == CLASS_VEHICLE && pEnt->m_pVehicle && pEnt->m_pVehicle->m_pVehicleInfo->type == VH_WALKER)))
+		if (p_ent &&
+			(p_ent->s.NPC_class == CLASS_ATST ||
+				(p_ent->s.NPC_class == CLASS_VEHICLE && p_ent->m_pVehicle && p_ent->m_pVehicle->m_pVehicleInfo->type == VH_WALKER)))
 		{//AT-STs can step high
 			up[2] += 66.0f;
 			isGiant = qtrue;
 		}
-		else if (pEnt && pEnt->s.NPC_class == CLASS_RANCOR)
+		else if (p_ent && p_ent->s.NPC_class == CLASS_RANCOR)
 		{//also can step up high
 			up[2] += 64.0f;
 			isGiant = qtrue;
@@ -988,8 +988,8 @@ void PM_StepSlideMove(qboolean gravity) {
 		if (pm->ps->client_num >= MAX_CLIENTS//NPC
 			&& isGiant
 			&& trace.entityNum < MAX_CLIENTS
-			&& pEnt
-			&& pEnt->s.NPC_class == CLASS_RANCOR)
+			&& p_ent
+			&& p_ent->s.NPC_class == CLASS_RANCOR)
 		{//Rancor don't step on clients
 			if (pm->stepSlideFix)
 			{
@@ -1006,9 +1006,9 @@ void PM_StepSlideMove(qboolean gravity) {
 		else if ( pm->ps->client_num >= MAX_CLIENTS//NPC
 			&& isGiant
 			&& trace.entityNum < MAX_CLIENTS
-			&& pEnt
-			&& pEnt->s.NPC_class == CLASS_ATST
-			&& OnSameTeam( pEnt, trace_ent) )
+			&& p_ent
+			&& p_ent->s.NPC_class == CLASS_ATST
+			&& OnSameTeam( p_ent, trace_ent) )
 		{//NPC AT-ST's don't step up on allies
 			VectorCopy (start_o, pm->ps->origin);
 			VectorCopy (start_v, pm->ps->velocity);

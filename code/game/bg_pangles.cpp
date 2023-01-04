@@ -46,7 +46,7 @@ extern qboolean PM_DodgeHoldAnim(int anim);
 extern qboolean PM_InReboundHold(int anim);
 extern qboolean PM_InKnockDownNoGetup(const playerState_t* ps);
 extern qboolean PM_InGetUpNoRoll(const playerState_t* ps);
-extern Vehicle_t* G_IsRidingVehicle(const gentity_t* pEnt);
+extern Vehicle_t* G_IsRidingVehicle(const gentity_t* p_ent);
 extern void WP_ForcePowerDrain(const gentity_t* self, forcePowers_t force_power, int override_amt);
 extern qboolean G_ControlledByPlayer(const gentity_t* self);
 extern qboolean PlayerAffectedByStasis();
@@ -1631,7 +1631,7 @@ void PM_UpdateViewAngles(int saber_anim_level, playerState_t* ps, usercmd_t* cmd
 			locked_yaw_value = p_veh->m_vOrientation[YAW];
 			yaw_max = yaw_min = 0;
 			root_pitch = p_veh->m_vOrientation[PITCH]; //???  what if goes over 90 when add the min/max?
-			pitch_max = 0.0f; //pVeh->m_pVehicleInfo->pitchLimit;
+			pitch_max = 0.0f; //p_veh->m_pVehicleInfo->pitchLimit;
 			pitch_min = 0.0f; //-pitchMax;
 			locked_yaw = qtrue;
 		}

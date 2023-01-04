@@ -933,7 +933,7 @@ void G_InitCvars(void)
 
 	g_allowcallout = gi.cvar("g_allowattackorder", "1", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART);
 
-	g_remove_unused_weapons = gi.cvar("g_removedroppedweapons", "1", CVAR_ARCHIVE);
+	g_remove_unused_weapons = gi.cvar("g_removedroppedweapons", "0", CVAR_ARCHIVE);
 
 	g_allowslipping = gi.cvar("g_allowslipping", "1", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART);
 
@@ -1687,9 +1687,9 @@ static int G_RagAnimForPositioning(gentity_t* ent)
 	return BOTH_DEADFLOP1;
 }
 
-static inline qboolean G_RagWantsHumanoidsOnly(CGhoul2Info* ghlInfo)
+static inline qboolean G_RagWantsHumanoidsOnly(CGhoul2Info* ghl_info)
 {
-	const char* GLAName = gi.G2API_GetGLAName(ghlInfo);
+	const char* GLAName = gi.G2API_GetGLAName(ghl_info);
 	assert(GLAName);
 
 	if (!Q_stricmp("models/players/_humanoid/_humanoid", GLAName))

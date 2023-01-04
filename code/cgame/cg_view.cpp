@@ -37,7 +37,7 @@ constexpr auto CAMERA_SIZE = 4;
 
 float cg_zoomFov;
 extern qboolean CG_OnMovingPlat(const playerState_t* ps);
-extern Vehicle_t* G_IsRidingVehicle(const gentity_t* pEnt);
+extern Vehicle_t* G_IsRidingVehicle(const gentity_t* p_ent);
 
 extern int g_crosshairSameEntTime;
 extern int g_crosshairEntNum;

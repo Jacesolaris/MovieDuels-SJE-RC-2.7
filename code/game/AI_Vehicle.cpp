@@ -56,7 +56,7 @@ constexpr auto MIN_STAY_VIEWABLE_TIME = 20000;
 ////////////////////////////////////////////////////////////////////////////////////////
 // Externs
 ////////////////////////////////////////////////////////////////////////////////////////
-extern Vehicle_t* G_IsRidingVehicle(const gentity_t* pEnt);
+extern Vehicle_t* G_IsRidingVehicle(const gentity_t* p_ent);
 extern void G_SoundAtSpot(vec3_t org, int sound_index, qboolean broadcast);
 extern void CG_DrawEdge(vec3_t start, vec3_t end, int type);
 
@@ -119,35 +119,35 @@ void Pilot_Update()
 	{
 		TIMER_Set(player, "FlybySoundArchitectureDebounce", 300);
 
-		const Vehicle_t* pVeh = G_IsRidingVehicle(player);
+		const Vehicle_t* p_veh = G_IsRidingVehicle(player);
 
-		if (pVeh &&
-			(pVeh->m_pVehicleInfo->soundFlyBy
-				|| pVeh->m_pVehicleInfo->soundFlyBy2
-				|| pVeh->m_pVehicleInfo->soundFlyBy3
-				|| pVeh->m_pVehicleInfo->soundFlyBy4
-				|| pVeh->m_pVehicleInfo->soundFlyBy5
-				|| pVeh->m_pVehicleInfo->soundFlyBy6
-				|| pVeh->m_pVehicleInfo->soundFlyBy7
-				|| pVeh->m_pVehicleInfo->soundFlyBy8
-				|| pVeh->m_pVehicleInfo->soundFlyBy9
-				|| pVeh->m_pVehicleInfo->soundFlyBy10
-				|| pVeh->m_pVehicleInfo->soundFlyBy11
-				|| pVeh->m_pVehicleInfo->soundFlyBy12
-				|| pVeh->m_pVehicleInfo->soundFlyBy13
-				|| pVeh->m_pVehicleInfo->soundFlyBy14) &&
-			VectorLength(pVeh->m_pParentEntity->client->ps.velocity) > 500.0f)
+		if (p_veh &&
+			(p_veh->m_pVehicleInfo->soundFlyBy
+				|| p_veh->m_pVehicleInfo->soundFlyBy2
+				|| p_veh->m_pVehicleInfo->soundFlyBy3
+				|| p_veh->m_pVehicleInfo->soundFlyBy4
+				|| p_veh->m_pVehicleInfo->soundFlyBy5
+				|| p_veh->m_pVehicleInfo->soundFlyBy6
+				|| p_veh->m_pVehicleInfo->soundFlyBy7
+				|| p_veh->m_pVehicleInfo->soundFlyBy8
+				|| p_veh->m_pVehicleInfo->soundFlyBy9
+				|| p_veh->m_pVehicleInfo->soundFlyBy10
+				|| p_veh->m_pVehicleInfo->soundFlyBy11
+				|| p_veh->m_pVehicleInfo->soundFlyBy12
+				|| p_veh->m_pVehicleInfo->soundFlyBy13
+				|| p_veh->m_pVehicleInfo->soundFlyBy14) &&
+			VectorLength(p_veh->m_pParentEntity->client->ps.velocity) > 500.0f)
 		{
 			vec3_t projectedPosition;
 			vec3_t projectedDirection;
 			vec3_t projectedRight;
 			vec3_t anglesNoRoll;
 
-			VectorCopy(pVeh->m_pParentEntity->currentAngles, anglesNoRoll);
+			VectorCopy(p_veh->m_pParentEntity->currentAngles, anglesNoRoll);
 			anglesNoRoll[2] = 0;
 			AngleVectors(anglesNoRoll, projectedDirection, projectedRight, nullptr);
 
-			VectorMA(player->currentOrigin, 1.2f, pVeh->m_pParentEntity->client->ps.velocity, projectedPosition);
+			VectorMA(player->currentOrigin, 1.2f, p_veh->m_pParentEntity->client->ps.velocity, projectedPosition);
 			VectorMA(projectedPosition, Q_flrand(-200.0f, 200.0f), projectedRight, projectedPosition);
 
 			gi.trace(&mPilotViewTrace,
@@ -166,57 +166,57 @@ void Pilot_Update()
 			{
 				TIMER_Set(player, "FlybySoundArchitectureDebounce", Q_irand(1000, 2000));
 
-				int sound_fly_by = pVeh->m_pVehicleInfo->soundFlyBy;
+				int sound_fly_by = p_veh->m_pVehicleInfo->soundFlyBy;
 
-				if (pVeh->m_pVehicleInfo->soundFlyBy2 && (!sound_fly_by || !Q_irand(0, 1)))
+				if (p_veh->m_pVehicleInfo->soundFlyBy2 && (!sound_fly_by || !Q_irand(0, 1)))
 				{
 					sound_fly_by = Q_irand(1, 13);
 					switch (sound_fly_by)
 					{
 					case 1:
-						sound_fly_by = pVeh->m_pVehicleInfo->soundFlyBy2;
+						sound_fly_by = p_veh->m_pVehicleInfo->soundFlyBy2;
 						break;
 					case 2:
-						sound_fly_by = pVeh->m_pVehicleInfo->soundFlyBy3;
+						sound_fly_by = p_veh->m_pVehicleInfo->soundFlyBy3;
 						break;
 					case 3:
-						sound_fly_by = pVeh->m_pVehicleInfo->soundFlyBy4;
+						sound_fly_by = p_veh->m_pVehicleInfo->soundFlyBy4;
 						break;
 					case 4:
-						sound_fly_by = pVeh->m_pVehicleInfo->soundFlyBy5;
+						sound_fly_by = p_veh->m_pVehicleInfo->soundFlyBy5;
 						break;
 					case 5:
-						sound_fly_by = pVeh->m_pVehicleInfo->soundFlyBy6;
+						sound_fly_by = p_veh->m_pVehicleInfo->soundFlyBy6;
 						break;
 					case 6:
-						sound_fly_by = pVeh->m_pVehicleInfo->soundFlyBy7;
+						sound_fly_by = p_veh->m_pVehicleInfo->soundFlyBy7;
 						break;
 					case 7:
-						sound_fly_by = pVeh->m_pVehicleInfo->soundFlyBy8;
+						sound_fly_by = p_veh->m_pVehicleInfo->soundFlyBy8;
 						break;
 					case 8:
-						sound_fly_by = pVeh->m_pVehicleInfo->soundFlyBy9;
+						sound_fly_by = p_veh->m_pVehicleInfo->soundFlyBy9;
 						break;
 					case 9:
-						sound_fly_by = pVeh->m_pVehicleInfo->soundFlyBy10;
+						sound_fly_by = p_veh->m_pVehicleInfo->soundFlyBy10;
 						break;
 					case 10:
-						sound_fly_by = pVeh->m_pVehicleInfo->soundFlyBy11;
+						sound_fly_by = p_veh->m_pVehicleInfo->soundFlyBy11;
 						break;
 					case 11:
-						sound_fly_by = pVeh->m_pVehicleInfo->soundFlyBy12;
+						sound_fly_by = p_veh->m_pVehicleInfo->soundFlyBy12;
 						break;
 					case 12:
-						sound_fly_by = pVeh->m_pVehicleInfo->soundFlyBy13;
+						sound_fly_by = p_veh->m_pVehicleInfo->soundFlyBy13;
 						break;
 					case 13:
-						sound_fly_by = pVeh->m_pVehicleInfo->soundFlyBy14;
+						sound_fly_by = p_veh->m_pVehicleInfo->soundFlyBy14;
 						break;
 					default: ;
 					}
 					if (sound_fly_by)
 					{
-						G_SoundIndexOnEnt(pVeh->m_pParentEntity, CHAN_AUTO, sound_fly_by);
+						G_SoundIndexOnEnt(p_veh->m_pParentEntity, CHAN_AUTO, sound_fly_by);
 					}
 				}
 				G_SoundAtSpot(mPilotViewTrace.endpos, sound_fly_by, qtrue);
@@ -307,20 +307,20 @@ bool Pilot_MasterUpdate()
 
 			if (NPCInfo->greetEnt && NPCInfo->greetEnt->m_pVehicle && level.time < NPCInfo->confusionTime)
 			{
-				Vehicle_t* pVeh = NPCInfo->greetEnt->m_pVehicle;
-				if (!(pVeh->m_ulFlags & VEH_OUTOFCONTROL))
+				Vehicle_t* p_veh = NPCInfo->greetEnt->m_pVehicle;
+				if (!(p_veh->m_ulFlags & VEH_OUTOFCONTROL))
 				{
-					gentity_t* parent = pVeh->m_pParentEntity;
+					gentity_t* parent = p_veh->m_pParentEntity;
 					const float CurSpeed = VectorLength(parent->client->ps.velocity);
-					pVeh->m_pVehicleInfo->StartDeathDelay(pVeh, 10000);
-					pVeh->m_ulFlags |= VEH_OUTOFCONTROL;
+					p_veh->m_pVehicleInfo->StartDeathDelay(p_veh, 10000);
+					p_veh->m_ulFlags |= VEH_OUTOFCONTROL;
 					VectorScale(parent->client->ps.velocity, 1.25f, parent->pos3);
-					if (CurSpeed < pVeh->m_pVehicleInfo->speedMax)
+					if (CurSpeed < p_veh->m_pVehicleInfo->speedMax)
 					{
 						VectorNormalize(parent->pos3);
 						if (fabsf(parent->pos3[2]) < 0.25f)
 						{
-							VectorScale(parent->pos3, pVeh->m_pVehicleInfo->speedMax * 1.25f, parent->pos3);
+							VectorScale(parent->pos3, p_veh->m_pVehicleInfo->speedMax * 1.25f, parent->pos3);
 						}
 						else
 						{
@@ -467,7 +467,7 @@ void Pilot_Goto_Vehicle()
 	NPC_UpdateAngles(qtrue, qtrue);
 }
 
-extern bool VEH_StartStrafeRam(Vehicle_t* pVeh, bool Right);
+extern bool VEH_StartStrafeRam(Vehicle_t* p_veh, bool Right);
 
 ////////////////////////////////////////////////////////////////////////////////////////
 //

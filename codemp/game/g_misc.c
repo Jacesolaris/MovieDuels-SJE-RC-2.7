@@ -347,7 +347,7 @@ set size better?
 multiple damage models?
 custom explosion effect/sound?
 */
-void misc_model_breakable_gravity_init(gentity_t* ent, qboolean dropToFloor);
+void misc_model_breakable_gravity_init(gentity_t* ent, qboolean drop_to_floor);
 void misc_model_breakable_init(gentity_t* ent);
 
 void SP_misc_model_breakable(gentity_t* ent)
@@ -387,7 +387,7 @@ void SP_misc_model_breakable(gentity_t* ent)
 	}
 }
 
-void misc_model_breakable_gravity_init(gentity_t* ent, qboolean dropToFloor)
+void misc_model_breakable_gravity_init(gentity_t* ent, qboolean drop_to_floor)
 {
 	trace_t		tr;
 	vec3_t		top, bottom;
@@ -399,7 +399,7 @@ void misc_model_breakable_gravity_init(gentity_t* ent, qboolean dropToFloor)
 
 	//drop to floor
 
-	if (dropToFloor)
+	if (drop_to_floor)
 	{
 		VectorCopy(ent->r.currentOrigin, top);
 		top[2] += 1;

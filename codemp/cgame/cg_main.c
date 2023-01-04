@@ -113,17 +113,17 @@ static void C_GetLerpData(void) {
 	}
 	else if (cg_entities[data->mEntityNum].currentState.eType == ET_NPC) {
 		// an NPC
-		const Vehicle_t* pVeh = cg_entities[data->mEntityNum].m_pVehicle;
-		if (!pVeh) {
+		const Vehicle_t* p_veh = cg_entities[data->mEntityNum].m_pVehicle;
+		if (!p_veh) {
 			// for vehicles, we may or may not want to 0 out pitch and roll
 			data->mAngles[PITCH] = 0.0f;
 			data->mAngles[ROLL] = 0.0f;
 		}
-		else if (pVeh->m_pVehicleInfo->type == VH_SPEEDER) {
+		else if (p_veh->m_pVehicleInfo->type == VH_SPEEDER) {
 			// speeder wants no pitch but a roll
 			data->mAngles[PITCH] = 0.0f;
 		}
-		else if (pVeh->m_pVehicleInfo->type != VH_FIGHTER) {
+		else if (p_veh->m_pVehicleInfo->type != VH_FIGHTER) {
 			// fighters want all angles
 			data->mAngles[PITCH] = 0.0f;
 			data->mAngles[ROLL] = 0.0f;
@@ -299,14 +299,14 @@ void CG_MiscEnt(void) {
 		trap->Error(ERR_DROP, "^1MAX_STATIC_MODELS(%i) hit", MAX_STATIC_MODELS);
 	}
 
-	const int modelIndex = trap->R_RegisterModel(data->mModel);
-	if (modelIndex == 0) {
+	const int model_index = trap->R_RegisterModel(data->mModel);
+	if (model_index == 0) {
 		trap->Error(ERR_DROP, "client_model failed to load model '%s'", data->mModel);
 		return;
 	}
 
 	cg_staticmodel_t* staticmodel = &cgs.miscStaticModels[cgs.numMiscStaticModels++];
-	staticmodel->model = modelIndex;
+	staticmodel->model = model_index;
 	AnglesToAxis(data->mAngles, staticmodel->axes);
 	for (int i = 0; i < 3; i++) {
 		VectorScale(staticmodel->axes[i], data->mScale[i], staticmodel->axes[i]);

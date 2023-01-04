@@ -35,7 +35,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define	LS(x) x=LittleShort(x)
 #define	LF(x) x=LittleFloat(x)
 
-void RE_LoadWorldMap_Actual(const char* name, world_t& worldData, int index); //should only be called for sub-bsp instances
+void RE_LoadWorldMap_Actual(const char* name, world_t& world_data, int index); //should only be called for sub-bsp instances
 
 static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* name, qboolean& bAlreadyCached);
 
@@ -356,7 +356,7 @@ static qboolean gbAllowScreenDissolve = qtrue;
 // param "bAllowScreenDissolve" is just a convenient way of getting hold of a bool which can be checked by the code that
 //	issues the InitDissolve command later in RE_RegisterMedia_LevelLoadEnd()
 //
-void RE_RegisterMedia_LevelLoadBegin(const char* psMapName, ForceReload_e eForceReload, qboolean bAllowScreenDissolve)
+void RE_RegisterMedia_LevelLoadBegin(const char* psMapName, ForceReload_e e_force_reload, qboolean bAllowScreenDissolve)
 {
 	gbAllowScreenDissolve = bAllowScreenDissolve;
 
@@ -364,7 +364,7 @@ void RE_RegisterMedia_LevelLoadBegin(const char* psMapName, ForceReload_e eForce
 
 	// for development purposes we may want to ditch certain media just before loading a map...
 	//
-	switch (eForceReload)
+	switch (e_force_reload)
 	{
 	case eForceReload_BSP:
 
@@ -445,7 +445,7 @@ model_t* R_GetModelByHandle(qhandle_t index) {
 /*
 ** R_GetAnimModelByHandle
 */
-model_t* R_GetAnimModelByHandle(CGhoul2Info* ghlInfo, qhandle_t index)
+model_t* R_GetAnimModelByHandle(CGhoul2Info* ghl_info, qhandle_t index)
 {
 	// out of range gets the defualt model
 	if (index < 1 || index > tr.numModels) {
@@ -454,10 +454,10 @@ model_t* R_GetAnimModelByHandle(CGhoul2Info* ghlInfo, qhandle_t index)
 
 	model_t* mod;
 
-	if (ghlInfo->animModelIndexOffset)
+	if (ghl_info->animModelIndexOffset)
 	{
 		// Have to recalculate offset to get map animations for JKA Campaign
-		index -= ghlInfo->animModelIndexOffset;
+		index -= ghl_info->animModelIndexOffset;
 		int mapIndex = 0;
 		constexpr int len = std::size(tr.models);
 		for (int i = 0; i < len; i++)
@@ -477,7 +477,7 @@ model_t* R_GetAnimModelByHandle(CGhoul2Info* ghlInfo, qhandle_t index)
 		}
 		else
 		{
-			mod = tr.models[index + ghlInfo->animModelIndexOffset];
+			mod = tr.models[index + ghl_info->animModelIndexOffset];
 		}
 	}
 	else
@@ -893,15 +893,15 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* mod_n
 		LL(surf->numShaders);
 		LL(surf->numTriangles);
 		LL(surf->ofsTriangles);
-		LL(surf->numVerts);
+		LL(surf->num_verts);
 		LL(surf->ofsShaders);
 		LL(surf->ofsSt);
 		LL(surf->ofsXyzNormals);
 		LL(surf->ofsEnd);
 
-		if (surf->numVerts > SHADER_MAX_VERTEXES) {
+		if (surf->num_verts > SHADER_MAX_VERTEXES) {
 			Com_Error(ERR_DROP, "R_LoadMD3: %s has more than %i verts on a surface (%i)",
-				mod_name, SHADER_MAX_VERTEXES, surf->numVerts);
+				mod_name, SHADER_MAX_VERTEXES, surf->num_verts);
 		}
 		if (surf->numTriangles * 3 > SHADER_MAX_INDEXES) {
 			Com_Error(ERR_DROP, "R_LoadMD3: %s has more than %i triangles on a surface (%i)",
@@ -945,14 +945,14 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* mod_n
 
 		// swap all the ST
 		st = (md3St_t*)((byte*)surf + surf->ofsSt);
-		for (j = 0; j < surf->numVerts; j++, st++) {
+		for (j = 0; j < surf->num_verts; j++, st++) {
 			LF(st->st[0]);
 			LF(st->st[1]);
 		}
 
 		// swap all the XyzNormals
 		xyz = (md3XyzNormal_t*)((byte*)surf + surf->ofsXyzNormals);
-		for (j = 0; j < surf->numVerts * surf->numFrames; j++, xyz++)
+		for (j = 0; j < surf->num_verts * surf->numFrames; j++, xyz++)
 		{
 			LS(xyz->xyz[0]);
 			LS(xyz->xyz[1]);

@@ -638,7 +638,7 @@ const mdxaBone_t& EvalBoneCache(int index, CBoneCache* boneCache)
 class CRenderSurface
 {
 public:
-	int				surfaceNum;
+	int				surface_num;
 	surfaceInfo_v& rootSList;
 	const shader_t* cust_shader;
 	int				fogNum;
@@ -672,7 +672,7 @@ public:
 #else
 		boltInfo_v& initboltList):
 #endif
-	surfaceNum(initsurfaceNum),
+	surface_num(initsurfaceNum),
 		rootSList(initrootSList),
 		cust_shader(initcust_shader),
 		fogNum(initfogNum),
@@ -1168,7 +1168,7 @@ void G2_TimingModel(boneInfo_t& bone, int currentTime, int numFramesInFile, int&
 //off which will give us the desired settling position given the frame in the skeleton
 //that should be used -rww
 int G2_Add_Bone(const model_t* mod, boneInfo_v& blist, const char* boneName);
-int G2_Find_Bone(CGhoul2Info* ghlInfo, boneInfo_v& blist, const char* boneName);
+int G2_Find_Bone(CGhoul2Info* ghl_info, boneInfo_v& blist, const char* boneName);
 void G2_RagGetAnimMatrix(CGhoul2Info& ghoul2, const int boneNum, mdxaBone_t& matrix, const int frame)
 {
 	mdxaBone_t animMatrix;
@@ -1910,7 +1910,7 @@ void G2_ProcessSurfaceBolt2(CBoneCache& boneCache, const mdxmSurface_t* surface,
 	int k;
 
 	// now there are two types of tag surface - model ones and procedural generated types - lets decide which one we have here.
-	if (surfInfo && surfInfo->offFlags == G2SURFACEFLAG_GENERATED)
+	if (surfInfo && surfInfo->off_flags == G2SURFACEFLAG_GENERATED)
 	{
 		const int surfNumber = surfInfo->genPolySurfaceIndex & 0x0ffff;
 		const int	polyNumber = (surfInfo->genPolySurfaceIndex >> 16) & 0x0ffff;
@@ -2131,13 +2131,13 @@ void G2_GetBoltMatrixLow(CGhoul2Info& ghoul2, int boltNum, const vec3_t scale, m
 			.boneNumber]);
 		Multiply_3x4Matrix(&retMatrix, &boneCache.EvalUnsmooth(boltList[boltNum].boneNumber), &skel->BasePoseMat);
 	}
-	else if (boltList[boltNum].surfaceNumber >= 0)
+	else if (boltList[boltNum].surface_number >= 0)
 	{
 		const surfaceInfo_t* surfInfo = nullptr;
 		{
 			for (surfaceInfo_t& t : ghoul2.mSlist)
 			{
-				if (t.surface == boltList[boltNum].surfaceNumber)
+				if (t.surface == boltList[boltNum].surface_number)
 				{
 					surfInfo = &t;
 				}
@@ -2146,7 +2146,7 @@ void G2_GetBoltMatrixLow(CGhoul2Info& ghoul2, int boltNum, const vec3_t scale, m
 		const mdxmSurface_t* surface = nullptr;
 		if (!surfInfo)
 		{
-			surface = static_cast<mdxmSurface_t*>(G2_FindSurface(boneCache.mod, boltList[boltNum].surfaceNumber, 0));
+			surface = static_cast<mdxmSurface_t*>(G2_FindSurface(boneCache.mod, boltList[boltNum].surface_number, 0));
 		}
 		if (!surface && surfInfo && surfInfo->surface < 10000)
 		{
@@ -2161,30 +2161,30 @@ void G2_GetBoltMatrixLow(CGhoul2Info& ghoul2, int boltNum, const vec3_t scale, m
 	}
 }
 
-void G2API_SetSurfaceOnOffFromSkin(CGhoul2Info* ghlInfo, qhandle_t renderSkin)
+void G2API_SetSurfaceOnOffFromSkin(CGhoul2Info* ghl_info, qhandle_t renderSkin)
 {
 	const skin_t* skin = R_GetSkinByHandle(renderSkin);
 	//FIXME:  using skin handles means we have to increase the numsurfs in a skin, but reading directly would cause file hits, we need another way to cache or just deal with the larger skin_t
 
 	if (skin)
 	{
-		ghlInfo->mSlist.clear();	//remove any overrides we had before.
-		ghlInfo->mMeshFrameNum = 0;
+		ghl_info->mSlist.clear();	//remove any overrides we had before.
+		ghl_info->mMeshFrameNum = 0;
 		for (int j = 0; j < skin->numSurfaces; j++)
 		{
 			uint32_t flags;
-			const int surfaceNum = G2_IsSurfaceLegal(ghlInfo->currentModel, skin->surfaces[j]->name, &flags);
+			const int surface_num = G2_IsSurfaceLegal(ghl_info->currentModel, skin->surfaces[j]->name, &flags);
 			// the names have both been lowercased
 			if (!(flags & G2SURFACEFLAG_OFF) && strcmp(skin->surfaces[j]->shader->name, "*off") == 0)
 			{
-				G2_SetSurfaceOnOff(ghlInfo, skin->surfaces[j]->name, G2SURFACEFLAG_OFF);
+				G2_SetSurfaceOnOff(ghl_info, skin->surfaces[j]->name, G2SURFACEFLAG_OFF);
 			}
 			else
 			{
 				//if ( strcmp( &skin->surfaces[j]->name[strlen(skin->surfaces[j]->name)-4],"_off") )
-				if ((surfaceNum != -1) && (!(flags & G2SURFACEFLAG_OFF)))	//only turn on if it's not an "_off" surface
+				if ((surface_num != -1) && (!(flags & G2SURFACEFLAG_OFF)))	//only turn on if it's not an "_off" surface
 				{
-					//G2_SetSurfaceOnOff(ghlInfo, skin->surfaces[j]->name, 0);
+					//G2_SetSurfaceOnOff(ghl_info, skin->surfaces[j]->name, 0);
 				}
 			}
 		}
@@ -2197,24 +2197,24 @@ void RenderSurfaces(CRenderSurface& RS)
 	assert(RS.currentModel);
 	assert(RS.currentModel->mdxm);
 	// back track and get the surfinfo struct for this surface
-	mdxmSurface_t* surface = static_cast<mdxmSurface_t*>(G2_FindSurface(RS.currentModel, RS.surfaceNum, RS.lod));
-	mdxmHierarchyOffsets_t* surfIndexes = reinterpret_cast<mdxmHierarchyOffsets_t*>(reinterpret_cast<byte*>(RS.currentModel->mdxm) + sizeof(mdxmHeader_t));
-	const mdxmSurfHierarchy_t* surfInfo = reinterpret_cast<mdxmSurfHierarchy_t*>(reinterpret_cast<byte*>(surfIndexes) + surfIndexes->offsets[surface->thisSurfaceIndex]);
+	mdxmSurface_t* surface = static_cast<mdxmSurface_t*>(G2_FindSurface(RS.currentModel, RS.surface_num, RS.lod));
+	mdxmHierarchyOffsets_t* surf_indexes = reinterpret_cast<mdxmHierarchyOffsets_t*>(reinterpret_cast<byte*>(RS.currentModel->mdxm) + sizeof(mdxmHeader_t));
+	const mdxmSurfHierarchy_t* surfInfo = reinterpret_cast<mdxmSurfHierarchy_t*>(reinterpret_cast<byte*>(surf_indexes) + surf_indexes->offsets[surface->thisSurfaceIndex]);
 
 	// see if we have an override surface in the surface list
-	const surfaceInfo_t* surfOverride = G2_FindOverrideSurface(RS.surfaceNum, RS.rootSList);
+	const surfaceInfo_t* surfOverride = G2_FindOverrideSurface(RS.surface_num, RS.rootSList);
 
 	// really, we should use the default flags for this surface unless it's been overriden
-	int offFlags = surfInfo->flags;
+	int off_flags = surfInfo->flags;
 
 	// set the off flags if we have some
 	if (surfOverride)
 	{
-		offFlags = surfOverride->offFlags;
+		off_flags = surfOverride->off_flags;
 	}
 
 	// if this surface is not off, add it to the shader render list
-	if (!offFlags)
+	if (!off_flags)
 	{
 		const shader_t* shader;
 		if (RS.cust_shader)
@@ -2248,9 +2248,9 @@ void RenderSurfaces(CRenderSurface& RS)
 			&& shader->sort == SS_OPAQUE)
 		{		// set the surface info to point at the where the transformed bone list is going to be for when the surface gets rendered out
 			CRenderableSurface* newSurf = AllocRS();
-			if (surface->numVerts >= SHADER_MAX_VERTEXES / 2)
-			{ //we need numVerts*2 xyz slots free in tess to do shadow, if this surf is going to exceed that then let's try the lowest lod -rww
-				mdxmSurface_t* lowsurface = static_cast<mdxmSurface_t*>(G2_FindSurface(RS.currentModel, RS.surfaceNum, RS.currentModel->numLods - 1));
+			if (surface->num_verts >= SHADER_MAX_VERTEXES / 2)
+			{ //we need num_verts*2 xyz slots free in tess to do shadow, if this surf is going to exceed that then let's try the lowest lod -rww
+				mdxmSurface_t* lowsurface = static_cast<mdxmSurface_t*>(G2_FindSurface(RS.currentModel, RS.surface_num, RS.currentModel->numLods - 1));
 				newSurf->surfaceData = lowsurface;
 			}
 			else
@@ -2287,7 +2287,7 @@ void RenderSurfaces(CRenderSurface& RS)
 			{
 				const int curTime = G2API_GetTime(tr.refdef.time);
 				const std::pair<std::multimap<int, SGoreSurface>::iterator, std::multimap<int, SGoreSurface>::iterator> range =
-					RS.gore_set->mGoreRecords.equal_range(RS.surfaceNum);
+					RS.gore_set->mGoreRecords.equal_range(RS.surface_num);
 				CRenderableSurface* last = newSurf;
 				for (std::multimap<int, SGoreSurface>::iterator k = range.first; k != range.second;)
 				{
@@ -2368,7 +2368,7 @@ void RenderSurfaces(CRenderSurface& RS)
 	}
 
 	// if we are turning off all descendants, then stop this recursion now
-	if (offFlags & G2SURFACEFLAG_NODESCENDANTS)
+	if (off_flags & G2SURFACEFLAG_NODESCENDANTS)
 	{
 		return;
 	}
@@ -2376,7 +2376,7 @@ void RenderSurfaces(CRenderSurface& RS)
 	// now recursively call for the children
 	for (int i = 0; i < surfInfo->numChildren; i++)
 	{
-		RS.surfaceNum = surfInfo->childIndexes[i];
+		RS.surface_num = surfInfo->childIndexes[i];
 		RenderSurfaces(RS);
 	}
 }
@@ -2632,15 +2632,15 @@ void R_AddGhoulSurfaces(trRefEntity_t* ent)
 	HackadelicOnClient = false;
 }
 
-bool G2_NeedsRecalc(CGhoul2Info* ghlInfo, int frameNum)
+bool G2_NeedsRecalc(CGhoul2Info* ghl_info, int frameNum)
 {
-	G2_SetupModelPointers(ghlInfo);
+	G2_SetupModelPointers(ghl_info);
 	// not sure if I still need this test, probably
-	if (ghlInfo->mSkelFrameNum != frameNum ||
-		!ghlInfo->mBoneCache ||
-		ghlInfo->mBoneCache->mod != ghlInfo->currentModel)
+	if (ghl_info->mSkelFrameNum != frameNum ||
+		!ghl_info->mBoneCache ||
+		ghl_info->mBoneCache->mod != ghl_info->currentModel)
 	{
-		ghlInfo->mSkelFrameNum = frameNum;
+		ghl_info->mSkelFrameNum = frameNum;
 		return true;
 	}
 	return false;
@@ -2709,7 +2709,7 @@ void RB_SurfaceGhoul(CRenderableSurface* surf)
 
 	int				j, k;
 	int				baseIndex, baseVertex;
-	int				numVerts;
+	int				num_verts;
 	mdxmVertex_t* v;
 	int* triangles;
 	int				indexes;
@@ -2733,22 +2733,22 @@ void RB_SurfaceGhoul(CRenderableSurface* surf)
 		*/
 
 		int* data = reinterpret_cast<int*>(surf->alternateTex);
-		numVerts = *data++;
+		num_verts = *data++;
 		indexes = (*data++);
 		// first up, sanity check our numbers
-		RB_CheckOverflow(numVerts, indexes);
+		RB_CheckOverflow(num_verts, indexes);
 		indexes *= 3;
 
-		data += numVerts;
+		data += num_verts;
 
-		baseIndex = tess.numIndexes;
+		baseIndex = tess.num_indexes;
 		baseVertex = tess.numVertexes;
 
-		memcpy(&tess.xyz[baseVertex][0], data, sizeof(float) * 4 * numVerts);
-		data += 4 * numVerts;
-		memcpy(&tess.normal[baseVertex][0], data, sizeof(float) * 4 * numVerts);
-		data += 4 * numVerts;
-		assert(numVerts > 0);
+		memcpy(&tess.xyz[baseVertex][0], data, sizeof(float) * 4 * num_verts);
+		data += 4 * num_verts;
+		memcpy(&tess.normal[baseVertex][0], data, sizeof(float) * 4 * num_verts);
+		data += 4 * num_verts;
+		assert(num_verts > 0);
 
 		//float *texCoords = tess.texCoords[0][baseVertex];
 		float* texCoords = tess.texCoords[baseVertex][0];
@@ -2760,7 +2760,7 @@ void RB_SurfaceGhoul(CRenderableSurface* surf)
 		//Or can you += array[.][x]+2?
 		if (surf->scale > 1.0f)
 		{
-			for (j = 0; j < numVerts; j++)
+			for (j = 0; j < num_verts; j++)
 			{
 				texCoords[0] = ((*reinterpret_cast<float*>(data)) - 0.5f) * surf->scale + 0.5f;
 				data++;
@@ -2773,7 +2773,7 @@ void RB_SurfaceGhoul(CRenderableSurface* surf)
 		}
 		else
 		{
-			for (j = 0; j < numVerts; j++)
+			for (j = 0; j < num_verts; j++)
 			{
 				texCoords[0] = *reinterpret_cast<float*>(data++);
 				texCoords[1] = *reinterpret_cast<float*>(data++);
@@ -2794,7 +2794,7 @@ void RB_SurfaceGhoul(CRenderableSurface* surf)
 				tess.fading = true;
 				lFade = Q_ftol(254.4f * surf->fade);
 
-				for (i = 0; i < numVerts; i++)
+				for (i = 0; i < num_verts; i++)
 				{
 					tess.svars.colors[i + baseVertex][3] = lFade;
 				}
@@ -2804,7 +2804,7 @@ void RB_SurfaceGhoul(CRenderableSurface* surf)
 				tess.fading = true;
 				lFade = Q_ftol(254.4f * (surf->fade - 2.0f));
 
-				for (i = 0; i < numVerts; i++)
+				for (i = 0; i < num_verts; i++)
 				{
 					if (lFade < tess.svars.colors[i + baseVertex][0])
 					{ //don't set it unless the fade is less than the current r value (to avoid brightening suddenly before we start fading)
@@ -2823,8 +2823,8 @@ void RB_SurfaceGhoul(CRenderableSurface* surf)
 		{
 			*indexPtr++ = baseVertex + (*triangles++);
 		}
-		tess.numIndexes += indexes;
-		tess.numVertexes += numVerts;
+		tess.num_indexes += indexes;
+		tess.numVertexes += num_verts;
 		return;
 	}
 #endif
@@ -2835,7 +2835,7 @@ void RB_SurfaceGhoul(CRenderableSurface* surf)
 	CBoneCache* bones = surf->boneCache;
 
 	// first up, sanity check our numbers
-	RB_CheckOverflow(surface->numVerts, surface->numTriangles);
+	RB_CheckOverflow(surface->num_verts, surface->numTriangles);
 
 	//
 	// deform the vertexes by the lerped bones
@@ -2844,13 +2844,13 @@ void RB_SurfaceGhoul(CRenderableSurface* surf)
 	// first up, sanity check our numbers
 	baseVertex = tess.numVertexes;
 	triangles = reinterpret_cast<int*>(reinterpret_cast<byte*>(surface) + surface->ofsTriangles);
-	baseIndex = tess.numIndexes;
+	baseIndex = tess.num_indexes;
 #if 0
 	indexes = surface->numTriangles * 3;
 	for (j = 0; j < indexes; j++) {
 		tess.indexes[baseIndex + j] = baseVertex + triangles[j];
 	}
-	tess.numIndexes += indexes;
+	tess.num_indexes += indexes;
 #else
 	indexes = surface->numTriangles; //*3;	//unrolled 3 times, don't multiply
 	tessIndexes = &tess.indexes[baseIndex];
@@ -2859,21 +2859,21 @@ void RB_SurfaceGhoul(CRenderableSurface* surf)
 		*tessIndexes++ = baseVertex + *triangles++;
 		*tessIndexes++ = baseVertex + *triangles++;
 	}
-	tess.numIndexes += indexes * 3;
+	tess.num_indexes += indexes * 3;
 #endif
 
-	numVerts = surface->numVerts;
+	num_verts = surface->num_verts;
 
 	piBoneReferences = reinterpret_cast<int*>(reinterpret_cast<byte*>(surface) + surface->ofsBoneReferences);
 	baseVertex = tess.numVertexes;
 	v = reinterpret_cast<mdxmVertex_t*>(reinterpret_cast<byte*>(surface) + surface->ofsVerts);
-	pTexCoords = reinterpret_cast<mdxmVertexTexCoord_t*>(&v[numVerts]);
+	pTexCoords = reinterpret_cast<mdxmVertexTexCoord_t*>(&v[num_verts]);
 
 	//	if (r_ghoul2fastnormals&&r_ghoul2fastnormals->integer==0)
 #if 0
 	if (0)
 	{
-		for (j = 0; j < numVerts; j++, baseVertex++, v++)
+		for (j = 0; j < num_verts; j++, baseVertex++, v++)
 		{
 			const int iNumWeights = G2_GetVertWeights(v);
 
@@ -2921,7 +2921,7 @@ void RB_SurfaceGhoul(CRenderableSurface* surf)
 		float t2;
 		const mdxaBone_t* bone;
 		const mdxaBone_t* bone2;
-		for (j = 0; j < numVerts; j++, baseVertex++, v++)
+		for (j = 0; j < num_verts; j++, baseVertex++, v++)
 		{
 #ifdef JK2_MODE
 			bone = &bones->Eval(piBoneReferences[G2_GetVertBoneIndex(v, 0)]);
@@ -3036,13 +3036,13 @@ void RB_SurfaceGhoul(CRenderableSurface* surf)
 			fdata += gnumVerts;
 			for (j = 0; j < gnumVerts; j++)
 			{
-				assert(data[j] >= 0 && data[j] < numVerts);
+				assert(data[j] >= 0 && data[j] < num_verts);
 				memcpy(fdata, &tess.xyz[tess.numVertexes + data[j]][0], sizeof(float) * 3);
 				fdata += 4;
 			}
 			for (j = 0; j < gnumVerts; j++)
 			{
-				assert(data[j] >= 0 && data[j] < numVerts);
+				assert(data[j] >= 0 && data[j] < num_verts);
 				memcpy(fdata, &tess.normal[tess.numVertexes + data[j]][0], sizeof(float) * 3);
 				fdata += 4;
 			}
@@ -3057,7 +3057,7 @@ void RB_SurfaceGhoul(CRenderableSurface* surf)
 	// it's not THAT bad), so we only delete it when doing the glow pass. Warning though, this assumes that
 	// the glow is rendered _second_!!! If that changes, change this!
 #endif
-	tess.numVertexes += surface->numVerts;
+	tess.numVertexes += surface->num_verts;
 
 #ifdef G2_PERFORMANCE_ANALYSIS
 	G2Time_RB_SurfaceGhoul += G2PerformanceTimer_RB_SurfaceGhoul.End();
@@ -3438,7 +3438,7 @@ qboolean R_LoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboolean& 
 	int* boneRef;
 	mdxmLODSurfOffset_t* indexes;
 	mdxmVertexTexCoord_t* pTexCoords;
-	mdxmHierarchyOffsets_t* surfIndexes;
+	mdxmHierarchyOffsets_t* surf_indexes;
 #endif
 
 	pinmodel = static_cast<mdxmHeader_t*>(buffer);
@@ -3563,7 +3563,7 @@ qboolean R_LoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboolean& 
 
 	surfInfo = reinterpret_cast<mdxmSurfHierarchy_t*>(reinterpret_cast<byte*>(mdxm) + mdxm->ofsSurfHierarchy);
 #ifdef Q3_BIG_ENDIAN
-	surfIndexes = (mdxmHierarchyOffsets_t*)((byte*)mdxm + sizeof(mdxmHeader_t));
+	surf_indexes = (mdxmHierarchyOffsets_t*)((byte*)mdxm + sizeof(mdxmHeader_t));
 #endif
 	for (i = 0; i < mdxm->numSurfaces; i++)
 	{
@@ -3613,8 +3613,8 @@ qboolean R_LoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboolean& 
 
 #ifdef Q3_BIG_ENDIAN
 		// swap the surface offset
-		LL(surfIndexes->offsets[i]);
-		assert(surfInfo == (mdxmSurfHierarchy_t*)((byte*)surfIndexes + surfIndexes->offsets[i]));
+		LL(surf_indexes->offsets[i]);
+		assert(surfInfo == (mdxmSurfHierarchy_t*)((byte*)surf_indexes + surf_indexes->offsets[i]));
 #endif
 
 		// find the next surface
@@ -3635,7 +3635,7 @@ qboolean R_LoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboolean& 
 		{
 			LL(surf->thisSurfaceIndex);
 			LL(surf->ofsHeader);
-			LL(surf->numVerts);
+			LL(surf->num_verts);
 			LL(surf->ofsVerts);
 			LL(surf->numTriangles);
 			LL(surf->ofsTriangles);
@@ -3645,9 +3645,9 @@ qboolean R_LoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboolean& 
 
 			triCount += surf->numTriangles;
 
-			if (surf->numVerts > SHADER_MAX_VERTEXES) {
+			if (surf->num_verts > SHADER_MAX_VERTEXES) {
 				Com_Error(ERR_DROP, "R_LoadMDXM: %s has more than %i verts on a surface (%i)",
-					mod_name, SHADER_MAX_VERTEXES, surf->numVerts);
+					mod_name, SHADER_MAX_VERTEXES, surf->num_verts);
 			}
 			if (surf->numTriangles * 3 > SHADER_MAX_INDEXES) {
 				Com_Error(ERR_DROP, "R_LoadMDXM: %s has more than %i triangles on a surface (%i)",
@@ -3681,9 +3681,9 @@ qboolean R_LoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboolean& 
 
 			// swap all the vertexes
 			v = (mdxmVertex_t*)((byte*)surf + surf->ofsVerts);
-			pTexCoords = (mdxmVertexTexCoord_t*)&v[surf->numVerts];
+			pTexCoords = (mdxmVertexTexCoord_t*)&v[surf->num_verts];
 
-			for (j = 0; j < surf->numVerts; j++)
+			for (j = 0; j < surf->num_verts; j++)
 			{
 				LF(v->normal[0]);
 				LF(v->normal[1]);

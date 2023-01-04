@@ -1429,7 +1429,7 @@ typedef struct usercmd_s {
 typedef struct addpolyArgStruct_s {
 	vec3_t				p[4];
 	vec2_t				ev[4];
-	int					numVerts;
+	int					num_verts;
 	vec3_t				vel;
 	vec3_t				accel;
 	float				alpha1;

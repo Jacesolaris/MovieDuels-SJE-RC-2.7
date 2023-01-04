@@ -45,7 +45,7 @@ void RE_StretchRaw(int x, int y, int w, int h, int cols, int rows, const byte* d
 
 	R_IssuePendingRenderCommands();
 
-	if (tess.numIndexes) {
+	if (tess.num_indexes) {
 		RB_EndSurface();
 	}
 

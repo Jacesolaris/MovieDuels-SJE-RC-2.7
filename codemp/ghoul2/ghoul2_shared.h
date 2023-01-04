@@ -47,7 +47,7 @@ struct model_s;
 // we save the whole surfaceInfo_t struct
 struct surfaceInfo_t
 {
-	int			offFlags;		// what the flags are for this model
+	int			off_flags;		// what the flags are for this model
 	int			surface;		// index into array held inside the model definition of pointers to the actual surface data loaded in - used by both client and game
 	float		genBarycentricJ;	// point 0 barycentric coors
 	float		genBarycentricI;	// point 1 barycentric coors - point 2 is 1 - point0 - point1
@@ -55,7 +55,7 @@ struct surfaceInfo_t
 	int			genLod;			// used to determine original lod of original surface and poly hit location
 
 	surfaceInfo_t() :
-		offFlags(0),
+		off_flags(0),
 		surface(0),
 		genBarycentricJ(0),
 		genBarycentricI(0),
@@ -175,13 +175,13 @@ struct  boneInfo_t
 //we save from top to boltUsed here. Don't bother saving the position, it gets rebuilt every frame anyway
 struct boltInfo_t {
 	int			boneNumber;		// bone number bolt attaches to
-	int			surfaceNumber;	// surface number bolt attaches to
+	int			surface_number;	// surface number bolt attaches to
 	int			surfaceType;	// if we attach to a surface, this tells us if it is an original surface or a generated one - doesn't go across the network
 	int			boltUsed;		// nor does this
 	mdxaBone_t	position;		// this does not go across the network
 	boltInfo_t() :
 		boneNumber(-1),
-		surfaceNumber(-1),
+		surface_number(-1),
 		surfaceType(0),
 		boltUsed(0)
 	{}

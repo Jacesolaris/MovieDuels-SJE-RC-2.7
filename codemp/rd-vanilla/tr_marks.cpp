@@ -418,7 +418,7 @@ int R_MarkFragments(int numPoints, const vec3_t* points, const vec3_t projection
 		else if (*surfaces[i] == SF_TRIANGLES && r_marksOnTriangleMeshes->integer) {
 			const srfTriangles_t* surf = (srfTriangles_t*)surfaces[i];
 
-			for (k = 0; k < surf->numIndexes; k += 3)
+			for (k = 0; k < surf->num_indexes; k += 3)
 			{
 				for (j = 0; j < 3; j++)
 				{

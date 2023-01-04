@@ -35,7 +35,7 @@ extern vmCvar_t cg_debugBlockBars;
 extern vmCvar_t cg_debugFatigueBars;
 extern vmCvar_t cg_saberinfo;
 
-extern Vehicle_t* G_IsRidingVehicle(const gentity_t* pEnt);
+extern Vehicle_t* G_IsRidingVehicle(const gentity_t* p_ent);
 extern qboolean G_ControlledByPlayer(const gentity_t* self);
 
 void CG_DrawSJEIconBackground();
@@ -4199,7 +4199,7 @@ constexpr auto MAX_VHUD_SPEED_TICS = 5;
 constexpr auto MAX_VHUD_ARMOR_TICS = 5;
 constexpr auto MAX_VHUD_AMMO_TICS = 5;
 
-static void CG_DrawVehicleSheild(const Vehicle_t* pVeh)
+static void CG_DrawVehicleSheild(const Vehicle_t* p_veh)
 {
 	int x_pos, y_pos, width, height;
 	vec4_t color, calc_color;
@@ -4207,15 +4207,15 @@ static void CG_DrawVehicleSheild(const Vehicle_t* pVeh)
 	float curr_value, max_health;
 
 	//riding some kind of living creature
-	if (pVeh->m_pVehicleInfo->type == VH_ANIMAL || pVeh->m_pVehicleInfo->type == VH_FLIER)
+	if (p_veh->m_pVehicleInfo->type == VH_ANIMAL || p_veh->m_pVehicleInfo->type == VH_FLIER)
 	{
 		max_health = 100.0f;
-		curr_value = pVeh->m_pParentEntity->health;
+		curr_value = p_veh->m_pParentEntity->health;
 	}
 	else //normal vehicle
 	{
-		max_health = pVeh->m_pVehicleInfo->armor;
-		curr_value = pVeh->m_iArmor;
+		max_health = p_veh->m_pVehicleInfo->armor;
+		curr_value = p_veh->m_iArmor;
 	}
 
 	if (cgi_UI_GetMenuItemInfo(
