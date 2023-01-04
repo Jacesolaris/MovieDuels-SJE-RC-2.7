@@ -521,7 +521,7 @@ int		SCR_GetBigStringWidth(const char* str);	// returns in virtual 640x480 coord
 
 void	SCR_FillRect(float x, float y, float width, float height,
 	const float* color);
-void	SCR_DrawPic(float x, float y, float width, float height, qhandle_t hShader);
+void	SCR_DrawPic(float x, float y, float width, float height, qhandle_t h_shader);
 void	SCR_DrawNamedPic(float x, float y, float width, float height, const char* picname);
 
 void	SCR_DrawBigString(int x, int y, const char* s, float alpha, qboolean noColorEscape);			// draws a string with embedded color control characters with fade

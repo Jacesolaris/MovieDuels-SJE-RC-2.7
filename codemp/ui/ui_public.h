@@ -316,10 +316,10 @@ typedef struct uiImport_s {
 	unsigned int	(*R_AnyLanguage_ReadCharFromString)		(const char* psText, int* piAdvanceCount, qboolean* pbIsTrailingPunctuation);
 
 	void			(*R_AddLightToScene)					(const vec3_t org, float intensity, float r, float g, float b);
-	void			(*R_AddPolysToScene)					(qhandle_t hShader, int num_verts, const polyVert_t* verts, int num);
+	void			(*R_AddPolysToScene)					(qhandle_t h_shader, int num_verts, const polyVert_t* verts, int num);
 	void			(*R_AddRefEntityToScene)				(const refEntity_t* re);
 	void			(*R_ClearScene)							(void);
-	void			(*R_DrawStretchPic)						(float x, float y, float w, float h, float s1, float t1, float s2, float t2, qhandle_t hShader);
+	void			(*R_DrawStretchPic)						(float x, float y, float w, float h, float s1, float t1, float s2, float t2, qhandle_t h_shader);
 	int				(*R_Font_StrLenPixels)					(const char* text, const int iFontIndex, const float scale);
 	int				(*R_Font_StrLenChars)					(const char* text);
 	int				(*R_Font_HeightPixels)					(const int iFontIndex, const float scale);

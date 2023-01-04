@@ -125,16 +125,16 @@ void GL_SelectTexture(const int unit)
 /*
 ** GL_Cull
 */
-void GL_Cull(const int cullType) {
-	if (glState.faceCulling == cullType) {
+void GL_Cull(const int cull_type) {
+	if (glState.faceCulling == cull_type) {
 		return;
 	}
-	glState.faceCulling = cullType;
+	glState.faceCulling = cull_type;
 	if (backEnd.projection2D) {	//don't care, we're in 2d when it's always disabled
 		return;
 	}
 
-	if (cullType == CT_TWO_SIDED)
+	if (cull_type == CT_TWO_SIDED)
 	{
 		qglDisable(GL_CULL_FACE);
 	}
@@ -142,7 +142,7 @@ void GL_Cull(const int cullType) {
 	{
 		qglEnable(GL_CULL_FACE);
 
-		if (cullType == CT_BACK_SIDED)
+		if (cull_type == CT_BACK_SIDED)
 		{
 			if (backEnd.viewParms.isMirror)
 			{
@@ -204,9 +204,9 @@ void GL_TexEnv(const int env)
 ** This routine is responsible for setting the most commonly changed state
 ** in Q3.
 */
-void GL_State(const uint32_t stateBits)
+void GL_State(const uint32_t state_bits)
 {
-	const uint32_t diff = stateBits ^ glState.glStateBits;
+	const uint32_t diff = state_bits ^ glState.glStateBits;
 
 	if (!diff)
 	{
@@ -218,7 +218,7 @@ void GL_State(const uint32_t stateBits)
 	//
 	if (diff & GLS_DEPTHFUNC_EQUAL)
 	{
-		if (stateBits & GLS_DEPTHFUNC_EQUAL)
+		if (state_bits & GLS_DEPTHFUNC_EQUAL)
 		{
 			qglDepthFunc(GL_EQUAL);
 		}
@@ -233,77 +233,77 @@ void GL_State(const uint32_t stateBits)
 	//
 	if (diff & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS))
 	{
-		if (stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS))
+		if (state_bits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS))
 		{
-			GLenum dstFactor;
-			GLenum srcFactor;
-			switch (stateBits & GLS_SRCBLEND_BITS)
+			GLenum dst_factor;
+			GLenum src_factor;
+			switch (state_bits & GLS_SRCBLEND_BITS)
 			{
 			case GLS_SRCBLEND_ZERO:
-				srcFactor = GL_ZERO;
+				src_factor = GL_ZERO;
 				break;
 			case GLS_SRCBLEND_ONE:
-				srcFactor = GL_ONE;
+				src_factor = GL_ONE;
 				break;
 			case GLS_SRCBLEND_DST_COLOR:
-				srcFactor = GL_DST_COLOR;
+				src_factor = GL_DST_COLOR;
 				break;
 			case GLS_SRCBLEND_ONE_MINUS_DST_COLOR:
-				srcFactor = GL_ONE_MINUS_DST_COLOR;
+				src_factor = GL_ONE_MINUS_DST_COLOR;
 				break;
 			case GLS_SRCBLEND_SRC_ALPHA:
-				srcFactor = GL_SRC_ALPHA;
+				src_factor = GL_SRC_ALPHA;
 				break;
 			case GLS_SRCBLEND_ONE_MINUS_SRC_ALPHA:
-				srcFactor = GL_ONE_MINUS_SRC_ALPHA;
+				src_factor = GL_ONE_MINUS_SRC_ALPHA;
 				break;
 			case GLS_SRCBLEND_DST_ALPHA:
-				srcFactor = GL_DST_ALPHA;
+				src_factor = GL_DST_ALPHA;
 				break;
 			case GLS_SRCBLEND_ONE_MINUS_DST_ALPHA:
-				srcFactor = GL_ONE_MINUS_DST_ALPHA;
+				src_factor = GL_ONE_MINUS_DST_ALPHA;
 				break;
 			case GLS_SRCBLEND_ALPHA_SATURATE:
-				srcFactor = GL_SRC_ALPHA_SATURATE;
+				src_factor = GL_SRC_ALPHA_SATURATE;
 				break;
 			default:
-				srcFactor = GL_ONE;		// to get warning to shut up
+				src_factor = GL_ONE;		// to get warning to shut up
 				Com_Error(ERR_DROP, "GL_State: invalid src blend state bits\n");
 			}
 
-			switch (stateBits & GLS_DSTBLEND_BITS)
+			switch (state_bits & GLS_DSTBLEND_BITS)
 			{
 			case GLS_DSTBLEND_ZERO:
-				dstFactor = GL_ZERO;
+				dst_factor = GL_ZERO;
 				break;
 			case GLS_DSTBLEND_ONE:
-				dstFactor = GL_ONE;
+				dst_factor = GL_ONE;
 				break;
 			case GLS_DSTBLEND_SRC_COLOR:
-				dstFactor = GL_SRC_COLOR;
+				dst_factor = GL_SRC_COLOR;
 				break;
 			case GLS_DSTBLEND_ONE_MINUS_SRC_COLOR:
-				dstFactor = GL_ONE_MINUS_SRC_COLOR;
+				dst_factor = GL_ONE_MINUS_SRC_COLOR;
 				break;
 			case GLS_DSTBLEND_SRC_ALPHA:
-				dstFactor = GL_SRC_ALPHA;
+				dst_factor = GL_SRC_ALPHA;
 				break;
 			case GLS_DSTBLEND_ONE_MINUS_SRC_ALPHA:
-				dstFactor = GL_ONE_MINUS_SRC_ALPHA;
+				dst_factor = GL_ONE_MINUS_SRC_ALPHA;
 				break;
 			case GLS_DSTBLEND_DST_ALPHA:
-				dstFactor = GL_DST_ALPHA;
+				dst_factor = GL_DST_ALPHA;
 				break;
 			case GLS_DSTBLEND_ONE_MINUS_DST_ALPHA:
-				dstFactor = GL_ONE_MINUS_DST_ALPHA;
+				dst_factor = GL_ONE_MINUS_DST_ALPHA;
 				break;
 			default:
-				dstFactor = GL_ONE;		// to get warning to shut up
+				dst_factor = GL_ONE;		// to get warning to shut up
 				Com_Error(ERR_DROP, "GL_State: invalid dst blend state bits\n");
 			}
 
 			qglEnable(GL_BLEND);
-			qglBlendFunc(srcFactor, dstFactor);
+			qglBlendFunc(src_factor, dst_factor);
 		}
 		else
 		{
@@ -316,7 +316,7 @@ void GL_State(const uint32_t stateBits)
 	//
 	if (diff & GLS_DEPTHMASK_TRUE)
 	{
-		if (stateBits & GLS_DEPTHMASK_TRUE)
+		if (state_bits & GLS_DEPTHMASK_TRUE)
 		{
 			qglDepthMask(GL_TRUE);
 		}
@@ -331,7 +331,7 @@ void GL_State(const uint32_t stateBits)
 	//
 	if (diff & GLS_POLYMODE_LINE)
 	{
-		if (stateBits & GLS_POLYMODE_LINE)
+		if (state_bits & GLS_POLYMODE_LINE)
 		{
 			qglPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		}
@@ -346,7 +346,7 @@ void GL_State(const uint32_t stateBits)
 	//
 	if (diff & GLS_DEPTHTEST_DISABLE)
 	{
-		if (stateBits & GLS_DEPTHTEST_DISABLE)
+		if (state_bits & GLS_DEPTHTEST_DISABLE)
 		{
 			qglDisable(GL_DEPTH_TEST);
 		}
@@ -361,7 +361,7 @@ void GL_State(const uint32_t stateBits)
 	//
 	if (diff & GLS_ATEST_BITS)
 	{
-		switch (stateBits & GLS_ATEST_BITS)
+		switch (state_bits & GLS_ATEST_BITS)
 		{
 		case 0:
 			qglDisable(GL_ALPHA_TEST);
@@ -388,7 +388,7 @@ void GL_State(const uint32_t stateBits)
 		}
 	}
 
-	glState.glStateBits = stateBits;
+	glState.glStateBits = state_bits;
 }
 
 /*
@@ -502,7 +502,7 @@ static void RB_BeginDrawingView()
 	if (!(backEnd.refdef.rdflags & RDF_NOWORLDMODEL) && (r_DynamicGlow->integer && !g_bRenderGlowingObjects))
 	{
 		if (tr.world && tr.world->globalFog != -1)
-		{ //this is because of a bug in multiple scenes I think, it needs to clear for the second scene but it doesn't normally.
+		{ //this is because of a errror in multiple scenes I think, it needs to clear for the second scene but it doesn't normally.
 			const fog_t* fog = &tr.world->fogs[tr.world->globalFog];
 
 			qglClearColor(fog->parms.color[0], fog->parms.color[1], fog->parms.color[2], 1.0f);

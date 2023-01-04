@@ -28,7 +28,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #include <png.h>
 #include <libpng/pngget.c>
 
-void user_write_data(png_structp png_ptr, png_bytep data, png_size_t length) {
+void user_write_data(const png_structp png_ptr, const png_bytep data, const png_size_t length) {
 	const fileHandle_t fp = *static_cast<fileHandle_t*>(png_get_io_ptr(png_ptr));
 	ri.FS_Write(data, length, fp);
 }
@@ -36,7 +36,7 @@ void user_flush_data(png_structp png_ptr) {
 	//TODO: ri->FS_Flush?
 }
 
-int RE_SavePNG(const char* filename, const byte* buf, size_t width, size_t height, int byteDepth) {
+int RE_SavePNG(const char* filename, const byte* buf, const size_t width, const size_t height, const int byteDepth) {
 	fileHandle_t fp;
 	png_structp png_ptr;
 	png_infop info_ptr;
@@ -101,7 +101,7 @@ int RE_SavePNG(const char* filename, const byte* buf, size_t width, size_t heigh
 	/* Write the image data to "fp". */
 
 //	png_init_io (png_ptr, fp);
-	png_set_write_fn(png_ptr, (png_voidp)&fp, user_write_data, user_flush_data);
+	png_set_write_fn(png_ptr, &fp, user_write_data, user_flush_data);
 	png_set_rows(png_ptr, info_ptr, row_pointers);
 	png_write_png(png_ptr, info_ptr, PNG_TRANSFORM_IDENTITY, nullptr);
 
@@ -125,17 +125,17 @@ fopen_failed:
 }
 
 void user_read_data(png_structp png_ptr, png_bytep data, png_size_t length);
-void png_print_error(png_structp png_ptr, png_const_charp err)
+void png_print_error(png_structp png_ptr, const png_const_charp err)
 {
 	ri.Printf(PRINT_ERROR, "%s\n", err);
 }
 
-void png_print_warning(png_structp png_ptr, png_const_charp warning)
+void png_print_warning(png_structp png_ptr, const png_const_charp warning)
 {
 	ri.Printf(PRINT_WARNING, "%s\n", warning);
 }
 
-bool IsPowerOfTwo(int i) { return (i & i - 1) == 0; }
+bool IsPowerOfTwo(const int i) { return (i & i - 1) == 0; }
 
 struct PNGFileReader
 {
@@ -191,7 +191,7 @@ struct PNGFileReader
 		offset += SIGNATURE_LEN;
 
 		// Setup reading information, and read header
-		png_set_read_fn(png_ptr, (png_voidp)this, &user_read_data);
+		png_set_read_fn(png_ptr, this, &user_read_data);
 #ifdef PNG_HANDLE_AS_UNKNOWN_SUPPORTED
 		// This generic "ignore all, except required chunks" requires 1.6.0 or newer"
 		png_set_keep_unknown_chunks(png_ptr, PNG_HANDLE_CHUNK_NEVER, nullptr, -1);
@@ -280,7 +280,7 @@ struct PNGFileReader
 		return 1;
 	}
 
-	void ReadBytes(void* dest, size_t len)
+	void ReadBytes(void* dest, const size_t len)
 	{
 		memcpy(dest, buf + offset, len);
 		offset += len;
@@ -293,7 +293,7 @@ private:
 	png_infop info_ptr;
 };
 
-void user_read_data(png_structp png_ptr, png_bytep data, png_size_t length) {
+void user_read_data(const png_structp png_ptr, const png_bytep data, const png_size_t length) {
 	const png_voidp r = png_get_io_ptr(png_ptr);
 	PNGFileReader* reader = static_cast<PNGFileReader*>(r);
 	reader->ReadBytes(data, length);

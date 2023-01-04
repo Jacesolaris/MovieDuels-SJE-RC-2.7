@@ -1906,7 +1906,7 @@ static void ParseSkyParms(const char** text) {
 		for (int i = 0; i < 6; i++) {
 			char pathname[MAX_QPATH];
 			Com_sprintf(pathname, sizeof pathname, "%s_%s", token, suf[i]);
-			shader.sky->outerbox[i] = R_FindImageFile((char*)pathname, qtrue, qtrue, static_cast<qboolean>(!shader.noTC), GL_CLAMP);
+			shader.sky->outerbox[i] = R_FindImageFile(pathname, qtrue, qtrue, static_cast<qboolean>(!shader.noTC), GL_CLAMP);
 			if (!shader.sky->outerbox[i]) {
 				if (i) {
 					shader.sky->outerbox[i] = shader.sky->outerbox[i - 1];//not found, so let's use the previous image
@@ -3337,7 +3337,7 @@ and src*dest blending applied with the texture, as apropriate for
 most world construction surfaces.
 ===============
 */
-shader_t* R_FindShader(const char* name, const int* lightmapIndex, const byte* styles, qboolean mipRawImage) {
+shader_t* R_FindShader(const char* name, const int* lightmapIndex, const byte* styles, const qboolean mipRawImage) {
 	char		strippedName[MAX_QPATH];
 	const char* shaderText;
 	shader_t* sh;
@@ -3529,16 +3529,16 @@ When a handle is passed in by another module, this range checks
 it and returns a valid (possibly default) shader_t to be used internally.
 ====================
 */
-shader_t* R_GetShaderByHandle(qhandle_t hShader) {
-	if (hShader < 0) {
-		ri.Printf(PRINT_WARNING, "R_GetShaderByHandle: out of range hShader '%d'\n", hShader);
+shader_t* R_GetShaderByHandle(const qhandle_t h_shader) {
+	if (h_shader < 0) {
+		ri.Printf(PRINT_WARNING, "R_GetShaderByHandle: out of range h_shader '%d'\n", h_shader);
 		return tr.defaultShader;
 	}
-	if (hShader >= tr.numShaders) {
-		ri.Printf(PRINT_WARNING, "R_GetShaderByHandle: out of range hShader '%d'\n", hShader);
+	if (h_shader >= tr.numShaders) {
+		ri.Printf(PRINT_WARNING, "R_GetShaderByHandle: out of range h_shader '%d'\n", h_shader);
 		return tr.defaultShader;
 	}
-	return tr.shaders[hShader];
+	return tr.shaders[h_shader];
 }
 
 /*

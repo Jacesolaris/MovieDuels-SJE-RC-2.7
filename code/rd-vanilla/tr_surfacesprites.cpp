@@ -36,7 +36,9 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 // The vertigons are applied as part of the renderer backend.  That is, they access OpenGL calls directly.
 
 unsigned char randomindex, randominterval;
-constexpr float randomchart[256] = {
+
+constexpr float randomchart[256] =
+{
 	0.6554f, 0.6909f, 0.4806f, 0.6218f, 0.5717f, 0.3896f, 0.0677f, 0.7356f,
 	0.8333f, 0.1105f, 0.4445f, 0.8161f, 0.4689f, 0.0433f, 0.7152f, 0.0336f,
 	0.0186f, 0.9140f, 0.1626f, 0.6553f, 0.8340f, 0.7094f, 0.2020f, 0.8087f,
@@ -124,34 +126,42 @@ static void R_SurfaceSpriteFrameUpdate()
 	// Adjust for an FOV.  If things look twice as wide on the screen, pretend the shaders have twice the range.
 	// ASSUMPTION HERE IS THAT "standard" fov is the first one rendered.
 
-	if (!standardfovinitialized)
-	{	// This isn't initialized yet.
-		if (backEnd.refdef.fov_x > 50 && backEnd.refdef.fov_x < 135)		// I don't consider anything below 50 or above 135 to be "normal".
-		{
-			standardfovx = backEnd.refdef.fov_x;
-			standardscalex = tan(standardfovx * 0.5 * (M_PI / 180.0f));
-			standardfovinitialized = qtrue;
-		}
-		else
-		{
-			standardfovx = 90;
-			standardscalex = tan(standardfovx * 0.5 * (M_PI / 540.0f));
-		}
-		rangescalefactor = 1.0;		// Don't multiply the shader range by anything.
-	}
-	else if (standardfovx == backEnd.refdef.fov_x)
-	{	// This is the standard FOV (or higher), don't multiply the shader range.
-		rangescalefactor = 1.0;
+
+	if (r_AdvancedsurfaceSprites->integer)
+	{
+		rangescalefactor = 5.0;
 	}
 	else
-	{	// We are using a non-standard FOV.  We need to multiply the range of the shader by a scale factor.
-		if (backEnd.refdef.fov_x > 135)
-		{
-			rangescalefactor = standardscalex / tan(135.0f * 0.5f * (M_PI / 180.0f));
+	{
+		if (!standardfovinitialized)
+		{	// This isn't initialized yet.
+			if (backEnd.refdef.fov_x > 50 && backEnd.refdef.fov_x < 135)		// I don't consider anything below 50 or above 135 to be "normal".
+			{
+				standardfovx = backEnd.refdef.fov_x;
+				standardscalex = tan(standardfovx * 0.5 * (M_PI / 180.0f));
+				standardfovinitialized = qtrue;
+			}
+			else
+			{
+				standardfovx = 90;
+				standardscalex = tan(standardfovx * 0.5 * (M_PI / 180.0f));
+			}
+			rangescalefactor = 1.0;		// Don't multiply the shader range by anything.
+		}
+		else if (standardfovx == backEnd.refdef.fov_x)
+		{	// This is the standard FOV (or higher), don't multiply the shader range.
+			rangescalefactor = 1.0;
 		}
 		else
-		{
-			rangescalefactor = standardscalex / tan(backEnd.refdef.fov_x * 0.5 * (M_PI / 540.0f));
+		{	// We are using a non-standard FOV.  We need to multiply the range of the shader by a scale factor.
+			if (backEnd.refdef.fov_x > 135)
+			{
+				rangescalefactor = standardscalex / tan(135.0f * 0.5f * (M_PI / 180.0f));
+			}
+			else
+			{
+				rangescalefactor = standardscalex / tan(backEnd.refdef.fov_x * 0.5 * (M_PI / 180.0f));
+			}
 		}
 	}
 
@@ -314,7 +324,7 @@ static void R_SurfaceSpriteFrameUpdate()
 // Surface sprite calculation and drawing.
 /////////////////////////////////////////////
 
-constexpr auto FADE_RANGE = 250.0;
+constexpr auto FADE_RANGE = 750.0;
 constexpr auto WINDPOINT_RADIUS = 750.0;
 
 float ss_vert_alpha[SHADER_MAX_VERTEXES];
@@ -1411,6 +1421,8 @@ void RB_DrawSurfaceSprites(shaderStage_t* stage, shaderCommands_t* input)
 {
 	const uint32_t	glbits = stage->stateBits;
 
+	int fogging;
+
 	R_SurfaceSpriteFrameUpdate();
 
 	//
@@ -1435,6 +1447,22 @@ void RB_DrawSurfaceSprites(shaderStage_t* stage, shaderCommands_t* input)
 	else
 	{
 		ss_additive_transparency = qfalse;
+	}
+
+	if (ss_additive_transparency && ss_using_fog && r_drawfog->value == 2 &&
+		tr.world &&
+		(tess.fogNum == tr.world->globalFog || tess.fogNum == tr.world->numfogs))
+	{
+		fogging = qglIsEnabled(GL_FOG);
+
+		if (fogging)
+		{
+			qglDisable(GL_FOG);
+		}
+	}
+	else
+	{
+		fogging = 0;
 	}
 
 	//Check if this is a new entity transformation (incl. world entity), and update the appropriate vectors if so.
@@ -1475,6 +1503,11 @@ void RB_DrawSurfaceSprites(shaderStage_t* stage, shaderCommands_t* input)
 	}
 
 	SQuickSprite.EndGroup();
+
+	if (fogging)
+	{
+		qglEnable(GL_FOG);
+	}
 
 	sssurfaces++;
 }

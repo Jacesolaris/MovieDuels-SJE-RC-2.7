@@ -158,15 +158,15 @@ R_AddDrawSurfCmd
 
 =============
 */
-void	R_AddDrawSurfCmd(drawSurf_t* drawSurfs, int numDrawSurfs) {
+void	R_AddDrawSurfCmd(drawSurf_t* draw_surfs, int num_draw_surfs) {
 	drawSurfsCommand_t* cmd = static_cast<drawSurfsCommand_t*>(R_GetCommandBuffer(sizeof(*cmd)));
 	if (!cmd) {
 		return;
 	}
 	cmd->commandId = RC_DRAW_SURFS;
 
-	cmd->drawSurfs = drawSurfs;
-	cmd->numDrawSurfs = numDrawSurfs;
+	cmd->drawSurfs = draw_surfs;
+	cmd->numDrawSurfs = num_draw_surfs;
 
 	cmd->refdef = tr.refdef;
 	cmd->viewParms = tr.viewParms;
@@ -206,13 +206,13 @@ RE_StretchPic
 =============
 */
 void RE_StretchPic(float x, float y, float w, float h,
-	float s1, float t1, float s2, float t2, qhandle_t hShader) {
+	float s1, float t1, float s2, float t2, qhandle_t h_shader) {
 	stretchPicCommand_t* cmd = static_cast<stretchPicCommand_t*>(R_GetCommandBuffer(sizeof(*cmd)));
 	if (!cmd) {
 		return;
 	}
 	cmd->commandId = RC_STRETCH_PIC;
-	cmd->shader = R_GetShaderByHandle(hShader);
+	cmd->shader = R_GetShaderByHandle(h_shader);
 	cmd->x = x;
 	cmd->y = y;
 	cmd->w = w;
@@ -229,13 +229,13 @@ RE_RotatePic
 =============
 */
 void RE_RotatePic(float x, float y, float w, float h,
-	float s1, float t1, float s2, float t2, float a, qhandle_t hShader) {
+	float s1, float t1, float s2, float t2, float a, qhandle_t h_shader) {
 	rotatePicCommand_t* cmd = static_cast<rotatePicCommand_t*>(R_GetCommandBuffer(sizeof(*cmd)));
 	if (!cmd) {
 		return;
 	}
 	cmd->commandId = RC_ROTATE_PIC;
-	cmd->shader = R_GetShaderByHandle(hShader);
+	cmd->shader = R_GetShaderByHandle(h_shader);
 	cmd->x = x;
 	cmd->y = y;
 	cmd->w = w;
@@ -253,13 +253,13 @@ RE_RotatePic2
 =============
 */
 void RE_RotatePic2(float x, float y, float w, float h,
-	float s1, float t1, float s2, float t2, float a, qhandle_t hShader) {
+	float s1, float t1, float s2, float t2, float a, qhandle_t h_shader) {
 	rotatePicCommand_t* cmd = static_cast<rotatePicCommand_t*>(R_GetCommandBuffer(sizeof(*cmd)));
 	if (!cmd) {
 		return;
 	}
 	cmd->commandId = RC_ROTATE_PIC2;
-	cmd->shader = R_GetShaderByHandle(hShader);
+	cmd->shader = R_GetShaderByHandle(h_shader);
 	cmd->x = x;
 	cmd->y = y;
 	cmd->w = w;
@@ -416,7 +416,7 @@ RE_EndFrame
 Returns the number of msec spent in the back end
 =============
 */
-void RE_EndFrame(int* frontEndMsec, int* backEndMsec) {
+void RE_EndFrame(int* front_end_msec, int* back_end_msec) {
 	if (!tr.registered) {
 		return;
 	}
@@ -432,12 +432,12 @@ void RE_EndFrame(int* frontEndMsec, int* backEndMsec) {
 	// may still be rendering into the current ones
 	R_InitNextFrame();
 
-	if (frontEndMsec) {
-		*frontEndMsec = tr.frontEndMsec;
+	if (front_end_msec) {
+		*front_end_msec = tr.frontEndMsec;
 	}
 	tr.frontEndMsec = 0;
-	if (backEndMsec) {
-		*backEndMsec = backEnd.pc.msec;
+	if (back_end_msec) {
+		*back_end_msec = backEnd.pc.msec;
 	}
 	backEnd.pc.msec = 0;
 }

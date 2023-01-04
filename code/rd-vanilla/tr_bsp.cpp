@@ -500,7 +500,7 @@ static void ParseMesh(const dsurface_t* ds, mapVert_t* verts, msurface_t* surf, 
 ParseTriSurf
 ===============
 */
-static void ParseTriSurf(const dsurface_t* ds, mapVert_t* verts, msurface_t* surf, int* indexes, const world_t& world_data, int index) {
+static void ParseTriSurf(const dsurface_t* ds, mapVert_t* verts, msurface_t* surf, int* indexes, const world_t& world_data, const int index) {
 	int				i, j, k;
 
 	// get fog volume

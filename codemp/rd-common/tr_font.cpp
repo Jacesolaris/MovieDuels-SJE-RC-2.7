@@ -1446,7 +1446,7 @@ void RE_Font_DrawString(int ox, int oy, const char* psText, const float* rgba, c
 {
 	static qboolean gbInShadow = qfalse;	// MUST default to this
 	const glyphInfo_t* pLetter;
-	qhandle_t			hShader;
+	qhandle_t			h_shader;
 
 	assert(psText);
 
@@ -1587,7 +1587,7 @@ void RE_Font_DrawString(int ox, int oy, const char* psText, const float* rgba, c
 			}
 			//purposely falls thrugh
 		default:
-			pLetter = curfont->GetLetter(uiLetter, &hShader);			// Description of pLetter
+			pLetter = curfont->GetLetter(uiLetter, &h_shader);			// Description of pLetter
 			if (!pLetter->width)
 			{
 				pLetter = curfont->GetLetter('.');
@@ -1623,7 +1623,7 @@ void RE_Font_DrawString(int ox, int oy, const char* psText, const float* rgba, c
 					pLetter->s2,					// float s2
 					pLetter->t2,					// float t2
 					//lastcolour.c,
-					hShader							// qhandle_t hShader
+					h_shader							// qhandle_t h_shader
 				);
 				if (r_aspectCorrectFonts->integer == 1) {
 					fx += fAdvancePixels

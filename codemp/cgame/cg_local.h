@@ -1742,8 +1742,8 @@ Ghoul2 Insert End
 //
 void CG_FillRect(float x, float y, float width, float height, const float* color);
 void CG_DrawPic(float x, float y, float width, float height, qhandle_t h_shader);
-void CG_DrawRotatePic(float x, float y, float width, float height, float angle, qhandle_t hShader);
-void CG_DrawRotatePic2(float x, float y, float width, float height, float angle, qhandle_t hShader);
+void CG_DrawRotatePic(float x, float y, float width, float height, float angle, qhandle_t h_shader);
+void CG_DrawRotatePic2(float x, float y, float width, float height, float angle, qhandle_t h_shader);
 void CG_DrawString(float x, float y, const char* string,
 	float charWidth, float charHeight, const float* modulate);
 
@@ -1797,7 +1797,7 @@ void CG_GetTeamColor(vec4_t* color);
 const char* CG_GetGameStatusText(void);
 const char* CG_GetKillerText(void);
 void CG_Draw3DModel(float x, float y, float w, float h, qhandle_t model, void* ghoul2, int g2radius, qhandle_t skin, vec3_t origin, vec3_t angles);
-void CG_Text_PaintChar(float x, float y, float width, float height, float scale, float s, float t, float s2, float t2, qhandle_t hShader);
+void CG_Text_PaintChar(float x, float y, float width, float height, float scale, float s, float t, float s2, float t2, qhandle_t h_shader);
 qboolean CG_YourTeamHasFlag(void);
 qboolean CG_OtherTeamHasFlag(void);
 qhandle_t CG_StatusHandle(int task);
@@ -1928,7 +1928,7 @@ localEntity_t* CG_SmokePuff(const vec3_t p,
 	int startTime,
 	int fadeInTime,
 	int leFlags,
-	qhandle_t hShader);
+	qhandle_t h_shader);
 void CG_BubbleTrail(vec3_t start, vec3_t end, float spacing);
 void CG_GlassShatter(int entnum, vec3_t dmgPt, vec3_t dmgDir, float dmgRadius, int maxShards);
 void CG_ScorePlum(int client, vec3_t org, int score);

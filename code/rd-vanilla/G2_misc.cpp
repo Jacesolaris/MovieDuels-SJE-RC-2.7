@@ -67,7 +67,7 @@ int goreModelIndex;
 static cvar_t* cg_g2MarksAllModels = nullptr;
 
 GoreTextureCoordinates* FindGoreRecord(int tag);
-static inline void DestroyGoreTexCoordinates(int tag)
+static inline void DestroyGoreTexCoordinates(const int tag)
 {
 	GoreTextureCoordinates* gTC = FindGoreRecord(tag);
 	if (!gTC)
@@ -126,7 +126,7 @@ void ResetGoreTag()
 	CurrentTagUpper += GORE_TAG_UPPER;
 }
 
-GoreTextureCoordinates* FindGoreRecord(int tag)
+GoreTextureCoordinates* FindGoreRecord(const int tag)
 {
 	const std::map<int, GoreTextureCoordinates>::iterator i = GoreRecords.find(tag);
 	if (i != GoreRecords.end())
@@ -136,12 +136,12 @@ GoreTextureCoordinates* FindGoreRecord(int tag)
 	return nullptr;
 }
 
-void* G2_GetGoreRecord(int tag)
+void* G2_GetGoreRecord(const int tag)
 {
 	return FindGoreRecord(tag);
 }
 
-void DeleteGoreRecord(int tag)
+void DeleteGoreRecord(const int tag)
 {
 	DestroyGoreTexCoordinates(tag);
 	GoreRecords.erase(tag);
@@ -150,7 +150,7 @@ void DeleteGoreRecord(int tag)
 static int CurrentGoreSet = 1; // this is a UUID for gore sets
 static std::map<int, CGoreSet*> GoreSets; // map from uuid to goreset
 
-CGoreSet* FindGoreSet(int goreSetTag)
+CGoreSet* FindGoreSet(const int goreSetTag)
 {
 	const std::map<int, CGoreSet*>::iterator f = GoreSets.find(goreSetTag);
 	if (f != GoreSets.end())
@@ -168,7 +168,7 @@ CGoreSet* NewGoreSet()
 	return ret;
 }
 
-void DeleteGoreSet(int goreSetTag)
+void DeleteGoreSet(const int goreSetTag)
 {
 	const std::map<int, CGoreSet*>::iterator f = GoreSets.find(goreSetTag);
 	if (f != GoreSets.end())
@@ -230,25 +230,25 @@ public:
 #endif
 
 	CTraceSurface(
-		int					initsurfaceNum,
+		const int					initsurfaceNum,
 		surfaceInfo_v& initrootSList,
 		const model_t* initcurrentModel,
-		int					initlod,
+		const int					initlod,
 		vec3_t				initrayStart,
 		vec3_t				initrayEnd,
 		CCollisionRecord* initcollRecMap,
-		int					initentNum,
-		int					initmodelIndex,
+		const int					initentNum,
+		const int					initmodelIndex,
 		const skin_t* initskin,
 		const shader_t* initcust_shader,
 		intptr_t* initTransformedVertsArray,
 		const EG2_Collision	einitG2TraceType,
 #ifdef _G2_GORE
 		float				fRadius,
-		float				initssize,
-		float				inittsize,
-		float				inittheta,
-		int					initgoreShader,
+		const float				initssize,
+		const float				inittsize,
+		const float				inittheta,
+		const int					initgoreShader,
 		CGhoul2Info* initghoul2info,
 		SSkinGoreData* initgore
 #else
@@ -510,8 +510,8 @@ void R_TransformEachSurface(const mdxmSurface_t* surface, vec3_t scale, CMiniHea
 	}
 }
 
-void G2_TransformSurfaces(int surface_num, surfaceInfo_v& rootSList,
-	CBoneCache* boneCache, const model_t* currentModel, int lod, vec3_t scale, CMiniHeap* G2VertSpace, intptr_t* TransformedVertArray, bool secondTimeAround)
+void G2_TransformSurfaces(const int surface_num, surfaceInfo_v& rootSList,
+                          CBoneCache* boneCache, const model_t* currentModel, const int lod, vec3_t scale, CMiniHeap* G2VertSpace, intptr_t* TransformedVertArray, const bool secondTimeAround)
 {
 	assert(currentModel);
 	assert(currentModel->mdxm);
@@ -551,7 +551,7 @@ void G2_TransformSurfaces(int surface_num, surfaceInfo_v& rootSList,
 
 // main calling point for the model transform for collision detection. At this point all of the skeleton has been transformed.
 #ifdef _G2_GORE
-void G2_TransformModel(CGhoul2Info_v& ghoul2, const int frameNum, vec3_t scale, CMiniHeap* G2VertSpace, int use_lod, bool ApplyGore, SSkinGoreData* gore)
+void G2_TransformModel(CGhoul2Info_v& ghoul2, const int frameNum, vec3_t scale, CMiniHeap* G2VertSpace, int use_lod, const bool ApplyGore, SSkinGoreData* gore)
 #else
 void G2_TransformModel(CGhoul2Info_v& ghoul2, const int frameNum, vec3_t scale, CMiniHeap* G2VertSpace, int use_lod)
 #endif
@@ -706,7 +706,7 @@ static void G2_BuildHitPointST(const vec3_t A, const float SA, const float TA,
 // routine that works out given a ray whether or not it hits a poly
 static inline qboolean G2_SegmentTriangleTest(const vec3_t start, const vec3_t end,
 	const vec3_t A, const vec3_t B, const vec3_t C,
-	qboolean backFaces, qboolean frontFaces, vec3_t returnedPoint, vec3_t returnedNormal, float* denom)
+	const qboolean backFaces, const qboolean frontFaces, vec3_t returnedPoint, vec3_t returnedNormal, float* denom)
 {
 	static constexpr float tiny = 1E-10f;
 	vec3_t returnedNormalT;
@@ -1523,7 +1523,7 @@ static void G2_TraceSurfaces(CTraceSurface& TS)
 }
 
 #ifdef _G2_GORE
-void G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, CCollisionRecord* collRecMap, int entNum, EG2_Collision e_g2_trace_type, int use_lod, float fRadius, float ssize, float tsize, float theta, int shader, SSkinGoreData* gore, qboolean skipIfLODNotMatch)
+void G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, CCollisionRecord* collRecMap, int entNum, EG2_Collision e_g2_trace_type, int use_lod, float fRadius, const float ssize, const float tsize, const float theta, const int shader, SSkinGoreData* gore, const qboolean skipIfLODNotMatch)
 #else
 void G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, CCollisionRecord* collRecMap, int entNum, EG2_Collision e_g2_trace_type, int use_lod, float fRadius)
 #endif
@@ -1711,13 +1711,13 @@ void G2_GenerateWorldMatrix(const vec3_t angles, const vec3_t origin)
 }
 
 // go away and determine what the pointer for a specific surface definition within the model definition is
-void* G2_FindSurface(const model_s* mod, int index, int lod)
+void* G2_FindSurface(const model_s* mod, const int index, const int lod)
 {
 	assert(mod);
 	assert(mod->mdxm);
 
 	// point at first lod list
-	byte* current = (byte*)((intptr_t)mod->mdxm + (intptr_t)mod->mdxm->ofsLODs);
+	byte* current = (byte*)((intptr_t)mod->mdxm + mod->mdxm->ofsLODs);
 
 	//walk the lods
 	assert(lod >= 0 && lod < mod->mdxm->numLODs);
@@ -1735,7 +1735,7 @@ void* G2_FindSurface(const model_s* mod, int index, int lod)
 	assert(index >= 0 && index < mod->mdxm->numSurfaces);
 	current += indexes->offsets[index];
 
-	return (void*)current;
+	return current;
 }
 
 #define SURFACE_SAVE_BLOCK_SIZE	sizeof(surfaceInfo_t)
@@ -1772,7 +1772,7 @@ void G2_SaveGhoul2Models(
 	}
 
 	// save out how many ghoul2 models we have
-	const int model_count = static_cast<int>(ghoul2.size());
+	const int model_count = ghoul2.size();
 
 	saved_game.write<int32_t>(
 		model_count);

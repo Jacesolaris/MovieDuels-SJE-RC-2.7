@@ -110,7 +110,7 @@ void R_AddPolygonSurfaces(void) {
 	tr.shiftedEntityNum = tr.currentEntityNum << QSORT_REFENTITYNUM_SHIFT;
 
 	for (i = 0, poly = tr.refdef.polys; i < tr.refdef.numPolys; i++, poly++) {
-		shader_t* sh = R_GetShaderByHandle(poly->hShader);
+		shader_t* sh = R_GetShaderByHandle(poly->h_shader);
 		R_AddDrawSurf((surfaceType_t*)poly, sh, poly->fogIndex, qfalse);
 	}
 }
@@ -121,7 +121,7 @@ RE_AddPolyToScene
 
 =====================
 */
-void RE_AddPolyToScene(qhandle_t hShader, int num_verts, const polyVert_t* verts, int numPolys) {
+void RE_AddPolyToScene(qhandle_t h_shader, int num_verts, const polyVert_t* verts, int numPolys) {
 	int			fogIndex;
 	vec3_t		bounds[2];
 
@@ -129,7 +129,7 @@ void RE_AddPolyToScene(qhandle_t hShader, int num_verts, const polyVert_t* verts
 		return;
 	}
 
-	if (!hShader) {
+	if (!h_shader) {
 		ri->Printf(PRINT_ALL, S_COLOR_YELLOW  "WARNING: RE_AddPolyToScene: NULL poly shader\n");
 		return;
 	}
@@ -148,7 +148,7 @@ void RE_AddPolyToScene(qhandle_t hShader, int num_verts, const polyVert_t* verts
 
 		srfPoly_t* poly = &backEndData->polys[r_numpolys];
 		poly->surfaceType = SF_POLY;
-		poly->hShader = hShader;
+		poly->h_shader = h_shader;
 		poly->num_verts = num_verts;
 		poly->verts = &backEndData->polyVerts[r_numpolyverts];
 

@@ -206,7 +206,7 @@ void MC_Compress(const float mat[3][4], unsigned char* _comp)
 
 void MC_UnCompress(float mat[3][4], const unsigned char* comp)
 {
-	int val = (int)((unsigned short*)(comp))[0];
+	int val = ((unsigned short*)comp)[0];
 	val -= 1 << (MC_BITS_X - 1);
 	mat[0][3] = static_cast<float>(val) * MC_SCALE_X;
 

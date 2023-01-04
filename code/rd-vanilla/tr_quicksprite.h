@@ -45,14 +45,14 @@ private:
 	int				mNextVert;
 	qboolean		mTurnCullBackOn;
 
-	void Flush(void);
+	void Flush();
 
 public:
-	CQuickSpriteSystem(void);
-	~CQuickSpriteSystem(void);
+	CQuickSpriteSystem();
+	~CQuickSpriteSystem();
 
-	void StartGroup(textureBundle_t* bundle, uint32_t glbits, int fogIndex = -1);
-	void EndGroup(void);
+	void StartGroup(textureBundle_t* bundle, uint32_t glbits, int fog_index = -1);
+	void EndGroup();
 
 	void Add(const float* pointdata, color4ub_t color, vec2_t fog = nullptr);
 };

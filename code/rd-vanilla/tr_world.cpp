@@ -269,7 +269,7 @@ static int R_DlightSurface(const msurface_t* surf, int dlightBits) {
 R_AddWorldSurface
 ======================
 */
-static void R_AddWorldSurface(msurface_t* surf, int dlightBits, qboolean noViewCount = qfalse) {
+static void R_AddWorldSurface(msurface_t* surf, int dlightBits, const qboolean noViewCount = qfalse) {
 	/*
 	if ( surf->viewCount == tr.viewCount ) {
 		return;		// already in this view
@@ -375,7 +375,7 @@ float GetQuadArea(vec3_t v1, vec3_t v2, vec3_t v3, vec3_t v4)
 		dis2[0] * dis2[0] + dis2[1] * dis2[1] + dis2[2] * dis2[2];
 }
 
-void RE_GetBModelVerts(int bmodelIndex, vec3_t* verts, vec3_t normal)
+void RE_GetBModelVerts(const int bmodelIndex, vec3_t* verts, vec3_t normal)
 {
 	msurface_t* surfs;
 	srfSurfaceFace_t* face;
@@ -637,7 +637,7 @@ static mnode_t* R_PointInLeaf(vec3_t p) {
 R_ClusterPVS
 ==============
 */
-static const byte* R_ClusterPVS(int cluster) {
+static const byte* R_ClusterPVS(const int cluster) {
 	if (!tr.world || !tr.world->vis || cluster < 0 || cluster >= tr.world->numClusters) {
 		return tr.world->novis;
 	}
@@ -670,7 +670,7 @@ Mark the leaves and nodes that are in the PVS for the current
 cluster
 ===============
 */
-static void R_MarkLeaves(void) {
+static void R_MarkLeaves() {
 	int		i;
 
 	// lockpvs lets designers walk around to determine the
@@ -744,7 +744,7 @@ static void R_MarkLeaves(void) {
 R_AddWorldSurfaces
 =============
 */
-void R_AddWorldSurfaces(void) {
+void R_AddWorldSurfaces() {
 	if (!r_drawworld->integer) {
 		return;
 	}

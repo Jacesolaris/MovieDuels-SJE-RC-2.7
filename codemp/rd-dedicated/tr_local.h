@@ -601,7 +601,7 @@ typedef struct drawSurf_s {
 // as soon as it is called
 typedef struct srfPoly_s {
 	surfaceType_t	surfaceType;
-	qhandle_t		hShader;
+	qhandle_t		h_shader;
 	int				fogIndex;
 	int				num_verts;
 	polyVert_t* verts;
@@ -1237,9 +1237,9 @@ void	GL_SetDefaultState(void);
 void	GL_SelectTexture(int unit);
 void	GL_TextureMode(const char* string);
 void	GL_CheckErrors(void);
-void	GL_State(uint32_t stateVector);
+void	GL_State(uint32_t state_bits);
 void	GL_TexEnv(int env);
-void	GL_Cull(int cullType);
+void	GL_Cull(int cull_type);
 
 #define GLS_SRCBLEND_ZERO						0x00000001
 #define GLS_SRCBLEND_ONE						0x00000002
@@ -1347,7 +1347,7 @@ const char* RE_ShaderNameFromIndex(int index);
 qhandle_t RE_RegisterShaderFromImage(const char* name, int* lightmapIndex, byte* styles, image_t* image, qboolean mipRawImage);
 
 shader_t* R_FindShader(const char* name, const int* lightmapIndex, const byte* styles, qboolean mipRawImage);
-shader_t* R_GetShaderByHandle(qhandle_t hShader);
+shader_t* R_GetShaderByHandle(qhandle_t h_shader);
 shader_t* R_GetShaderByState(int index, long* cycleTime);
 shader_t* R_FindShaderByName(const char* name);
 void		R_InitShaders(qboolean server);
@@ -1536,7 +1536,7 @@ void RE_ClearScene(void);
 void RE_ClearDecals(void);
 void RE_AddRefEntityToScene(const refEntity_t* ent);
 void RE_AddMiniRefEntityToScene(const miniRefEntity_t* ent);
-void RE_AddPolyToScene(qhandle_t hShader, int num_verts, const polyVert_t* verts, int num);
+void RE_AddPolyToScene(qhandle_t h_shader, int num_verts, const polyVert_t* verts, int num);
 void RE_AddDecalToScene(qhandle_t shader, const vec3_t origin, const vec3_t dir, float orientation, float r, float g, float b, float a, qboolean alphaFade, float radius, qboolean temporary);
 void RE_AddLightToScene(const vec3_t org, float intensity, float r, float g, float b);
 void RE_AddAdditiveLightToScene(const vec3_t org, float intensity, float r, float g, float b);
@@ -1771,17 +1771,17 @@ void RB_ExecuteRenderCommands(const void* data);
 
 void R_IssuePendingRenderCommands(void);
 
-void R_AddDrawSurfCmd(drawSurf_t* drawSurfs, int numDrawSurfs);
+void R_AddDrawSurfCmd(drawSurf_t* draw_surfs, int num_draw_surfs);
 
 void RE_SetColor(const float* rgba);
 void RE_StretchPic(float x, float y, float w, float h,
-	float s1, float t1, float s2, float t2, qhandle_t hShader);
+	float s1, float t1, float s2, float t2, qhandle_t h_shader);
 void RE_RotatePic(float x, float y, float w, float h,
-	float s1, float t1, float s2, float t2, float a, qhandle_t hShader);
+	float s1, float t1, float s2, float t2, float a, qhandle_t h_shader);
 void RE_RotatePic2(float x, float y, float w, float h,
-	float s1, float t1, float s2, float t2, float a, qhandle_t hShader);
+	float s1, float t1, float s2, float t2, float a, qhandle_t h_shader);
 void RE_BeginFrame(stereoFrame_t stereoFrame);
-void RE_EndFrame(int* frontEndMsec, int* backEndMsec);
+void RE_EndFrame(int* front_end_msec, int* back_end_msec);
 void RE_TakeVideoFrame(int width, int height, byte* captureBuffer, byte* encodeBuffer, qboolean motionJpeg);
 
 /*

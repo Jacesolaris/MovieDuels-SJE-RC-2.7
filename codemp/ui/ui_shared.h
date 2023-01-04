@@ -415,7 +415,7 @@ typedef struct displayContextDef_s {
 	qhandle_t(*registerShaderNoMip)				(const char* p);
 	void			(*setColor)							(const vec4_t v);
 	void			(*drawHandlePic)					(float x, float y, float w, float h, qhandle_t asset);
-	void			(*drawStretchPic)					(float x, float y, float w, float h, float s1, float t1, float s2, float t2, qhandle_t hShader);
+	void			(*drawStretchPic)					(float x, float y, float w, float h, float s1, float t1, float s2, float t2, qhandle_t h_shader);
 	void			(*drawText)							(float x, float y, float scale, vec4_t color, const char* text, float adjust, int limit, int style, int iMenuFont);
 	int				(*textWidth)						(const char* text, float scale, int iMenuFont);
 	int				(*textHeight)						(const char* text, float scale, int iMenuFont);

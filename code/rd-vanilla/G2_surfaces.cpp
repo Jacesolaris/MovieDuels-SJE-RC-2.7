@@ -57,7 +57,7 @@ public:
 		mCurrentTouch++;
 	}
 
-	void Set(int index, int pos)
+	void Set(const int index, const int pos)
 	{
 		if (index == 10000)
 		{
@@ -68,7 +68,7 @@ public:
 		mAt[index] = pos;
 	}
 
-	int Test(int index) const
+	int Test(const int index) const
 	{
 		assert(index >= 0 && index < 512);
 		if (mOverride[index] != mCurrentTouch)

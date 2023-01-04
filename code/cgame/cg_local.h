@@ -1095,22 +1095,22 @@ qboolean cgi_R_inPVS(vec3_t p1, vec3_t p2);
 
 // polys are intended for simple wall marks, not really for doing
 // significant construction
-void cgi_R_AddPolyToScene(qhandle_t hShader, int num_verts, const polyVert_t* verts);
+void cgi_R_AddPolyToScene(qhandle_t h_shader, int num_verts, const polyVert_t* verts);
 void cgi_R_AddLightToScene(const vec3_t org, float intensity, float r, float g, float b);
 void cgi_R_RenderScene(const refdef_t* fd);
 void cgi_R_SetColor(const float* rgba); // NULL = 1,1,1,1
 void cgi_R_DrawStretchPic(float x, float y, float w, float h,
-                          float s1, float t1, float s2, float t2, qhandle_t hShader);
+                          float s1, float t1, float s2, float t2, qhandle_t h_shader);
 
 void cgi_R_ModelBounds(qhandle_t model, vec3_t mins, vec3_t maxs);
 void cgi_R_LerpTag(orientation_t* tag, qhandle_t mod, int startFrame, int endFrame,
                    float frac, const char* tagName);
 // Does weird, barely controllable rotation behaviour
 void cgi_R_DrawRotatePic(float x, float y, float w, float h,
-                         float s1, float t1, float s2, float t2, float a, qhandle_t hShader, float aspectCorrection);
+                         float s1, float t1, float s2, float t2, float a, qhandle_t h_shader, float aspectCorrection);
 // rotates image around exact center point of passed in coords
 void cgi_R_DrawRotatePic2(float x, float y, float w, float h,
-                          float s1, float t1, float s2, float t2, float a, qhandle_t hShader, float aspectCorrection);
+                          float s1, float t1, float s2, float t2, float a, qhandle_t h_shader, float aspectCorrection);
 void cgi_R_SetRangeFog(float range);
 void cgi_R_LAGoggles(void);
 void cgi_R_Scissor(float x, float y, float w, float h);

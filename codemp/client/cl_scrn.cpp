@@ -46,8 +46,8 @@ Coordinates are 640*480 virtual values
 void SCR_DrawNamedPic(float x, float y, float width, float height, const char* picname) {
 	assert(width != 0);
 
-	const qhandle_t hShader = re->RegisterShader(picname);
-	re->DrawStretchPic(x, y, width, height, 0, 0, 1, 1, hShader);
+	const qhandle_t h_shader = re->RegisterShader(picname);
+	re->DrawStretchPic(x, y, width, height, 0, 0, 1, 1, h_shader);
 }
 
 /*
@@ -72,8 +72,8 @@ SCR_DrawPic
 Coordinates are 640*480 virtual values
 =================
 */
-void SCR_DrawPic(float x, float y, float width, float height, qhandle_t hShader) {
-	re->DrawStretchPic(x, y, width, height, 0, 0, 1, 1, hShader);
+void SCR_DrawPic(float x, float y, float width, float height, qhandle_t h_shader) {
+	re->DrawStretchPic(x, y, width, height, 0, 0, 1, 1, h_shader);
 }
 
 /*

@@ -4724,7 +4724,7 @@ void CG_LerpCrosshairPos(float* x, float* y)
 vec3_t cg_crosshairPos = { 0,0,0 };
 static void CG_DrawCrosshair(vec3_t worldPoint, int chEntValid) {
 	float		w, h;
-	qhandle_t	hShader = 0;
+	qhandle_t	h_shader = 0;
 	float		x, y;
 	qboolean	corona = qfalse;
 	vec4_t		ecolor = { 0,0,0,0 };
@@ -5005,7 +5005,7 @@ static void CG_DrawCrosshair(vec3_t worldPoint, int chEntValid) {
 			&& vehCent->m_pVehicle->m_pVehicleInfo
 			&& vehCent->m_pVehicle->m_pVehicleInfo->crosshairShaderHandle)
 		{
-			hShader = vehCent->m_pVehicle->m_pVehicleInfo->crosshairShaderHandle;
+			h_shader = vehCent->m_pVehicle->m_pVehicleInfo->crosshairShaderHandle;
 		}
 		//bigger by default
 		w = cg_crosshairSize.value * 2.0f;
@@ -5040,14 +5040,14 @@ static void CG_DrawCrosshair(vec3_t worldPoint, int chEntValid) {
 		y = cg_crosshairY.integer;
 	}
 
-	if (!hShader)
+	if (!h_shader)
 	{
-		hShader = cgs.media.crosshairShader[cg_drawCrosshair.integer % NUM_CROSSHAIRS];
+		h_shader = cgs.media.crosshairShader[cg_drawCrosshair.integer % NUM_CROSSHAIRS];
 	}
 
 	const float chX = x + cg.refdef.x + 0.5 * (640 - w);
 	float chY = y + cg.refdef.y + 0.5 * (480 - h);
-	trap->R_DrawStretchPic(chX, chY, w, h, 0, 0, 1, 1, hShader);
+	trap->R_DrawStretchPic(chX, chY, w, h, 0, 0, 1, 1, h_shader);
 
 	//draw a health bar directly under the crosshair if we're looking at something
 	//that takes damage

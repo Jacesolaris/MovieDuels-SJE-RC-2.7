@@ -42,9 +42,9 @@ Out must have space for two more vertexes than in
 #define	SIDE_FRONT	0
 #define	SIDE_BACK	1
 #define	SIDE_ON		2
-static void R_ChopPolyBehindPlane(int numInPoints, vec3_t inPoints[MAX_VERTS_ON_POLY],
-	int* numOutPoints, vec3_t outPoints[MAX_VERTS_ON_POLY],
-	vec3_t normal, vec_t dist, vec_t epsilon) {
+static void R_ChopPolyBehindPlane(const int numInPoints, vec3_t inPoints[MAX_VERTS_ON_POLY],
+                                  int* numOutPoints, vec3_t outPoints[MAX_VERTS_ON_POLY],
+                                  vec3_t normal, const vec_t dist, const vec_t epsilon) {
 	float		dists[MAX_VERTS_ON_POLY + 4] = { 0 };
 	int			sides[MAX_VERTS_ON_POLY + 4] = { 0 };
 	int			counts[3];
@@ -180,8 +180,8 @@ void R_BoxSurfaces_r(const mnode_t* node, vec3_t mins, vec3_t maxs, surfaceType_
 				surf->viewCount = tr.viewCount;
 			}
 		}
-		else if (*(surfaceType_t*)surf->data != SF_GRID
-			&& *(surfaceType_t*)surf->data != SF_TRIANGLES)
+		else if (*surf->data != SF_GRID
+			&& *surf->data != SF_TRIANGLES)
 		{
 			surf->viewCount = tr.viewCount;
 		}
@@ -189,7 +189,7 @@ void R_BoxSurfaces_r(const mnode_t* node, vec3_t mins, vec3_t maxs, surfaceType_
 		// already been added if it spans multiple leafs
 		if (surf->viewCount != tr.viewCount) {
 			surf->viewCount = tr.viewCount;
-			list[*listlength] = (surfaceType_t*)surf->data;
+			list[*listlength] = surf->data;
 			(*listlength)++;
 		}
 		mark++;
@@ -203,8 +203,8 @@ R_AddMarkFragments
 =================
 */
 void R_AddMarkFragments(int numClipPoints, vec3_t clipPoints[2][MAX_VERTS_ON_POLY],
-	int numPlanes, vec3_t* normals, const float* dists,
-	int maxPoints, vec3_t pointBuffer,
+                        const int numPlanes, vec3_t* normals, const float* dists,
+                        const int maxPoints, vec3_t pointBuffer,
 	int maxFragments, markFragment_t* fragmentBuffer,
 	int* returnedPoints, int* returnedFragments,
 	vec3_t mins, vec3_t maxs) {
@@ -258,7 +258,7 @@ R_MarkFragments
 =================
 */
 int R_MarkFragments(int numPoints, const vec3_t* points, const vec3_t projection,
-	int maxPoints, vec3_t pointBuffer, int maxFragments, markFragment_t* fragmentBuffer) {
+                    const int maxPoints, vec3_t pointBuffer, const int maxFragments, markFragment_t* fragmentBuffer) {
 	int				numsurfaces;
 	int				i, k;
 	surfaceType_t* surfaces[64];

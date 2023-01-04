@@ -43,7 +43,7 @@ Used by both the front end (for DlightBmodel) and
 the back end (before doing the lighting calculation)
 ===============
 */
-void R_TransformDlights(int count, dlight_t* dl, const orientationr_t* ori) {
+void R_TransformDlights(const int count, dlight_t* dl, const orientationr_t* ori) {
 	for (int i = 0; i < count; i++, dl++) {
 		vec3_t temp;
 		VectorSubtract(dl->origin, ori->origin, temp);
@@ -60,7 +60,7 @@ R_DlightBmodel
 Determine which dynamic lights may effect this bmodel
 =============
 */
-void R_DlightBmodel(const bmodel_t* bmodel, qboolean NoLight) {
+void R_DlightBmodel(const bmodel_t* bmodel, const qboolean NoLight) {
 	int			i;
 
 	// transform all the lights

@@ -105,7 +105,7 @@ static char* CommaParse(char** data_p) {
 			if (c == '\"' || !c)
 			{
 				com_token[len] = 0;
-				*data_p = (char*)data;
+				*data_p = data;
 				return com_token;
 			}
 			if (len < MAX_TOKEN_CHARS - 1)
@@ -130,7 +130,7 @@ static char* CommaParse(char** data_p) {
 
 	com_token[len] = 0;
 
-	*data_p = (char*)data;
+	*data_p = data;
 	return com_token;
 }
 
@@ -151,7 +151,7 @@ AnimationCFGs_t AnimationCFGs;
 // Usage:  call with psDest == NULL for a size enquire (for malloc),
 //				then with NZ ptr for it to copy to your supplied buffer...
 //
-int RE_GetAnimationCFG(const char* psCFGFilename, char* psDest, int iDestSize)
+int RE_GetAnimationCFG(const char* psCFGFilename, char* psDest, const int iDestSize)
 {
 	char* psText;
 
@@ -261,7 +261,7 @@ bool RE_SplitSkins(const char* INname, char* skinhead, char* skintorso, char* sk
 }
 
 // given a name, go get the skin we want and return
-qhandle_t RE_RegisterIndividualSkin(const char* name, qhandle_t hSkin)
+qhandle_t RE_RegisterIndividualSkin(const char* name, const qhandle_t hSkin)
 {
 	skinSurface_t* surf;
 	char* text, * text_p;
@@ -314,7 +314,7 @@ qhandle_t RE_RegisterIndividualSkin(const char* name, qhandle_t hSkin)
 		if (static_cast<unsigned>(skin->numSurfaces) >= std::size(skin->surfaces))
 		{
 			assert(ARRAY_LEN(skin->surfaces) > static_cast<unsigned>(skin->numSurfaces));
-			ri.Printf(PRINT_WARNING, "WARNING: RE_RegisterSkin( '%s' ) more than %u surfaces!\n", name, (unsigned int)std::size(skin->surfaces));
+			ri.Printf(PRINT_WARNING, "WARNING: RE_RegisterSkin( '%s' ) more than %u surfaces!\n", name, std::size(skin->surfaces));
 			break;
 		}
 		surf = skin->surfaces[skin->numSurfaces] = static_cast<skinSurface_t*>(R_Hunk_Alloc(sizeof * skin->surfaces[0], qtrue));
@@ -445,7 +445,7 @@ void	R_InitSkins(void) {
 R_GetSkinByHandle
 ===============
 */
-skin_t* R_GetSkinByHandle(qhandle_t hSkin) {
+skin_t* R_GetSkinByHandle(const qhandle_t hSkin) {
 	if (hSkin < 1 || hSkin >= tr.numSkins) {
 		return tr.skins[0];
 	}

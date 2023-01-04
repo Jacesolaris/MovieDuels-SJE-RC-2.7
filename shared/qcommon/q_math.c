@@ -1173,7 +1173,7 @@ float DotProduct(const vec3_t vec1, const vec3_t vec2) {
 
 qboolean VectorCompare(const vec3_t vec1, const vec3_t vec2)
 {
-	return (qboolean)(vec1[0] == vec2[0] && vec1[1] == vec2[1] && vec1[2] == vec2[2]);
+	return vec1[0] == vec2[0] && vec1[1] == vec2[1] && vec1[2] == vec2[2];
 }
 
 qboolean VectorCompare2(const vec3_t v1, const vec3_t v2)

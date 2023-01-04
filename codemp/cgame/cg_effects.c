@@ -98,7 +98,7 @@ localEntity_t* CG_SmokePuff(const vec3_t p, const vec3_t vel,
 	int startTime,
 	int fadeInTime,
 	int leFlags,
-	qhandle_t hShader) {
+	qhandle_t h_shader) {
 	static int	seed = 0x92;
 	//	int fadeInTime = startTime + duration / 2;
 
@@ -132,7 +132,7 @@ localEntity_t* CG_SmokePuff(const vec3_t p, const vec3_t vel,
 	VectorCopy(p, le->pos.trBase);
 
 	VectorCopy(p, re->origin);
-	re->customShader = hShader;
+	re->customShader = h_shader;
 
 	re->shaderRGBA[0] = le->color[0] * 0xff;
 	re->shaderRGBA[1] = le->color[1] * 0xff;
