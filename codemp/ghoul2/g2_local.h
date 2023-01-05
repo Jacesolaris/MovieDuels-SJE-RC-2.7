@@ -210,7 +210,7 @@ qboolean	G2_Stop_Bone_Angles(const char* fileName, boneInfo_v& blist, const char
 void		G2_Animate_Bone_List(CGhoul2Info_v& ghoul2, const int currentTime, const int index, CRagDollUpdateParams* params);
 //rww - RAGDOLL_END
 void		G2_Init_Bone_List(boneInfo_v& blist, int numBones);
-int			G2_Find_Bone_In_List(boneInfo_v& blist, const int boneNum);
+int			G2_Find_Bone_In_List(const boneInfo_v& blist, const int bone_num);
 void		G2_RemoveRedundantBoneOverrides(boneInfo_v& blist, int* activeBones);
 qboolean	G2_Set_Bone_Angles_Matrix(const char* fileName, boneInfo_v& blist, const char* boneName, const mdxaBone_t& matrix, const int flags, qhandle_t* modelList, const int model_index, const int blendTime, const int currentTime);
 int			G2_Get_Bone_Index(CGhoul2Info* ghoul2, const char* boneName);
@@ -241,13 +241,13 @@ void		TransformPoint(const vec3_t in, vec3_t out, mdxaBone_t* mat);
 void		Inverse_Matrix(mdxaBone_t* src, mdxaBone_t* dest);
 void* G2_FindSurface(void* mod, int index, int lod);
 qboolean	G2_SaveGhoul2Models(CGhoul2Info_v& ghoul2, char** buffer, int* size);
-void		G2_LoadGhoul2Model(CGhoul2Info_v& ghoul2, char* buffer);
+void		G2_LoadGhoul2Model(CGhoul2Info_v& ghoul2, const char* buffer);
 
 // internal bolt calls. G2_bolts.cpp
 int			G2_Add_Bolt(CGhoul2Info* ghl_info, boltInfo_v& bltlist, surfaceInfo_v& slist, const char* boneName);
 qboolean	G2_Remove_Bolt(boltInfo_v& bltlist, int index);
 void		G2_Init_Bolt_List(boltInfo_v& bltlist);
-int			G2_Find_Bolt_Bone_Num(boltInfo_v& bltlist, const int boneNum);
+int			G2_Find_Bolt_Bone_Num(const boltInfo_v& bltlist, const int boneNum);
 int			G2_Find_Bolt_Surface_Num(boltInfo_v& bltlist, const int surface_num, const int flags);
 int			G2_Add_Bolt_Surf_Num(CGhoul2Info* ghl_info, boltInfo_v& bltlist, surfaceInfo_v& slist, const int surfNum);
 void		G2_RemoveRedundantBolts(boltInfo_v& bltlist, surfaceInfo_v& slist, int* activeSurfaces, int* activeBones);
@@ -353,8 +353,8 @@ qboolean	G2API_RagForceSolve(CGhoul2Info_v& ghoul2, qboolean force);
 qboolean	G2API_SetBoneIKState(CGhoul2Info_v& ghoul2, int time, const char* boneName, int ikState, sharedSetBoneIKStateParams_t* params);
 qboolean	G2API_IKMove(CGhoul2Info_v& ghoul2, int time, sharedIKMoveParams_t* params);
 
-void		G2API_AttachInstanceToEntNum(CGhoul2Info_v& ghoul2, int entityNum, qboolean server);
-void		G2API_ClearAttachedInstance(int entityNum);
+void		G2API_AttachInstanceToEntNum(CGhoul2Info_v& ghoul2, int entity_num, qboolean server);
+void		G2API_ClearAttachedInstance(int entity_num);
 void		G2API_CleanEntAttachments(void);
 qboolean	G2API_OverrideServerWithClientData(CGhoul2Info_v& ghoul2, int model_index);
 

@@ -1616,12 +1616,12 @@ void TryUse(gentity_t* ent)
 	//Trace ahead to find a valid target
 	trap->Trace(&trace, src, vec3_origin, vec3_origin, dest, ent->s.number, MASK_OPAQUE | CONTENTS_SOLID | CONTENTS_BODY | CONTENTS_ITEM | CONTENTS_CORPSE, qfalse, 0, 0);
 
-	if (trace.fraction == 1.0f || trace.entityNum == ENTITYNUM_NONE)
+	if (trace.fraction == 1.0f || trace.entity_num == ENTITYNUM_NONE)
 	{
 		goto tryJetPack;
 	}
 
-	gentity_t* target = &g_entities[trace.entityNum];
+	gentity_t* target = &g_entities[trace.entity_num];
 
 	//Enable for corpse dragging
 #if 0

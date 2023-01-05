@@ -612,7 +612,7 @@ typedef struct postRender_s {
 	int			entNum;
 	int			dlighted;
 	int			depthRange;
-	drawSurf_t* drawSurf;
+	drawSurf_t* draw_surf;
 	shader_t* shader;
 	qboolean	eValid;
 } postRender_t;
@@ -659,10 +659,10 @@ static inline bool R_AverageTessXYZ(vec3_t dest)
 void RB_RenderDrawSurfList(drawSurf_t* draw_surfs, int num_draw_surfs) {
 	shader_t* shader;
 	int				fogNum;
-	int				entityNum;
+	int				entity_num;
 	int				dlighted;
 	int				i;
-	drawSurf_t* drawSurf;
+	drawSurf_t* draw_surf;
 	postRender_t* pRender;
 	bool			didShadowPass = false;
 
@@ -680,7 +680,7 @@ void RB_RenderDrawSurfList(drawSurf_t* draw_surfs, int num_draw_surfs) {
 	// draw everything
 	int oldEntityNum = -1;
 	backEnd.currentEntity = &tr.worldEntity;
-	shader_t* oldShader = NULL;
+	shader_t* oldShader = nullptr;
 	int oldFogNum = -1;
 	int oldDepthRange = qfalse;
 	int oldDlighted = qfalse;
@@ -689,40 +689,40 @@ void RB_RenderDrawSurfList(drawSurf_t* draw_surfs, int num_draw_surfs) {
 
 	backEnd.pc.c_surfaces += num_draw_surfs;
 
-	for (i = 0, drawSurf = draw_surfs; i < num_draw_surfs; i++, drawSurf++)
+	for (i = 0, draw_surf = draw_surfs; i < num_draw_surfs; i++, draw_surf++)
 	{
-		if (drawSurf->sort == oldSort)
+		if (draw_surf->sort == oldSort)
 		{
 			// fast path, same as previous sort
-			rb_surfaceTable[*drawSurf->surface](drawSurf->surface);
+			rb_surfaceTable[*draw_surf->surface](draw_surf->surface);
 			continue;
 		}
-		R_DecomposeSort(drawSurf->sort, &entityNum, &shader, &fogNum, &dlighted);
+		R_DecomposeSort(draw_surf->sort, &entity_num, &shader, &fogNum, &dlighted);
 
 		// If we're rendering glowing objects, but this shader has no stages with glow, skip it!
 		if (g_bRenderGlowingObjects && !shader->hasGlow)
 		{
 			shader = oldShader;
-			entityNum = oldEntityNum;
+			entity_num = oldEntityNum;
 			fogNum = oldFogNum;
 			dlighted = oldDlighted;
 			continue;
 		}
 
-		oldSort = drawSurf->sort;
+		oldSort = draw_surf->sort;
 
 		//
 		// change the tess parameters if needed
 		// a "entityMergable" shader is a shader that can have surfaces from seperate
 		// entities merged into a single batch, like smoke and blood puff sprites
-		if (entityNum != REFENTITYNUM_WORLD &&
+		if (entity_num != REFENTITYNUM_WORLD &&
 			g_numPostRenders < MAX_POST_RENDERS)
 		{
-			if ((backEnd.refdef.entities[entityNum].e.renderfx & RF_DISTORTION) ||
-				(backEnd.refdef.entities[entityNum].e.renderfx & RF_FORCEPOST) ||
-				(backEnd.refdef.entities[entityNum].e.renderfx & RF_FORCE_ENT_ALPHA))
+			if ((backEnd.refdef.entities[entity_num].e.renderfx & RF_DISTORTION) ||
+				(backEnd.refdef.entities[entity_num].e.renderfx & RF_FORCEPOST) ||
+				(backEnd.refdef.entities[entity_num].e.renderfx & RF_FORCE_ENT_ALPHA))
 			{ //must render last
-				const trRefEntity_t* curEnt = &backEnd.refdef.entities[entityNum];
+				const trRefEntity_t* curEnt = &backEnd.refdef.entities[entity_num];
 				pRender = &g_postRenders[g_numPostRenders];
 
 				g_numPostRenders++;
@@ -744,10 +744,10 @@ void RB_RenderDrawSurfList(drawSurf_t* draw_surfs, int num_draw_surfs) {
 				depthRange = oldDepthRange;
 
 				//store off the ent num
-				pRender->entNum = entityNum;
+				pRender->entNum = entity_num;
 
 				//remember the other values necessary for rendering this surf
-				pRender->drawSurf = drawSurf;
+				pRender->draw_surf = draw_surf;
 				pRender->dlighted = dlighted;
 				pRender->fogNum = fogNum;
 				pRender->shader = shader;
@@ -765,7 +765,7 @@ void RB_RenderDrawSurfList(drawSurf_t* draw_surfs, int num_draw_surfs) {
 
 				//assure the info is back to the last set state
 				shader = oldShader;
-				entityNum = oldEntityNum;
+				entity_num = oldEntityNum;
 				fogNum = oldFogNum;
 				dlighted = oldDlighted;
 
@@ -791,10 +791,10 @@ void RB_RenderDrawSurfList(drawSurf_t* draw_surfs, int num_draw_surfs) {
 			depthRange = oldDepthRange;
 
 			//store off the ent num
-			pRender->entNum = entityNum;
+			pRender->entNum = entity_num;
 
 			//remember the other values necessary for rendering this surf
-			pRender->drawSurf = drawSurf;
+			pRender->draw_surf = draw_surf;
 			pRender->dlighted = dlighted;
 			pRender->fogNum = fogNum;
 			pRender->shader = shader;
@@ -803,7 +803,7 @@ void RB_RenderDrawSurfList(drawSurf_t* draw_surfs, int num_draw_surfs) {
 
 			//assure the info is back to the last set state
 			shader = oldShader;
-			entityNum = oldEntityNum;
+			entity_num = oldEntityNum;
 			fogNum = oldFogNum;
 			dlighted = oldDlighted;
 
@@ -815,9 +815,9 @@ void RB_RenderDrawSurfList(drawSurf_t* draw_surfs, int num_draw_surfs) {
 		*/
 
 		if (shader != oldShader || fogNum != oldFogNum || dlighted != oldDlighted
-			|| (entityNum != oldEntityNum && !shader->entityMergable))
+			|| (entity_num != oldEntityNum && !shader->entityMergable))
 		{
-			if (oldShader != NULL) {
+			if (oldShader != nullptr) {
 				RB_EndSurface();
 
 				if (!didShadowPass && shader && shader->sort > SS_BANNER)
@@ -835,11 +835,11 @@ void RB_RenderDrawSurfList(drawSurf_t* draw_surfs, int num_draw_surfs) {
 		//
 		// change the modelview matrix if needed
 		//
-		if (entityNum != oldEntityNum) {
+		if (entity_num != oldEntityNum) {
 			depthRange = 0;
 
-			if (entityNum != REFENTITYNUM_WORLD) {
-				backEnd.currentEntity = &backEnd.refdef.entities[entityNum];
+			if (entity_num != REFENTITYNUM_WORLD) {
+				backEnd.currentEntity = &backEnd.refdef.entities[entity_num];
 
 				backEnd.refdef.floatTime = originalTime - backEnd.currentEntity->e.shaderTime;
 				// we have to reset the shaderTime as well otherwise image animations start
@@ -873,7 +873,7 @@ void RB_RenderDrawSurfList(drawSurf_t* draw_surfs, int num_draw_surfs) {
 				R_TransformDlights(backEnd.refdef.num_dlights, backEnd.refdef.dlights, &backEnd.ori);
 			}
 
-			qglLoadMatrixf(backEnd.ori.modelMatrix);
+			qglLoadMatrixf(backEnd.ori.model_matrix);
 
 			//
 			// change depthrange if needed
@@ -897,19 +897,19 @@ void RB_RenderDrawSurfList(drawSurf_t* draw_surfs, int num_draw_surfs) {
 				oldDepthRange = depthRange;
 			}
 
-			oldEntityNum = entityNum;
+			oldEntityNum = entity_num;
 		}
 
 		// add the triangles for this surface
-		rb_surfaceTable[*drawSurf->surface](drawSurf->surface);
+		rb_surfaceTable[*draw_surf->surface](draw_surf->surface);
 	}
 
 	backEnd.refdef.floatTime = originalTime;
 
 	// draw the contents of the last shader batch
-	//assert(entityNum < MAX_GENTITIES);
+	//assert(entity_num < MAX_GENTITIES);
 
-	if (oldShader != NULL) {
+	if (oldShader != nullptr) {
 		RB_EndSurface();
 	}
 
@@ -967,7 +967,7 @@ void RB_RenderDrawSurfList(drawSurf_t* draw_surfs, int num_draw_surfs) {
 				}
 			}
 
-			qglLoadMatrixf(backEnd.ori.modelMatrix);
+			qglLoadMatrixf(backEnd.ori.model_matrix);
 
 			depthRange = pRender->depthRange;
 			switch (depthRange)
@@ -1119,13 +1119,13 @@ void RB_RenderDrawSurfList(drawSurf_t* draw_surfs, int num_draw_surfs) {
 				}
 			}
 
-			rb_surfaceTable[*pRender->drawSurf->surface](pRender->drawSurf->surface);
+			rb_surfaceTable[*pRender->draw_surf->surface](pRender->draw_surf->surface);
 			RB_EndSurface();
 		}
 	}
 
 	// go back to the world modelview matrix
-	qglLoadMatrixf(backEnd.viewParms.world.modelMatrix);
+	qglLoadMatrixf(backEnd.viewParms.world.model_matrix);
 	if (depthRange) {
 		qglDepthRange(0, 1);
 	}
@@ -1745,7 +1745,7 @@ void RB_ShowImages(void) {
 
 	int i = 0;
 	R_Images_StartIteration();
-	while ((image = R_Images_GetNextIteration()) != NULL)
+	while ((image = R_Images_GetNextIteration()) != nullptr)
 	{
 		float w = glConfig.vidWidth / 20;
 		float h = glConfig.vidHeight / 15;

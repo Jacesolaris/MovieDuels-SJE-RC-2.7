@@ -48,7 +48,7 @@ int R_CullLocalPointAndRadius(const vec3_t pt, float radius)
 */
 int R_CullPointAndRadius(const vec3_t pt, float radius)
 {
-	qboolean mightBeClipped = qfalse;
+	qboolean might_be_clipped = qfalse;
 
 	if (r_nocull->integer == 1) {
 		return CULL_CLIP;
@@ -66,11 +66,11 @@ int R_CullPointAndRadius(const vec3_t pt, float radius)
 		}
 		if (dist <= radius)
 		{
-			mightBeClipped = qtrue;
+			might_be_clipped = qtrue;
 		}
 	}
 
-	if (mightBeClipped)
+	if (might_be_clipped)
 	{
 		return CULL_CLIP;
 	}

@@ -78,7 +78,7 @@ public:
 	}
 
 	// Sound
-	static inline	void	PlaySound(vec3_t origin, int entityNum, int entchannel, sfxHandle_t sfxHandle, int volume, int radius)
+	static inline	void	PlaySound(vec3_t origin, int entity_num, int entchannel, sfxHandle_t sfxHandle, int volume, int radius)
 	{
 		//S_StartSound( origin, ENTITYNUM_NONE, CHAN_AUTO, sfxHandle, volume, radius );
 		S_StartSound(origin, ENTITYNUM_NONE, CHAN_AUTO, sfxHandle);

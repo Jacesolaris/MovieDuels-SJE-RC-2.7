@@ -71,9 +71,9 @@ int			mParticlesRendered;
 ////////////////////////////////////////////////////////////////////////////////////////
 inline void		VectorMA(vec3_t vecAdd, const float scale, const vec3_t vecScale)
 {
-	vecAdd[0] += (scale * vecScale[0]);
-	vecAdd[1] += (scale * vecScale[1]);
-	vecAdd[2] += (scale * vecScale[2]);
+	vecAdd[0] += scale * vecScale[0];
+	vecAdd[1] += scale * vecScale[1];
+	vecAdd[2] += scale * vecScale[2];
 }
 
 inline void VectorFloor(vec3_t in)
@@ -92,7 +92,7 @@ inline void VectorCeil(vec3_t in)
 
 inline float	FloatRand(void)
 {
-	return (static_cast<float>(rand()) / static_cast<float>(RAND_MAX));
+	return static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
 }
 
 inline float	fast_flrand(const float min, const float max)
@@ -105,15 +105,15 @@ inline	void	SnapFloatToGrid(float& f, const int GridSize)
 {
 	f = static_cast<int>(f);
 
-	const bool	fNeg = (f < 0);
+	const bool	fNeg = f < 0;
 	if (fNeg)
 	{
 		f *= -1;		// Temporarly make it positive
 	}
 
-	int		Offset = (static_cast<int>(f) % (int)(GridSize));
+	int		Offset = static_cast<int>(f) % (int)GridSize;
 	const int		OffsetAbs = abs(Offset);
-	if (OffsetAbs > (GridSize / 2))
+	if (OffsetAbs > GridSize / 2)
 	{
 		Offset = (GridSize - OffsetAbs) * -1;
 	}
@@ -127,7 +127,7 @@ inline	void	SnapFloatToGrid(float& f, const int GridSize)
 
 	f = static_cast<int>(f);
 
-	assert((static_cast<int>(f) % (int)(GridSize)) == 0);
+	assert(static_cast<int>(f) % (int) GridSize == 0);
 }
 
 inline	void	SnapVectorToGrid(CVec3& Vec, const int GridSize)
@@ -161,7 +161,7 @@ struct	SVecRange
 	{
 		if (V[0] <= mMins[0])
 		{
-			if ((mMins[0] - V[0]) > 500)
+			if (mMins[0] - V[0] > 500)
 			{
 				Pick(V);
 				return;
@@ -170,7 +170,7 @@ struct	SVecRange
 		}
 		if (V[0] >= mMaxs[0])
 		{
-			if ((V[0] - mMaxs[0]) > 500)
+			if (V[0] - mMaxs[0] > 500)
 			{
 				Pick(V);
 				return;
@@ -180,7 +180,7 @@ struct	SVecRange
 
 		if (V[1] <= mMins[1])
 		{
-			if ((mMins[1] - V[1]) > 500)
+			if (mMins[1] - V[1] > 500)
 			{
 				Pick(V);
 				return;
@@ -189,7 +189,7 @@ struct	SVecRange
 		}
 		if (V[1] >= mMaxs[1])
 		{
-			if ((V[1] - mMaxs[1]) > 500)
+			if (V[1] - mMaxs[1] > 500)
 			{
 				Pick(V);
 				return;
@@ -199,7 +199,7 @@ struct	SVecRange
 
 		if (V[2] <= mMins[2])
 		{
-			if ((mMins[2] - V[2]) > 500)
+			if (mMins[2] - V[2] > 500)
 			{
 				Pick(V);
 				return;
@@ -208,7 +208,7 @@ struct	SVecRange
 		}
 		if (V[2] >= mMaxs[2])
 		{
-			if ((V[2] - mMaxs[2]) > 500)
+			if (V[2] - mMaxs[2] > 500)
 			{
 				Pick(V);
 				return;
@@ -219,7 +219,7 @@ struct	SVecRange
 
 	inline bool In(const CVec3& V) const
 	{
-		return (V > mMins && V < mMaxs);
+		return V > mMins && V < mMaxs;
 	}
 };
 
@@ -239,7 +239,7 @@ struct	SFloatRange
 	}
 	inline bool In(const float& V) const
 	{
-		return (V > mMin && V < mMax);
+		return V > mMin && V < mMax;
 	}
 };
 
@@ -259,7 +259,7 @@ struct	SIntRange
 	}
 	inline bool In(const int& V) const
 	{
-		return (V > mMin && V < mMax);
+		return V > mMin && V < mMax;
 	}
 };
 
@@ -362,7 +362,7 @@ public:
 			{
 				DeltaVelocityLen = mMaxDeltaVelocityPerUpdate;
 			}
-			DeltaVelocity *= (DeltaVelocityLen);
+			DeltaVelocity *= DeltaVelocityLen;
 			mCurrentVelocity += DeltaVelocity;
 		}
 	}
@@ -407,7 +407,7 @@ bool R_GetWindGusting(vec3_t atpoint)
 {
 	float windSpeed;
 	R_GetWindSpeed(windSpeed, atpoint);
-	return (windSpeed > 1000.0f);
+	return windSpeed > 1000.0f;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -448,13 +448,13 @@ private:
 
 		void WriteToDisk(const fileHandle_t f) const
 		{
-			ri.FS_Write(&mMarkedOutside, sizeof(mMarkedOutside), f);
+			ri.FS_Write(&mMarkedOutside, sizeof mMarkedOutside, f);
 			ri.FS_Write(mPointCache, miPointCacheByteSize, f);
 		}
 
 		void ReadFromDisk(const fileHandle_t f) const
 		{
-			ri.FS_Read(&mMarkedOutside, sizeof(mMarkedOutside), f);
+			ri.FS_Read(&mMarkedOutside, sizeof mMarkedOutside, f);
 			ri.FS_Read(mPointCache, miPointCacheByteSize, f);
 		}
 
@@ -463,11 +463,11 @@ private:
 		////////////////////////////////////////////////////////////////////////////////////
 		inline	void	ConvertToCell(const CVec3& pos, int& x, int& y, int& z, int& bit)
 		{
-			x = static_cast<int>((pos[0] / POINTCACHE_CELL_SIZE) - mSize.mMins[0]);
-			y = static_cast<int>((pos[1] / POINTCACHE_CELL_SIZE) - mSize.mMins[1]);
-			z = static_cast<int>((pos[2] / POINTCACHE_CELL_SIZE) - mSize.mMins[2]);
+			x = static_cast<int>(pos[0] / POINTCACHE_CELL_SIZE - mSize.mMins[0]);
+			y = static_cast<int>(pos[1] / POINTCACHE_CELL_SIZE - mSize.mMins[1]);
+			z = static_cast<int>(pos[2] / POINTCACHE_CELL_SIZE - mSize.mMins[2]);
 
-			bit = (z & 31);
+			bit = z & 31;
 			z >>= 5;
 		}
 
@@ -476,11 +476,11 @@ private:
 		////////////////////////////////////////////////////////////////////////////////////
 		inline	bool	CellOutside(const int x, const int y, const int z, const int bit) const
 		{
-			if ((x < 0 || x >= mWidth) || (y < 0 || y >= mHeight) || (z < 0 || z >= mDepth) || (bit < 0 || bit >= 32))
+			if (x < 0 || x >= mWidth || (y < 0 || y >= mHeight) || (z < 0 || z >= mDepth) || (bit < 0 || bit >= 32))
 			{
-				return !(mMarkedOutside);
+				return !mMarkedOutside;
 			}
-			return (mMarkedOutside == (!!(mPointCache[((z * mWidth * mHeight) + (y * mWidth) + x)] & (1 << bit))));
+			return mMarkedOutside == !!(mPointCache[(z * mWidth * mHeight + y * mWidth + x)] & 1 << bit);
 		}
 	};
 	ratl::vector_vs<SWeatherZone, MAX_WEATHER_ZONES>	mWeatherZones;
@@ -515,9 +515,9 @@ private:
 		{
 			if (SWeatherZone::mMarkedOutside)
 			{
-				return (!!(contents & CONTENTS_OUTSIDE));
+				return !!(contents & CONTENTS_OUTSIDE);
 			}
-			return (!(contents & CONTENTS_INSIDE));
+			return !(contents & CONTENTS_INSIDE);
 		}
 		return !!(contents & CONTENTS_OUTSIDE);
 	}
@@ -587,7 +587,7 @@ public:
 			Wz.mHeight = static_cast<int>(Wz.mSize.mMaxs[1] - Wz.mSize.mMins[1]);
 			Wz.mDepth = (static_cast<int>(Wz.mSize.mMaxs[2] - Wz.mSize.mMins[2]) + 31) >> 5;
 
-			Wz.miPointCacheByteSize = (Wz.mWidth * Wz.mHeight * Wz.mDepth) * sizeof(uint32_t);
+			Wz.miPointCacheByteSize = Wz.mWidth * Wz.mHeight * Wz.mDepth * sizeof(uint32_t);
 			Wz.mPointCache = static_cast<uint32_t*>(R_Malloc(Wz.miPointCacheByteSize, TAG_POINTCACHE, qtrue));
 		}
 		else
@@ -622,7 +622,7 @@ public:
 		{
 			const WeatherFileHeader_t WeatherFileHeader;
 
-			ri.FS_Write(&WeatherFileHeader, sizeof(WeatherFileHeader), f);
+			ri.FS_Write(&WeatherFileHeader, sizeof WeatherFileHeader, f);
 			return f;
 		}
 		ri.Printf(PRINT_WARNING, "(Unable to open weather file \"%s\" for writing!)\n", GenCachedWeatherFilename());
@@ -643,9 +643,9 @@ public:
 			const WeatherFileHeader_t WeatherFileHeaderForCompare;
 			WeatherFileHeader_t WeatherFileHeaderFromDisk;
 
-			ri.FS_Read(&WeatherFileHeaderFromDisk, sizeof(WeatherFileHeaderFromDisk), f);
+			ri.FS_Read(&WeatherFileHeaderFromDisk, sizeof WeatherFileHeaderFromDisk, f);
 
-			if (memcmp(&WeatherFileHeaderForCompare, &WeatherFileHeaderFromDisk, sizeof(WeatherFileHeaderFromDisk)) == 0)
+			if (memcmp(&WeatherFileHeaderForCompare, &WeatherFileHeaderFromDisk, sizeof WeatherFileHeaderFromDisk) == 0)
 			{
 				// go for it...
 				//
@@ -712,7 +712,7 @@ public:
 				CVec3 Mins = wz.mExtents.mMins;
 				for (x = 0; x < 3; x++)
 				{
-					Mins[x] += (POINTCACHE_CELL_SIZE / 2);
+					Mins[x] += POINTCACHE_CELL_SIZE / 2;
 				}
 
 				// Start Scanning
@@ -721,8 +721,8 @@ public:
 				{
 					for (int q = 0; q < 32; q++)
 					{
-						const uint32_t bit = (1 << q);
-						const int zbase = (z << 5);
+						const uint32_t bit = 1 << q;
+						const int zbase = z << 5;
 
 						for (x = 0; x < wz.mWidth; x++)
 						{
@@ -736,7 +736,7 @@ public:
 								const uint32_t contents = ri.CM_PointContents(CurPos.v, 0);
 								if (contents & CONTENTS_INSIDE || contents & CONTENTS_OUTSIDE)
 								{
-									const bool curPosOutside = ((contents & CONTENTS_OUTSIDE) != 0);
+									const bool curPosOutside = (contents & CONTENTS_OUTSIDE) != 0;
 									if (!mCacheInit)
 									{
 										mCacheInit = true;
@@ -750,7 +750,7 @@ public:
 
 									// Mark The Point
 									//----------------
-									wz.mPointCache[((z * wz.mWidth * wz.mHeight) + (y * wz.mWidth) + x)] |= bit;
+									wz.mPointCache[(z * wz.mWidth * wz.mHeight + y * wz.mWidth + x)] |= bit;
 								}
 							}// for (y)
 						}// for (x)
@@ -799,7 +799,7 @@ public:
 				return wz.CellOutside(x, y, z, bit);
 			}
 		}
-		return !(SWeatherZone::mMarkedOutside);
+		return !SWeatherZone::mMarkedOutside;
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////
@@ -816,11 +816,11 @@ public:
 				wz.ConvertToCell(pos, x, y, z, bit);
 				if (width < POINTCACHE_CELL_SIZE || height < POINTCACHE_CELL_SIZE)
 				{
-					return (wz.CellOutside(x, y, z, bit));
+					return wz.CellOutside(x, y, z, bit);
 				}
 
-				mWCells = (static_cast<int>(width) / POINTCACHE_CELL_SIZE);
-				mHCells = (static_cast<int>(height) / POINTCACHE_CELL_SIZE);
+				mWCells = static_cast<int>(width) / POINTCACHE_CELL_SIZE;
+				mHCells = static_cast<int>(height) / POINTCACHE_CELL_SIZE;
 
 				mXMax = x + mWCells;
 				mYMax = y + mWCells;
@@ -842,7 +842,7 @@ public:
 				return true;
 			}
 		}
-		return !(SWeatherZone::mMarkedOutside);
+		return !SWeatherZone::mMarkedOutside;
 	}
 };
 COutside			mOutside;
@@ -860,12 +860,12 @@ bool R_IsOutside(vec3_t pos)
 
 bool R_IsShaking(vec3_t pos)
 {
-	return (mOutside.mOutsideShake && mOutside.PointOutside(pos));
+	return mOutside.mOutsideShake && mOutside.PointOutside(pos);
 }
 
 float R_IsOutsideCausingPain(vec3_t pos)
 {
-	return (mOutside.mOutsidePain && mOutside.PointOutside(pos));
+	return mOutside.mOutsidePain && mOutside.PointOutside(pos);
 }
 
 bool R_SetTempGlobalFogColor(vec3_t color)
@@ -1008,7 +1008,7 @@ public:
 
 		for (int particleNum = 0; particleNum < mParticleCount; particleNum++)
 		{
-			WFXParticle* part = &(mParticles[particleNum]);
+			WFXParticle* part = &mParticles[particleNum];
 			part->mPosition.Clear();
 			part->mVelocity.Clear();
 			part->mAlpha = 0.0f;
@@ -1016,7 +1016,7 @@ public:
 		}
 
 		mVertexCount = VertexCount;
-		mGLModeEnum = (mVertexCount == 3) ? (GL_TRIANGLES) : (GL_QUADS);
+		mGLModeEnum = mVertexCount == 3 ? GL_TRIANGLES : GL_QUADS;
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////
@@ -1046,7 +1046,7 @@ public:
 		mSpawnPlaneDistance = 500;
 		mSpawnPlaneSize = 500;
 		mSpawnRange.mMins = -(mSpawnPlaneDistance * 1.25f);
-		mSpawnRange.mMaxs = (mSpawnPlaneDistance * 1.25f);
+		mSpawnRange.mMaxs = mSpawnPlaneDistance * 1.25f;
 
 		mGravity = 300.0f;	// Units Per Second
 
@@ -1100,7 +1100,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////
 	inline bool	UseSpawnPlane() const
 	{
-		return (mGravity != 0.0f);
+		return mGravity != 0.0f;
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////
@@ -1108,7 +1108,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////
 	void		Update()
 	{
-		const float		particleFade = (mFade * mSecondsElapsed);
+		const float		particleFade = mFade * mSecondsElapsed;
 		const int			numLocalWindZones = mLocalWindZones.size();
 
 		// Compute Camera
@@ -1132,22 +1132,22 @@ public:
 				}
 				mRotationChangeNext--;
 
-				const float	RotationDeltaDifference = (mRotationDeltaTarget - mRotationDelta);
+				const float	RotationDeltaDifference = mRotationDeltaTarget - mRotationDelta;
 				if (fabsf(RotationDeltaDifference) > 0.01)
 				{
 					mRotationDelta += RotationDeltaDifference;		// Blend To New Delta
 				}
-				mRotationCurrent += (mRotationDelta * mSecondsElapsed);
+				mRotationCurrent += mRotationDelta * mSecondsElapsed;
 				const float s = sinf(mRotationCurrent);
 				const float c = cosf(mRotationCurrent);
 
 				const CVec3	TempCamLeft(mCameraLeft);
 
-				mCameraLeft *= (c * mWidth);
-				mCameraLeft.ScaleAdd(mCameraDown, (s * mWidth * -1.0f));
+				mCameraLeft *= c * mWidth;
+				mCameraLeft.ScaleAdd(mCameraDown, s * mWidth * -1.0f);
 
-				mCameraDown *= (c * mHeight);
-				mCameraDown.ScaleAdd(TempCamLeft, (s * mHeight));
+				mCameraDown *= c * mHeight;
+				mCameraDown.ScaleAdd(TempCamLeft, s * mHeight);
 			}
 			else
 			{
@@ -1185,11 +1185,11 @@ public:
 				{
 					if (force[dim] > 0.01)
 					{
-						mRange.mMins[dim] -= (mSpawnPlaneDistance / 2.0f);
+						mRange.mMins[dim] -= mSpawnPlaneDistance / 2.0f;
 					}
 					else if (force[dim] < -0.01)
 					{
-						mRange.mMaxs[dim] += (mSpawnPlaneDistance / 2.0f);
+						mRange.mMaxs[dim] += mSpawnPlaneDistance / 2.0f;
 					}
 				}
 				mSpawnPlaneNorm = force;
@@ -1201,12 +1201,12 @@ public:
 			//--------------------------------------------
 			if (mVertexCount == 4)
 			{
-				mCameraLeftPlusUp = (mCameraLeft - mCameraDown);
-				mCameraLeftMinusUp = (mCameraLeft + mCameraDown);
+				mCameraLeftPlusUp = mCameraLeft - mCameraDown;
+				mCameraLeftMinusUp = mCameraLeft + mCameraDown;
 			}
 			else
 			{
-				mCameraLeftPlusUp = (mCameraDown + mCameraLeft);		// should really be called mCamera Left + Down
+				mCameraLeftPlusUp = mCameraDown + mCameraLeft;		// should really be called mCamera Left + Down
 			}
 		}
 
@@ -1222,7 +1222,7 @@ public:
 		mParticleCountRender = 0;
 		for (int particleNum = 0; particleNum < mParticleCount; particleNum++)
 		{
-			WFXParticle* part = &(mParticles[particleNum]);
+			WFXParticle* part = &mParticles[particleNum];
 
 			if (!mPopulated)
 			{
@@ -1253,11 +1253,11 @@ public:
 
 			part->mPosition.ScaleAdd(part->mVelocity, mSecondsElapsed);
 
-			CVec3 partToCamera = (part->mPosition - mCameraPosition);
+			CVec3 partToCamera = part->mPosition - mCameraPosition;
 			bool partRendering = part->mFlags.get_bit(WFXParticle::FLAG_RENDER);
 			const bool partOutside = mOutside.PointOutside(part->mPosition, mWidth, mHeight);
 			bool partInRange = mRange.In(part->mPosition);
-			const bool partInView = (partOutside && partInRange && (partToCamera.Dot(mCameraForward) > 0.0f));
+			const bool partInView = partOutside && partInRange && partToCamera.Dot(mCameraForward) > 0.0f;
 
 			// Process Respawn
 			//-----------------
@@ -1270,9 +1270,9 @@ public:
 				if (UseSpawnPlane())
 				{
 					part->mPosition = mCameraPosition;
-					part->mPosition -= (mSpawnPlaneNorm * mSpawnPlaneDistance);
-					part->mPosition += (mSpawnPlaneRight * Q_flrand(-mSpawnPlaneSize, mSpawnPlaneSize));
-					part->mPosition += (mSpawnPlaneUp * Q_flrand(-mSpawnPlaneSize, mSpawnPlaneSize));
+					part->mPosition -= mSpawnPlaneNorm * mSpawnPlaneDistance;
+					part->mPosition += mSpawnPlaneRight * Q_flrand(-mSpawnPlaneSize, mSpawnPlaneSize);
+					part->mPosition += mSpawnPlaneUp * Q_flrand(-mSpawnPlaneSize, mSpawnPlaneSize);
 				}
 
 				// Otherwise, Just Wrap Around To The Other End Of The Range
@@ -1364,7 +1364,7 @@ public:
 	{
 		// Set The GL State And Image Binding
 		//------------------------------------
-		GL_State((mBlendMode == 0) ? (GLS_ALPHA) : (GLS_SRCBLEND_ONE | GLS_DSTBLEND_ONE));
+		GL_State(mBlendMode == 0 ? GLS_ALPHA : GLS_SRCBLEND_ONE | GLS_DSTBLEND_ONE);
 		GL_Bind(mImage);
 
 		// Enable And Disable Things
@@ -1372,8 +1372,8 @@ public:
 		qglEnable(GL_TEXTURE_2D);
 		qglDisable(GL_CULL_FACE);
 
-		qglTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (mFilterMode == 0) ? (GL_LINEAR) : (GL_NEAREST));
-		qglTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (mFilterMode == 0) ? (GL_LINEAR) : (GL_NEAREST));
+		qglTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, mFilterMode == 0 ? GL_LINEAR : GL_NEAREST);
+		qglTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mFilterMode == 0 ? GL_LINEAR : GL_NEAREST);
 
 		// Setup Matrix Mode And Translation
 		//-----------------------------------
@@ -1385,7 +1385,7 @@ public:
 		qglBegin(mGLModeEnum);
 		for (int particleNum = 0; particleNum < mParticleCount; particleNum++)
 		{
-			WFXParticle* part = &(mParticles[particleNum]);
+			WFXParticle* part = &mParticles[particleNum];
 			if (!part->mFlags.get_bit(WFXParticle::FLAG_RENDER))
 			{
 				continue;
@@ -1398,15 +1398,15 @@ public:
 				CVec3 partDirection = part->mVelocity;
 				VectorNormalize(partDirection.v);
 				mCameraDown = partDirection;
-				mCameraDown *= (mHeight * -1);
+				mCameraDown *= mHeight * -1;
 				if (mVertexCount == 4)
 				{
-					mCameraLeftPlusUp = (mCameraLeft - mCameraDown);
-					mCameraLeftMinusUp = (mCameraLeft + mCameraDown);
+					mCameraLeftPlusUp = mCameraLeft - mCameraDown;
+					mCameraLeftMinusUp = mCameraLeft + mCameraDown;
 				}
 				else
 				{
-					mCameraLeftPlusUp = (mCameraDown + mCameraLeft);
+					mCameraLeftPlusUp = mCameraDown + mCameraLeft;
 				}
 			}
 
@@ -1516,8 +1516,8 @@ void R_ShutdownWorldEffects()
 void RB_RenderWorldEffects()
 {
 	if (!tr.world ||
-		(tr.refdef.rdflags & RDF_NOWORLDMODEL) ||
-		(backEnd.refdef.rdflags & RDF_SKYBOXPORTAL) ||
+		tr.refdef.rdflags & RDF_NOWORLDMODEL ||
+		backEnd.refdef.rdflags & RDF_SKYBOXPORTAL ||
 		!mParticleClouds.size() ||
 		ri.CL_IsRunningInGameCinematic())
 	{	//  no world rendering or no world or no particle clouds
@@ -1526,7 +1526,7 @@ void RB_RenderWorldEffects()
 
 	SetViewportAndScissor();
 	qglMatrixMode(GL_MODELVIEW);
-	qglLoadMatrixf(backEnd.viewParms.world.modelMatrix);
+	qglLoadMatrixf(backEnd.viewParms.world.model_matrix);
 
 	// Calculate Elapsed Time For Scale Purposes
 	//-------------------------------------------
@@ -1539,7 +1539,7 @@ void RB_RenderWorldEffects()
 	{
 		mMillisecondsElapsed = 1000.0f;
 	}
-	mSecondsElapsed = (mMillisecondsElapsed / 1000.0f);
+	mSecondsElapsed = mMillisecondsElapsed / 1000.0f;
 
 	// Make Sure We Are Always Outside Cached
 	//----------------------------------------
@@ -1580,21 +1580,21 @@ void RB_RenderWorldEffects()
 void R_WorldEffect_f(void)
 {
 	char	temp[2048];
-	ri.Cmd_ArgsBuffer(temp, sizeof(temp));
+	ri.Cmd_ArgsBuffer(temp, sizeof temp);
 	R_WorldEffectCommand(temp);
 }
 
 void R_WeatherEffect_f(void)
 {
 	char	temp[2048];
-	ri.Cmd_ArgsBuffer(temp, sizeof(temp));
+	ri.Cmd_ArgsBuffer(temp, sizeof temp);
 	R_WeatherEffectCommand(temp);
 }
 
 void R_SetWeatherEffect_f(void)
 {
 	char	temp[2048];
-	ri.Cmd_ArgsBuffer(temp, sizeof(temp));
+	ri.Cmd_ArgsBuffer(temp, sizeof temp);
 	R_SetWeatherEffectCommand(temp);
 }
 
@@ -2049,7 +2049,7 @@ void R_WorldEffectCommand(const char* command)
 		nCloud.mMass.mMin = 5.0f;
 
 		nCloud.mSpawnRange.mMins = -(nCloud.mSpawnPlaneDistance * 1.25f);
-		nCloud.mSpawnRange.mMaxs = (nCloud.mSpawnPlaneDistance * 1.25f);
+		nCloud.mSpawnRange.mMaxs = nCloud.mSpawnPlaneDistance * 1.25f;
 		nCloud.mSpawnRange.mMins[2] = -150;
 		nCloud.mSpawnRange.mMaxs[2] = 150;
 
@@ -2535,7 +2535,7 @@ void R_SetWeatherEffectCommand(const char* command)
 		nCloud.mMass.mMin = 5.0f;
 
 		nCloud.mSpawnRange.mMins = -(nCloud.mSpawnPlaneDistance * 1.25f);
-		nCloud.mSpawnRange.mMaxs = (nCloud.mSpawnPlaneDistance * 1.25f);
+		nCloud.mSpawnRange.mMaxs = nCloud.mSpawnPlaneDistance * 1.25f;
 		nCloud.mSpawnRange.mMins[2] = -150;
 		nCloud.mSpawnRange.mMaxs[2] = 150;
 
@@ -2741,7 +2741,7 @@ void R_WeatherEffectCommand(const char* command)
 		nCloud.mMass.mMin = 5.0f;
 
 		nCloud.mSpawnRange.mMins = -(nCloud.mSpawnPlaneDistance * 1.25f);
-		nCloud.mSpawnRange.mMaxs = (nCloud.mSpawnPlaneDistance * 1.25f);
+		nCloud.mSpawnRange.mMaxs = nCloud.mSpawnPlaneDistance * 1.25f;
 		nCloud.mSpawnRange.mMins[2] = -150;
 		nCloud.mSpawnRange.mMaxs[2] = 150;
 
@@ -2822,13 +2822,13 @@ float R_GetChanceOfSaberFizz()
 	{
 		if (mParticleClouds[i].mWaterParticles)
 		{
-			chance += (mParticleClouds[i].mGravity / 20000.0f);
+			chance += mParticleClouds[i].mGravity / 20000.0f;
 			numWater++;
 		}
 	}
 	if (numWater)
 	{
-		return (chance / numWater);
+		return chance / numWater;
 	}
 	return 0.0f;
 }

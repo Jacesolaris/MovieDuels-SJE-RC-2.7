@@ -1915,7 +1915,7 @@ static bool RB_TestZFlare(vec3_t point) {
 
 	// if the point is off the screen, don't bother adding it
 	// calculate screen coordinates and depth
-	R_TransformModelToClip(point, backEnd.ori.modelMatrix,
+	R_TransformModelToClip(point, backEnd.ori.model_matrix,
 		backEnd.viewParms.projectionMatrix, eye, clip);
 
 	// check to see if the point is completely off screen

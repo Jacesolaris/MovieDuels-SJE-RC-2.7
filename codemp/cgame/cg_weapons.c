@@ -2129,7 +2129,7 @@ void CG_MissileHitWall(int weapon, int client_num, vec3_t origin, vec3_t dir, im
 CG_MissileHitPlayer
 =================
 */
-void CG_MissileHitPlayer(int weapon, vec3_t origin, vec3_t dir, int entityNum, qboolean altFire)
+void CG_MissileHitPlayer(int weapon, vec3_t origin, vec3_t dir, int entity_num, qboolean altFire)
 {
 	const qboolean	humanoid = qtrue;
 	vec3_t up = { 0,0,1 };
@@ -2316,11 +2316,11 @@ BULLETS
 CG_CalcMuzzlePoint
 ======================
 */
-qboolean CG_CalcMuzzlePoint(int entityNum, vec3_t muzzle) {
+qboolean CG_CalcMuzzlePoint(int entity_num, vec3_t muzzle) {
 	vec3_t		forward, right;
 	vec3_t		gunpoint;
 
-	if (entityNum == cg.snap->ps.client_num)
+	if (entity_num == cg.snap->ps.client_num)
 	{ //I'm not exactly sure why we'd be rendering someone else's crosshair, but hey.
 		const int weapontype = cg.snap->ps.weapon;
 		vec3_t weaponMuzzle;
@@ -2393,7 +2393,7 @@ qboolean CG_CalcMuzzlePoint(int entityNum, vec3_t muzzle) {
 		return qtrue;
 	}
 
-	const centity_t* cent = &cg_entities[entityNum];
+	const centity_t* cent = &cg_entities[entity_num];
 	if (!cent->currentValid) {
 		return qfalse;
 	}

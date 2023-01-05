@@ -214,7 +214,7 @@ void RB_ShadowTessEnd(void)
 	RB_DoShadowTessEnd(dl->transformed);
 
 #else //old ents-only way
-	RB_DoShadowTessEnd(NULL);
+	RB_DoShadowTessEnd(nullptr);
 #endif
 }
 

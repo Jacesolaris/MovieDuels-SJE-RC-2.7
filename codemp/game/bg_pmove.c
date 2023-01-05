@@ -2209,7 +2209,7 @@ static qboolean PM_CheckJump(void)
 					VectorNormalize(idealNormal);
 				}
 
-				if (!doTrace || (trace.fraction < 1.0f && (trace.entityNum < MAX_CLIENTS || DotProduct(wallNormal, idealNormal) > 0.7)))
+				if (!doTrace || (trace.fraction < 1.0f && (trace.entity_num < MAX_CLIENTS || DotProduct(wallNormal, idealNormal) > 0.7)))
 				{//there is a wall there.. or hit a client
 					if ((anim != BOTH_WALL_RUN_LEFT
 						&& anim != BOTH_WALL_RUN_RIGHT
@@ -2240,9 +2240,9 @@ static qboolean PM_CheckJump(void)
 						/*
 						if ( doTrace && anim != BOTH_WALL_RUN_LEFT && anim != BOTH_WALL_RUN_RIGHT )
 						{
-							if (trace.entityNum < MAX_CLIENTS)
+							if (trace.entity_num < MAX_CLIENTS)
 							{
-								pm->ps->forceKickFlip = trace.entityNum+1; //let the server know that this person gets kicked by this client
+								pm->ps->forceKickFlip = trace.entity_num+1; //let the server know that this person gets kicked by this client
 							}
 						}
 						*/
@@ -2444,9 +2444,9 @@ static qboolean PM_CheckJump(void)
 					pm->ps->fd.forceJumpSound = 1;
 					BG_ForcePowerDrain( pm->ps, FP_LEVITATION, 5 );
 
-					if (trace.entityNum < MAX_CLIENTS)
+					if (trace.entity_num < MAX_CLIENTS)
 					{
-						pm->ps->forceKickFlip = trace.entityNum+1; //let the server know that this person gets kicked by this client
+						pm->ps->forceKickFlip = trace.entity_num+1; //let the server know that this person gets kicked by this client
 					}
 				}
 			}
@@ -2495,10 +2495,10 @@ static qboolean PM_CheckJump(void)
 						pm->trace(&trace, pm->ps->origin, mins, maxs, traceto, pm->ps->client_num, contents);//FIXME: clip brushes too?
 						VectorSubtract(pm->ps->origin, traceto, idealNormal);
 						VectorNormalize(idealNormal);
-						trace_ent = PM_BGEntForNum(trace.entityNum);
+						trace_ent = PM_BGEntForNum(trace.entity_num);
 
 						if (trace.fraction < 1.0f
-							&& ((trace.entityNum < ENTITYNUM_WORLD && trace_ent && trace_ent->s.solid != SOLID_BMODEL) || DotProduct(trace.plane.normal, idealNormal) > 0.7))
+							&& ((trace.entity_num < ENTITYNUM_WORLD && trace_ent && trace_ent->s.solid != SOLID_BMODEL) || DotProduct(trace.plane.normal, idealNormal) > 0.7))
 						{//there is a wall there
 							pm->ps->velocity[0] = pm->ps->velocity[1] = 0;
 							if (wallWalkAnim == BOTH_FORCEWALLRUNFLIP_START)
@@ -2597,10 +2597,10 @@ static qboolean PM_CheckJump(void)
 						pm->trace(&trace, pm->ps->origin, mins, maxs, traceto, pm->ps->client_num, CONTENTS_SOLID);//FIXME: clip brushes too?
 						VectorSubtract(pm->ps->origin, traceto, idealNormal);
 						VectorNormalize(idealNormal);
-						trace_ent = PM_BGEntForNum(trace.entityNum);
+						trace_ent = PM_BGEntForNum(trace.entity_num);
 						if (trace.fraction < 1.0f
 							&& fabs(trace.plane.normal[2]) <= 0.2f/*MAX_WALL_GRAB_SLOPE*/
-							&& ((trace.entityNum < ENTITYNUM_WORLD && trace_ent && trace_ent->s.solid != SOLID_BMODEL) || DotProduct(trace.plane.normal, idealNormal) > 0.7))
+							&& ((trace.entity_num < ENTITYNUM_WORLD && trace_ent && trace_ent->s.solid != SOLID_BMODEL) || DotProduct(trace.plane.normal, idealNormal) > 0.7))
 						{//there is a wall there
 							float dot = DotProduct(pm->ps->velocity, trace.plane.normal);
 							if (dot < 1.0f)
@@ -4124,12 +4124,12 @@ static void PM_GroundTrace(void) {
 #ifdef _GAME
 		if (pm->ps->client_num < MAX_CLIENTS &&
 			!pm->ps->m_iVehicleNum &&
-			trace.entityNum < ENTITYNUM_WORLD &&
-			trace.entityNum >= MAX_CLIENTS &&
+			trace.entity_num < ENTITYNUM_WORLD &&
+			trace.entity_num >= MAX_CLIENTS &&
 			!pm->ps->zoomMode &&
 			pm_entSelf)
 		{ //check if we landed on a vehicle
-			const gentity_t* trEnt = &g_entities[trace.entityNum];
+			const gentity_t* trEnt = &g_entities[trace.entity_num];
 			if (trEnt->inuse && trEnt->client && trEnt->s.eType == ET_NPC && trEnt->s.NPC_class == CLASS_VEHICLE &&
 				!trEnt->client->ps.m_iVehicleNum &&
 				trEnt->m_pVehicle &&
@@ -4160,10 +4160,10 @@ static void PM_GroundTrace(void) {
 		}
 	}
 
-	pm->ps->groundEntityNum = trace.entityNum;
+	pm->ps->groundEntityNum = trace.entity_num;
 	pm->ps->lastOnGround = pm->cmd.serverTime;
 
-	PM_AddTouchEnt(trace.entityNum);
+	PM_AddTouchEnt(trace.entity_num);
 }
 
 /*
@@ -5797,7 +5797,7 @@ int BG_VehTraceFromCamPos(trace_t* camTrace, bgEntity_t* bgEnt, const vec3_t ent
 		VectorCopy(camTrace->endpos, newEnd);
 		VectorSubtract(newEnd, shotStart, shotDir);
 		VectorNormalize(shotDir);
-		return (camTrace->entityNum + 1);
+		return (camTrace->entity_num + 1);
 	}
 	return 0;
 }
@@ -5849,9 +5849,9 @@ void PM_RocketLock(float lockDist, qboolean vehicleLock)
 		}
 	}
 
-	if (tr.fraction != 1 && tr.entityNum < ENTITYNUM_NONE && tr.entityNum != pm->ps->client_num)
+	if (tr.fraction != 1 && tr.entity_num < ENTITYNUM_NONE && tr.entity_num != pm->ps->client_num)
 	{
-		const bgEntity_t* bgEnt = PM_BGEntForNum(tr.entityNum);
+		const bgEntity_t* bgEnt = PM_BGEntForNum(tr.entity_num);
 		if (bgEnt && (bgEnt->s.powerups & PW_CLOAKED))
 		{
 			pm->ps->rocketLockIndex = ENTITYNUM_NONE;
@@ -5861,15 +5861,15 @@ void PM_RocketLock(float lockDist, qboolean vehicleLock)
 		{
 			if (pm->ps->rocketLockIndex == ENTITYNUM_NONE)
 			{
-				pm->ps->rocketLockIndex = tr.entityNum;
+				pm->ps->rocketLockIndex = tr.entity_num;
 				pm->ps->rocketLockTime = pm->cmd.serverTime;
 			}
-			else if (pm->ps->rocketLockIndex != tr.entityNum && pm->ps->rocketTargetTime < pm->cmd.serverTime)
+			else if (pm->ps->rocketLockIndex != tr.entity_num && pm->ps->rocketTargetTime < pm->cmd.serverTime)
 			{
-				pm->ps->rocketLockIndex = tr.entityNum;
+				pm->ps->rocketLockIndex = tr.entity_num;
 				pm->ps->rocketLockTime = pm->cmd.serverTime;
 			}
-			else if (pm->ps->rocketLockIndex == tr.entityNum)
+			else if (pm->ps->rocketLockIndex == tr.entity_num)
 			{
 				if (pm->ps->rocketLockTime == -1)
 				{
@@ -5877,7 +5877,7 @@ void PM_RocketLock(float lockDist, qboolean vehicleLock)
 				}
 			}
 
-			if (pm->ps->rocketLockIndex == tr.entityNum)
+			if (pm->ps->rocketLockIndex == tr.entity_num)
 			{
 				pm->ps->rocketTargetTime = pm->cmd.serverTime + 500;
 			}
@@ -6274,7 +6274,7 @@ int PM_ItemUsable(playerState_t* ps, int forcedUse)
 
 		pm->trace(&tr, ps->origin, mins, maxs, trtest, ps->client_num, MASK_PLAYERSOLID);
 
-		if ((tr.fraction != 1 && tr.entityNum != ps->client_num) || tr.startsolid || tr.allsolid)
+		if ((tr.fraction != 1 && tr.entity_num != ps->client_num) || tr.startsolid || tr.allsolid)
 		{
 			PM_AddEventWithParm(EV_ITEMUSEFAIL, SENTRY_NOROOM);
 			return 0;

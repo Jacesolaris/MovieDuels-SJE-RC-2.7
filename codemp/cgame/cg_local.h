@@ -334,7 +334,7 @@ typedef struct clientInfo_s {
 #define MAX_CG_LOOPSOUNDS 8
 
 typedef struct cgLoopSound_s {
-	int entityNum;
+	int entity_num;
 	vec3_t origin;
 	vec3_t velocity;
 	sfxHandle_t sfx;
@@ -1845,10 +1845,10 @@ void CG_ReattachLimb(centity_t* source);
 // cg_ents.c
 //
 
-void CG_S_AddLoopingSound(int entityNum, const vec3_t origin, const vec3_t velocity, sfxHandle_t sfx);
-void CG_S_AddRealLoopingSound(int entityNum, const vec3_t origin, const vec3_t velocity, sfxHandle_t sfx);
-void CG_S_StopLoopingSound(int entityNum, sfxHandle_t sfx);
-void CG_S_UpdateLoopingSounds(int entityNum);
+void CG_S_AddLoopingSound(int entity_num, const vec3_t origin, const vec3_t velocity, sfxHandle_t sfx);
+void CG_S_AddRealLoopingSound(int entity_num, const vec3_t origin, const vec3_t velocity, sfxHandle_t sfx);
+void CG_S_StopLoopingSound(int entity_num, sfxHandle_t sfx);
+void CG_S_UpdateLoopingSounds(int entity_num);
 
 void CG_SetEntitySoundPosition(centity_t* cent);
 void CG_AddPacketEntities(qboolean isPortal);
@@ -1889,7 +1889,7 @@ void CG_RegisterItemVisuals(int item_num);
 
 void CG_FireWeapon(centity_t* cent, qboolean alt_fire);
 void CG_MissileHitWall(int weapon, int client_num, vec3_t origin, vec3_t dir, impactSound_t soundType, qboolean alt_fire, int charge);
-void CG_MissileHitPlayer(int weapon, vec3_t origin, vec3_t dir, int entityNum, qboolean alt_fire);
+void CG_MissileHitPlayer(int weapon, vec3_t origin, vec3_t dir, int entity_num, qboolean alt_fire);
 
 void CG_AddViewWeapon(playerState_t* ps);
 void CG_AddPlayerWeapon(refEntity_t* parent, playerState_t* ps, centity_t* cent, int team, vec3_t newAngles, qboolean thirdPerson);

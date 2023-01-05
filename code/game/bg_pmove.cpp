@@ -58,8 +58,8 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 extern qboolean G_DoDismemberment(gentity_t* self, vec3_t point, int mod, int hit_loc,
 	qboolean force = qfalse);
 extern qboolean rocket_trooper_player(const gentity_t* self);
-extern qboolean G_EntIsUnlockedDoor(int entityNum);
-extern qboolean G_EntIsDoor(int entityNum);
+extern qboolean G_EntIsUnlockedDoor(int entity_num);
+extern qboolean G_EntIsDoor(int entity_num);
 extern qboolean InFront(vec3_t spot, vec3_t from, vec3_t fromAngles, float threshHold = 0.0f);
 extern void G_AddVoiceEvent(const gentity_t* self, int event, int speak_debounce_time);
 extern qboolean Q3_TaskIDPending(const gentity_t* ent, taskID_t taskType);
@@ -582,7 +582,7 @@ qboolean PM_ClientImpact( trace_t *trace, qboolean damageSelf )
 */
 qboolean PM_ClientImpact(const trace_t* trace, const qboolean damage_self)
 {
-	const int other_entity_num = trace->entityNum;
+	const int other_entity_num = trace->entity_num;
 
 	if (!pm->gent)
 	{
@@ -2173,10 +2173,10 @@ static qboolean PM_CheckJump()
 							//trace up and forward a little to make sure the wall it at least 64 tall
 							if (contents & CONTENTS_BODY //included entitied
 								&& trace.contents & CONTENTS_BODY //hit an entity
-								&& g_entities[trace.entityNum].client) //hit a client
+								&& g_entities[trace.entity_num].client) //hit a client
 							{
 								//no need to trace up, it's all good...
-								if (PM_InOnGroundAnim(&g_entities[trace.entityNum].client->ps)) //on the ground, no jump
+								if (PM_InOnGroundAnim(&g_entities[trace.entity_num].client->ps)) //on the ground, no jump
 								{
 									//can't jump off guys on ground
 									trace.fraction = 1.0f; //way to stop if from doing the jump
@@ -2234,9 +2234,9 @@ static qboolean PM_CheckJump()
 						}
 					}
 				}
-				gentity_t* trace_ent = &g_entities[trace.entityNum];
+				gentity_t* trace_ent = &g_entities[trace.entity_num];
 
-				if (!do_trace || trace.fraction < 1.0f && (trace.entityNum < ENTITYNUM_WORLD && trace_ent && trace_ent->
+				if (!do_trace || trace.fraction < 1.0f && (trace.entity_num < ENTITYNUM_WORLD && trace_ent && trace_ent->
 					s
 					.solid != SOLID_BMODEL || DotProduct(wall_normal, ideal_normal) > 0.7))
 				{
@@ -2293,7 +2293,7 @@ static qboolean PM_CheckJump()
 							&& anim != BOTH_WALL_RUN_RIGHT
 							&& anim != BOTH_FORCEWALLRUNFLIP_START)
 						{
-							if (pm->gent && trace.entityNum < ENTITYNUM_WORLD)
+							if (pm->gent && trace.entity_num < ENTITYNUM_WORLD)
 							{
 								if (trace_ent
 									&& trace_ent->client
@@ -2590,10 +2590,10 @@ static qboolean PM_CheckJump()
 							static_cast<EG2_Collision>(0), 0); //FIXME: clip brushes too?
 						VectorSubtract(pm->ps->origin, traceto, ideal_normal);
 						VectorNormalize(ideal_normal);
-						gentity_t* trace_ent = &g_entities[trace.entityNum];
+						gentity_t* trace_ent = &g_entities[trace.entity_num];
 						if (trace.fraction < 1.0f
 							&& fabs(trace.plane.normal[2]) <= MAX_WALL_GRAB_SLOPE
-							&& (trace.entityNum < ENTITYNUM_WORLD && trace_ent && trace_ent->s.solid != SOLID_BMODEL ||
+							&& (trace.entity_num < ENTITYNUM_WORLD && trace_ent && trace_ent->s.solid != SOLID_BMODEL ||
 								DotProduct(trace.plane.normal, ideal_normal) > 0.7))
 						{
 							//there is a wall there
@@ -4355,10 +4355,10 @@ qboolean PM_TryRoll()
 						roll = qtrue;
 					}
 				}
-				else if (G_EntIsDoor(trace.entityNum))
+				else if (G_EntIsDoor(trace.entity_num))
 				{
 					//okay to roll into a door
-					if (G_EntIsUnlockedDoor(trace.entityNum))
+					if (G_EntIsUnlockedDoor(trace.entity_num))
 					{
 						//if it's an auto-door
 						roll = qtrue;
@@ -4367,7 +4367,7 @@ qboolean PM_TryRoll()
 				else
 				{
 					//check other conditions
-					const gentity_t* trace_ent = &g_entities[trace.entityNum];
+					const gentity_t* trace_ent = &g_entities[trace.entity_num];
 					if (trace_ent && trace_ent->svFlags & SVF_GLASS_BRUSH)
 					{
 						//okay to roll through glass
@@ -4544,10 +4544,10 @@ qboolean pm_try_roll_md()
 						roll = qtrue;
 					}
 				}
-				else if (G_EntIsDoor(trace.entityNum))
+				else if (G_EntIsDoor(trace.entity_num))
 				{
 					//okay to roll into a door
-					if (G_EntIsUnlockedDoor(trace.entityNum))
+					if (G_EntIsUnlockedDoor(trace.entity_num))
 					{
 						//if it's an auto-door
 						roll = qtrue;
@@ -4556,7 +4556,7 @@ qboolean pm_try_roll_md()
 				else
 				{
 					//check other conditions
-					const gentity_t* trace_ent = &g_entities[trace.entityNum];
+					const gentity_t* trace_ent = &g_entities[trace.entity_num];
 					if (trace_ent && trace_ent->svFlags & SVF_GLASS_BRUSH)
 					{
 						//okay to roll through glass
@@ -5590,7 +5590,7 @@ static void PM_GroundTraceMissed()
 														cliff_fall = qtrue;
 													}
 												}
-												else if (trace.entityNum < ENTITYNUM_NONE
+												else if (trace.entity_num < ENTITYNUM_NONE
 													&& pm->ps->weapon != WP_SABER
 													&& (!pm->gent || !pm->gent->client || pm->gent->client->NPC_class
 														!= CLASS_BOBAFETT && pm->gent->client->NPC_class !=
@@ -5600,8 +5600,8 @@ static void PM_GroundTraceMissed()
 														!= CLASS_ROCKETTROOPER))
 												{
 													//Jedi don't scream and die if they're heading for a hard impact
-													const gentity_t* trace_ent = &g_entities[trace.entityNum];
-													if (trace.entityNum == ENTITYNUM_WORLD || trace_ent && trace_ent->
+													const gentity_t* trace_ent = &g_entities[trace.entity_num];
+													if (trace.entity_num == ENTITYNUM_WORLD || trace_ent && trace_ent->
 														bmodel)
 													{
 														//hit architecture, find impact force
@@ -6037,7 +6037,7 @@ static void PM_GroundTrace()
 			Com_Printf("%i:Land\n", c_pmove);
 		}
 
-		//if ( !PM_ClientImpact( trace.entityNum, qtrue ) )
+		//if ( !PM_ClientImpact( trace.entity_num, qtrue ) )
 		{
 			PM_CrashLand();
 
@@ -6059,7 +6059,7 @@ static void PM_GroundTrace()
 		}
 	}
 
-	pm->ps->groundEntityNum = trace.entityNum;
+	pm->ps->groundEntityNum = trace.entity_num;
 	pm->ps->lastOnGround = level.time;
 	if (pm->ps->client_num < MAX_CLIENTS || PM_ControlledByPlayer())
 	{
@@ -6070,7 +6070,7 @@ static void PM_GroundTrace()
 	// don't reset the z velocity for slopes
 	//	pm->ps->velocity[2] = 0;
 
-	PM_AddTouchEnt(trace.entityNum);
+	PM_AddTouchEnt(trace.entity_num);
 }
 
 int LastMatrixJumpTime = 0;
@@ -23161,7 +23161,7 @@ void PM_AdjustAngleForWallGrab(playerState_t* ps, usercmd_t* ucmd)
 			gi.trace(&trace, trace_from, nullptr, nullptr, trace_to, ps->client_num, pm->tracemask,
 				static_cast<EG2_Collision>(0), 0);
 
-			if (trace.fraction == 1 || !LedgeGrabableEntity(trace.entityNum)
+			if (trace.fraction == 1 || !LedgeGrabableEntity(trace.entity_num)
 				|| pm->cmd.buttons & BUTTON_USE_FORCE
 				|| pm->cmd.buttons & BUTTON_FORCE_LIGHTNING
 				|| pm->cmd.buttons & BUTTON_LIGHTNING_STRIKE
@@ -23304,7 +23304,7 @@ qboolean LedgeTrace(trace_t* trace, vec3_t dir, float* lerpup, float* lerpfwd, f
 	gi.trace(trace, trace_from, nullptr, nullptr, trace_to, pm->ps->client_num, pm->tracemask,
 		static_cast<EG2_Collision>(0), 0);
 
-	if (trace->fraction < 1 && LedgeGrabableEntity(trace->entityNum))
+	if (trace->fraction < 1 && LedgeGrabableEntity(trace->entity_num))
 	{
 		//hit a wall, pop into the wall and fire down to find top of wall
 		VectorMA(trace->endpos, 0.5, dir, trace_to);
@@ -23316,7 +23316,7 @@ qboolean LedgeTrace(trace_t* trace, vec3_t dir, float* lerpup, float* lerpfwd, f
 		gi.trace(trace, trace_from, nullptr, nullptr, trace_to, pm->ps->client_num, pm->tracemask,
 			static_cast<EG2_Collision>(0), 0);
 
-		if (trace->fraction == 1.0 || trace->startsolid || !LedgeGrabableEntity(trace->entityNum))
+		if (trace->fraction == 1.0 || trace->startsolid || !LedgeGrabableEntity(trace->entity_num))
 		{
 			return qfalse;
 		}
@@ -23344,7 +23344,7 @@ qboolean LedgeTrace(trace_t* trace, vec3_t dir, float* lerpup, float* lerpfwd, f
 	vectoangles(trace->plane.normal, wallangles);
 	if (trace->fraction == 1.0
 		|| wallangles[PITCH] > 20 || wallangles[PITCH] < -20
-		|| !LedgeGrabableEntity(trace->entityNum))
+		|| !LedgeGrabableEntity(trace->entity_num))
 	{
 		//no ledge or too steep of a ledge
 		return qfalse;

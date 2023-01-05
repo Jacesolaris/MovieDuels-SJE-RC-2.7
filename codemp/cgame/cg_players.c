@@ -3456,7 +3456,7 @@ But I don't want to slow it down..
 void	CG_Rag_Trace(trace_t* result, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end,
 	int skipNumber, int mask) {
 	trap->CM_Trace(result, start, end, mins, maxs, 0, mask, 0);
-	result->entityNum = result->fraction != 1.0 ? ENTITYNUM_WORLD : ENTITYNUM_NONE;
+	result->entity_num = result->fraction != 1.0 ? ENTITYNUM_WORLD : ENTITYNUM_NONE;
 }
 
 //#define _RAG_BOLT_TESTING
@@ -6236,7 +6236,7 @@ qboolean CG_G2TraceCollide(trace_t* tr, vec3_t const mins, vec3_t const maxs, co
 		G2Trace[tN].mEntityNum = -1;
 		tN++;
 	}
-	centity_t* g2Hit = &cg_entities[tr->entityNum];
+	centity_t* g2Hit = &cg_entities[tr->entity_num];
 
 	if (g2Hit && g2Hit->ghoul2)
 	{
@@ -6258,7 +6258,7 @@ qboolean CG_G2TraceCollide(trace_t* tr, vec3_t const mins, vec3_t const maxs, co
 		if (G2Trace[0].mEntityNum != g2Hit->currentState.number)
 		{
 			tr->fraction = 1.0f;
-			tr->entityNum = ENTITYNUM_NONE;
+			tr->entity_num = ENTITYNUM_NONE;
 			tr->startsolid = 0;
 			tr->allsolid = 0;
 			return qfalse;
@@ -6295,14 +6295,14 @@ void CG_G2SaberEffects(vec3_t start, vec3_t end, centity_t* owner)
 
 		CG_Trace(&trace, startTr, NULL, NULL, endTr, owner->currentState.number, MASK_PLAYERSOLID);
 
-		if (trace.entityNum < MAX_CLIENTS)
+		if (trace.entity_num < MAX_CLIENTS)
 		{ //hit a client..
 			CG_G2TraceCollide(&trace, NULL, NULL, startTr, endTr);
 
-			if (trace.entityNum != ENTITYNUM_NONE)
+			if (trace.entity_num != ENTITYNUM_NONE)
 			{ //it succeeded with the ghoul2 trace
 				trap->FX_PlayEffectID(cgs.effects.mSaberBloodSparks, trace.endpos, trace.plane.normal, -1, -1, qfalse);
-				trap->S_StartSound(trace.endpos, trace.entityNum, CHAN_AUTO, trap->S_RegisterSound(va("sound/weapons/saber/saberhit%i.wav", Q_irand(1, 3))));
+				trap->S_StartSound(trace.endpos, trace.entity_num, CHAN_AUTO, trap->S_RegisterSound(va("sound/weapons/saber/saberhit%i.wav", Q_irand(1, 3))));
 			}
 		}
 
@@ -6409,20 +6409,20 @@ void CG_SaberCompWork(vec3_t start, vec3_t end, centity_t* owner, int saber_num,
 
 		CG_Trace(&trace, startTr, NULL, NULL, endTr, owner->currentState.number, MASK_PLAYERSOLID);
 
-		if (trace.entityNum == owner->serverSaberHitIndex)
+		if (trace.entity_num == owner->serverSaberHitIndex)
 		{ //this is the guy the server says we last hit, so continue.
-			if (cg_entities[trace.entityNum].ghoul2)
+			if (cg_entities[trace.entity_num].ghoul2)
 			{ //If it has a g2 instance, do the proper ghoul2 checks
 				CG_G2TraceCollide(&trace, NULL, NULL, startTr, endTr);
 
-				if (trace.entityNum != ENTITYNUM_NONE)
+				if (trace.entity_num != ENTITYNUM_NONE)
 				{ //it succeeded with the ghoul2 trace
 					doEffect = qtrue;
 
 					if (cg_ghoul2Marks.integer)
 					{
 						vec3_t ePos;
-						centity_t* trEnt = &cg_entities[trace.entityNum];
+						centity_t* trEnt = &cg_entities[trace.entity_num];
 
 						if (trEnt->ghoul2)
 						{
@@ -6472,7 +6472,7 @@ void CG_SaberCompWork(vec3_t start, vec3_t end, centity_t* owner, int saber_num,
 									}
 								}
 								CG_AddGhoul2Mark(markShader, flrand(3.0f, 4.0f),
-									trace.endpos, ePos, trace.entityNum, trEnt->lerpOrigin, trEnt->lerpAngles[YAW],
+									trace.endpos, ePos, trace.entity_num, trEnt->lerpOrigin, trEnt->lerpAngles[YAW],
 									trEnt->ghoul2, trEnt->modelScale, Q_irand(5000, 10000));
 								if (weaponMarkShader)
 								{
@@ -6538,7 +6538,7 @@ void CG_SaberCompWork(vec3_t start, vec3_t end, centity_t* owner, int saber_num,
 				if (owner->serverSaberFleshImpact)
 				{ //do standard player/live ent hit sparks
 					trap->FX_PlayEffectID(hitPersonFxID, trace.endpos, trace.plane.normal, -1, -1, qfalse);
-					//trap->S_StartSound(trace.endpos, trace.entityNum, CHAN_AUTO, trap->S_RegisterSound(va("sound/weapons/saber/saberhit%i.wav", Q_irand(1, 3))));
+					//trap->S_StartSound(trace.endpos, trace.entity_num, CHAN_AUTO, trap->S_RegisterSound(va("sound/weapons/saber/saberhit%i.wav", Q_irand(1, 3))));
 				}
 				else
 				{ //do the cut effect
@@ -6776,7 +6776,7 @@ void CG_AddSaberBlade(centity_t* cent, centity_t* scent, refEntity_t* saber, int
 					//....come up with something better..
 					if (client->saber[saber_num].blade[blade_num].trail.haveOldPos[i])
 					{
-						if (trace.entityNum == ENTITYNUM_WORLD || cg_entities[trace.entityNum].currentState.eType == ET_TERRAIN || (cg_entities[trace.entityNum].currentState.eFlags & EF_PERMANENT))
+						if (trace.entity_num == ENTITYNUM_WORLD || cg_entities[trace.entity_num].currentState.eType == ET_TERRAIN || (cg_entities[trace.entity_num].currentState.eFlags & EF_PERMANENT))
 						{//only put marks on architecture
 							// Let's do some cool burn/glowing mark bits!!!
 							CG_CreateSaberMarks(client->saber[saber_num].blade[blade_num].trail.oldPos[i], trace.endpos, trace.plane.normal);
@@ -9124,8 +9124,8 @@ void CG_CheckThirdPersonAlpha(centity_t* cent, refEntity_t* legs)
 				VectorNormalize(dir2Crosshair);
 				VectorMA(cameraCurLoc, cent->m_pVehicle->m_pVehicleInfo->cameraRange * 2.0f, dir2Crosshair, end);
 				CG_G2Trace(&trace, cameraCurLoc, vec3_origin, vec3_origin, end, ENTITYNUM_NONE, CONTENTS_BODY);
-				if (trace.entityNum == cent->currentState.client_num
-					|| trace.entityNum == cg.predictedPlayerState.client_num)
+				if (trace.entity_num == cent->currentState.client_num
+					|| trace.entity_num == cg.predictedPlayerState.client_num)
 				{//hit me or the vehicle I'm in
 					cg_vehThirdPersonAlpha -= 0.1f * cg.frametime / 50.0f;
 					if (cg_vehThirdPersonAlpha < cent->m_pVehicle->m_pVehicleInfo->cameraAlpha)

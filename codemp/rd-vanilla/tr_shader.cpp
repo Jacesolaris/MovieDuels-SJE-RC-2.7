@@ -45,7 +45,7 @@ static	texModInfo_t	texMods[MAX_SHADER_STAGES][TR_MAX_TEXMODS];
 static	shader_t* hashTable[FILE_HASH_SIZE];
 
 #define MAX_SHADERTEXT_HASH		2048
-static char** shaderTextHashTable[MAX_SHADERTEXT_HASH] = { 0 };
+static char** shaderTextHashTable[MAX_SHADERTEXT_HASH] = { nullptr };
 
 void KillTheShaderHashTable(void)
 {
@@ -153,22 +153,22 @@ void R_RemapShader(const char* shaderName, const char* newShaderName, const char
 	qhandle_t	h;
 
 	shader_t* sh = R_FindShaderByName(shaderName);
-	if (sh == NULL || sh == tr.defaultShader) {
+	if (sh == nullptr || sh == tr.defaultShader) {
 		h = RE_RegisterShaderLightMap(shaderName, lightmapsNone, stylesDefault);
 		sh = R_GetShaderByHandle(h);
 	}
-	if (sh == NULL || sh == tr.defaultShader) {
+	if (sh == nullptr || sh == tr.defaultShader) {
 		ri->Printf(PRINT_ALL, S_COLOR_YELLOW  "WARNING: R_RemapShader: shader %s not found\n", shaderName);
 		return;
 	}
 
 	shader_t* sh2 = R_FindShaderByName(newShaderName);
-	if (sh2 == NULL || sh2 == tr.defaultShader) {
+	if (sh2 == nullptr || sh2 == tr.defaultShader) {
 		h = RE_RegisterShaderLightMap(newShaderName, lightmapsNone, stylesDefault);
 		sh2 = R_GetShaderByHandle(h);
 	}
 
-	if (sh2 == NULL || sh2 == tr.defaultShader) {
+	if (sh2 == nullptr || sh2 == tr.defaultShader) {
 		ri->Printf(PRINT_ALL, S_COLOR_YELLOW  "WARNING: R_RemapShader: new shader %s not found\n", newShaderName);
 		return;
 	}
@@ -183,7 +183,7 @@ void R_RemapShader(const char* shaderName, const char* newShaderName, const char
 				sh->remappedShader = sh2;
 			}
 			else {
-				sh->remappedShader = NULL;
+				sh->remappedShader = nullptr;
 			}
 		}
 	}
@@ -2516,19 +2516,19 @@ static void FixRenderCommandList(int newShader) {
 				case RC_DRAW_SURFS:
 				{
 					int i;
-					drawSurf_t* drawSurf;
+					drawSurf_t* draw_surf;
 					shader_t* shader;
 					int			fogNum;
-					int			entityNum;
+					int			entity_num;
 					int			dlightMap;
 					const drawSurfsCommand_t* ds_cmd = static_cast<const drawSurfsCommand_t*>(curCmd);
 
-					for (i = 0, drawSurf = ds_cmd->drawSurfs; i < ds_cmd->numDrawSurfs; i++, drawSurf++) {
-						R_DecomposeSort(drawSurf->sort, &entityNum, &shader, &fogNum, &dlightMap);
-						int sortedIndex = ((drawSurf->sort >> QSORT_SHADERNUM_SHIFT) & (MAX_SHADERS - 1));
+					for (i = 0, draw_surf = ds_cmd->drawSurfs; i < ds_cmd->numDrawSurfs; i++, draw_surf++) {
+						R_DecomposeSort(draw_surf->sort, &entity_num, &shader, &fogNum, &dlightMap);
+						int sortedIndex = ((draw_surf->sort >> QSORT_SHADERNUM_SHIFT) & (MAX_SHADERS - 1));
 						if (sortedIndex >= newShader) {
 							sortedIndex++;
-							drawSurf->sort = (sortedIndex << QSORT_SHADERNUM_SHIFT) | (entityNum << QSORT_REFENTITYNUM_SHIFT) | (fogNum << QSORT_FOGNUM_SHIFT) | (int)dlightMap;
+							draw_surf->sort = (sortedIndex << QSORT_SHADERNUM_SHIFT) | (entity_num << QSORT_REFENTITYNUM_SHIFT) | (fogNum << QSORT_FOGNUM_SHIFT) | (int)dlightMap;
 						}
 					}
 					curCmd = static_cast<const void*>(ds_cmd + 1);
@@ -2639,7 +2639,7 @@ static shader_t* GeneratePermanentShader(void) {
 			}
 			else
 			{
-				newShader->stages[i].bundle[b].texMods = 0;	//clear the globabl ptr jic
+				newShader->stages[i].bundle[b].texMods = nullptr;	//clear the globabl ptr jic
 			}
 		}
 	}
@@ -3147,7 +3147,7 @@ static const char* FindShaderInShaderText(const char* shadername) {
 	p = s_shaderText;
 
 	if (!p) {
-		return NULL;
+		return nullptr;
 	}
 
 	// look for label
@@ -3164,7 +3164,7 @@ static const char* FindShaderInShaderText(const char* shadername) {
 		SkipBracedSection(&p, 0);
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 /*
@@ -3178,7 +3178,7 @@ default shader if the real one can't be found.
 shader_t* R_FindShaderByName(const char* name) {
 	char		strippedName[MAX_QPATH];
 
-	if ((name == NULL) || (name[0] == 0)) {
+	if ((name == nullptr) || (name[0] == 0)) {
 		return tr.defaultShader;
 	}
 
@@ -3203,7 +3203,7 @@ shader_t* R_FindShaderByName(const char* name) {
 	return tr.defaultShader;
 }
 
-inline qboolean IsShader(shader_t* sh, const char* name, const int* lightmapIndex, const byte* styles)
+inline qboolean IsShader(const shader_t* sh, const char* name, const int* lightmapIndex, const byte* styles)
 {
 	if (Q_stricmp(sh->name, name))
 	{
@@ -3245,7 +3245,7 @@ static inline const int* R_FindLightmap(const int* lightmapIndex)
 		return lightmapIndex;
 
 	// does this lightmap already exist?
-	if (*lightmapIndex < tr.numLightmaps && tr.lightmaps[*lightmapIndex] != NULL)
+	if (*lightmapIndex < tr.numLightmaps && tr.lightmaps[*lightmapIndex] != nullptr)
 		return lightmapIndex;
 
 	// bail if no world dir
@@ -3260,7 +3260,7 @@ static inline const int* R_FindLightmap(const int* lightmapIndex)
 	// attempt to load an external lightmap
 	Com_sprintf(fileName, sizeof(fileName), "%s/" EXTERNAL_LIGHTMAP, tr.worldDir, *lightmapIndex);
 	image_t* image = R_FindImageFile(fileName, qfalse, qfalse, static_cast<qboolean>(r_ext_compressed_lightmaps->integer), GL_CLAMP);
-	if (image == NULL)
+	if (image == nullptr)
 	{
 		return lightmapsVertex;
 	}
@@ -3929,7 +3929,7 @@ static void ScanAndLoadShaderFiles(void)
 				}
 				ri->Printf(PRINT_WARNING, ".\n");
 				ri->FS_FreeFile(buffers[i]);
-				buffers[i] = NULL;
+				buffers[i] = nullptr;
 				break;
 			}
 
@@ -3938,7 +3938,7 @@ static void ScanAndLoadShaderFiles(void)
 				ri->Printf(PRINT_WARNING, "WARNING: Ignoring shader file %s. Shader \"%s\" on line %d missing closing brace.\n",
 					filename, shaderName, shaderLine);
 				ri->FS_FreeFile(buffers[i]);
-				buffers[i] = NULL;
+				buffers[i] = nullptr;
 				break;
 			}
 		}

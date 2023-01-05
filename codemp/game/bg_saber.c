@@ -585,9 +585,9 @@ saberMoveName_t PM_CheckStabDown(void)
 
 	pm->trace(&tr, pm->ps->origin, trmins, trmaxs, fwd, pm->ps->client_num, MASK_PLAYERSOLID);
 
-	if (tr.entityNum < ENTITYNUM_WORLD)
+	if (tr.entity_num < ENTITYNUM_WORLD)
 	{
-		ent = PM_BGEntForNum(tr.entityNum);
+		ent = PM_BGEntForNum(tr.entity_num);
 	}
 
 	if (ent &&
@@ -1509,9 +1509,9 @@ qboolean PM_CanBackstab(void)
 
 	pm->trace(&tr, pm->ps->origin, trmins, trmaxs, back, pm->ps->client_num, MASK_PLAYERSOLID);
 
-	if (tr.fraction != 1.0 && tr.entityNum >= 0 && tr.entityNum < ENTITYNUM_NONE)
+	if (tr.fraction != 1.0 && tr.entity_num >= 0 && tr.entity_num < ENTITYNUM_NONE)
 	{
-		const bgEntity_t* bgEnt = PM_BGEntForNum(tr.entityNum);
+		const bgEntity_t* bgEnt = PM_BGEntForNum(tr.entity_num);
 
 		if (bgEnt && (bgEnt->s.eType == ET_PLAYER || bgEnt->s.eType == ET_NPC))
 		{
@@ -1567,7 +1567,7 @@ saberMoveName_t PM_SaberFlipOverAttackMove(void)
 	pm->ps->velocity[2] = 400;
 
 	/*
-	bgEnt = PM_BGEntForNum(tr->entityNum);
+	bgEnt = PM_BGEntForNum(tr->entity_num);
 
 	if (!bgEnt)
 	{
@@ -1687,9 +1687,9 @@ qboolean PM_SomeoneInFront(trace_t* tr)
 
 	pm->trace(tr, pm->ps->origin, trmins, trmaxs, back, pm->ps->client_num, MASK_PLAYERSOLID);
 
-	if (tr->fraction != 1.0 && tr->entityNum >= 0 && tr->entityNum < ENTITYNUM_NONE)
+	if (tr->fraction != 1.0 && tr->entity_num >= 0 && tr->entity_num < ENTITYNUM_NONE)
 	{
-		const bgEntity_t* bgEnt = PM_BGEntForNum(tr->entityNum);
+		const bgEntity_t* bgEnt = PM_BGEntForNum(tr->entity_num);
 
 		if (bgEnt && (bgEnt->s.eType == ET_PLAYER || bgEnt->s.eType == ET_NPC))
 		{
@@ -1959,9 +1959,9 @@ static qboolean PM_CheckEnemyPresence(int dir, float radius)
 	VectorMA(pm->ps->origin, radius, checkDir, tTo);
 	pm->trace(&tr, pm->ps->origin, tMins, tMaxs, tTo, pm->ps->client_num, MASK_PLAYERSOLID);
 
-	if (tr.fraction != 1.0f && tr.entityNum < ENTITYNUM_WORLD)
+	if (tr.fraction != 1.0f && tr.entity_num < ENTITYNUM_WORLD)
 	{ //let's see who we hit
-		const bgEntity_t* bgEnt = PM_BGEntForNum(tr.entityNum);
+		const bgEntity_t* bgEnt = PM_BGEntForNum(tr.entity_num);
 
 		if (bgEnt &&
 			(bgEnt->s.eType == ET_PLAYER || bgEnt->s.eType == ET_NPC))

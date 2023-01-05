@@ -570,7 +570,7 @@ using trace_t = struct
 	cplane_t plane; // surface normal at impact, transformed to world space
 	int surfaceFlags; // surface hit
 	int contents; // contents on other side of surface hit
-	int entityNum; // entity the contacted surface is a part of
+	int entity_num; // entity the contacted surface is a part of
 	/*
 	Ghoul2 Insert Start
 	*/
@@ -590,7 +590,7 @@ using trace_t = struct
 		saved_game.write<>(plane);
 		saved_game.write<int8_t>(surfaceFlags);
 		saved_game.write<int8_t>(contents);
-		saved_game.write<int8_t>(entityNum);
+		saved_game.write<int8_t>(entity_num);
 		saved_game.write<>(G2CollisionMap);
 	}
 
@@ -604,12 +604,12 @@ using trace_t = struct
 		saved_game.read<>(plane);
 		saved_game.read<int8_t>(surfaceFlags);
 		saved_game.read<int8_t>(contents);
-		saved_game.read<int8_t>(entityNum);
+		saved_game.read<int8_t>(entity_num);
 		saved_game.read<>(G2CollisionMap);
 	}
 };
 
-// trace->entityNum can also be 0 to (MAX_GENTITIES-1)
+// trace->entity_num can also be 0 to (MAX_GENTITIES-1)
 // or ENTITYNUM_NONE, ENTITYNUM_WORLD
 
 // markfragments are returned by CM_MarkFragments()

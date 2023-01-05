@@ -755,7 +755,7 @@ void NPC_BSDefault(void)
 					enemyLOS = NPC_ClearLOS( muzzle, enemyHead );
 
 					trap->trace ( &tr, muzzle, vec3_origin, vec3_origin, enemyHead, NPC->s.number, MASK_SHOT );
-					enemyCS = NPC_EvaluateShot( tr.entityNum, qtrue );
+					enemyCS = NPC_EvaluateShot( tr.entity_num, qtrue );
 				}
 				else
 				{//skip thr 2 traces since they would have to fail

@@ -297,7 +297,7 @@ static qboolean VEH_TurretFindEnemies(Vehicle_t* p_veh,
 
 		trap->Trace(&tr, org2, NULL, NULL, org, parent->s.number, MASK_SHOT, qfalse, 0, 0);
 
-		if (tr.entityNum == target->s.number
+		if (tr.entity_num == target->s.number
 			|| (!tr.allsolid && !tr.startsolid && tr.fraction == 1.0))
 		{
 			// Only acquire if have a clear shot, Is it in range and closer than our best?
@@ -435,7 +435,7 @@ void VEH_TurretThink(Vehicle_t* p_veh, gentity_t* parent, int turretNum)
 					VectorCopy(turretEnemy->r.currentOrigin, end);
 					trap->Trace(&tr, start, NULL, NULL, end, parent->s.number, MASK_SHOT, qfalse, 0, 0);
 
-					if (tr.entityNum == turretEnemy->s.number
+					if (tr.entity_num == turretEnemy->s.number
 						|| (!tr.allsolid && !tr.startsolid))
 					{
 						doAim = qtrue;	// Can see our enemy

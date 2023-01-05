@@ -2191,7 +2191,7 @@ void RB_EndSurface()
 		{
 			if (!drawskyboxportal)
 			{
-				if ((tess.currentStageIteratorFunc != RB_StageIteratorSky))
+				if (tess.currentStageIteratorFunc != RB_StageIteratorSky)
 				{	// /only/ process sky tris
 					return;
 				}

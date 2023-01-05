@@ -356,7 +356,7 @@ static void ParseFace(dsurface_t* ds, mapVert_t* verts, msurface_t* surf, int* i
 	const int num_indexes = (ds->num_indexes);
 
 	// create the srfSurfaceFace_t
-	int sfaceSize = (size_t) & static_cast<srfSurfaceFace_t*>(0)->points[numPoints];
+	int sfaceSize = (size_t) & static_cast<srfSurfaceFace_t*>(nullptr)->points[numPoints];
 	const int ofsIndexes = sfaceSize;
 	sfaceSize += sizeof(int) * num_indexes;
 
@@ -1349,7 +1349,7 @@ static	void R_LoadSubmodels(lump_t* l, world_t& world_data, int index) {
 		model_t* model = R_AllocModel();
 
 		assert(model != NULL);			// this should never happen
-		if (model == NULL) {
+		if (model == nullptr) {
 			ri->Error(ERR_DROP, "R_LoadSubmodels: R_AllocModel() failed");
 		}
 
@@ -1467,7 +1467,7 @@ static	void R_LoadNodesAndLeafs(lump_t* nodeLump, lump_t* leafLump, world_t& wor
 	}
 
 	// chain decendants
-	R_SetParent(world_data.nodes, NULL);
+	R_SetParent(world_data.nodes, nullptr);
 }
 
 //=============================================================================
@@ -1749,7 +1749,7 @@ void R_LoadLightGridArray(lump_t* l, world_t& world_data) {
 
 	if (static_cast<unsigned>(l->filelen) != w->numGridArrayElements * sizeof(*w->lightGridArray)) {
 		ri->Printf(PRINT_ALL, S_COLOR_YELLOW  "WARNING: light grid array mismatch\n");
-		w->lightGridData = NULL;
+		w->lightGridData = nullptr;
 		return;
 	}
 
@@ -1912,7 +1912,7 @@ void RE_LoadWorldMap_Actual(const char* name, world_t& world_data, int index)
 
 		// clear tr.world so if the level fails to load, the next
 		// try will not look at the partially loaded version
-		tr.world = NULL;
+		tr.world = nullptr;
 	}
 
 	// check for cached disk file from the server first...
@@ -1982,7 +1982,7 @@ void RE_LoadWorldMap_Actual(const char* name, world_t& world_data, int index)
 	if (ri->CM_GetCachedMapDiskImage())
 	{
 		Z_Free(ri->CM_GetCachedMapDiskImage());
-		ri->CM_SetCachedMapDiskImage(NULL);
+		ri->CM_SetCachedMapDiskImage(nullptr);
 	}
 	else
 	{

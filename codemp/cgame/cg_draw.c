@@ -33,7 +33,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 extern float CG_RadiusForCent(centity_t* cent);
 qboolean CG_WorldCoordToScreenCoordFloat(vec3_t world_coord, float* x, float* y);
-qboolean CG_CalcMuzzlePoint(int entityNum, vec3_t muzzle);
+qboolean CG_CalcMuzzlePoint(int entity_num, vec3_t muzzle);
 static void CG_DrawSiegeTimer(int timeRemaining, qboolean isMyTeam);
 static void CG_DrawSiegeDeathTimer(int timeRemaining);
 // nmckenzie: DUEL_HEALTH
@@ -5775,9 +5775,9 @@ static void CG_DrawRocketLocking(const int lock_ent_num)
 }
 
 extern void CG_CalcVehMuzzle(Vehicle_t* p_veh, centity_t* ent, int muzzleNum);
-qboolean CG_CalcVehicleMuzzlePoint(int entityNum, vec3_t start, vec3_t d_f, vec3_t d_rt, vec3_t d_up)
+qboolean CG_CalcVehicleMuzzlePoint(int entity_num, vec3_t start, vec3_t d_f, vec3_t d_rt, vec3_t d_up)
 {
-	centity_t* vehCent = &cg_entities[entityNum];
+	centity_t* vehCent = &cg_entities[entity_num];
 	if (vehCent->m_pVehicle && vehCent->m_pVehicle->m_pVehicleInfo->type == VH_WALKER)
 	{//draw from barrels
 		VectorCopy(vehCent->lerpOrigin, start);
@@ -6032,15 +6032,15 @@ static void CG_ScanForCrosshairEntity(void) {
 			ignore, CONTENTS_SOLID | CONTENTS_BODY);
 	}
 
-	if (trace.entityNum < MAX_CLIENTS)
+	if (trace.entity_num < MAX_CLIENTS)
 	{
-		if (CG_IsMindTricked(cg_entities[trace.entityNum].currentState.trickedentindex,
-			cg_entities[trace.entityNum].currentState.trickedentindex2,
-			cg_entities[trace.entityNum].currentState.trickedentindex3,
-			cg_entities[trace.entityNum].currentState.trickedentindex4,
+		if (CG_IsMindTricked(cg_entities[trace.entity_num].currentState.trickedentindex,
+			cg_entities[trace.entity_num].currentState.trickedentindex2,
+			cg_entities[trace.entity_num].currentState.trickedentindex3,
+			cg_entities[trace.entity_num].currentState.trickedentindex4,
 			cg.snap->ps.client_num))
 		{
-			if (cg.crosshairclient_num == trace.entityNum)
+			if (cg.crosshairclient_num == trace.entity_num)
 			{
 				cg.crosshairclient_num = ENTITYNUM_NONE;
 				cg.crosshairClientTime = 0;
@@ -6054,10 +6054,10 @@ static void CG_ScanForCrosshairEntity(void) {
 
 	if (cg.snap->ps.persistant[PERS_TEAM] != TEAM_SPECTATOR)
 	{
-		if (trace.entityNum < /*MAX_CLIENTS*/ENTITYNUM_WORLD)
+		if (trace.entity_num < /*MAX_CLIENTS*/ENTITYNUM_WORLD)
 		{
-			const centity_t* veh = &cg_entities[trace.entityNum];
-			cg.crosshairclient_num = trace.entityNum;
+			const centity_t* veh = &cg_entities[trace.entity_num];
+			cg.crosshairclient_num = trace.entity_num;
 			cg.crosshairClientTime = cg.time;
 
 			if (veh->currentState.eType == ET_NPC &&
@@ -6077,7 +6077,7 @@ static void CG_ScanForCrosshairEntity(void) {
 		}
 	}
 
-	if (trace.entityNum >= MAX_CLIENTS) {
+	if (trace.entity_num >= MAX_CLIENTS) {
 		return;
 	}
 
@@ -6088,7 +6088,7 @@ static void CG_ScanForCrosshairEntity(void) {
 	}
 
 	// update the fade timer
-	cg.crosshairclient_num = trace.entityNum;
+	cg.crosshairclient_num = trace.entity_num;
 	cg.crosshairClientTime = cg.time;
 }
 

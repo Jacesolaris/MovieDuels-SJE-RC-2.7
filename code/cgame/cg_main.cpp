@@ -1430,7 +1430,7 @@ static void CG_RegisterEffects(void)
 }
 
 /*
-void CG_RegisterClientModels (int entityNum)
+void CG_RegisterClientModels (int entity_num)
 
 Only call if clientInfo->infoValid is not true
 

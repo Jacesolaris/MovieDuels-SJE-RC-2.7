@@ -228,7 +228,7 @@ void SV_BotFreeClient(int client_num) {
 BotDrawDebugPolygons
 ==================
 */
-void BotDrawDebugPolygons(void (*drawPoly)(int color, int numPoints, float* points), int value) {
+void BotDrawDebugPolygons(void (*draw_poly)(int color, int numPoints, float* points), int value) {
 	static cvar_t* bot_debug, * bot_groundonly, * bot_reachability, * bot_highlightarea;
 
 	if (!debugpolygons)
@@ -256,7 +256,7 @@ void BotDrawDebugPolygons(void (*drawPoly)(int color, int numPoints, float* poin
 	for (int i = 0; i < bot_maxdebugpolys; i++) {
 		const bot_debugpoly_t* poly = &debugpolygons[i];
 		if (!poly->inuse) continue;
-		drawPoly(poly->color, poly->numPoints, (float*)poly->points);
+		draw_poly(poly->color, poly->numPoints, (float*)poly->points);
 		//Com_Printf("poly %i, numpoints = %d\n", i, poly->numPoints);
 	}
 }
@@ -321,7 +321,7 @@ void BotImport_Trace(bsp_trace_t* bsptrace, vec3_t start, vec3_t mins, vec3_t ma
 	bsptrace->plane.signbits = trace.plane.signbits;
 	bsptrace->plane.type = trace.plane.type;
 	bsptrace->surface.value = trace.surfaceFlags;
-	bsptrace->ent = trace.entityNum;
+	bsptrace->ent = trace.entity_num;
 	bsptrace->exp_dist = 0;
 	bsptrace->sidenum = 0;
 	bsptrace->contents = 0;
@@ -346,7 +346,7 @@ void BotImport_EntityTrace(bsp_trace_t* bsptrace, vec3_t start, vec3_t mins, vec
 	bsptrace->plane.signbits = trace.plane.signbits;
 	bsptrace->plane.type = trace.plane.type;
 	bsptrace->surface.value = trace.surfaceFlags;
-	bsptrace->ent = trace.entityNum;
+	bsptrace->ent = trace.entity_num;
 	bsptrace->exp_dist = 0;
 	bsptrace->sidenum = 0;
 	bsptrace->contents = 0;
@@ -745,7 +745,7 @@ int SV_BotGetConsoleMessage(int client, char* buf, int size)
 EntityInPVS
 ==================
 */
-int EntityInPVS(int client, int entityNum) {
+int EntityInPVS(int client, int entity_num) {
 	client_t* cl;
 	clientSnapshot_t* frame;
 	int					i;
@@ -753,7 +753,7 @@ int EntityInPVS(int client, int entityNum) {
 	cl = &svs.clients[client];
 	frame = &cl->frames[cl->netchan.outgoingSequence & PACKET_MASK];
 	for (i = 0; i < frame->num_entities; i++) {
-		if (svs.snapshotEntities[(frame->first_entity + i) % svs.numSnapshotEntities].number == entityNum) {
+		if (svs.snapshotEntities[(frame->first_entity + i) % svs.numSnapshotEntities].number == entity_num) {
 			return qtrue;
 		}
 	}

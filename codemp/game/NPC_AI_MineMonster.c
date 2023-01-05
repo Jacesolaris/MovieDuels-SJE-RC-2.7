@@ -132,9 +132,9 @@ void MineMonster_TryDamage(const gentity_t* enemy, int damage)
 	// Should probably trace from the mouth, but, ah well.
 	trap->Trace(&tr, NPCS.NPC->r.currentOrigin, vec3_origin, vec3_origin, end, NPCS.NPC->s.number, MASK_SHOT, qfalse, 0, 0);
 
-	if (tr.entityNum >= 0 && tr.entityNum < ENTITYNUM_NONE)
+	if (tr.entity_num >= 0 && tr.entity_num < ENTITYNUM_NONE)
 	{
-		G_Damage(&g_entities[tr.entityNum], NPCS.NPC, NPCS.NPC, dir, tr.endpos, damage, DAMAGE_NO_KNOCKBACK, MOD_MELEE);
+		G_Damage(&g_entities[tr.entity_num], NPCS.NPC, NPCS.NPC, dir, tr.endpos, damage, DAMAGE_NO_KNOCKBACK, MOD_MELEE);
 		G_Sound(NPCS.NPC, CHAN_AUTO, G_EffectIndex(va("sound/chars/mine/misc/bite%i.wav", Q_irand(1, 4))));
 	}
 	else

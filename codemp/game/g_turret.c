@@ -486,7 +486,7 @@ static qboolean turret_find_enemies(gentity_t* self)
 
 		trap->Trace(&tr, org2, NULL, NULL, org, self->s.number, MASK_SHOT, qfalse, 0, 0);
 
-		if (!tr.allsolid && !tr.startsolid && (tr.fraction == 1.0 || tr.entityNum == target->s.number))
+		if (!tr.allsolid && !tr.startsolid && (tr.fraction == 1.0 || tr.entity_num == target->s.number))
 		{
 			// Only acquire if have a clear shot, Is it in range and closer than our best?
 			VectorSubtract(target->r.currentOrigin, top->r.currentOrigin, enemyDir);
@@ -595,7 +595,7 @@ void turret_base_think(gentity_t* self)
 					}
 					trap->Trace(&tr, org2, NULL, NULL, org, self->s.number, MASK_SHOT, qfalse, 0, 0);
 
-					if (!tr.allsolid && !tr.startsolid && tr.entityNum == self->enemy->s.number)
+					if (!tr.allsolid && !tr.startsolid && tr.entity_num == self->enemy->s.number)
 					{
 						turnOff = qfalse;	// Can see our enemy
 					}

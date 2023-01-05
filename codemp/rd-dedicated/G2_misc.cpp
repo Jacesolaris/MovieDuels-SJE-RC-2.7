@@ -1751,7 +1751,7 @@ void G2_FreeSaveBuffer(char* buffer)
 qboolean G2_SetupModelPointers(CGhoul2Info* ghl_info);
 qboolean G2_SetupModelPointers(CGhoul2Info_v& ghoul2);
 
-void G2_LoadGhoul2Model(CGhoul2Info_v& ghoul2, char* buffer)
+void G2_LoadGhoul2Model(CGhoul2Info_v& ghoul2, const char* buffer)
 {
 	// first thing, lets see how many ghoul2 models we have, and resize our buffers accordingly
 	const int newSize = *(int*)buffer;

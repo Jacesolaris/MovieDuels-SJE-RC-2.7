@@ -69,7 +69,7 @@ qboolean G2_Get_Bone_Anim(CGhoul2Info* ghl_info, boneInfo_v& blist, const char* 
                           float* currentFrame, int* startFrame, int* endFrame, int* flags, float* retAnimSpeed);
 qboolean G2_Get_Bone_Anim_Range(CGhoul2Info* ghl_info, boneInfo_v& blist, const char* boneName, int* startFrame,
                                 int* endFrame);
-qboolean G2_Get_Bone_Anim_Range_Index(boneInfo_v& blist, int boneIndex, int* startFrame, int* endFrame);
+qboolean G2_Get_Bone_Anim_Range_Index(const boneInfo_v& blist, int bone_index, int* start_frame, int* end_frame);
 qboolean G2_Pause_Bone_Anim(CGhoul2Info* ghl_info, boneInfo_v& blist, const char* boneName, int currentTime);
 qboolean G2_Pause_Bone_Anim_Index(boneInfo_v& blist, int boneIndex, int currentTime, int numFrames);
 qboolean G2_IsPaused(CGhoul2Info* ghl_info, boneInfo_v& blist, const char* boneName);
@@ -80,7 +80,7 @@ void G2_Animate_Bone_List(CGhoul2Info_v& ghoul2, int currentTime, int index, CRa
 //rww - RAGDOLL_END
 
 void G2_Init_Bone_List(boneInfo_v& blist, int numBones);
-int G2_Find_Bone_In_List(boneInfo_v& blist, int boneNum);
+int G2_Find_Bone_In_List(const boneInfo_v& blist, int bone_num);
 qboolean G2_Set_Bone_Angles_Matrix(CGhoul2Info* ghl_info, boneInfo_v& blist, const char* boneName,
                                    const mdxaBone_t& matrix,
                                    int flags, int blendTime, int currentTime);
@@ -115,7 +115,7 @@ void		G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, CCol
 void TransformAndTranslatePoint(const vec3_t in, vec3_t out, mdxaBone_t* mat);
 #ifdef _G2_GORE
 void G2_TransformModel(CGhoul2Info_v& ghoul2, int frameNum, vec3_t scale, CMiniHeap* G2VertSpace, int use_lod,
-                       bool ApplyGore, SSkinGoreData* gore = nullptr);
+                       bool ApplyGore, const SSkinGoreData* gore = nullptr);
 #else
 void		G2_TransformModel(CGhoul2Info_v& ghoul2, const int frameNum, vec3_t scale, CMiniHeap* G2VertSpace, int use_lod);
 #endif
@@ -130,7 +130,7 @@ void G2_LoadGhoul2Model(CGhoul2Info_v& ghoul2, char* buffer);
 int G2_Add_Bolt(CGhoul2Info* ghl_info, boltInfo_v& bltlist, surfaceInfo_v& slist, const char* boneName);
 qboolean G2_Remove_Bolt(boltInfo_v& bltlist, int index);
 void G2_Init_Bolt_List(boltInfo_v& bltlist);
-int G2_Find_Bolt_Bone_Num(boltInfo_v& bltlist, int boneNum);
+int G2_Find_Bolt_Bone_Num(const boltInfo_v& bltlist, int boneNum);
 int G2_Find_Bolt_Surface_Num(boltInfo_v& bltlist, int surface_num, int flags);
 int G2_Add_Bolt_Surf_Num(CGhoul2Info* ghl_info, boltInfo_v& bltlist, surfaceInfo_v& slist, int surfNum);
 

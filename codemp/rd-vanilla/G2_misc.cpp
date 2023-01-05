@@ -42,7 +42,7 @@ static std::map<std::pair<int, int>, int> GoreTagsTemp; // this is a surface ind
 // temporarily during the generation phase so we reuse gore tags per LOD
 int goreModelIndex;
 
-static cvar_t* cg_g2MarksAllModels = NULL;
+static cvar_t* cg_g2MarksAllModels = nullptr;
 
 GoreTextureCoordinates* FindGoreRecord(int tag);
 static inline void DestroyGoreTexCoordinates(int tag)
@@ -111,7 +111,7 @@ GoreTextureCoordinates* FindGoreRecord(int tag)
 	{
 		return &(*i).second;
 	}
-	return 0;
+	return nullptr;
 }
 
 void* G2_GetGoreRecord(int tag)
@@ -135,7 +135,7 @@ CGoreSet* FindGoreSet(int goreSetTag)
 	{
 		return (*f).second;
 	}
-	return 0;
+	return nullptr;
 }
 
 CGoreSet* NewGoreSet()
@@ -280,7 +280,7 @@ void G2_List_Model_Surfaces(const char* fileName)
 			}
 		}
 		// find the next surface
-		surf = (mdxmSurfHierarchy_t*)((byte*)surf + (size_t)(&static_cast<mdxmSurfHierarchy_t*>(0)->childIndexes[surf->numChildren]));
+		surf = (mdxmSurfHierarchy_t*)((byte*)surf + (size_t)(&static_cast<mdxmSurfHierarchy_t*>(nullptr)->childIndexes[surf->numChildren]));
 		surface = (mdxmSurface_t*)((byte*)surface + surface->ofsEnd);
 	}
 }
@@ -533,12 +533,12 @@ void G2_TransformModel(CGhoul2Info_v& ghoul2, const int frameNum, vec3_t scale, 
 	vec3_t			correctScale;
 	qboolean		firstModelOnly = qfalse;
 
-	if (cg_g2MarksAllModels == NULL)
+	if (cg_g2MarksAllModels == nullptr)
 	{
 		cg_g2MarksAllModels = ri->Cvar_Get("cg_g2MarksAllModels", "0", 0, "");
 	}
 
-	if (cg_g2MarksAllModels == NULL
+	if (cg_g2MarksAllModels == nullptr
 		|| !cg_g2MarksAllModels->integer)
 	{
 		firstModelOnly = qtrue;
@@ -581,7 +581,7 @@ void G2_TransformModel(CGhoul2Info_v& ghoul2, const int frameNum, vec3_t scale, 
 			assert(g.currentModel);
 			if (lod >= g.currentModel->numLods)
 			{
-				g.mTransformedVertsArray = 0;
+				g.mTransformedVertsArray = nullptr;
 				if (firstModelOnly)
 				{
 					// we don't really need to do multiple models for gore.
@@ -918,7 +918,7 @@ void G2_GorePolys(const mdxmSurface_t* surface, CTraceSurface& TS, const mdxmSur
 	if (f == GoreTagsTemp.end()) // need to generate a record
 	{
 		newTag = AllocGoreRecord();
-		CGoreSet* goreSet = 0;
+		CGoreSet* goreSet = nullptr;
 		if (TS.ghoul2info->mGoreSetTag)
 		{
 			goreSet = FindGoreSet(TS.ghoul2info->mGoreSetTag);
@@ -1462,12 +1462,12 @@ void G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, Colli
 	shader_t* cust_shader;
 	qboolean		firstModelOnly = qfalse;
 
-	if (cg_g2MarksAllModels == NULL)
+	if (cg_g2MarksAllModels == nullptr)
 	{
 		cg_g2MarksAllModels = ri->Cvar_Get("cg_g2MarksAllModels", "0", 0, "");
 	}
 
-	if (cg_g2MarksAllModels == NULL
+	if (cg_g2MarksAllModels == nullptr
 		|| !cg_g2MarksAllModels->integer)
 	{
 		firstModelOnly = qtrue;
@@ -1503,7 +1503,7 @@ void G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, Colli
 		}
 		else
 		{
-			cust_shader = NULL;
+			cust_shader = nullptr;
 		}
 
 		// figure out the custom skin thing
@@ -1513,7 +1513,7 @@ void G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, Colli
 		}
 		else
 		{
-			skin = NULL;
+			skin = nullptr;
 		}
 
 		lod = G2_DecideTraceLod(ghoul2[i], use_lod);
@@ -1751,7 +1751,7 @@ void G2_FreeSaveBuffer(char* buffer)
 qboolean G2_SetupModelPointers(CGhoul2Info* ghl_info);
 qboolean G2_SetupModelPointers(CGhoul2Info_v& ghoul2);
 
-void G2_LoadGhoul2Model(CGhoul2Info_v& ghoul2, char* buffer)
+void G2_LoadGhoul2Model(CGhoul2Info_v& ghoul2, const char* buffer)
 {
 	// first thing, lets see how many ghoul2 models we have, and resize our buffers accordingly
 	const int newSize = *(int*)buffer;

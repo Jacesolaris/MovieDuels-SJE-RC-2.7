@@ -65,7 +65,7 @@ surfaceInfo_t* G2_FindOverrideSurface(int surface_num, surfaceInfo_v& surfaceLis
 		}
 	}
 	// didn't find it.
-	return NULL;
+	return nullptr;
 }
 
 // given a surface name, lets see if it's legal in the model
@@ -82,7 +82,7 @@ int G2_IsSurfaceLegal(void* mod, const char* surface_name, int* flags)
 			return i;
 		}
 		// find the next surface
-		surf = (mdxmSurfHierarchy_t*)((byte*)surf + (size_t)(&static_cast<mdxmSurfHierarchy_t*>(0)->childIndexes[surf->numChildren]));
+		surf = (mdxmSurfHierarchy_t*)((byte*)surf + (size_t)(&static_cast<mdxmSurfHierarchy_t*>(nullptr)->childIndexes[surf->numChildren]));
 	}
 	return -1;
 }
@@ -114,7 +114,7 @@ mdxmSurface_t* G2_FindSurface(const CGhoul2Info* ghl_info, const surfaceInfo_v& 
 		{
 			*surf_index = -1;
 		}
-		return 0;
+		return nullptr;
 	}
 
 	// first find if we already have this surface in the list
@@ -144,7 +144,7 @@ mdxmSurface_t* G2_FindSurface(const CGhoul2Info* ghl_info, const surfaceInfo_v& 
 	{
 		*surf_index = -1;
 	}
-	return 0;
+	return nullptr;
 }
 
 // set a named surface off_flags - if it doesn't find a surface with this name in the list then it will add one.
@@ -253,7 +253,7 @@ int G2_IsSurfaceOff(CGhoul2Info* ghl_info, surfaceInfo_v& slist, const char* sur
 			return surface->flags;
 		}
 		// find the next surface
-		surface = (mdxmSurfHierarchy_t*)((byte*)surface + (intptr_t)(&static_cast<mdxmSurfHierarchy_t*>(0)->childIndexes[surface->numChildren]));
+		surface = (mdxmSurfHierarchy_t*)((byte*)surface + (intptr_t)(&static_cast<mdxmSurfHierarchy_t*>(nullptr)->childIndexes[surface->numChildren]));
 	}
 
 	assert(0);

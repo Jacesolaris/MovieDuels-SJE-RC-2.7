@@ -791,9 +791,9 @@ void RB_CalcFogTexCoords(float* dst_tex_coords)
 
 	// all fogging distance is based on world Z units
 	VectorSubtract(backEnd.ori.origin, backEnd.viewParms.ori.origin, local_vec);
-	fog_distance_vector[0] = -backEnd.ori.modelMatrix[2];
-	fog_distance_vector[1] = -backEnd.ori.modelMatrix[6];
-	fog_distance_vector[2] = -backEnd.ori.modelMatrix[10];
+	fog_distance_vector[0] = -backEnd.ori.model_matrix[2];
+	fog_distance_vector[1] = -backEnd.ori.model_matrix[6];
+	fog_distance_vector[2] = -backEnd.ori.model_matrix[10];
 	fog_distance_vector[3] = DotProduct(local_vec, backEnd.viewParms.ori.axis[0]);
 
 	// scale the fog vectors based on the fog's thickness

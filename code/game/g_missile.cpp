@@ -165,7 +165,7 @@ static void G_MissileStick(gentity_t* missile, gentity_t* other, trace_t* tr)
 		missile->s.pos.trTime = level.time - 10; // move a bit on the first frame
 
 		// check for stop
-		if (tr->entityNum >= 0 && tr->entityNum < ENTITYNUM_WORLD &&
+		if (tr->entity_num >= 0 && tr->entity_num < ENTITYNUM_WORLD &&
 			tr->plane.normal[2] > 0.7 && missile->s.pos.trDelta[2] < 40)
 		//this can happen even on very slightly sloped walls, so changed it from > 0 to > 0.7
 		{
@@ -190,7 +190,7 @@ static void G_MissileStick(gentity_t* missile, gentity_t* other, trace_t* tr)
 	if (other->s.eType == ET_MOVER || other->e_DieFunc == dieF_funcBBrushDie || other->e_DieFunc == dieF_funcGlassDie)
 	{
 		// movers and breakable brushes need extra info...so sticky missiles can ride lifts and blow up when the thing they are attached to goes away.
-		missile->s.groundEntityNum = tr->entityNum;
+		missile->s.groundEntityNum = tr->entity_num;
 	}
 }
 
@@ -1812,7 +1812,7 @@ void G_MissileImpact_MD(gentity_t* ent, trace_t* trace, const int hit_loc = HL_N
 {
 	vec3_t diff;
 
-	gentity_t* other = &g_entities[trace->entityNum];
+	gentity_t* other = &g_entities[trace->entity_num];
 
 	if (other == ent)
 	{
@@ -1914,7 +1914,7 @@ void G_MissileImpact_MD(gentity_t* ent, trace_t* trace, const int hit_loc = HL_N
 			G_MissileAddAlerts(ent);
 		}
 		G_MissileBounceEffect(ent, trace->endpos, trace->plane.normal,
-		                      static_cast<qboolean>(trace->entityNum == ENTITYNUM_WORLD));
+		                      static_cast<qboolean>(trace->entity_num == ENTITYNUM_WORLD));
 
 		return;
 	}
@@ -1939,7 +1939,7 @@ void G_MissileImpact_MD(gentity_t* ent, trace_t* trace, const int hit_loc = HL_N
 					ent->s.eFlags &= ~EF_BOUNCE_SHRAPNEL;
 				}
 				G_MissileBounceEffect(ent, trace->endpos, trace->plane.normal,
-				                      static_cast<qboolean>(trace->entityNum == ENTITYNUM_WORLD));
+				                      static_cast<qboolean>(trace->entity_num == ENTITYNUM_WORLD));
 				return;
 			}
 		}
@@ -1958,7 +1958,7 @@ void G_MissileImpact_MD(gentity_t* ent, trace_t* trace, const int hit_loc = HL_N
 					ent->s.eFlags &= ~EF_BOUNCE_SHRAPNEL;
 				}
 				G_MissileBounceEffect(ent, trace->endpos, trace->plane.normal,
-				                      static_cast<qboolean>(trace->entityNum == ENTITYNUM_WORLD));
+				                      static_cast<qboolean>(trace->entity_num == ENTITYNUM_WORLD));
 				return;
 			}
 		}
@@ -2265,7 +2265,7 @@ void G_MissileImpactJKA(gentity_t* ent, trace_t* trace, const int hit_loc = HL_N
 {
 	vec3_t diff;
 
-	gentity_t* other = &g_entities[trace->entityNum];
+	gentity_t* other = &g_entities[trace->entity_num];
 
 	if (other == ent)
 	{
@@ -2371,7 +2371,7 @@ void G_MissileImpactJKA(gentity_t* ent, trace_t* trace, const int hit_loc = HL_N
 			G_MissileAddAlerts(ent);
 		}
 		G_MissileBounceEffect(ent, trace->endpos, trace->plane.normal,
-		                      static_cast<qboolean>(trace->entityNum == ENTITYNUM_WORLD));
+		                      static_cast<qboolean>(trace->entity_num == ENTITYNUM_WORLD));
 
 		return;
 	}
@@ -2394,7 +2394,7 @@ void G_MissileImpactJKA(gentity_t* ent, trace_t* trace, const int hit_loc = HL_N
 				ent->s.eFlags &= ~EF_BOUNCE_SHRAPNEL;
 			}
 			G_MissileBounceEffect(ent, trace->endpos, trace->plane.normal,
-			                      static_cast<qboolean>(trace->entityNum == ENTITYNUM_WORLD));
+			                      static_cast<qboolean>(trace->entity_num == ENTITYNUM_WORLD));
 			return;
 		}
 	}
@@ -2659,7 +2659,7 @@ int G_GroundTrace(const gentity_t* ent, pml_t* pPml)
 	pPml->groundPlane = qtrue;
 	pPml->walking = qtrue;
 
-	return trace.entityNum;
+	return trace.entity_num;
 }
 
 void G_ClipVelocity(vec3_t in, vec3_t normal, vec3_t out, const float overbounce)
@@ -2758,10 +2758,10 @@ void G_RollMissile(gentity_t* ent)
 
 		//had to move this up above the trace.allsolid check now that for some reason ghoul2 impacts tell me I'm allsolid?!
 		//this needs to be fixed, really
-		if (trace.entityNum < ENTITYNUM_WORLD)
+		if (trace.entity_num < ENTITYNUM_WORLD)
 		{
 			//hit another ent
-			gentity_t* hit_ent = &g_entities[trace.entityNum];
+			gentity_t* hit_ent = &g_entities[trace.entity_num];
 
 			if (hit_ent && (hit_ent->takedamage || hit_ent->contents & CONTENTS_LIGHTSABER))
 			{
@@ -2831,7 +2831,7 @@ void G_RollMissile(gentity_t* ent)
 		//
 		// modify velocity so it parallels all of the clip planes
 		//
-		if (&g_entities[trace.entityNum] != nullptr && g_entities[trace.entityNum].client)
+		if (&g_entities[trace.entity_num] != nullptr && g_entities[trace.entity_num].client)
 		{
 			//hit a person, bounce off much less
 			bounceAmt = OVERCLIP;
@@ -3013,9 +3013,9 @@ void G_RunMissile(gentity_t* ent)
 		gi.trace(&tr, ent->currentOrigin, ent->mins, ent->maxs, origin,
 		         ent->owner ? ent->owner->s.number : ent->s.number, ent->clipmask, G2_COLLIDE, 10);
 
-		if (tr.entityNum != ENTITYNUM_NONE)
+		if (tr.entity_num != ENTITYNUM_NONE)
 		{
-			const gentity_t* other = &g_entities[tr.entityNum];
+			const gentity_t* other = &g_entities[tr.entity_num];
 			// check for hitting a lightsaber
 			if (other->contents & CONTENTS_LIGHTSABER)
 			{
@@ -3031,7 +3031,7 @@ void G_RunMissile(gentity_t* ent)
 				//other->owner->s.number == 0 &&
 				{
 					//Jedi cannot block shots from behind!	//re-trace from here, ignoring the lightsaber
-					gi.trace(&tr, tr.endpos, ent->mins, ent->maxs, origin, tr.entityNum, ent->clipmask, G2_RETURNONHIT,
+					gi.trace(&tr, tr.endpos, ent->mins, ent->maxs, origin, tr.entity_num, ent->clipmask, G2_RETURNONHIT,
 					         10);
 				}
 			}

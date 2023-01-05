@@ -82,7 +82,7 @@ SBCSOverrideLanguages_t g_SBCSOverrideLanguages[] =
 {
 	{"russian",	eRussian},
 	{"polish",	ePolish},
-	{NULL,		eWestern}
+	{nullptr,		eWestern}
 };
 
 //================================================
@@ -140,7 +140,7 @@ struct ThaiCodes_t
 		{
 			if (m_strInitFailureReason.empty())	// never tried and failed already?
 			{
-				int* piData = NULL;	// note <int>, not <byte>, for []-access
+				int* piData = nullptr;	// note <int>, not <byte>, for []-access
 				//
 				// read the valid-codes table in...
 				//
@@ -232,7 +232,7 @@ public:
 	int GetAscender(void) const { return(mAscender); }
 	int GetDescender(void) const { return(mDescender); }
 
-	const glyphInfo_t* GetLetter(const unsigned int uiLetter, int* piShader = NULL);
+	const glyphInfo_t* GetLetter(const unsigned int uiLetter, int* piShader = nullptr);
 	int GetCollapsedAsianCode(ulong uiLetter) const;
 
 	int GetLetterWidth(const unsigned int uiLetter);
@@ -836,14 +836,14 @@ CFontInfo::CFontInfo(const char* _fontName)
 
 	// clear some general things...
 	//
-	m_pThaiData = NULL;
+	m_pThaiData = nullptr;
 	m_iAltSBCSFont = -1;
 	m_iThisFont = -1;
 	m_iOriginalFontWhenSBCSOverriden = -1;
 	m_fAltSBCSFontScaleFactor = -1;
 	m_bIsFakeAlienLanguage = !strcmp(_fontName, "aurabesh");	// dont try and make SBCS or asian overrides for this
 
-	const int len = ri->FS_ReadFile(fontName, NULL);
+	const int len = ri->FS_ReadFile(fontName, nullptr);
 	if (len == sizeof(dfontdat_t))
 	{
 		ri->FS_ReadFile(fontName, &buff);
@@ -910,7 +910,7 @@ CFontInfo::CFontInfo(const char* _fontName)
 
 			char sTemp[MAX_QPATH];
 			int iGlyphTPs = 0;
-			const char* psLang = NULL;
+			const char* psLang = nullptr;
 
 			// SBCS override languages...
 			//
@@ -987,7 +987,7 @@ void CFontInfo::UpdateAsianIfNeeded(bool bForceReEval /* = false */)
 				m_iLanguageModificationCount = se_language->modificationCount;
 
 				int iGlyphTPs = 0;
-				const char* psLang = NULL;
+				const char* psLang = nullptr;
 
 				switch (eLanguage)
 				{
@@ -1098,7 +1098,7 @@ static CFontInfo* GetFont_Actual(int index)
 
 		return pFont;
 	}
-	return(NULL);
+	return(nullptr);
 }
 
 // needed to add *piShader param because of multiple TPs,
@@ -1306,7 +1306,7 @@ static CFontInfo* GetFont_SBCSOverride(CFontInfo* pFont, Language_e eLanguageSBC
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 CFontInfo* GetFont(int index)
@@ -1346,12 +1346,12 @@ float RE_Font_StrLenPixelsNew(const char* psText, const int iFontHandle, const f
 	float thisLineWidth = 0.0f;
 	while (*psText) {
 		int iAdvanceCount;
-		unsigned int uiLetter = AnyLanguage_ReadCharFromString(psText, &iAdvanceCount, NULL);
+		unsigned int uiLetter = AnyLanguage_ReadCharFromString(psText, &iAdvanceCount, nullptr);
 		psText += iAdvanceCount;
 
 		if (uiLetter == '^') {
 			if (*psText >= '0' && *psText <= '9') {
-				uiLetter = AnyLanguage_ReadCharFromString(psText, &iAdvanceCount, NULL);
+				uiLetter = AnyLanguage_ReadCharFromString(psText, &iAdvanceCount, nullptr);
 				psText += iAdvanceCount;
 				continue;
 			}
@@ -1403,7 +1403,7 @@ int RE_Font_StrLenChars(const char* psText)
 		// in other words, colour codes and CR/LF don't count as chars, all else does...
 		//
 		int iAdvanceCount;
-		const unsigned int uiLetter = AnyLanguage_ReadCharFromString(psText, &iAdvanceCount, NULL);
+		const unsigned int uiLetter = AnyLanguage_ReadCharFromString(psText, &iAdvanceCount, nullptr);
 		psText += iAdvanceCount;
 
 		switch (uiLetter)
@@ -1542,7 +1542,7 @@ void RE_Font_DrawString(int ox, int oy, const char* psText, const float* rgba, c
 	while (*psText && !bNextTextWouldOverflow)
 	{
 		int iAdvanceCount;
-		const unsigned int uiLetter = AnyLanguage_ReadCharFromString(psText, &iAdvanceCount, NULL);
+		const unsigned int uiLetter = AnyLanguage_ReadCharFromString(psText, &iAdvanceCount, nullptr);
 		psText += iAdvanceCount;
 
 		switch (uiLetter)

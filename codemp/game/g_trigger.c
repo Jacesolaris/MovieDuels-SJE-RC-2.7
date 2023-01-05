@@ -790,7 +790,7 @@ void Do_Strike(gentity_t* ent)
 	}
 	else
 	{ //only damage individuals
-		gentity_t* trHit = &g_entities[localTrace.entityNum];
+		gentity_t* trHit = &g_entities[localTrace.entity_num];
 
 		if (trHit->inuse && trHit->takedamage)
 		{ //damage it then

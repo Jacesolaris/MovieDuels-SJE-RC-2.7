@@ -1397,27 +1397,27 @@ void ForceGrip(gentity_t* self)
 	trap->Trace(&tr, tfrom, NULL, NULL, tto, self->s.number, MASK_PLAYERSOLID, qfalse, 0, 0);
 
 	if (tr.fraction != 1.0 &&
-		tr.entityNum != ENTITYNUM_NONE &&
-		g_entities[tr.entityNum].client &&
-		!g_entities[tr.entityNum].client->ps.fd.forceGripCripple &&
-		g_entities[tr.entityNum].client->ps.fd.forceGripBeingGripped < level.time &&
-		ForcePowerUsableOn(self, &g_entities[tr.entityNum], FP_GRIP) &&
-		(g_friendlyFire.integer || !OnSameTeam(self, &g_entities[tr.entityNum]))) //don't grip someone who's still crippled
+		tr.entity_num != ENTITYNUM_NONE &&
+		g_entities[tr.entity_num].client &&
+		!g_entities[tr.entity_num].client->ps.fd.forceGripCripple &&
+		g_entities[tr.entity_num].client->ps.fd.forceGripBeingGripped < level.time &&
+		ForcePowerUsableOn(self, &g_entities[tr.entity_num], FP_GRIP) &&
+		(g_friendlyFire.integer || !OnSameTeam(self, &g_entities[tr.entity_num]))) //don't grip someone who's still crippled
 	{
-		if (g_entities[tr.entityNum].s.number < MAX_CLIENTS && g_entities[tr.entityNum].client->ps.m_iVehicleNum)
+		if (g_entities[tr.entity_num].s.number < MAX_CLIENTS && g_entities[tr.entity_num].client->ps.m_iVehicleNum)
 		{ //a player on a vehicle
-			const gentity_t* vehEnt = &g_entities[g_entities[tr.entityNum].client->ps.m_iVehicleNum];
+			const gentity_t* vehEnt = &g_entities[g_entities[tr.entity_num].client->ps.m_iVehicleNum];
 			if (vehEnt->inuse && vehEnt->client && vehEnt->m_pVehicle)
 			{
 				if (vehEnt->m_pVehicle->m_pVehicleInfo->type == VH_SPEEDER ||
 					vehEnt->m_pVehicle->m_pVehicleInfo->type == VH_ANIMAL)
 				{ //push the guy off
-					vehEnt->m_pVehicle->m_pVehicleInfo->Eject(vehEnt->m_pVehicle, (bgEntity_t*)&g_entities[tr.entityNum], qfalse);
+					vehEnt->m_pVehicle->m_pVehicleInfo->Eject(vehEnt->m_pVehicle, (bgEntity_t*)&g_entities[tr.entity_num], qfalse);
 				}
 			}
 		}
-		self->client->ps.fd.forceGripEntityNum = tr.entityNum;
-		g_entities[tr.entityNum].client->ps.fd.forceGripStarted = level.time;
+		self->client->ps.fd.forceGripEntityNum = tr.entity_num;
+		g_entities[tr.entity_num].client->ps.fd.forceGripStarted = level.time;
 		self->client->ps.fd.forceGripDamageDebounceTime = 0;
 
 		self->client->ps.forceHandExtend = HANDEXTEND_FORCE_HOLD;
@@ -1836,7 +1836,7 @@ void ForceShootLightning(gentity_t* self)
 
 			//Now check and see if we can actually hit it
 			trap->Trace(&tr, self->client->ps.origin, vec3_origin, vec3_origin, ent_org, self->s.number, MASK_SHOT, qfalse, 0, 0);
-			if (tr.fraction < 1.0f && tr.entityNum != trace_ent->s.number)
+			if (tr.fraction < 1.0f && tr.entity_num != trace_ent->s.number)
 			{//must have clear LOS
 				continue;
 			}
@@ -1850,12 +1850,12 @@ void ForceShootLightning(gentity_t* self)
 		VectorMA(self->client->ps.origin, 2048, forward, end);
 
 		trap->Trace(&tr, self->client->ps.origin, vec3_origin, vec3_origin, end, self->s.number, MASK_SHOT, qfalse, 0, 0);
-		if (tr.entityNum == ENTITYNUM_NONE || tr.fraction == 1.0 || tr.allsolid || tr.startsolid)
+		if (tr.entity_num == ENTITYNUM_NONE || tr.fraction == 1.0 || tr.allsolid || tr.startsolid)
 		{
 			return;
 		}
 
-		trace_ent = &g_entities[tr.entityNum];
+		trace_ent = &g_entities[tr.entity_num];
 		ForceLightningDamage(self, trace_ent, forward, tr.endpos);
 	}
 }
@@ -2121,7 +2121,7 @@ int ForceShootDrain(gentity_t* self)
 
 			//Now check and see if we can actually hit it
 			trap->Trace(&tr, self->client->ps.origin, vec3_origin, vec3_origin, ent_org, self->s.number, MASK_SHOT, qfalse, 0, 0);
-			if (tr.fraction < 1.0f && tr.entityNum != trace_ent->s.number)
+			if (tr.fraction < 1.0f && tr.entity_num != trace_ent->s.number)
 			{//must have clear LOS
 				continue;
 			}
@@ -2136,12 +2136,12 @@ int ForceShootDrain(gentity_t* self)
 		VectorMA(self->client->ps.origin, 2048, forward, end);
 
 		trap->Trace(&tr, self->client->ps.origin, vec3_origin, vec3_origin, end, self->s.number, MASK_SHOT, qfalse, 0, 0);
-		if (tr.entityNum == ENTITYNUM_NONE || tr.fraction == 1.0 || tr.allsolid || tr.startsolid || !g_entities[tr.entityNum].client || !g_entities[tr.entityNum].inuse)
+		if (tr.entity_num == ENTITYNUM_NONE || tr.fraction == 1.0 || tr.allsolid || tr.startsolid || !g_entities[tr.entity_num].client || !g_entities[tr.entity_num].inuse)
 		{
 			return 0;
 		}
 
-		trace_ent = &g_entities[tr.entityNum];
+		trace_ent = &g_entities[tr.entity_num];
 		ForceDrainDamage(self, trace_ent, forward, tr.endpos);
 		gotOneOrMore = 1;
 	}
@@ -2382,7 +2382,7 @@ qboolean ForceTelepathyCheckDirectNPCTarget(gentity_t* self, trace_t* tr, qboole
 
 	trap->Trace(tr, tfrom, NULL, NULL, tto, self->s.number, MASK_PLAYERSOLID, qfalse, 0, 0);
 
-	if (tr->entityNum == ENTITYNUM_NONE
+	if (tr->entity_num == ENTITYNUM_NONE
 		|| tr->fraction == 1.0f
 		|| tr->allsolid
 		|| tr->startsolid)
@@ -2390,7 +2390,7 @@ qboolean ForceTelepathyCheckDirectNPCTarget(gentity_t* self, trace_t* tr, qboole
 		return qfalse;
 	}
 
-	gentity_t* trace_ent = &g_entities[tr->entityNum];
+	gentity_t* trace_ent = &g_entities[tr->entity_num];
 
 	if (trace_ent->NPC
 		&& trace_ent->NPC->scriptFlags & SCF_NO_FORCE)
@@ -2637,13 +2637,13 @@ void ForceTelepathy(gentity_t* self)
 	if (self->client->ps.fd.forcePowerLevel[FP_TELEPATHY] == FORCE_LEVEL_1)
 	{
 		if (tr.fraction != 1.0 &&
-			tr.entityNum != ENTITYNUM_NONE &&
-			g_entities[tr.entityNum].inuse &&
-			g_entities[tr.entityNum].client &&
-			g_entities[tr.entityNum].client->pers.connected &&
-			g_entities[tr.entityNum].client->sess.sessionTeam != TEAM_SPECTATOR)
+			tr.entity_num != ENTITYNUM_NONE &&
+			g_entities[tr.entity_num].inuse &&
+			g_entities[tr.entity_num].client &&
+			g_entities[tr.entity_num].client->pers.connected &&
+			g_entities[tr.entity_num].client->sess.sessionTeam != TEAM_SPECTATOR)
 		{
-			WP_AddAsMindtricked(&self->client->ps.fd, tr.entityNum);
+			WP_AddAsMindtricked(&self->client->ps.fd, tr.entity_num);
 			if (!tookPower)
 			{
 				WP_ForcePowerStart(self, FP_TELEPATHY, 0);
@@ -3050,29 +3050,29 @@ void ForceThrow(gentity_t* self, qboolean pull)
 		trap->Trace(&tr, tfrom, NULL, NULL, tto, self->s.number, MASK_PLAYERSOLID, qfalse, 0, 0);
 
 		if (tr.fraction != 1.0 &&
-			tr.entityNum != ENTITYNUM_NONE)
+			tr.entity_num != ENTITYNUM_NONE)
 		{
-			if (!g_entities[tr.entityNum].client && g_entities[tr.entityNum].s.eType == ET_NPC)
+			if (!g_entities[tr.entity_num].client && g_entities[tr.entity_num].s.eType == ET_NPC)
 			{ //g2animent
-				if (g_entities[tr.entityNum].s.genericenemyindex < level.time)
+				if (g_entities[tr.entity_num].s.genericenemyindex < level.time)
 				{
-					g_entities[tr.entityNum].s.genericenemyindex = level.time + 2000;
+					g_entities[tr.entity_num].s.genericenemyindex = level.time + 2000;
 				}
 			}
 
 			num_listed_entities = 0;
-			entityList[num_listed_entities] = tr.entityNum;
+			entityList[num_listed_entities] = tr.entity_num;
 
 			if (pull)
 			{
-				if (!ForcePowerUsableOn(self, &g_entities[tr.entityNum], FP_PULL))
+				if (!ForcePowerUsableOn(self, &g_entities[tr.entity_num], FP_PULL))
 				{
 					return;
 				}
 			}
 			else
 			{
-				if (!ForcePowerUsableOn(self, &g_entities[tr.entityNum], FP_PUSH))
+				if (!ForcePowerUsableOn(self, &g_entities[tr.entity_num], FP_PUSH))
 				{
 					return;
 				}
@@ -3275,7 +3275,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 
 		//really should have a clear LOS to this thing...
 		trap->Trace(&tr, self->client->ps.origin, vec3_origin, vec3_origin, ent_org, self->s.number, MASK_SHOT, qfalse, 0, 0);
-		if (tr.fraction < 1.0f && tr.entityNum != ent->s.number)
+		if (tr.fraction < 1.0f && tr.entity_num != ent->s.number)
 		{//must have clear LOS
 			//try from eyes too before you give up
 			vec3_t eyePoint;
@@ -3283,7 +3283,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 			eyePoint[2] += self->client->ps.viewheight;
 			trap->Trace(&tr, eyePoint, vec3_origin, vec3_origin, ent_org, self->s.number, MASK_SHOT, qfalse, 0, 0);
 
-			if (tr.fraction < 1.0f && tr.entityNum != ent->s.number)
+			if (tr.fraction < 1.0f && tr.entity_num != ent->s.number)
 			{
 				continue;
 			}
@@ -3565,7 +3565,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 				VectorNormalize(forward);
 				VectorMA(trFrom, radius, forward, end);
 				trap->Trace(&tr, trFrom, vec3_origin, vec3_origin, end, self->s.number, MASK_SHOT, qfalse, 0, 0);
-				if (tr.entityNum != push_list[x]->s.number || tr.fraction == 1.0 || tr.allsolid || tr.startsolid)
+				if (tr.entity_num != push_list[x]->s.number || tr.fraction == 1.0 || tr.allsolid || tr.startsolid)
 				{//must be pointing right at it
 					continue;
 				}
@@ -3828,7 +3828,7 @@ void DoGripAction(gentity_t* self, forcePowers_t forcePower)
 	}
 
 	if (tr.fraction != 1.0f &&
-		tr.entityNum != grip_ent->s.number /*&&
+		tr.entity_num != grip_ent->s.number /*&&
 		gripLevel < FORCE_LEVEL_3*/)
 	{
 		WP_ForcePowerStop(self, forcePower);

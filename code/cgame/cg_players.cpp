@@ -13379,7 +13379,7 @@ static void CG_AddSaberBladeGo(centity_t* cent, centity_t* scent, const int rend
 								saber[saber_num].saberFlags2 & SFL2_NO_WALL_MARKS2))
 						{
 							if (!(trace.surfaceFlags & SURF_NOIMPACT) // never spark on sky
-								&& (trace.entityNum == ENTITYNUM_WORLD || cg_entities[trace.entityNum].currentState.
+								&& (trace.entity_num == ENTITYNUM_WORLD || cg_entities[trace.entity_num].currentState.
 									solid == SOLID_BMODEL)
 								&& Q_irand(1, client->ps.saber[saber_num].numBlades) == 1)
 							{
@@ -13391,8 +13391,8 @@ static void CG_AddSaberBladeGo(centity_t* cent, centity_t* scent, const int rend
 						//....come up with something better..
 						if (client->ps.saber[saber_num].blade[blade_num].trail.haveOldPos[i])
 						{
-							if (trace.entityNum == ENTITYNUM_WORLD || cg_entities[trace.entityNum].currentState.eFlags
-								& EF_PERMANENT || cg_entities[trace.entityNum].currentState.eType == ET_TERRAIN)
+							if (trace.entity_num == ENTITYNUM_WORLD || cg_entities[trace.entity_num].currentState.eFlags
+								& EF_PERMANENT || cg_entities[trace.entity_num].currentState.eType == ET_TERRAIN)
 							{
 								//only put marks on architecture
 								if (!WP_SaberBladeUseSecondBladeStyle(&client->ps.saber[saber_num], blade_num) && !(
@@ -13444,7 +13444,7 @@ static void CG_AddSaberBladeGo(centity_t* cent, centity_t* scent, const int rend
 							else if (!i)
 							{
 								//can put marks on G2 clients (but only on base to tip trace)
-								gentity_t* hit_ent = &g_entities[trace.entityNum];
+								gentity_t* hit_ent = &g_entities[trace.entity_num];
 								vec3_t uaxis, splash_back_dir;
 								VectorSubtract(client->ps.saber[saber_num].blade[blade_num].trail.oldPos[i],
 								               trace.endpos, uaxis);

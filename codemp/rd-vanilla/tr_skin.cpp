@@ -52,12 +52,12 @@ return= true if three part skins found
 output= qualified names to three skins if return is true, undefined if false
 ===============
 */
-bool RE_SplitSkins(const char* INname, char* skinhead, char* skintorso, char* skinlower)
+bool RE_SplitSkins(const char* i_nname, char* skinhead, char* skintorso, char* skinlower)
 {	//INname= "models/players/jedi_tf/|head01_skin1|torso01|lower01";
-	if (strchr(INname, '|'))
+	if (strchr(i_nname, '|'))
 	{
 		char name[MAX_QPATH];
-		strcpy(name, INname);
+		strcpy(name, i_nname);
 		char* p = strchr(name, '|');
 		*p = 0;
 		p++;
@@ -99,7 +99,7 @@ bool RE_SplitSkins(const char* INname, char* skinhead, char* skintorso, char* sk
 }
 
 // given a name, go get the skin we want and return
-qhandle_t RE_RegisterIndividualSkin(const char* name, qhandle_t hSkin)
+qhandle_t RE_RegisterIndividualSkin(const char* name, qhandle_t h_skin)
 {
 	char* text, * text_p;
 	char			surfName[MAX_QPATH];
@@ -113,9 +113,9 @@ qhandle_t RE_RegisterIndividualSkin(const char* name, qhandle_t hSkin)
 		return 0;
 	}
 
-	assert(tr.skins[hSkin]);	//should already be setup, but might be an 3part append
+	assert(tr.skins[h_skin]);	//should already be setup, but might be an 3part append
 
-	skin_t* skin = tr.skins[hSkin];
+	skin_t* skin = tr.skins[h_skin];
 
 	text_p = text;
 	while (text_p && *text_p) {
@@ -171,7 +171,7 @@ qhandle_t RE_RegisterIndividualSkin(const char* name, qhandle_t hSkin)
 		return 0;		// use default skin
 	}
 
-	return hSkin;
+	return h_skin;
 }
 
 qhandle_t RE_RegisterSkin(const char* name) {
@@ -263,7 +263,7 @@ static char* CommaParse(char** data_p) {
 
 	// make sure incoming data is valid
 	if (!data) {
-		*data_p = NULL;
+		*data_p = nullptr;
 		return com_token;
 	}
 
@@ -388,11 +388,11 @@ void	R_InitSkins(void) {
 R_GetSkinByHandle
 ===============
 */
-skin_t* R_GetSkinByHandle(qhandle_t hSkin) {
-	if (hSkin < 1 || hSkin >= tr.numSkins) {
+skin_t* R_GetSkinByHandle(qhandle_t h_skin) {
+	if (h_skin < 1 || h_skin >= tr.numSkins) {
 		return tr.skins[0];
 	}
-	return tr.skins[hSkin];
+	return tr.skins[h_skin];
 }
 
 /*

@@ -387,7 +387,7 @@ qboolean FighterSuspended(const Vehicle_t* p_veh, const playerState_t* parent_ps
 }
 
 #ifdef CGAME
-extern void trap_S_StartSound(vec3_t origin, int entityNum, int entchannel, sfxHandle_t sfx); //cg_syscalls.c
+extern void trap_S_StartSound(vec3_t origin, int entity_num, int entchannel, sfxHandle_t sfx); //cg_syscalls.c
 extern sfxHandle_t trap_S_RegisterSound(const char* sample); //cg_syscalls.c
 #endif
 //MP RULE - ALL PROCESSMOVECOMMANDS FUNCTIONS MUST BE BG-COMPATIBLE!!!

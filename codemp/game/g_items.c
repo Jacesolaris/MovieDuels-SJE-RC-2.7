@@ -439,7 +439,7 @@ qboolean PlaceShield(gentity_t* playerent)
 			shield->use = 0; //Use_Item;
 
 			// allow to ride movers
-			shield->s.groundEntityNum = tr.entityNum;
+			shield->s.groundEntityNum = tr.entity_num;
 
 			G_SetOrigin(shield, tr.endpos);
 
@@ -608,7 +608,7 @@ static qboolean pas_find_enemies(gentity_t* self)
 
 		trap->Trace(&tr, org2, NULL, NULL, org, self->s.number, MASK_SHOT, qfalse, 0, 0);
 
-		if (!tr.allsolid && !tr.startsolid && (tr.fraction == 1.0 || tr.entityNum == target->s.number))
+		if (!tr.allsolid && !tr.startsolid && (tr.fraction == 1.0 || tr.entity_num == target->s.number))
 		{
 			// Only acquire if have a clear shot, Is it in range and closer than our best?
 			VectorSubtract(target->r.currentOrigin, self->r.currentOrigin, enemyDir);
@@ -664,9 +664,9 @@ void pas_adjust_enemy(gentity_t* ent)
 
 		trap->Trace(&tr, org2, NULL, NULL, org, ent->s.number, MASK_SHOT, qfalse, 0, 0);
 
-		if (tr.allsolid || tr.startsolid || tr.fraction < 0.9f || tr.entityNum == ent->s.number)
+		if (tr.allsolid || tr.startsolid || tr.fraction < 0.9f || tr.entity_num == ent->s.number)
 		{
-			if (tr.entityNum != ent->enemy->s.number)
+			if (tr.entity_num != ent->enemy->s.number)
 			{
 				// trace failed
 				keep = qfalse;
@@ -1882,7 +1882,7 @@ gentity_t* EWeb_Create(gentity_t* spawner)
 	downPos[2] -= 18.0f;
 	trap->Trace(&tr, pos, mins, maxs, downPos, spawner->s.number, MASK_PLAYERSOLID, qfalse, 0, 0);
 
-	if (tr.startsolid || tr.allsolid || tr.fraction == 1.0f || tr.entityNum < ENTITYNUM_WORLD)
+	if (tr.startsolid || tr.allsolid || tr.fraction == 1.0f || tr.entity_num < ENTITYNUM_WORLD)
 	{ //didn't hit ground.
 		G_FreeEntity(ent);
 		G_Sound(spawner, CHAN_AUTO, failSound);
@@ -2915,7 +2915,7 @@ void FinishSpawningItem(gentity_t* ent) {
 		ent->r.maxs[2] += 0.1f;
 
 		// allow to ride movers
-		ent->s.groundEntityNum = tr.entityNum;
+		ent->s.groundEntityNum = tr.entity_num;
 
 		G_SetOrigin(ent, tr.endpos);
 	}
@@ -3117,7 +3117,7 @@ void G_BounceItem(gentity_t* ent, trace_t* trace) {
 	{ //detpacks only
 		if (ent->touch)
 		{
-			ent->touch(ent, &g_entities[trace->entityNum], trace);
+			ent->touch(ent, &g_entities[trace->entity_num], trace);
 			return;
 		}
 	}
@@ -3127,7 +3127,7 @@ void G_BounceItem(gentity_t* ent, trace_t* trace) {
 		trace->endpos[2] += 1.0;	// make sure it is off ground
 		SnapVector(trace->endpos);
 		G_SetOrigin(ent, trace->endpos);
-		ent->s.groundEntityNum = trace->entityNum;
+		ent->s.groundEntityNum = trace->entity_num;
 		return;
 	}
 
@@ -3140,7 +3140,7 @@ void G_BounceItem(gentity_t* ent, trace_t* trace) {
 	{ //holocrons and sentry guns
 		if (ent->touch)
 		{
-			ent->touch(ent, &g_entities[trace->entityNum], trace);
+			ent->touch(ent, &g_entities[trace->entity_num], trace);
 		}
 	}
 }

@@ -132,9 +132,9 @@ CG_S_AddLoopingSound
 Set the current looping sounds on the entity.
 ==================
 */
-void CG_S_AddLoopingSound(int entityNum, const vec3_t origin, const vec3_t velocity, sfxHandle_t sfx)
+void CG_S_AddLoopingSound(int entity_num, const vec3_t origin, const vec3_t velocity, sfxHandle_t sfx)
 {
-	centity_t* cent = &cg_entities[entityNum];
+	centity_t* cent = &cg_entities[entity_num];
 	cgLoopSound_t* cSound = NULL;
 	int i = 0;
 	qboolean alreadyPlaying = qfalse;
@@ -166,7 +166,7 @@ void CG_S_AddLoopingSound(int entityNum, const vec3_t origin, const vec3_t veloc
 	//Add a new looping sound.
 	cSound = &cent->loopingSound[cent->numLoopingSounds];
 
-	cSound->entityNum = entityNum;
+	cSound->entity_num = entity_num;
 	VectorCopy(origin, cSound->origin);
 	VectorCopy(velocity, cSound->velocity);
 	cSound->sfx = sfx;
@@ -181,9 +181,9 @@ CG_S_AddLoopingSound
 For now just redirect, might eventually do something different.
 ==================
 */
-void CG_S_AddRealLoopingSound(int entityNum, const vec3_t origin, const vec3_t velocity, sfxHandle_t sfx)
+void CG_S_AddRealLoopingSound(int entity_num, const vec3_t origin, const vec3_t velocity, sfxHandle_t sfx)
 {
-	CG_S_AddLoopingSound(entityNum, origin, velocity, sfx);
+	CG_S_AddLoopingSound(entity_num, origin, velocity, sfx);
 }
 
 /*
@@ -193,9 +193,9 @@ CG_S_AddLoopingSound
 Clear looping sounds.
 ==================
 */
-void CG_S_StopLoopingSound(int entityNum, sfxHandle_t sfx)
+void CG_S_StopLoopingSound(int entity_num, sfxHandle_t sfx)
 {
-	centity_t* cent = &cg_entities[entityNum];
+	centity_t* cent = &cg_entities[entity_num];
 
 	if (sfx == -1)
 	{ //clear all the looping sounds on the entity
@@ -224,7 +224,7 @@ void CG_S_StopLoopingSound(int entityNum, sfxHandle_t sfx)
 			i++;
 		}
 	}
-	//trap->S_StopLoopingSound(entityNum);
+	//trap->S_StopLoopingSound(entity_num);
 }
 
 /*
@@ -234,9 +234,9 @@ CG_S_UpdateLoopingSounds
 Update any existing looping sounds on the entity.
 ==================
 */
-void CG_S_UpdateLoopingSounds(int entityNum)
+void CG_S_UpdateLoopingSounds(int entity_num)
 {
-	const centity_t* cent = &cg_entities[entityNum];
+	const centity_t* cent = &cg_entities[entity_num];
 	vec3_t lerpOrg;
 	int i = 0;
 
@@ -269,9 +269,9 @@ void CG_S_UpdateLoopingSounds(int entityNum)
 	{
 		const cgLoopSound_t* cSound = &cent->loopingSound[i];
 
-		//trap->S_AddLoopingSound(entityNum, cSound->origin, cSound->velocity, cSound->sfx);
+		//trap->S_AddLoopingSound(entity_num, cSound->origin, cSound->velocity, cSound->sfx);
 		//I guess just keep using lerpOrigin for now,
-		trap->S_AddLoopingSound(entityNum, lerpOrg, cSound->velocity, cSound->sfx);
+		trap->S_AddLoopingSound(entity_num, lerpOrg, cSound->velocity, cSound->sfx);
 		i++;
 	}
 }

@@ -237,18 +237,18 @@ static void InvertCtrl(int width, int height, drawVert_t ctrl[MAX_GRID_SIZE][MAX
 InvertErrorTable
 =================
 */
-static void InvertErrorTable(float errorTable[2][MAX_GRID_SIZE], int width, int height) {
+static void InvertErrorTable(float error_table[2][MAX_GRID_SIZE], int width, int height) {
 	int		i;
 	float	copy[2][MAX_GRID_SIZE];
 
-	memcpy(copy, errorTable, sizeof(copy));
+	memcpy(copy, error_table, sizeof(copy));
 
 	for (i = 0; i < width; i++) {
-		errorTable[1][i] = copy[0][i];	//[width-1-i];
+		error_table[1][i] = copy[0][i];	//[width-1-i];
 	}
 
 	for (i = 0; i < height; i++) {
-		errorTable[0][i] = copy[1][height - 1 - i];
+		error_table[0][i] = copy[1][height - 1 - i];
 	}
 }
 
@@ -518,7 +518,7 @@ srfGridMesh_t* R_GridInsertColumn(srfGridMesh_t* grid, int column, int row, vec3
 	int oldwidth = 0;
 	const int width = grid->width + 1;
 	if (width > MAX_GRID_SIZE)
-		return NULL;
+		return nullptr;
 	const int height = grid->height;
 	for (int i = 0; i < width; i++) {
 		if (i == column) {
@@ -571,7 +571,7 @@ srfGridMesh_t* R_GridInsertRow(srfGridMesh_t* grid, int row, int column, vec3_t 
 	const int width = grid->width;
 	const int height = grid->height + 1;
 	if (height > MAX_GRID_SIZE)
-		return NULL;
+		return nullptr;
 	for (int i = 0; i < height; i++) {
 		if (i == row) {
 			//insert new row

@@ -141,7 +141,7 @@ static void MakeMeshNormals(const int width, const int height, drawVert_t ctrl[M
 		wrapWidth = qtrue;
 	}
 
-	qboolean wrapHeight = qfalse;
+	qboolean wrap_height = qfalse;
 	for (i = 0; i < width; i++) {
 		VectorSubtract(ctrl[0][i].xyz, ctrl[height - 1][i].xyz, delta);
 		len = VectorLength(delta);
@@ -150,7 +150,7 @@ static void MakeMeshNormals(const int width, const int height, drawVert_t ctrl[M
 		}
 	}
 	if (i == width) {
-		wrapHeight = qtrue;
+		wrap_height = qtrue;
 	}
 
 	for (i = 0; i < width; i++) {
@@ -177,7 +177,7 @@ static void MakeMeshNormals(const int width, const int height, drawVert_t ctrl[M
 							x = 1 + x - width;
 						}
 					}
-					if (wrapHeight) {
+					if (wrap_height) {
 						if (y < 0) {
 							y = height - 1 + y;
 						}
@@ -241,18 +241,18 @@ static void InvertCtrl(const int width, const int height, drawVert_t ctrl[MAX_GR
 InvertErrorTable
 =================
 */
-static void InvertErrorTable(float errorTable[2][MAX_GRID_SIZE], const int width, const int height) {
+static void InvertErrorTable(float error_table[2][MAX_GRID_SIZE], const int width, const int height) {
 	int		i;
 	float	copy[2][MAX_GRID_SIZE];
 
-	memcpy(copy, errorTable, sizeof(copy));
+	memcpy(copy, error_table, sizeof(copy));
 
 	for (i = 0; i < width; i++) {
-		errorTable[1][i] = copy[0][i];	//[width-1-i];
+		error_table[1][i] = copy[0][i];	//[width-1-i];
 	}
 
 	for (i = 0; i < height; i++) {
-		errorTable[0][i] = copy[1][height - 1 - i];
+		error_table[0][i] = copy[1][height - 1 - i];
 	}
 }
 
@@ -295,10 +295,10 @@ srfGridMesh_t* R_SubdividePatchToGrid(int width, int height,
 	drawVert_t	prev, next, mid;
 	int			t;
 	drawVert_t	ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE];
-	float		errorTable[2][MAX_GRID_SIZE];
+	float		error_table[2][MAX_GRID_SIZE];
 	srfGridMesh_t* grid;
 	drawVert_t* vert;
-	vec3_t		tmpVec;
+	vec3_t		tmp_vec;
 
 	for (i = 0; i < width; i++) {
 		for (j = 0; j < height; j++) {
@@ -308,13 +308,13 @@ srfGridMesh_t* R_SubdividePatchToGrid(int width, int height,
 
 	for (int dir = 0; dir < 2; dir++) {
 		for (j = 0; j < MAX_GRID_SIZE; j++) {
-			errorTable[dir][j] = 0;
+			error_table[dir][j] = 0;
 		}
 
 		// horizontal subdivisions
 		for (j = 0; j + 2 < width; j += 2) {
 			// check subdivided midpoints against control points
-			float maxLen = 0;
+			float max_len = 0;
 			for (i = 0; i < height; i++) {
 				vec3_t		midxyz;
 				vec3_t		vec_out;
@@ -339,29 +339,29 @@ srfGridMesh_t* R_SubdividePatchToGrid(int width, int height,
 				VectorSubtract(midxyz, projected, midxyz);
 				const float len = VectorLength(midxyz);
 
-				if (len > maxLen) {
-					maxLen = len;
+				if (len > max_len) {
+					max_len = len;
 				}
 			}
 
 			// if all the points are on the lines, remove the entire columns
-			if (maxLen < 0.1) {
-				errorTable[dir][j + 1] = 999;
+			if (max_len < 0.1) {
+				error_table[dir][j + 1] = 999;
 				continue;
 			}
 
 			// see if we want to insert subdivided columns
 			if (width + 2 > MAX_GRID_SIZE) {
-				errorTable[dir][j + 1] = 1.0 / maxLen;
+				error_table[dir][j + 1] = 1.0 / max_len;
 				continue;	// can't subdivide any more
 			}
 
-			if (maxLen <= r_subdivisions->value) {
-				errorTable[dir][j + 1] = 1.0 / maxLen;
+			if (max_len <= r_subdivisions->value) {
+				error_table[dir][j + 1] = 1.0 / max_len;
 				continue;	// didn't need subdivision
 			}
 
-			errorTable[dir][j + 2] = 1.0 / maxLen;
+			error_table[dir][j + 2] = 1.0 / max_len;
 
 			// insert two columns and replace the peak
 			width += 2;
@@ -393,27 +393,27 @@ srfGridMesh_t* R_SubdividePatchToGrid(int width, int height,
 
 	// cull out any rows or columns that are colinear
 	for (i = 1; i < width - 1; i++) {
-		if (errorTable[0][i] != 999) {
+		if (error_table[0][i] != 999) {
 			continue;
 		}
 		for (j = i + 1; j < width; j++) {
 			for (k = 0; k < height; k++) {
 				ctrl[k][j - 1] = ctrl[k][j];
 			}
-			errorTable[0][j - 1] = errorTable[0][j];
+			error_table[0][j - 1] = error_table[0][j];
 		}
 		width--;
 	}
 
 	for (i = 1; i < height - 1; i++) {
-		if (errorTable[1][i] != 999) {
+		if (error_table[1][i] != 999) {
 			continue;
 		}
 		for (j = i + 1; j < height; j++) {
 			for (k = 0; k < width; k++) {
 				ctrl[j - 1][k] = ctrl[j][k];
 			}
-			errorTable[1][j - 1] = errorTable[1][j];
+			error_table[1][j - 1] = error_table[1][j];
 		}
 		height--;
 	}
@@ -424,7 +424,7 @@ srfGridMesh_t* R_SubdividePatchToGrid(int width, int height,
 	// without this step
 	if (height > width) {
 		Transpose(width, height, ctrl);
-		InvertErrorTable(errorTable, width, height);
+		InvertErrorTable(error_table, width, height);
 		t = width;
 		width = height;
 		height = t;
@@ -439,10 +439,10 @@ srfGridMesh_t* R_SubdividePatchToGrid(int width, int height,
 	grid = static_cast<srfGridMesh_s*>(R_Hunk_Alloc((width * height - 1) * sizeof(drawVert_t) + sizeof(*grid), qtrue));
 
 	grid->widthLodError = static_cast<float*>(R_Hunk_Alloc(width * 4, qfalse));
-	memcpy(grid->widthLodError, errorTable[0], width * 4);
+	memcpy(grid->widthLodError, error_table[0], width * 4);
 
 	grid->heightLodError = static_cast<float*>(R_Hunk_Alloc(height * 4, qfalse));
-	memcpy(grid->heightLodError, errorTable[1], height * 4);
+	memcpy(grid->heightLodError, error_table[1], height * 4);
 
 	grid->width = width;
 	grid->height = height;
@@ -459,8 +459,8 @@ srfGridMesh_t* R_SubdividePatchToGrid(int width, int height,
 	// compute local origin and bounds
 	VectorAdd(grid->meshBounds[0], grid->meshBounds[1], grid->localOrigin);
 	VectorScale(grid->localOrigin, 0.5f, grid->localOrigin);
-	VectorSubtract(grid->meshBounds[0], grid->localOrigin, tmpVec);
-	grid->meshRadius = VectorLength(tmpVec);
+	VectorSubtract(grid->meshBounds[0], grid->localOrigin, tmp_vec);
+	grid->meshRadius = VectorLength(tmp_vec);
 
 	VectorCopy(grid->localOrigin, grid->lodOrigin);
 	grid->lodRadius = grid->meshRadius;

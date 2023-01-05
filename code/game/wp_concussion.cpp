@@ -128,13 +128,13 @@ static void WP_FireConcussionAlt(gentity_t* ent)
 			render_impact = qfalse;
 		}
 
-		if (tr.entityNum == ent->s.number)
+		if (tr.entity_num == ent->s.number)
 		{
 			// should never happen, but basically we don't want to consider a hit to ourselves?
 			// Get ready for an attempt to trace through another person
 			VectorCopy(tr.endpos, muzzle2);
 			VectorCopy(tr.endpos, start);
-			skip = tr.entityNum;
+			skip = tr.entity_num;
 #ifdef _DEBUG
 			gi.Printf("BAD! Concussion gun shot somehow traced back and hit the owner!\n");
 #endif
@@ -147,7 +147,7 @@ static void WP_FireConcussionAlt(gentity_t* ent)
 			break;
 		}
 
-		gentity_t* trace_ent = &g_entities[tr.entityNum];
+		gentity_t* trace_ent = &g_entities[tr.entity_num];
 
 		if (trace_ent)
 		{
@@ -176,7 +176,7 @@ static void WP_FireConcussionAlt(gentity_t* ent)
 		{
 			if (render_impact)
 			{
-				if (tr.entityNum < ENTITYNUM_WORLD && trace_ent->takedamage
+				if (tr.entity_num < ENTITYNUM_WORLD && trace_ent->takedamage
 					|| !Q_stricmp(trace_ent->classname, "misc_model_breakable")
 					|| trace_ent->s.eType == ET_MOVER)
 				{
@@ -261,7 +261,7 @@ static void WP_FireConcussionAlt(gentity_t* ent)
 		// Get ready for an attempt to trace through another person
 		VectorCopy(tr.endpos, muzzle2);
 		VectorCopy(tr.endpos, start);
-		skip = tr.entityNum;
+		skip = tr.entity_num;
 		hitDodged = qfalse;
 	}
 	//just draw one beam all the way to the end

@@ -186,14 +186,14 @@ qboolean PM_SlideMove(const float grav_mod)
 		}
 
 		// save entity for contact
-		PM_AddTouchEnt(trace.entityNum);
+		PM_AddTouchEnt(trace.entity_num);
 
 		//Hit it
 		if (trace.surfaceFlags & SURF_NODAMAGE)
 		{
 			damage_self = qfalse;
 		}
-		else if (trace.entityNum == ENTITYNUM_WORLD && trace.plane.normal[2] > 0.5f)
+		else if (trace.entity_num == ENTITYNUM_WORLD && trace.plane.normal[2] > 0.5f)
 		{
 			//if we land on the ground, let falling damage do it's thing itself, otherwise do impact damage
 			damage_self = qfalse;
@@ -533,7 +533,7 @@ void PM_StepSlideMove(float grav_mod)
 		{
 			if (pm->ps->client_num
 				&& is_giant
-				&& g_entities[trace.entityNum].client
+				&& g_entities[trace.entity_num].client
 				&& pm->gent
 				&& pm->gent->client
 				&& pm->gent->client->NPC_class == CLASS_RANCOR)
@@ -552,8 +552,8 @@ void PM_StepSlideMove(float grav_mod)
 			}
 			else if (pm->ps->client_num
 				&& is_giant
-				&& g_entities[trace.entityNum].client
-				&& g_entities[trace.entityNum].client->playerTeam == pm->gent->client->playerTeam)
+				&& g_entities[trace.entity_num].client
+				&& g_entities[trace.entity_num].client->playerTeam == pm->gent->client->playerTeam)
 			{
 				//AT-ST's don't step up on allies
 				if (g_stepSlideFix->integer)

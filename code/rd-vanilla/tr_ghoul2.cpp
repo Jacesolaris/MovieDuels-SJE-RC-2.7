@@ -1168,7 +1168,7 @@ void G2_TimingModel(boneInfo_t& bone, const int currentTime, const int numFrames
 //off which will give us the desired settling position given the frame in the skeleton
 //that should be used -rww
 int G2_Add_Bone(const model_t* mod, boneInfo_v& blist, const char* boneName);
-int G2_Find_Bone(CGhoul2Info* ghl_info, boneInfo_v& blist, const char* boneName);
+int G2_Find_Bone(const CGhoul2Info* ghl_info, const boneInfo_v& blist, const char* boneName);
 void G2_RagGetAnimMatrix(CGhoul2Info& ghoul2, const int boneNum, mdxaBone_t& matrix, const int frame)
 {
 	mdxaBone_t animMatrix;

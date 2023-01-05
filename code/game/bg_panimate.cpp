@@ -2660,9 +2660,9 @@ qboolean PM_CheckEnemyInBack(const float back_check_dist)
 
 	pm->trace(&trace, pm->ps->origin, vec3_origin, vec3_origin, end, pm->ps->client_num, CONTENTS_SOLID | CONTENTS_BODY,
 	          static_cast<EG2_Collision>(0), 0);
-	if (trace.fraction < 1.0f && trace.entityNum < ENTITYNUM_WORLD)
+	if (trace.fraction < 1.0f && trace.entity_num < ENTITYNUM_WORLD)
 	{
-		gentity_t* trace_ent = &g_entities[trace.entityNum];
+		gentity_t* trace_ent = &g_entities[trace.entity_num];
 		if (trace_ent
 			&& trace_ent->health > 0
 			&& trace_ent->client

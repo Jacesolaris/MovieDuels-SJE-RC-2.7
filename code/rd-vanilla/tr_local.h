@@ -108,7 +108,7 @@ using orientationr_t = struct {
 	vec3_t		origin;			// in world coordinates
 	vec3_t		axis[3];		// orientation in world
 	vec3_t		viewOrigin;		// viewParms->or.origin in local coordinates
-	float		modelMatrix[16];
+	float		model_matrix[16];
 };
 
 using image_t = struct image_s {
@@ -1198,7 +1198,7 @@ void R_SwapBuffers(int);
 
 void R_RenderView(const viewParms_t* parms);
 
-void R_AddMD3Surfaces(trRefEntity_t* e);
+void R_AddMD3Surfaces(trRefEntity_t* ent);
 void R_AddNullModelSurfaces(trRefEntity_t* e);
 void R_AddBeamSurfaces(trRefEntity_t* e);
 void R_AddRailSurfaces(trRefEntity_t* e, qboolean isUnderwater);
@@ -1206,22 +1206,22 @@ void R_AddLightningBoltSurfaces(trRefEntity_t* e);
 
 void R_AddPolygonSurfaces(void);
 
-void R_DecomposeSort(unsigned sort, int* entityNum, shader_t** shader,
-	int* fogNum, int* dlightMap);
+void R_DecomposeSort(unsigned sort, int* entity_num, shader_t** shader,
+	int* fog_num, int* dlight_map);
 
-void R_AddDrawSurf(const surfaceType_t* surface, const shader_t* shader, int fogIndex, int dlightMap);
+void R_AddDrawSurf(const surfaceType_t* surface, const shader_t* shader, int fog_index, int dlight_map);
 
 #define	CULL_IN		0		// completely unclipped
 #define	CULL_CLIP	1		// clipped by one or more planes
 #define	CULL_OUT	2		// completely outside the clipping planes
 void R_LocalNormalToWorld(const vec3_t local, vec3_t world);
 void R_LocalPointToWorld(const vec3_t local, vec3_t world);
-void R_WorldNormalToEntity(const vec3_t localVec, vec3_t world);
+void R_WorldNormalToEntity(const vec3_t worldvec, vec3_t entvec);
 int R_CullLocalBox(const vec3_t bounds[2]);
 int R_CullPointAndRadius(const vec3_t pt, float radius);
 int R_CullLocalPointAndRadius(const vec3_t pt, float radius);
 
-void R_RotateForEntity(const trRefEntity_t* ent, const viewParms_t* viewParms, orientationr_t* ori);
+void R_RotateForEntity(const trRefEntity_t* ent, const viewParms_t* view_parms, orientationr_t* ori);
 
 /*
 ** GL wrapper/helper functions
@@ -1272,10 +1272,10 @@ void	GL_Cull(int cull_type);
 #define GLS_DEFAULT			GLS_DEPTHMASK_TRUE
 #define GLS_ALPHA			(GLS_SRCBLEND_SRC_ALPHA | GLS_DSTBLEND_ONE_MINUS_SRC_ALPHA)
 
-void	RE_StretchRaw(int x, int y, int w, int h, int cols, int rows, const byte* data, int iClient, qboolean bDirty);
+void	RE_StretchRaw(int x, int y, int w, int h, int cols, int rows, const byte* data, int i_client, qboolean b_dirty);
 void	RE_UploadCinematic(int cols, int rows, const byte* data, int client, qboolean dirty);
-void	RE_GetScreenShot(byte* data, int w, int h);
-byte* RE_TempRawImage_ReadFromFile(const char* psLocalFilename, int* piWidth, int* piHeight, byte* pbReSampleBuffer, qboolean qbVertFlip);
+void	RE_GetScreenShot(byte* buffer, int w, int h);
+byte* RE_TempRawImage_ReadFromFile(const char* ps_local_filename, int* pi_width, int* pi_height, byte* pb_re_sample_buffer, qboolean qb_vert_flip);
 void	RE_TempRawImage_CleanUp();
 
 void		RE_BeginRegistration(glconfig_t* glconfig);
@@ -1283,7 +1283,7 @@ void		RE_LoadWorldMap(const char* name);
 void		RE_SetWorldVisData(const byte* vis);
 qhandle_t	RE_RegisterModel(const char* name);
 qhandle_t	RE_RegisterSkin(const char* name);
-int			RE_GetAnimationCFG(const char* psCFGFilename, char* psDest, int iDestSize);
+int			RE_GetAnimationCFG(const char* ps_cfg_filename, char* ps_dest, int i_dest_size);
 void		RE_Shutdown(qboolean destroyWindow);
 
 void		RE_RegisterMedia_LevelLoadBegin(const char* psMapName, ForceReload_e e_force_reload, qboolean bAllowScreenDissolve);
@@ -1309,7 +1309,7 @@ void		R_SetColorMappings(void);
 void		R_GammaCorrect(byte* buffer, int bufSize);
 
 void	R_ImageList_f(void);
-void	R_SkinList_f(void);
+void	R_SkinList_f();
 void	R_FontList_f(void);
 void	R_ScreenShot_f();
 void	R_ScreenShotTGA_f();
@@ -1319,8 +1319,8 @@ float	R_FogFactor(float s, float t);
 void	R_InitImages(void);
 void	R_DeleteTextures(void);
 float	R_SumOfUsedImages(qboolean bUseFormat);
-void	R_InitSkins(void);
-skin_t* R_GetSkinByHandle(qhandle_t hSkin);
+void	R_InitSkins();
+skin_t* R_GetSkinByHandle(qhandle_t h_skin);
 
 //
 // tr_shader.c
@@ -1420,7 +1420,7 @@ void RB_CheckOverflow(int verts, int indexes);
 #define RB_CHECKOVERFLOW(v,i) if (tess.numVertexes + (v) >= SHADER_MAX_VERTEXES || tess.num_indexes + (i) >= SHADER_MAX_INDEXES ) {RB_CheckOverflow(v,i);}
 
 void RB_StageIteratorGeneric();
-void RB_StageIteratorSky(void);
+void RB_StageIteratorSky();
 
 void RB_AddQuadStamp(vec3_t origin, vec3_t left, vec3_t up, byte* color);
 void RB_AddQuadStampExt(vec3_t origin, vec3_t left, vec3_t up, byte* color, float s1, float t1, float s2, float t2);
@@ -1470,11 +1470,11 @@ SKIES
 ============================================================
 */
 
-void R_BuildCloudData(const shaderCommands_t* shader);
-void R_InitSkyTexCoords(float cloudLayerHeight);
+void R_BuildCloudData(const shaderCommands_t* input);
+void R_InitSkyTexCoords(float height_cloud);
 void R_DrawSkyBox(shaderCommands_t* shader);
-void RB_DrawSun(void);
-void RB_ClipSkyPolygons(const shaderCommands_t* shader);
+void RB_DrawSun();
+void RB_ClipSkyPolygons(const shaderCommands_t* input);
 
 /*
 ============================================================
@@ -1502,8 +1502,8 @@ MARKERS, POLYGON PROJECTION ON WORLD POLYGONS
 ============================================================
 */
 
-int R_MarkFragments(int numPoints, const vec3_t* points, const vec3_t projection,
-	int maxPoints, vec3_t pointBuffer, int maxFragments, markFragment_t* fragmentBuffer);
+int R_MarkFragments(int num_points, const vec3_t* points, const vec3_t projection,
+	int max_points, vec3_t point_buffer, int max_fragments, markFragment_t* fragment_buffer);
 
 /*
 ============================================================
@@ -1606,7 +1606,7 @@ Ghoul2 Insert End
 =============================================================
 =============================================================
 */
-void	R_TransformModelToClip(const vec3_t src, const float* modelMatrix, const float* projectionMatrix,
+void	R_TransformModelToClip(const vec3_t src, const float* model_matrix, const float* projection_matrix,
 	vec4_t eye, vec4_t dst);
 void	R_TransformClipToWindow(const vec4_t clip, const viewParms_t* view, vec4_t normalized, vec4_t window);
 

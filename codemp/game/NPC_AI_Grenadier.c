@@ -519,7 +519,7 @@ void NPC_BSGrenadier_Attack(void)
 		{//grenadier
 			trace_t	trace;
 			trap->Trace(&trace, NPCS.NPC->r.currentOrigin, NPCS.NPC->enemy->r.mins, NPCS.NPC->enemy->r.maxs, NPCS.NPC->enemy->r.currentOrigin, NPCS.NPC->s.number, NPCS.NPC->enemy->clipmask, qfalse, 0, 0);
-			if (!trace.allsolid && !trace.startsolid && (trace.fraction == 1.0 || trace.entityNum == NPCS.NPC->enemy->s.number))
+			if (!trace.allsolid && !trace.startsolid && (trace.fraction == 1.0 || trace.entity_num == NPCS.NPC->enemy->s.number))
 			{//I can get right to him
 				//reset fire-timing variables
 				NPC_ChangeWeapon(WP_STUN_BATON);

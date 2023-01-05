@@ -194,12 +194,12 @@ qboolean G2_Remove_Bone_Index(boneInfo_v& blist, int index)
 }
 
 // given a bone number, see if there is an override bone in the bone list
-int	G2_Find_Bone_In_List(boneInfo_v& blist, const int boneNum)
+int	G2_Find_Bone_In_List(const boneInfo_v& blist, int bone_num)
 {
 	// look through entire list
 	for (size_t i = 0; i < blist.size(); i++)
 	{
-		if (blist[i].boneNumber == boneNum)
+		if (blist[i].boneNumber == bone_num)
 		{
 			return i;
 		}
@@ -471,7 +471,7 @@ qboolean G2_Set_Bone_Angles_Index(boneInfo_v& blist, const int index,
 	Com_OPrintf("PCJ %2d %6d   (%6.2f,%6.2f,%6.2f) %d %d %d %d\n", index, currentTime, angles[0], angles[1], angles[2], yaw, pitch, roll, flags);
 #endif
 
-	G2_Generate_Matrix(NULL, blist, index, angles, flags, yaw, pitch, roll);
+	G2_Generate_Matrix(nullptr, blist, index, angles, flags, yaw, pitch, roll);
 	return qtrue;
 }
 
@@ -659,7 +659,7 @@ qboolean G2_Set_Bone_Anim_Index(
 		float	currentFrame, animSpeed;
 		int 	startFrame, endFrame, flags;
 		// figure out where we are now
-		if (G2_Get_Bone_Anim_Index(blist, index, currentTime, &currentFrame, &startFrame, &endFrame, &flags, &animSpeed, NULL, numFrames))
+		if (G2_Get_Bone_Anim_Index(blist, index, currentTime, &currentFrame, &startFrame, &endFrame, &flags, &animSpeed, nullptr, numFrames))
 		{
 			if (blist[index].blendStart == currentTime)	//we're replacing a blend in progress which hasn't started
 			{
@@ -941,7 +941,7 @@ qboolean G2_Pause_Bone_Anim(CGhoul2Info* ghl_info, boneInfo_v& blist, const char
 			float	currentFrame = 0.0f, animSpeed = 1.0f;
 
 			// figure out what frame we are on now
-			G2_Get_Bone_Anim(ghl_info, blist, boneName, blist[index].pauseTime, &currentFrame, &startFrame, &endFrame, &flags, &animSpeed, NULL, 0);
+			G2_Get_Bone_Anim(ghl_info, blist, boneName, blist[index].pauseTime, &currentFrame, &startFrame, &endFrame, &flags, &animSpeed, nullptr, 0);
 			// reset start time so we are actually on this frame right now
 			G2_Set_Bone_Anim(ghl_info, blist, boneName, startFrame, endFrame, flags, animSpeed, currentTime, currentFrame, 0);
 			// no pausing anymore
@@ -1135,7 +1135,7 @@ void G2_Animate_Bone_List(CGhoul2Info_v& ghoul2, const int currentTime, const in
   rag stuff
 
 */
-static void G2_RagDollSolve(CGhoul2Info_v& ghoul2V, int g2Index, float decay, int frameNum, const vec3_t currentOrg, bool LimitAngles, CRagDollUpdateParams* params = NULL);
+static void G2_RagDollSolve(CGhoul2Info_v& ghoul2V, int g2Index, float decay, int frameNum, const vec3_t currentOrg, bool LimitAngles, CRagDollUpdateParams* params = nullptr);
 static void G2_RagDollCurrentPosition(CGhoul2Info_v& ghoul2V, int g2Index, int frameNum, const vec3_t angles, const vec3_t position, const vec3_t scale);
 static bool G2_RagDollSettlePositionNumeroTrois(CGhoul2Info_v& ghoul2V, const vec3_t currentOrg, CRagDollUpdateParams* params, int curTime);
 static bool G2_RagDollSetup(CGhoul2Info& ghoul2, int frameNum, bool resetOrigin, const vec3_t origin, bool anyRendered);
@@ -1333,8 +1333,8 @@ static int G2_Set_Bone_Angles_Rag(
 	const char* boneName,
 	const int flags,
 	const float radius,
-	const vec3_t angleMin = 0,
-	const vec3_t angleMax = 0,
+	const vec3_t angleMin = nullptr,
+	const vec3_t angleMax = nullptr,
 	const int blendTime = 500)
 {
 	int			index = G2_Find_Bone_Rag(&ghoul2, blist, boneName);
@@ -2285,7 +2285,7 @@ static bool G2_RagDollSetup(CGhoul2Info& ghoul2, int frameNum, bool resetOrigin,
 				}
 				if (static_cast<int>(rag.size()) < bone.boneNumber + 1)
 				{
-					rag.resize(bone.boneNumber + 1, 0);
+					rag.resize(bone.boneNumber + 1, nullptr);
 				}
 				rag[bone.boneNumber] = &bone;
 				ragBlistIndex[bone.boneNumber] = i;
@@ -2652,10 +2652,10 @@ void Rag_Trace(trace_t* results, const vec3_t start, const vec3_t mins, const ve
 	}
 	else
 	{
-		results->entityNum = ENTITYNUM_NONE;
+		results->entity_num = ENTITYNUM_NONE;
 		//SV_Trace(results, start, mins, maxs, end, pass_entity_num, contentmask, e_g2_trace_type, use_lod);
 		ri->CM_BoxTrace(results, start, end, mins, maxs, 0, contentmask, 0);
-		results->entityNum = results->fraction != 1.0 ? ENTITYNUM_WORLD : ENTITYNUM_NONE;
+		results->entity_num = results->fraction != 1.0 ? ENTITYNUM_WORLD : ENTITYNUM_NONE;
 	}
 
 #ifdef _DEBUG
@@ -2716,7 +2716,7 @@ static inline bool G2_ApplyRealBonePhysics(boneInfo_t& bone, SRagEffector& e, CR
 
 		Rag_Trace(&tr, e.currentOrigin, testMins, testMaxs, ground, params->me, RAG_MASK, G2_NOCOLLIDE, 0);
 
-		if (tr.entityNum == ENTITYNUM_NONE)
+		if (tr.entity_num == ENTITYNUM_NONE)
 		{
 			boneOnGround = false;
 		}
@@ -2807,9 +2807,9 @@ static inline bool G2_ApplyRealBonePhysics(boneInfo_t& bone, SRagEffector& e, CR
 		//I suppose it could be sort of neat to make a game callback here to actual do stuff
 		//when bones slam into things. But it could be slow too.
 		/*
-		if (tr.entityNum != ENTITYNUM_NONE && ent->touch)
+		if (tr.entity_num != ENTITYNUM_NONE && ent->touch)
 		{ //then call the touch function
-			ent->touch(ent, &g_entities[tr.entityNum], &tr);
+			ent->touch(ent, &g_entities[tr.entity_num], &tr);
 		}
 		*/
 	}
@@ -2892,7 +2892,7 @@ static bool G2_RagDollSettlePositionNumeroTrois(CGhoul2Info_v& ghoul2V, const ve
 			assert(!Q_isnan(testMins[1]));
 			assert(!Q_isnan(testMaxs[1]));
 			Rag_Trace(&tr, testStart, testMins, testMaxs, testEnd, ignoreNum, RAG_MASK, G2_NOCOLLIDE, 0/*SV_TRACE_NO_PLAYER*/);
-			if (tr.entityNum == 0)
+			if (tr.entity_num == 0)
 			{
 				VectorAdvance(testStart, .5f, testEnd, tr.endpos);
 			}
@@ -2953,7 +2953,7 @@ static bool G2_RagDollSettlePositionNumeroTrois(CGhoul2Info_v& ghoul2V, const ve
 		{
 			trace_t		tr;
 			Rag_Trace(&tr, testStart, testMins, testMaxs, testEnd, ignoreNum, RAG_MASK, G2_NOCOLLIDE, 0);
-			if (tr.entityNum == 0)
+			if (tr.entity_num == 0)
 			{
 				VectorAdvance(testStart, .5f, testEnd, tr.endpos);
 			}
@@ -2969,7 +2969,7 @@ static bool G2_RagDollSettlePositionNumeroTrois(CGhoul2Info_v& ghoul2V, const ve
 					// lets try higher
 					testStart[2] = groundSpot[2] + 8.0f;
 					Rag_Trace(&tr, testStart, testMins, testMaxs, testEnd, ignoreNum, RAG_MASK, G2_NOCOLLIDE, 0);
-					if (tr.entityNum == 0)
+					if (tr.entity_num == 0)
 					{
 						VectorAdvance(testStart, .5f, testEnd, tr.endpos);
 					}
@@ -3077,7 +3077,7 @@ static bool G2_RagDollSettlePositionNumeroTrois(CGhoul2Info_v& ghoul2V, const ve
 		{
 			trace_t		tr;
 			Rag_Trace(&tr, testStart, testMins, testMaxs, testEnd, ignoreNum, RAG_MASK, G2_NOCOLLIDE, 0);
-			if (tr.entityNum == 0)
+			if (tr.entity_num == 0)
 			{
 				VectorAdvance(testStart, .5f, testEnd, tr.endpos);
 			}
@@ -3130,7 +3130,7 @@ static bool G2_RagDollSettlePositionNumeroTrois(CGhoul2Info_v& ghoul2V, const ve
 
 						// this can be a line trace, we just want the plane normal
 						Rag_Trace(&tr, testEnd, 0, 0, testStart, ignoreNum, RAG_MASK, G2_NOCOLLIDE, 0);
-						if (tr.entityNum == 0)
+						if (tr.entity_num == 0)
 						{
 							VectorAdvance(testStart, .5f, testEnd, tr.endpos);
 						}
@@ -3163,7 +3163,7 @@ static bool G2_RagDollSettlePositionNumeroTrois(CGhoul2Info_v& ghoul2V, const ve
 		{
 			trace_t		tr;
 			Rag_Trace(&tr, testStart, NULL, NULL, testEnd, ignoreNum, RAG_MASK, G2_NOCOLLIDE, 0);
-			if (tr.entityNum == 0)
+			if (tr.entity_num == 0)
 			{
 				VectorAdvance(testStart, .5f, testEnd, tr.endpos);
 			}
@@ -3571,7 +3571,7 @@ static bool G2_RagDollSettlePositionNumeroTrois(CGhoul2Info_v& ghoul2V, const ve
 				const float f = VectorLength(v);
 				vectoangles(v, a);
 				a[YAW] -= fa;
-				AngleVectors(a, v, 0, 0);
+				AngleVectors(a, v, nullptr, nullptr);
 				VectorNormalize(v);
 				VectorMA(animPelvisPos, f, v, basePos);
 
@@ -4431,8 +4431,8 @@ static int G2_Set_Bone_Angles_IK(
 	const char* boneName,
 	const int flags,
 	const float radius,
-	const vec3_t angleMin = 0,
-	const vec3_t angleMax = 0,
+	const vec3_t angleMin = nullptr,
+	const vec3_t angleMax = nullptr,
 	const int blendTime = 500)
 {
 	int			index = G2_Find_Bone_Rag(&ghoul2, blist, boneName);

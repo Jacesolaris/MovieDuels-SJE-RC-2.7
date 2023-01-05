@@ -144,7 +144,7 @@ void* R_GetCommandBuffer(int bytes) {
 			Com_Error(ERR_FATAL, "R_GetCommandBuffer: bad size %i", bytes);
 		}
 		// if we run out of room, just start dropping commands
-		return NULL;
+		return nullptr;
 	}
 
 	cmdList->used += bytes;

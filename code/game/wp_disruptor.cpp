@@ -80,7 +80,7 @@ static void WP_DisruptorMainFire(gentity_t* ent)
 		//need to loop this in case we hit a Jedi who dodges the shot
 		gi.trace(&tr, start, nullptr, nullptr, end, ignore, MASK_SHOT, G2_RETURNONHIT, 0);
 
-		trace_ent = &g_entities[tr.entityNum];
+		trace_ent = &g_entities[tr.entity_num];
 
 		if (trace_ent)
 		{
@@ -95,7 +95,7 @@ static void WP_DisruptorMainFire(gentity_t* ent)
 					WP_SaberBlockBolt_MD(trace_ent, tr.endpos, qtrue);
 
 					VectorCopy(tr.endpos, start);
-					ignore = tr.entityNum;
+					ignore = tr.entity_num;
 					traces++;
 					continue;
 				}
@@ -103,7 +103,7 @@ static void WP_DisruptorMainFire(gentity_t* ent)
 				{
 					//act like we didn't even hit him
 					VectorCopy(tr.endpos, start);
-					ignore = tr.entityNum;
+					ignore = tr.entity_num;
 					traces++;
 					continue;
 				}
@@ -119,7 +119,7 @@ static void WP_DisruptorMainFire(gentity_t* ent)
 					WP_SaberBlockBolt_MD(trace_ent, tr.endpos, qtrue);
 
 					VectorCopy(tr.endpos, start);
-					ignore = tr.entityNum;
+					ignore = tr.entity_num;
 					traces++;
 					continue;
 				}
@@ -127,7 +127,7 @@ static void WP_DisruptorMainFire(gentity_t* ent)
 				{
 					//act like we didn't even hit him
 					VectorCopy(tr.endpos, start);
-					ignore = tr.entityNum;
+					ignore = tr.entity_num;
 					traces++;
 					continue;
 				}
@@ -149,7 +149,7 @@ static void WP_DisruptorMainFire(gentity_t* ent)
 
 	if (render_impact)
 	{
-		if (tr.entityNum < ENTITYNUM_WORLD && trace_ent->takedamage)
+		if (tr.entity_num < ENTITYNUM_WORLD && trace_ent->takedamage)
 		{
 			// Create a simple impact type mark that doesn't last long in the world
 			G_PlayEffect(G_EffectIndex("disruptor/flesh_impact"), tr.endpos, tr.plane.normal);
@@ -272,13 +272,13 @@ void WP_DisruptorAltFire(gentity_t* ent)
 			render_impact = qfalse;
 		}
 
-		if (tr.entityNum == ent->s.number)
+		if (tr.entity_num == ent->s.number)
 		{
 			// should never happen, but basically we don't want to consider a hit to ourselves?
 			// Get ready for an attempt to trace through another person
 			VectorCopy(tr.endpos, muzzle2);
 			VectorCopy(tr.endpos, start);
-			skip = tr.entityNum;
+			skip = tr.entity_num;
 #ifdef _DEBUG
 			gi.Printf("BAD! Disruptor gun shot somehow traced back and hit the owner!\n");
 #endif
@@ -291,7 +291,7 @@ void WP_DisruptorAltFire(gentity_t* ent)
 			break;
 		}
 
-		gentity_t* trace_ent = &g_entities[tr.entityNum];
+		gentity_t* trace_ent = &g_entities[tr.entity_num];
 
 		if (trace_ent)
 		{
@@ -320,7 +320,7 @@ void WP_DisruptorAltFire(gentity_t* ent)
 		{
 			if (render_impact)
 			{
-				if (tr.entityNum < ENTITYNUM_WORLD && trace_ent->takedamage
+				if (tr.entity_num < ENTITYNUM_WORLD && trace_ent->takedamage
 					|| !Q_stricmp(trace_ent->classname, "misc_model_breakable")
 					|| trace_ent->s.eType == ET_MOVER)
 				{
@@ -369,7 +369,7 @@ void WP_DisruptorAltFire(gentity_t* ent)
 		// Get ready for an attempt to trace through another person
 		VectorCopy(tr.endpos, muzzle2);
 		VectorCopy(tr.endpos, start);
-		skip = tr.entityNum;
+		skip = tr.entity_num;
 		hitDodged = qfalse;
 	}
 	//just draw one solid beam all the way to the end...

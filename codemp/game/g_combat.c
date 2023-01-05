@@ -5520,7 +5520,7 @@ qboolean CanDamage(gentity_t* targ, vec3_t origin) {
 
 	VectorCopy(midpoint, dest);
 	trap->Trace(&tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID, qfalse, 0, 0);
-	if (tr.fraction == 1.0 || tr.entityNum == targ->s.number)
+	if (tr.fraction == 1.0 || tr.entity_num == targ->s.number)
 		return qtrue;
 
 	// this should probably check in the plane of projection,

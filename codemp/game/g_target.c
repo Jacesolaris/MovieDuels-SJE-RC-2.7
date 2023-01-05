@@ -382,9 +382,9 @@ void target_laser_think(gentity_t* self) {
 
 	trap->Trace(&tr, self->s.origin, NULL, NULL, end, self->s.number, CONTENTS_SOLID | CONTENTS_BODY | CONTENTS_CORPSE, qfalse, 0, 0);
 
-	if (tr.entityNum) {
+	if (tr.entity_num) {
 		// hurt it if we can
-		G_Damage(&g_entities[tr.entityNum], self, self->activator, self->movedir,
+		G_Damage(&g_entities[tr.entity_num], self, self->activator, self->movedir,
 			tr.endpos, self->damage, DAMAGE_NO_KNOCKBACK, MOD_TARGET_LASER);
 	}
 

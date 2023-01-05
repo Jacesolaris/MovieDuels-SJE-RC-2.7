@@ -462,7 +462,7 @@ public:
 		for (int wz = 0; wz < mWeatherZones.size(); wz++)
 		{
 			Z_Free(mWeatherZones[wz].mPointCache);
-			mWeatherZones[wz].mPointCache = 0;
+			mWeatherZones[wz].mPointCache = nullptr;
 		}
 		mWeatherZones.clear();
 	}
@@ -803,13 +803,13 @@ public:
 		{
 			// TODO: Free Image?
 		}
-		mImage = 0;
+		mImage = nullptr;
 		if (mParticleCount)
 		{
 			delete[] mParticles;
 		}
 		mParticleCount = 0;
-		mParticles = 0;
+		mParticles = nullptr;
 
 		mPopulated = 0;
 
@@ -857,7 +857,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////
 	CWeatherParticleCloud()
 	{
-		mImage = 0;
+		mImage = nullptr;
 		mParticleCount = 0;
 		Reset();
 	}
@@ -1280,7 +1280,7 @@ void RB_RenderWorldEffects(void)
 
 	SetViewportAndScissor();
 	qglMatrixMode(GL_MODELVIEW);
-	qglLoadMatrixf(backEnd.viewParms.world.modelMatrix);
+	qglLoadMatrixf(backEnd.viewParms.world.model_matrix);
 
 	// Calculate Elapsed Time For Scale Purposes
 	//-------------------------------------------

@@ -1095,7 +1095,7 @@ void Cvar_List_f(void)
 		Com_Printf("%i cvar indexes\n", cvar_numIndexes);
 }
 
-void Cvar_SerenityJediEngine_f(void)
+void Cvar_SerenityJediEngine_f()
 {
 	if (d_Allowdebuginfo->integer)
 	{

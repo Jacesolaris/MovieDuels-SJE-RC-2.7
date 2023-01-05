@@ -508,7 +508,7 @@ const mdxaHeader_t* G2_GetModA(CGhoul2Info& ghoul2)
 {
 	if (!ghoul2.mBoneCache)
 	{
-		return 0;
+		return nullptr;
 	}
 
 	const CBoneCache& boneCache = *ghoul2.mBoneCache;
@@ -590,7 +590,7 @@ char* G2_GetBoneNameFromSkel(const CGhoul2Info& ghoul2, int boneNum)
 {
 	if (!ghoul2.mBoneCache)
 	{
-		return NULL;
+		return nullptr;
 	}
 	const CBoneCache& boneCache = *ghoul2.mBoneCache;
 	assert(boneCache.mod);
@@ -2348,7 +2348,7 @@ void G2_ProcessGeneratedSurfaceBolts(CGhoul2Info& ghoul2, mdxaBone_v& bonePtr, m
 			// yes - ok, processing time.
 			if (boltNum != -1)
 			{
-				G2_ProcessSurfaceBolt(bonePtr, NULL, boltNum, ghoul2.mBltlist, &ghoul2.mSlist[i], mod_t);
+				G2_ProcessSurfaceBolt(bonePtr, nullptr, boltNum, ghoul2.mBltlist, &ghoul2.mSlist[i], mod_t);
 			}
 		}
 	}
@@ -2362,7 +2362,7 @@ void RenderSurfaces(CRenderSurface& RS) //also ended up just ripping right from 
 #ifdef G2_PERFORMANCE_ANALYSIS
 	G2PerformanceTimer_RenderSurfaces.Start();
 #endif
-	const shader_t* shader = 0;
+	const shader_t* shader = nullptr;
 	int			off_flags = 0;
 #ifdef _G2_GORE
 	const bool		drawGore = true;
@@ -2488,7 +2488,7 @@ void RenderSurfaces(CRenderSurface& RS) //also ended up just ripping right from 
 					{
 						CRenderableSurface* newSurf2 = AllocRS();
 						*newSurf2 = *newSurf;
-						newSurf2->goreChain = 0;
+						newSurf2->goreChain = nullptr;
 						newSurf2->alternateTex = tex->tex[RS.lod];
 						newSurf2->scale = 1.0f;
 						newSurf2->fade = 1.0f;
@@ -3079,7 +3079,7 @@ void G2_GetBoltMatrixLow(CGhoul2Info& ghoul2, int boltNum, const vec3_t scale, m
 	}
 	else if (boltList[boltNum].surface_number >= 0)
 	{
-		const surfaceInfo_t* surfInfo = 0;
+		const surfaceInfo_t* surfInfo = nullptr;
 		{
 			for (size_t i = 0; i < ghoul2.mSlist.size(); i++)
 			{
@@ -3090,7 +3090,7 @@ void G2_GetBoltMatrixLow(CGhoul2Info& ghoul2, int boltNum, const vec3_t scale, m
 				}
 			}
 		}
-		const mdxmSurface_t* surface = 0;
+		const mdxmSurface_t* surface = nullptr;
 		if (!surfInfo)
 		{
 			surface = static_cast<mdxmSurface_t*>(G2_FindSurface_BC(boneCache.mod, boltList[boltNum].surface_number, 0));
@@ -3161,9 +3161,9 @@ void R_AddGhoulSurfaces(trRefEntity_t* ent) {
 #ifdef G2_PERFORMANCE_ANALYSIS
 	G2PerformanceTimer_R_AddGHOULSurfaces.Start();
 #endif
-	shader_t* cust_shader = 0;
+	shader_t* cust_shader = nullptr;
 #ifdef _G2_GORE
-	shader_t* gore_shader = 0;
+	shader_t* gore_shader = nullptr;
 #endif
 	int				i, whichLod;
 	skin_t* skin;
@@ -3236,14 +3236,14 @@ void R_AddGhoulSurfaces(trRefEntity_t* ent) {
 			//
 			// figure out whether we should be using a custom shader for this model
 			//
-			skin = NULL;
+			skin = nullptr;
 			if (ent->e.customShader)
 			{
 				cust_shader = R_GetShaderByHandle(ent->e.customShader);
 			}
 			else
 			{
-				cust_shader = NULL;
+				cust_shader = nullptr;
 				// figure out the custom skin thing
 				if (ghoul2[i].mCustomSkin)
 				{
@@ -3275,7 +3275,7 @@ void R_AddGhoulSurfaces(trRefEntity_t* ent) {
 			G2_FindOverrideSurface(-1, ghoul2[i].mSlist); //reset the quick surface override lookup;
 
 #ifdef _G2_GORE
-			CGoreSet* gore = 0;
+			CGoreSet* gore = nullptr;
 			if (ghoul2[i].mGoreSetTag)
 			{
 				gore = FindGoreSet(ghoul2[i].mGoreSetTag);
@@ -3316,7 +3316,7 @@ bool G2_NeedsRecalc(CGhoul2Info* ghl_info, int frameNum)
 		ghl_info->mBoneCache->mod != ghl_info->currentModel)
 	{
 #ifdef _G2_LISTEN_SERVER_OPT
-		if (ghl_info->entityNum != ENTITYNUM_NONE &&
+		if (ghl_info->entity_num != ENTITYNUM_NONE &&
 			G2API_OverrideServerWithClientData(ghl_info))
 		{ //if we can manage this, then we don't have to reconstruct
 			return false;
@@ -3374,7 +3374,7 @@ void G2_ConstructGhoulSkeleton(CGhoul2Info_v& ghoul2, const int frameNum, bool c
 				G2_TransformGhoulBones(ghoul2[i].mBlist, bolt, ghoul2[i], frameNum, checkForNewOrigin);
 			}
 #ifdef _G2_LISTEN_SERVER_OPT
-			else if (ghoul2[i].entityNum == ENTITYNUM_NONE || ghoul2[i].mSkelFrameNum != frameNum)
+			else if (ghoul2[i].entity_num == ENTITYNUM_NONE || ghoul2[i].mSkelFrameNum != frameNum)
 #else
 			else
 #endif
@@ -4244,7 +4244,7 @@ qboolean R_LoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboolean& 
 #endif
 
 		// find the next surface
-		surfInfo = (mdxmSurfHierarchy_t*)((byte*)surfInfo + (size_t)(&static_cast<mdxmSurfHierarchy_t*>(0)->childIndexes[surfInfo->numChildren]));
+		surfInfo = (mdxmSurfHierarchy_t*)((byte*)surfInfo + (size_t)(&static_cast<mdxmSurfHierarchy_t*>(nullptr)->childIndexes[surfInfo->numChildren]));
 	}
 
 	// swap all the LOD's	(we need to do the middle part of this even for intel, because of shader reg and err-check)

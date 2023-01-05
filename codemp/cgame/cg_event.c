@@ -1014,16 +1014,16 @@ int CG_InClientBitflags(entityState_t* ent, int client)
 void CG_PlayDoorLoopSound(centity_t* cent);
 void CG_PlayDoorSound(centity_t* cent, int type);
 
-void CG_TryPlayCustomSound(vec3_t origin, int entityNum, int channel, const char* soundName)
+void CG_TryPlayCustomSound(vec3_t origin, int entity_num, int channel, const char* soundName)
 {
-	const sfxHandle_t cSound = CG_CustomSound(entityNum, soundName);
+	const sfxHandle_t cSound = CG_CustomSound(entity_num, soundName);
 
 	if (cSound <= 0)
 	{
 		return;
 	}
 
-	trap->S_StartSound(origin, entityNum, channel, cSound);
+	trap->S_StartSound(origin, entity_num, channel, cSound);
 }
 
 void CG_G2MarkEvent(entityState_t* es)
@@ -1053,14 +1053,14 @@ void CG_G2MarkEvent(entityState_t* es)
 
 		CG_G2Trace(&tr, es->origin, NULL, NULL, es->origin2, ignore, MASK_PLAYERSOLID);
 
-		if (tr.entityNum != es->otherEntityNum)
+		if (tr.entity_num != es->otherEntityNum)
 		{ //try again if we hit an ent but not the one we wanted.
 			//CG_TestLine(es->origin, es->origin2, 2000, 0x0000ff, 1);
-			if (tr.entityNum < ENTITYNUM_WORLD)
+			if (tr.entity_num < ENTITYNUM_WORLD)
 			{
-				ignore = tr.entityNum;
+				ignore = tr.entity_num;
 				CG_G2Trace(&tr, es->origin, NULL, NULL, es->origin2, ignore, MASK_PLAYERSOLID);
-				if (tr.entityNum != es->otherEntityNum)
+				if (tr.entity_num != es->otherEntityNum)
 				{ //try extending the trace a bit.. or not
 					/*
 					vec3_t v;
@@ -1070,7 +1070,7 @@ void CG_G2MarkEvent(entityState_t* es)
 					VectorAdd(es->origin2, v, es->origin2);
 
 					CG_G2Trace(&tr, es->origin, NULL, NULL, es->origin2, ignore, MASK_PLAYERSOLID);
-					if (tr.entityNum != es->otherEntityNum)
+					if (tr.entity_num != es->otherEntityNum)
 					{
 						return;
 					}

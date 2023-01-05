@@ -966,11 +966,11 @@ qboolean trap_G2API_IKMove(void* ghoul2, int time, sharedIKMoveParams_t* params)
 qboolean trap_G2API_RemoveBone(void* ghoul2, const char* boneName, int model_index) {
 	return Q_syscall(G_G2_REMOVEBONE, ghoul2, boneName, model_index);
 }
-void trap_G2API_AttachInstanceToEntNum(void* ghoul2, int entityNum, qboolean server) {
-	Q_syscall(G_G2_ATTACHINSTANCETOENTNUM, ghoul2, entityNum, server);
+void trap_G2API_AttachInstanceToEntNum(void* ghoul2, int entity_num, qboolean server) {
+	Q_syscall(G_G2_ATTACHINSTANCETOENTNUM, ghoul2, entity_num, server);
 }
-void trap_G2API_ClearAttachedInstance(int entityNum) {
-	Q_syscall(G_G2_CLEARATTACHEDINSTANCE, entityNum);
+void trap_G2API_ClearAttachedInstance(int entity_num) {
+	Q_syscall(G_G2_CLEARATTACHEDINSTANCE, entity_num);
 }
 void trap_G2API_CleanEntAttachments(void) {
 	Q_syscall(G_G2_CLEANENTATTACHMENTS);

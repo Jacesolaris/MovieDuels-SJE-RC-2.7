@@ -1396,7 +1396,7 @@ int DoorBlockingSection(int start, int end)
 		return 0;
 	}
 
-	const gentity_t* testdoor = &g_entities[tr.entityNum];
+	const gentity_t* testdoor = &g_entities[tr.entity_num];
 
 	if (!testdoor)
 	{
@@ -1408,7 +1408,7 @@ int DoorBlockingSection(int start, int end)
 		return 0;
 	}
 
-	const int start_trace_index = tr.entityNum;
+	const int start_trace_index = tr.entity_num;
 
 	trap->Trace(&tr, gWPArray[end]->origin, NULL, NULL, gWPArray[start]->origin, ENTITYNUM_NONE, MASK_SOLID, qfalse, 0, 0);
 
@@ -1417,7 +1417,7 @@ int DoorBlockingSection(int start, int end)
 		return 0;
 	}
 
-	if (start_trace_index == tr.entityNum)
+	if (start_trace_index == tr.entity_num)
 	{
 		return 1;
 	}
@@ -2239,7 +2239,7 @@ void FlagObjects(void)
 			{
 				trap->Trace(&tr, flag_red->s.pos.trBase, mins, maxs, gWPArray[i]->origin, flag_red->s.number, MASK_SOLID, qfalse, 0, 0);
 
-				if (tr.fraction == 1 || tr.entityNum == flag_red->s.number)
+				if (tr.fraction == 1 || tr.entity_num == flag_red->s.number)
 				{
 					bestdist = tlen;
 					bestindex = i;
@@ -2275,7 +2275,7 @@ void FlagObjects(void)
 			{
 				trap->Trace(&tr, flag_blue->s.pos.trBase, mins, maxs, gWPArray[i]->origin, flag_blue->s.number, MASK_SOLID, qfalse, 0, 0);
 
-				if (tr.fraction == 1 || tr.entityNum == flag_blue->s.number)
+				if (tr.fraction == 1 || tr.entity_num == flag_blue->s.number)
 				{
 					bestdist = tlen;
 					bestindex = i;
@@ -3018,7 +3018,7 @@ void G_RMGPathing(void)
 			downVec[2] -= 3000;
 			trap->Trace(&tr, nodetable[nodenum].origin, trMins, trMaxs, downVec, ENTITYNUM_NONE, MASK_SOLID, qfalse, 0, 0);
 
-			if ((tr.entityNum >= ENTITYNUM_WORLD || g_entities[tr.entityNum].s.eType == ET_TERRAIN) && tr.endpos[2] < terrain->r.absmin[2] + 750)
+			if ((tr.entity_num >= ENTITYNUM_WORLD || g_entities[tr.entity_num].s.eType == ET_TERRAIN) && tr.endpos[2] < terrain->r.absmin[2] + 750)
 			{ //only drop nodes on terrain directly
 				VectorCopy(tr.endpos, nodetable[nodenum].origin);
 				nodenum++;

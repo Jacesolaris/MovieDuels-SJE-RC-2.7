@@ -423,8 +423,8 @@ void Boba_FireFlameThrower(gentity_t* self)
 
 	trap->Trace(&tr, start, traceMins, traceMaxs, end, self->s.number, MASK_SHOT, qfalse, 0, 0);
 
-	gentity_t* trace_ent = &g_entities[tr.entityNum];
-	if (tr.entityNum < ENTITYNUM_WORLD && trace_ent->takedamage)
+	gentity_t* trace_ent = &g_entities[tr.entity_num];
+	if (tr.entity_num < ENTITYNUM_WORLD && trace_ent->takedamage)
 	{
 		G_Damage(trace_ent, self, self, dir, tr.endpos, damage, DAMAGE_NO_ARMOR | DAMAGE_NO_KNOCKBACK |/*DAMAGE_NO_HIT_LOC|*/DAMAGE_IGNORE_TEAM, MOD_LAVA);
 		//rwwFIXMEFIXME: add DAMAGE_NO_HIT_LOC?
@@ -1033,7 +1033,7 @@ static qboolean jedi_clear_path_to_spot(vec3_t dest, int impact_ent_num)
 	if (trace.fraction < 1.0f)
 	{
 		//hit something
-		if (impact_ent_num != ENTITYNUM_NONE && trace.entityNum == impact_ent_num)
+		if (impact_ent_num != ENTITYNUM_NONE && trace.entity_num == impact_ent_num)
 		{//hit what we're going after
 			return qtrue;
 		}
@@ -1130,14 +1130,14 @@ qboolean npc_move_dir_clear(int forwardmove, int rightmove, qboolean reset)
 	}
 	if (trace.fraction < 0.6)
 	{//Going to bump into something very close, don't move, just turn
-		if ((NPCS.NPC->enemy && trace.entityNum == NPCS.NPC->enemy->s.number) || (NPCS.NPCInfo->goalEntity && trace.entityNum == NPCS.NPCInfo->goalEntity->s.number))
+		if ((NPCS.NPC->enemy && trace.entity_num == NPCS.NPC->enemy->s.number) || (NPCS.NPCInfo->goalEntity && trace.entity_num == NPCS.NPCInfo->goalEntity->s.number))
 		{//okay to bump into enemy or goal
 			//Com_Printf( "%d bump into enemy/goal okay\n", level.time );
 			return qtrue;
 		}
 		if (reset)
 		{//actually want to screw with the ucmd
-			//Com_Printf( "%d avoiding walk into wall (entnum %d)\n", level.time, trace.entityNum );
+			//Com_Printf( "%d avoiding walk into wall (entnum %d)\n", level.time, trace.entity_num );
 			NPCS.ucmd.forwardmove = 0;
 			NPCS.ucmd.rightmove = 0;
 			VectorClear(NPCS.NPC->client->ps.moveDir);
@@ -1169,7 +1169,7 @@ qboolean npc_move_dir_clear(int forwardmove, int rightmove, qboolean reset)
 	if (trace.fraction < 1.0)
 	{//Not going off a cliff
 		//FIXME: what if plane.normal is sloped?  We'll slide off, not land... plus this doesn't account for slide-movement...
-		//Com_Printf( "%d walk off cliff okay will hit entnum %d at dropdist of %4.2f\n", level.time, trace.entityNum, (trace.fraction*bottom_max) );
+		//Com_Printf( "%d walk off cliff okay will hit entnum %d at dropdist of %4.2f\n", level.time, trace.entity_num, (trace.fraction*bottom_max) );
 		return qtrue;
 	}
 
@@ -2105,8 +2105,8 @@ evasionType_t Jedi_CheckFlipEvasions(gentity_t* self, float rightdot, float zdif
 
 			VectorSubtract(self->r.currentOrigin, traceto, idealNormal);
 			VectorNormalize(idealNormal);
-			const gentity_t* trace_ent = &g_entities[trace.entityNum];
-			if ((trace.entityNum < ENTITYNUM_WORLD && trace_ent && trace_ent->s.solid != SOLID_BMODEL) || DotProduct(trace.plane.normal, idealNormal) > 0.7f)
+			const gentity_t* trace_ent = &g_entities[trace.entity_num];
+			if ((trace.entity_num < ENTITYNUM_WORLD && trace_ent && trace_ent->s.solid != SOLID_BMODEL) || DotProduct(trace.plane.normal, idealNormal) > 0.7f)
 			{//it's a ent of some sort or it's a wall roughly facing us
 				float bestCheckDist = 0;
 				//hmm, see if we're moving forward
@@ -3645,7 +3645,7 @@ gentity_t* Jedi_FindEnemyInCone(gentity_t* self, gentity_t* fallback, float minD
 
 		//really should have a clear LOS to this thing...
 		trap->Trace(&tr, self->r.currentOrigin, vec3_origin, vec3_origin, check->r.currentOrigin, self->s.number, MASK_SHOT, qfalse, 0, 0);
-		if (tr.fraction < 1.0f && tr.entityNum != check->s.number)
+		if (tr.fraction < 1.0f && tr.entity_num != check->s.number)
 		{//must have clear shot
 			continue;
 		}
@@ -4478,7 +4478,7 @@ static qboolean Jedi_Jump(vec3_t dest, int goalEntNum)
 					}
 					if (trace.fraction < 1.0f)
 					{//hit something
-						if (trace.entityNum == goalEntNum)
+						if (trace.entity_num == goalEntNum)
 						{//hit the enemy, that's perfect!
 							//Hmm, don't want to land on him, though...
 							break;
@@ -4957,9 +4957,9 @@ static void jedi_check_jumps(void)
 	trap->Trace(&trace, trace.endpos, NPCS.NPC->r.mins, NPCS.NPC->r.maxs, bottom, NPCS.NPC->s.number, NPCS.NPC->clipmask, qfalse, 0, 0);
 	if (trace.allsolid || trace.startsolid || trace.fraction < 1.0f)
 	{//hit ground!
-		if (trace.entityNum < ENTITYNUM_WORLD)
+		if (trace.entity_num < ENTITYNUM_WORLD)
 		{//landed on an ent
-			const gentity_t* groundEnt = &g_entities[trace.entityNum];
+			const gentity_t* groundEnt = &g_entities[trace.entity_num];
 			if (groundEnt->r.svFlags & SVF_GLASS_BRUSH)
 			{//don't land on breakable glass!
 				goto jump_unsafe;

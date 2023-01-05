@@ -102,7 +102,7 @@ typedef struct orientationr_s {
 	vec3_t		origin;			// in world coordinates
 	matrix3_t	axis;		// orientation in world
 	vec3_t		viewOrigin;		// viewParms->or.origin in local coordinates
-	float		modelMatrix[16];
+	float		model_matrix[16];
 } orientationr_t;
 
 typedef struct image_s {
@@ -1224,7 +1224,7 @@ void R_AddLightningBoltSurfaces(trRefEntity_t* e);
 
 void R_AddPolygonSurfaces(void);
 
-void R_DecomposeSort(unsigned sort, int* entityNum, shader_t** shader, int* fogNum, int* dlightMap);
+void R_DecomposeSort(unsigned sort, int* entity_num, shader_t** shader, int* fog_num, int* dlight_map);
 
 void R_AddDrawSurf(surfaceType_t* surface, shader_t* shader, int fogIndex, int dlightMap);
 
@@ -1233,7 +1233,7 @@ void R_AddDrawSurf(surfaceType_t* surface, shader_t* shader, int fogIndex, int d
 #define	CULL_OUT	2		// completely outside the clipping planes
 void R_LocalNormalToWorld(const vec3_t local, vec3_t world);
 void R_LocalPointToWorld(const vec3_t local, vec3_t world);
-void R_WorldNormalToEntity(const vec3_t localVec, vec3_t world);
+void R_WorldNormalToEntity(const vec3_t worldvec, vec3_t entvec);
 int R_CullLocalBox(const vec3_t bounds[2]);
 int R_CullPointAndRadius(const vec3_t origin, float radius);
 int R_CullLocalPointAndRadius(const vec3_t origin, float radius);
@@ -1340,7 +1340,7 @@ void	R_InitImages(void);
 void	R_DeleteTextures(void);
 float	R_SumOfUsedImages(qboolean bUseFormat);
 void	R_InitSkins(void);
-skin_t* R_GetSkinByHandle(qhandle_t hSkin);
+skin_t* R_GetSkinByHandle(qhandle_t h_skin);
 const void* RB_TakeVideoFrameCmd(const void* data);
 void RE_HunkClearCrap(void);
 
@@ -1513,11 +1513,11 @@ SKIES
 
 ============================================================
 */
-void R_BuildCloudData(const shaderCommands_t* shader);
-void R_InitSkyTexCoords(float cloudLayerHeight);
+void R_BuildCloudData(const shaderCommands_t* input);
+void R_InitSkyTexCoords(float height_cloud);
 void R_DrawSkyBox(shaderCommands_t* shader);
 void RB_DrawSun(void);
-void RB_ClipSkyPolygons(const shaderCommands_t* shader);
+void RB_ClipSkyPolygons(const shaderCommands_t* input);
 /*
 ============================================================
 
@@ -1615,11 +1615,11 @@ public:
 
 	CRenderableSurface() :
 		ident(SF_MDX),
-		boneCache(0),
+		boneCache(nullptr),
 #ifdef _G2_GORE
-		surfaceData(0),
-		alternateTex(0),
-		goreChain(0)
+		surfaceData(nullptr),
+		alternateTex(nullptr),
+		goreChain(nullptr)
 #else
 		surfaceData(0)
 #endif
@@ -1629,10 +1629,10 @@ public:
 	void Init()
 	{
 		ident = SF_MDX;
-		boneCache = 0;
-		surfaceData = 0;
-		alternateTex = 0;
-		goreChain = 0;
+		boneCache = nullptr;
+		surfaceData = nullptr;
+		alternateTex = nullptr;
+		goreChain = nullptr;
 	}
 #endif
 };
@@ -1646,7 +1646,7 @@ Ghoul2 Insert End
 =============================================================
 =============================================================
 */
-void	R_TransformModelToClip(const vec3_t src, const float* modelMatrix, const float* projectionMatrix,
+void	R_TransformModelToClip(const vec3_t src, const float* model_matrix, const float* projection_matrix,
 	vec4_t eye, vec4_t dst);
 void	R_TransformClipToWindow(const vec4_t clip, const viewParms_t* view, vec4_t normalized, vec4_t window);
 

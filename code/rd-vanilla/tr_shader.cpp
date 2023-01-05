@@ -2621,20 +2621,20 @@ static void FixRenderCommandList(int newShader) {
 				case RC_DRAW_SURFS:
 				{
 					int i;
-					drawSurf_t* drawSurf;
+					drawSurf_t* draw_surf;
 					shader_t* shader;
 					int			fogNum;
-					int			entityNum;
+					int			entity_num;
 					int			dlightMap;
 					int			sortedIndex;
 					const drawSurfsCommand_t* ds_cmd = (const drawSurfsCommand_t*)curCmd;
 
-					for (i = 0, drawSurf = ds_cmd->drawSurfs; i < ds_cmd->numDrawSurfs; i++, drawSurf++) {
-						R_DecomposeSort(drawSurf->sort, &entityNum, &shader, &fogNum, &dlightMap);
-						sortedIndex = ((drawSurf->sort >> QSORT_SHADERNUM_SHIFT) & (MAX_SHADERS - 1));
+					for (i = 0, draw_surf = ds_cmd->drawSurfs; i < ds_cmd->numDrawSurfs; i++, draw_surf++) {
+						R_DecomposeSort(draw_surf->sort, &entity_num, &shader, &fogNum, &dlightMap);
+						sortedIndex = ((draw_surf->sort >> QSORT_SHADERNUM_SHIFT) & (MAX_SHADERS - 1));
 						if (sortedIndex >= newShader) {
 							sortedIndex++;
-							drawSurf->sort = (sortedIndex << QSORT_SHADERNUM_SHIFT) | (entityNum << QSORT_REFENTITYNUM_SHIFT) | (fogNum << QSORT_FOGNUM_SHIFT) | (int)dlightMap;
+							draw_surf->sort = (sortedIndex << QSORT_SHADERNUM_SHIFT) | (entity_num << QSORT_REFENTITYNUM_SHIFT) | (fogNum << QSORT_FOGNUM_SHIFT) | (int)dlightMap;
 						}
 					}
 					curCmd = (const void*)(ds_cmd + 1);
@@ -3240,7 +3240,7 @@ static const char* FindShaderInShaderText(const char* shadername) {
 #endif
 }
 
-inline qboolean IsShader(shader_t* sh, const char* name, const int* lightmapIndex, const byte* styles)
+inline qboolean IsShader(const shader_t* sh, const char* name, const int* lightmapIndex, const byte* styles)
 {
 	if (Q_stricmp(sh->name, name))
 	{

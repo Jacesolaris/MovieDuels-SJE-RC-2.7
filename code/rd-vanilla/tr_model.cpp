@@ -346,7 +346,7 @@ static void RE_RegisterModels_DeleteAll(void)
 		CachedModels->erase(itModel++);
 	}
 
-	extern void RE_AnimationCFGs_DeleteAll(void);
+	extern void RE_AnimationCFGs_DeleteAll();
 	RE_AnimationCFGs_DeleteAll();
 }
 
@@ -458,21 +458,21 @@ model_t* R_GetAnimModelByHandle(CGhoul2Info* ghl_info, qhandle_t index)
 	{
 		// Have to recalculate offset to get map animations for JKA Campaign
 		index -= ghl_info->animModelIndexOffset;
-		int mapIndex = 0;
+		int map_index = 0;
 		constexpr int len = std::size(tr.models);
 		for (int i = 0; i < len; i++)
 		{
 			if (!Q_stricmp(va("models/players/_humanoid/_humanoid.gla"), tr.models[i]->name))
 			{
-				mapIndex = i + 1;
+				map_index = i + 1;
 				break;
 			}
 		}
 
 		// Custom skeletons will be further along than the base _humanoid, don't modify for normal JKA skeletons
-		if (index > mapIndex)
+		if (index > map_index)
 		{
-			const int offSet = index - mapIndex;
+			const int offSet = index - map_index;
 			mod = tr.models[index - offSet];
 		}
 		else

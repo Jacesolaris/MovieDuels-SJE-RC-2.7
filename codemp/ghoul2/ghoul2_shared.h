@@ -281,7 +281,7 @@ public:
 	const mdxaHeader_t* aHeader;
 
 #ifdef _G2_LISTEN_SERVER_OPT
-	int					entityNum;
+	int					entity_num;
 #endif
 
 	CGhoul2Info() :
@@ -310,7 +310,7 @@ public:
 		currentAnimModelSize(0),
 		aHeader(nullptr)
 #ifdef _G2_LISTEN_SERVER_OPT
-		, entityNum(ENTITYNUM_NONE)
+		, entity_num(ENTITYNUM_NONE)
 #endif
 	{
 		mFileName[0] = 0;

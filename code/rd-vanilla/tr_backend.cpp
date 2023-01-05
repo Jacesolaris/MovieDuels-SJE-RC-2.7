@@ -620,7 +620,7 @@ using postRender_t = struct
 	int			entNum;
 	int			dlighted;
 	int			depthRange;
-	drawSurf_t* drawSurf;
+	drawSurf_t* draw_surf;
 	shader_t* shader;
 };
 
@@ -716,7 +716,7 @@ void RB_RenderDrawSurfList(drawSurf_t* draw_surfs, const int num_draw_surfs)
 				p_render->entNum = entity_num;
 
 				//remember the other values necessary for rendering this surf
-				p_render->drawSurf = draw_surf;
+				p_render->draw_surf = draw_surf;
 				p_render->dlighted = dlighted;
 				p_render->fogNum = fog_num;
 				p_render->shader = shader;
@@ -786,7 +786,7 @@ void RB_RenderDrawSurfList(drawSurf_t* draw_surfs, const int num_draw_surfs)
 				R_TransformDlights(backEnd.refdef.num_dlights, backEnd.refdef.dlights, &backEnd.ori);
 			}
 
-			qglLoadMatrixf(backEnd.ori.modelMatrix);
+			qglLoadMatrixf(backEnd.ori.model_matrix);
 
 			//
 			// change depthrange if needed
@@ -853,7 +853,7 @@ void RB_RenderDrawSurfList(drawSurf_t* draw_surfs, const int num_draw_surfs)
 				R_TransformDlights(backEnd.refdef.num_dlights, backEnd.refdef.dlights, &backEnd.ori);
 			}
 
-			qglLoadMatrixf(backEnd.ori.modelMatrix);
+			qglLoadMatrixf(backEnd.ori.model_matrix);
 
 			depth_range = p_render->depthRange;
 			switch (depth_range)
@@ -911,13 +911,13 @@ void RB_RenderDrawSurfList(drawSurf_t* draw_surfs, const int num_draw_surfs)
 				}
 			}
 
-			rb_surfaceTable[*p_render->drawSurf->surface](p_render->drawSurf->surface);
+			rb_surfaceTable[*p_render->draw_surf->surface](p_render->draw_surf->surface);
 			RB_EndSurface();
 		}
 	}
 
 	// go back to the world modelview matrix
-	qglLoadMatrixf(backEnd.viewParms.world.modelMatrix);
+	qglLoadMatrixf(backEnd.viewParms.world.model_matrix);
 	if (depth_range) {
 		qglDepthRange(0, 1);
 	}

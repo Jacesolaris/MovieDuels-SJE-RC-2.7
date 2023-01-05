@@ -158,7 +158,7 @@ void CG_BuildSolidList(void) {
 
 static QINLINE qboolean CG_VehicleClipCheck(centity_t* ignored, trace_t* trace)
 {
-	if (!trace || trace->entityNum < 0 || trace->entityNum >= ENTITYNUM_WORLD)
+	if (!trace || trace->entity_num < 0 || trace->entity_num >= ENTITYNUM_WORLD)
 	{ //it's alright then
 		return qtrue;
 	}
@@ -172,7 +172,7 @@ static QINLINE qboolean CG_VehicleClipCheck(centity_t* ignored, trace_t* trace)
 	if (ignored->currentState.m_iVehicleNum)
 	{ //see if the ignore ent is a vehicle/rider - if so, see if the ent we supposedly hit is a vehicle/rider.
 		//if they belong to each other, we don't want to collide them.
-		const centity_t* otherguy = &cg_entities[trace->entityNum];
+		const centity_t* otherguy = &cg_entities[trace->entity_num];
 
 		if (otherguy->currentState.eType != ET_PLAYER &&
 			otherguy->currentState.eType != ET_NPC)
@@ -287,7 +287,7 @@ static void CG_ClipMoveToEntities(const vec3_t start, const vec3_t mins, const v
 		}
 
 		trap->CM_TransformedTrace(&trace, start, end, mins, maxs, cmodel, mask, origin, angles, 0);
-		trace.entityNum = trace.fraction != 1.0 ? ent->number : ENTITYNUM_NONE;
+		trace.entity_num = trace.fraction != 1.0 ? ent->number : ENTITYNUM_NONE;
 
 		if (g2Check || (ignored && ignored->currentState.m_iVehicleNum))
 		{
@@ -297,20 +297,20 @@ static void CG_ClipMoveToEntities(const vec3_t start, const vec3_t mins, const v
 		}
 
 		if (trace.allsolid || trace.fraction < tr->fraction) {
-			trace.entityNum = ent->number;
+			trace.entity_num = ent->number;
 			*tr = trace;
 		}
 		else if (trace.startsolid) {
 			tr->startsolid = qtrue;
 
 			//rww 12-02-02
-			tr->entityNum = trace.entityNum = ent->number;
+			tr->entity_num = trace.entity_num = ent->number;
 		}
 		if (tr->allsolid)
 		{
 			if (ignored && ignored->currentState.m_iVehicleNum)
 			{
-				trace.entityNum = ent->number;
+				trace.entity_num = ent->number;
 				if (CG_VehicleClipCheck(ignored, &trace))
 				{ //this isn't our vehicle, we're really stuck
 					return;
@@ -327,11 +327,11 @@ static void CG_ClipMoveToEntities(const vec3_t start, const vec3_t mins, const v
 
 		if (g2Check)
 		{
-			if (trace.entityNum == ent->number && cent->ghoul2)
+			if (trace.entity_num == ent->number && cent->ghoul2)
 			{
 				CG_G2TraceCollide(&trace, mins, maxs, start, end);
 
-				if (trace.entityNum == ENTITYNUM_NONE)
+				if (trace.entity_num == ENTITYNUM_NONE)
 				{ //g2 trace failed, so put it back where it was.
 					trace = oldTrace;
 					*tr = trace;
@@ -341,7 +341,7 @@ static void CG_ClipMoveToEntities(const vec3_t start, const vec3_t mins, const v
 
 		if (ignored && ignored->currentState.m_iVehicleNum)
 		{ //see if this is the vehicle we hit
-			centity_t* hit = &cg_entities[trace.entityNum];
+			centity_t* hit = &cg_entities[trace.entity_num];
 			if (!CG_VehicleClipCheck(ignored, &trace))
 			{ //looks like it
 				trace = oldTrace;
@@ -367,7 +367,7 @@ void	CG_Trace(trace_t* result, const vec3_t start, const vec3_t mins, const vec3
 	trace_t	t;
 
 	trap->CM_Trace(&t, start, end, mins, maxs, 0, mask, 0);
-	t.entityNum = t.fraction != 1.0 ? ENTITYNUM_WORLD : ENTITYNUM_NONE;
+	t.entity_num = t.fraction != 1.0 ? ENTITYNUM_WORLD : ENTITYNUM_NONE;
 	// check all other solid models
 	CG_ClipMoveToEntities(start, mins, maxs, end, skipNumber, mask, &t, qfalse);
 
@@ -384,7 +384,7 @@ void	CG_G2Trace(trace_t* result, const vec3_t start, const vec3_t mins, const ve
 	trace_t	t;
 
 	trap->CM_Trace(&t, start, end, mins, maxs, 0, mask, 0);
-	t.entityNum = t.fraction != 1.0 ? ENTITYNUM_WORLD : ENTITYNUM_NONE;
+	t.entity_num = t.fraction != 1.0 ? ENTITYNUM_WORLD : ENTITYNUM_NONE;
 	// check all other solid models
 	CG_ClipMoveToEntities(start, mins, maxs, end, skipNumber, mask, &t, qtrue);
 

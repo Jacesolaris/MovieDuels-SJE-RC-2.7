@@ -380,8 +380,8 @@ int BotAI_GetClientState(int client_num, playerState_t* state) {
 BotAI_GetEntityState
 ==================
 */
-int BotAI_GetEntityState(int entityNum, entityState_t* state) {
-	const gentity_t* ent = &g_entities[entityNum];
+int BotAI_GetEntityState(int entity_num, entityState_t* state) {
+	const gentity_t* ent = &g_entities[entity_num];
 	memset(state, 0, sizeof(entityState_t));
 	if (!ent->inuse) return qfalse;
 	if (!ent->r.linked) return qfalse;
@@ -1010,11 +1010,11 @@ int WPOrgVisible(gentity_t* bot, vec3_t org1, vec3_t org2, int ignore)
 	{
 		trap->Trace(&tr, org1, NULL, NULL, org2, ignore, MASK_PLAYERSOLID, qfalse, 0, 0);
 
-		if (tr.fraction != 1 && tr.entityNum != ENTITYNUM_NONE && g_entities[tr.entityNum].s.eType == ET_SPECIAL)
+		if (tr.fraction != 1 && tr.entity_num != ENTITYNUM_NONE && g_entities[tr.entity_num].s.eType == ET_SPECIAL)
 		{
-			if (g_entities[tr.entityNum].parent && g_entities[tr.entityNum].parent->client)
+			if (g_entities[tr.entity_num].parent && g_entities[tr.entity_num].parent->client)
 			{
-				gentity_t* ownent = g_entities[tr.entityNum].parent;
+				gentity_t* ownent = g_entities[tr.entity_num].parent;
 
 				if (OnSameTeam(bot, ownent) || bot->s.number == ownent->s.number)
 				{
@@ -1071,7 +1071,7 @@ int CheckForFunc(vec3_t org, int ignore)
 		return 0;
 	}
 
-	const gentity_t* fent = &g_entities[tr.entityNum];
+	const gentity_t* fent = &g_entities[tr.entity_num];
 
 	if (!fent)
 	{
@@ -1649,7 +1649,7 @@ int BotTrace_Jump(bot_state_t* bs, vec3_t traceto)
 		return 0;
 	}
 
-	const int orTr = tr.entityNum;
+	const int orTr = tr.entity_num;
 
 	VectorCopy(bs->origin, tracefrom_mod);
 
@@ -2441,7 +2441,7 @@ gentity_t* GetNearestBadThing(bot_state_t* bs)
 			{
 				trap->Trace(&tr, bs->origin, NULL, NULL, ent->s.pos.trBase, bs->client, MASK_SOLID, qfalse, 0, 0);
 
-				if (tr.fraction == 1 || tr.entityNum == ent->s.number)
+				if (tr.fraction == 1 || tr.entity_num == ent->s.number)
 				{
 					bestindex = i;
 					bestdist = glen;
@@ -3019,7 +3019,7 @@ int EntityVisibleBox(vec3_t org1, vec3_t mins, vec3_t maxs, vec3_t org2, int ign
 	{
 		return 1;
 	}
-	if (tr.entityNum != ENTITYNUM_NONE && tr.entityNum == ignore2)
+	if (tr.entity_num != ENTITYNUM_NONE && tr.entity_num == ignore2)
 	{
 		return 1;
 	}
@@ -3319,7 +3319,7 @@ int SiegeTakesPriority(bot_state_t* bs)
 				{
 					trap->Trace(&tr, bs->origin, NULL, NULL, dif, bs->client, MASK_SOLID, qfalse, 0, 0);
 
-					if (tr.fraction != 1 && tr.entityNum != bs->shootGoal->s.number)
+					if (tr.fraction != 1 && tr.entity_num != bs->shootGoal->s.number)
 					{
 						bs->shootGoal = NULL;
 					}
@@ -3344,7 +3344,7 @@ int SiegeTakesPriority(bot_state_t* bs)
 			{
 				trap->Trace(&tr, bs->origin, NULL, NULL, dif, bs->client, MASK_SOLID, qfalse, 0, 0);
 
-				if (tr.fraction != 1 && tr.entityNum != bs->shootGoal->s.number)
+				if (tr.fraction != 1 && tr.entity_num != bs->shootGoal->s.number)
 				{
 					bs->shootGoal = NULL;
 				}
@@ -3368,7 +3368,7 @@ int SiegeTakesPriority(bot_state_t* bs)
 			{
 				trap->Trace(&tr, bs->origin, NULL, NULL, dif, bs->client, MASK_SOLID, qfalse, 0, 0);
 
-				if (tr.fraction != 1 && tr.entityNum != bs->shootGoal->s.number)
+				if (tr.fraction != 1 && tr.entity_num != bs->shootGoal->s.number)
 				{
 					bs->shootGoal = NULL;
 				}
@@ -5483,9 +5483,9 @@ gentity_t* CheckForFriendInLOF(bot_state_t* bs)
 
 	trap->Trace(&tr, trfrom, mins, maxs, trto, bs->client, MASK_PLAYERSOLID, qfalse, 0, 0);
 
-	if (tr.fraction != 1 && tr.entityNum <= MAX_CLIENTS)
+	if (tr.fraction != 1 && tr.entity_num <= MAX_CLIENTS)
 	{
-		gentity_t* trent = &g_entities[tr.entityNum];
+		gentity_t* trent = &g_entities[tr.entity_num];
 
 		if (trent && trent->client)
 		{
@@ -5628,7 +5628,7 @@ void CTFFlagMovement(bot_state_t* bs)
 				{
 					trap->Trace(&tr, bs->origin, mins, maxs, desiredDrop->s.pos.trBase, bs->client, MASK_SOLID, qfalse, 0, 0);
 
-					if (tr.fraction == 1 || tr.entityNum == desiredDrop->s.number)
+					if (tr.fraction == 1 || tr.entity_num == desiredDrop->s.number)
 					{
 						VectorCopy(desiredDrop->s.pos.trBase, bs->goalPosition);
 						VectorCopy(desiredDrop->s.pos.trBase, bs->staticFlagSpot);

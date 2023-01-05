@@ -1504,7 +1504,7 @@ RB_SurfaceEntity
 Entities that have a single procedurally generated surface
 ====================
 */
-void RB_SurfaceEntity(surfaceType_t* surfType) {
+void RB_SurfaceEntity(surfaceType_t* surf_type) {
 	switch (backEnd.currentEntity->e.reType) {
 	case RT_SPRITE:
 		RB_SurfaceSprite();
@@ -1550,7 +1550,7 @@ void RB_SurfaceEntity(surfaceType_t* surfType) {
 
 			assert(backEnd.currentEntity->e.renderfx >= 0);
 
-			RB_SurfaceEntity(surfType);
+			RB_SurfaceEntity(surf_type);
 		}
 	}
 	break;
@@ -1560,7 +1560,7 @@ void RB_SurfaceEntity(surfaceType_t* surfType) {
 	}
 }
 
-void RB_SurfaceBad(surfaceType_t* surfType) {
+void RB_SurfaceBad(surfaceType_t* surf_type) {
 	ri->Printf(PRINT_ALL, "Bad surface tesselated.\n");
 }
 
@@ -1576,7 +1576,7 @@ static bool RB_TestZFlare(vec3_t point) {
 
 	// if the point is off the screen, don't bother adding it
 	// calculate screen coordinates and depth
-	R_TransformModelToClip(point, backEnd.ori.modelMatrix,
+	R_TransformModelToClip(point, backEnd.ori.model_matrix,
 		backEnd.viewParms.projectionMatrix, eye, clip);
 
 	// check to see if the point is completely off screen

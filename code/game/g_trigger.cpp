@@ -142,7 +142,7 @@ void multi_trigger(gentity_t* ent, gentity_t* activator)
 
 		//	trace_t	viewTrace;
 		//	gi.trace(&viewTrace, ent->currentOrigin, 0, 0, activator->currentOrigin, ent->s.number, MASK_SHOT);
-		//	if ((viewTrace.allsolid) || (viewTrace.startsolid) || 	(viewTrace.entityNum!=activator->s.number))
+		//	if ((viewTrace.allsolid) || (viewTrace.startsolid) || 	(viewTrace.entity_num!=activator->s.number))
 		//	{
 		//		return;
 		//	}

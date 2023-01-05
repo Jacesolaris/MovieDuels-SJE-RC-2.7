@@ -2492,9 +2492,9 @@ void WP_SaberClearDamageForEntNum(gentity_t* attacker, const int entity_num, con
 #ifndef FINAL_BUILD
 	if (d_saberCombat->integer)
 	{
-		if (entityNum)
+		if (entity_num)
 		{
-			Com_Printf("clearing damage for entnum %d\n", entityNum);
+			Com_Printf("clearing damage for entnum %d\n", entity_num);
 		}
 	}
 #endif// FINAL_BUILD
@@ -2660,7 +2660,7 @@ qboolean WP_SaberApplyDamageJKA(gentity_t* ent, const float base_damage, const i
 					trace_t test_trace;
 					gi.trace(&test_trace, test_from, vec3_origin, vec3_origin, victim->currentOrigin, ent->s.number,
 						MASK_SHOT, static_cast<EG2_Collision>(0), 0);
-					if (test_trace.entityNum != victim->s.number)
+					if (test_trace.entity_num != victim->s.number)
 					{
 						//can only damage maglocks if have a clear trace to the thing's origin
 						continue;
@@ -3113,7 +3113,7 @@ qboolean WP_SaberApplyDamageMD(gentity_t* ent, const float base_damage, const in
 					trace_t test_trace;
 					gi.trace(&test_trace, test_from, vec3_origin, vec3_origin, victim->currentOrigin, ent->s.number,
 						MASK_SHOT, static_cast<EG2_Collision>(0), 0);
-					if (test_trace.entityNum != victim->s.number)
+					if (test_trace.entity_num != victim->s.number)
 					{
 						//can only damage maglocks if have a clear trace to the thing's origin
 						continue;
@@ -4736,7 +4736,7 @@ void WP_SaberKnockaway(const gentity_t* attacker, trace_t* tr)
 	}
 #endif
 	VectorCopy(tr->endpos, saberHitLocation);
-	saberHitEntity = tr->entityNum;
+	saberHitEntity = tr->entity_num;
 	if (!g_noClashFlare)
 	{
 		g_saberFlashTime = level.time - 50;
@@ -4857,12 +4857,12 @@ qboolean WP_SaberDamageForTrace(const int ignore, vec3_t start, vec3_t end, floa
 	}
 #endif
 
-	if (tr.entityNum == ENTITYNUM_NONE)
+	if (tr.entity_num == ENTITYNUM_NONE)
 	{
 		return qfalse;
 	}
 
-	if (tr.entityNum == ENTITYNUM_WORLD)
+	if (tr.entity_num == ENTITYNUM_WORLD)
 	{
 		if (attacker && attacker->client && attacker->client->ps.saber[saber_num].saberFlags & SFL_BOUNCE_ON_WALLS)
 		{
@@ -4872,10 +4872,10 @@ qboolean WP_SaberDamageForTrace(const int ignore, vec3_t start, vec3_t end, floa
 		return qtrue;
 	}
 
-	if (&g_entities[tr.entityNum])
+	if (&g_entities[tr.entity_num])
 	{
-		const gentity_t* hit_ent = &g_entities[tr.entityNum];
-		const gentity_t* owner = g_entities[tr.entityNum].owner;
+		const gentity_t* hit_ent = &g_entities[tr.entity_num];
+		const gentity_t* owner = g_entities[tr.entity_num].owner;
 
 		if (hit_ent->contents & CONTENTS_LIGHTSABER)
 		{
@@ -5003,11 +5003,11 @@ qboolean WP_SaberDamageForTrace(const int ignore, vec3_t start, vec3_t end, floa
 				//swing came from behind and/or was not stopped by a lightsaber
 				gi.trace(&tr, start, nullptr, nullptr, end2, ignore, mask & ~CONTENTS_LIGHTSABER, G2_NOCOLLIDE, 10);
 
-				if (tr.entityNum == ENTITYNUM_WORLD)
+				if (tr.entity_num == ENTITYNUM_WORLD)
 				{
 					return qtrue;
 				}
-				if (tr.entityNum == ENTITYNUM_NONE || &g_entities[tr.entityNum] == nullptr)
+				if (tr.entity_num == ENTITYNUM_NONE || &g_entities[tr.entity_num] == nullptr)
 				{
 					//didn't hit the owner
 					return qfalse; // Exit, but we didn't hit the wall.
@@ -5021,8 +5021,8 @@ qboolean WP_SaberDamageForTrace(const int ignore, vec3_t start, vec3_t end, floa
 					}
 				}
 #endif//FINAL_BUILD
-				hit_ent = &g_entities[tr.entityNum];
-				owner = g_entities[tr.entityNum].owner;
+				hit_ent = &g_entities[tr.entity_num];
+				owner = g_entities[tr.entity_num].owner;
 			}
 			else
 			{
@@ -5083,7 +5083,7 @@ qboolean WP_SaberDamageForTrace(const int ignore, vec3_t start, vec3_t end, floa
 					}
 #endif//FINAL_BUILD
 					VectorCopy(tr.endpos, saberHitLocation);
-					saberHitEntity = tr.entityNum;
+					saberHitEntity = tr.entity_num;
 				}
 				return qfalse; // Exit, but we didn't hit the wall.
 			}
@@ -5196,7 +5196,7 @@ qboolean WP_SaberDamageForTrace(const int ignore, vec3_t start, vec3_t end, floa
 				}
 				vec3_t backdir;
 				VectorScale(dir, -1, backdir);
-				WP_SaberDamageAdd(tr_frac, tr.entityNum, dir, blade_vec, backdir, tr.endpos, dmg, dmg_frac, HL_NONE,
+				WP_SaberDamageAdd(tr_frac, tr.entity_num, dir, blade_vec, backdir, tr.endpos, dmg, dmg_frac, HL_NONE,
 					qfalse, HL_NONE);
 				if (!tr.allsolid && !tr.startsolid)
 				{
@@ -7655,11 +7655,11 @@ void WP_SaberDamageTrace(gentity_t* ent, int saber_num, int blade_num)
 			trace_t trace;
 			gi.trace(&trace, ent->currentOrigin, vec3_origin, vec3_origin, mp1, ent->s.number,
 				MASK_SHOT & ~(CONTENTS_CORPSE | CONTENTS_ITEM), static_cast<EG2_Collision>(0), 0);
-			if (trace.entityNum < ENTITYNUM_WORLD && (trace.entityNum > 0 || ent->client->NPC_class == CLASS_DESANN))
+			if (trace.entity_num < ENTITYNUM_WORLD && (trace.entity_num > 0 || ent->client->NPC_class == CLASS_DESANN))
 				//NPCs don't push player away, unless it's Desann
 			{
 				//a valid ent
-				gentity_t* trace_ent = &g_entities[trace.entityNum];
+				gentity_t* trace_ent = &g_entities[trace.entity_num];
 				if (trace_ent
 					&& trace_ent->client
 					&& trace_ent->client->NPC_class != CLASS_RANCOR
@@ -9463,8 +9463,8 @@ void wp_saber_damage_trace_amd(gentity_t* ent, int saber_num, int blade_num)
 			gi.trace(&trace, ent->currentOrigin, vec3_origin, vec3_origin, mp1, ent->s.number,
 				MASK_SHOT & ~(CONTENTS_CORPSE | CONTENTS_ITEM), static_cast<EG2_Collision>(0), 0);
 
-			if (trace.entityNum < ENTITYNUM_WORLD
-				&& (trace.entityNum > 0
+			if (trace.entity_num < ENTITYNUM_WORLD
+				&& (trace.entity_num > 0
 					|| ent->client->NPC_class == CLASS_DESANN
 					|| ent->client->NPC_class == CLASS_VADER
 					|| ent->client->NPC_class == CLASS_SITHLORD
@@ -9472,7 +9472,7 @@ void wp_saber_damage_trace_amd(gentity_t* ent, int saber_num, int blade_num)
 					|| ent->client->NPC_class == CLASS_LUKE)) //NPCs don't push player away, unless it's Desann
 			{
 				//a valid ent
-				gentity_t* trace_ent = &g_entities[trace.entityNum];
+				gentity_t* trace_ent = &g_entities[trace.entity_num];
 				if (trace_ent
 					&& trace_ent->client
 					&& trace_ent->client->NPC_class != CLASS_RANCOR
@@ -10851,8 +10851,8 @@ void WP_SaberDamageTrace_MD(gentity_t* ent, int saber_num, int blade_num)
 			gi.trace(&trace, ent->currentOrigin, vec3_origin, vec3_origin, mp1, ent->s.number,
 				MASK_SHOT & ~(CONTENTS_CORPSE | CONTENTS_ITEM), static_cast<EG2_Collision>(0), 0);
 
-			if (trace.entityNum < ENTITYNUM_WORLD
-				&& (trace.entityNum > 0
+			if (trace.entity_num < ENTITYNUM_WORLD
+				&& (trace.entity_num > 0
 					|| ent->client->NPC_class == CLASS_DESANN
 					|| ent->client->NPC_class == CLASS_VADER
 					|| ent->client->NPC_class == CLASS_SITHLORD
@@ -10860,7 +10860,7 @@ void WP_SaberDamageTrace_MD(gentity_t* ent, int saber_num, int blade_num)
 					|| ent->client->NPC_class == CLASS_LUKE)) //NPCs don't push player away, unless it's Desann
 			{
 				//a valid ent
-				gentity_t* trace_ent = &g_entities[trace.entityNum];
+				gentity_t* trace_ent = &g_entities[trace.entity_num];
 				if (trace_ent
 					&& trace_ent->client
 					&& trace_ent->client->NPC_class != CLASS_RANCOR
@@ -11940,7 +11940,7 @@ WP_SaberImpact
 */
 void WP_SaberImpact(gentity_t* owner, gentity_t* saber, trace_t* trace)
 {
-	gentity_t* other = &g_entities[trace->entityNum];
+	gentity_t* other = &g_entities[trace->entity_num];
 
 	if (other->takedamage && other->svFlags & SVF_BBRUSH)
 	{
@@ -19290,16 +19290,16 @@ void wp_saber_start_missile_block_check(gentity_t* self, const usercmd_t* ucmd)
 			trace_to[2] = self->absmax[2] - 4;
 			gi.trace(&trace, ent->currentOrigin, ent->mins, ent->maxs, trace_to, ent->s.number, ent->clipmask,
 				static_cast<EG2_Collision>(0), 0);
-			if (trace.allsolid || trace.startsolid || trace.fraction < 1.0f && trace.entityNum != self->s.number &&
-				trace.entityNum != self->client->ps.saberEntityNum)
+			if (trace.allsolid || trace.startsolid || trace.fraction < 1.0f && trace.entity_num != self->s.number &&
+				trace.entity_num != self->client->ps.saberEntityNum)
 			{
 				//okay, try one more check
 				VectorNormalize2(ent->s.pos.trDelta, entDir);
 				VectorMA(ent->currentOrigin, radius, entDir, trace_to);
 				gi.trace(&trace, ent->currentOrigin, ent->mins, ent->maxs, trace_to, ent->s.number, ent->clipmask,
 					static_cast<EG2_Collision>(0), 0);
-				if (trace.allsolid || trace.startsolid || trace.fraction < 1.0f && trace.entityNum != self->s.number &&
-					trace.entityNum != self->client->ps.saberEntityNum)
+				if (trace.allsolid || trace.startsolid || trace.fraction < 1.0f && trace.entity_num != self->s.number &&
+					trace.entity_num != self->client->ps.saberEntityNum)
 				{
 					//can't hit me, ignore it
 					continue;
@@ -19964,16 +19964,16 @@ void wp_saber_start_missile_block_check_md(gentity_t* self, const usercmd_t* ucm
 			trace_to[2] = self->absmax[2] - 4;
 			gi.trace(&trace, ent->currentOrigin, ent->mins, ent->maxs, trace_to, ent->s.number, ent->clipmask,
 				static_cast<EG2_Collision>(0), 0);
-			if (trace.allsolid || trace.startsolid || trace.fraction < 1.0f && trace.entityNum != self->s.number &&
-				trace.entityNum != self->client->ps.saberEntityNum)
+			if (trace.allsolid || trace.startsolid || trace.fraction < 1.0f && trace.entity_num != self->s.number &&
+				trace.entity_num != self->client->ps.saberEntityNum)
 			{
 				//okay, try one more check
 				VectorNormalize2(ent->s.pos.trDelta, ent_dir);
 				VectorMA(ent->currentOrigin, radius, ent_dir, trace_to);
 				gi.trace(&trace, ent->currentOrigin, ent->mins, ent->maxs, trace_to, ent->s.number, ent->clipmask,
 					static_cast<EG2_Collision>(0), 0);
-				if (trace.allsolid || trace.startsolid || trace.fraction < 1.0f && trace.entityNum != self->s.number &&
-					trace.entityNum != self->client->ps.saberEntityNum)
+				if (trace.allsolid || trace.startsolid || trace.fraction < 1.0f && trace.entity_num != self->s.number &&
+					trace.entity_num != self->client->ps.saberEntityNum)
 				{
 					//can't hit me, ignore it
 					continue;
@@ -21661,7 +21661,7 @@ qboolean WP_ForceThrowable(gentity_t* ent, const gentity_t* forward_ent, const g
 						gi.trace(&tr, self->client->renderInfo.eyePoint, vec3_origin, vec3_origin, end, self->s.number,
 							MASK_OPAQUE | CONTENTS_SOLID | CONTENTS_BODY | CONTENTS_ITEM | CONTENTS_CORPSE,
 							static_cast<EG2_Collision>(0), 0); //was MASK_SHOT, changed to match crosshair trace
-						if (tr.entityNum != ent->s.number)
+						if (tr.entity_num != ent->s.number)
 						{
 							//last chance
 							return qfalse;
@@ -22306,10 +22306,10 @@ void ForceThrow_JKA(gentity_t* self, qboolean pull, qboolean fake)
 			MASK_OPAQUE | CONTENTS_SOLID | CONTENTS_BODY | CONTENTS_ITEM | CONTENTS_CORPSE,
 			static_cast<EG2_Collision>(0), 0); //was MASK_SHOT, changed to match crosshair trace
 
-		if (tr.entityNum < ENTITYNUM_WORLD)
+		if (tr.entity_num < ENTITYNUM_WORLD)
 		{
 			//found something right in front of self,
-			forward_ent = &g_entities[tr.entityNum];
+			forward_ent = &g_entities[tr.entity_num];
 			if (!forward_ent->client && !Q_stricmp("func_static", forward_ent->classname))
 			{
 				if (forward_ent->spawnflags & 1 || forward_ent->spawnflags & 2/*F_PULL*/)
@@ -22471,7 +22471,7 @@ void ForceThrow_JKA(gentity_t* self, qboolean pull, qboolean fake)
 				gi.trace(&tr, self->client->renderInfo.eyePoint, vec3_origin, vec3_origin, ent_org, self->s.number,
 					MASK_FORCE_PUSH, static_cast<EG2_Collision>(0), 0);
 				//was MASK_SHOT, but changed to match above trace and crosshair trace
-				if (tr.fraction < 1.0f && tr.entityNum != ent->s.number)
+				if (tr.fraction < 1.0f && tr.entity_num != ent->s.number)
 				{
 					//must have clear LOS
 					continue;
@@ -23051,7 +23051,7 @@ void ForceThrow_JKA(gentity_t* self, qboolean pull, qboolean fake)
 					VectorMA(self->client->renderInfo.eyePoint, radius, forward, end);
 					gi.trace(&trace, self->client->renderInfo.eyePoint, vec3_origin, vec3_origin, end, self->s.number,
 						MASK_SHOT, static_cast<EG2_Collision>(0), 0);
-					if (trace.entityNum != push_list[x]->s.number || trace.fraction == 1.0 || trace.allsolid || trace.
+					if (trace.entity_num != push_list[x]->s.number || trace.fraction == 1.0 || trace.allsolid || trace.
 						startsolid)
 					{
 						//must be pointing right at it
@@ -23107,7 +23107,7 @@ void ForceThrow_JKA(gentity_t* self, qboolean pull, qboolean fake)
 					VectorMA(self->client->renderInfo.eyePoint, radius, forward, end);
 					gi.trace(&tr, self->client->renderInfo.eyePoint, vec3_origin, vec3_origin, end, self->s.number,
 						MASK_SHOT, static_cast<EG2_Collision>(0), 0);
-					if (tr.entityNum != push_list[x]->s.number || tr.fraction == 1.0 || tr.allsolid || tr.startsolid)
+					if (tr.entity_num != push_list[x]->s.number || tr.fraction == 1.0 || tr.allsolid || tr.startsolid)
 					{
 						//must be pointing right at it
 						continue;
@@ -23753,10 +23753,10 @@ void ForceThrow_MD(gentity_t* self, qboolean pull, qboolean fake) //MD Mode Push
 		gi.trace(&tr, self->client->renderInfo.eyePoint, vec3_origin, vec3_origin, end, self->s.number,
 			MASK_OPAQUE | CONTENTS_SOLID | CONTENTS_BODY | CONTENTS_ITEM | CONTENTS_CORPSE,
 			static_cast<EG2_Collision>(0), 0); //was MASK_SHOT, changed to match crosshair trace
-		if (tr.entityNum < ENTITYNUM_WORLD)
+		if (tr.entity_num < ENTITYNUM_WORLD)
 		{
 			//found something right in front of self,
-			forward_ent = &g_entities[tr.entityNum];
+			forward_ent = &g_entities[tr.entity_num];
 			if (!forward_ent->client && !Q_stricmp("func_static", forward_ent->classname))
 			{
 				if (forward_ent->spawnflags & 1/*F_PUSH*/ || forward_ent->spawnflags & 2/*F_PULL*/)
@@ -23918,7 +23918,7 @@ void ForceThrow_MD(gentity_t* self, qboolean pull, qboolean fake) //MD Mode Push
 				gi.trace(&tr, self->client->renderInfo.eyePoint, vec3_origin, vec3_origin, ent_org, self->s.number,
 					MASK_FORCE_PUSH, static_cast<EG2_Collision>(0), 0);
 				//was MASK_SHOT, but changed to match above trace and crosshair trace
-				if (tr.fraction < 1.0f && tr.entityNum != ent->s.number)
+				if (tr.fraction < 1.0f && tr.entity_num != ent->s.number)
 				{
 					//must have clear LOS
 					continue;
@@ -24577,7 +24577,7 @@ void ForceThrow_MD(gentity_t* self, qboolean pull, qboolean fake) //MD Mode Push
 					VectorMA(self->client->renderInfo.eyePoint, radius, forward, end);
 					gi.trace(&trace, self->client->renderInfo.eyePoint, vec3_origin, vec3_origin, end, self->s.number,
 						MASK_SHOT, static_cast<EG2_Collision>(0), 0);
-					if (trace.entityNum != push_list[x]->s.number || trace.fraction == 1.0 || trace.allsolid || trace.
+					if (trace.entity_num != push_list[x]->s.number || trace.fraction == 1.0 || trace.allsolid || trace.
 						startsolid)
 					{
 						//must be pointing right at it
@@ -24634,7 +24634,7 @@ void ForceThrow_MD(gentity_t* self, qboolean pull, qboolean fake) //MD Mode Push
 					VectorMA(self->client->renderInfo.eyePoint, radius, forward, end);
 					gi.trace(&tr, self->client->renderInfo.eyePoint, vec3_origin, vec3_origin, end, self->s.number,
 						MASK_SHOT, static_cast<EG2_Collision>(0), 0);
-					if (tr.entityNum != push_list[x]->s.number || tr.fraction == 1.0 || tr.allsolid || tr.startsolid)
+					if (tr.entity_num != push_list[x]->s.number || tr.fraction == 1.0 || tr.allsolid || tr.startsolid)
 					{
 						//must be pointing right at it
 						continue;
@@ -25277,10 +25277,10 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 		MASK_OPAQUE | CONTENTS_SOLID | CONTENTS_BODY | CONTENTS_ITEM | CONTENTS_CORPSE,
 		static_cast<EG2_Collision>(0), 0);
 
-	if (tr.entityNum < ENTITYNUM_WORLD)
+	if (tr.entity_num < ENTITYNUM_WORLD)
 	{
 		//found something right in front of self,
-		forward_ent = &g_entities[tr.entityNum];
+		forward_ent = &g_entities[tr.entity_num];
 		if (!forward_ent->client && !Q_stricmp("func_static", forward_ent->classname))
 		{
 			if (forward_ent->spawnflags & 1 || forward_ent->spawnflags & 2)
@@ -25439,7 +25439,7 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 						gi.trace(&tr, self->client->renderInfo.eyePoint, vec3_origin, vec3_origin, ent_org,
 							self->s.number, MASK_FORCE_PUSH, static_cast<EG2_Collision>(0), 0);
 						//was MASK_SHOT, but changed to match above trace and crosshair trace
-						if (tr.fraction < 1.0f && tr.entityNum != ent->s.number)
+						if (tr.fraction < 1.0f && tr.entity_num != ent->s.number)
 						{
 							//must have clear LOS
 							continue;
@@ -25588,7 +25588,7 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 					{
 						gi.trace(&tr, self->client->renderInfo.eyePoint, vec3_origin, vec3_origin, ent_org,
 							self->s.number, MASK_FORCE_PUSH, static_cast<EG2_Collision>(0), 0);
-						if (tr.fraction < 1.0f && tr.entityNum != ent->s.number)
+						if (tr.fraction < 1.0f && tr.entity_num != ent->s.number)
 						{
 							//must have clear LOS
 							continue;
@@ -25717,7 +25717,7 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 					gi.trace(&tr, self->client->renderInfo.eyePoint, vec3_origin, vec3_origin, ent_org, self->s.number,
 						MASK_FORCE_PUSH, static_cast<EG2_Collision>(0), 0);
 					//was MASK_SHOT, but changed to match above trace and crosshair trace
-					if (tr.fraction < 1.0f && tr.entityNum != ent->s.number)
+					if (tr.fraction < 1.0f && tr.entity_num != ent->s.number)
 					{
 						//must have clear LOS
 						continue;
@@ -26472,7 +26472,7 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 						VectorMA(self->client->renderInfo.eyePoint, radius, forward, end);
 						gi.trace(&trace, self->client->renderInfo.eyePoint, vec3_origin, vec3_origin, end,
 							self->s.number, MASK_SHOT, static_cast<EG2_Collision>(0), 0);
-						if (trace.entityNum != push_list[x]->s.number || trace.fraction == 1.0 || trace.allsolid ||
+						if (trace.entity_num != push_list[x]->s.number || trace.fraction == 1.0 || trace.allsolid ||
 							trace.startsolid)
 						{
 							//must be pointing right at it
@@ -26530,7 +26530,7 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 						VectorMA(self->client->renderInfo.eyePoint, radius, forward, end);
 						gi.trace(&tr, self->client->renderInfo.eyePoint, vec3_origin, vec3_origin, end, self->s.number,
 							MASK_SHOT, static_cast<EG2_Collision>(0), 0);
-						if (tr.entityNum != push_list[x]->s.number || tr.fraction == 1.0 || tr.allsolid || tr.
+						if (tr.entity_num != push_list[x]->s.number || tr.fraction == 1.0 || tr.allsolid || tr.
 							startsolid)
 						{
 							//must be pointing right at it
@@ -27514,7 +27514,7 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 						VectorMA(self->client->renderInfo.eyePoint, radius, forward, end);
 						gi.trace(&trace, self->client->renderInfo.eyePoint, vec3_origin, vec3_origin, end,
 							self->s.number, MASK_SHOT, static_cast<EG2_Collision>(0), 0);
-						if (trace.entityNum != push_list[x]->s.number || trace.fraction == 1.0 || trace.allsolid ||
+						if (trace.entity_num != push_list[x]->s.number || trace.fraction == 1.0 || trace.allsolid ||
 							trace.startsolid)
 						{
 							//must be pointing right at it
@@ -27572,7 +27572,7 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 						VectorMA(self->client->renderInfo.eyePoint, radius, forward, end);
 						gi.trace(&tr, self->client->renderInfo.eyePoint, vec3_origin, vec3_origin, end, self->s.number,
 							MASK_SHOT, static_cast<EG2_Collision>(0), 0);
-						if (tr.entityNum != push_list[x]->s.number || tr.fraction == 1.0 || tr.allsolid || tr.
+						if (tr.entity_num != push_list[x]->s.number || tr.fraction == 1.0 || tr.allsolid || tr.
 							startsolid)
 						{
 							//must be pointing right at it
@@ -28133,7 +28133,7 @@ void ForceRepulseThrow(gentity_t* self, int charge_time)
 				gi.trace(&tr, self->client->renderInfo.eyePoint, vec3_origin, vec3_origin, ent_org, self->s.number,
 					MASK_FORCE_PUSH, static_cast<EG2_Collision>(0), 0);
 				//was MASK_SHOT, but changed to match above trace and crosshair trace
-				if (tr.fraction < 1.0f && tr.entityNum != ent->s.number)
+				if (tr.fraction < 1.0f && tr.entity_num != ent->s.number)
 				{
 					//must have clear LOS
 					continue;
@@ -28585,7 +28585,7 @@ void ForceRepulseThrow(gentity_t* self, int charge_time)
 				VectorMA(self->client->renderInfo.eyePoint, radius, forward, end);
 				gi.trace(&trace, self->client->renderInfo.eyePoint, vec3_origin, vec3_origin, end, self->s.number,
 					MASK_SHOT, static_cast<EG2_Collision>(0), 0);
-				if (trace.entityNum != push_list[x]->s.number || trace.fraction == 1.0 || trace.allsolid || trace.
+				if (trace.entity_num != push_list[x]->s.number || trace.fraction == 1.0 || trace.allsolid || trace.
 					startsolid)
 				{
 					//must be pointing right at it
@@ -29371,12 +29371,12 @@ void ForceTelepathy(gentity_t* self)
 	//Cause a distraction if enemy is not fighting
 	gi.trace(&tr, self->client->renderInfo.eyePoint, vec3_origin, vec3_origin, end, self->s.number,
 		MASK_OPAQUE | CONTENTS_BODY, static_cast<EG2_Collision>(0), 0);
-	if (tr.entityNum == ENTITYNUM_NONE || tr.fraction == 1.0 || tr.allsolid || tr.startsolid)
+	if (tr.entity_num == ENTITYNUM_NONE || tr.fraction == 1.0 || tr.allsolid || tr.startsolid)
 	{
 		return;
 	}
 
-	gentity_t* trace_ent = &g_entities[tr.entityNum];
+	gentity_t* trace_ent = &g_entities[tr.entity_num];
 
 	if (trace_ent->s.number >= MAX_CLIENTS && !G_ControlledByPlayer(trace_ent))
 	{
@@ -29678,7 +29678,7 @@ void ForceGrip(gentity_t* self)
 						gi.trace(&tr, self->client->renderInfo.eyePoint, vec3_origin, vec3_origin,
 							self->enemy->currentOrigin, self->s.number, MASK_SHOT, static_cast<EG2_Collision>(0),
 							0);
-						if (tr.fraction == 1.0f || tr.entityNum == self->enemy->s.number)
+						if (tr.fraction == 1.0f || tr.entity_num == self->enemy->s.number)
 						{
 							//must have clear LOS
 							trace_ent = self->enemy;
@@ -29693,12 +29693,12 @@ void ForceGrip(gentity_t* self)
 		//okay, trace straight ahead and see what's there
 		gi.trace(&tr, self->client->renderInfo.handLPoint, vec3_origin, vec3_origin, end, self->s.number, MASK_SHOT,
 			static_cast<EG2_Collision>(0), 0);
-		if (tr.entityNum >= ENTITYNUM_WORLD || tr.fraction == 1.0 || tr.allsolid || tr.startsolid)
+		if (tr.entity_num >= ENTITYNUM_WORLD || tr.fraction == 1.0 || tr.allsolid || tr.startsolid)
 		{
 			return;
 		}
 
-		trace_ent = &g_entities[tr.entityNum];
+		trace_ent = &g_entities[tr.entity_num];
 	}
 	//rww - RAGDOLL_BEGIN
 #ifdef JK2_RAGDOLL_GRIPNOHEALTH
@@ -30298,12 +30298,12 @@ void ForceFear(gentity_t* self)
 	//Cause a distraction if enemy is not fighting
 	gi.trace(&tr, self->client->renderInfo.eyePoint, vec3_origin, vec3_origin, end, self->s.number,
 		MASK_OPAQUE | CONTENTS_BODY, static_cast<EG2_Collision>(0), 0);
-	if (tr.entityNum == ENTITYNUM_NONE || tr.fraction == 1.0 || tr.allsolid || tr.startsolid)
+	if (tr.entity_num == ENTITYNUM_NONE || tr.fraction == 1.0 || tr.allsolid || tr.startsolid)
 	{
 		return;
 	}
 
-	gentity_t* trace_ent = &g_entities[tr.entityNum];
+	gentity_t* trace_ent = &g_entities[tr.entity_num];
 
 	if (trace_ent->NPC && trace_ent->NPC->scriptFlags & SCF_NO_FORCE)
 	{
@@ -30673,7 +30673,7 @@ void force_shootstrike(gentity_t* self)
 				render_impact = qfalse;
 			}
 
-			if (tr.fraction < 1.0f && tr.entityNum != trace_ent->s.number)
+			if (tr.fraction < 1.0f && tr.entity_num != trace_ent->s.number)
 			{
 				//must have clear LOS
 				continue;
@@ -30681,7 +30681,7 @@ void force_shootstrike(gentity_t* self)
 
 			if (render_impact)
 			{
-				if (tr.entityNum < ENTITYNUM_WORLD && trace_ent->takedamage)
+				if (tr.entity_num < ENTITYNUM_WORLD && trace_ent->takedamage)
 				{
 					// Create a simple impact type mark that doesn't last long in the world
 					G_PlayEffect(G_EffectIndex("tusken/hit"), tr.endpos, tr.plane.normal);
@@ -30952,7 +30952,7 @@ void force_shootstrike(gentity_t* self)
 				render_impact = qfalse;
 			}
 
-			if (tr.fraction < 1.0f && tr.entityNum != trace_ent->s.number)
+			if (tr.fraction < 1.0f && tr.entity_num != trace_ent->s.number)
 			{
 				//must have clear LOS
 				continue;
@@ -30960,7 +30960,7 @@ void force_shootstrike(gentity_t* self)
 
 			if (render_impact)
 			{
-				if (tr.entityNum < ENTITYNUM_WORLD && trace_ent->takedamage)
+				if (tr.entity_num < ENTITYNUM_WORLD && trace_ent->takedamage)
 				{
 					// Create a simple impact type mark that doesn't last long in the world
 					G_PlayEffect(G_EffectIndex("tusken/hit"), tr.endpos, tr.plane.normal);
@@ -31231,7 +31231,7 @@ void force_shootstrike(gentity_t* self)
 				render_impact = qfalse;
 			}
 
-			if (tr.fraction < 1.0f && tr.entityNum != trace_ent->s.number)
+			if (tr.fraction < 1.0f && tr.entity_num != trace_ent->s.number)
 			{
 				//must have clear LOS
 				continue;
@@ -31239,7 +31239,7 @@ void force_shootstrike(gentity_t* self)
 
 			if (render_impact)
 			{
-				if (tr.entityNum < ENTITYNUM_WORLD && trace_ent->takedamage)
+				if (tr.entity_num < ENTITYNUM_WORLD && trace_ent->takedamage)
 				{
 					// Create a simple impact type mark that doesn't last long in the world
 					G_PlayEffect(G_EffectIndex("tusken/hit"), tr.endpos, tr.plane.normal);
@@ -34127,7 +34127,7 @@ void ForceShootLightning(gentity_t* self)
 			//Now check and see if we can actually hit it
 			gi.trace(&tr, self->client->renderInfo.handLPoint, vec3_origin, vec3_origin, ent_org, self->s.number,
 				MASK_SHOT, static_cast<EG2_Collision>(0), 0);
-			if (tr.fraction < 1.0f && tr.entityNum != trace_ent->s.number)
+			if (tr.fraction < 1.0f && tr.entity_num != trace_ent->s.number)
 			{
 				//must have clear LOS
 				continue;
@@ -34165,12 +34165,12 @@ void ForceShootLightning(gentity_t* self)
 		{
 			//need to loop this in case we hit a Jedi who dodges the shot
 			gi.trace(&tr, start, vec3_origin, vec3_origin, end, ignore, MASK_SHOT, G2_RETURNONHIT, 10);
-			if (tr.entityNum == ENTITYNUM_NONE || tr.fraction == 1.0 || tr.allsolid || tr.startsolid)
+			if (tr.entity_num == ENTITYNUM_NONE || tr.fraction == 1.0 || tr.allsolid || tr.startsolid)
 			{
 				return;
 			}
 
-			trace_ent = &g_entities[tr.entityNum];
+			trace_ent = &g_entities[tr.entity_num];
 			//NOTE: only NPCs do this auto-dodge
 			if (trace_ent
 				&& trace_ent->s.number >= MAX_CLIENTS
@@ -34181,7 +34181,7 @@ void ForceShootLightning(gentity_t* self)
 				{
 					//act like we didn't even hit him
 					VectorCopy(tr.endpos, start);
-					ignore = tr.entityNum;
+					ignore = tr.entity_num;
 					traces++;
 					continue;
 				}
@@ -34190,7 +34190,7 @@ void ForceShootLightning(gentity_t* self)
 			break;
 		}
 
-		trace_ent = &g_entities[tr.entityNum];
+		trace_ent = &g_entities[tr.entity_num];
 
 		if (g_SerenityJediEngineMode->integer)
 		{
@@ -34377,11 +34377,11 @@ qboolean ForceDrain2(gentity_t* self)
 	//okay, trace straight ahead and see what's there
 	gi.trace(&tr, self->client->renderInfo.eyePoint, vec3_origin, vec3_origin, end, self->s.number, MASK_SHOT,
 		static_cast<EG2_Collision>(0), 0);
-	if (tr.entityNum >= ENTITYNUM_WORLD || tr.fraction == 1.0 || tr.allsolid || tr.startsolid)
+	if (tr.entity_num >= ENTITYNUM_WORLD || tr.fraction == 1.0 || tr.allsolid || tr.startsolid)
 	{
 		return qfalse;
 	}
-	gentity_t* trace_ent = &g_entities[tr.entityNum];
+	gentity_t* trace_ent = &g_entities[tr.entity_num];
 	if (!trace_ent || trace_ent == self/*???*/ || trace_ent->bmodel || trace_ent->health <= 0 && trace_ent->takedamage
 		||
 		trace_ent->NPC && trace_ent->NPC->scriptFlags & SCF_NO_FORCE)
@@ -34995,7 +34995,7 @@ void ForceShootDrain(gentity_t* self)
 				//Now check and see if we can actually hit it
 				gi.trace(&tr, self->client->ps.origin, vec3_origin, vec3_origin, ent_org, self->s.number, MASK_SHOT,
 					G2_RETURNONHIT, 10);
-				if (tr.fraction < 1.0f && tr.entityNum != trace_ent->s.number)
+				if (tr.fraction < 1.0f && tr.entity_num != trace_ent->s.number)
 				{
 					//must have clear LOS
 					continue;
@@ -35055,14 +35055,14 @@ void ForceShootDrain(gentity_t* self)
 			{
 				//need to loop this in case we hit a Jedi who dodges the shot
 				gi.trace(&tr, start, vec3_origin, vec3_origin, end, ignore, MASK_SHOT, G2_RETURNONHIT, 10);
-				if (tr.entityNum == ENTITYNUM_NONE || tr.fraction == 1.0 || tr.allsolid || tr.startsolid)
+				if (tr.entity_num == ENTITYNUM_NONE || tr.fraction == 1.0 || tr.allsolid || tr.startsolid)
 				{
 					//always take 1 force point per frame that we're shooting this
 					WP_ForcePowerDrain(self, FP_DRAIN, 1);
 					return;
 				}
 
-				trace_ent = &g_entities[tr.entityNum];
+				trace_ent = &g_entities[tr.entity_num];
 
 				if (g_SerenityJediEngineMode->integer)
 				{
@@ -35076,7 +35076,7 @@ void ForceShootDrain(gentity_t* self)
 						{
 							//act like we didn't even hit him
 							VectorCopy(tr.endpos, start);
-							ignore = tr.entityNum;
+							ignore = tr.entity_num;
 							traces++;
 							continue;
 						}
@@ -35093,7 +35093,7 @@ void ForceShootDrain(gentity_t* self)
 						{
 							//act like we didn't even hit him
 							VectorCopy(tr.endpos, start);
-							ignore = tr.entityNum;
+							ignore = tr.entity_num;
 							traces++;
 							continue;
 						}
@@ -35101,7 +35101,7 @@ void ForceShootDrain(gentity_t* self)
 				}
 				break;
 			}
-			trace_ent = &g_entities[tr.entityNum];
+			trace_ent = &g_entities[tr.entity_num];
 			if (!WP_CheckForceDraineeStopMe(self, trace_ent))
 			{
 				ForceDrainDamage(self, trace_ent, forward, tr.endpos);
@@ -36411,7 +36411,7 @@ void ForceStasis(gentity_t* self)
 		//Stasis the enemy!
 		AngleVectors(self->client->ps.viewangles, forward, nullptr, nullptr);
 		VectorNormalize(forward);
-		//trace_ent = &g_entities[tr.entityNum];
+		//trace_ent = &g_entities[tr.entity_num];
 
 		vec3_t center, mins, maxs, v;
 		const float reach = radius;
@@ -36488,7 +36488,7 @@ void ForceStasis(gentity_t* self)
 			//Now check and see if we can actually hit it
 			gi.trace(&tr, self->client->renderInfo.handLPoint, vec3_origin, vec3_origin, ent_org, self->s.number,
 				MASK_SHOT, G2_NOCOLLIDE, 0);
-			if (tr.fraction < 1.0f && tr.entityNum != trace_ent->s.number)
+			if (tr.fraction < 1.0f && tr.entity_num != trace_ent->s.number)
 			{
 				//must have clear LOS
 				continue;
@@ -36534,7 +36534,7 @@ void ForceStasis(gentity_t* self)
 							gi.trace(&tr, self->client->renderInfo.eyePoint, vec3_origin, vec3_origin,
 								self->enemy->currentOrigin, self->s.number, MASK_SHOT,
 								static_cast<EG2_Collision>(0), 0);
-							if (tr.fraction == 1.0f || tr.entityNum == self->enemy->s.number)
+							if (tr.fraction == 1.0f || tr.entity_num == self->enemy->s.number)
 							{
 								//must have clear LOS
 								trace_ent = self->enemy;
@@ -36548,12 +36548,12 @@ void ForceStasis(gentity_t* self)
 				//Stasis the enemy!
 				gi.trace(&tr, self->client->renderInfo.eyePoint, vec3_origin, vec3_origin, end, self->s.number,
 					MASK_OPAQUE | CONTENTS_BODY, static_cast<EG2_Collision>(0), 0);
-				if (tr.entityNum == ENTITYNUM_NONE || tr.fraction == 1.0 || tr.allsolid || tr.startsolid)
+				if (tr.entity_num == ENTITYNUM_NONE || tr.fraction == 1.0 || tr.allsolid || tr.startsolid)
 				{
 					return;
 				}
 
-				trace_ent = &g_entities[tr.entityNum];
+				trace_ent = &g_entities[tr.entity_num];
 			}
 		}
 		if (!trace_ent)
@@ -36561,11 +36561,11 @@ void ForceStasis(gentity_t* self)
 			//okay, trace straight ahead and see what's there
 			gi.trace(&tr, self->client->renderInfo.eyePoint, vec3_origin, vec3_origin, end, self->s.number, MASK_SHOT,
 				static_cast<EG2_Collision>(0), 0);
-			if (tr.entityNum == ENTITYNUM_NONE || tr.fraction == 1.0 || tr.allsolid || tr.startsolid)
+			if (tr.entity_num == ENTITYNUM_NONE || tr.fraction == 1.0 || tr.allsolid || tr.startsolid)
 			{
 				return;
 			}
-			trace_ent = &g_entities[tr.entityNum];
+			trace_ent = &g_entities[tr.entity_num];
 			G_AddVoiceEvent(trace_ent, Q_irand(EV_PUSHED1, EV_PUSHED3), 2000);
 		}
 	}
@@ -36937,7 +36937,7 @@ void ForceGrasp(gentity_t* self)
 						gi.trace(&tr, self->client->renderInfo.eyePoint, vec3_origin, vec3_origin,
 							self->enemy->currentOrigin, self->s.number, MASK_SHOT, static_cast<EG2_Collision>(0),
 							0);
-						if (tr.fraction == 1.0f || tr.entityNum == self->enemy->s.number)
+						if (tr.fraction == 1.0f || tr.entity_num == self->enemy->s.number)
 						{
 							//must have clear LOS
 							trace_ent = self->enemy;
@@ -36952,12 +36952,12 @@ void ForceGrasp(gentity_t* self)
 		//okay, trace straight ahead and see what's there
 		gi.trace(&tr, self->client->renderInfo.handLPoint, vec3_origin, vec3_origin, end, self->s.number, MASK_SHOT,
 			static_cast<EG2_Collision>(0), 0);
-		if (tr.entityNum >= ENTITYNUM_WORLD || tr.fraction == 1.0 || tr.allsolid || tr.startsolid)
+		if (tr.entity_num >= ENTITYNUM_WORLD || tr.fraction == 1.0 || tr.allsolid || tr.startsolid)
 		{
 			return;
 		}
 
-		trace_ent = &g_entities[tr.entityNum];
+		trace_ent = &g_entities[tr.entity_num];
 	}
 	//rww - RAGDOLL_BEGIN
 #ifdef JK2_RAGDOLL_GRIPNOHEALTH
@@ -40479,7 +40479,7 @@ static void wp_force_power_run(gentity_t* self, forcePowers_t force_power, userc
 				//really should have a clear LOS to this thing...
 				gi.trace(&tr, self->currentOrigin, vec3_origin, vec3_origin, check->currentOrigin, self->s.number,
 					MASK_SHOT, static_cast<EG2_Collision>(0), 0);
-				if (tr.fraction < 1.0f && tr.entityNum != check->s.number)
+				if (tr.fraction < 1.0f && tr.entity_num != check->s.number)
 				{
 					//must have clear shot
 					continue;
@@ -41895,7 +41895,12 @@ qboolean BG_SaberInPartialDamageMove(gentity_t* self)
 		self->client->ps.torsoAnim == BOTH_ROLL_STAB ||
 		self->client->ps.torsoAnim == BOTH_STABDOWN ||
 		self->client->ps.torsoAnim == BOTH_STABDOWN_STAFF ||
-		self->client->ps.torsoAnim == BOTH_STABDOWN_DUAL)
+		self->client->ps.torsoAnim == BOTH_STABDOWN_DUAL ||
+		self->client->ps.torsoAnim == BOTH_A6_SABERPROTECT ||
+		self->client->ps.torsoAnim == BOTH_A7_SOULCAL ||
+		self->client->ps.torsoAnim == BOTH_A1_SPECIAL ||
+		self->client->ps.torsoAnim == BOTH_A2_SPECIAL ||
+		self->client->ps.torsoAnim == BOTH_A3_SPECIAL)
 	{
 		float current = 0.0f;
 		int end = 0;
@@ -41921,12 +41926,16 @@ qboolean BG_SaberInPartialDamageMove(gentity_t* self)
 			switch (self->client->ps.torsoAnim)
 			{
 			case BOTH_JUMPFLIPSTABDOWN: return static_cast<qboolean>(percent_complete > 0.0 && percent_complete < 0.30);
-			case BOTH_JUMPFLIPSLASHDOWN1: return static_cast<qboolean>(percent_complete > 0.0 && percent_complete <
-				0.30);
+			case BOTH_JUMPFLIPSLASHDOWN1: return static_cast<qboolean>(percent_complete > 0.0 && percent_complete < 0.30);
 			case BOTH_ROLL_STAB: return static_cast<qboolean>(percent_complete > 0.0 && percent_complete < 0.30);
-			case BOTH_STABDOWN: return static_cast<qboolean>(percent_complete > 0.0 && percent_complete < 0.35);
-			case BOTH_STABDOWN_STAFF: return static_cast<qboolean>(percent_complete > 0.0 && percent_complete < 0.35);
-			case BOTH_STABDOWN_DUAL: return static_cast<qboolean>(percent_complete > 0.0 && percent_complete < 0.35);
+			case BOTH_STABDOWN: return static_cast<qboolean>(percent_complete > 0.0 && percent_complete < 0.40);
+			case BOTH_STABDOWN_STAFF: return static_cast<qboolean>(percent_complete > 0.0 && percent_complete < 0.40);
+			case BOTH_STABDOWN_DUAL: return static_cast<qboolean>(percent_complete > 0.0 && percent_complete < 0.40);
+			case BOTH_A6_SABERPROTECT: return static_cast<qboolean>(percent_complete > 0.0 && percent_complete < 0.30);
+			case BOTH_A7_SOULCAL: return static_cast<qboolean>(percent_complete > 0.0 && percent_complete < 0.20);
+			case BOTH_A1_SPECIAL: return static_cast<qboolean>(percent_complete > 0.0 && percent_complete < 0.20);
+			case BOTH_A2_SPECIAL: return static_cast<qboolean>(percent_complete > 0.0 && percent_complete < 0.20);
+			case BOTH_A3_SPECIAL: return static_cast<qboolean>(percent_complete > 0.0 && percent_complete < 0.15);
 			default:;
 			}
 		}

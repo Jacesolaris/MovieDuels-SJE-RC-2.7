@@ -1839,11 +1839,11 @@ static bool Update(Vehicle_t* p_veh, const usercmd_t* pUmcd)
 			if (tr.fraction < 1.0f &&
 				!tr.allsolid &&
 				!tr.startsolid &&
-				tr.entityNum != ENTITYNUM_NONE &&
-				tr.entityNum != ENTITYNUM_WORLD &&
+				tr.entity_num != ENTITYNUM_NONE &&
+				tr.entity_num != ENTITYNUM_WORLD &&
 				(level.time < p_veh->m_iTurboTime || Q_irand(0, 3) == 0))
 			{
-				gentity_t* other = &g_entities[tr.entityNum];
+				gentity_t* other = &g_entities[tr.entity_num];
 				if (other && other->client && !other->s.m_iVehicleNum)
 				{
 					G_Throw(other, dir, force / 10.0f);

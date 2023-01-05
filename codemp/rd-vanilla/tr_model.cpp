@@ -68,7 +68,7 @@ struct CachedEndianedModelBinary_s
 
 	CachedEndianedModelBinary_s()
 	{
-		pModelDiskImage = 0;
+		pModelDiskImage = nullptr;
 		iAllocSize = 0;
 		ShaderRegisterData.clear();
 		iLastLevelUsedOn = -1;
@@ -77,7 +77,7 @@ struct CachedEndianedModelBinary_s
 };
 typedef CachedEndianedModelBinary_s CachedEndianedModelBinary_t;
 typedef std::map <sstring_t, CachedEndianedModelBinary_t>	CachedModels_t;
-CachedModels_t* CachedModels = NULL;	// the important cache item.
+CachedModels_t* CachedModels = nullptr;	// the important cache item.
 
 void RE_RegisterModels_StoreShaderRequest(const char* psModelFileName, const char* psShaderName, int* piShaderIndexPoke)
 {
@@ -90,7 +90,7 @@ void RE_RegisterModels_StoreShaderRequest(const char* psModelFileName, const cha
 
 	CachedEndianedModelBinary_t& ModelBin = (*CachedModels)[sModelName];
 
-	if (ModelBin.pModelDiskImage == NULL)
+	if (ModelBin.pModelDiskImage == nullptr)
 	{
 		assert(0);	// should never happen, means that we're being called on a model that wasn't loaded
 	}
@@ -144,7 +144,7 @@ qboolean RE_RegisterModels_GetDiskFile(const char* psModelFileName, void** ppvBu
 
 	const CachedEndianedModelBinary_t& ModelBin = (*CachedModels)[sModelName];
 
-	if (ModelBin.pModelDiskImage == NULL)
+	if (ModelBin.pModelDiskImage == nullptr)
 	{
 		// didn't have it cached, so try the disk...
 		//
@@ -193,7 +193,7 @@ void* RE_RegisterModels_Malloc(int iSize, void* pvDiskBufferIfJustLoaded, const 
 
 	CachedEndianedModelBinary_t& ModelBin = (*CachedModels)[sModelName];
 
-	if (ModelBin.pModelDiskImage == NULL)
+	if (ModelBin.pModelDiskImage == nullptr)
 	{
 		// ... then this entry has only just been created, ie we need to load it fully...
 		//
@@ -266,7 +266,7 @@ void* RE_RegisterServerModels_Malloc(int iSize, void* pvDiskBufferIfJustLoaded, 
 
 	CachedEndianedModelBinary_t& ModelBin = (*CachedModels)[sModelName];
 
-	if (ModelBin.pModelDiskImage == NULL)
+	if (ModelBin.pModelDiskImage == nullptr)
 	{
 		// new, instead of doing a Z_Malloc and assigning that we just morph the disk buffer alloc
 		//	then don't thrown it away on return - cuts down on mem overhead
@@ -583,7 +583,7 @@ model_t* R_GetModelByHandle(qhandle_t index) {
 */
 model_t* R_AllocModel(void) {
 	if (tr.numModels == MAX_MOD_KNOWN) {
-		return NULL;
+		return nullptr;
 	}
 
 	model_t* mod = static_cast<model_s*>(Hunk_Alloc(sizeof(*tr.models[tr.numModels]), h_low));
@@ -887,7 +887,7 @@ qboolean ServerLoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboole
 #endif
 
 		// find the next surface
-		surfInfo = (mdxmSurfHierarchy_t*)((byte*)surfInfo + (intptr_t)(&static_cast<mdxmSurfHierarchy_t*>(0)->childIndexes[surfInfo->numChildren]));
+		surfInfo = (mdxmSurfHierarchy_t*)((byte*)surfInfo + (intptr_t)(&static_cast<mdxmSurfHierarchy_t*>(nullptr)->childIndexes[surfInfo->numChildren]));
 	}
 
 	// swap all the LOD's	(we need to do the middle part of this even for intel, because of shader reg and err-check)
@@ -1019,7 +1019,7 @@ qhandle_t RE_RegisterServerModel(const char* name) {
 		}
 	}
 
-	if ((mod = R_AllocModel()) == NULL) {
+	if ((mod = R_AllocModel()) == nullptr) {
 		return 0;
 	}
 
@@ -1223,7 +1223,7 @@ static qhandle_t RE_RegisterModel_Actual(const char* name) {
 
 	// allocate a new model_t
 
-	if ((mod = R_AllocModel()) == NULL) {
+	if ((mod = R_AllocModel()) == nullptr) {
 		ri->Printf(PRINT_ALL, S_COLOR_YELLOW  "RE_RegisterModel: R_AllocModel() failed for '%s'\n", name);
 		return 0;
 	}
@@ -1627,7 +1627,7 @@ void R_ModelFree(void)
 	if (CachedModels) {
 		RE_RegisterModels_DeleteAll();
 		delete CachedModels;
-		CachedModels = NULL;
+		CachedModels = nullptr;
 	}
 }
 
@@ -1678,7 +1678,7 @@ static md3Tag_t* R_GetTag(md3Header_t* mod, int frame, const char* tagName) {
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 /*

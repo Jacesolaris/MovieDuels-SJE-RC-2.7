@@ -151,43 +151,43 @@ AnimationCFGs_t AnimationCFGs;
 // Usage:  call with psDest == NULL for a size enquire (for malloc),
 //				then with NZ ptr for it to copy to your supplied buffer...
 //
-int RE_GetAnimationCFG(const char* psCFGFilename, char* psDest, const int iDestSize)
+int RE_GetAnimationCFG(const char* ps_cfg_filename, char* ps_dest, const int i_dest_size)
 {
-	char* psText;
+	char* ps_text;
 
-	const AnimationCFGs_t::iterator it = AnimationCFGs.find(psCFGFilename);
+	const auto it = AnimationCFGs.find(ps_cfg_filename);
 	if (it != AnimationCFGs.end())
 	{
-		psText = (*it).second;
+		ps_text = (*it).second;
 	}
 	else
 	{
 		// not found, so load it...
 		//
 		fileHandle_t f;
-		const int iLen = ri.FS_FOpenFileRead(psCFGFilename, &f, qfalse);
-		if (iLen <= 0)
+		const int i_len = ri.FS_FOpenFileRead(ps_cfg_filename, &f, qfalse);
+		if (i_len <= 0)
 		{
 			return 0;
 		}
 
-		psText = static_cast<char*>(R_Malloc(iLen + 1, TAG_ANIMATION_CFG, qfalse));
+		ps_text = static_cast<char*>(R_Malloc(i_len + 1, TAG_ANIMATION_CFG, qfalse));
 
-		ri.FS_Read(psText, iLen, f);
-		psText[iLen] = '\0';
+		ri.FS_Read(ps_text, i_len, f);
+		ps_text[i_len] = '\0';
 		ri.FS_FCloseFile(f);
 
-		AnimationCFGs[psCFGFilename] = psText;
+		AnimationCFGs[ps_cfg_filename] = ps_text;
 	}
 
-	if (psText)	// sanity, but should always be NZ
+	if (ps_text)	// sanity, but should always be NZ
 	{
-		if (psDest)
+		if (ps_dest)
 		{
-			Q_strncpyz(psDest, psText, iDestSize);
+			Q_strncpyz(ps_dest, ps_text, i_dest_size);
 		}
 
-		return strlen(psText);
+		return strlen(ps_text);
 	}
 
 	return 0;
@@ -195,12 +195,12 @@ int RE_GetAnimationCFG(const char* psCFGFilename, char* psDest, const int iDestS
 
 // only called from devmapbsp, devmapall, or ...
 //
-void RE_AnimationCFGs_DeleteAll(void)
+void RE_AnimationCFGs_DeleteAll()
 {
-	for (const auto& AnimationCFG : AnimationCFGs)
+	for (const auto& animation_cfg : AnimationCFGs)
 	{
-		char* psText = AnimationCFG.second;
-		R_Free(psText);
+		char* ps_text = animation_cfg.second;
+		R_Free(ps_text);
 	}
 
 	AnimationCFGs.clear();
@@ -214,12 +214,12 @@ return= true if three part skins found
 output= qualified names to three skins if return is true, undefined if false
 ===============
 */
-bool RE_SplitSkins(const char* INname, char* skinhead, char* skintorso, char* skinlower)
+bool RE_SplitSkins(const char* i_nname, char* skinhead, char* skintorso, char* skinlower)
 {	//INname= "models/players/jedi_tf/|head01_skin1|torso01|lower01";
-	if (strchr(INname, '|'))
+	if (strchr(i_nname, '|'))
 	{
 		char name[MAX_QPATH];
-		strcpy(name, INname);
+		strcpy(name, i_nname);
 		char* p = strchr(name, '|');
 		*p = 0;
 		p++;
@@ -261,11 +261,11 @@ bool RE_SplitSkins(const char* INname, char* skinhead, char* skintorso, char* sk
 }
 
 // given a name, go get the skin we want and return
-qhandle_t RE_RegisterIndividualSkin(const char* name, const qhandle_t hSkin)
+qhandle_t RE_RegisterIndividualSkin(const char* name, const qhandle_t h_skin)
 {
 	skinSurface_t* surf;
 	char* text, * text_p;
-	char		surfName[MAX_QPATH];
+	char		surf_name[MAX_QPATH];
 
 	// load and parse the skin file
 	ri.FS_ReadFile(name, reinterpret_cast<void**>(&text));
@@ -274,21 +274,21 @@ qhandle_t RE_RegisterIndividualSkin(const char* name, const qhandle_t hSkin)
 		return 0;
 	}
 
-	assert(tr.skins[hSkin]);	//should already be setup, but might be an 3part append
+	assert(tr.skins[h_skin]);	//should already be setup, but might be an 3part append
 
-	skin_t* skin = tr.skins[hSkin];
+	skin_t* skin = tr.skins[h_skin];
 
 	text_p = text;
 	while (text_p && *text_p) {
 		// get surface name
 		const char* token = CommaParse(&text_p);
-		Q_strncpyz(surfName, token, sizeof surfName);
+		Q_strncpyz(surf_name, token, sizeof surf_name);
 
 		if (!token[0]) {
 			break;
 		}
 		// lowercase the surface name so skin compares are faster
-		Q_strlwr(surfName);
+		Q_strlwr(surf_name);
 
 		if (*text_p == ',') {
 			text_p++;
@@ -302,13 +302,13 @@ qhandle_t RE_RegisterIndividualSkin(const char* name, const qhandle_t hSkin)
 		token = CommaParse(&text_p);
 
 #ifndef JK2_MODE
-		if (strcmp(&surfName[strlen(surfName) - 4], "_off") == 0)
+		if (strcmp(&surf_name[strlen(surf_name) - 4], "_off") == 0)
 		{
 			if (strcmp(token, "*off") == 0)
 			{
 				continue;	//don't need these double offs
 			}
-			surfName[strlen(surfName) - 4] = 0;	//remove the "_off"
+			surf_name[strlen(surf_name) - 4] = 0;	//remove the "_off"
 		}
 #endif
 		if (static_cast<unsigned>(skin->numSurfaces) >= std::size(skin->surfaces))
@@ -318,7 +318,7 @@ qhandle_t RE_RegisterIndividualSkin(const char* name, const qhandle_t hSkin)
 			break;
 		}
 		surf = skin->surfaces[skin->numSurfaces] = static_cast<skinSurface_t*>(R_Hunk_Alloc(sizeof * skin->surfaces[0], qtrue));
-		Q_strncpyz(surf->name, surfName, sizeof surf->name);
+		Q_strncpyz(surf->name, surf_name, sizeof surf->name);
 		surf->shader = R_FindShader(token, lightmapsNone, stylesDefault, qtrue);
 		skin->numSurfaces++;
 	}
@@ -330,7 +330,7 @@ qhandle_t RE_RegisterIndividualSkin(const char* name, const qhandle_t hSkin)
 		return 0;		// use default skin
 	}
 
-	return hSkin;
+	return h_skin;
 }
 
 /*
@@ -340,7 +340,7 @@ RE_RegisterSkin
 ===============
 */
 qhandle_t RE_RegisterSkin(const char* name) {
-	qhandle_t	hSkin;
+	qhandle_t	h_skin;
 	skin_t* skin;
 
 	//	if (!cls.cgameStarted && !cls.uiStarted)
@@ -366,13 +366,13 @@ qhandle_t RE_RegisterSkin(const char* name) {
 	}
 
 	// see if the skin is already loaded
-	for (hSkin = 1; hSkin < tr.numSkins; hSkin++) {
-		skin = tr.skins[hSkin];
+	for (h_skin = 1; h_skin < tr.numSkins; h_skin++) {
+		skin = tr.skins[h_skin];
 		if (!Q_stricmp(skin->name, name)) {
 			if (skin->numSurfaces == 0) {
 				return 0;		// default skin
 			}
-			return hSkin;
+			return h_skin;
 		}
 	}
 
@@ -383,7 +383,7 @@ qhandle_t RE_RegisterSkin(const char* name) {
 	// allocate a new skin
 	tr.numSkins++;
 	skin = static_cast<skin_t*>(R_Hunk_Alloc(sizeof(skin_t), qtrue));
-	tr.skins[hSkin] = skin;
+	tr.skins[h_skin] = skin;
 	Q_strncpyz(skin->name, name, sizeof skin->name);	//always make one so it won't search for it again
 
 	// If not a .skin file, load as a single shader	- then return
@@ -392,13 +392,8 @@ qhandle_t RE_RegisterSkin(const char* name) {
 		skin->numSurfaces = 1;
 		skin->surfaces[0] = (skinSurface_t*)R_Hunk_Alloc(sizeof(skin->surfaces[0]), qtrue);
 		skin->surfaces[0]->shader = R_FindShader(name, lightmapsNone, stylesDefault, qtrue);
-		return hSkin;
+		return h_skin;
 #endif
-		/*		skin->numSurfaces = 1;
-				skin->surfaces[0] = (skinSurface_t *) R_Hunk_Alloc( sizeof(skin->surfaces[0]), qtrue );
-				skin->surfaces[0]->shader = R_FindShader( name, lightmapsNone, stylesDefault, qtrue );
-				return hSkin;
-		*/
 	}
 
 	char skinhead[MAX_QPATH] = { 0 };
@@ -406,22 +401,22 @@ qhandle_t RE_RegisterSkin(const char* name) {
 	char skinlower[MAX_QPATH] = { 0 };
 	if (RE_SplitSkins(name, reinterpret_cast<char*>(&skinhead), reinterpret_cast<char*>(&skintorso), reinterpret_cast<char*>(&skinlower)))
 	{//three part
-		hSkin = RE_RegisterIndividualSkin(skinhead, hSkin);
-		if (hSkin && strcmp(skinhead, skintorso) != 0)
+		h_skin = RE_RegisterIndividualSkin(skinhead, h_skin);
+		if (h_skin && strcmp(skinhead, skintorso) != 0)
 		{
-			hSkin = RE_RegisterIndividualSkin(skintorso, hSkin);
+			h_skin = RE_RegisterIndividualSkin(skintorso, h_skin);
 		}
 
-		if (hSkin && strcmp(skinhead, skinlower) != 0 && strcmp(skintorso, skinlower) != 0)
+		if (h_skin && strcmp(skinhead, skinlower) != 0 && strcmp(skintorso, skinlower) != 0)
 		{
-			hSkin = RE_RegisterIndividualSkin(skinlower, hSkin);
+			h_skin = RE_RegisterIndividualSkin(skinlower, h_skin);
 		}
 	}
 	else
 	{//single skin
-		hSkin = RE_RegisterIndividualSkin(name, hSkin);
+		h_skin = RE_RegisterIndividualSkin(name, h_skin);
 	}
-	return hSkin;
+	return h_skin;
 }
 
 /*
@@ -429,7 +424,7 @@ qhandle_t RE_RegisterSkin(const char* name) {
 R_InitSkins
 ===============
 */
-void	R_InitSkins(void) {
+void	R_InitSkins() {
 	tr.numSkins = 1;
 
 	// make the default skin have all default shaders
@@ -445,11 +440,11 @@ void	R_InitSkins(void) {
 R_GetSkinByHandle
 ===============
 */
-skin_t* R_GetSkinByHandle(const qhandle_t hSkin) {
-	if (hSkin < 1 || hSkin >= tr.numSkins) {
+skin_t* R_GetSkinByHandle(const qhandle_t h_skin) {
+	if (h_skin < 1 || h_skin >= tr.numSkins) {
 		return tr.skins[0];
 	}
-	return tr.skins[hSkin];
+	return tr.skins[h_skin];
 }
 
 /*
@@ -457,7 +452,7 @@ skin_t* R_GetSkinByHandle(const qhandle_t hSkin) {
 R_SkinList_f
 ===============
 */
-void	R_SkinList_f(void) {
+void	R_SkinList_f() {
 	ri.Printf(PRINT_ALL, "------------------\n");
 
 	for (int i = 0; i < tr.numSkins; i++) {

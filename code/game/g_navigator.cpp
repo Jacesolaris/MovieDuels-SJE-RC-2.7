@@ -1228,7 +1228,7 @@ bool NAV::TestEdge(const TNodeHandle NodeA, const TNodeHandle NodeB, const qbool
 	// Try It
 	//--------
 	CanGo = MoveTrace(a.mPoint, b.mPoint, Mins, Maxs, 0, true, false);
-	int EntHit = mMoveTrace.entityNum;
+	int EntHit = mMoveTrace.entity_num;
 
 	// Check For A Flying Edge
 	//-------------------------
@@ -1882,9 +1882,9 @@ bool NAV::LoadFromEntitiesAndSaveToFile(const char* filename, int checksum)
 				gi.Printf("Nav(%s)<->(%s): The last trace hit:\n", aName, bName);
 				gi.Printf("Nav(%s)<->(%s):     at %s,\n", aName, bName, cpointstr);
 				gi.Printf("Nav(%s)<->(%s):     normal %s\n", aName, bName, cnormstr);
-				if (mMoveTrace.entityNum != ENTITYNUM_WORLD)
+				if (mMoveTrace.entity_num != ENTITYNUM_WORLD)
 				{
-					gentity_t* ent = &g_entities[mMoveTrace.entityNum];
+					gentity_t* ent = &g_entities[mMoveTrace.entity_num];
 					gi.Printf("Nav(%s)<->(%s):     on entity Type (%s), TargetName (%s)\n", aName, bName,
 						ent->classname, ent->targetname);
 				}
@@ -4967,19 +4967,19 @@ bool TestCollision(gentity_t* actor, SSteerUser& suser, const CVec3& ProjectVelo
 	// Test To See If The Projected Position Is Safe
 	//-----------------------------------------------
 	bool Safe = Side == Side_None ? MoveTrace(actor, suser.mProjectFwd) : MoveTrace(actor, suser.mProjectSide);
-	if (mMoveTrace.entityNum != ENTITYNUM_NONE && mMoveTrace.entityNum != ENTITYNUM_WORLD)
+	if (mMoveTrace.entity_num != ENTITYNUM_NONE && mMoveTrace.entity_num != ENTITYNUM_WORLD)
 	{
 		// The Ignore Entity Is Safe
 		//---------------------------
-		if (mMoveTrace.entityNum == suser.mIgnoreEntity)
+		if (mMoveTrace.entity_num == suser.mIgnoreEntity)
 		{
 			Safe = true;
 		}
 
 		// Doors Are Always Safe
 		//-----------------------
-		if (g_entities[mMoveTrace.entityNum].classname &&
-			Q_stricmp(g_entities[mMoveTrace.entityNum].classname, "func_door") == 0)
+		if (g_entities[mMoveTrace.entity_num].classname &&
+			Q_stricmp(g_entities[mMoveTrace.entity_num].classname, "func_door") == 0)
 		{
 			Safe = true;
 		}
@@ -4987,7 +4987,7 @@ bool TestCollision(gentity_t* actor, SSteerUser& suser, const CVec3& ProjectVelo
 		// If It's Breakable And We Can Go Through It, Then That's Safe Too
 		//------------------------------------------------------------------
 		if (actor->NPC->aiFlags & NPCAI_NAV_THROUGH_BREAKABLES &&
-			G_EntIsBreakable(mMoveTrace.entityNum, actor))
+			G_EntIsBreakable(mMoveTrace.entity_num, actor))
 		{
 			Safe = true;
 		}
@@ -5000,7 +5000,7 @@ bool TestCollision(gentity_t* actor, SSteerUser& suser, const CVec3& ProjectVelo
 	//--------------------------------------------
 	CVec3 ContactNormal(mMoveTrace.plane.normal);
 	CVec3 ContactPoint(mMoveTrace.endpos);
-	const int ContactNum = mMoveTrace.entityNum;
+	const int ContactNum = mMoveTrace.entity_num;
 
 	if (!Safe && Side == Side_None)
 	{
