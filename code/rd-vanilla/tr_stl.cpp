@@ -50,7 +50,7 @@ int ShaderEntryPtrs_Size(void)
 
 void ShaderEntryPtrs_Insert(const char* token, const char* p)
 {
-	const ShaderEntryPtrs_t::iterator it = ShaderEntryPtrs.find(token);
+	const auto it = ShaderEntryPtrs.find(token);
 
 	if (it == ShaderEntryPtrs.end())
 	{
@@ -64,9 +64,9 @@ void ShaderEntryPtrs_Insert(const char* token, const char* p)
 
 // returns NULL if not found...
 //
-const char* ShaderEntryPtrs_Lookup(const char* psShaderName)
+const char* ShaderEntryPtrs_Lookup(const char* ps_shader_name)
 {
-	const ShaderEntryPtrs_t::iterator it = ShaderEntryPtrs.find(psShaderName);
+	const auto it = ShaderEntryPtrs.find(ps_shader_name);
 	if (it != ShaderEntryPtrs.end())
 	{
 		const char* p = (*it).second;

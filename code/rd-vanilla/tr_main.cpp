@@ -451,9 +451,9 @@ void R_RotateForViewer()
 /*
 ** SetFarClip
 */
-static void SetFarClip(void)
+static void SetFarClip()
 {
-	float	farthestCornerDistance = 0;
+	float	farthest_corner_distance = 0;
 
 	// if not rendering the world (icons, menus, etc)
 	// set a 2k far clip plane
@@ -498,15 +498,15 @@ static void SetFarClip(void)
 
 		const float distance = DistanceSquared(tr.viewParms.ori.origin, v);
 
-		if (distance > farthestCornerDistance)
+		if (distance > farthest_corner_distance)
 		{
-			farthestCornerDistance = distance;
+			farthest_corner_distance = distance;
 		}
 	}
 	// Bring in the zFar to the distanceCull distance
 	// The sky renders at zFar so need to move it out a little
 	// ...and make sure there is a minimum zfar to prevent problems
-	tr.viewParms.zFar = Com_Clamp(2048.0f, tr.distanceCull * 1.732, sqrtf(farthestCornerDistance));
+	tr.viewParms.zFar = Com_Clamp(2048.0f, tr.distanceCull * 1.732, sqrtf(farthest_corner_distance));
 }
 
 /*
@@ -796,7 +796,7 @@ qboolean R_GetPortalOrientations(const drawSurf_t* draw_surf, const int entity_n
 	return qfalse;
 }
 
-static qboolean IsMirror(const drawSurf_t* draw_surf, const int entityNum)
+static qboolean IsMirror(const drawSurf_t* draw_surf, const int entity_num)
 {
 	cplane_t	original_plane, plane;
 
@@ -804,10 +804,10 @@ static qboolean IsMirror(const drawSurf_t* draw_surf, const int entityNum)
 	R_PlaneForSurface(draw_surf->surface, &original_plane);
 
 	// rotate the plane if necessary
-	if (entityNum != REFENTITYNUM_WORLD)
+	if (entity_num != REFENTITYNUM_WORLD)
 	{
-		tr.currentEntityNum = entityNum;
-		tr.currentEntity = &tr.refdef.entities[entityNum];
+		tr.currentEntityNum = entity_num;
+		tr.currentEntity = &tr.refdef.entities[entity_num];
 
 		// get the orientation of the entity
 		R_RotateForEntity(tr.currentEntity, &tr.viewParms, &tr.ori);
@@ -1485,7 +1485,7 @@ void R_RenderView(const viewParms_t* parms)
 	tr.viewParms.frameSceneNum = tr.frameSceneNum;
 	tr.viewParms.frameCount = tr.frameCount;
 
-	const int firstDrawSurf = tr.refdef.numDrawSurfs;
+	const int first_draw_surf = tr.refdef.numDrawSurfs;
 
 	tr.viewCount++;
 
@@ -1509,7 +1509,7 @@ void R_RenderView(const viewParms_t* parms)
 		num_draw_surfs = MAX_DRAWSURFS;
 	}
 
-	R_SortDrawSurfs(tr.refdef.drawSurfs + firstDrawSurf, num_draw_surfs - firstDrawSurf);
+	R_SortDrawSurfs(tr.refdef.drawSurfs + first_draw_surf, num_draw_surfs - first_draw_surf);
 
 	// draw main system development information (surface outlines, etc)
 	R_DebugGraphics();

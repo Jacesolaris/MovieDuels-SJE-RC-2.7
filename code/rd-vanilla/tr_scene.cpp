@@ -48,7 +48,7 @@ R_InitNextFrame
 
 ====================
 */
-void R_InitNextFrame(void) {
+void R_InitNextFrame() {
 	backEndData->commands.used = 0;
 
 	r_firstSceneDrawSurf = 0;
@@ -71,7 +71,7 @@ RE_ClearScene
 
 ====================
 */
-void RE_ClearScene(void) {
+void RE_ClearScene() {
 	r_firstSceneDlight = r_numdlights;
 	r_firstSceneEntity = r_numentities;
 	r_firstScenePoly = r_numpolys;
@@ -94,7 +94,7 @@ R_AddPolygonSurfaces
 Adds all the scene's polys into this view's drawsurf list
 =====================
 */
-void R_AddPolygonSurfaces(void) {
+void R_AddPolygonSurfaces() {
 	int			i;
 	srfPoly_t* poly;
 
@@ -114,7 +114,7 @@ RE_AddPolyToScene
 =====================
 */
 void RE_AddPolyToScene(const qhandle_t h_shader, const int num_verts, const polyVert_t* verts) {
-	int			fogIndex = 0;
+	int			fog_index = 0;
 
 	if (!tr.registered) {
 		return;
@@ -150,7 +150,7 @@ void RE_AddPolyToScene(const qhandle_t h_shader, const int num_verts, const poly
 
 	// see if it is in a fog volume
 	if (!tr.world || tr.world->numfogs == 1) {
-		fogIndex = 0;
+		fog_index = 0;
 	}
 	else {
 		vec3_t bounds[2];
@@ -160,8 +160,8 @@ void RE_AddPolyToScene(const qhandle_t h_shader, const int num_verts, const poly
 		for (int i = 1; i < poly->num_verts; i++) {
 			AddPointToBounds(poly->verts[i].xyz, bounds[0], bounds[1]);
 		}
-		for (int fI = 1; fI < tr.world->numfogs; fI++) {
-			const fog_t* fog = &tr.world->fogs[fI];
+		for (int f_i = 1; f_i < tr.world->numfogs; f_i++) {
+			const fog_t* fog = &tr.world->fogs[f_i];
 			if (bounds[0][0] >= fog->bounds[0][0]
 				&& bounds[0][1] >= fog->bounds[0][1]
 				&& bounds[0][2] >= fog->bounds[0][2]
@@ -169,7 +169,7 @@ void RE_AddPolyToScene(const qhandle_t h_shader, const int num_verts, const poly
 				&& bounds[1][1] <= fog->bounds[1][1]
 				&& bounds[1][2] <= fog->bounds[1][2])
 			{//completely in this one
-				fogIndex = fI;
+				fog_index = f_i;
 				break;
 			}
 			if (bounds[0][0] >= fog->bounds[0][0] && bounds[0][1] >= fog->bounds[0][1] && bounds[0][2] >= fog->bounds[0][2] &&
@@ -178,19 +178,19 @@ void RE_AddPolyToScene(const qhandle_t h_shader, const int num_verts, const poly
 				bounds[1][0] <= fog->bounds[1][0] && bounds[1][1] <= fog->bounds[1][1] && bounds[1][2] <= fog->bounds[1][2])
 			{
 				//partially in this one
-				if (tr.refdef.fogIndex == fI || R_FogParmsMatch(tr.refdef.fogIndex, fI))
+				if (tr.refdef.fogIndex == f_i || R_FogParmsMatch(tr.refdef.fogIndex, f_i))
 				{//take new one only if it's the same one that the viewpoint is in
-					fogIndex = fI;
+					fog_index = f_i;
 					break;
 				}
-				if (!fogIndex)
+				if (!fog_index)
 				{//didn't find one yet, so use this one
-					fogIndex = fI;
+					fog_index = f_i;
 				}
 			}
 		}
 	}
-	poly->fogIndex = fogIndex;
+	poly->fogIndex = fog_index;
 }
 
 //=================================================================================
@@ -259,7 +259,7 @@ to handle mirrors,
 extern int	recursivePortalCount;
 void RE_RenderScene(const refdef_t* fd) {
 	viewParms_t		parms;
-	static int		lastTime = 0;
+	static int		last_time = 0;
 
 	if (!tr.registered) {
 		return;
@@ -291,7 +291,7 @@ void RE_RenderScene(const refdef_t* fd) {
 	VectorCopy(fd->viewaxis[2], tr.refdef.viewaxis[2]);
 
 	tr.refdef.time = fd->time;
-	tr.refdef.frametime = fd->time - lastTime;
+	tr.refdef.frametime = fd->time - last_time;
 	tr.refdef.rdflags = fd->rdflags;
 	// Ignore my last there. This actually breaks the rest of the game as well, causing massive issues.
 	// We need to figure out what's going on in fd->rdflags first :S .. I'm half-tempted to just revert
@@ -304,7 +304,7 @@ void RE_RenderScene(const refdef_t* fd) {
 	else
 	{
 		// cdr - only change last time for the real render, not the portal
-		lastTime = fd->time;
+		last_time = fd->time;
 	}
 
 	if (fd->rdflags & RDF_DRAWSKYBOX)
@@ -321,13 +321,13 @@ void RE_RenderScene(const refdef_t* fd) {
 	tr.refdef.areamaskModified = qfalse;
 	if (!(tr.refdef.rdflags & RDF_NOWORLDMODEL)) {
 		// compare the area bits
-		int areaDiff = 0;
+		int area_diff = 0;
 		for (int i = 0; i < MAX_MAP_AREA_BYTES / 4; i++) {
-			areaDiff |= reinterpret_cast<int*>(tr.refdef.areamask)[i] ^ ((int*)fd->areamask)[i];
+			area_diff |= reinterpret_cast<int*>(tr.refdef.areamask)[i] ^ ((int*)fd->areamask)[i];
 			reinterpret_cast<int*>(tr.refdef.areamask)[i] = ((int*)fd->areamask)[i];
 		}
 
-		if (areaDiff) {
+		if (area_diff) {
 			// a door just opened or something
 			tr.refdef.areamaskModified = qtrue;
 		}

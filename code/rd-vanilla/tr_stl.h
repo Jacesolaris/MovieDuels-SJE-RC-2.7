@@ -34,7 +34,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #ifdef USE_STL_FOR_SHADER_LOOKUPS
 void ShaderEntryPtrs_Clear(void);
 int ShaderEntryPtrs_Size(void);
-const char* ShaderEntryPtrs_Lookup(const char* psShaderName);
+const char* ShaderEntryPtrs_Lookup(const char* ps_shader_name);
 void ShaderEntryPtrs_Insert(const char* token, const char* p);
 #else
 

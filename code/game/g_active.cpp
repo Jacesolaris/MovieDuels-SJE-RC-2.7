@@ -2028,11 +2028,11 @@ void ClientTimerActions(gentity_t* ent, const int msec)
 				{
 					if (ent->client->ps.saberFatigueChainCount > MISHAPLEVEL_HEAVY)
 					{
-						WP_SaberFatigueRegenerate(1);
+						WP_SaberFatigueRegenerate(2);
 					}
 					else
 					{
-						WP_SaberFatigueRegenerate(2);
+						WP_SaberFatigueRegenerate(4);
 					}
 				}
 			}

@@ -34,7 +34,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define	LS(x) x=LittleShort(x)
 #define	LF(x) x=LittleFloat(x)
 
-static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* name, qboolean& bAlreadyCached);
+static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* mod_name, qboolean& b_already_cached);
 /*
 Ghoul2 Insert Start
 */
@@ -133,13 +133,13 @@ void RE_LoadWorldMap_Actual(const char* name, world_t& world_data, int index);
 //
 // don't use ri->xxx functions in case running on dedicated...
 //
-qboolean RE_RegisterModels_GetDiskFile(const char* psModelFileName, void** ppvBuffer, qboolean* pqbAlreadyCached)
+qboolean RE_RegisterModels_GetDiskFile(const char* ps_model_file_name, void** ppv_buffer, qboolean* pqb_already_cached)
 {
 	char sModelName[MAX_QPATH];
 
 	assert(CachedModels);
 
-	Q_strncpyz(sModelName, psModelFileName, sizeof(sModelName));
+	Q_strncpyz(sModelName, ps_model_file_name, sizeof(sModelName));
 	Q_strlwr(sModelName);
 
 	const CachedEndianedModelBinary_t& ModelBin = (*CachedModels)[sModelName];
@@ -151,30 +151,30 @@ qboolean RE_RegisterModels_GetDiskFile(const char* psModelFileName, void** ppvBu
 
 			// special case intercept first...
 			//
-		if (!strcmp(sDEFAULT_GLA_NAME ".gla", psModelFileName))
+		if (!strcmp(sDEFAULT_GLA_NAME ".gla", ps_model_file_name))
 		{
 			// return fake params as though it was found on disk...
 			//
 			void* pvFakeGLAFile = Z_Malloc(sizeof(FakeGLAFile), TAG_FILESYS, qfalse);
 			memcpy(pvFakeGLAFile, &FakeGLAFile[0], sizeof(FakeGLAFile));
-			*ppvBuffer = pvFakeGLAFile;
-			*pqbAlreadyCached = qfalse;	// faking it like this should mean that it works fine on the Mac as well
+			*ppv_buffer = pvFakeGLAFile;
+			*pqb_already_cached = qfalse;	// faking it like this should mean that it works fine on the Mac as well
 			return qtrue;
 		}
 
-		ri->FS_ReadFile(sModelName, ppvBuffer);
-		*pqbAlreadyCached = qfalse;
-		const qboolean bSuccess = !!(*ppvBuffer) ? qtrue : qfalse;
+		ri->FS_ReadFile(sModelName, ppv_buffer);
+		*pqb_already_cached = qfalse;
+		const qboolean bSuccess = !!(*ppv_buffer) ? qtrue : qfalse;
 
 		if (bSuccess)
 		{
-			ri->Printf(PRINT_DEVELOPER, "RE_RegisterModels_GetDiskFile(): Disk-loading \"%s\"\n", psModelFileName);
+			ri->Printf(PRINT_DEVELOPER, "RE_RegisterModels_GetDiskFile(): Disk-loading \"%s\"\n", ps_model_file_name);
 		}
 
 		return bSuccess;
 	}
-	*ppvBuffer = ModelBin.pModelDiskImage;
-	*pqbAlreadyCached = qtrue;
+	*ppv_buffer = ModelBin.pModelDiskImage;
+	*pqb_already_cached = qtrue;
 	return qtrue;
 }
 
@@ -182,13 +182,13 @@ qboolean RE_RegisterModels_GetDiskFile(const char* psModelFileName, void** ppvBu
 //
 // don't use ri->xxx functions in case running on dedicated
 //
-void* RE_RegisterModels_Malloc(int iSize, void* pvDiskBufferIfJustLoaded, const char* psModelFileName, qboolean* pqbAlreadyFound, memtag_t eTag)
+void* RE_RegisterModels_Malloc(int i_size, void* pv_disk_buffer_if_just_loaded, const char* ps_model_file_name, qboolean* pqb_already_found, memtag_t e_tag)
 {
 	char sModelName[MAX_QPATH];
 
 	assert(CachedModels);
 
-	Q_strncpyz(sModelName, psModelFileName, sizeof(sModelName));
+	Q_strncpyz(sModelName, ps_model_file_name, sizeof(sModelName));
 	Q_strlwr(sModelName);
 
 	CachedEndianedModelBinary_t& ModelBin = (*CachedModels)[sModelName];
@@ -202,17 +202,17 @@ void* RE_RegisterModels_Malloc(int iSize, void* pvDiskBufferIfJustLoaded, const 
 		//
 		// ... groan, but not if doing a limb hierarchy creation (some VV stuff?), in which case it's NULL
 		//
-		if (pvDiskBufferIfJustLoaded)
+		if (pv_disk_buffer_if_just_loaded)
 		{
-			Z_MorphMallocTag(pvDiskBufferIfJustLoaded, eTag);
+			Z_MorphMallocTag(pv_disk_buffer_if_just_loaded, e_tag);
 		}
 		else
 		{
-			pvDiskBufferIfJustLoaded = Z_Malloc(iSize, eTag, qfalse);
+			pv_disk_buffer_if_just_loaded = Z_Malloc(i_size, e_tag, qfalse);
 		}
 
-		ModelBin.pModelDiskImage = pvDiskBufferIfJustLoaded;
-		ModelBin.iAllocSize = iSize;
+		ModelBin.pModelDiskImage = pv_disk_buffer_if_just_loaded;
+		ModelBin.iAllocSize = i_size;
 
 		int iCheckSum;
 		if (ri->FS_FileIsInPAK(sModelName, &iCheckSum) == 1)
@@ -220,7 +220,7 @@ void* RE_RegisterModels_Malloc(int iSize, void* pvDiskBufferIfJustLoaded, const 
 			ModelBin.iPAKFileCheckSum = iCheckSum;	// else ModelBin's constructor will leave it as -1
 		}
 
-		*pqbAlreadyFound = qfalse;
+		*pqb_already_found = qfalse;
 	}
 	else
 	{
@@ -245,7 +245,7 @@ void* RE_RegisterModels_Malloc(int iSize, void* pvDiskBufferIfJustLoaded, const 
 				*piShaderPokePtr = sh->index;
 			}
 		}
-		*pqbAlreadyFound = qtrue;	// tell caller not to re-Endian or re-Shader this binary
+		*pqb_already_found = qtrue;	// tell caller not to re-Endian or re-Shader this binary
 	}
 
 	ModelBin.iLastLevelUsedOn = RE_RegisterMedia_GetLevel();
@@ -339,7 +339,7 @@ extern cvar_t* r_modelpoolmegs;
 // return qtrue if at least one cached model was freed (which tells z_malloc()-fail recoveryt code to try again)
 //
 extern qboolean gbInsideRegisterModel;
-qboolean RE_RegisterModels_LevelLoadEnd(qboolean bDeleteEverythingNotUsedThisLevel /* = qfalse */)
+qboolean RE_RegisterModels_LevelLoadEnd(qboolean b_delete_everything_not_used_this_level /* = qfalse */)
 {
 	qboolean bAtLeastoneModelFreed = qfalse;
 
@@ -356,13 +356,13 @@ qboolean RE_RegisterModels_LevelLoadEnd(qboolean bDeleteEverythingNotUsedThisLev
 		int iLoadedModelBytes = GetModelDataAllocSize();
 		const int iMaxModelBytes = r_modelpoolmegs->integer * 1024 * 1024;
 
-		for (CachedModels_t::iterator itModel = CachedModels->begin(); itModel != CachedModels->end() && (bDeleteEverythingNotUsedThisLevel || iLoadedModelBytes > iMaxModelBytes); )
+		for (CachedModels_t::iterator itModel = CachedModels->begin(); itModel != CachedModels->end() && (b_delete_everything_not_used_this_level || iLoadedModelBytes > iMaxModelBytes); )
 		{
 			const CachedEndianedModelBinary_t& CachedModel = (*itModel).second;
 
 			qboolean bDeleteThis = qfalse;
 
-			if (bDeleteEverythingNotUsedThisLevel)
+			if (b_delete_everything_not_used_this_level)
 			{
 				bDeleteThis = (CachedModel.iLastLevelUsedOn != RE_RegisterMedia_GetLevel()) ? qtrue : qfalse;
 			}
@@ -1378,7 +1378,7 @@ qhandle_t RE_RegisterModel(const char* name)
 R_LoadMD3
 =================
 */
-static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* mod_name, qboolean& bAlreadyCached) {
+static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* mod_name, qboolean& b_already_cached) {
 	int j;
 	md3Header_t* pinmodel;
 	md3Surface_t* surf;
@@ -1400,7 +1400,7 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* mod_n
 	version = pinmodel->version;
 	size = pinmodel->ofsEnd;
 
-	if (!bAlreadyCached)
+	if (!b_already_cached)
 	{
 		LL(version);
 		LL(size);
@@ -1418,7 +1418,7 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* mod_n
 	qboolean bAlreadyFound = qfalse;
 	mod->md3[lod] = static_cast<md3Header_t*>(RE_RegisterModels_Malloc(size, buffer, mod_name, &bAlreadyFound, TAG_MODEL_MD3));
 
-	assert(bAlreadyCached == bAlreadyFound);	// I should probably eliminate 'bAlreadyFound', but wtf?
+	assert(b_already_cached == bAlreadyFound);	// I should probably eliminate 'bAlreadyFound', but wtf?
 
 	if (!bAlreadyFound)
 	{
@@ -1428,7 +1428,7 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* mod_n
 		//
 		// Aaaargh. Kill me now...
 		//
-		bAlreadyCached = qtrue;
+		b_already_cached = qtrue;
 		assert(mod->md3[lod] == buffer);
 		//		memcpy( mod->md3[lod], buffer, size );	// and don't do this now, since it's the same thing
 
@@ -1563,10 +1563,10 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* mod_n
 /*
 ** RE_BeginRegistration
 */
-void RE_BeginRegistration(glconfig_t* glconfigOut) {
+void RE_BeginRegistration(glconfig_t* glconfig_out) {
 	R_Init();
 
-	*glconfigOut = glConfig;
+	*glconfig_out = glConfig;
 
 	R_IssuePendingRenderCommands();
 

@@ -1639,14 +1639,14 @@ void G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, CColl
 	}
 }
 
-void TransformPoint(const vec3_t in, vec3_t out, mdxaBone_t* mat) {
+void TransformPoint(const vec3_t in, vec3_t out, const mdxaBone_t* mat) {
 	for (int i = 0; i < 3; i++)
 	{
 		out[i] = in[0] * mat->matrix[i][0] + in[1] * mat->matrix[i][1] + in[2] * mat->matrix[i][2];
 	}
 }
 
-void TransformAndTranslatePoint(const vec3_t in, vec3_t out, mdxaBone_t* mat) {
+void TransformAndTranslatePoint(const vec3_t in, vec3_t out, const mdxaBone_t* mat) {
 	for (int i = 0; i < 3; i++)
 	{
 		out[i] = in[0] * mat->matrix[i][0] + in[1] * mat->matrix[i][1] + in[2] * mat->matrix[i][2] + mat->matrix[i][3];
@@ -1678,7 +1678,7 @@ void Create_Matrix(const float* angle, mdxaBone_t* matrix)
 }
 
 // given a matrix, generate the inverse of that matrix
-void Inverse_Matrix(mdxaBone_t* src, mdxaBone_t* dest)
+void Inverse_Matrix(const mdxaBone_t* src, mdxaBone_t* dest)
 {
 	int i, j;
 
@@ -1836,7 +1836,7 @@ void G2_SaveGhoul2Models(
 // FIXME Remove 'buffer' parameter
 void G2_LoadGhoul2Model(
 	CGhoul2Info_v& ghoul2,
-	char* buffer)
+	const char* buffer)
 {
 	static_cast<void>(buffer);
 

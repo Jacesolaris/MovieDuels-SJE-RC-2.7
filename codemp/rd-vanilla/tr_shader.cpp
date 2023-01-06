@@ -3203,7 +3203,7 @@ shader_t* R_FindShaderByName(const char* name) {
 	return tr.defaultShader;
 }
 
-inline qboolean IsShader(const shader_t* sh, const char* name, const int* lightmapIndex, const byte* styles)
+inline qboolean IsShader(const shader_t* sh, const char* name, const int* lightmap_index, const byte* styles)
 {
 	if (Q_stricmp(sh->name, name))
 	{
@@ -3214,7 +3214,7 @@ inline qboolean IsShader(const shader_t* sh, const char* name, const int* lightm
 	{
 		for (int i = 0; i < MAXLIGHTMAPS; i++)
 		{
-			if (sh->lightmapIndex[i] != lightmapIndex[i])
+			if (sh->lightmapIndex[i] != lightmap_index[i])
 			{
 				return qfalse;
 			}
@@ -3236,17 +3236,17 @@ inline qboolean IsShader(const shader_t* sh, const char* name, const int* lightm
  ===============
  */
 #define EXTERNAL_LIGHTMAP     "lm_%04d.tga"     // THIS MUST BE IN SYNC WITH Q3MAP2
-static inline const int* R_FindLightmap(const int* lightmapIndex)
+static inline const int* R_FindLightmap(const int* lightmap_index)
 {
 	char          fileName[MAX_QPATH];
 
 	// don't bother with vertex lighting
-	if (*lightmapIndex < 0)
-		return lightmapIndex;
+	if (*lightmap_index < 0)
+		return lightmap_index;
 
 	// does this lightmap already exist?
-	if (*lightmapIndex < tr.numLightmaps && tr.lightmaps[*lightmapIndex] != nullptr)
-		return lightmapIndex;
+	if (*lightmap_index < tr.numLightmaps && tr.lightmaps[*lightmap_index] != nullptr)
+		return lightmap_index;
 
 	// bail if no world dir
 	if (tr.worldDir[0] == '\0')
@@ -3258,7 +3258,7 @@ static inline const int* R_FindLightmap(const int* lightmapIndex)
 	//R_SyncRenderThread();
 
 	// attempt to load an external lightmap
-	Com_sprintf(fileName, sizeof(fileName), "%s/" EXTERNAL_LIGHTMAP, tr.worldDir, *lightmapIndex);
+	Com_sprintf(fileName, sizeof(fileName), "%s/" EXTERNAL_LIGHTMAP, tr.worldDir, *lightmap_index);
 	image_t* image = R_FindImageFile(fileName, qfalse, qfalse, static_cast<qboolean>(r_ext_compressed_lightmaps->integer), GL_CLAMP);
 	if (image == nullptr)
 	{
@@ -3266,10 +3266,10 @@ static inline const int* R_FindLightmap(const int* lightmapIndex)
 	}
 
 	// add it to the lightmap list
-	if (*lightmapIndex >= tr.numLightmaps)
-		tr.numLightmaps = *lightmapIndex + 1;
-	tr.lightmaps[*lightmapIndex] = image;
-	return lightmapIndex;
+	if (*lightmap_index >= tr.numLightmaps)
+		tr.numLightmaps = *lightmap_index + 1;
+	tr.lightmaps[*lightmap_index] = image;
+	return lightmap_index;
 }
 
 /*
@@ -3300,7 +3300,7 @@ most world construction surfaces.
 
 ===============
 */
-shader_t* R_FindShader(const char* name, const int* lightmapIndex, const byte* styles, qboolean mipRawImage)
+shader_t* R_FindShader(const char* name, const int* lightmap_index, const byte* styles, qboolean mip_raw_image)
 {
 	char		strippedName[MAX_QPATH];
 	char		fileName[MAX_QPATH];
@@ -3318,13 +3318,13 @@ shader_t* R_FindShader(const char* name, const int* lightmapIndex, const byte* s
 		lightmapIndex = lightmapsVertex;
 	}*/
 
-	lightmapIndex = R_FindLightmap(lightmapIndex);
+	lightmap_index = R_FindLightmap(lightmap_index);
 
-	if (lightmapIndex[0] < LIGHTMAP_2D)
+	if (lightmap_index[0] < LIGHTMAP_2D)
 	{
 		// negative lightmap indexes cause stray pointers (think tr.lightmaps[lightmapIndex])
-		ri->Printf(PRINT_WARNING, "WARNING: shader '%s' has invalid lightmap index of %d\n", name, lightmapIndex[0]);
-		lightmapIndex = lightmapsVertex;
+		ri->Printf(PRINT_WARNING, "WARNING: shader '%s' has invalid lightmap index of %d\n", name, lightmap_index[0]);
+		lightmap_index = lightmapsVertex;
 	}
 
 	COM_StripExtension(name, strippedName, sizeof(strippedName));
@@ -3339,7 +3339,7 @@ shader_t* R_FindShader(const char* name, const int* lightmapIndex, const byte* s
 		// then a default shader is created with lightmapIndex == LIGHTMAP_NONE, so we
 		// have to check all default shaders otherwise for every call to R_FindShader
 		// with that same strippedName a new default shader is created.
-		if (IsShader(sh, strippedName, lightmapIndex, styles))
+		if (IsShader(sh, strippedName, lightmap_index, styles))
 		{
 			return sh;
 		}
@@ -3348,7 +3348,7 @@ shader_t* R_FindShader(const char* name, const int* lightmapIndex, const byte* s
 	// clear the global shader
 	ClearGlobalShader();
 	Q_strncpyz(shader.name, strippedName, sizeof(shader.name));
-	Com_Memcpy(shader.lightmapIndex, lightmapIndex, sizeof(shader.lightmapIndex));
+	Com_Memcpy(shader.lightmapIndex, lightmap_index, sizeof(shader.lightmapIndex));
 	Com_Memcpy(shader.styles, styles, sizeof(shader.styles));
 
 	//
@@ -3369,7 +3369,7 @@ shader_t* R_FindShader(const char* name, const int* lightmapIndex, const byte* s
 	// look for a single TGA, BMP, or PCX
 	//
 	COM_StripExtension(name, fileName, sizeof(fileName));
-	image_t* image = R_FindImageFile(fileName, mipRawImage, mipRawImage, qtrue, mipRawImage ? GL_REPEAT : GL_CLAMP);
+	image_t* image = R_FindImageFile(fileName, mip_raw_image, mip_raw_image, qtrue, mip_raw_image ? GL_REPEAT : GL_CLAMP);
 	if (!image) {
 		ri->Printf(PRINT_DEVELOPER, S_COLOR_RED "Couldn't find image for shader %s\n", name);
 		shader.defaultShader = true;

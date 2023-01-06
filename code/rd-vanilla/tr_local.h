@@ -805,13 +805,13 @@ using model_t = struct model_s {
 
 #define	MAX_MOD_KNOWN	1024
 
-void		R_ModelInit(void);
-model_t* R_GetModelByHandle(qhandle_t hModel);
-void		R_LerpTag(orientation_t* tag, qhandle_t handle, int startFrame, int endFrame,
-	float frac, const char* tagName);
+void		R_ModelInit();
+model_t* R_GetModelByHandle(qhandle_t index);
+void		R_LerpTag(orientation_t* tag, qhandle_t handle, int start_frame, int end_frame,
+	float frac, const char* tag_name);
 void		R_ModelBounds(qhandle_t handle, vec3_t mins, vec3_t maxs);
 
-void		R_Modellist_f(void);
+void		R_Modellist_f();
 
 //====================================================
 #define	MAX_DRAWIMAGES			2048
@@ -1204,7 +1204,7 @@ void R_AddBeamSurfaces(trRefEntity_t* e);
 void R_AddRailSurfaces(trRefEntity_t* e, qboolean isUnderwater);
 void R_AddLightningBoltSurfaces(trRefEntity_t* e);
 
-void R_AddPolygonSurfaces(void);
+void R_AddPolygonSurfaces();
 
 void R_DecomposeSort(unsigned sort, int* entity_num, shader_t** shader,
 	int* fog_num, int* dlight_map);
@@ -1278,7 +1278,7 @@ void	RE_GetScreenShot(byte* buffer, int w, int h);
 byte* RE_TempRawImage_ReadFromFile(const char* ps_local_filename, int* pi_width, int* pi_height, byte* pb_re_sample_buffer, qboolean qb_vert_flip);
 void	RE_TempRawImage_CleanUp();
 
-void		RE_BeginRegistration(glconfig_t* glconfig);
+void		RE_BeginRegistration(glconfig_t* glconfig_out);
 void		RE_LoadWorldMap(const char* name);
 void		RE_SetWorldVisData(const byte* vis);
 qhandle_t	RE_RegisterModel(const char* name);
@@ -1286,17 +1286,17 @@ qhandle_t	RE_RegisterSkin(const char* name);
 int			RE_GetAnimationCFG(const char* ps_cfg_filename, char* ps_dest, int i_dest_size);
 void		RE_Shutdown(qboolean destroyWindow);
 
-void		RE_RegisterMedia_LevelLoadBegin(const char* psMapName, ForceReload_e e_force_reload, qboolean bAllowScreenDissolve);
-void		RE_RegisterMedia_LevelLoadEnd(void);
-int			RE_RegisterMedia_GetLevel(void);
-qboolean	RE_RegisterModels_LevelLoadEnd(qboolean bDeleteEverythingNotUsedThisLevel = qfalse);
-void* RE_RegisterModels_Malloc(int iSize, void* pvDiskBufferIfJustLoaded, const char* psModelFileName, qboolean* pqbAlreadyFound, memtag_t eTag);
-void		RE_RegisterModels_StoreShaderRequest(const char* psModelFileName, const char* psShaderName, const int* piShaderIndexPoke);
-void		RE_RegisterModels_Info_f(void);
+void		RE_RegisterMedia_LevelLoadBegin(const char* ps_map_name, ForceReload_e e_force_reload, qboolean b_allow_screen_dissolve);
+void		RE_RegisterMedia_LevelLoadEnd();
+int			RE_RegisterMedia_GetLevel();
+qboolean	RE_RegisterModels_LevelLoadEnd(qboolean b_delete_everything_not_used_this_level = qfalse);
+void* RE_RegisterModels_Malloc(int i_size, void* pv_disk_buffer_if_just_loaded, const char* ps_model_file_name, qboolean* pqb_already_found, memtag_t e_tag);
+void		RE_RegisterModels_StoreShaderRequest(const char* ps_model_file_name, const char* ps_shader_name, const int* pi_shader_index_poke);
+void		RE_RegisterModels_Info_f();
 qboolean	RE_RegisterImages_LevelLoadEnd(void);
 void		RE_RegisterImages_Info_f(void);
 
-model_t* R_AllocModel(void);
+model_t* R_AllocModel();
 
 void    	R_Init();
 image_t* R_FindImageFile(const char* name, qboolean mipmap, qboolean allowPicmip, qboolean allowTC, int glWrapClampMode);
@@ -1334,10 +1334,10 @@ extern	const byte	stylesDefault[MAXLIGHTMAPS];
 qhandle_t		 RE_RegisterShader(const char* name);
 qhandle_t		 RE_RegisterShaderNoMip(const char* name);
 
-shader_t* R_FindShader(const char* name, const int* lightmapIndex, const byte* styles, qboolean mipRawImage);
+shader_t* R_FindShader(const char* name, const int* lightmap_index, const byte* styles, qboolean mip_raw_image);
 shader_t* R_GetShaderByHandle(qhandle_t h_shader);
-void		R_InitShaders(void);
-void		R_ShaderList_f(void);
+void		R_InitShaders();
+void		R_ShaderList_f();
 
 //
 // tr_arb.c
@@ -1513,9 +1513,9 @@ SCENE GENERATION
 ============================================================
 */
 
-void R_InitNextFrame(void);
+void R_InitNextFrame();
 
-void RE_ClearScene(void);
+void RE_ClearScene();
 void RE_AddRefEntityToScene(const refEntity_t* ent);
 void RE_AddPolyToScene(qhandle_t h_shader, int num_verts, const polyVert_t* verts);
 void RE_AddLightToScene(const vec3_t org, float intensity, float r, float g, float b);
@@ -1613,7 +1613,7 @@ void	R_TransformClipToWindow(const vec4_t clip, const viewParms_t* view, vec4_t 
 void	RB_DeformTessGeometry();
 
 void	RB_CalcScaleTexCoords(const float scale[2], float* dst_tex_coords);
-void	RB_CalcScrollTexCoords(const float scroll[2], float* dst_tex_coords);
+void	RB_CalcScrollTexCoords(const float scroll_speed[2], float* dst_tex_coords);
 void	RB_CalcStretchTexCoords(const waveForm_t* wf, float* tex_coords);
 void	RB_CalcTransformTexCoords(const texModInfo_t* tmi, float* dst_tex_coords);
 void	RB_CalcRotateTexCoords(float degs_per_second, float* dst_tex_coords);

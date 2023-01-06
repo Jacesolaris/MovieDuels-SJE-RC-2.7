@@ -2252,7 +2252,7 @@ bool G2_TestModelPointers(CGhoul2Info* ghl_info) // returns true if the model is
 	return ghl_info->mValid;
 }
 
-extern model_t* R_GetAnimModelByHandle(CGhoul2Info* ghl_info, qhandle_t index);
+extern model_t* R_GetAnimModelByHandle(const CGhoul2Info* ghl_info, qhandle_t index);
 bool G2_SetupModelPointers(CGhoul2Info* ghl_info) // returns true if the model is properly set up
 {
 	G2ERROR(ghl_info, "NULL ghl_info");

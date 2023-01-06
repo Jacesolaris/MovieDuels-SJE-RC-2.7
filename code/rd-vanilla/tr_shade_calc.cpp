@@ -603,7 +603,7 @@ void RB_CalcColorFromEntity(unsigned char* dst_colors)
 */
 void RB_CalcColorFromOneMinusEntity(unsigned char* dst_colors)
 {
-	auto* pColors = reinterpret_cast<int*>(dst_colors);
+	auto* p_colors = reinterpret_cast<int*>(dst_colors);
 	unsigned char inv_modulate[4];
 
 	if (!backEnd.currentEntity)
@@ -617,7 +617,7 @@ void RB_CalcColorFromOneMinusEntity(unsigned char* dst_colors)
 	const byteAlias_t* ba = reinterpret_cast<byteAlias_t*>(&inv_modulate);
 
 	for (int i = 0; i < tess.numVertexes; i++) {
-		*pColors++ = ba->i;
+		*p_colors++ = ba->i;
 	}
 }
 
@@ -970,16 +970,16 @@ void RB_CalcRotateTexCoords(const float degs_per_second, float* dst_tex_coords)
 	const float degs = -degs_per_second * time_scale;
 	const int index = degs * (FUNCTABLE_SIZE / 360.0f);
 
-	const float sinValue = tr.sinTable[index & FUNCTABLE_MASK];
-	const float cosValue = tr.sinTable[index + FUNCTABLE_SIZE / 4 & FUNCTABLE_MASK];
+	const float sin_value = tr.sinTable[index & FUNCTABLE_MASK];
+	const float cos_value = tr.sinTable[index + FUNCTABLE_SIZE / 4 & FUNCTABLE_MASK];
 
-	tmi.matrix[0][0] = cosValue;
-	tmi.matrix[1][0] = -sinValue;
-	tmi.translate[0] = 0.5 - 0.5 * cosValue + 0.5 * sinValue;
+	tmi.matrix[0][0] = cos_value;
+	tmi.matrix[1][0] = -sin_value;
+	tmi.translate[0] = 0.5 - 0.5 * cos_value + 0.5 * sin_value;
 
-	tmi.matrix[0][1] = sinValue;
-	tmi.matrix[1][1] = cosValue;
-	tmi.translate[1] = 0.5 - 0.5 * sinValue - 0.5 * cosValue;
+	tmi.matrix[0][1] = sin_value;
+	tmi.matrix[1][1] = cos_value;
+	tmi.translate[1] = 0.5 - 0.5 * sin_value - 0.5 * cos_value;
 
 	RB_CalcTransformTexCoords(&tmi, dst_tex_coords);
 }

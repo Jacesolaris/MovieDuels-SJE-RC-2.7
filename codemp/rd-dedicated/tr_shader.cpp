@@ -2923,7 +2923,7 @@ shader_t* R_FindShaderByName(const char* name) {
 	return tr.defaultShader;
 }
 
-inline qboolean IsShader(const shader_t* sh, const char* name, const int* lightmapIndex, const byte* styles)
+inline qboolean IsShader(const shader_t* sh, const char* name, const int* lightmap_index, const byte* styles)
 {
 	if (Q_stricmp(sh->name, name))
 	{
@@ -2934,7 +2934,7 @@ inline qboolean IsShader(const shader_t* sh, const char* name, const int* lightm
 	{
 		for (int i = 0; i < MAXLIGHTMAPS; i++)
 		{
-			if (sh->lightmapIndex[i] != lightmapIndex[i])
+			if (sh->lightmapIndex[i] != lightmap_index[i])
 			{
 				return qfalse;
 			}
@@ -2976,7 +2976,7 @@ most world construction surfaces.
 
 ===============
 */
-shader_t* R_FindShader(const char* name, const int* lightmapIndex, const byte* styles, qboolean mipRawImage)
+shader_t* R_FindShader(const char* name, const int* lightmap_index, const byte* styles, qboolean mip_raw_image)
 {
 	char		strippedName[MAX_QPATH];
 	char		fileName[MAX_QPATH];
@@ -2989,15 +2989,15 @@ shader_t* R_FindShader(const char* name, const int* lightmapIndex, const byte* s
 
 	// use (fullbright) vertex lighting if the bsp file doesn't have
 	// lightmaps
-	if (lightmapIndex[0] >= 0 && lightmapIndex[0] >= tr.numLightmaps)
+	if (lightmap_index[0] >= 0 && lightmap_index[0] >= tr.numLightmaps)
 	{
-		lightmapIndex = lightmapsVertex;
+		lightmap_index = lightmapsVertex;
 	}
-	else if (lightmapIndex[0] < LIGHTMAP_2D)
+	else if (lightmap_index[0] < LIGHTMAP_2D)
 	{
 		// negative lightmap indexes cause stray pointers (think tr.lightmaps[lightmapIndex])
-		ri->Printf(PRINT_WARNING, "WARNING: shader '%s' has invalid lightmap index of %d\n", name, lightmapIndex[0]);
-		lightmapIndex = lightmapsVertex;
+		ri->Printf(PRINT_WARNING, "WARNING: shader '%s' has invalid lightmap index of %d\n", name, lightmap_index[0]);
+		lightmap_index = lightmapsVertex;
 	}
 
 	COM_StripExtension(name, strippedName, sizeof(strippedName));
@@ -3012,7 +3012,7 @@ shader_t* R_FindShader(const char* name, const int* lightmapIndex, const byte* s
 		// then a default shader is created with lightmapIndex == LIGHTMAP_NONE, so we
 		// have to check all default shaders otherwise for every call to R_FindShader
 		// with that same strippedName a new default shader is created.
-		if (IsShader(sh, strippedName, lightmapIndex, styles))
+		if (IsShader(sh, strippedName, lightmap_index, styles))
 		{
 			return sh;
 		}
@@ -3021,7 +3021,7 @@ shader_t* R_FindShader(const char* name, const int* lightmapIndex, const byte* s
 	// clear the global shader
 	ClearGlobalShader();
 	Q_strncpyz(shader.name, strippedName, sizeof(shader.name));
-	Com_Memcpy(shader.lightmapIndex, lightmapIndex, sizeof(shader.lightmapIndex));
+	Com_Memcpy(shader.lightmapIndex, lightmap_index, sizeof(shader.lightmapIndex));
 	Com_Memcpy(shader.styles, styles, sizeof(shader.styles));
 
 	//

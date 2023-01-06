@@ -407,7 +407,7 @@ void sab_beh_animate_attack_bounce(gentity_t* attacker)
 	}
 }
 
-void sab_beh_add_mishap_attacker(gentity_t* attacker, gentity_t* blocker, const int saber_num)
+void sab_beh_add_mishap_attacker(gentity_t* attacker, const int saber_num)
 {
 	if (attacker->client->ps.blockPoints <= MISHAPLEVEL_NONE)
 	{
@@ -496,7 +496,7 @@ qboolean sab_beh_attack_blocked(gentity_t* attacker, gentity_t* blocker, const i
 				if (!Q_irand(0, 4))
 				{
 					//20% chance
-					sab_beh_add_mishap_attacker(attacker, blocker, saber_num);
+					sab_beh_add_mishap_attacker(attacker, saber_num);
 				}
 				else
 				{
@@ -516,7 +516,7 @@ qboolean sab_beh_attack_blocked(gentity_t* attacker, gentity_t* blocker, const i
 				{
 					gi.Printf(S_COLOR_GREEN"Attacker Advanced player attacker is fatigued\n");
 				}
-				sab_beh_add_mishap_attacker(attacker, blocker, saber_num);
+				sab_beh_add_mishap_attacker(attacker, saber_num);
 			}
 			return qtrue;
 		}
@@ -955,7 +955,7 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 
 							if (attacker->client->ps.blockPoints <= BLOCKPOINTS_FATIGUE)
 							{
-								sab_beh_add_mishap_attacker(attacker, blocker, saber_num);
+								sab_beh_add_mishap_attacker(attacker, saber_num);
 							}
 							else
 							{
@@ -1298,7 +1298,7 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 
 							if (attacker->client->ps.forcePower <= BLOCKPOINTS_FATIGUE)
 							{
-								sab_beh_add_mishap_attacker(attacker, blocker, saber_num);
+								sab_beh_add_mishap_attacker(attacker, saber_num);
 							}
 							else
 							{

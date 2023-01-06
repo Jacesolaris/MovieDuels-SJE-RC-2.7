@@ -808,7 +808,7 @@ typedef struct world_s {
 
 void		R_ModelInit(void);
 
-model_t* R_GetModelByHandle(qhandle_t hModel);
+model_t* R_GetModelByHandle(qhandle_t index);
 int			R_LerpTag(orientation_t* tag, qhandle_t handle, int startFrame, int endFrame,
 	float frac, const char* tagName);
 void		R_ModelBounds(qhandle_t handle, vec3_t mins, vec3_t maxs);
@@ -1293,7 +1293,7 @@ void	RE_StretchRaw(int x, int y, int w, int h, int cols, int rows, const byte* d
 void	RE_UploadCinematic(int cols, int rows, const byte* data, int client, qboolean dirty);
 
 void		RE_BeginFrame(stereoFrame_t stereoFrame);
-void		RE_BeginRegistration(glconfig_t* glconfig);
+void		RE_BeginRegistration(glconfig_t* glconfig_out);
 void		R_ColorShiftLightingBytes(byte in[4], byte out[4]); //rwwRMG - added
 void		RE_LoadWorldMap(const char* name);
 
@@ -1307,8 +1307,8 @@ void		RE_Shutdown(qboolean destroyWindow);
 void		RE_RegisterMedia_LevelLoadBegin(const char* psMapName, ForceReload_e e_force_reload);
 void		RE_RegisterMedia_LevelLoadEnd(void);
 int			RE_RegisterMedia_GetLevel(void);
-qboolean	RE_RegisterModels_LevelLoadEnd(qboolean bDeleteEverythingNotUsedThisLevel = qfalse);
-void* RE_RegisterModels_Malloc(int iSize, void* pvDiskBufferIfJustLoaded, const char* psModelFileName, qboolean* pqbAlreadyFound, memtag_t eTag);
+qboolean	RE_RegisterModels_LevelLoadEnd(qboolean b_delete_everything_not_used_this_level = qfalse);
+void* RE_RegisterModels_Malloc(int i_size, void* pv_disk_buffer_if_just_loaded, const char* ps_model_file_name, qboolean* pqb_already_found, memtag_t e_tag);
 void		RE_RegisterModels_StoreShaderRequest(const char* psModelFileName, const char* psShaderName, int* piShaderIndexPoke);
 void		RE_RegisterModels_Info_f(void);
 qboolean	RE_RegisterImages_LevelLoadEnd(void);
@@ -1359,7 +1359,7 @@ qhandle_t		 RE_RegisterShaderNoMip(const char* name);
 const char* RE_ShaderNameFromIndex(int index);
 qhandle_t RE_RegisterShaderFromImage(const char* name, int* lightmapIndex, byte* styles, image_t* image, qboolean mipRawImage);
 
-shader_t* R_FindShader(const char* name, const int* lightmapIndex, const byte* styles, qboolean mipRawImage);
+shader_t* R_FindShader(const char* name, const int* lightmap_index, const byte* styles, qboolean mip_raw_image);
 shader_t* R_GetShaderByHandle(qhandle_t h_shader);
 shader_t* R_GetShaderByState(int index, long* cycleTime);
 shader_t* R_FindShaderByName(const char* name);
@@ -1654,7 +1654,7 @@ void	RB_DeformTessGeometry(void);
 
 void	RB_CalcEnvironmentTexCoords(float* dst_tex_coords);
 void	RB_CalcFogTexCoords(float* dst_tex_coords);
-void	RB_CalcScrollTexCoords(const float scroll[2], float* dst_tex_coords);
+void	RB_CalcScrollTexCoords(const float scroll_speed[2], float* dst_tex_coords);
 void	RB_CalcRotateTexCoords(float degs_per_second, float* dst_tex_coords);
 void	RB_CalcScaleTexCoords(const float scale[2], float* dst_tex_coords);
 void	RB_CalcTurbulentTexCoords(const waveForm_t* wf, float* dstTexCoords);

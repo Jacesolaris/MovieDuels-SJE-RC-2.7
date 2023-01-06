@@ -112,7 +112,7 @@ void G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, CColl
 #else
 void		G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, CCollisionRecord* collRecMap, int entNum, EG2_Collision e_g2_trace_type, int use_lod, float fRadius);
 #endif
-void TransformAndTranslatePoint(const vec3_t in, vec3_t out, mdxaBone_t* mat);
+void TransformAndTranslatePoint(const vec3_t in, vec3_t out, const mdxaBone_t* mat);
 #ifdef _G2_GORE
 void G2_TransformModel(CGhoul2Info_v& ghoul2, int frameNum, vec3_t scale, CMiniHeap* G2VertSpace, int use_lod,
                        bool ApplyGore, const SSkinGoreData* gore = nullptr);
@@ -120,11 +120,11 @@ void G2_TransformModel(CGhoul2Info_v& ghoul2, int frameNum, vec3_t scale, CMiniH
 void		G2_TransformModel(CGhoul2Info_v& ghoul2, const int frameNum, vec3_t scale, CMiniHeap* G2VertSpace, int use_lod);
 #endif
 void G2_GenerateWorldMatrix(const vec3_t angles, const vec3_t origin);
-void TransformPoint(const vec3_t in, vec3_t out, mdxaBone_t* mat);
-void Inverse_Matrix(mdxaBone_t * src, mdxaBone_t * dest);
+void TransformPoint(const vec3_t in, vec3_t out, const mdxaBone_t* mat);
+void Inverse_Matrix(const mdxaBone_t * src, mdxaBone_t * dest);
 void* G2_FindSurface(const model_s*, int index, int lod);
 void G2_SaveGhoul2Models(CGhoul2Info_v& ghoul2);
-void G2_LoadGhoul2Model(CGhoul2Info_v& ghoul2, char* buffer);
+void G2_LoadGhoul2Model(CGhoul2Info_v& ghoul2, const char* buffer);
 
 // internal bolt calls. G2_bolts.cpp
 int G2_Add_Bolt(CGhoul2Info* ghl_info, boltInfo_v& bltlist, surfaceInfo_v& slist, const char* boneName);
