@@ -2618,7 +2618,7 @@ qboolean UI_ParseAnimFileSet(const char* animCFG, int* animFileIndex)
 	return qtrue;
 }
 
-int UI_G2SetAnim(CGhoul2Info* ghl_info, const char* boneName, const int animNum, const qboolean freeze)
+int UI_G2SetAnim(CGhoul2Info* ghl_info, const char* bone_name, const int animNum, const qboolean freeze)
 {
 	int animIndex;
 
@@ -2642,7 +2642,7 @@ int UI_G2SetAnim(CGhoul2Info* ghl_info, const char* boneName, const int animNum,
 		const int eFrame = anim->firstFrame + anim->numFrames;
 		int flags = BONE_ANIM_OVERRIDE;
 		const int time = uiInfo.uiDC.realTime;
-		const float animSpeed = 50.0f / anim->frameLerp;
+		const float anim_speed = 50.0f / anim->frameLerp;
 
 		// Freeze anim if it's not looping, special hack for datapad moves menu
 		if (freeze)
@@ -2661,9 +2661,9 @@ int UI_G2SetAnim(CGhoul2Info* ghl_info, const char* boneName, const int animNum,
 			flags = BONE_ANIM_OVERRIDE_LOOP;
 		}
 		flags |= BONE_ANIM_BLEND;
-		constexpr int blendTime = 150;
+		constexpr int blend_time = 150;
 
-		re.G2API_SetBoneAnim(ghl_info, boneName, sFrame, eFrame, flags, animSpeed, time, -1, blendTime);
+		re.G2API_SetBoneAnim(ghl_info, bone_name, sFrame, eFrame, flags, anim_speed, time, -1, blend_time);
 
 		return anim->frameLerp * (anim->numFrames - 2);
 	}
@@ -3319,7 +3319,7 @@ void UI_LoadMenus(const char* menuFile, const qboolean reset)
 	Com_Printf("---------------- MovieDuels-SJE-RC-2.7---------------------------\n");
 	Com_Printf("-----------------------------------------------------------------\n");
 	Com_Printf("------------------------Update 7---------------------------------\n");
-	Com_Printf("------------------Build Date 06/01/2023--------------------------\n");
+	Com_Printf("------------------Build Date 07/01/2023--------------------------\n");
 	Com_Printf("-----------------------------------------------------------------\n");
 	Com_Printf("------------------------LightSaber-------------------------------\n");
 	Com_Printf("-----------An elegant weapon for a more civilized age------------\n");

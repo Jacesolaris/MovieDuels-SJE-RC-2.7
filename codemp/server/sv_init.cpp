@@ -154,9 +154,9 @@ SV_GetConfigstring
 
 ===============
 */
-void SV_GetConfigstring(int index, char* buffer, int bufferSize) {
-	if (bufferSize < 1) {
-		Com_Error(ERR_DROP, "SV_GetConfigstring: bufferSize == %i", bufferSize);
+void SV_GetConfigstring(int index, char* buffer, int buffer_size) {
+	if (buffer_size < 1) {
+		Com_Error(ERR_DROP, "SV_GetConfigstring: buffer_size == %i", buffer_size);
 	}
 	if (index < 0 || index >= MAX_CONFIGSTRINGS) {
 		Com_Error(ERR_DROP, "SV_GetConfigstring: bad index %i\n", index);
@@ -166,7 +166,7 @@ void SV_GetConfigstring(int index, char* buffer, int bufferSize) {
 		return;
 	}
 
-	Q_strncpyz(buffer, sv.configstrings[index], bufferSize);
+	Q_strncpyz(buffer, sv.configstrings[index], buffer_size);
 }
 
 /*
@@ -194,14 +194,14 @@ SV_GetUserinfo
 
 ===============
 */
-void SV_GetUserinfo(int index, char* buffer, int bufferSize) {
-	if (bufferSize < 1) {
-		Com_Error(ERR_DROP, "SV_GetUserinfo: bufferSize == %i", bufferSize);
+void SV_GetUserinfo(int index, char* buffer, int buffer_size) {
+	if (buffer_size < 1) {
+		Com_Error(ERR_DROP, "SV_GetUserinfo: buffer_size == %i", buffer_size);
 	}
 	if (index < 0 || index >= sv_maxclients->integer) {
 		Com_Error(ERR_DROP, "SV_GetUserinfo: bad index %i\n", index);
 	}
-	Q_strncpyz(buffer, svs.clients[index].userinfo, bufferSize);
+	Q_strncpyz(buffer, svs.clients[index].userinfo, buffer_size);
 }
 
 /*
@@ -802,7 +802,7 @@ static void CM_SetCachedMapDiskImage(void* ptr) { gpvCachedMapDiskImage = ptr; }
 static void CM_SetUsingCache(qboolean usingCache) { gbUsingCachedMapDataRightNow = usingCache; }
 
 //server stuff D:
-extern void SV_GetConfigstring(int index, char* buffer, int bufferSize);
+extern void SV_GetConfigstring(int index, char* buffer, int buffer_size);
 extern void SV_SetConfigstring(int index, const char* val);
 
 static IHeapAllocator* GetG2VertSpaceServer(void) {

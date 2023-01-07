@@ -5418,10 +5418,10 @@ Q3_SetStartFrame
   Description	:
   Return type	: static void
   Argument		:  int entID
-  Argument		: int startFrame
+  Argument		: int start_frame
 ============
 */
-static void Q3_SetStartFrame(int entID, int startFrame)
+static void Q3_SetStartFrame(int entID, int start_frame)
 {
 	G_DebugPrint(WL_WARNING, "Q3_SetStartFrame: NOT SUPPORTED IN MP\n");
 }
@@ -5432,10 +5432,10 @@ Q3_SetEndFrame
   Description	:
   Return type	: static void
   Argument		:  int entID
-  Argument		: int endFrame
+  Argument		: int end_frame
 ============
 */
-static void Q3_SetEndFrame(int entID, int endFrame)
+static void Q3_SetEndFrame(int entID, int end_frame)
 {
 	G_DebugPrint(WL_WARNING, "Q3_SetEndFrame: NOT SUPPORTED IN MP\n");
 }
@@ -5446,7 +5446,7 @@ Q3_SetAnimFrame
   Description	:
   Return type	: static void
   Argument		:  int entID
-  Argument		: int startFrame
+  Argument		: int start_frame
 ============
 */
 static void Q3_SetAnimFrame(int entID, int animFrame)

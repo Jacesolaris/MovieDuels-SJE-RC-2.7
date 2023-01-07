@@ -554,7 +554,7 @@ void SetClientViewAngle(gentity_t* ent, vec3_t angle);
 gentity_t* SelectSpawnPoint(vec3_t avoidPoint, team_t team, vec3_t origin, vec3_t angles);
 void respawn(gentity_t* ent);
 
-qboolean ClientSpawn(gentity_t* ent, SavedGameJustLoaded_e eSavedGameJustLoaded);
+qboolean ClientSpawn(gentity_t* ent, SavedGameJustLoaded_e e_saved_game_just_loaded);
 void player_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int means_of_death, int d_flags,
                 int hit_loc);
 void AddScore(const gentity_t* ent, int score);
@@ -629,7 +629,7 @@ extern void G_SoundIndexOnEnt(const gentity_t* ent, soundChannel_t channel, int 
 char* ClientConnect(int client_num, qboolean first_time, SavedGameJustLoaded_e e_saved_game_just_loaded);
 void ClientUserinfoChanged(int client_num);
 void ClientDisconnect(int client_num);
-void ClientBegin(int client_num, const usercmd_t* cmd, SavedGameJustLoaded_e eSavedGameJustLoaded);
+void ClientBegin(int client_num, const usercmd_t* cmd, SavedGameJustLoaded_e e_saved_game_just_loaded);
 void ClientCommand(int client_num);
 
 //

@@ -51,7 +51,7 @@ static void S_SetDynamicMusic_f(void);
 void S_Update_();
 void S_StopAllSounds(void);
 static void S_UpdateBackgroundTrack(void);
-sfx_t* S_FindName(const char* name);
+sfx_t* s_find_name(const char* name);
 static int SND_FreeSFXMem(sfx_t* sfx);
 
 extern qboolean Sys_LowPhysicalMemory();
@@ -779,17 +779,17 @@ static long S_HashSFXName(const char* name) {
 
 /*
 ==================
-S_FindName
+s_find_name
 
 Will allocate a new sfx if it isn't found
 ==================
 */
-sfx_t* S_FindName(const char* name) {
+sfx_t* s_find_name(const char* name) {
 	if (!name) {
-		Com_Error(ERR_FATAL, "S_FindName: NULL");
+		Com_Error(ERR_FATAL, "s_find_name: NULL");
 	}
 	if (!name[0]) {
-		Com_Error(ERR_FATAL, "S_FindName: empty name");
+		Com_Error(ERR_FATAL, "s_find_name: empty name");
 	}
 
 	if (strlen(name) >= MAX_QPATH) {
@@ -840,7 +840,7 @@ sfx_t* S_FindName(const char* name) {
 			//	events, so current MAX_SFX limit should do, or only need a small boost...	-ste
 			//
 
-			Com_Error(ERR_FATAL, "S_FindName: out of sfx_t");
+			Com_Error(ERR_FATAL, "s_find_name: out of sfx_t");
 		}
 	}
 	else
@@ -921,7 +921,7 @@ void S_BeginRegistration(void)
 		memset(sfxHash, 0, sizeof(sfx_t*) * LOOP_HASH);
 
 #ifdef _DEBUG
-		sfx_t* sfx = S_FindName("***DEFAULT***");
+		sfx_t* sfx = s_find_name("***DEFAULT***");
 		S_DefaultSound(sfx);
 #else
 		S_RegisterSound("sound/null.wav");
@@ -993,7 +993,7 @@ sfxHandle_t	S_RegisterSound(const char* name)
 		return 0;
 	}
 
-	sfx_t* sfx = S_FindName(name);
+	sfx_t* sfx = s_find_name(name);
 
 	SND_TouchSFX(sfx);
 
@@ -3892,11 +3892,11 @@ int S_FindWavChunk(fileHandle_t f, char* chunk) {
 //
 // DO NOT replace this with a call to FS_FileExists, that's for checking about writing out, and doesn't work for this.
 //
-qboolean S_FileExists(const char* psFilename)
+qboolean S_FileExists(const char* ps_filename)
 {
 	fileHandle_t fhTemp;
 
-	FS_FOpenFileRead(psFilename, &fhTemp, qtrue);	// qtrue so I can fclose the handle without closing a PAK
+	FS_FOpenFileRead(ps_filename, &fhTemp, qtrue);	// qtrue so I can fclose the handle without closing a PAK
 	if (!fhTemp)
 		return qfalse;
 
@@ -4931,7 +4931,7 @@ cvar_t* s_soundpoolmegs = NULL;
 //
 byte* SND_malloc(int iSize, sfx_t* sfx)
 {
-	byte* pData = static_cast<byte*>(Z_Malloc(iSize, TAG_SND_RAWDATA, qfalse));	// don't bother asking for zeroed mem
+	byte* p_data = static_cast<byte*>(Z_Malloc(iSize, TAG_SND_RAWDATA, qfalse));	// don't bother asking for zeroed mem
 
 	// if "s_soundpoolmegs" is < 0, then the -ve of the value is the maximum amount of sounds we're allowed to have loaded...
 	//
@@ -4945,7 +4945,7 @@ byte* SND_malloc(int iSize, sfx_t* sfx)
 		}
 	}
 
-	return pData;
+	return p_data;
 }
 
 // called once-only in EXE lifetime...

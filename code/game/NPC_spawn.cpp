@@ -2156,7 +2156,7 @@ gentity_t* NPC_Spawn_Do(gentity_t* ent, const qboolean fullSpawnNow)
 		if (ent->spawnflags & 1)
 		{
 			//wants to explode when not in vis of player
-			newent->endFrame = ent->endFrame;
+			newent->end_frame = ent->end_frame;
 		}
 
 		// Setup the vehicle.
@@ -2689,9 +2689,9 @@ void SP_NPC_Vehicle(gentity_t* self)
 	if (self->spawnflags & 1)
 	{
 		//wants to explode when not in vis of player
-		if (!self->endFrame)
+		if (!self->end_frame)
 		{
-			self->endFrame = NO_PILOT_DIE_TIME;
+			self->end_frame = NO_PILOT_DIE_TIME;
 		}
 	}
 

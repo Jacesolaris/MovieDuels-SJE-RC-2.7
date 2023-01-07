@@ -1325,8 +1325,8 @@ struct gentity_s
 
 	//Animation
 	qboolean loopAnim;
-	int startFrame;
-	int endFrame;
+	int start_frame;
+	int end_frame;
 
 	//Script/ICARUS-related fields
 	int m_iIcarusID;
@@ -1607,8 +1607,8 @@ struct gentity_s
 		saved_game.write<int32_t>(followPosRecalcTime);
 		saved_game.write<int32_t>(followPosWaypoint);
 		saved_game.write<int32_t>(loopAnim);
-		saved_game.write<int32_t>(startFrame);
-		saved_game.write<int32_t>(endFrame);
+		saved_game.write<int32_t>(start_frame);
+		saved_game.write<int32_t>(end_frame);
 		saved_game.write<int32_t>(m_iIcarusID);
 		saved_game.write<int32_t>(taskID);
 		saved_game.write<int32_t>(parms);
@@ -1822,8 +1822,8 @@ struct gentity_s
 		saved_game.read<int32_t>(followPosRecalcTime);
 		saved_game.read<int32_t>(followPosWaypoint);
 		saved_game.read<int32_t>(loopAnim);
-		saved_game.read<int32_t>(startFrame);
-		saved_game.read<int32_t>(endFrame);
+		saved_game.read<int32_t>(start_frame);
+		saved_game.read<int32_t>(end_frame);
 		saved_game.read<int32_t>(m_iIcarusID);
 		saved_game.read<int32_t>(taskID);
 		saved_game.read<int32_t>(parms);

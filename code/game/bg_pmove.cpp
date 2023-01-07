@@ -331,7 +331,8 @@ qboolean PM_InForceFall()
 
 	if (in_camera ||
 		strcmp(s, "doom_shields") == 0 ||
-		strcmp(s, "md_df2_lvl4") == 0)
+		strcmp(s, "md_df2_lvl4") == 0 ||
+		strcmp(s, "duel_tower") == 0)
 	{
 		return qfalse;
 	}
@@ -14519,7 +14520,7 @@ void PM_SetSaberMove(saberMoveName_t new_move)
 	}
 	if (anim != -1)
 	{
-		PM_SetAnim(pm, parts, anim, setflags, saberMoveData[new_move].blendTime);
+		PM_SetAnim(pm, parts, anim, setflags, saberMoveData[new_move].blend_time);
 	}
 
 	if (pm->ps->torsoAnim == anim)

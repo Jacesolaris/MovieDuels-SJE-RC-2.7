@@ -1375,7 +1375,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position) {
 			cl_ent->bolt4 = 0;
 			cl_ent->bodyHeight = 0;//SABER_LENGTH_MAX;
 			//cl_ent->saberExtendTime = 0;
-			cl_ent->boltInfo = 0;
+			cl_ent->bolt_info = 0;
 			cl_ent->frame_minus1_refreshed = 0;
 			cl_ent->frame_minus2_refreshed = 0;
 			cl_ent->frame_hold_time = 0;

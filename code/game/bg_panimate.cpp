@@ -5615,7 +5615,7 @@ PM_SetAnimFinal
 void PM_SetAnimFinal(int* torso_anim, int* legs_anim,
                      const int set_anim_parts, int anim, const int set_anim_flags,
                      int* torso_anim_timer, int* legs_anim_timer,
-                     gentity_t* gent, int blend_time) // default blendTime=350
+                     gentity_t* gent, int blend_time) // default blend_time=350
 {
 	// BASIC SETUP AND SAFETY CHECKING
 	//=================================
@@ -5706,7 +5706,7 @@ void PM_SetAnimFinal(int* torso_anim, int* legs_anim,
 	const bool anim_sync = g_synchSplitAnims->integer != 0 && !anim_restart;
 	float anim_current = -1.0f;
 	float anim_speed = 50.0f / cur_anim.frameLerp * time_scale_mod;
-	// animSpeed is 1.0 if the frameLerp (ms/frame) is 50 (20 fps).
+	// anim_speed is 1.0 if the frameLerp (ms/frame) is 50 (20 fps).
 	const float anim_fps = fabsf(cur_anim.frameLerp);
 	const auto anim_dur_m_sec = static_cast<int>((cur_anim.numFrames - 1) * anim_fps / time_scale_mod);
 	const int anim_hold_m_sec = anim_holdless && time_scale_mod == 1.0f

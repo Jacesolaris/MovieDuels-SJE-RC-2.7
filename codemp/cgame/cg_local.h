@@ -413,7 +413,7 @@ typedef struct centity_s {
 	void* ghoul2weapon; //rww - pointer to ghoul2 instance of the current 3rd person weapon
 
 	float			radius;
-	int				boltInfo;
+	int				bolt_info;
 
 	//sometimes used as a bolt index, but these values are also used as generic values for clientside entities
 	//at times

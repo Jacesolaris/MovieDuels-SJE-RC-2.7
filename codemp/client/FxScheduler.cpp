@@ -51,17 +51,17 @@ CFxScheduler::CFxScheduler()
 	memset(&mLoopedEffectArray, 0, sizeof(mLoopedEffectArray));
 }
 
-int CFxScheduler::ScheduleLoopedEffect(int id, int boltInfo, CGhoul2Info_v* ghoul2, bool isPortal, int iLoopTime, bool isRelative)
+int CFxScheduler::ScheduleLoopedEffect(int id, int bolt_info, CGhoul2Info_v* ghoul2, bool isPortal, int iLoopTime, bool isRelative)
 {
 	int i;
 
 	assert(id);
-	assert(boltInfo != -1);
+	assert(bolt_info != -1);
 
 	for (i = 0; i < MAX_LOOPED_FX; i++)	//see if it's already playing so we can just update it
 	{
 		if (mLoopedEffectArray[i].mId == id &&
-			mLoopedEffectArray[i].mBoltInfo == boltInfo &&
+			mLoopedEffectArray[i].mBoltInfo == bolt_info &&
 			mLoopedEffectArray[i].mPortalEffect == isPortal
 			)
 		{
@@ -90,7 +90,7 @@ int CFxScheduler::ScheduleLoopedEffect(int id, int boltInfo, CGhoul2Info_v* ghou
 		return -1;
 	}
 	mLoopedEffectArray[i].mId = id;
-	mLoopedEffectArray[i].mBoltInfo = boltInfo;
+	mLoopedEffectArray[i].mBoltInfo = bolt_info;
 	mLoopedEffectArray[i].mGhoul2 = ghoul2;
 	mLoopedEffectArray[i].mPortalEffect = isPortal;
 	mLoopedEffectArray[i].mIsRelative = isRelative;
@@ -99,7 +99,7 @@ int CFxScheduler::ScheduleLoopedEffect(int id, int boltInfo, CGhoul2Info_v* ghou
 	return i;
 }
 
-void CFxScheduler::StopEffect(const char* file, int boltInfo, bool isPortal)
+void CFxScheduler::StopEffect(const char* file, int bolt_info, bool isPortal)
 {
 	char	sfile[MAX_QPATH];
 
@@ -117,7 +117,7 @@ void CFxScheduler::StopEffect(const char* file, int boltInfo, bool isPortal)
 	for (int i = 0; i < MAX_LOOPED_FX; i++)
 	{
 		if (mLoopedEffectArray[i].mId == id &&
-			mLoopedEffectArray[i].mBoltInfo == boltInfo &&
+			mLoopedEffectArray[i].mBoltInfo == bolt_info &&
 			mLoopedEffectArray[i].mPortalEffect == isPortal
 			)
 		{
@@ -702,13 +702,13 @@ void CFxScheduler::PlayEffect(int id, vec3_t origin, vec3_t forward, int vol, in
 //
 // Input:
 //	Effect file name, the origin, and axis.
-//	Optional boltInfo (defaults to -1)
-//  and iGhoul2 used by boltInfo
+//	Optional bolt_info (defaults to -1)
+//  and iGhoul2 used by bolt_info
 //
 // Return:
 //	none
 //------------------------------------------------------
-void CFxScheduler::PlayEffect(const char* file, vec3_t origin, matrix3_t axis, const int boltInfo, CGhoul2Info_v* ghoul2,
+void CFxScheduler::PlayEffect(const char* file, vec3_t origin, matrix3_t axis, const int bolt_info, CGhoul2Info_v* ghoul2,
 	int fxParm /*-1*/, int vol, int rad, int iLoopTime, bool isRelative)
 {
 	char	sfile[MAX_QPATH];
@@ -724,7 +724,7 @@ void CFxScheduler::PlayEffect(const char* file, vec3_t origin, matrix3_t axis, c
 	}
 #endif
 
-	PlayEffect(mEffectIDs[sfile], origin, axis, boltInfo, ghoul2, fxParm, vol, rad, qfalse, iLoopTime, isRelative);
+	PlayEffect(mEffectIDs[sfile], origin, axis, bolt_info, ghoul2, fxParm, vol, rad, qfalse, iLoopTime, isRelative);
 }
 
 int	totalPrimitives = 0;
@@ -753,13 +753,13 @@ void GetRGB_Colors(CPrimitiveTemplate* fx, vec3_t outStartRGB, vec3_t outEndRGB)
 //
 // Input:
 //	Effect id, the origin, and axis.
-//	Optional boltInfo (defaults to -1)
+//	Optional bolt_info (defaults to -1)
 //  Optional entity number to be used by a cheap entity origin bolt (defaults to -1)
 //
 // Return:
 //	none
 //------------------------------------------------------
-void CFxScheduler::PlayEffect(int id, vec3_t origin, matrix3_t axis, const int boltInfo, CGhoul2Info_v* ghoul2, int fxParm /*-1*/, int vol, int rad, bool isPortal/*false*/, int iLoopTime/*0*/, bool isRelative)
+void CFxScheduler::PlayEffect(int id, vec3_t origin, matrix3_t axis, const int bolt_info, CGhoul2Info_v* ghoul2, int fxParm /*-1*/, int vol, int rad, bool isPortal/*false*/, int iLoopTime/*0*/, bool isRelative)
 {
 	SEffectTemplate* fx;
 	CPrimitiveTemplate* prim;
@@ -785,19 +785,19 @@ void CFxScheduler::PlayEffect(int id, vec3_t origin, matrix3_t axis, const int b
 	int						modelNum = 0, boltNum = -1;
 	int						entity_num = -1;
 
-	if (boltInfo > 0)
+	if (bolt_info > 0)
 	{
 		// extract the wraith ID from the bolt info
-		modelNum = (boltInfo >> MODEL_SHIFT) & MODEL_AND;
-		boltNum = (boltInfo >> BOLT_SHIFT) & BOLT_AND;
-		entity_num = (boltInfo >> ENTITY_SHIFT) & ENTITY_AND;
+		modelNum = (bolt_info >> MODEL_SHIFT) & MODEL_AND;
+		boltNum = (bolt_info >> BOLT_SHIFT) & BOLT_AND;
+		entity_num = (bolt_info >> ENTITY_SHIFT) & ENTITY_AND;
 
 		// We always force ghoul bolted objects to be scheduled so that they don't play right away.
 		forceScheduling = true;
 
 		if (iLoopTime)//0 = not looping, 1 for infinite, else duration
 		{//store off the id to reschedule every frame
-			ScheduleLoopedEffect(id, boltInfo, ghoul2, !!isPortal, iLoopTime, isRelative);
+			ScheduleLoopedEffect(id, bolt_info, ghoul2, !!isPortal, iLoopTime, isRelative);
 		}
 	}
 
@@ -879,7 +879,7 @@ void CFxScheduler::PlayEffect(int id, vec3_t origin, matrix3_t axis, const int b
 			// if the delay is so small, we may as well just create this bit right now
 			if (delay < 1 && !forceScheduling && !isPortal)
 			{
-				if (boltInfo == -1 && entity_num != -1)
+				if (bolt_info == -1 && entity_num != -1)
 				{
 					// Find out where the entity currently is
 					TCGVectorData* data = (TCGVectorData*)cl.mSharedMemory;
@@ -907,7 +907,7 @@ void CFxScheduler::PlayEffect(int id, vec3_t origin, matrix3_t axis, const int b
 				sfx->mIsRelative = isRelative;
 				sfx->mPortalEffect = isPortal;
 
-				if (boltInfo == -1)
+				if (bolt_info == -1)
 				{
 					sfx->ghoul2 = NULL;
 					if (entity_num == -1)
@@ -1687,9 +1687,9 @@ void CFxScheduler::CreateEffect(CPrimitiveTemplate* fx, const vec3_t origin, mat
 void CFxScheduler::CreateEffect(CPrimitiveTemplate* fx, SScheduledEffect* scheduledFx)
 {
 	// annoying bit....we have to pack the values back into an int before calling playEffect since there isn't the ideal overload we can already use.
-	int boltInfo = ((scheduledFx->mModelNum & MODEL_AND) << MODEL_SHIFT);
-	boltInfo |= ((scheduledFx->mBoltNum & BOLT_AND) << BOLT_SHIFT);
-	boltInfo |= ((scheduledFx->mEntNum & ENTITY_AND) << ENTITY_SHIFT);
+	int bolt_info = ((scheduledFx->mModelNum & MODEL_AND) << MODEL_SHIFT);
+	bolt_info |= ((scheduledFx->mBoltNum & BOLT_AND) << BOLT_SHIFT);
+	bolt_info |= ((scheduledFx->mEntNum & ENTITY_AND) << ENTITY_SHIFT);
 
-	PlayEffect(fx->mPlayFxHandles.GetHandle(), scheduledFx->mOrigin, scheduledFx->mAxis, boltInfo);
+	PlayEffect(fx->mPlayFxHandles.GetHandle(), scheduledFx->mOrigin, scheduledFx->mAxis, bolt_info);
 }

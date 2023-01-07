@@ -90,7 +90,7 @@ extern void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_
 
 #ifdef _JK2MP
 #include "../namespace_begin.h"
-extern void BG_SetAnim(playerState_t* ps, animation_t* animations, int setAnimParts, int anim, int setAnimFlags, int blendTime);
+extern void BG_SetAnim(playerState_t* ps, animation_t* animations, int setAnimParts, int anim, int setAnimFlags, int blend_time);
 extern void BG_SetLegsAnimTimer(playerState_t* ps, int time);
 extern void BG_SetTorsoAnimTimer(playerState_t* ps, int time);
 #include "../namespace_end.h"
@@ -262,7 +262,7 @@ void G_VehicleSpawn(gentity_t* self)
 	if (vehEnt->spawnflags & 1)
 	{
 		//die without pilot
-		vehEnt->m_pVehicle->m_iPilotTime = level.time + vehEnt->endFrame;
+		vehEnt->m_pVehicle->m_iPilotTime = level.time + vehEnt->end_frame;
 	}
 #endif
 	//return vehEnt;
@@ -1807,7 +1807,7 @@ static bool Update(Vehicle_t* p_veh, const usercmd_t* pUmcd)
 			if (!player || G_ClearLineOfSight(p_veh->m_pParentEntity->currentOrigin, player->currentOrigin,
 			                                  p_veh->m_pParentEntity->s.number, MASK_OPAQUE))
 			{
-				p_veh->m_iPilotTime = level.time + p_veh->m_pParentEntity->endFrame;
+				p_veh->m_iPilotTime = level.time + p_veh->m_pParentEntity->end_frame;
 			}
 		}
 		if (p_veh->m_iPilotTime && p_veh->m_iPilotTime < level.time)

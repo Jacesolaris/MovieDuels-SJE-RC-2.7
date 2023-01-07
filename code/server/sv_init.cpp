@@ -80,11 +80,11 @@ SV_GetConfigstring
 
 ===============
 */
-void SV_GetConfigstring(const int index, char* buffer, const int bufferSize)
+void SV_GetConfigstring(const int index, char* buffer, const int buffer_size)
 {
-	if (bufferSize < 1)
+	if (buffer_size < 1)
 	{
-		Com_Error(ERR_DROP, "SV_GetConfigstring: bufferSize == %i", bufferSize);
+		Com_Error(ERR_DROP, "SV_GetConfigstring: buffer_size == %i", buffer_size);
 	}
 	if (index < 0 || index >= MAX_CONFIGSTRINGS)
 	{
@@ -96,7 +96,7 @@ void SV_GetConfigstring(const int index, char* buffer, const int bufferSize)
 		return;
 	}
 
-	Q_strncpyz(buffer, sv.configstrings[index], bufferSize);
+	Q_strncpyz(buffer, sv.configstrings[index], buffer_size);
 }
 
 /*
@@ -126,17 +126,17 @@ SV_GetUserinfo
 
 ===============
 */
-void SV_GetUserinfo(const int index, char* buffer, const int bufferSize)
+void SV_GetUserinfo(const int index, char* buffer, const int buffer_size)
 {
-	if (bufferSize < 1)
+	if (buffer_size < 1)
 	{
-		Com_Error(ERR_DROP, "SV_GetUserinfo: bufferSize == %i", bufferSize);
+		Com_Error(ERR_DROP, "SV_GetUserinfo: buffer_size == %i", buffer_size);
 	}
 	if (index < 0 || index >= 1)
 	{
 		Com_Error(ERR_DROP, "SV_GetUserinfo: bad index %i\n", index);
 	}
-	Q_strncpyz(buffer, svs.clients[index].userinfo, bufferSize);
+	Q_strncpyz(buffer, svs.clients[index].userinfo, buffer_size);
 }
 
 /*
@@ -214,7 +214,7 @@ void SV_SpawnServer(const char* server, const ForceReload_e e_force_reload, cons
 	Cvar_Set("r_ratiofix", "0");
 
 	// shut down the existing game if it is running
-	SV_ShutdownGameProgs(qtrue);
+	SV_ShutdownGameProgs();
 
 	Com_Printf("------ Server Initialization ------\n%s\n", com_version->string);
 	Com_Printf("Server: %s\n", server);
@@ -479,7 +479,7 @@ void SV_Shutdown(const char* finalmsg)
 	}
 
 	SV_RemoveOperatorCommands();
-	SV_ShutdownGameProgs(qfalse);
+	SV_ShutdownGameProgs();
 
 	if (svs.snapshotEntities)
 	{

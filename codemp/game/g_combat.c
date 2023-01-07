@@ -2313,7 +2313,7 @@ extern void RunEmplacedWeapon( gentity_t *ent, usercmd_t **ucmd );
 
 			if ( self->owner )
 			{
-				self->owner->s.frame = self->owner->startFrame = self->owner->endFrame = 0;
+				self->owner->s.frame = self->owner->start_frame = self->owner->end_frame = 0;
 				self->owner->svFlags &= ~SVF_ANIMATING;
 			}
 

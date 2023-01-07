@@ -232,7 +232,7 @@ uint32_t Com_BlockChecksum(const void* buffer, const int length)
 {
 	int digest[4];
 
-	mdfour((byte*)digest, (byte*)buffer, length);
+	mdfour(reinterpret_cast<byte*>(digest), (byte*)buffer, length);
 
 	const uint32_t val = digest[0] ^ digest[1] ^ digest[2] ^ digest[3];
 

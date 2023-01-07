@@ -222,11 +222,11 @@ static long RllDecodeMonoToMono(unsigned char *from,short *to,unsigned int size,
 //
 // Returns:		Number of samples placed in output buffer
 //-----------------------------------------------------------------------------
-static long RllDecodeMonoToStereo(const unsigned char* from, short* to, unsigned int size, char signedOutput, unsigned short flag)
+static long RllDecodeMonoToStereo(const unsigned char* from, short* to, unsigned int size, char signed_output, unsigned short flag)
 {
 	int prev;
 
-	if (signedOutput)
+	if (signed_output)
 		prev = flag - 0x8000;
 	else
 		prev = flag;
@@ -252,12 +252,12 @@ static long RllDecodeMonoToStereo(const unsigned char* from, short* to, unsigned
 //
 // Returns:		Number of samples placed in output buffer
 //-----------------------------------------------------------------------------
-static long RllDecodeStereoToStereo(unsigned char* from, short* to, unsigned int size, char signedOutput, unsigned short flag)
+static long RllDecodeStereoToStereo(unsigned char* from, short* to, unsigned int size, char signed_output, unsigned short flag)
 {
 	unsigned char* zz = from;
 	int	prevL, prevR;
 
-	if (signedOutput) {
+	if (signed_output) {
 		prevL = (flag & 0xff00) - 0x8000;
 		prevR = ((flag & 0x00ff) << 8) - 0x8000;
 	}
@@ -892,7 +892,7 @@ static void decodeCodeBook(byte* input, unsigned short roq_flags)
 *
 ******************************************************************************/
 
-static void recurseQuad(long startX, long startY, long quadSize, long xOff, long yOff)
+static void recurseQuad(long start_x, long start_y, long quad_size, long x_off, long y_off)
 {
 	long lowy;
 
@@ -905,21 +905,21 @@ static void recurseQuad(long startX, long startY, long quadSize, long xOff, long
 	if (bigx > cinTable[currentHandle].CIN_WIDTH) bigx = cinTable[currentHandle].CIN_WIDTH;
 	if (bigy > cinTable[currentHandle].CIN_HEIGHT) bigy = cinTable[currentHandle].CIN_HEIGHT;
 
-	if ((startX >= lowx) && (startX + quadSize) <= (bigx) && (startY + quadSize) <= (bigy) && (startY >= lowy) && quadSize <= MAXSIZE) {
-		const long useY = startY;
-		byte* scroff = cin.linbuf + (useY + ((cinTable[currentHandle].CIN_HEIGHT - bigy) >> 1) + yOff) * (cinTable[
-			currentHandle].samplesPerLine) + (((startX + xOff)) * cinTable[currentHandle].samplesPerPixel);
+	if ((start_x >= lowx) && (start_x + quad_size) <= (bigx) && (start_y + quad_size) <= (bigy) && (start_y >= lowy) && quad_size <= MAXSIZE) {
+		const long useY = start_y;
+		byte* scroff = cin.linbuf + (useY + ((cinTable[currentHandle].CIN_HEIGHT - bigy) >> 1) + y_off) * (cinTable[
+			currentHandle].samplesPerLine) + (((start_x + x_off)) * cinTable[currentHandle].samplesPerPixel);
 
 			cin.qStatus[0][cinTable[currentHandle].onQuad] = scroff;
 			cin.qStatus[1][cinTable[currentHandle].onQuad++] = scroff + offset;
 	}
 
-	if (quadSize != MINSIZE) {
-		quadSize >>= 1;
-		recurseQuad(startX, startY, quadSize, xOff, yOff);
-		recurseQuad(startX + quadSize, startY, quadSize, xOff, yOff);
-		recurseQuad(startX, startY + quadSize, quadSize, xOff, yOff);
-		recurseQuad(startX + quadSize, startY + quadSize, quadSize, xOff, yOff);
+	if (quad_size != MINSIZE) {
+		quad_size >>= 1;
+		recurseQuad(start_x, start_y, quad_size, x_off, y_off);
+		recurseQuad(start_x + quad_size, start_y, quad_size, x_off, y_off);
+		recurseQuad(start_x, start_y + quad_size, quad_size, x_off, y_off);
+		recurseQuad(start_x + quad_size, start_y + quad_size, quad_size, x_off, y_off);
 	}
 }
 
@@ -931,14 +931,14 @@ static void recurseQuad(long startX, long startY, long quadSize, long xOff, long
 *
 ******************************************************************************/
 
-static void setupQuad(long xOff, long yOff)
+static void setupQuad(long x_off, long y_off)
 {
-	if (xOff == cin.oldXOff && yOff == cin.oldYOff && cinTable[currentHandle].ysize == static_cast<unsigned>(cin.oldysize) && cinTable[currentHandle].xsize == static_cast<unsigned>(cin.oldxsize)) {
+	if (x_off == cin.oldXOff && y_off == cin.oldYOff && cinTable[currentHandle].ysize == static_cast<unsigned>(cin.oldysize) && cinTable[currentHandle].xsize == static_cast<unsigned>(cin.oldxsize)) {
 		return;
 	}
 
-	cin.oldXOff = xOff;
-	cin.oldYOff = yOff;
+	cin.oldXOff = x_off;
+	cin.oldYOff = y_off;
 	cin.oldysize = cinTable[currentHandle].ysize;
 	cin.oldxsize = cinTable[currentHandle].xsize;
 	/*	Enisform: Not in q3 source
@@ -955,7 +955,7 @@ static void setupQuad(long xOff, long yOff)
 
 	for (long y = 0; y < static_cast<long>(cinTable[currentHandle].ysize); y += 16)
 		for (long x = 0; x < static_cast<long>(cinTable[currentHandle].xsize); x += 16)
-			recurseQuad(x, y, 16, xOff, yOff);
+			recurseQuad(x, y, 16, x_off, y_off);
 
 	byte* temp = NULL;
 
@@ -973,14 +973,14 @@ static void setupQuad(long xOff, long yOff)
 *
 ******************************************************************************/
 
-static void readQuadInfo(const byte* qData)
+static void readQuadInfo(const byte* q_data)
 {
 	if (currentHandle < 0) return;
 
-	cinTable[currentHandle].xsize = qData[0] + qData[1] * 256;
-	cinTable[currentHandle].ysize = qData[2] + qData[3] * 256;
-	cinTable[currentHandle].maxsize = qData[4] + qData[5] * 256;
-	cinTable[currentHandle].minsize = qData[6] + qData[7] * 256;
+	cinTable[currentHandle].xsize = q_data[0] + q_data[1] * 256;
+	cinTable[currentHandle].ysize = q_data[2] + q_data[3] * 256;
+	cinTable[currentHandle].maxsize = q_data[4] + q_data[5] * 256;
+	cinTable[currentHandle].minsize = q_data[6] + q_data[7] * 256;
 
 	cinTable[currentHandle].CIN_HEIGHT = cinTable[currentHandle].ysize;
 	cinTable[currentHandle].CIN_WIDTH = cinTable[currentHandle].xsize;
@@ -1595,7 +1595,7 @@ void CIN_DrawCinematic(int handle) {
 	cinTable[handle].dirty = qfalse;
 }
 
-void CL_PlayCinematic_f(void) {
+void CL_PlayCinematic_f() {
 	Com_DPrintf("CL_PlayCinematic_f\n");
 	if (cls.state == CA_CINEMATIC) {
 		SCR_StopCinematic();
@@ -1618,7 +1618,7 @@ void CL_PlayCinematic_f(void) {
 	if (CL_handle >= 0) {
 		do {
 			SCR_RunCinematic();
-		} while (cinTable[currentHandle].buf == NULL && cinTable[currentHandle].status == FMV_PLAY);		// wait for first frame (load codebook and sound)
+		} while (cinTable[currentHandle].buf == nullptr && cinTable[currentHandle].status == FMV_PLAY);		// wait for first frame (load codebook and sound)
 	}
 	else
 	{

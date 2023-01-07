@@ -809,7 +809,7 @@ typedef struct world_s {
 void		R_ModelInit(void);
 
 model_t* R_GetModelByHandle(qhandle_t index);
-int			R_LerpTag(orientation_t* tag, qhandle_t handle, int startFrame, int endFrame,
+int			R_LerpTag(orientation_t* tag, qhandle_t handle, int start_frame, int end_frame,
 	float frac, const char* tagName);
 void		R_ModelBounds(qhandle_t handle, vec3_t mins, vec3_t maxs);
 

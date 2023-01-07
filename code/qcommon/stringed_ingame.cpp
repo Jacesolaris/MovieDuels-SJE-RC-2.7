@@ -129,9 +129,9 @@ private:
 	static const char* InsideQuotes(const char* psLine);
 	static const char* ConvertCRLiterals_Read(const char* psString);
 	void REMKill(char* psBuffer) const;
-	char* Filename_PathOnly(const char* psFilename) const;
-	static char* Filename_WithoutPath(const char* psFilename);
-	char* Filename_WithoutExt(const char* psFilename) const;
+	char* Filename_PathOnly(const char* ps_filename) const;
+	static char* Filename_WithoutPath(const char* ps_filename);
+	char* Filename_WithoutExt(const char* ps_filename) const;
 };
 
 CStringEdPackage TheStringPackage;
@@ -169,11 +169,11 @@ void CStringEdPackage::Clear(SE_BOOL bChangingLanguages)
 // (normally I'd call another function for this, but this is supposed to be engine-independant,
 //	 so a certain amount of re-invention of the wheel is to be expected...)
 //
-char* CStringEdPackage::Filename_PathOnly(const char* psFilename) const
+char* CStringEdPackage::Filename_PathOnly(const char* ps_filename) const
 {
 	static char sString[iSE_MAX_FILENAME_LENGTH];
 
-	strcpy(sString, psFilename);
+	strcpy(sString, ps_filename);
 
 	char* p1 = strrchr(sString, '\\');
 	char* p2 = strrchr(sString, '/');
@@ -190,11 +190,11 @@ char* CStringEdPackage::Filename_PathOnly(const char* psFilename) const
 // (normally I'd call another function for this, but this is supposed to be engine-independant,
 //	 so a certain amount of re-invention of the wheel is to be expected...)
 //
-char* CStringEdPackage::Filename_WithoutExt(const char* psFilename) const
+char* CStringEdPackage::Filename_WithoutExt(const char* ps_filename) const
 {
 	static char sString[iSE_MAX_FILENAME_LENGTH];
 
-	strcpy(sString, psFilename);
+	strcpy(sString, ps_filename);
 
 	char* p = strrchr(sString, '.');
 	const char* p2 = strrchr(sString, '\\');
@@ -217,17 +217,17 @@ char* CStringEdPackage::Filename_WithoutExt(const char* psFilename) const
 // (normally I'd call another function for this, but this is supposed to be engine-independent,
 //	 so a certain amount of re-invention of the wheel is to be expected...)
 //
-char* CStringEdPackage::Filename_WithoutPath(const char* psFilename)
+char* CStringEdPackage::Filename_WithoutPath(const char* ps_filename)
 {
 	static char sString[iSE_MAX_FILENAME_LENGTH];
 
-	const char* psCopyPos = psFilename;
+	const char* psCopyPos = ps_filename;
 
-	while (*psFilename)
+	while (*ps_filename)
 	{
-		if (*psFilename == '/' || *psFilename == '\\')
-			psCopyPos = psFilename + 1;
-		psFilename++;
+		if (*ps_filename == '/' || *ps_filename == '\\')
+			psCopyPos = ps_filename + 1;
+		ps_filename++;
 	}
 
 	strcpy(sString, psCopyPos);

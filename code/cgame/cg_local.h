@@ -1103,7 +1103,7 @@ void cgi_R_DrawStretchPic(float x, float y, float w, float h,
                           float s1, float t1, float s2, float t2, qhandle_t h_shader);
 
 void cgi_R_ModelBounds(qhandle_t model, vec3_t mins, vec3_t maxs);
-void cgi_R_LerpTag(orientation_t* tag, qhandle_t mod, int startFrame, int endFrame,
+void cgi_R_LerpTag(orientation_t* tag, qhandle_t mod, int start_frame, int end_frame,
                    float frac, const char* tagName);
 // Does weird, barely controllable rotation behaviour
 void cgi_R_DrawRotatePic(float x, float y, float w, float h,
@@ -1262,7 +1262,7 @@ qboolean CG_VehicleWeaponImpact(centity_t* cent);
 Ghoul2 Insert Start
 */
 // CG specific API access
-void trap_G2_SetGhoul2ModelIndexes(CGhoul2Info_v& ghoul2, qhandle_t* modelList, qhandle_t* skinList);
+void trap_G2_SetGhoul2ModelIndexes(CGhoul2Info_v& ghoul2, qhandle_t* model_list, qhandle_t* skinList);
 void CG_Init_CG(void);
 
 void CG_SetGhoul2Info(refEntity_t* ent, const centity_t* cent);

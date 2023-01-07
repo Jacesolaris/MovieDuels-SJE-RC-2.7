@@ -280,11 +280,11 @@ void CG_SetGhoul2Info(refEntity_t* ent, const centity_t* cent)
 void G2_BoltToGhoul2Model(const centity_t* cent, refEntity_t* ent)
 {
 	// extract the wraith ID from the bolt info
-	int model_num = cent->currentState.boltInfo >> MODEL_SHIFT;
+	int model_num = cent->currentState.bolt_info >> MODEL_SHIFT;
 	model_num &= MODEL_AND;
-	int bolt_num = cent->currentState.boltInfo >> BOLT_SHIFT;
+	int bolt_num = cent->currentState.bolt_info >> BOLT_SHIFT;
 	bolt_num &= BOLT_AND;
-	int ent_num = cent->currentState.boltInfo >> ENTITY_SHIFT;
+	int ent_num = cent->currentState.bolt_info >> ENTITY_SHIFT;
 	ent_num &= ENTITY_AND;
 
 	mdxaBone_t bolt_matrix;
@@ -542,7 +542,7 @@ static void CG_General(centity_t* cent)
 	Ghoul2 Insert Start
 	*/
 	// are we bolted to a Ghoul2 model?
-	if (s1->boltInfo)
+	if (s1->bolt_info)
 	{
 		G2_BoltToGhoul2Model(cent, &ent);
 	}
@@ -2484,7 +2484,7 @@ extern cvar_t* g_skippingcin;
 void CG_MatrixEffect(const centity_t* cent)
 {
 	float MATRIX_EFFECT_TIME = 1000.0f;
-	if (cent->currentState.boltInfo & MEF_MULTI_SPIN)
+	if (cent->currentState.bolt_info & MEF_MULTI_SPIN)
 	{
 		//multiple spins
 		if (cent->currentState.time2 > 0)
@@ -2507,7 +2507,7 @@ void CG_MatrixEffect(const centity_t* cent)
 	float elapsed_time = total_elapsed_time;
 	bool stop_effect = total_elapsed_time > cent->currentState.eventParm || cg.missionStatusShow || in_camera;
 
-	if (!stop_effect && cent->currentState.boltInfo & MEF_HIT_GROUND_STOP && g_entities[cent->currentState.
+	if (!stop_effect && cent->currentState.bolt_info & MEF_HIT_GROUND_STOP && g_entities[cent->currentState.
 		otherEntityNum].client)
 	{
 		if (g_entities[cent->currentState.otherEntityNum].client->ps.groundEntityNum != ENTITYNUM_NONE)
@@ -2523,7 +2523,7 @@ void CG_MatrixEffect(const centity_t* cent)
 			}
 		}
 	}
-	if (!stop_effect && cent->currentState.boltInfo & MEF_LOOK_AT_ENEMY)
+	if (!stop_effect && cent->currentState.bolt_info & MEF_LOOK_AT_ENEMY)
 	{
 		if (!g_entities[cent->currentState.otherEntityNum].lastEnemy ||
 			!g_entities[cent->currentState.otherEntityNum].lastEnemy->inuse)
@@ -2563,7 +2563,7 @@ void CG_MatrixEffect(const centity_t* cent)
 
 	MatrixMode = qtrue;
 
-	if (cent->currentState.boltInfo & MEF_LOOK_AT_ENEMY)
+	if (cent->currentState.bolt_info & MEF_LOOK_AT_ENEMY)
 	{
 		vec3_t to_enemy;
 		vec3_t to_enemy_angles;
@@ -2592,13 +2592,13 @@ void CG_MatrixEffect(const centity_t* cent)
 		cg.overrides.thirdPersonRange = cg_thirdPersonRange.value * 3.0f;
 	}
 
-	if (!(cent->currentState.boltInfo & MEF_NO_SPIN))
+	if (!(cent->currentState.bolt_info & MEF_NO_SPIN))
 	{
 		//rotate around them
 		//rotate
 		cg.overrides.active |= CG_OVERRIDE_3RD_PERSON_ANG;
 		cg.overrides.thirdPersonAngle = 360.0f * elapsed_time / MATRIX_EFFECT_TIME;
-		if (cent->currentState.boltInfo & MEF_REVERSE_SPIN)
+		if (cent->currentState.bolt_info & MEF_REVERSE_SPIN)
 		{
 			cg.overrides.thirdPersonAngle *= -1;
 		}
@@ -2609,7 +2609,7 @@ void CG_MatrixEffect(const centity_t* cent)
 	{
 		cgi_Cvar_Set("timescale", va("%4.2f", cent->currentState.angles2[0]));
 	}
-	else if (!(cent->currentState.boltInfo & MEF_NO_TIMESCALE))
+	else if (!(cent->currentState.bolt_info & MEF_NO_TIMESCALE))
 	{
 		//ramp the timescale
 		//slowdown
@@ -2627,7 +2627,7 @@ void CG_MatrixEffect(const centity_t* cent)
 		//cgi_Cvar_Set( "timescale", "1.0ff" );
 	}
 
-	if (!(cent->currentState.boltInfo & MEF_NO_VERTBOB))
+	if (!(cent->currentState.bolt_info & MEF_NO_VERTBOB))
 	{
 		//bob the pitch
 		//pitch
@@ -2649,7 +2649,7 @@ void CG_MatrixEffect(const centity_t* cent)
 		}
 	}
 
-	if (!(cent->currentState.boltInfo & MEF_NO_RANGEVAR))
+	if (!(cent->currentState.bolt_info & MEF_NO_RANGEVAR))
 	{
 		//vary the camera range
 		//pull back
@@ -2674,7 +2674,7 @@ void CG_StasisEffect(const centity_t* cent)
 {
 	float stasis_effect_time = 25.0f;
 
-	if (cent->currentState.boltInfo & MEF_MULTI_SPIN)
+	if (cent->currentState.bolt_info & MEF_MULTI_SPIN)
 	{
 		//multiple spins
 		if (cent->currentState.time2 > 0)
@@ -2696,7 +2696,7 @@ void CG_StasisEffect(const centity_t* cent)
 	float elapsed_time = total_elapsed_time;
 	bool stop_effect = total_elapsed_time > cent->currentState.eventParm || cg.missionStatusShow || in_camera;
 
-	if (!stop_effect && cent->currentState.boltInfo & MEF_HIT_GROUND_STOP && g_entities[cent->currentState.
+	if (!stop_effect && cent->currentState.bolt_info & MEF_HIT_GROUND_STOP && g_entities[cent->currentState.
 		otherEntityNum].client)
 	{
 		if (g_entities[cent->currentState.otherEntityNum].client->ps.groundEntityNum != ENTITYNUM_NONE)
@@ -2712,7 +2712,7 @@ void CG_StasisEffect(const centity_t* cent)
 			}
 		}
 	}
-	if (!stop_effect && cent->currentState.boltInfo & MEF_LOOK_AT_ENEMY)
+	if (!stop_effect && cent->currentState.bolt_info & MEF_LOOK_AT_ENEMY)
 	{
 		if (!g_entities[cent->currentState.otherEntityNum].lastEnemy ||
 			!g_entities[cent->currentState.otherEntityNum].lastEnemy->inuse)
@@ -2750,7 +2750,7 @@ void CG_StasisEffect(const centity_t* cent)
 
 	MatrixMode = qtrue;
 
-	if (cent->currentState.boltInfo & MEF_LOOK_AT_ENEMY)
+	if (cent->currentState.bolt_info & MEF_LOOK_AT_ENEMY)
 	{
 		vec3_t to_enemy;
 		vec3_t to_enemy_angles;
@@ -2782,7 +2782,7 @@ void CG_StasisEffect(const centity_t* cent)
 	{
 		cgi_Cvar_Set("timescale", va("%4.2f", cent->currentState.angles2[0]));
 	}
-	else if (!(cent->currentState.boltInfo & MEF_NO_TIMESCALE))
+	else if (!(cent->currentState.bolt_info & MEF_NO_TIMESCALE))
 	{
 		//ramp the timescale
 		//slowdown
@@ -2803,7 +2803,7 @@ void CG_StasisEffectLong(const centity_t* cent)
 {
 	float stasis_effect_time = 100.0f;
 
-	if (cent->currentState.boltInfo & MEF_MULTI_SPIN)
+	if (cent->currentState.bolt_info & MEF_MULTI_SPIN)
 	{
 		//multiple spins
 		if (cent->currentState.time2 > 0)
@@ -2825,7 +2825,7 @@ void CG_StasisEffectLong(const centity_t* cent)
 	float elapsed_time = total_elapsed_time;
 	bool stop_effect = total_elapsed_time > cent->currentState.eventParm || cg.missionStatusShow || in_camera;
 
-	if (!stop_effect && cent->currentState.boltInfo & MEF_HIT_GROUND_STOP && g_entities[cent->currentState.
+	if (!stop_effect && cent->currentState.bolt_info & MEF_HIT_GROUND_STOP && g_entities[cent->currentState.
 		otherEntityNum].client)
 	{
 		if (g_entities[cent->currentState.otherEntityNum].client->ps.groundEntityNum != ENTITYNUM_NONE)
@@ -2841,7 +2841,7 @@ void CG_StasisEffectLong(const centity_t* cent)
 			}
 		}
 	}
-	if (!stop_effect && cent->currentState.boltInfo & MEF_LOOK_AT_ENEMY)
+	if (!stop_effect && cent->currentState.bolt_info & MEF_LOOK_AT_ENEMY)
 	{
 		if (!g_entities[cent->currentState.otherEntityNum].lastEnemy ||
 			!g_entities[cent->currentState.otherEntityNum].lastEnemy->inuse)
@@ -2879,7 +2879,7 @@ void CG_StasisEffectLong(const centity_t* cent)
 
 	MatrixMode = qtrue;
 
-	if (cent->currentState.boltInfo & MEF_LOOK_AT_ENEMY)
+	if (cent->currentState.bolt_info & MEF_LOOK_AT_ENEMY)
 	{
 		vec3_t to_enemy;
 		vec3_t to_enemy_angles;
@@ -2911,7 +2911,7 @@ void CG_StasisEffectLong(const centity_t* cent)
 	{
 		cgi_Cvar_Set("timescale", va("%4.2f", cent->currentState.angles2[0]));
 	}
-	else if (!(cent->currentState.boltInfo & MEF_NO_TIMESCALE))
+	else if (!(cent->currentState.bolt_info & MEF_NO_TIMESCALE))
 	{
 		//ramp the timescale
 		//slowdown

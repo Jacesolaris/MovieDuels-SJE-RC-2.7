@@ -28,7 +28,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 extern gentity_t* NPC_Spawn_Do(gentity_t* ent);
 extern void NPC_SetAnim(gentity_t* ent, int setAnimParts, int anim, int setAnimFlags);
 
-extern void BG_SetAnim(playerState_t* ps, animation_t* animations, int setAnimParts, int anim, int setAnimFlags, int blendTime);
+extern void BG_SetAnim(playerState_t* ps, animation_t* animations, int setAnimParts, int anim, int setAnimFlags, int blend_time);
 extern void BG_SetLegsAnimTimer(playerState_t* ps, int time);
 extern void BG_SetTorsoAnimTimer(playerState_t* ps, int time);
 void G_VehUpdateShields(gentity_t* targ);

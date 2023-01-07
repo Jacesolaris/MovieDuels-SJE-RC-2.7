@@ -968,7 +968,7 @@ void G_StartMatrixEffect(const gentity_t* ent, const int me_flags = 0, const int
 		matrix->svFlags |= SVF_BROADCAST; // Broadcast to all clients
 		matrix->s.time = level.time;
 		matrix->s.eventParm = length;
-		matrix->s.boltInfo = me_flags;
+		matrix->s.bolt_info = me_flags;
 		matrix->s.time2 = spin_time;
 		matrix->s.angles2[0] = time_scale;
 	}
@@ -995,7 +995,7 @@ void G_StartStasisEffect_FORCE_LEVEL_1(const gentity_t* ent, const int me_flags 
 		stasis->svFlags |= SVF_BROADCAST; // Broadcast to all clients
 		stasis->s.time = level.time;
 		stasis->s.eventParm = length;
-		stasis->s.boltInfo = me_flags;
+		stasis->s.bolt_info = me_flags;
 		stasis->s.time2 = spin_time;
 		stasis->s.angles2[0] = time_scale;
 	}
@@ -1022,7 +1022,7 @@ void G_StartStasisEffect_FORCE_LEVEL_2(const gentity_t* ent, const int me_flags 
 		stasis->svFlags |= SVF_BROADCAST; // Broadcast to all clients
 		stasis->s.time = level.time;
 		stasis->s.eventParm = length;
-		stasis->s.boltInfo = me_flags;
+		stasis->s.bolt_info = me_flags;
 		stasis->s.time2 = spin_time;
 		stasis->s.angles2[0] = time_scale;
 	}
@@ -1064,7 +1064,7 @@ void G_StartNextItemEffect(gentity_t* ent, const int me_flags = 0, const int len
 		stasis->svFlags |= SVF_BROADCAST; // Broadcast to all clients
 		stasis->s.time = level.time;
 		stasis->s.eventParm = length;
-		stasis->s.boltInfo = me_flags;
+		stasis->s.bolt_info = me_flags;
 		stasis->s.time2 = spin_time;
 		stasis->s.angles2[0] = time_scale;
 		G_AddEvent(ent, EV_GENERAL_SOUND, ItemActivateSound);
@@ -4604,7 +4604,7 @@ void player_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, cons
 
 			if (self->owner)
 			{
-				self->owner->s.frame = self->owner->startFrame = self->owner->endFrame = 0;
+				self->owner->s.frame = self->owner->start_frame = self->owner->end_frame = 0;
 				self->owner->svFlags &= ~SVF_ANIMATING;
 			}
 

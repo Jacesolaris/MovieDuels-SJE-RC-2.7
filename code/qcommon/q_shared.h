@@ -2991,7 +2991,7 @@ using entityState_t = struct entityState_s
 	vec3_t modelScale; // used to scale models in any axis
 	int radius;
 	// used for culling all the ghoul models attached to this ent NOTE - this is automatically scaled by Ghoul2 if/when you scale the model. This is a 100% size value
-	int boltInfo;
+	int bolt_info;
 	// info used for bolting entities to Ghoul2 models - NOT used for bolting ghoul2 models to themselves, more for stuff like bolting effects to ghoul2 models
 	/*
 	Ghoul2 Insert End
@@ -3124,7 +3124,7 @@ using entityState_t = struct entityState_s
 
 		saved_game.write<float>(modelScale);
 		saved_game.write<int32_t>(radius);
-		saved_game.write<int32_t>(boltInfo);
+		saved_game.write<int32_t>(bolt_info);
 
 #ifndef JK2_MODE
 		saved_game.write<int32_t>(isPortalEnt);
@@ -3243,7 +3243,7 @@ using entityState_t = struct entityState_s
 
 		saved_game.read<float>(modelScale);
 		saved_game.read<int32_t>(radius);
-		saved_game.read<int32_t>(boltInfo);
+		saved_game.read<int32_t>(bolt_info);
 
 #ifndef JK2_MODE
 		saved_game.read<int32_t>(isPortalEnt);
@@ -3389,7 +3389,7 @@ using sharedRagDollUpdateParams_t = struct
 //rww - update parms for ik bone stuff
 using sharedIKMoveParams_t = struct
 {
-	char boneName[512]; //name of bone
+	char bone_name[512]; //name of bone
 	vec3_t desiredOrigin; //world coordinate that this bone should be attempting to reach
 	vec3_t origin; //world coordinate of the entity who owns the g2 instance that owns the bone
 	float movementSpeed; //how fast the bone should move toward the destination
@@ -3403,10 +3403,10 @@ using sharedSetBoneIKStateParams_t = struct
 	vec3_t angles; //angles of caller
 	vec3_t scale; //scale of caller
 	float radius; //bone rad
-	int blendTime; //bone blend time
+	int blend_time; //bone blend time
 	int pcjOverrides; //override ik bone flags
-	int startFrame; //base pose start
-	int endFrame; //base pose end
+	int start_frame; //base pose start
+	int end_frame; //base pose end
 };
 
 enum sharedEIKMoveState

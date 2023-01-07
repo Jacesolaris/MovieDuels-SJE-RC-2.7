@@ -33,7 +33,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #include "cgame/cg_local.h"
 #endif
 
-void BG_AttachToRancor(void* ghoul2, float rancYaw, vec3_t rancOrigin, int time, qhandle_t* modelList, vec3_t modelScale, qboolean inMouth, vec3_t out_origin, vec3_t out_angles, matrix3_t out_axis)
+void BG_AttachToRancor(void* ghoul2, float rancYaw, vec3_t rancOrigin, int time, qhandle_t* model_list, vec3_t modelScale, qboolean inMouth, vec3_t out_origin, vec3_t out_angles, matrix3_t out_axis)
 {
 	mdxaBone_t	bolt_matrix;
 	int bolt_index;
@@ -58,9 +58,9 @@ void BG_AttachToRancor(void* ghoul2, float rancYaw, vec3_t rancOrigin, int time,
 	}
 	VectorSet(rancAngles, 0, rancYaw, 0);
 #if defined(_GAME)
-	trap->G2API_GetBoltMatrix(ghoul2, 0, bolt_index, &bolt_matrix, rancAngles, rancOrigin, time, modelList, modelScale);
+	trap->G2API_GetBoltMatrix(ghoul2, 0, bolt_index, &bolt_matrix, rancAngles, rancOrigin, time, model_list, modelScale);
 #elif defined(_CGAME)
-	trap->G2API_GetBoltMatrix(ghoul2, 0, bolt_index, &bolt_matrix, rancAngles, rancOrigin, time, modelList, modelScale);
+	trap->G2API_GetBoltMatrix(ghoul2, 0, bolt_index, &bolt_matrix, rancAngles, rancOrigin, time, model_list, modelScale);
 #endif
 	// Storing ent position, bolt position, and bolt axis
 	if (out_origin)

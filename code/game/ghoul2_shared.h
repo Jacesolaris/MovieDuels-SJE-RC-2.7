@@ -114,15 +114,15 @@ struct boneInfo_t
 	int boneNumber; // what bone are we overriding?
 	mdxaBone_t matrix; // details of bone angle overrides - some are pre-done on the server, some in ghoul2
 	int flags; // flags for override
-	int startFrame; // start frame for animation
-	int endFrame; // end frame for animation NOTE anim actually ends on endFrame+1
+	int start_frame; // start frame for animation
+	int end_frame; // end frame for animation NOTE anim actually ends on end_frame+1
 	int startTime; // time we started this animation
 	int pauseTime; // time we paused this animation - 0 if not paused
-	float animSpeed;
+	float anim_speed;
 	// speed at which this anim runs. 1.0f means full speed of animation incoming - ie if anim is 20hrtz, we run at 20hrts. If 5hrts, we run at 5 hrts
 	float blendFrame; // frame PLUS LERP value to blend from
 	int blendLerpFrame; // frame to lerp the blend frame with.
-	int blendTime;
+	int blend_time;
 	// Duration time for blending - used to calc amount each frame of new anim is blended with last frame of the last anim
 	int blendStart;
 	// Time when blending starts - not necessarily the same as startTime since we might start half way through an anim
@@ -200,14 +200,14 @@ struct boneInfo_t
 	boneInfo_t() :
 		boneNumber(-1), matrix(),
 		flags(0),
-		startFrame(0),
-		endFrame(0),
+		start_frame(0),
+		end_frame(0),
 		startTime(0),
 		pauseTime(0),
-		animSpeed(0),
+		anim_speed(0),
 		blendFrame(0),
 		blendLerpFrame(0),
-		blendTime(0),
+		blend_time(0),
 		blendStart(0),
 		boneBlendTime(0),
 		boneBlendStart(0), newMatrix(), lastTimeUpdated(0), lastContents(0), lastPosition{}, velocityEffector{},
@@ -262,14 +262,14 @@ struct boneInfo_t
 		saved_game.write<int32_t>(boneNumber);
 		saved_game.write<>(matrix);
 		saved_game.write<int32_t>(flags);
-		saved_game.write<int32_t>(startFrame);
-		saved_game.write<int32_t>(endFrame);
+		saved_game.write<int32_t>(start_frame);
+		saved_game.write<int32_t>(end_frame);
 		saved_game.write<int32_t>(startTime);
 		saved_game.write<int32_t>(pauseTime);
-		saved_game.write<float>(animSpeed);
+		saved_game.write<float>(anim_speed);
 		saved_game.write<float>(blendFrame);
 		saved_game.write<int32_t>(blendLerpFrame);
-		saved_game.write<int32_t>(blendTime);
+		saved_game.write<int32_t>(blend_time);
 		saved_game.write<int32_t>(blendStart);
 		saved_game.write<int32_t>(boneBlendTime);
 		saved_game.write<int32_t>(boneBlendStart);
@@ -338,14 +338,14 @@ struct boneInfo_t
 		saved_game.read<int32_t>(boneNumber);
 		saved_game.read<>(matrix);
 		saved_game.read<int32_t>(flags);
-		saved_game.read<int32_t>(startFrame);
-		saved_game.read<int32_t>(endFrame);
+		saved_game.read<int32_t>(start_frame);
+		saved_game.read<int32_t>(end_frame);
 		saved_game.read<int32_t>(startTime);
 		saved_game.read<int32_t>(pauseTime);
-		saved_game.read<float>(animSpeed);
+		saved_game.read<float>(anim_speed);
 		saved_game.read<float>(blendFrame);
 		saved_game.read<int32_t>(blendLerpFrame);
-		saved_game.read<int32_t>(blendTime);
+		saved_game.read<int32_t>(blend_time);
 		saved_game.read<int32_t>(blendStart);
 		saved_game.read<int32_t>(boneBlendTime);
 		saved_game.read<int32_t>(boneBlendStart);

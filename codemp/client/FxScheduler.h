@@ -599,7 +599,7 @@ private:
 
 	SLoopedEffect	mLoopedEffectArray[MAX_LOOPED_FX];
 
-	int		ScheduleLoopedEffect(int id, int boltInfo, CGhoul2Info_v* ghoul2, bool isPortal, int iLoopTime, bool isRelative);
+	int		ScheduleLoopedEffect(int id, int bolt_info, CGhoul2Info_v* ghoul2, bool isPortal, int iLoopTime, bool isRelative);
 	void	AddLoopedEffects();
 
 	class CScheduled2DEffect
@@ -661,14 +661,14 @@ public:
 	//rww - maybe this should be done differently.. it's more than a bit confusing.
 	//Remind me when I don't have 50 files checked out.
 	void	PlayEffect(int id, vec3_t org, vec3_t fwd, int vol = -1, int rad = -1, bool isPortal = false);				// builds arbitrary perp. right vector, does a cross product to define up
-	void	PlayEffect(int id, vec3_t origin, matrix3_t axis, const int boltInfo = -1, CGhoul2Info_v* ghoul2 = NULL,
+	void	PlayEffect(int id, vec3_t origin, matrix3_t axis, const int bolt_info = -1, CGhoul2Info_v* ghoul2 = NULL,
 		int fxParm = -1, int vol = -1, int rad = -1, bool isPortal = false, int iLoopTime = false, bool isRelative = false);
 	void	PlayEffect(const char* file, vec3_t org, int vol = -1, int rad = -1);					// uses a default up axis
 	void	PlayEffect(const char* file, vec3_t org, vec3_t fwd, int vol = -1, int rad = -1);		// builds arbitrary perp. right vector, does a cross product to define up
 	void	PlayEffect(const char* file, vec3_t origin,
-		matrix3_t axis, const int boltInfo = -1, CGhoul2Info_v* ghoul2 = NULL, int fxParm = -1, int vol = -1, int rad = -1, int iLoopTime = false, bool isRelative = false);
+		matrix3_t axis, const int bolt_info = -1, CGhoul2Info_v* ghoul2 = NULL, int fxParm = -1, int vol = -1, int rad = -1, int iLoopTime = false, bool isRelative = false);
 
-	void	StopEffect(const char* file, const int boltInfo, bool isPortal = false);	//find a scheduled Looping effect with these parms and kill it
+	void	StopEffect(const char* file, const int bolt_info, bool isPortal = false);	//find a scheduled Looping effect with these parms and kill it
 	void	AddScheduledEffects(bool portal);								// call once per CGame frame
 
 	// kef -- called for a 2D effect instead of addRefToScene

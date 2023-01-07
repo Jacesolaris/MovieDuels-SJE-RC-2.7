@@ -5867,7 +5867,7 @@ void Menu_New(char* buffer)
 Menus_CloseAll
 ===============
 */
-void Menus_CloseAll(void)
+void Menus_CloseAll()
 {
 	for (int i = 0; i < menuCount; i++)
 	{

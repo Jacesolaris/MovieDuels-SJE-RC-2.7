@@ -1005,7 +1005,7 @@ void CG_KillCEntityInstances(void)
 		cent->bodyHeight = 0;//SABER_LENGTH_MAX;
 		//cent->saberExtendTime = 0;
 
-		cent->boltInfo = 0;
+		cent->bolt_info = 0;
 
 		cent->frame_minus1_refreshed = 0;
 		cent->frame_minus2_refreshed = 0;
@@ -1172,7 +1172,7 @@ void CG_CheckSVStringEdRef(char* buf, const char* str)
 static void CG_BodyQueueCopy(centity_t* cent, int client_num, int knownWeapon)
 {
 	animation_t* anim;
-	float			animSpeed;
+	float			anim_speed;
 	const int				flags = BONE_ANIM_OVERRIDE_FREEZE;
 
 	if (cent->ghoul2)
@@ -1242,7 +1242,7 @@ static void CG_BodyQueueCopy(centity_t* cent, int client_num, int knownWeapon)
 		{
 			anim = &bgAllAnims[source->localAnimIndex].anims[source->currentState.torsoAnim];
 		}
-		animSpeed = 50.0f / anim->frameLerp;
+		anim_speed = 50.0f / anim->frameLerp;
 
 		if (!fallBack)
 		{
@@ -1271,9 +1271,9 @@ static void CG_BodyQueueCopy(centity_t* cent, int client_num, int knownWeapon)
 		//	aNum = (anim->firstFrame+anim->numFrames)-1;
 		//}
 
-		trap->G2API_SetBoneAnim(cent->ghoul2, 0, "upper_lumbar", aNum, eFrame, flags, animSpeed, cg.time, -1, 150);
-		trap->G2API_SetBoneAnim(cent->ghoul2, 0, "model_root", aNum, eFrame, flags, animSpeed, cg.time, -1, 150);
-		trap->G2API_SetBoneAnim(cent->ghoul2, 0, "Motion", aNum, eFrame, flags, animSpeed, cg.time, -1, 150);
+		trap->G2API_SetBoneAnim(cent->ghoul2, 0, "upper_lumbar", aNum, eFrame, flags, anim_speed, cg.time, -1, 150);
+		trap->G2API_SetBoneAnim(cent->ghoul2, 0, "model_root", aNum, eFrame, flags, anim_speed, cg.time, -1, 150);
+		trap->G2API_SetBoneAnim(cent->ghoul2, 0, "Motion", aNum, eFrame, flags, anim_speed, cg.time, -1, 150);
 	}
 
 	//After we create the bodyqueue, regenerate any limbs on the real instance

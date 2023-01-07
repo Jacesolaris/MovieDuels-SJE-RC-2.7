@@ -35,7 +35,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #include "snd_music.h"
 #include "snd_ambient.h"
 
-extern qboolean S_FileExists(const char* psFilename);
+extern qboolean S_FileExists(const char* ps_filename);
 
 #define sKEY_MUSICFILES	"musicfiles"
 #define sKEY_ENTRY		"entry"

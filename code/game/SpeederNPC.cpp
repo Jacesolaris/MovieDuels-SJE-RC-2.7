@@ -104,7 +104,7 @@ extern int PM_AnimLength(int index, animNumber_t anim);
 
 #include "../namespace_begin.h"
 
-extern void BG_SetAnim(playerState_t* ps, animation_t* animations, int setAnimParts, int anim, int setAnimFlags, int blendTime);
+extern void BG_SetAnim(playerState_t* ps, animation_t* animations, int setAnimParts, int anim, int setAnimFlags, int blend_time);
 extern int BG_GetTime(void);
 #endif
 

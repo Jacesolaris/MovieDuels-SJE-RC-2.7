@@ -40,7 +40,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #include "../game/genericparser2.h"
 
-extern qboolean S_FileExists(const char* psFilename);
+extern qboolean S_FileExists(const char* ps_filename);
 
 #define sKEY_MUSICFILES	CSTRING_VIEW( "musicfiles" )
 #define sKEY_ENTRY		CSTRING_VIEW( "entry" )

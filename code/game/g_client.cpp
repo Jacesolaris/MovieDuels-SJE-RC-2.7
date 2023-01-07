@@ -717,16 +717,16 @@ to be placed into the level.  This will happen every level load,
 and on transition between teams, but doesn't happen on respawns
 ============
 */
-void ClientBegin(const int client_num, const usercmd_t* cmd, const SavedGameJustLoaded_e eSavedGameJustLoaded)
+void ClientBegin(const int client_num, const usercmd_t* cmd, const SavedGameJustLoaded_e e_saved_game_just_loaded)
 {
 	gentity_t* ent = g_entities + client_num;
 	gclient_t* client = level.clients + client_num;
 
-	if (eSavedGameJustLoaded == eFULL) //qbFromSavedGame)
+	if (e_saved_game_just_loaded == eFULL) //qbFromSavedGame)
 	{
 		client->pers.connected = CON_CONNECTED;
 		ent->client = client;
-		ClientSpawn(ent, eSavedGameJustLoaded);
+		ClientSpawn(ent, e_saved_game_just_loaded);
 	}
 	else
 	{
@@ -751,7 +751,7 @@ void ClientBegin(const int client_num, const usercmd_t* cmd, const SavedGameJust
 		}
 
 		// locate ent at a spawn point
-		if (ClientSpawn(ent, eSavedGameJustLoaded))
+		if (ClientSpawn(ent, e_saved_game_just_loaded))
 		{
 			// send teleport event
 		}
@@ -834,7 +834,7 @@ Player_RestoreFromPrevLevel
   Argument		: gentity_t *ent
 ============
 */
-static void Player_RestoreFromPrevLevel(gentity_t* ent, SavedGameJustLoaded_e eSavedGameJustLoaded)
+static void Player_RestoreFromPrevLevel(gentity_t* ent, SavedGameJustLoaded_e e_saved_game_just_loaded)
 {
 	gclient_t* client = ent->client;
 
@@ -1457,7 +1457,7 @@ void G_NextTestAxes()
 	}
 }
 
-void G_BoneOrientationsForClass(const int NPC_class, const char* boneName, Eorientations* oUp, Eorientations* oRt,
+void G_BoneOrientationsForClass(const int NPC_class, const char* bone_name, Eorientations* oUp, Eorientations* oRt,
                                 Eorientations* oFwd)
 {
 	//defaults
@@ -1481,7 +1481,7 @@ void G_BoneOrientationsForClass(const int NPC_class, const char* boneName, Eorie
 		//*oUp = POSITIVE_Z;
 		//*oRt = NEGATIVE_X;
 		//*oFwd = NEGATIVE_Y;
-		if (Q_stricmp("pelvis", boneName) == 0)
+		if (Q_stricmp("pelvis", bone_name) == 0)
 		{
 			//child of root
 			//in ModView:
@@ -1510,8 +1510,8 @@ void G_BoneOrientationsForClass(const int NPC_class, const char* boneName, Eorie
 		}
 		break;
 	case CLASS_SABER_DROID:
-		if (Q_stricmp("pelvis", boneName) == 0
-			|| Q_stricmp("thoracic", boneName) == 0)
+		if (Q_stricmp("pelvis", bone_name) == 0
+			|| Q_stricmp("thoracic", bone_name) == 0)
 		{
 			*oUp = NEGATIVE_X;
 			*oRt = NEGATIVE_Z;
@@ -1525,7 +1525,7 @@ void G_BoneOrientationsForClass(const int NPC_class, const char* boneName, Eorie
 		}
 		break;
 	case CLASS_WAMPA:
-		if (Q_stricmp("pelvis", boneName) == 0)
+		if (Q_stricmp("pelvis", bone_name) == 0)
 		{
 			*oUp = NEGATIVE_X;
 			*oRt = POSITIVE_Y;
@@ -1543,9 +1543,9 @@ void G_BoneOrientationsForClass(const int NPC_class, const char* boneName, Eorie
 		}
 		break;
 	case CLASS_ASSASSIN_DROID:
-		if (Q_stricmp("pelvis", boneName) == 0
-			|| Q_stricmp("lower_lumbar", boneName) == 0
-			|| Q_stricmp("upper_lumbar", boneName) == 0)
+		if (Q_stricmp("pelvis", bone_name) == 0
+			|| Q_stricmp("lower_lumbar", bone_name) == 0
+			|| Q_stricmp("upper_lumbar", bone_name) == 0)
 		{
 			//only these 3 bones on them are wrong
 			//*oUp = POSITIVE_X;
@@ -3010,7 +3010,7 @@ qboolean G_CheckPlayerDarkSide()
 	return qfalse;
 }
 
-qboolean ClientSpawn(gentity_t* ent, SavedGameJustLoaded_e eSavedGameJustLoaded)
+qboolean ClientSpawn(gentity_t* ent, SavedGameJustLoaded_e e_saved_game_just_loaded)
 {
 	int index;
 	gclient_t* client;
@@ -3023,7 +3023,7 @@ qboolean ClientSpawn(gentity_t* ent, SavedGameJustLoaded_e eSavedGameJustLoaded)
 	index = ent - g_entities;
 	client = ent->client;
 
-	if (eSavedGameJustLoaded == eFULL && g_qbLoadTransition == qfalse) //qbFromSavedGame)
+	if (e_saved_game_just_loaded == eFULL && g_qbLoadTransition == qfalse) //qbFromSavedGame)
 	{
 		//loading up a full save game
 		ent->client->pers.teamState.state = TEAM_ACTIVE;
@@ -3250,7 +3250,7 @@ qboolean ClientSpawn(gentity_t* ent, SavedGameJustLoaded_e eSavedGameJustLoaded)
 			}
 		}
 
-		if (eSavedGameJustLoaded == eNO)
+		if (e_saved_game_just_loaded == eNO)
 		{
 			//FIXME: get player's info from NPCs.cfg
 			client->ps.dualSabers = qfalse;
@@ -3308,10 +3308,10 @@ qboolean ClientSpawn(gentity_t* ent, SavedGameJustLoaded_e eSavedGameJustLoaded)
 
 		// restore some player data
 		//
-		Player_RestoreFromPrevLevel(ent, eSavedGameJustLoaded);
+		Player_RestoreFromPrevLevel(ent, e_saved_game_just_loaded);
 
 		//FIXME: put this BEFORE the Player_RestoreFromPrevLevel check above?
-		if (eSavedGameJustLoaded == eNO)
+		if (e_saved_game_just_loaded == eNO)
 		{
 			//fresh start
 			if (!(spawnPoint->spawnflags & 1)) // not KEEP_PREV
@@ -3429,7 +3429,7 @@ qboolean ClientSpawn(gentity_t* ent, SavedGameJustLoaded_e eSavedGameJustLoaded)
 	client->pers.enterTime = level.time; //needed mainly to stop the weapon switch to WP_NONE that happens on loads
 	ent->max_health = client->ps.stats[STAT_MAX_HEALTH];
 
-	if (eSavedGameJustLoaded == eNO)
+	if (e_saved_game_just_loaded == eNO)
 	{
 		//on map transitions, Ghoul2 frame gets reset to zero, restart our anim
 		NPC_SetAnim(ent, SETANIM_LEGS, ent->client->ps.legsAnim, SETANIM_FLAG_NORMAL | SETANIM_FLAG_RESTART);

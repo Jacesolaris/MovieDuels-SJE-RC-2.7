@@ -577,9 +577,9 @@ void CG_CreateBBRefEnts(entityState_t* s1, vec3_t origin)
 void G2_BoltToGhoul2Model(centity_t* cent, refEntity_t* ent)
 {
 	// extract the wraith ID from the bolt info
-	int modelNum = cent->boltInfo >> MODEL_SHIFT;
-	int boltNum = cent->boltInfo >> BOLT_SHIFT;
-	int	entNum = cent->boltInfo >> ENTITY_SHIFT;
+	int modelNum = cent->bolt_info >> MODEL_SHIFT;
+	int boltNum = cent->bolt_info >> BOLT_SHIFT;
+	int	entNum = cent->bolt_info >> ENTITY_SHIFT;
 	mdxaBone_t 		bolt_matrix;
 
 	modelNum &= MODEL_AND;

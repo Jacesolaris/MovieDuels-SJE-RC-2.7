@@ -196,10 +196,10 @@ void SV_RemoveOperatorCommands(void);
 // sv_init.c
 //
 void SV_SetConfigstring(int index, const char* val);
-void SV_GetConfigstring(int index, char* buffer, int bufferSize);
+void SV_GetConfigstring(int index, char* buffer, int buffer_size);
 
 void SV_SetUserinfo(int index, const char* val);
-void SV_GetUserinfo(int index, char* buffer, int bufferSize);
+void SV_GetUserinfo(int index, char* buffer, int buffer_size);
 
 void SV_SpawnServer(const char* server, ForceReload_e e_force_reload, qboolean b_allow_screen_dissolve);
 
@@ -211,7 +211,7 @@ void SV_DirectConnect(netadr_t from);
 void SV_ExecuteClientMessage(client_t* cl, msg_t* msg);
 void SV_UserinfoChanged(client_t* cl);
 
-void SV_ClientEnterWorld(client_t* client, const usercmd_t* cmd, SavedGameJustLoaded_e eSavedGameJustLoaded);
+void SV_ClientEnterWorld(client_t* client, const usercmd_t* cmd, SavedGameJustLoaded_e e_saved_game_just_loaded);
 void SV_DropClient(client_t* drop, const char* reason);
 
 void SV_ExecuteClientCommand(client_t* cl, const char* s);
@@ -231,8 +231,8 @@ void SV_SendClientSnapshot(client_t* client);
 gentity_t* SV_GentityNum(int num);
 svEntity_t* SV_SvEntityForGentity(const gentity_t* g_ent);
 gentity_t* SV_GEntityForSvEntity(const svEntity_t* sv_ent);
-void SV_InitGameProgs(void);
-void SV_ShutdownGameProgs(qboolean shutdownCin);
+void SV_InitGameProgs();
+void SV_ShutdownGameProgs();
 qboolean SV_inPVS(const vec3_t p1, const vec3_t p2);
 
 //============================================================
@@ -313,7 +313,7 @@ void SG_TestSave(void);
 #define iSAVEGAME_VERSION 1
 int SG_Version(void); // call this to know what version number a successfully-opened savegame file was
 //
-extern SavedGameJustLoaded_e eSavedGameJustLoaded;
+extern SavedGameJustLoaded_e e_saved_game_just_loaded;
 extern qboolean qbLoadTransition;
 //
 ///////////////////////////////////////////////

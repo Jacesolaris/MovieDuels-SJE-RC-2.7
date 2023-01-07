@@ -2605,7 +2605,7 @@ void PM_SetTorsoAnimTimer(int time)
 	BG_SetTorsoAnimTimer(pm->ps, time);
 }
 
-void BG_SaberStartTransAnim(int client_num, int saberAnimLevel, int weapon, int anim, float* animSpeed, int broken)
+void BG_SaberStartTransAnim(int client_num, int saberAnimLevel, int weapon, int anim, float* anim_speed, int broken)
 {
 	if (anim >= BOTH_A1_T__B_ && anim <= BOTH_ROLL_STAB)
 	{
@@ -2615,13 +2615,13 @@ void BG_SaberStartTransAnim(int client_num, int saberAnimLevel, int weapon, int 
 			if (saber
 				&& saber->animSpeedScale != 1.0f)
 			{
-				*animSpeed *= saber->animSpeedScale;
+				*anim_speed *= saber->animSpeedScale;
 			}
 			saber = BG_MySaber(client_num, 1);
 			if (saber
 				&& saber->animSpeedScale != 1.0f)
 			{
-				*animSpeed *= saber->animSpeedScale;
+				*anim_speed *= saber->animSpeedScale;
 			}
 		}
 	}
@@ -2635,31 +2635,31 @@ void BG_SaberStartTransAnim(int client_num, int saberAnimLevel, int weapon, int 
 	{
 		if (saberAnimLevel == FORCE_LEVEL_1)
 		{
-			*animSpeed *= 1.5f;
+			*anim_speed *= 1.5f;
 		}
 		else if (saberAnimLevel == FORCE_LEVEL_3)
 		{
-			*animSpeed *= 0.75f;
+			*anim_speed *= 0.75f;
 		}
 
 		if (broken & (1 << BROKENLIMB_RARM))
 		{
-			*animSpeed *= 0.5f;
+			*anim_speed *= 0.5f;
 		}
 		else if (broken & (1 << BROKENLIMB_LARM))
 		{
-			*animSpeed *= 0.65f;
+			*anim_speed *= 0.65f;
 		}
 	}
 	else if (broken && PM_InSaberAnim(anim))
 	{
 		if (broken & (1 << BROKENLIMB_RARM))
 		{
-			*animSpeed *= 0.5f;
+			*anim_speed *= 0.5f;
 		}
 		else if (broken & (1 << BROKENLIMB_LARM))
 		{
-			*animSpeed *= 0.65f;
+			*anim_speed *= 0.65f;
 		}
 	}
 }

@@ -190,7 +190,7 @@ protected:
 class CBlockStream
 {
 public:
-	CBlockStream()
+	CBlockStream(): m_fileSize(0), m_fileHandle(nullptr), m_fileName{}
 	{
 		m_stream = nullptr;
 		m_streamPos = 0;

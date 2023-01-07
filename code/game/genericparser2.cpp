@@ -32,21 +32,21 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #include <algorithm>
 #include <cctype>
 
-static void skipWhitespace(gsl::cstring_view& text, const bool allowLineBreaks)
+static void skipWhitespace(gsl::cstring_view& text, const bool allow_line_breaks)
 {
 	auto whitespaceEnd = text.begin();
 	while (whitespaceEnd != text.end() // No EOF
 		&& std::isspace(*whitespaceEnd) // No End of Whitespace
-		&& (allowLineBreaks || *whitespaceEnd != '\n')) // No unwanted newline
+		&& (allow_line_breaks || *whitespaceEnd != '\n')) // No unwanted newline
 	{
 		++whitespaceEnd;
 	}
 	text = {whitespaceEnd, text.end()};
 }
 
-static void skipWhitespaceAndComments(gsl::cstring_view& text, const bool allowLineBreaks)
+static void skipWhitespaceAndComments(gsl::cstring_view& text, const bool allow_line_breaks)
 {
-	skipWhitespace(text, allowLineBreaks);
+	skipWhitespace(text, allow_line_breaks);
 	// skip single line comment
 	if (text.size() >= 2 && text[0] == '/' && text[1] == '/')
 	{
@@ -57,7 +57,7 @@ static void skipWhitespaceAndComments(gsl::cstring_view& text, const bool allowL
 			return;
 		}
 		text = {commentEnd, text.end()};
-		skipWhitespaceAndComments(text, allowLineBreaks);
+		skipWhitespaceAndComments(text, allow_line_breaks);
 		return;
 	}
 
@@ -72,7 +72,7 @@ static void skipWhitespaceAndComments(gsl::cstring_view& text, const bool allowL
 			return;
 		}
 		text = {commentEnd + endStr.size(), text.end()};
-		skipWhitespace(text, allowLineBreaks);
+		skipWhitespace(text, allow_line_breaks);
 	}
 }
 
@@ -95,9 +95,9 @@ A token can be:
 - EOL- or comment-delimited (if readToEOL == true); i.e. reads to end of line or the first // or /*
 @param text adjusted to start beyond the read token
 */
-static gsl::cstring_view GetToken(gsl::cstring_view& text, const bool allowLineBreaks, const bool readToEOL = false)
+static gsl::cstring_view GetToken(gsl::cstring_view& text, const bool allow_line_breaks, const bool read_to_eol = false)
 {
-	skipWhitespaceAndComments(text, allowLineBreaks);
+	skipWhitespaceAndComments(text, allow_line_breaks);
 	// EOF
 	if (text.empty())
 	{
@@ -118,7 +118,7 @@ static gsl::cstring_view GetToken(gsl::cstring_view& text, const bool allowLineB
 		text = {tokenEnd + 1, text.end()};
 		return token;
 	}
-	if (readToEOL)
+	if (read_to_eol)
 	{
 		// find the first of '\n', "//" or "/*"; that's end of token
 		auto tokenEnd = std::find(text.begin(), text.end(), '\n');

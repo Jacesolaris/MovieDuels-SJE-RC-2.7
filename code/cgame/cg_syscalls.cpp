@@ -410,10 +410,10 @@ void cgi_R_ModelBounds(const qhandle_t model, vec3_t mins, vec3_t maxs)
 	Q_syscall(CG_R_MODELBOUNDS, model, mins, maxs);
 }
 
-void cgi_R_LerpTag(orientation_t* tag, const qhandle_t mod, const int startFrame, const int endFrame,
+void cgi_R_LerpTag(orientation_t* tag, const qhandle_t mod, const int start_frame, const int end_frame,
                    const float frac, const char* tagName)
 {
-	Q_syscall(CG_R_LERPTAG, tag, mod, startFrame, endFrame, PASSFLOAT(frac), tagName);
+	Q_syscall(CG_R_LERPTAG, tag, mod, start_frame, end_frame, PASSFLOAT(frac), tagName);
 }
 
 void cgi_R_DrawRotatePic(const float x, const float y, const float w, const float h,
@@ -504,9 +504,9 @@ void cgi_SetUserCmdAngles(const float pitchOverride, const float yawOverride, co
 Ghoul2 Insert Start
 */
 // CG Specific API calls
-void trap_G2_SetGhoul2ModelIndexes(CGhoul2Info_v& ghoul2, qhandle_t* modelList, qhandle_t* skinList)
+void trap_G2_SetGhoul2ModelIndexes(CGhoul2Info_v& ghoul2, qhandle_t* model_list, qhandle_t* skinList)
 {
-	Q_syscall(CG_G2_SETMODELS, &ghoul2, modelList, skinList);
+	Q_syscall(CG_G2_SETMODELS, &ghoul2, model_list, skinList);
 }
 
 /*

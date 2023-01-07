@@ -142,25 +142,25 @@ void turret_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, cons
 }
 
 //start an animation on model_root both server side and client side
-void TurboLaser_SetBoneAnim(gentity_t* eweb, const int startFrame, const int endFrame)
+void TurboLaser_SetBoneAnim(gentity_t* eweb, const int start_frame, const int end_frame)
 {
 	//set info on the entity so it knows to start the anim on the client next snapshot.
 	//eweb->s.eFlags |= EF_G2ANIMATING;
 
-	if (eweb->s.torsoAnim == startFrame && eweb->s.legsAnim == endFrame)
+	if (eweb->s.torsoAnim == start_frame && eweb->s.legsAnim == end_frame)
 	{
 		//already playing this anim, let's flag it to restart
 		//eweb->s.torsoFlip = !eweb->s.torsoFlip;
 	}
 	else
 	{
-		eweb->s.torsoAnim = startFrame;
-		eweb->s.legsAnim = endFrame;
+		eweb->s.torsoAnim = start_frame;
+		eweb->s.legsAnim = end_frame;
 	}
 
 	//now set the animation on the server ghoul2 instance.
 	assert(&eweb->ghoul2[0]);
-	gi.G2API_SetBoneAnim(&eweb->ghoul2[0], "model_root", startFrame, endFrame,
+	gi.G2API_SetBoneAnim(&eweb->ghoul2[0], "model_root", start_frame, end_frame,
 	                     BONE_ANIM_OVERRIDE_FREEZE | BONE_ANIM_BLEND, 1.0f, level.time, -1, 100);
 }
 
@@ -686,7 +686,7 @@ void turret_SetBoneAngles(gentity_t* ent, const char* bone, const vec3_t angles)
 	int *thebone = &ent->s.boneIndex1;
 	int *firstFree = NULL;
 	int i = 0;
-	int boneIndex = G_BoneIndex(bone);
+	int bone_index = G_BoneIndex(bone);
 	int flags;
 	Eorientations up, right, forward;
 	vec3_t *boneVector = &ent->s.boneAngles1;
@@ -701,7 +701,7 @@ void turret_SetBoneAngles(gentity_t* ent, const char* bone, const vec3_t angles)
 		}
 		else if (*thebone)
 		{
-			if (*thebone == boneIndex)
+			if (*thebone == bone_index)
 			{ //this is it
 				break;
 			}
@@ -740,7 +740,7 @@ void turret_SetBoneAngles(gentity_t* ent, const char* bone, const vec3_t angles)
 
 		thebone = firstFree;
 
-		*thebone = boneIndex;
+		*thebone = bone_index;
 		boneVector = freeBoneVec;
 	}
 

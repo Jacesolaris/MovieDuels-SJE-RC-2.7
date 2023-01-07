@@ -2183,7 +2183,7 @@ static void CG_ATSTLegsYaw(centity_t* cent, vec3_t trailing_legs_angles)
 }
 
 extern qboolean G_ClassHasBadBones(int NPC_class);
-extern void G_BoneOrientationsForClass(int NPC_class, const char* boneName, Eorientations* oUp, Eorientations* oRt,
+extern void G_BoneOrientationsForClass(int NPC_class, const char* bone_name, Eorientations* oUp, Eorientations* oRt,
                                        Eorientations* oFwd);
 extern qboolean PM_FlippingAnim(int anim);
 extern qboolean PM_SpinningSaberAnim(int anim);
@@ -6439,7 +6439,7 @@ static void CG_G2SetHeadAnim(const centity_t* cent, const int anim)
 	{
 		anim_flags |= BONE_ANIM_OVERRIDE_FREEZE;
 	}
-	// animSpeed is 1.0 if the frameLerp (ms/frame) is 50 (20 fps).
+	// anim_speed is 1.0 if the frameLerp (ms/frame) is 50 (20 fps).
 	int first_frame;
 	int last_frame;
 	if (anim_speed < 0)
@@ -6455,10 +6455,10 @@ static void CG_G2SetHeadAnim(const centity_t* cent, const int anim)
 	}
 
 	// first decide if we are doing an animation on the head already
-	//	int startFrame, endFrame;
-	//	const qboolean animatingHead =  gi.G2API_GetAnimRangeIndex(&gent->ghoul2[gent->playerModel], cent->gent->faceBone, &startFrame, &endFrame);
+	//	int start_frame, end_frame;
+	//	const qboolean animatingHead =  gi.G2API_GetAnimRangeIndex(&gent->ghoul2[gent->playerModel], cent->gent->faceBone, &start_frame, &end_frame);
 
-	//	if (!animatingHead || ( animations[anim].firstFrame != startFrame ) )// only set the anim if we aren't going to do the same animation again
+	//	if (!animatingHead || ( animations[anim].firstFrame != start_frame ) )// only set the anim if we aren't going to do the same animation again
 	{
 		constexpr int blend_time = 50;
 		gi.G2API_SetBoneAnimIndex(&gent->ghoul2[gent->playerModel], cent->gent->faceBone,

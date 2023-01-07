@@ -2228,7 +2228,7 @@ void SP_misc_model_bomb_planted(gentity_t* ent)
 	ent->noise_index = G_SoundIndex("sound/interface/ammocon_run");
 	ent->s.loopSound = ent->noise_index;
 	//ent->s.eFlags |= EF_SHADER_ANIM;
-	//ent->s.frame = ent->startFrame = 0;
+	//ent->s.frame = ent->start_frame = 0;
 	ent->count = 1;
 
 	// If we have a targetname, we're are invisible until we are spawned in by being used.
@@ -2256,8 +2256,8 @@ void beacon_deploy(gentity_t* ent)
 	ent->nextthink = level.time + FRAMETIME * 0.5f;
 
 	ent->s.frame = 0;
-	ent->startFrame = 0;
-	ent->endFrame = 30;
+	ent->start_frame = 0;
+	ent->end_frame = 30;
 	ent->loopAnim = qfalse;
 }
 
@@ -2271,8 +2271,8 @@ void beacon_think(gentity_t* ent)
 		ent->e_ThinkFunc = thinkF_NULL;
 		ent->nextthink = -1;
 
-		ent->startFrame = 31;
-		ent->endFrame = 60;
+		ent->start_frame = 31;
+		ent->end_frame = 60;
 		ent->loopAnim = qtrue;
 
 		ent->s.loopSound = ent->noise_index;
@@ -2988,7 +2988,7 @@ void misc_atst_setanim(gentity_t* self, const int bone, const int anim)
 	}
 	int firstFrame = -1;
 	int lastFrame = -1;
-	float animSpeed = 0;
+	float anim_speed = 0;
 	//try to get anim ranges from the animation.cfg for an AT-ST
 	for (int i = 0; i < level.numKnownAnimFileSets; i++)
 	{
@@ -2996,18 +2996,18 @@ void misc_atst_setanim(gentity_t* self, const int bone, const int anim)
 		{
 			firstFrame = level.knownAnimFileSets[i].animations[anim].firstFrame;
 			lastFrame = firstFrame + level.knownAnimFileSets[i].animations[anim].numFrames;
-			animSpeed = 50.0f / level.knownAnimFileSets[i].animations[anim].frameLerp;
+			anim_speed = 50.0f / level.knownAnimFileSets[i].animations[anim].frameLerp;
 			break;
 		}
 	}
-	if (firstFrame != -1 && lastFrame != -1 && animSpeed != 0)
+	if (firstFrame != -1 && lastFrame != -1 && anim_speed != 0)
 	{
 		if (!gi.G2API_SetBoneAnimIndex(&self->ghoul2[self->playerModel], bone, firstFrame,
-		                               lastFrame, BONE_ANIM_OVERRIDE_FREEZE | BONE_ANIM_BLEND, animSpeed,
+		                               lastFrame, BONE_ANIM_OVERRIDE_FREEZE | BONE_ANIM_BLEND, anim_speed,
 		                               cg.time ? cg.time : level.time, -1, 150))
 		{
 			gi.G2API_SetBoneAnimIndex(&self->ghoul2[self->playerModel], bone, firstFrame,
-			                          lastFrame, BONE_ANIM_OVERRIDE_FREEZE, animSpeed,
+			                          lastFrame, BONE_ANIM_OVERRIDE_FREEZE, anim_speed,
 			                          cg.time ? cg.time : level.time, -1, 150);
 		}
 	}

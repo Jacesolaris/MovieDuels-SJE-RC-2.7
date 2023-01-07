@@ -98,7 +98,7 @@ struct mdxmWeight_t
 typedef struct
 #endif
 {
-	int			boneIndex;		// these are indexes into the surface boneReferences, not the global bone index
+	int			bone_index;		// these are indexes into the surface boneReferences, not the global bone index
 	float		boneWeight;		// not the global per-frame bone list
 
 	// I'm defining this '<' operator so this struct can be used with an STL <set>...
@@ -293,9 +293,9 @@ static inline int G2_GetVertWeights(const mdxmVertex_t* pVert)
 
 static inline int G2_GetVertBoneIndex(const mdxmVertex_t* pVert, const int iWeightNum)
 {
-	const int iBoneIndex = (pVert->uiNmWeightsAndBoneIndexes >> (iG2_BITS_PER_BONEREF * iWeightNum)) & ((1 << iG2_BITS_PER_BONEREF) - 1);
+	const int i_bone_index = (pVert->uiNmWeightsAndBoneIndexes >> (iG2_BITS_PER_BONEREF * iWeightNum)) & ((1 << iG2_BITS_PER_BONEREF) - 1);
 
-	return iBoneIndex;
+	return i_bone_index;
 }
 
 static inline float G2_GetVertBoneWeight(const mdxmVertex_t* pVert, const int iWeightNum, float& fTotalWeight, int iNumWeights)

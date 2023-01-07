@@ -1351,7 +1351,7 @@ void PM_SaberLocked(void)
 
 			const animation_t* anim = &pm->animations[pm->ps->torsoAnim];
 
-			const float currentFrame = pm->ps->saberLockFrame;
+			const float current_frame = pm->ps->saberLockFrame;
 
 			//advance/decrement my frame number
 			if (BG_InSaberLockOld(pm->ps->torsoAnim))
@@ -1359,7 +1359,7 @@ void PM_SaberLocked(void)
 				if ((pm->ps->torsoAnim) == BOTH_CCWCIRCLELOCK ||
 					(pm->ps->torsoAnim) == BOTH_BF2LOCK)
 				{
-					curFrame = floor(currentFrame) - strength;
+					curFrame = floor(current_frame) - strength;
 					//drop my frame one
 					if (curFrame <= anim->firstFrame)
 					{//I won!  Break out
@@ -1371,7 +1371,7 @@ void PM_SaberLocked(void)
 				}
 				else
 				{
-					curFrame = ceil(currentFrame) + strength;
+					curFrame = ceil(current_frame) + strength;
 					//advance my frame one
 					if (curFrame >= anim->firstFrame + anim->numFrames)
 					{//I won!  Break out
@@ -1386,7 +1386,7 @@ void PM_SaberLocked(void)
 			{ //new locks
 				if (BG_CheckIncrementLockAnim(pm->ps->torsoAnim, SABERLOCK_WIN))
 				{
-					curFrame = ceil(currentFrame) + strength;
+					curFrame = ceil(current_frame) + strength;
 					//advance my frame one
 					if (curFrame >= anim->firstFrame + anim->numFrames)
 					{//I won!  Break out
@@ -1398,7 +1398,7 @@ void PM_SaberLocked(void)
 				}
 				else
 				{
-					curFrame = floor(currentFrame) - strength;
+					curFrame = floor(current_frame) - strength;
 					//drop my frame one
 					if (curFrame <= anim->firstFrame)
 					{//I won!  Break out
@@ -3078,7 +3078,7 @@ void PM_WeaponLightsaber(void)
 
 				PM_SetSaberMove(bounceMove);
 
-				pm->ps->weaponTime = pm->ps->torsoTimer;//+saberMoveData[bounceMove].blendTime+SABER_BLOCK_DUR;
+				pm->ps->weaponTime = pm->ps->torsoTimer;//+saberMoveData[bounceMove].blend_time+SABER_BLOCK_DUR;
 			}
 			break;
 		case BLOCKED_UPPER_RIGHT:

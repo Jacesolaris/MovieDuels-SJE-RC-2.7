@@ -1686,7 +1686,7 @@ static md3Tag_t* R_GetTag(md3Header_t* mod, int frame, const char* tagName) {
 R_LerpTag
 ================
 */
-int R_LerpTag(orientation_t* tag, qhandle_t handle, int startFrame, int endFrame,
+int R_LerpTag(orientation_t* tag, qhandle_t handle, int start_frame, int end_frame,
 	float frac, const char* tagName) {
 	const model_t* model = R_GetModelByHandle(handle);
 	if (!model->md3[0]) {
@@ -1695,8 +1695,8 @@ int R_LerpTag(orientation_t* tag, qhandle_t handle, int startFrame, int endFrame
 		return qfalse;
 	}
 
-	const md3Tag_t* start = R_GetTag(model->md3[0], startFrame, tagName);
-	const md3Tag_t* end = R_GetTag(model->md3[0], endFrame, tagName);
+	const md3Tag_t* start = R_GetTag(model->md3[0], start_frame, tagName);
+	const md3Tag_t* end = R_GetTag(model->md3[0], end_frame, tagName);
 	if (!start || !end) {
 		AxisClear(tag->axis);
 		VectorClear(tag->origin);

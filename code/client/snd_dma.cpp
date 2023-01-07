@@ -51,7 +51,7 @@ static void S_totgmapmusic_f(void);
 void S_Update_();
 void S_StopAllSounds(void);
 static void S_UpdateBackgroundTrack(void);
-sfx_t* S_FindName(const char* name);
+sfx_t* s_find_name(const char* name);
 static int SND_FreeSFXMem(sfx_t* sfx);
 
 extern qboolean Sys_LowPhysicalMemory();
@@ -793,23 +793,23 @@ static long S_HashSFXName(const char* name)
 
 /*
 ==================
-S_FindName
+s_find_name
 
 Will allocate a new sfx if it isn't found
 ==================
 */
-sfx_t* S_FindName(const char* name)
+sfx_t* s_find_name(const char* name)
 {
 	if (!name)
 	{
 		Com_Printf(
-			S_COLOR_RED "ERROR: S_FindName: NULL!.Jace has made stopped the crash caused by bad files" S_COLOR_WHITE
+			S_COLOR_RED "ERROR: s_find_name: NULL!.Jace has made stopped the crash caused by bad files" S_COLOR_WHITE
 			"\n");
 	}
 	if (!name[0])
 	{
 		Com_Printf(
-			S_COLOR_RED "S_FindName: empty name bug!.Jace has made stopped the crash caused by bad files." S_COLOR_WHITE
+			S_COLOR_RED "s_find_name: empty name bug!.Jace has made stopped the crash caused by bad files." S_COLOR_WHITE
 			"\n");
 	}
 
@@ -866,7 +866,7 @@ sfx_t* S_FindName(const char* name)
 			//	events, so current MAX_SFX limit should do, or only need a small boost...	-ste
 			//
 
-			Com_Error(ERR_FATAL, "S_FindName: out of sfx_t");
+			Com_Error(ERR_FATAL, "s_find_name: out of sfx_t");
 		}
 	}
 	else
@@ -952,7 +952,7 @@ void S_BeginRegistration(void)
 		memset(sfxHash, 0, sizeof(sfx_t*) * LOOP_HASH);
 
 #ifdef _DEBUG
-		sfx_t* sfx = S_FindName("***DEFAULT***");
+		sfx_t* sfx = s_find_name("***DEFAULT***");
 		S_DefaultSound(sfx);
 #else
 		S_RegisterSound("sound/null.wav");
@@ -1027,7 +1027,7 @@ sfxHandle_t S_RegisterSound(const char* name)
 		return 0;
 	}
 
-	sfx_t* sfx = S_FindName(name);
+	sfx_t* sfx = s_find_name(name);
 
 	SND_TouchSFX(sfx);
 
@@ -2112,7 +2112,7 @@ Music streaming
 ============
 */
 void S_RawSamples(const int samples, const int rate, const int width, const int channels, const byte* data, const float volume,
-                  const qboolean bFirstOrOnlyUpdateThisFrame)
+                  const qboolean b_first_or_only_update_this_frame)
 {
 	int i;
 	int src, dst;
@@ -2122,7 +2122,7 @@ void S_RawSamples(const int samples, const int rate, const int width, const int 
 		return;
 	}
 
-	int intVolume = 256 * volume;
+	int int_volume = 256 * volume;
 
 	if (s_rawend < s_soundtime)
 	{
@@ -2130,7 +2130,7 @@ void S_RawSamples(const int samples, const int rate, const int width, const int 
 		s_rawend = s_soundtime;
 	}
 
-	const int rawEndStart = s_rawend;
+	const int raw_end_start = s_rawend;
 
 	const float scale = static_cast<float>(rate) / dma.speed;
 
@@ -2140,14 +2140,14 @@ void S_RawSamples(const int samples, const int rate, const int width, const int 
 		if (scale == 1.0)
 		{
 			// optimized case
-			if (bFirstOrOnlyUpdateThisFrame)
+			if (b_first_or_only_update_this_frame)
 			{
 				for (i = 0; i < samples; i++)
 				{
 					dst = s_rawend & (MAX_RAW_SAMPLES - 1);
 					s_rawend++;
-					s_rawsamples[dst].left = ((short*)data)[i * 2] * intVolume;
-					s_rawsamples[dst].right = ((short*)data)[i * 2 + 1] * intVolume;
+					s_rawsamples[dst].left = ((short*)data)[i * 2] * int_volume;
+					s_rawsamples[dst].right = ((short*)data)[i * 2 + 1] * int_volume;
 				}
 			}
 			else
@@ -2156,14 +2156,14 @@ void S_RawSamples(const int samples, const int rate, const int width, const int 
 				{
 					dst = s_rawend & (MAX_RAW_SAMPLES - 1);
 					s_rawend++;
-					s_rawsamples[dst].left += ((short*)data)[i * 2] * intVolume;
-					s_rawsamples[dst].right += ((short*)data)[i * 2 + 1] * intVolume;
+					s_rawsamples[dst].left += ((short*)data)[i * 2] * int_volume;
+					s_rawsamples[dst].right += ((short*)data)[i * 2 + 1] * int_volume;
 				}
 			}
 		}
 		else
 		{
-			if (bFirstOrOnlyUpdateThisFrame)
+			if (b_first_or_only_update_this_frame)
 			{
 				for (i = 0; ; i++)
 				{
@@ -2173,10 +2173,10 @@ void S_RawSamples(const int samples, const int rate, const int width, const int 
 					dst = s_rawend & (MAX_RAW_SAMPLES - 1);
 					s_rawend++;
 					//Don't overflow if resampling.
-					if (s_rawend > rawEndStart + MAX_RAW_SAMPLES)
+					if (s_rawend > raw_end_start + MAX_RAW_SAMPLES)
 						break;
-					s_rawsamples[dst].left = ((short*)data)[src * 2] * intVolume;
-					s_rawsamples[dst].right = ((short*)data)[src * 2 + 1] * intVolume;
+					s_rawsamples[dst].left = ((short*)data)[src * 2] * int_volume;
+					s_rawsamples[dst].right = ((short*)data)[src * 2 + 1] * int_volume;
 				}
 			}
 			else
@@ -2189,17 +2189,17 @@ void S_RawSamples(const int samples, const int rate, const int width, const int 
 					dst = s_rawend & (MAX_RAW_SAMPLES - 1);
 					s_rawend++;
 					//Don't overflow if resampling.
-					if (s_rawend > rawEndStart + MAX_RAW_SAMPLES)
+					if (s_rawend > raw_end_start + MAX_RAW_SAMPLES)
 						break;
-					s_rawsamples[dst].left += ((short*)data)[src * 2] * intVolume;
-					s_rawsamples[dst].right += ((short*)data)[src * 2 + 1] * intVolume;
+					s_rawsamples[dst].left += ((short*)data)[src * 2] * int_volume;
+					s_rawsamples[dst].right += ((short*)data)[src * 2 + 1] * int_volume;
 				}
 			}
 		}
 	}
 	else if (channels == 1 && width == 2)
 	{
-		if (bFirstOrOnlyUpdateThisFrame)
+		if (b_first_or_only_update_this_frame)
 		{
 			for (i = 0; ; i++)
 			{
@@ -2209,10 +2209,10 @@ void S_RawSamples(const int samples, const int rate, const int width, const int 
 				dst = s_rawend & (MAX_RAW_SAMPLES - 1);
 				s_rawend++;
 				//Don't overflow if resampling.
-				if (s_rawend > rawEndStart + MAX_RAW_SAMPLES)
+				if (s_rawend > raw_end_start + MAX_RAW_SAMPLES)
 					break;
-				s_rawsamples[dst].left = ((short*)data)[src] * intVolume;
-				s_rawsamples[dst].right = ((short*)data)[src] * intVolume;
+				s_rawsamples[dst].left = ((short*)data)[src] * int_volume;
+				s_rawsamples[dst].right = ((short*)data)[src] * int_volume;
 			}
 		}
 		else
@@ -2225,18 +2225,18 @@ void S_RawSamples(const int samples, const int rate, const int width, const int 
 				dst = s_rawend & (MAX_RAW_SAMPLES - 1);
 				s_rawend++;
 				//Don't overflow if resampling.
-				if (s_rawend > rawEndStart + MAX_RAW_SAMPLES)
+				if (s_rawend > raw_end_start + MAX_RAW_SAMPLES)
 					break;
-				s_rawsamples[dst].left += ((short*)data)[src] * intVolume;
-				s_rawsamples[dst].right += ((short*)data)[src] * intVolume;
+				s_rawsamples[dst].left += ((short*)data)[src] * int_volume;
+				s_rawsamples[dst].right += ((short*)data)[src] * int_volume;
 			}
 		}
 	}
 	else if (channels == 2 && width == 1)
 	{
-		intVolume *= 256;
+		int_volume *= 256;
 
-		if (bFirstOrOnlyUpdateThisFrame)
+		if (b_first_or_only_update_this_frame)
 		{
 			for (i = 0; ; i++)
 			{
@@ -2246,10 +2246,10 @@ void S_RawSamples(const int samples, const int rate, const int width, const int 
 				dst = s_rawend & (MAX_RAW_SAMPLES - 1);
 				s_rawend++;
 				//Don't overflow if resampling.
-				if (s_rawend > rawEndStart + MAX_RAW_SAMPLES)
+				if (s_rawend > raw_end_start + MAX_RAW_SAMPLES)
 					break;
-				s_rawsamples[dst].left = ((char*)data)[src * 2] * intVolume;
-				s_rawsamples[dst].right = ((char*)data)[src * 2 + 1] * intVolume;
+				s_rawsamples[dst].left = ((char*)data)[src * 2] * int_volume;
+				s_rawsamples[dst].right = ((char*)data)[src * 2 + 1] * int_volume;
 			}
 		}
 		else
@@ -2262,18 +2262,18 @@ void S_RawSamples(const int samples, const int rate, const int width, const int 
 				dst = s_rawend & (MAX_RAW_SAMPLES - 1);
 				s_rawend++;
 				//Don't overflow if resampling.
-				if (s_rawend > rawEndStart + MAX_RAW_SAMPLES)
+				if (s_rawend > raw_end_start + MAX_RAW_SAMPLES)
 					break;
-				s_rawsamples[dst].left += ((char*)data)[src * 2] * intVolume;
-				s_rawsamples[dst].right += ((char*)data)[src * 2 + 1] * intVolume;
+				s_rawsamples[dst].left += ((char*)data)[src * 2] * int_volume;
+				s_rawsamples[dst].right += ((char*)data)[src * 2 + 1] * int_volume;
 			}
 		}
 	}
 	else if (channels == 1 && width == 1)
 	{
-		intVolume *= 256;
+		int_volume *= 256;
 
-		if (bFirstOrOnlyUpdateThisFrame)
+		if (b_first_or_only_update_this_frame)
 		{
 			for (i = 0; ; i++)
 			{
@@ -2283,10 +2283,10 @@ void S_RawSamples(const int samples, const int rate, const int width, const int 
 				dst = s_rawend & (MAX_RAW_SAMPLES - 1);
 				s_rawend++;
 				//Don't overflow if resampling.
-				if (s_rawend > rawEndStart + MAX_RAW_SAMPLES)
+				if (s_rawend > raw_end_start + MAX_RAW_SAMPLES)
 					break;
-				s_rawsamples[dst].left = (((byte*)data)[src] - 128) * intVolume;
-				s_rawsamples[dst].right = (((byte*)data)[src] - 128) * intVolume;
+				s_rawsamples[dst].left = (const_cast<byte*>(data)[src] - 128) * int_volume;
+				s_rawsamples[dst].right = (const_cast<byte*>(data)[src] - 128) * int_volume;
 			}
 		}
 		else
@@ -2299,10 +2299,10 @@ void S_RawSamples(const int samples, const int rate, const int width, const int 
 				dst = s_rawend & (MAX_RAW_SAMPLES - 1);
 				s_rawend++;
 				//Don't overflow if resampling.
-				if (s_rawend > rawEndStart + MAX_RAW_SAMPLES)
+				if (s_rawend > raw_end_start + MAX_RAW_SAMPLES)
 					break;
-				s_rawsamples[dst].left += (((byte*)data)[src] - 128) * intVolume;
-				s_rawsamples[dst].right += (((byte*)data)[src] - 128) * intVolume;
+				s_rawsamples[dst].left += (const_cast<byte*>(data)[src] - 128) * int_volume;
+				s_rawsamples[dst].right += (const_cast<byte*>(data)[src] - 128) * int_volume;
 			}
 		}
 	}
@@ -4130,11 +4130,11 @@ int S_FindWavChunk(const fileHandle_t f, const char* chunk)
 //
 // DO NOT replace this with a call to FS_FileExists, that's for checking about writing out, and doesn't work for this.
 //
-qboolean S_FileExists(const char* psFilename)
+qboolean S_FileExists(const char* ps_filename)
 {
 	fileHandle_t fhTemp;
 
-	FS_FOpenFileRead(psFilename, &fhTemp, qtrue); // qtrue so I can fclose the handle without closing a PAK
+	FS_FOpenFileRead(ps_filename, &fhTemp, qtrue); // qtrue so I can fclose the handle without closing a PAK
 	if (!fhTemp)
 		return qfalse;
 
@@ -5241,7 +5241,7 @@ cvar_t* s_soundpoolmegs = nullptr;
 //
 byte* SND_malloc(const int iSize, sfx_t* sfx)
 {
-	auto pData = static_cast<byte*>(Z_Malloc(iSize, TAG_SND_RAWDATA, qfalse)); // don't bother asking for zeroed mem
+	auto p_data = static_cast<byte*>(Z_Malloc(iSize, TAG_SND_RAWDATA, qfalse)); // don't bother asking for zeroed mem
 
 	// if "s_soundpoolmegs" is < 0, then the -ve of the value is the maximum amount of sounds we're allowed to have loaded...
 	//
@@ -5256,7 +5256,7 @@ byte* SND_malloc(const int iSize, sfx_t* sfx)
 		}
 	}
 
-	return pData;
+	return p_data;
 }
 
 // called once-only in EXE lifetime...

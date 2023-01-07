@@ -962,11 +962,11 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 
 			s = CG_ConfigString(CS_EFFECTS + es->eventParm);
 			// Ghoul2 Insert Start
-			if (es->boltInfo != 0)
+			if (es->bolt_info != 0)
 			{
 				const bool is_relative = !!es->weapon;
 				theFxScheduler.
-					PlayEffect(s, cent->lerpOrigin, axis, es->boltInfo, -1, portal_ent, es->loopSound, is_relative);
+					PlayEffect(s, cent->lerpOrigin, axis, es->bolt_info, -1, portal_ent, es->loopSound, is_relative);
 				//loopSound 0 = not looping, 1 for infinite, else duration
 			}
 			else
@@ -1009,9 +1009,9 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 			}
 
 			s = CG_ConfigString(CS_EFFECTS + es->eventParm);
-			if (es->boltInfo != 0)
+			if (es->bolt_info != 0)
 			{
-				theFxScheduler.StopEffect(s, es->boltInfo, portal_ent);
+				theFxScheduler.StopEffect(s, es->bolt_info, portal_ent);
 			}
 		}
 		break;

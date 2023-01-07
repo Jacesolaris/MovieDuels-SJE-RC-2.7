@@ -8469,7 +8469,7 @@ qboolean BG_InRollES(entityState_t* ps, int anim)
 }
 
 void BG_IK_MoveArm(void* ghoul2, int lHandBolt, int time, entityState_t* ent, int basePose, vec3_t desiredPos, qboolean* ikInProgress,
-	vec3_t origin, vec3_t angles, vec3_t scale, int blendTime, qboolean forceHalt)
+	vec3_t origin, vec3_t angles, vec3_t scale, int blend_time, qboolean forceHalt)
 {
 	mdxaBone_t lHandMatrix;
 	vec3_t lHand;
@@ -8498,7 +8498,7 @@ void BG_IK_MoveArm(void* ghoul2, int lHandBolt, int time, entityState_t* ent, in
 		VectorSet(ikP.pcjMaxs, 0, 0, 0);
 
 		//give the info on our entity.
-		ikP.blendTime = blendTime;
+		ikP.blend_time = blend_time;
 		VectorCopy(origin, ikP.origin);
 		VectorCopy(angles, ikP.angles);
 		ikP.angles[PITCH] = 0;
@@ -8507,8 +8507,8 @@ void BG_IK_MoveArm(void* ghoul2, int lHandBolt, int time, entityState_t* ent, in
 		VectorCopy(scale, ikP.scale);
 
 		//base pose frames for the limb
-		ikP.startFrame = bgHumanoidAnimations[baseposeAnim].firstFrame + bgHumanoidAnimations[baseposeAnim].numFrames;
-		ikP.endFrame = bgHumanoidAnimations[baseposeAnim].firstFrame + bgHumanoidAnimations[baseposeAnim].numFrames;
+		ikP.start_frame = bgHumanoidAnimations[baseposeAnim].firstFrame + bgHumanoidAnimations[baseposeAnim].numFrames;
+		ikP.end_frame = bgHumanoidAnimations[baseposeAnim].firstFrame + bgHumanoidAnimations[baseposeAnim].numFrames;
 
 		ikP.forceAnimOnBone = qfalse; //let it use existing anim if it's the same as this one.
 
@@ -8580,7 +8580,7 @@ void BG_IK_MoveArm(void* ghoul2, int lHandBolt, int time, entityState_t* ent, in
 		}
 		VectorCopy(origin, ikM.origin); //our position in the world.
 
-		ikM.boneName[0] = 0;
+		ikM.bone_name[0] = 0;
 		if (trap->G2API_IKMove(ghoul2, time, &ikM))
 		{
 			//now do the standard model animate stuff with ragdoll update params.
@@ -8602,7 +8602,7 @@ void BG_IK_MoveArm(void* ghoul2, int lHandBolt, int time, entityState_t* ent, in
 	}
 	else if (*ikInProgress)
 	{ //kill it
-		float cFrame, animSpeed;
+		float cFrame, anim_speed;
 		int sFrame, eFrame, flags;
 
 		trap->G2API_SetBoneIKState(ghoul2, time, "lhumerus", IKS_NONE, NULL);
@@ -8613,9 +8613,9 @@ void BG_IK_MoveArm(void* ghoul2, int lHandBolt, int time, entityState_t* ent, in
 		trap->G2API_SetBoneAngles(ghoul2, 0, "lradius", vec3_origin, BONE_ANGLES_POSTMULT, POSITIVE_X, NEGATIVE_Y, NEGATIVE_Z, NULL, 0, time);
 
 		//Get the anim/frames that the pelvis is on exactly, and match the left arm back up with them again.
-		trap->G2API_GetBoneAnim(ghoul2, "pelvis", (const int)time, &cFrame, &sFrame, &eFrame, &flags, &animSpeed, 0, 0);
-		trap->G2API_SetBoneAnim(ghoul2, 0, "lhumerus", sFrame, eFrame, flags, animSpeed, time, sFrame, 300);
-		trap->G2API_SetBoneAnim(ghoul2, 0, "lradius", sFrame, eFrame, flags, animSpeed, time, sFrame, 300);
+		trap->G2API_GetBoneAnim(ghoul2, "pelvis", (const int)time, &cFrame, &sFrame, &eFrame, &flags, &anim_speed, 0, 0);
+		trap->G2API_SetBoneAnim(ghoul2, 0, "lhumerus", sFrame, eFrame, flags, anim_speed, time, sFrame, 300);
+		trap->G2API_SetBoneAnim(ghoul2, 0, "lradius", sFrame, eFrame, flags, anim_speed, time, sFrame, 300);
 
 		//And finally, get rid of all the ik state effector data by calling with null bone name (similar to how we init it).
 		trap->G2API_SetBoneIKState(ghoul2, time, NULL, IKS_NONE, NULL);

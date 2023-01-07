@@ -2792,7 +2792,7 @@ void G_UpdateClientAnims(gentity_t* self, float animSpeedScale)
 	static int legsAnim;
 	static int firstFrame, lastFrame;
 	static int aFlags;
-	static float animSpeed, lAnimSpeedScale;
+	static float anim_speed, lAnimSpeedScale;
 	qboolean setTorso = qfalse;
 
 	torsoAnim = (self->client->ps.torsoAnim);
@@ -2815,8 +2815,8 @@ void G_UpdateClientAnims(gentity_t* self, float animSpeedScale)
 
 	if (self->client->legsAnimExecute != legsAnim || self->client->legsLastFlip != self->client->ps.legsFlip)
 	{
-		animSpeed = 50.0f / bgAllAnims[self->localAnimIndex].anims[legsAnim].frameLerp;
-		lAnimSpeedScale = (animSpeed *= animSpeedScale);
+		anim_speed = 50.0f / bgAllAnims[self->localAnimIndex].anims[legsAnim].frameLerp;
+		lAnimSpeedScale = (anim_speed *= animSpeedScale);
 
 		if (bgAllAnims[self->localAnimIndex].anims[legsAnim].loopFrames != -1)
 		{
@@ -2827,7 +2827,7 @@ void G_UpdateClientAnims(gentity_t* self, float animSpeedScale)
 			aFlags = BONE_ANIM_OVERRIDE_FREEZE;
 		}
 
-		if (animSpeed < 0)
+		if (anim_speed < 0)
 		{
 			lastFrame = bgAllAnims[self->localAnimIndex].anims[legsAnim].firstFrame;
 			firstFrame = bgAllAnims[self->localAnimIndex].anims[legsAnim].firstFrame + bgAllAnims[self->localAnimIndex].anims[legsAnim].numFrames;
@@ -2865,14 +2865,14 @@ tryTorso:
 		!self->noLumbar)
 	{
 		aFlags = 0;
-		animSpeed = 0;
+		anim_speed = 0;
 
 		f = torsoAnim;
 
 		BG_SaberStartTransAnim(self->s.number, self->client->ps.fd.saberAnimLevel, self->client->ps.weapon, f, &animSpeedScale, self->client->ps.brokenLimbs);
 
-		animSpeed = 50.0f / bgAllAnims[self->localAnimIndex].anims[f].frameLerp;
-		lAnimSpeedScale = (animSpeed *= animSpeedScale);
+		anim_speed = 50.0f / bgAllAnims[self->localAnimIndex].anims[f].frameLerp;
+		lAnimSpeedScale = (anim_speed *= animSpeedScale);
 
 		if (bgAllAnims[self->localAnimIndex].anims[f].loopFrames != -1)
 		{
@@ -2885,7 +2885,7 @@ tryTorso:
 
 		aFlags |= BONE_ANIM_BLEND; //since client defaults to blend. Not sure if this will make much difference if any on client position, but it's here just for the sake of matching them.
 
-		if (animSpeed < 0)
+		if (anim_speed < 0)
 		{
 			lastFrame = bgAllAnims[self->localAnimIndex].anims[f].firstFrame;
 			firstFrame = bgAllAnims[self->localAnimIndex].anims[f].firstFrame + bgAllAnims[self->localAnimIndex].anims[f].numFrames;

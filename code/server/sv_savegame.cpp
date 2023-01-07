@@ -47,7 +47,7 @@ static char saveGameComment[iSG_COMMENT_SIZE];
 
 int giSaveGameVersion; // filled in when a savegame file is opened
 
-SavedGameJustLoaded_e eSavedGameJustLoaded = eNO;
+SavedGameJustLoaded_e e_saved_game_just_loaded = eNO;
 
 char sLastSaveFileLoaded[MAX_QPATH] = {0};
 
@@ -91,7 +91,7 @@ typedef map<unsigned int, CChid> CChidInfo_t;
 CChidInfo_t	save_info;
 #endif
 
-static const char* GetString_FailedToOpenSaveGame(const char* psFilename, qboolean bOpen)
+static const char* GetString_FailedToOpenSaveGame(const char* ps_filename, qboolean bOpen)
 {
 	static char sTemp[256];
 
@@ -102,7 +102,7 @@ static const char* GetString_FailedToOpenSaveGame(const char* psFilename, qboole
 #else
 	const char* psReference = bOpen ? "MENUS_FAILED_TO_OPEN_SAVEGAME" : "MENUS3_FAILED_TO_CREATE_SAVEGAME";
 #endif
-	Q_strncpyz(sTemp + strlen(sTemp), va(SE_GetString(psReference), psFilename), sizeof sTemp);
+	Q_strncpyz(sTemp + strlen(sTemp), va(SE_GetString(psReference), ps_filename), sizeof sTemp);
 	strcat(sTemp, "\n");
 	return sTemp;
 }
@@ -123,7 +123,7 @@ void SG_Shutdown()
 
 	saved_game.close();
 
-	eSavedGameJustLoaded = eNO;
+	e_saved_game_just_loaded = eNO;
 	// important to do this if we ERR_DROP during loading, else next map you load after
 	// a bad save-file you'll arrive at dead :-)
 
@@ -161,11 +161,11 @@ void SG_StoreSaveGameComment(const char* sComment)
 
 qboolean SV_TryLoadTransition(const char* mapname)
 {
-	char* psFilename = va("hub/%s", mapname);
+	char* ps_filename = va("hub/%s", mapname);
 
-	Com_Printf(S_COLOR_CYAN "Restoring game \"%s\"...\n", psFilename);
+	Com_Printf(S_COLOR_CYAN "Restoring game \"%s\"...\n", ps_filename);
 
-	if (!SG_ReadSavegame(psFilename))
+	if (!SG_ReadSavegame(ps_filename))
 	{
 		//couldn't load a savegame
 		return qfalse;
@@ -203,14 +203,14 @@ void SV_LoadGame_f(void)
 		return;
 	}
 
-	const char* psFilename = Cmd_Argv(1);
-	if (strstr(psFilename, "..") || strstr(psFilename, "/") || strstr(psFilename, "\\"))
+	const char* ps_filename = Cmd_Argv(1);
+	if (strstr(ps_filename, "..") || strstr(ps_filename, "/") || strstr(ps_filename, "\\"))
 	{
 		Com_Printf(S_COLOR_RED "Bad loadgame name.\n");
 		return;
 	}
 
-	if (!Q_stricmp(psFilename, "current"))
+	if (!Q_stricmp(ps_filename, "current"))
 	{
 		Com_Printf(S_COLOR_RED "Can't load from \"current\"\n");
 		return;
@@ -219,9 +219,9 @@ void SV_LoadGame_f(void)
 	// special case, if doing a respawn then check that the available auto-save (if any) is from the same map
 	//	as we're currently on (if in a map at all), if so, load that "auto", else re-load the last-loaded file...
 	//
-	if (!Q_stricmp(psFilename, "*respawn"))
+	if (!Q_stricmp(ps_filename, "*respawn"))
 	{
-		psFilename = "auto"; // default to standard respawn behaviour
+		ps_filename = "auto"; // default to standard respawn behaviour
 
 		// see if there's a last-loaded file to even check against as regards loading...
 		//
@@ -237,7 +237,7 @@ void SV_LoadGame_f(void)
 				//if you're in the brig and there is no autosave, load the last loaded savegame
 				if (!psMapNameOfAutoSave)
 				{
-					psFilename = sLastSaveFileLoaded;
+					ps_filename = sLastSaveFileLoaded;
 				}
 			}
 			else
@@ -250,7 +250,7 @@ void SV_LoadGame_f(void)
 
 				if (!Q_stricmp(psMapName, psMapNameOfLastSaveFileLoaded)))
 				{
-					psFilename = sLastSaveFileLoaded;
+					ps_filename = sLastSaveFileLoaded;
 				}
 				else
 #endif
@@ -258,20 +258,20 @@ void SV_LoadGame_f(void)
 				{
 					// either there's no auto file, or it's from a different map to the one we've just died on...
 					//
-					psFilename = sLastSaveFileLoaded;
+					ps_filename = sLastSaveFileLoaded;
 				}
 			}
 		}
 		//default will continue to load auto
 	}
 #ifdef JK2_MODE
-	Com_Printf(S_COLOR_CYAN "Loading game \"%s\"...\n", psFilename);
+	Com_Printf(S_COLOR_CYAN "Loading game \"%s\"...\n", ps_filename);
 #else
-	Com_Printf(S_COLOR_CYAN "%s\n", va(SE_GetString("MENUS_LOADING_MAPNAME"), psFilename));
+	Com_Printf(S_COLOR_CYAN "%s\n", va(SE_GetString("MENUS_LOADING_MAPNAME"), ps_filename));
 #endif
 
 	gbAlreadyDoingLoad = qtrue;
-	if (!SG_ReadSavegame(psFilename))
+	if (!SG_ReadSavegame(ps_filename))
 	{
 		gbAlreadyDoingLoad = qfalse;
 		//	do NOT do this here now, need to wait until client spawn, unless the load failed.
@@ -335,10 +335,10 @@ void SV_SaveGame_f(void)
 		return;
 	}
 
-	const char* psFilename = Cmd_Argv(1);
+	const char* ps_filename = Cmd_Argv(1);
 	char filename[MAX_QPATH] = {0};
 
-	Q_strncpyz(filename, psFilename, sizeof filename);
+	Q_strncpyz(filename, ps_filename, sizeof filename);
 
 	if (!Q_stricmp(filename, "current"))
 	{
@@ -1287,13 +1287,13 @@ qboolean SG_ReadSavegame(
 	// read game state
 	const qboolean qbAutosave = ReadGame();
 
-	eSavedGameJustLoaded = qbAutosave ? eAUTO : eFULL;
+	e_saved_game_just_loaded = qbAutosave ? eAUTO : eFULL;
 
 	// note that this also trashes the whole G_Alloc pool as well (of course)
 	SV_SpawnServer(
 		sMapCmd,
 		eForceReload_NOTHING,
-		eSavedGameJustLoaded != eFULL ? qtrue : qfalse);
+		e_saved_game_just_loaded != eFULL ? qtrue : qfalse);
 
 	// read in all the level data...
 	//

@@ -219,7 +219,7 @@ void G_PlayEffect(const int fx_id, const int model_index, const int bolt_index, 
 	tent->s.weapon = is_relative;
 
 	tent->svFlags |= SVF_BROADCAST;
-	gi.G2API_AttachEnt(&tent->s.boltInfo, &g_entities[ent_num].ghoul2[model_index], bolt_index, ent_num, model_index);
+	gi.G2API_AttachEnt(&tent->s.bolt_info, &g_entities[ent_num].ghoul2[model_index], bolt_index, ent_num, model_index);
 }
 
 //-----------------------------
@@ -254,7 +254,7 @@ void G_StopEffect(const int fx_id, const int model_index, const int bolt_index, 
 	gentity_t* tent = G_TempEntity(g_entities[ent_num].currentOrigin, EV_STOP_EFFECT);
 	tent->s.eventParm = fx_id;
 	tent->svFlags |= SVF_BROADCAST;
-	gi.G2API_AttachEnt(&tent->s.boltInfo, &g_entities[ent_num].ghoul2[model_index], bolt_index, ent_num, model_index);
+	gi.G2API_AttachEnt(&tent->s.bolt_info, &g_entities[ent_num].ghoul2[model_index], bolt_index, ent_num, model_index);
 }
 
 void G_StopEffect(const char* name, const int model_index, const int bolt_index, const int ent_num)

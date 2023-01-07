@@ -1148,7 +1148,7 @@ void* CL_Malloc(const int iSize, const memtag_t eTag, const qboolean bZeroit, in
 CL_InitRef
 ============
 */
-extern qboolean S_FileExists(const char* psFilename);
+extern qboolean S_FileExists(const char* ps_filename);
 extern bool CM_CullWorldBox(const cplane_t* frustum, const vec3pair_t bounds);
 extern qboolean SND_RegisterAudio_LevelLoadEnd(qboolean bDeleteEverythingNotUsedThisLevel /* 99% qfalse */);
 extern cvar_t* Cvar_Set2(const char* var_name, const char* value, qboolean force);
@@ -1291,7 +1291,7 @@ void CL_InitRef(void)
 
 //===========================================================================================
 
-void CL_CompleteCinematic(char* args, int argNum);
+void CL_CompleteCinematic(char* args, int arg_num);
 
 /*
 ====================

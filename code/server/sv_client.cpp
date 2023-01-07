@@ -126,7 +126,7 @@ gotnewcl:
 	Q_strncpyz(newcl->userinfo, userinfo, sizeof(newcl->userinfo));
 
 	// get the game a chance to reject this connection or modify the userinfo
-	char* denied = ge->ClientConnect(client_num, qtrue, eSavedGameJustLoaded); // firstTime = qtrue
+	char* denied = ge->ClientConnect(client_num, qtrue, e_saved_game_just_loaded); // firstTime = qtrue
 	if (denied)
 	{
 		NET_OutOfBandPrint(NS_SERVER, from, "print\n%s\n", denied);
@@ -197,7 +197,7 @@ the wrong gamestate.
 void SV_SendClientGameState(client_t* client)
 {
 	msg_t msg;
-	byte msgBuffer[MAX_MSGLEN];
+	byte msg_buffer[MAX_MSGLEN];
 
 	Com_DPrintf("SV_SendGameState() for %s\n", client->name);
 	client->state = CS_PRIMED;
@@ -211,7 +211,7 @@ void SV_SendClientGameState(client_t* client)
 	client->reliableSequence = 0;
 	client->reliableAcknowledge = 0;
 
-	MSG_Init(&msg, msgBuffer, sizeof(msgBuffer));
+	MSG_Init(&msg, msg_buffer, sizeof(msg_buffer));
 
 	// send the gamestate
 	MSG_WriteByte(&msg, svc_gamestate);
@@ -245,7 +245,7 @@ void SV_SendClientGameState(client_t* client)
 SV_ClientEnterWorld
 ==================
 */
-void SV_ClientEnterWorld(client_t* client, const usercmd_t* cmd, const SavedGameJustLoaded_e eSavedGameJustLoaded)
+void SV_ClientEnterWorld(client_t* client, const usercmd_t* cmd, const SavedGameJustLoaded_e e_saved_game_just_loaded)
 {
 	Com_DPrintf("SV_ClientEnterWorld() from %s\n", client->name);
 	client->state = CS_ACTIVE;
@@ -264,7 +264,7 @@ void SV_ClientEnterWorld(client_t* client, const usercmd_t* cmd, const SavedGame
 	client->cmdNum = 0;
 
 	// call the game begin function
-	ge->ClientBegin(client - svs.clients, cmd, eSavedGameJustLoaded);
+	ge->ClientBegin(client - svs.clients, cmd, e_saved_game_just_loaded);
 }
 
 /*
@@ -472,11 +472,11 @@ static void SV_UserMove(client_t* cl, msg_t* msg)
 	// this gamestate, put the client into the world
 	if (cl->state == CS_PRIMED)
 	{
-		SV_ClientEnterWorld(cl, &cmds[0], eSavedGameJustLoaded);
+		SV_ClientEnterWorld(cl, &cmds[0], e_saved_game_just_loaded);
 		if (sv_mapname->string[0] != '_')
 		{
 			char savename[MAX_QPATH];
-			if (eSavedGameJustLoaded == eNO)
+			if (e_saved_game_just_loaded == eNO)
 			{
 				SG_WriteSavegame("auto", qtrue);
 				if (Q_stricmpn(sv_mapname->string, "academy", 7) != 0)
@@ -492,7 +492,7 @@ static void SV_UserMove(client_t* cl, msg_t* msg)
 				SG_WriteSavegame("auto", qfalse); //need a copy for auto, too
 			}
 		}
-		eSavedGameJustLoaded = eNO;
+		e_saved_game_just_loaded = eNO;
 		// the moves can be processed normaly
 	}
 

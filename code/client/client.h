@@ -384,24 +384,24 @@ void	SCR_PrecacheScreenshot();
 //
 // cl_cin.c
 //
-void CL_PlayCinematic_f(void);
-void CL_PlayInGameCinematic_f(void);
-qboolean CL_CheckPendingCinematic(void);
-qboolean CL_IsRunningInGameCinematic(void);
-qboolean CL_InGameCinematicOnStandBy(void);
-void SCR_DrawCinematic(void);
-void SCR_RunCinematic(void);
-void SCR_StopCinematic(qboolean bAllowRefusal = qfalse);
+void CL_PlayCinematic_f();
+void CL_PlayInGameCinematic_f();
+qboolean CL_CheckPendingCinematic();
+qboolean CL_IsRunningInGameCinematic();
+qboolean CL_InGameCinematicOnStandBy();
+void SCR_DrawCinematic();
+void SCR_RunCinematic();
+void SCR_StopCinematic(qboolean b_allow_refusal = qfalse);
 
-int CIN_PlayCinematic(const char* arg0, int xpos, int ypos, int width, int height, int bits,
-                      const char* psAudioFile /* = NULL */);
+int CIN_PlayCinematic(const char* arg, int x, int y, int w, int h, int systemBits,
+                      const char* ps_audio_file /* = NULL */);
 e_status CIN_StopCinematic(int handle);
 e_status CIN_RunCinematic(int handle);
 void CIN_DrawCinematic(int handle);
 void CIN_SetExtents(int handle, int x, int y, int w, int h);
 void CIN_SetLooping(int handle, qboolean loop);
 void CIN_UploadCinematic(int handle);
-void CIN_CloseAllVideos(void);
+void CIN_CloseAllVideos();
 
 //
 // cl_cgame.c

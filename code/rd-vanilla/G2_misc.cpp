@@ -440,10 +440,10 @@ void R_TransformEachSurface(const mdxmSurface_t* surface, vec3_t scale, CMiniHea
 			float fTotalWeight = 0.0f;
 			for (k = 0; k < iNumWeights; k++)
 			{
-				const int		iBoneIndex = G2_GetVertBoneIndex(v, k);
+				const int		i_bone_index = G2_GetVertBoneIndex(v, k);
 				const float	fBoneWeight = G2_GetVertBoneWeight(v, k, fTotalWeight, iNumWeights);
 
-				const mdxaBone_t& bone = EvalBoneCache(piBoneReferences[iBoneIndex], boneCache);
+				const mdxaBone_t& bone = EvalBoneCache(piBoneReferences[i_bone_index], boneCache);
 
 				tempVert[0] += fBoneWeight * (DotProduct(bone.matrix[0], v->vertCoords) + bone.matrix[0][3]);
 				tempVert[1] += fBoneWeight * (DotProduct(bone.matrix[1], v->vertCoords) + bone.matrix[1][3]);
@@ -483,10 +483,10 @@ void R_TransformEachSurface(const mdxmSurface_t* surface, vec3_t scale, CMiniHea
 			float fTotalWeight = 0.0f;
 			for (k = 0; k < iNumWeights; k++)
 			{
-				const int		iBoneIndex = G2_GetVertBoneIndex(v, k);
+				const int		i_bone_index = G2_GetVertBoneIndex(v, k);
 				const float	fBoneWeight = G2_GetVertBoneWeight(v, k, fTotalWeight, iNumWeights);
 
-				const mdxaBone_t& bone = EvalBoneCache(piBoneReferences[iBoneIndex], boneCache);
+				const mdxaBone_t& bone = EvalBoneCache(piBoneReferences[i_bone_index], boneCache);
 
 				tempVert[0] += fBoneWeight * (DotProduct(bone.matrix[0], v->vertCoords) + bone.matrix[0][3]);
 				tempVert[1] += fBoneWeight * (DotProduct(bone.matrix[1], v->vertCoords) + bone.matrix[1][3]);

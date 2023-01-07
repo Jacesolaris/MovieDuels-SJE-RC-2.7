@@ -23,6 +23,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 // stuff added for PCH files.  I want to have a lot of stuff included here so the PCH is pretty rich,
 //	but without exposing too many extra protos, so for now (while I experiment)...
 //
+#pragma once
 
 #include "../qcommon/q_shared.h"
 #include "../qcommon/qcommon.h"

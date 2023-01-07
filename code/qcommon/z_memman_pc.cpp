@@ -213,17 +213,17 @@ qboolean gbMemFreeupOccured = qfalse;
 // (normally I'd call another function for this, but this is supposed to be engine-independent,
 //	 so a certain amount of re-invention of the wheel is to be expected...)
 //
-char* _D_Z_Filename_WithoutPath(const char* psFilename)
+char* _D_Z_Filename_WithoutPath(const char* ps_filename)
 {
 	static char sString[MAX_QPATH];
 
-	const char* psCopyPos = psFilename;
+	const char* psCopyPos = ps_filename;
 
-	while (*psFilename)
+	while (*ps_filename)
 	{
-		if (*psFilename == PATH_SEP)
-			psCopyPos = psFilename + 1;
-		psFilename++;
+		if (*ps_filename == PATH_SEP)
+			psCopyPos = ps_filename + 1;
+		ps_filename++;
 	}
 
 	strcpy(sString, psCopyPos);

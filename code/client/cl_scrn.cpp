@@ -548,7 +548,7 @@ void SCR_PrecacheScreenshot()
 		//		SCR_UnprecacheScreenshot();
 		//		pbScreenData = (byte *)Z_Malloc(SG_SCR_WIDTH * SG_SCR_HEIGHT * 4);
 		S_ClearSoundBuffer(); // clear DMA etc because the following glReadPixels() call can take ages
-		re.GetScreenShot((byte*)&bScreenData, SG_SCR_WIDTH, SG_SCR_HEIGHT);
+		re.GetScreenShot(reinterpret_cast<byte*>(&bScreenData), SG_SCR_WIDTH, SG_SCR_HEIGHT);
 		screenDataValid = qtrue;
 	}
 }

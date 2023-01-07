@@ -448,8 +448,8 @@ typedef struct sharedRagDollParams_s {
 	int me; //index of entity giving this update
 
 	//rww - we have convenient animation/frame access in the game, so just send this info over from there.
-	int startFrame;
-	int endFrame;
+	int start_frame;
+	int end_frame;
 
 	int collisionType; // 1 = from a fall, 0 from effectors, this will be going away soon, hence no enum
 
@@ -474,7 +474,7 @@ typedef struct sharedRagDollUpdateParams_s {
 
 //rww - update parms for ik bone stuff
 typedef struct sharedIKMoveParams_s {
-	char boneName[512]; //name of bone
+	char bone_name[512]; //name of bone
 	vec3_t desiredOrigin; //world coordinate that this bone should be attempting to reach
 	vec3_t origin; //world coordinate of the entity who owns the g2 instance that owns the bone
 	float movementSpeed; //how fast the bone should move toward the destination
@@ -487,10 +487,10 @@ typedef struct sharedSetBoneIKStateParams_s {
 	vec3_t angles; //angles of caller
 	vec3_t scale; //scale of caller
 	float radius; //bone rad
-	int blendTime; //bone blend time
+	int blend_time; //bone blend time
 	int pcjOverrides; //override ik bone flags
-	int startFrame; //base pose start
-	int endFrame; //base pose end
+	int start_frame; //base pose start
+	int end_frame; //base pose end
 	qboolean forceAnimOnBone; //normally if the bone has specified start/end frames already it will leave it alone.. if this is true, then the animation will be restarted on the bone with the specified frames anyway.
 } sharedSetBoneIKStateParams_t;
 

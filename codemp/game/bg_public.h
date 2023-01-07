@@ -1460,7 +1460,7 @@ typedef struct saberMoveData_s {
 	int	startQuad;
 	int	endQuad;
 	unsigned animSetFlags;
-	int blendTime;
+	int blend_time;
 	int blocking;
 	saberMoveName_t chain_idle;			// What move to call if the attack button is not pressed at the end of this anim
 	saberMoveName_t chain_attack;		// What move to call if the attack button (and nothing else) is pressed
@@ -1661,7 +1661,7 @@ qboolean BG_LegalizedForcePowers(char* powerOut, size_t powerOutSize, int maxRan
 void BG_GiveMeVectorFromMatrix(mdxaBone_t* bolt_matrix, int flags, vec3_t vec);
 
 void BG_IK_MoveArm(void* ghoul2, int lHandBolt, int time, entityState_t* ent, int basePose, vec3_t desiredPos, qboolean* ikInProgress,
-	vec3_t origin, vec3_t angles, vec3_t scale, int blendTime, qboolean forceHalt);
+	vec3_t origin, vec3_t angles, vec3_t scale, int blend_time, qboolean forceHalt);
 
 void BG_G2PlayerAngles(void* ghoul2, int motionBolt, entityState_t* cent, int time, vec3_t cent_lerpOrigin,
 	vec3_t cent_lerpAngles, matrix3_t legs, vec3_t legsAngles, qboolean* tYawing,
@@ -1701,7 +1701,7 @@ qboolean BG_InDeathAnim(int anim);
 qboolean BG_InSaberLockOld(int anim);
 qboolean BG_InSaberLock(int anim);
 
-void BG_SaberStartTransAnim(int client_num, int saberAnimLevel, int weapon, int anim, float* animSpeed, int broken);
+void BG_SaberStartTransAnim(int client_num, int saberAnimLevel, int weapon, int anim, float* anim_speed, int broken);
 
 void BG_ForcePowerDrain(playerState_t* ps, forcePowers_t forcePower, int overrideAmt);
 
@@ -1754,7 +1754,7 @@ float BG_SI_Length(saberInfo_t* saber);
 float BG_SI_LengthMax(saberInfo_t* saber);
 void BG_SI_ActivateTrail(saberInfo_t* saber, float duration);
 void BG_SI_DeactivateTrail(saberInfo_t* saber, float duration);
-extern void BG_AttachToRancor(void* ghoul2, float rancYaw, vec3_t rancOrigin, int time, qhandle_t* modelList, vec3_t modelScale, qboolean inMouth, vec3_t out_origin, vec3_t out_angles, matrix3_t out_axis);
+extern void BG_AttachToRancor(void* ghoul2, float rancYaw, vec3_t rancOrigin, int time, qhandle_t* model_list, vec3_t modelScale, qboolean inMouth, vec3_t out_origin, vec3_t out_angles, matrix3_t out_axis);
 void BG_ClearRocketLock(playerState_t* ps);
 
 extern int WeaponReadyAnim[WP_NUM_WEAPONS];

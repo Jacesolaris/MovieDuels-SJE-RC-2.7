@@ -867,7 +867,7 @@ void CG_AddViewWeapon(playerState_t* ps) {
 		hand.backlerp = 0;
 	}
 	else {
-		float currentFrame;
+		float current_frame;
 		// get clientinfo for animation map
 		if (cent->currentState.eType == ET_NPC)
 		{
@@ -883,10 +883,10 @@ void CG_AddViewWeapon(playerState_t* ps) {
 			ci = &cgs.clientinfo[cent->currentState.client_num];
 		}
 
-		trap->G2API_GetBoneFrame(cent->ghoul2, "lower_lumbar", cg.time, &currentFrame, cgs.gameModels, 0);
-		hand.frame = CG_MapTorsoToWeaponFrame(ci, ceil(currentFrame), ps->torsoAnim);
-		hand.oldframe = CG_MapTorsoToWeaponFrame(ci, floor(currentFrame), ps->torsoAnim);
-		hand.backlerp = 1.0f - (currentFrame - floor(currentFrame));
+		trap->G2API_GetBoneFrame(cent->ghoul2, "lower_lumbar", cg.time, &current_frame, cgs.gameModels, 0);
+		hand.frame = CG_MapTorsoToWeaponFrame(ci, ceil(current_frame), ps->torsoAnim);
+		hand.oldframe = CG_MapTorsoToWeaponFrame(ci, floor(current_frame), ps->torsoAnim);
+		hand.backlerp = 1.0f - (current_frame - floor(current_frame));
 
 		// Handle the fringe situation where oldframe is invalid
 		if (hand.frame == -1)
