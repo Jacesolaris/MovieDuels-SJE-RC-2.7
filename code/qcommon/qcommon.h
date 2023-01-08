@@ -714,7 +714,7 @@ void Com_TouchMemory(void);
 // commandLine should not include the executable name (argv[0])
 void Com_SetOrgAngles(vec3_t org, vec3_t angles);
 void Com_Init(char* commandLine);
-void Com_Frame(void);
+void Com_Frame();
 void Com_Shutdown(void);
 void Com_ShutdownZoneMemory(void);
 void Com_ShutdownHunkMemory(void);
@@ -784,7 +784,7 @@ void SCR_DebugGraph(float value, int color); // FIXME: move logging to common?
 //
 void SV_Init(void);
 void SV_Shutdown(const char* finalmsg);
-void SV_Frame(int msec, float fractionMsec);
+void SV_Frame(int msec, float fraction_msec);
 void SV_PacketEvent(netadr_t from, msg_t* msg);
 qboolean SV_GameCommand();
 

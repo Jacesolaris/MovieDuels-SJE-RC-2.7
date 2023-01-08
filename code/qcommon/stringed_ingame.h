@@ -59,7 +59,7 @@ extern cvar_t* se_language;
 //
 void SE_Init(void);
 void SE_ShutDown(void);
-void SE_CheckForLanguageUpdates(void);
+void SE_CheckForLanguageUpdates();
 int SE_GetNumLanguages(void);
 const char* SE_GetLanguageName(int iLangIndex); // eg "german"
 const char* SE_GetLanguageDir(int iLangIndex); // eg "strings/german"

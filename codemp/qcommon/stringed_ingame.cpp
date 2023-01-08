@@ -119,7 +119,7 @@ public:
 private:
 
 	void	AddEntry(const char* psLocalReference);
-	int		GetNumStrings(void);
+	int		get_num_strings(void);
 	void	SetString(const char* psLocalReference, const char* psNewString, SE_BOOL bEnglishDebug);
 	SE_BOOL	SetReference(int iIndex, const char* psNewString);
 	void	AddFlagReference(const char* psLocalReference, const char* psFlagName);

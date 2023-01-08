@@ -385,7 +385,7 @@ void SV_PacketEvent(const netadr_t from, msg_t* msg)
 // Server time is used instead of realtime to avoid dropping the local client while debugging.
 // When a client is normally dropped, the client_t goes into a zombie state for a few seconds to make sure any final
 //	reliable message gets resent if necessary
-void SV_CheckTimeouts(void)
+void SV_CheckTimeouts()
 {
 	client_t* cl = svs.clients;
 
@@ -420,7 +420,7 @@ void SV_CheckTimeouts(void)
 SV_CheckPaused
 ==================
 */
-qboolean SV_CheckPaused(void)
+qboolean SV_CheckPaused()
 {
 	if (!cl_paused->integer)
 	{
@@ -458,10 +458,11 @@ happen before SV_Frame is called
 ==================
 */
 extern cvar_t* cl_newClock;
+extern void SE_CheckForLanguageUpdates();
 
-void SV_Frame(int msec, const float fractionMsec)
+void SV_Frame(int msec, const float fraction_msec)
 {
-	int startTime = 0;
+	int start_time = 0;
 
 	// the menu kills the server with this cvar
 	if (sv_killserver->integer)
@@ -475,8 +476,6 @@ void SV_Frame(int msec, const float fractionMsec)
 	{
 		return;
 	}
-
-	extern void SE_CheckForLanguageUpdates(void);
 	SE_CheckForLanguageUpdates(); // will fast-return else load different language if menu changed it
 
 	// allow pause if only the local client is connected
@@ -497,10 +496,10 @@ void SV_Frame(int msec, const float fractionMsec)
 	{
 		Cvar_Set("sv_fps", "10");
 	}
-	const int frameMsec = 1000 / sv_fps->integer;
+	const int frame_msec = 1000 / sv_fps->integer;
 
 	sv.timeResidual += msec;
-	sv.timeResidualFraction += fractionMsec;
+	sv.timeResidualFraction += fraction_msec;
 	if (sv.timeResidualFraction >= 1.0f)
 	{
 		sv.timeResidualFraction -= 1.0f;
@@ -509,7 +508,7 @@ void SV_Frame(int msec, const float fractionMsec)
 			sv.timeResidual++;
 		}
 	}
-	if (sv.timeResidual < frameMsec)
+	if (sv.timeResidual < frame_msec)
 	{
 		return;
 	}
@@ -539,16 +538,16 @@ void SV_Frame(int msec, const float fractionMsec)
 
 	if (com_speeds->integer)
 	{
-		startTime = Sys_Milliseconds();
+		start_time = Sys_Milliseconds();
 	}
 
 	//	SV_BotFrame( sv.time );
 
 	// run the game simulation in chunks
-	while (sv.timeResidual >= frameMsec)
+	while (sv.timeResidual >= frame_msec)
 	{
-		sv.timeResidual -= frameMsec;
-		sv.time += frameMsec;
+		sv.timeResidual -= frame_msec;
+		sv.time += frame_msec;
 		re.G2API_SetTime(sv.time, G2T_SV_TIME);
 
 		// let everything in the world think and move
@@ -557,7 +556,7 @@ void SV_Frame(int msec, const float fractionMsec)
 
 	if (com_speeds->integer)
 	{
-		time_game = Sys_Milliseconds() - startTime;
+		time_game = Sys_Milliseconds() - start_time;
 	}
 
 	SG_TestSave();

@@ -119,12 +119,11 @@ public:
 
 private:
 	void AddEntry(const char* psLocalReference);
-	int GetNumStrings(void);
 	void SetString(const char* psLocalReference, const char* psNewString, SE_BOOL bEnglishDebug);
 	SE_BOOL SetReference(int iIndex, const char* psNewString);
 	void AddFlagReference(const char* psLocalReference, const char* psFlagName);
-	const char* GetCurrentFileName(void);
-	const char* GetCurrentReference_ParseOnly(void) const;
+	const char* GetCurrentFileName();
+	const char* GetCurrentReference_ParseOnly() const;
 	SE_BOOL CheckLineForKeyword(const char* psKeyword, const char*& psLine);
 	static const char* InsideQuotes(const char* psLine);
 	static const char* ConvertCRLiterals_Read(const char* psString);
@@ -1231,14 +1230,14 @@ const char* SE_LoadLanguage(const char* psLanguage, SE_BOOL bLoadDebug /* = SE_T
 //
 // instead of re-loading just the files we've already loaded I'm going to load the whole language (simpler)
 //
-void SE_CheckForLanguageUpdates(void)
+void SE_CheckForLanguageUpdates()
 {
 	if (se_language && se_language->modified)
 	{
-		const char* psErrorMessage = SE_LoadLanguage(se_language->string, SE_TRUE);
-		if (psErrorMessage)
+		const char* ps_error_message = SE_LoadLanguage(se_language->string, SE_TRUE);
+		if (ps_error_message)
 		{
-			Com_Error(ERR_DROP, psErrorMessage);
+			Com_Error(ERR_DROP, ps_error_message);
 		}
 		se_language->modified = SE_FALSE;
 	}

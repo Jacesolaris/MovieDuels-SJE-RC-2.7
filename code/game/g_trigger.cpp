@@ -180,7 +180,7 @@ void Use_Multi(gentity_t* ent, gentity_t* other, gentity_t* activator)
 	multi_trigger(ent, activator);
 }
 
-extern int Pilot_ActivePilotCount(void);
+extern int Pilot_ActivePilotCount();
 
 void Touch_Multi(gentity_t* self, gentity_t* other, trace_t* trace)
 {
@@ -309,15 +309,15 @@ void Touch_Multi(gentity_t* self, gentity_t* other, trace_t* trace)
 
 	if (other->client && self->radius)
 	{
-		vec3_t eyeSpot;
+		vec3_t eye_spot;
 
 		//Only works if your head is in it, but we allow leaning out
 		//NOTE: We don't use CalcEntitySpot SPOT_HEAD because we don't want this
 		//to be reliant on the physical model the player uses.
-		VectorCopy(other->currentOrigin, eyeSpot);
-		eyeSpot[2] += other->client->ps.viewheight;
+		VectorCopy(other->currentOrigin, eye_spot);
+		eye_spot[2] += other->client->ps.viewheight;
 
-		if (G_PointInBounds(eyeSpot, self->absmin, self->absmax))
+		if (G_PointInBounds(eye_spot, self->absmin, self->absmax))
 		{
 			if (!(other->client->ps.eFlags & EF_FIRING) &&
 				!(other->client->ps.eFlags & EF_ALT_FIRING))
@@ -1079,7 +1079,7 @@ void trigger_teleporter_find_closest_portal(gentity_t* self)
 {
 	gentity_t* found = nullptr;
 	vec3_t org;
-	float bestDist = 64 * 64;
+	float best_dist = 64 * 64;
 
 	VectorAdd(self->mins, self->maxs, org);
 	VectorScale(org, 0.5, org);
@@ -1088,10 +1088,10 @@ void trigger_teleporter_find_closest_portal(gentity_t* self)
 		vec3_t vec;
 		VectorSubtract(found->currentOrigin, org, vec);
 		const float dist = VectorLengthSquared(vec);
-		if (dist < bestDist)
+		if (dist < best_dist)
 		{
 			self->lastEnemy = found;
-			bestDist = dist;
+			best_dist = dist;
 		}
 	}
 
@@ -1183,7 +1183,7 @@ extern void JET_FlyStart(gentity_t* self);
 void hurt_touch(gentity_t* self, gentity_t* other, trace_t* trace)
 {
 	int dflags;
-	int actualDmg = self->damage;
+	int actual_dmg = self->damage;
 
 	if (self->svFlags & SVF_INACTIVE)
 	{
@@ -1267,7 +1267,7 @@ void hurt_touch(gentity_t* self, gentity_t* other, trace_t* trace)
 		if (self->attackDebounceTime < self->delay)
 		{
 			//FIXME: this is for the entire trigger, not per person, so if someone else jumped in after you were in it for 5 seconds, they'd get damaged faster
-			actualDmg = floor(static_cast<float>(self->damage * self->attackDebounceTime / self->delay));
+			actual_dmg = floor(static_cast<float>(self->damage * self->attackDebounceTime / self->delay));
 		}
 		self->attackDebounceTime += FRAMETIME;
 
@@ -1275,7 +1275,7 @@ void hurt_touch(gentity_t* self, gentity_t* other, trace_t* trace)
 		self->nextthink = level.time + FRAMETIME * 2;
 	}
 
-	if (actualDmg)
+	if (actual_dmg)
 	{
 		if (self->spawnflags & 64 && other->client) //electrical damage
 		{
@@ -1307,7 +1307,7 @@ void hurt_touch(gentity_t* self, gentity_t* other, trace_t* trace)
 				}
 				else
 				{
-					G_Damage(other, self, self, nullptr, nullptr, actualDmg, dflags | DAMAGE_NO_ARMOR, MOD_FALLING);
+					G_Damage(other, self, self, nullptr, nullptr, actual_dmg, dflags | DAMAGE_NO_ARMOR, MOD_FALLING);
 				}
 				// G_Damage will free this ent, which makes it s.number 0, so we must check inuse...
 				if (!other->s.number && other->health <= 0)
@@ -1334,7 +1334,7 @@ void hurt_touch(gentity_t* self, gentity_t* other, trace_t* trace)
 		}
 		else
 		{
-			G_Damage(other, self, self, nullptr, nullptr, actualDmg, dflags, MOD_TRIGGER_HURT);
+			G_Damage(other, self, self, nullptr, nullptr, actual_dmg, dflags, MOD_TRIGGER_HURT);
 		}
 		if (other && !other->s.number)
 		{
@@ -1506,7 +1506,7 @@ void shipboundary_touch(gentity_t* self, gentity_t* other, trace_t* trace)
 
 void shipboundary_think(gentity_t* ent)
 {
-	gentity_t* entityList[MAX_GENTITIES];
+	gentity_t* entity_list[MAX_GENTITIES];
 	int i = 0;
 
 	ent->nextthink = level.time + 100;
@@ -1517,19 +1517,19 @@ void shipboundary_think(gentity_t* ent)
 		return;
 	}
 
-	const int num_listed_entities = gi.EntitiesInBox(ent->absmin, ent->absmax, entityList, MAX_GENTITIES);
+	const int num_listed_entities = gi.EntitiesInBox(ent->absmin, ent->absmax, entity_list, MAX_GENTITIES);
 	while (i < num_listed_entities)
 	{
-		gentity_t* listedEnt = entityList[i];
-		if (listedEnt->inuse && listedEnt->client && listedEnt->s.m_iVehicleNum)
+		gentity_t* listed_ent = entity_list[i];
+		if (listed_ent->inuse && listed_ent->client && listed_ent->s.m_iVehicleNum)
 		{
-			if (listedEnt->NPC &&
-				listedEnt->client->NPC_class == CLASS_VEHICLE)
+			if (listed_ent->NPC &&
+				listed_ent->client->NPC_class == CLASS_VEHICLE)
 			{
-				const Vehicle_t* p_veh = listedEnt->m_pVehicle;
+				const Vehicle_t* p_veh = listed_ent->m_pVehicle;
 				if (p_veh && p_veh->m_pVehicleInfo->type == VH_FIGHTER)
 				{
-					shipboundary_touch(ent, listedEnt, nullptr);
+					shipboundary_touch(ent, listed_ent, nullptr);
 				}
 			}
 		}
@@ -1601,9 +1601,9 @@ void hyperspace_touch(const gentity_t* self, gentity_t* other, trace_t* trace)
 				}
 				VectorSubtract(other->client->ps.origin, ent->s.origin, diff);
 				AngleVectors(ent->s.angles, fwd, right, up);
-				const float fDiff = DotProduct(fwd, diff);
-				const float rDiff = DotProduct(right, diff);
-				const float uDiff = DotProduct(up, diff);
+				const float f_diff = DotProduct(fwd, diff);
+				const float r_diff = DotProduct(right, diff);
+				const float u_diff = DotProduct(up, diff);
 				//Now get the base position of the destination
 				ent = G_Find(nullptr, FOFS(targetname), self->target2);
 
@@ -1615,9 +1615,9 @@ void hyperspace_touch(const gentity_t* self, gentity_t* other, trace_t* trace)
 				VectorCopy(ent->s.origin, newOrg);
 				//finally, add the offset into the new origin
 				AngleVectors(ent->s.angles, fwd, right, up);
-				VectorMA(newOrg, fDiff * self->radius, fwd, newOrg);
-				VectorMA(newOrg, rDiff * self->radius, right, newOrg);
-				VectorMA(newOrg, uDiff * self->radius, up, newOrg);
+				VectorMA(newOrg, f_diff * self->radius, fwd, newOrg);
+				VectorMA(newOrg, r_diff * self->radius, right, newOrg);
+				VectorMA(newOrg, u_diff * self->radius, up, newOrg);
 				TeleportPlayer(other, newOrg, ent->s.angles);
 
 				if (other->m_pVehicle && other->m_pVehicle->m_pPilot)
@@ -1842,11 +1842,11 @@ void asteroid_move_to_start(gentity_t* self)
 
 void asteroid_field_think(gentity_t* self)
 {
-	const int numAsteroids = asteroid_count_num_asteroids(self);
+	const int num_asteroids = asteroid_count_num_asteroids(self);
 
 	self->nextthink = level.time + 500;
 
-	if (numAsteroids < self->count)
+	if (num_asteroids < self->count)
 	{
 		//need to spawn a new asteroid
 		gentity_t* newAsteroid = G_Spawn();
@@ -1882,7 +1882,7 @@ void asteroid_field_think(gentity_t* self)
 				asteroid_move_to_start2(newAsteroid, self);
 
 				//think again sooner if need even more
-				if (numAsteroids + 1 < self->count)
+				if (num_asteroids + 1 < self->count)
 				{
 					//still need at least one more
 					//spawn it in 100ms
@@ -2007,7 +2007,6 @@ ownername - If any, who to calc the distance from- default is the trigger_entdis
 example: target "biessman telsia" will look for the biessman and telsia NPC
 if it finds either of these within distance it will fire.
 
-  todo -
   add delay, count
   add monster classnames?????
   add LOS to it???

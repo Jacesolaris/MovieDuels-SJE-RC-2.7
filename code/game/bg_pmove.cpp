@@ -53,7 +53,6 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #include "wp_saber.h"
 #include "g_vehicles.h"
-#include <cfloat>
 
 extern qboolean G_DoDismemberment(gentity_t* self, vec3_t point, int mod, int hit_loc,
 	qboolean force = qfalse);
@@ -2817,9 +2816,9 @@ static void PM_WaterMove()
 			}
 			else {
 				pm->ps->velocity[2] = 50;
+			}
 		}
 	}
-}
 #endif
 	PM_Friction();
 
@@ -3531,7 +3530,8 @@ static void PM_WalkMove()
 	}
 	else if (pml.groundTrace.surfaceFlags & SURF_SLICK)
 	{
-		if (g_allowslipping->integer && !(pm->cmd.buttons & BUTTON_WALKING))
+		if (g_allowslipping->integer &&
+			!(pm->cmd.buttons & BUTTON_WALKING))
 		{
 			accelerate = 0.1f;
 

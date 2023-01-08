@@ -45,9 +45,9 @@ constexpr auto SPF_TURRETG2_LEAD_ENEMY = 8;
 
 //------------------------------------------------------------------------------------------------------------
 void TurretPain(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, const vec3_t point, int damage,
-                const int mod,
-                int hit_loc)
-//------------------------------------------------------------------------------------------------------------
+	const int mod,
+	int hit_loc)
+	//------------------------------------------------------------------------------------------------------------
 {
 	vec3_t dir;
 
@@ -72,11 +72,11 @@ void TurretPain(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, cons
 
 //------------------------------------------------------------------------------------------------------------
 void turret_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, const int damage, const int meansOfDeath,
-                int dFlags,
-                int hit_loc)
-//------------------------------------------------------------------------------------------------------------
+	int dFlags,
+	int hit_loc)
+	//------------------------------------------------------------------------------------------------------------
 {
-	vec3_t forward = {0, 0, -1};
+	vec3_t forward = { 0, 0, -1 };
 
 	// Turn off the thinking of the base & use it's targets
 	self->e_ThinkFunc = thinkF_NULL;
@@ -161,7 +161,7 @@ void TurboLaser_SetBoneAnim(gentity_t* eweb, const int start_frame, const int en
 	//now set the animation on the server ghoul2 instance.
 	assert(&eweb->ghoul2[0]);
 	gi.G2API_SetBoneAnim(&eweb->ghoul2[0], "model_root", start_frame, end_frame,
-	                     BONE_ANIM_OVERRIDE_FREEZE | BONE_ANIM_BLEND, 1.0f, level.time, -1, 100);
+		BONE_ANIM_OVERRIDE_FREEZE | BONE_ANIM_BLEND, 1.0f, level.time, -1, 100);
 }
 
 constexpr auto START_DIS = 15;
@@ -254,18 +254,18 @@ void turret_head_think(gentity_t* self)
 
 		// Getting the flash bolt here
 		gi.G2API_GetBoltMatrix(self->ghoul2,
-		                       0,
-		                       self->spawnflags & SPF_TURRETG2_TURBO
-			                       ? (self->alt_fire
-				                          ? gi.G2API_AddBolt(&self->ghoul2[0], "*muzzle2")
-				                          : gi.G2API_AddBolt(&self->ghoul2[0], "*muzzle1"))
-			                       : gi.G2API_AddBolt(&self->ghoul2[0], "*flash03"),
-		                       &bolt_matrix,
-		                       self->currentAngles,
-		                       self->currentOrigin,
-		                       level.time,
-		                       nullptr,
-		                       self->modelScale);
+			0,
+			self->spawnflags & SPF_TURRETG2_TURBO
+			? (self->alt_fire
+				? gi.G2API_AddBolt(&self->ghoul2[0], "*muzzle2")
+				: gi.G2API_AddBolt(&self->ghoul2[0], "*muzzle1"))
+			: gi.G2API_AddBolt(&self->ghoul2[0], "*flash03"),
+			&bolt_matrix,
+			self->currentAngles,
+			self->currentOrigin,
+			level.time,
+			nullptr,
+			self->modelScale);
 		if (self->spawnflags & SPF_TURRETG2_TURBO)
 		{
 			self->alt_fire = static_cast<qboolean>(!self->alt_fire);
@@ -293,10 +293,10 @@ void turret_head_think(gentity_t* self)
 static void turret_aim(gentity_t* self)
 //-----------------------------------------------------
 {
-	vec3_t desiredAngles;
-	float diffYaw = 0.0f, diffPitch = 0.0f;
-	const float maxYawSpeed = self->spawnflags & SPF_TURRETG2_TURBO ? 30.0f : 14.0f;
-	const float maxPitchSpeed = self->spawnflags & SPF_TURRETG2_TURBO ? 15.0f : 3.0f;
+	vec3_t desired_angles;
+	float diff_yaw = 0.0f, diff_pitch = 0.0f;
+	const float max_yaw_speed = self->spawnflags & SPF_TURRETG2_TURBO ? 30.0f : 14.0f;
+	const float max_pitch_speed = self->spawnflags & SPF_TURRETG2_TURBO ? 15.0f : 3.0f;
 
 	// move our gun base yaw to where we should be at this time....
 	EvaluateTrajectory(&self->s.apos, level.time, self->currentAngles);
@@ -307,7 +307,7 @@ static void turret_aim(gentity_t* self)
 	{
 		vec3_t org2;
 		vec3_t org;
-		vec3_t enemyDir;
+		vec3_t enemy_dir;
 		// ...then we'll calculate what new aim adjustments we should attempt to make this frame
 		// Aim at enemy
 		if (self->enemy->client)
@@ -330,26 +330,26 @@ static void turret_aim(gentity_t* self)
 
 		// Getting the "eye" here
 		gi.G2API_GetBoltMatrix(self->ghoul2,
-		                       0,
-		                       self->spawnflags & SPF_TURRETG2_TURBO
-			                       ? (self->alt_fire
-				                          ? gi.G2API_AddBolt(&self->ghoul2[0], "*muzzle2")
-				                          : gi.G2API_AddBolt(&self->ghoul2[0], "*muzzle1"))
-			                       : gi.G2API_AddBolt(&self->ghoul2[0], "*flash03"),
-		                       &bolt_matrix,
-		                       self->currentAngles,
-		                       self->s.origin,
-		                       level.time,
-		                       nullptr,
-		                       self->modelScale);
+			0,
+			self->spawnflags & SPF_TURRETG2_TURBO
+			? (self->alt_fire
+				? gi.G2API_AddBolt(&self->ghoul2[0], "*muzzle2")
+				: gi.G2API_AddBolt(&self->ghoul2[0], "*muzzle1"))
+			: gi.G2API_AddBolt(&self->ghoul2[0], "*flash03"),
+			&bolt_matrix,
+			self->currentAngles,
+			self->s.origin,
+			level.time,
+			nullptr,
+			self->modelScale);
 
 		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, org2);
 
-		VectorSubtract(org, org2, enemyDir);
-		vectoangles(enemyDir, desiredAngles);
+		VectorSubtract(org, org2, enemy_dir);
+		vectoangles(enemy_dir, desired_angles);
 
-		diffYaw = AngleSubtract(self->currentAngles[YAW], desiredAngles[YAW]);
-		diffPitch = AngleSubtract(self->speed, desiredAngles[PITCH]);
+		diff_yaw = AngleSubtract(self->currentAngles[YAW], desired_angles[YAW]);
+		diff_pitch = AngleSubtract(self->speed, desired_angles[PITCH]);
 	}
 	else
 	{
@@ -357,35 +357,35 @@ static void turret_aim(gentity_t* self)
 		//		diffYaw = sin( level.time * 0.0001f + self->count ) * 5.0f;	// don't do this for now since it can make it go into walls.
 	}
 
-	if (diffYaw)
+	if (diff_yaw)
 	{
-		vec3_t setAngle;
+		vec3_t set_angle;
 		// cap max speed....
-		if (fabs(diffYaw) > maxYawSpeed)
+		if (fabs(diff_yaw) > max_yaw_speed)
 		{
-			diffYaw = diffYaw >= 0 ? maxYawSpeed : -maxYawSpeed;
+			diff_yaw = diff_yaw >= 0 ? max_yaw_speed : -max_yaw_speed;
 		}
 
 		// ...then set up our desired yaw
-		VectorSet(setAngle, 0.0f, diffYaw, 0.0f);
+		VectorSet(set_angle, 0.0f, diff_yaw, 0.0f);
 
 		VectorCopy(self->currentAngles, self->s.apos.trBase);
-		VectorScale(setAngle, -5, self->s.apos.trDelta);
+		VectorScale(set_angle, -5, self->s.apos.trDelta);
 		self->s.apos.trTime = level.time;
 		self->s.apos.trType = TR_LINEAR;
 	}
 
-	if (diffPitch)
+	if (diff_pitch)
 	{
-		if (fabs(diffPitch) > maxPitchSpeed)
+		if (fabs(diff_pitch) > max_pitch_speed)
 		{
 			// cap max speed
-			self->speed += diffPitch > 0.0f ? -maxPitchSpeed : maxPitchSpeed;
+			self->speed += diff_pitch > 0.0f ? -max_pitch_speed : max_pitch_speed;
 		}
 		else
 		{
 			// small enough, so just add half the diff so we smooth out the stopping
-			self->speed -= diffPitch; //desiredAngles[PITCH];
+			self->speed -= diff_pitch; //desiredAngles[PITCH];
 		}
 
 		// Note that this is NOT interpolated, so it will be less smooth...On the other hand, it does use Ghoul2 to blend, so it may smooth it out a bit?
@@ -393,31 +393,31 @@ static void turret_aim(gentity_t* self)
 		{
 			if (self->spawnflags & 2)
 			{
-				VectorSet(desiredAngles, 0.0f, 0.0f, -self->speed);
+				VectorSet(desired_angles, 0.0f, 0.0f, -self->speed);
 			}
 			else
 			{
-				VectorSet(desiredAngles, 0.0f, 0.0f, self->speed);
+				VectorSet(desired_angles, 0.0f, 0.0f, self->speed);
 			}
-			turret_SetBoneAngles(self, "pitch", desiredAngles);
+			turret_SetBoneAngles(self, "pitch", desired_angles);
 		}
 		else
 		{
 			// Note that this is NOT interpolated, so it will be less smooth...On the other hand, it does use Ghoul2 to blend, so it may smooth it out a bit?
 			if (self->spawnflags & 2)
 			{
-				VectorSet(desiredAngles, self->speed, 0.0f, 0.0f);
+				VectorSet(desired_angles, self->speed, 0.0f, 0.0f);
 			}
 			else
 			{
-				VectorSet(desiredAngles, -self->speed, 0.0f, 0.0f);
+				VectorSet(desired_angles, -self->speed, 0.0f, 0.0f);
 			}
-			gi.G2API_SetBoneAngles(&self->ghoul2[0], "Bone_body", desiredAngles,
-			                       BONE_ANGLES_POSTMULT, POSITIVE_Y, POSITIVE_Z, POSITIVE_X, nullptr, 100, cg.time);
+			gi.G2API_SetBoneAngles(&self->ghoul2[0], "Bone_body", desired_angles,
+				BONE_ANGLES_POSTMULT, POSITIVE_Y, POSITIVE_Z, POSITIVE_X, nullptr, 100, cg.time);
 		}
 	}
 
-	if (diffYaw || diffPitch)
+	if (diff_yaw || diff_pitch)
 	{
 		self->s.loopSound = G_SoundIndex("sound/chars/turret/move.wav");
 	}
@@ -461,9 +461,9 @@ static qboolean turret_find_enemies(gentity_t* self)
 		return qfalse;
 
 	qboolean found = qfalse;
-	float bestDist = self->radius * self->radius;
+	float best_dist = self->radius * self->radius;
 	vec3_t org, org2;
-	gentity_t *entity_list[MAX_GENTITIES], *bestTarget = nullptr;
+	gentity_t* entity_list[MAX_GENTITIES], * bestTarget = nullptr;
 
 	if (self->aimDebounceTime > level.time) // time since we've been shut off
 	{
@@ -526,12 +526,12 @@ static qboolean turret_find_enemies(gentity_t* self)
 
 		if (!tr.allsolid && !tr.startsolid && (tr.fraction == 1.0 || tr.entity_num == target->s.number))
 		{
-			vec3_t enemyDir;
+			vec3_t enemy_dir;
 			// Only acquire if have a clear shot, Is it in range and closer than our best?
-			VectorSubtract(target->currentOrigin, self->currentOrigin, enemyDir);
-			const float enemyDist = VectorLengthSquared(enemyDir);
+			VectorSubtract(target->currentOrigin, self->currentOrigin, enemy_dir);
+			const float enemy_dist = VectorLengthSquared(enemy_dir);
 
-			if (enemyDist < bestDist) // all things equal, keep current
+			if (enemy_dist < best_dist) // all things equal, keep current
 			{
 				if (self->attackDebounceTime < level.time)
 				{
@@ -543,7 +543,7 @@ static qboolean turret_find_enemies(gentity_t* self)
 				}
 
 				bestTarget = target;
-				bestDist = enemyDist;
+				best_dist = enemy_dist;
 				found = qtrue;
 			}
 		}
@@ -571,7 +571,7 @@ static qboolean turret_find_enemies(gentity_t* self)
 void turret_base_think(gentity_t* self)
 //-----------------------------------------------------
 {
-	qboolean turnOff = qtrue;
+	qboolean turn_off = qtrue;
 
 	self->nextthink = level.time + FRAMETIME;
 
@@ -592,19 +592,19 @@ void turret_base_think(gentity_t* self)
 	{
 		if (turret_find_enemies(self))
 		{
-			turnOff = qfalse;
+			turn_off = qfalse;
 		}
 	}
 	else
 	{
 		if (self->enemy->health > 0)
 		{
-			vec3_t enemyDir;
+			vec3_t enemy_dir;
 			// enemy is alive
-			VectorSubtract(self->enemy->currentOrigin, self->currentOrigin, enemyDir);
-			const float enemyDist = VectorLengthSquared(enemyDir);
+			VectorSubtract(self->enemy->currentOrigin, self->currentOrigin, enemy_dir);
+			const float enemy_dist = VectorLengthSquared(enemy_dir);
 
-			if (enemyDist < self->radius * self->radius)
+			if (enemy_dist < self->radius * self->radius)
 			{
 				// was in valid radius
 				if (gi.inPVS(self->currentOrigin, self->enemy->currentOrigin))
@@ -632,12 +632,12 @@ void turret_base_think(gentity_t* self)
 						org2[2] -= 10;
 					}
 					gi.trace(&tr, org2, nullptr, nullptr, org, self->s.number, MASK_SHOT, static_cast<EG2_Collision>(0),
-					         0);
+						0);
 
 					if (self->spawnflags & SPF_TURRETG2_TURBO || !tr.allsolid && !tr.startsolid && tr.entity_num == self
 						->enemy->s.number)
 					{
-						turnOff = qfalse; // Can see our enemy
+						turn_off = qfalse; // Can see our enemy
 					}
 				}
 			}
@@ -646,7 +646,7 @@ void turret_base_think(gentity_t* self)
 		turret_head_think(self);
 	}
 
-	if (turnOff)
+	if (turn_off)
 	{
 		if (self->bounceCount < level.time) // bounceCount is used to keep the thing from ping-ponging from on to off
 		{
@@ -682,74 +682,6 @@ void turret_base_use(const gentity_t* self, gentity_t* other, gentity_t* activat
 //special routine for tracking angles between client and server -rww
 void turret_SetBoneAngles(gentity_t* ent, const char* bone, const vec3_t angles)
 {
-	/*
-	int *thebone = &ent->s.boneIndex1;
-	int *firstFree = NULL;
-	int i = 0;
-	int bone_index = G_BoneIndex(bone);
-	int flags;
-	Eorientations up, right, forward;
-	vec3_t *boneVector = &ent->s.boneAngles1;
-	vec3_t *freeBoneVec = NULL;
-
-	while (thebone)
-	{
-		if (!*thebone && !firstFree)
-		{ //if the value is 0 then this index is clear, we can use it if we don't find the bone we want already existing.
-			firstFree = thebone;
-			freeBoneVec = boneVector;
-		}
-		else if (*thebone)
-		{
-			if (*thebone == bone_index)
-			{ //this is it
-				break;
-			}
-		}
-
-		switch (i)
-		{
-		case 0:
-			thebone = &ent->s.boneIndex2;
-			boneVector = &ent->s.boneAngles2;
-			break;
-		case 1:
-			thebone = &ent->s.boneIndex3;
-			boneVector = &ent->s.boneAngles3;
-			break;
-		case 2:
-			thebone = &ent->s.boneIndex4;
-			boneVector = &ent->s.boneAngles4;
-			break;
-		default:
-			thebone = NULL;
-			boneVector = NULL;
-			break;
-		}
-
-		i++;
-	}
-
-	if (!thebone)
-	{ //didn't find it, create it
-		if (!firstFree)
-		{ //no free bones.. can't do a thing then.
-			Com_Printf("WARNING: NPC has no free bone indexes\n");
-			return;
-		}
-
-		thebone = firstFree;
-
-		*thebone = bone_index;
-		boneVector = freeBoneVec;
-	}
-
-	//If we got here then we have a vector and an index.
-
-	//Copy the angles over the vector in the entitystate, so we can use the corresponding index
-	//to set the bone angles on the client.
-	VectorCopy(angles, *boneVector);
-*/
 	//Now set the angles on our server instance if we have one.
 
 	if (!ent->ghoul2.size())
@@ -762,11 +694,8 @@ void turret_SetBoneAngles(gentity_t* ent, const char* bone, const vec3_t angles)
 	constexpr Eorientations right = NEGATIVE_Z;
 	constexpr Eorientations forward = NEGATIVE_X;
 
-	//first 3 bits is forward, second 3 bits is right, third 3 bits is up
-	//ent->s.boneOrient = ((forward)|(right<<3)|(up<<6));
-
 	gi.G2API_SetBoneAngles(&ent->ghoul2[0], bone, angles, flags, up,
-	                       right, forward, nullptr, 100, level.time);
+		right, forward, nullptr, 100, level.time);
 }
 
 void turret_set_models(gentity_t* self, const qboolean dying)
@@ -780,20 +709,6 @@ void turret_set_models(gentity_t* self, const qboolean dying)
 		}
 
 		gi.G2API_RemoveGhoul2Model(self->ghoul2, 0);
-		/*G_KillG2Queue( self->s.number );
-		self->s.modelGhoul2 = 0;
-
-		gi.G2API_InitGhoul2Model( &self->ghoul2,
-									name2,
-									0, //base->s.modelindex,
-									//note, this is not the same kind of index - this one's referring to the actual
-									//index of the model in the g2 instance, whereas modelindex is the index of a
-									//configstring -rww
-									0,
-									0,
-									0,
-									0);
-		*/
 	}
 	else
 	{
@@ -803,41 +718,31 @@ void turret_set_models(gentity_t* self, const qboolean dying)
 			self->s.modelindex2 = G_ModelIndex(name2);
 			//set the new onw
 			gi.G2API_InitGhoul2Model(self->ghoul2,
-			                         name,
-			                         0, //base->s.modelindex,
-			                         //note, this is not the same kind of index - this one's referring to the actual
-			                         //index of the model in the g2 instance, whereas modelindex is the index of a
-			                         //configstring -rww
-			                         0,
-			                         0,
-			                         0,
-			                         0);
+				name,
+				0, //base->s.modelindex,
+				//note, this is not the same kind of index - this one's referring to the actual
+				//index of the model in the g2 instance, whereas modelindex is the index of a
+				//configstring -rww
+				0,
+				0,
+				0,
+				0);
 		}
 		else
 		{
 			self->s.modelindex = G_ModelIndex(name3);
 			//set the new onw
 			gi.G2API_InitGhoul2Model(self->ghoul2,
-			                         name3,
-			                         0, //base->s.modelindex,
-			                         //note, this is not the same kind of index - this one's referring to the actual
-			                         //index of the model in the g2 instance, whereas modelindex is the index of a
-			                         //configstring -rww
-			                         0,
-			                         0,
-			                         0,
-			                         0);
+				name3,
+				0, //base->s.modelindex,
+				//note, this is not the same kind of index - this one's referring to the actual
+				//index of the model in the g2 instance, whereas modelindex is the index of a
+				//configstring -rww
+				0,
+				0,
+				0,
+				0);
 		}
-
-		/*self->s.modelGhoul2 = 1;
-		if ( (self->spawnflags&SPF_TURRETG2_TURBO) )
-		{//larger
-			self->s.g2radius = 128;
-		}
-		else
-		{
-			self->s.g2radius = 80;
-		}*/
 
 		if (self->spawnflags & SPF_TURRETG2_TURBO)
 		{
@@ -887,7 +792,7 @@ void SP_misc_turret(gentity_t* base)
 	turret_set_models(base, qfalse);
 
 	gi.G2API_SetBoneAngles(&base->ghoul2[base->playerModel], "Bone_body", vec3_origin, BONE_ANGLES_POSTMULT, POSITIVE_Y,
-	                       POSITIVE_Z, POSITIVE_X, nullptr, 0, 0);
+		POSITIVE_Z, POSITIVE_X, nullptr, 0, 0);
 	base->torsoBolt = gi.G2API_AddBolt(&base->ghoul2[base->playerModel], "*flash03");
 
 	finish_spawning_turret(base);
@@ -1144,11 +1049,11 @@ void SP_misc_ns_turret(gentity_t* base)
 	base->s.modelindex = G_ModelIndex("models/map_objects/nar_shaddar/turret/turret.glm");
 	base->s.modelindex2 = G_ModelIndex("models/map_objects/imp_mine/turret_damage.md3"); // FIXME!
 	base->playerModel = gi.G2API_InitGhoul2Model(base->ghoul2, "models/map_objects/nar_shaddar/turret/turret.glm",
-	                                             base->s.modelindex, NULL_HANDLE, NULL_HANDLE, 0, 0);
+		base->s.modelindex, NULL_HANDLE, NULL_HANDLE, 0, 0);
 	base->s.radius = 80.0f;
 
 	gi.G2API_SetBoneAngles(&base->ghoul2[base->playerModel], "Bone_body", vec3_origin, BONE_ANGLES_POSTMULT, POSITIVE_Y,
-	                       POSITIVE_Z, POSITIVE_X, nullptr, 0, 0);
+		POSITIVE_Z, POSITIVE_X, nullptr, 0, 0);
 	base->torsoBolt = gi.G2API_AddBolt(&base->ghoul2[base->playerModel], "*flash02");
 
 	finish_spawning_turret(base);
@@ -1180,7 +1085,7 @@ void laser_arm_fire(gentity_t* ent)
 	VectorMA(start, 4096, fwd, end);
 
 	gi.trace(&trace, start, nullptr, nullptr, end, ENTITYNUM_NONE, MASK_SHOT, static_cast<EG2_Collision>(0),
-	         0); //ignore
+		0); //ignore
 	ent->fly_sound_debounce_time = level.time; //used as lastShotTime
 
 	// Only deal damage when in alt-fire mode
@@ -1192,7 +1097,7 @@ void laser_arm_fire(gentity_t* ent)
 			if (hapless_victim && hapless_victim->takedamage && ent->damage)
 			{
 				G_Damage(hapless_victim, ent, ent->nextTrain->activator, fwd, trace.endpos, ent->damage,
-				         DAMAGE_IGNORE_TEAM, MOD_UNKNOWN);
+					DAMAGE_IGNORE_TEAM, MOD_UNKNOWN);
 			}
 		}
 	}
@@ -1209,7 +1114,7 @@ void laser_arm_fire(gentity_t* ent)
 
 void laser_arm_use(gentity_t* self, gentity_t* other, gentity_t* activator)
 {
-	vec3_t newAngles;
+	vec3_t new_angles;
 
 	self->activator = activator;
 	switch (self->count)
@@ -1228,45 +1133,45 @@ void laser_arm_use(gentity_t* self, gentity_t* other, gentity_t* activator)
 	case 1:
 		//Yaw left
 		//gi.Printf("LEFT...\n");
-		VectorCopy(self->lastEnemy->currentAngles, newAngles);
-		newAngles[1] += self->speed;
-		G_SetAngles(self->lastEnemy, newAngles);
-	//		bolt_head_to_arm( self->lastEnemy, self->lastEnemy->lastEnemy, LARM_FOFS, LARM_ROFS, LARM_UOFS );
+		VectorCopy(self->lastEnemy->currentAngles, new_angles);
+		new_angles[1] += self->speed;
+		G_SetAngles(self->lastEnemy, new_angles);
+		//		bolt_head_to_arm( self->lastEnemy, self->lastEnemy->lastEnemy, LARM_FOFS, LARM_ROFS, LARM_UOFS );
 		G_Sound(self->lastEnemy, G_SoundIndex("sound/chars/l_arm/move.wav"));
 		break;
 	case 2:
 		//Yaw right
 		//gi.Printf("RIGHT...\n");
-		VectorCopy(self->lastEnemy->currentAngles, newAngles);
-		newAngles[1] -= self->speed;
-		G_SetAngles(self->lastEnemy, newAngles);
-	//		bolt_head_to_arm( self->lastEnemy, self->lastEnemy->lastEnemy, LARM_FOFS, LARM_ROFS, LARM_UOFS );
+		VectorCopy(self->lastEnemy->currentAngles, new_angles);
+		new_angles[1] -= self->speed;
+		G_SetAngles(self->lastEnemy, new_angles);
+		//		bolt_head_to_arm( self->lastEnemy, self->lastEnemy->lastEnemy, LARM_FOFS, LARM_ROFS, LARM_UOFS );
 		G_Sound(self->lastEnemy, G_SoundIndex("sound/chars/l_arm/move.wav"));
 		break;
 	case 3:
 		//pitch up
 		//gi.Printf("UP...\n");
 		//FIXME: Clamp
-		VectorCopy(self->lastEnemy->lastEnemy->currentAngles, newAngles);
-		newAngles[0] -= self->speed;
-		if (newAngles[0] < -45)
+		VectorCopy(self->lastEnemy->lastEnemy->currentAngles, new_angles);
+		new_angles[0] -= self->speed;
+		if (new_angles[0] < -45)
 		{
-			newAngles[0] = -45;
+			new_angles[0] = -45;
 		}
-		G_SetAngles(self->lastEnemy->lastEnemy, newAngles);
+		G_SetAngles(self->lastEnemy->lastEnemy, new_angles);
 		G_Sound(self->lastEnemy->lastEnemy, G_SoundIndex("sound/chars/l_arm/move.wav"));
 		break;
 	case 4:
 		//pitch down
 		//gi.Printf("DOWN...\n");
 		//FIXME: Clamp
-		VectorCopy(self->lastEnemy->lastEnemy->currentAngles, newAngles);
-		newAngles[0] += self->speed;
-		if (newAngles[0] > 90)
+		VectorCopy(self->lastEnemy->lastEnemy->currentAngles, new_angles);
+		new_angles[0] += self->speed;
+		if (new_angles[0] > 90)
 		{
-			newAngles[0] = 90;
+			new_angles[0] = 90;
 		}
-		G_SetAngles(self->lastEnemy->lastEnemy, newAngles);
+		G_SetAngles(self->lastEnemy->lastEnemy, new_angles);
 		G_Sound(self->lastEnemy->lastEnemy, G_SoundIndex("sound/chars/l_arm/move.wav"));
 		break;
 	}
@@ -1293,16 +1198,16 @@ What it does when used depends on it's "count" (can be set by a script)
 */
 void laser_arm_start(gentity_t* base)
 {
-	vec3_t armAngles;
-	vec3_t headAngles;
+	vec3_t arm_angles;
+	vec3_t head_angles;
 
 	base->e_ThinkFunc = thinkF_NULL;
 	//We're the base, spawn the arm and head
 	gentity_t* arm = G_Spawn();
 	gentity_t* head = G_Spawn();
 
-	VectorCopy(base->s.angles, armAngles);
-	VectorCopy(base->s.angles, headAngles);
+	VectorCopy(base->s.angles, arm_angles);
+	VectorCopy(base->s.angles, head_angles);
 	if (base->target && base->target[0])
 	{
 		//Start out pointing at something
@@ -1319,9 +1224,9 @@ void laser_arm_start(gentity_t* base)
 
 			VectorSubtract(targ->currentOrigin, base->s.origin, dir);
 			vectoangles(dir, angles);
-			armAngles[1] = angles[1];
-			headAngles[0] = angles[0];
-			headAngles[1] = angles[1];
+			arm_angles[1] = angles[1];
+			head_angles[0] = angles[0];
+			head_angles[1] = angles[1];
 		}
 	}
 
@@ -1351,22 +1256,22 @@ void laser_arm_start(gentity_t* base)
 	//Does nothing, not solid, gets removed when head explodes
 	G_SetOrigin(arm, base->s.origin);
 	gi.linkentity(arm);
-	G_SetAngles(arm, armAngles);
+	G_SetAngles(arm, arm_angles);
 	//	bolt_head_to_arm( arm, head, LARM_FOFS, LARM_ROFS, LARM_UOFS );
 	arm->s.modelindex = G_ModelIndex("models/mapobjects/dn/laser_arm.md3");
 
 	//Head
 	//Fires when enemy detected, animates, can be blown up
 	//Need to normalize the headAngles pitch for the clamping later
-	if (headAngles[0] < -180)
+	if (head_angles[0] < -180)
 	{
-		headAngles[0] += 360;
+		head_angles[0] += 360;
 	}
-	else if (headAngles[0] > 180)
+	else if (head_angles[0] > 180)
 	{
-		headAngles[0] -= 360;
+		head_angles[0] -= 360;
 	}
-	G_SetAngles(head, headAngles);
+	G_SetAngles(head, head_angles);
 	head->s.modelindex = G_ModelIndex("models/mapobjects/dn/laser_head.md3");
 	head->s.eType = ET_GENERAL;
 	//	head->svFlags |= SVF_BROADCAST;// Broadcast to all clients
@@ -1453,9 +1358,9 @@ void pas_fire(gentity_t* ent)
 
 	// Getting the flash bolt here
 	gi.G2API_GetBoltMatrix(ent->ghoul2, ent->playerModel,
-	                       ent->torsoBolt,
-	                       &bolt_matrix, ent->currentAngles, ent->s.origin, cg.time ? cg.time : level.time,
-	                       nullptr, ent->s.modelScale);
+		ent->torsoBolt,
+		&bolt_matrix, ent->currentAngles, ent->s.origin, cg.time ? cg.time : level.time,
+		nullptr, ent->s.modelScale);
 
 	gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, org);
 	gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, POSITIVE_Y, fwd);
@@ -1493,7 +1398,7 @@ static qboolean pas_find_enemies(gentity_t* self)
 //-----------------------------------------------------
 {
 	qboolean found = qfalse;
-	float bestDist = self->radius * self->radius;
+	float best_dist = self->radius * self->radius;
 	vec3_t org, org2;
 	gentity_t* entity_list[MAX_GENTITIES];
 
@@ -1511,9 +1416,9 @@ static qboolean pas_find_enemies(gentity_t* self)
 
 	// Getting the "eye" here
 	gi.G2API_GetBoltMatrix(self->ghoul2, self->playerModel,
-	                       self->torsoBolt,
-	                       &bolt_matrix, self->currentAngles, self->s.origin, cg.time ? cg.time : level.time,
-	                       nullptr, self->s.modelScale);
+		self->torsoBolt,
+		&bolt_matrix, self->currentAngles, self->s.origin, cg.time ? cg.time : level.time,
+		nullptr, self->s.modelScale);
 
 	gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, org2);
 
@@ -1556,17 +1461,17 @@ static qboolean pas_find_enemies(gentity_t* self)
 
 		if (!tr.allsolid && !tr.startsolid && (tr.fraction == 1.0 || tr.entity_num == target->s.number))
 		{
-			vec3_t enemyDir;
+			vec3_t enemy_dir;
 			// Only acquire if have a clear shot, Is it in range and closer than our best?
-			VectorSubtract(target->currentOrigin, self->currentOrigin, enemyDir);
-			const float enemyDist = VectorLengthSquared(enemyDir);
+			VectorSubtract(target->currentOrigin, self->currentOrigin, enemy_dir);
+			const float enemy_dist = VectorLengthSquared(enemy_dir);
 
 			if (target->s.number) // don't do this for the player
 			{
 				G_StartFlee(target, self, self->currentOrigin, AEL_DANGER, 3000, 5000);
 			}
 
-			if (enemyDist < bestDist) // all things equal, keep current
+			if (enemy_dist < best_dist) // all things equal, keep current
 			{
 				if (self->attackDebounceTime + 2000 < level.time)
 				{
@@ -1578,7 +1483,7 @@ static qboolean pas_find_enemies(gentity_t* self)
 				}
 
 				G_SetEnemy(self, target);
-				bestDist = enemyDist;
+				best_dist = enemy_dist;
 				found = qtrue;
 			}
 		}
@@ -1610,9 +1515,9 @@ void pas_adjust_enemy(gentity_t* ent)
 
 		// Getting the "eye" here
 		gi.G2API_GetBoltMatrix(ent->ghoul2, ent->playerModel,
-		                       ent->torsoBolt,
-		                       &bolt_matrix, ent->currentAngles, ent->s.origin, cg.time ? cg.time : level.time,
-		                       nullptr, ent->s.modelScale);
+			ent->torsoBolt,
+			&bolt_matrix, ent->currentAngles, ent->s.origin, cg.time ? cg.time : level.time,
+			nullptr, ent->s.modelScale);
 
 		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, org2);
 
@@ -1675,7 +1580,7 @@ void pas_think(gentity_t* ent)
 		// let us do our animation, then we are good to go in terms of pounding the crap out of enemies.
 		ent->damage = 1;
 		gi.G2API_SetBoneAnimIndex(&ent->ghoul2[ent->playerModel], ent->rootBone, 0, 11, BONE_ANIM_OVERRIDE_FREEZE, 0.8f,
-		                          cg.time, -1, -1);
+			cg.time, -1, -1);
 		ent->nextthink = level.time + 1200;
 		return;
 	}
@@ -1700,17 +1605,17 @@ void pas_think(gentity_t* ent)
 	}
 
 	qboolean moved = qfalse;
-	float diffYaw, diffPitch = 0.0f;
-	vec3_t frontAngles, backAngles;
+	float diff_yaw, diff_pitch = 0.0f;
+	vec3_t front_angles, back_angles;
 
 	ent->speed = AngleNormalize360(ent->speed);
 	ent->random = AngleNormalize360(ent->random);
 
 	if (ent->enemy)
 	{
-		vec3_t desiredAngles;
+		vec3_t desired_angles;
 		vec3_t org;
-		vec3_t enemyDir;
+		vec3_t enemy_dir;
 		// ...then we'll calculate what new aim adjustments we should attempt to make this frame
 		// Aim at enemy
 		if (ent->enemy->client)
@@ -1723,60 +1628,60 @@ void pas_think(gentity_t* ent)
 			VectorCopy(ent->enemy->currentOrigin, org);
 		}
 
-		VectorSubtract(org, ent->currentOrigin, enemyDir);
-		vectoangles(enemyDir, desiredAngles);
+		VectorSubtract(org, ent->currentOrigin, enemy_dir);
+		vectoangles(enemy_dir, desired_angles);
 
-		diffYaw = AngleSubtract(ent->speed, desiredAngles[YAW]);
-		diffPitch = AngleSubtract(ent->random, desiredAngles[PITCH]);
+		diff_yaw = AngleSubtract(ent->speed, desired_angles[YAW]);
+		diff_pitch = AngleSubtract(ent->random, desired_angles[PITCH]);
 	}
 	else
 	{
 		// no enemy, so make us slowly sweep back and forth as if searching for a new one
-		diffYaw = sin(level.time * 0.0001f + ent->count) * 2.0f;
+		diff_yaw = sin(level.time * 0.0001f + ent->count) * 2.0f;
 	}
 
-	if (fabs(diffYaw) > 0.25f)
+	if (fabs(diff_yaw) > 0.25f)
 	{
 		moved = qtrue;
 
-		if (fabs(diffYaw) > 10.0f)
+		if (fabs(diff_yaw) > 10.0f)
 		{
 			// cap max speed
-			ent->speed += diffYaw > 0.0f ? -10.0f : 10.0f;
+			ent->speed += diff_yaw > 0.0f ? -10.0f : 10.0f;
 		}
 		else
 		{
 			// small enough
-			ent->speed -= diffYaw;
+			ent->speed -= diff_yaw;
 		}
 	}
 
-	if (fabs(diffPitch) > 0.25f)
+	if (fabs(diff_pitch) > 0.25f)
 	{
 		moved = qtrue;
 
-		if (fabs(diffPitch) > 4.0f)
+		if (fabs(diff_pitch) > 4.0f)
 		{
 			// cap max speed
-			ent->random += diffPitch > 0.0f ? -4.0f : 4.0f;
+			ent->random += diff_pitch > 0.0f ? -4.0f : 4.0f;
 		}
 		else
 		{
 			// small enough
-			ent->random -= diffPitch;
+			ent->random -= diff_pitch;
 		}
 	}
 
 	// the bone axes are messed up, so hence some dumbness here
-	VectorSet(frontAngles, -ent->random, 0.0f, 0.0f);
-	VectorSet(backAngles, 0.0f, 0.0f, ent->speed - ent->s.angles[YAW]);
+	VectorSet(front_angles, -ent->random, 0.0f, 0.0f);
+	VectorSet(back_angles, 0.0f, 0.0f, ent->speed - ent->s.angles[YAW]);
 
-	gi.G2API_SetBoneAngles(&ent->ghoul2[ent->playerModel], "bone_barrel", frontAngles,
-	                       BONE_ANGLES_POSTMULT, POSITIVE_Y, POSITIVE_Z, NEGATIVE_X, nullptr, 100, cg.time);
-	gi.G2API_SetBoneAngles(&ent->ghoul2[ent->playerModel], "bone_gback", frontAngles,
-	                       BONE_ANGLES_POSTMULT, POSITIVE_Y, POSITIVE_Z, NEGATIVE_X, nullptr, 100, cg.time);
-	gi.G2API_SetBoneAngles(&ent->ghoul2[ent->playerModel], "bone_hinge", backAngles,
-	                       BONE_ANGLES_POSTMULT, POSITIVE_Y, POSITIVE_Z, POSITIVE_X, nullptr, 100, cg.time);
+	gi.G2API_SetBoneAngles(&ent->ghoul2[ent->playerModel], "bone_barrel", front_angles,
+		BONE_ANGLES_POSTMULT, POSITIVE_Y, POSITIVE_Z, NEGATIVE_X, nullptr, 100, cg.time);
+	gi.G2API_SetBoneAngles(&ent->ghoul2[ent->playerModel], "bone_gback", front_angles,
+		BONE_ANGLES_POSTMULT, POSITIVE_Y, POSITIVE_Z, NEGATIVE_X, nullptr, 100, cg.time);
+	gi.G2API_SetBoneAngles(&ent->ghoul2[ent->playerModel], "bone_hinge", back_angles,
+		BONE_ANGLES_POSTMULT, POSITIVE_Y, POSITIVE_Z, POSITIVE_X, nullptr, 100, cg.time);
 
 	if (moved)
 	{
@@ -1847,17 +1752,17 @@ void SP_PAS(gentity_t* base)
 
 	base->s.modelindex = G_ModelIndex("models/items/psgun.glm");
 	base->playerModel = gi.G2API_InitGhoul2Model(base->ghoul2, "models/items/psgun.glm", base->s.modelindex,
-	                                             NULL_HANDLE, NULL_HANDLE, 0, 0);
+		NULL_HANDLE, NULL_HANDLE, 0, 0);
 	base->s.radius = 30.0f;
 	VectorSet(base->s.modelScale, 1.0f, 1.0f, 1.0f);
 
 	base->rootBone = gi.G2API_GetBoneIndex(&base->ghoul2[base->playerModel], "model_root", qtrue);
 	gi.G2API_SetBoneAngles(&base->ghoul2[base->playerModel], "bone_hinge", vec3_origin, BONE_ANGLES_POSTMULT,
-	                       POSITIVE_Y, POSITIVE_Z, POSITIVE_X, nullptr, 0, 0);
+		POSITIVE_Y, POSITIVE_Z, POSITIVE_X, nullptr, 0, 0);
 	gi.G2API_SetBoneAngles(&base->ghoul2[base->playerModel], "bone_gback", vec3_origin, BONE_ANGLES_POSTMULT,
-	                       POSITIVE_Y, POSITIVE_Z, POSITIVE_X, nullptr, 0, 0);
+		POSITIVE_Y, POSITIVE_Z, POSITIVE_X, nullptr, 0, 0);
 	gi.G2API_SetBoneAngles(&base->ghoul2[base->playerModel], "bone_barrel", vec3_origin, BONE_ANGLES_POSTMULT,
-	                       POSITIVE_Y, POSITIVE_Z, POSITIVE_X, nullptr, 0, 0);
+		POSITIVE_Y, POSITIVE_Z, POSITIVE_X, nullptr, 0, 0);
 
 	base->torsoBolt = gi.G2API_AddBolt(&base->ghoul2[base->playerModel], "*flash02");
 
@@ -2012,9 +1917,9 @@ void ion_cannon_think(gentity_t* self)
 
 		// Getting the flash bolt here
 		gi.G2API_GetBoltMatrix(self->ghoul2, self->playerModel,
-		                       self->torsoBolt,
-		                       &bolt_matrix, self->s.angles, self->s.origin, cg.time ? cg.time : level.time,
-		                       nullptr, self->s.modelScale);
+			self->torsoBolt,
+			&bolt_matrix, self->s.angles, self->s.origin, cg.time ? cg.time : level.time,
+			nullptr, self->s.modelScale);
 
 		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, org);
 		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, POSITIVE_Y, fwd);
@@ -2029,14 +1934,14 @@ void ion_cannon_think(gentity_t* self)
 	}
 
 	gi.G2API_SetBoneAnimIndex(&self->ghoul2[self->playerModel], self->rootBone, 0, 8, BONE_ANIM_OVERRIDE_FREEZE, 0.6f,
-	                          cg.time, -1, -1);
+		cg.time, -1, -1);
 	self->nextthink = level.time + self->wait + Q_flrand(-1.0f, 1.0f) * self->random;
 }
 
 //----------------------------------------------------------------------------------------------
 void ion_cannon_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod, int dFlags,
-                    int hit_loc)
-//----------------------------------------------------------------------------------------------
+	int hit_loc)
+	//----------------------------------------------------------------------------------------------
 {
 	vec3_t org;
 
@@ -2077,7 +1982,7 @@ void ion_cannon_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, 
 	if (self->splashDamage > 0 && self->splashRadius > 0)
 	{
 		G_RadiusDamage(self->currentOrigin, attacker, self->splashDamage, self->splashRadius,
-		               attacker, MOD_UNKNOWN);
+			attacker, MOD_UNKNOWN);
 	}
 
 	gi.linkentity(self);
@@ -2129,7 +2034,7 @@ void SP_misc_ion_cannon(gentity_t* base)
 
 	base->s.modelindex = G_ModelIndex("models/map_objects/imp_mine/ion_cannon.glm");
 	base->playerModel = gi.G2API_InitGhoul2Model(base->ghoul2, "models/map_objects/imp_mine/ion_cannon.glm",
-	                                             base->s.modelindex, NULL_HANDLE, NULL_HANDLE, 0, 0);
+		base->s.modelindex, NULL_HANDLE, NULL_HANDLE, 0, 0);
 	base->s.radius = 320.0f;
 	VectorSet(base->s.modelScale, 2.0f, 2.0f, 2.0f);
 
@@ -2242,7 +2147,7 @@ void spotlight_think(gentity_t* ent)
 
 	VectorMA(ent->currentOrigin, 2048, dir, end); // just pick some max trace distance
 	gi.trace(&tr, ent->currentOrigin, vec3_origin, vec3_origin, end, ent->s.number, CONTENTS_SOLID,
-	         static_cast<EG2_Collision>(0), 0);
+		static_cast<EG2_Collision>(0), 0);
 
 	ent->radius = tr.fraction * 2048.0f;
 
@@ -2360,7 +2265,7 @@ extern gentity_t* player;
 extern qboolean G_ClearViewEntity(gentity_t* ent);
 extern void G_SetViewEntity(gentity_t* self, gentity_t* view_entity);
 extern gentity_t* CreateMissile(vec3_t org, vec3_t dir, float vel, int life, gentity_t* owner,
-                                qboolean alt_fire = qfalse);
+	qboolean alt_fire = qfalse);
 
 void panel_turret_shoot(gentity_t* self, vec3_t org, vec3_t dir)
 {
@@ -2388,7 +2293,7 @@ void panel_turret_shoot(gentity_t* self, vec3_t org, vec3_t dir)
 
 //-----------------------------------------
 void misc_panel_turret_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod, int dFlags,
-                           int hit_loc)
+	int hit_loc)
 {
 	if (self->target3)
 	{
@@ -2420,7 +2325,7 @@ void panel_turret_think(gentity_t* self)
 
 		// Only clamp if we have a PITCH clamp
 		if (self->random != 0.0f)
-		// Angle clamping -- PITCH
+			// Angle clamping -- PITCH
 		{
 			if (self->s.apos.trBase[PITCH] > self->random) // random is PITCH
 			{
@@ -2454,11 +2359,10 @@ void panel_turret_think(gentity_t* self)
 
 		// Let cgame interpolation smooth out the angle changes
 		self->s.apos.trType = TR_INTERPOLATE;
-		self->s.pos.trType = TR_INTERPOLATE; // not really moving, but this fixes an interpolation bug in cg_ents.
+		self->s.pos.trType = TR_INTERPOLATE; // not really moving, but this fixes an interpolation error in cg_ents.
 
 		// Check for backing out of turret
-		if (self->useDebounceTime < level.time && (ucmd->buttons & BUTTON_USE || ucmd->forwardmove || ucmd->
-			rightmove || ucmd->upmove))
+		if (self->useDebounceTime < level.time && (ucmd->buttons & BUTTON_BLOCK || ucmd->buttons & BUTTON_USE || ucmd->forwardmove || ucmd->rightmove || ucmd->upmove))
 		{
 			self->useDebounceTime = level.time + 200;
 

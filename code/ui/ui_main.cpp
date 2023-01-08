@@ -609,6 +609,8 @@ constexpr auto NOWEAPON = -1;
 
 static constexpr size_t cvarTableSize = std::size(cvarTable);
 
+extern void SE_CheckForLanguageUpdates();
+
 void Text_Paint(float x, float y, float scale, vec4_t color, const char* text, int iMaxPixelWidth, int style,
                 int iFontIndex);
 int Key_GetCatcher(void);
@@ -624,8 +626,6 @@ void _UI_Refresh(const int realtime)
 	{
 		return;
 	}
-
-	extern void SE_CheckForLanguageUpdates(void);
 	SE_CheckForLanguageUpdates();
 
 	if (Menus_AnyFullScreenVisible())
@@ -3319,7 +3319,7 @@ void UI_LoadMenus(const char* menuFile, const qboolean reset)
 	Com_Printf("---------------- MovieDuels-SJE-RC-2.7---------------------------\n");
 	Com_Printf("-----------------------------------------------------------------\n");
 	Com_Printf("------------------------Update 7---------------------------------\n");
-	Com_Printf("------------------Build Date 07/01/2023--------------------------\n");
+	Com_Printf("------------------Build Date 09/01/2023--------------------------\n");
 	Com_Printf("-----------------------------------------------------------------\n");
 	Com_Printf("------------------------LightSaber-------------------------------\n");
 	Com_Printf("-----------An elegant weapon for a more civilized age------------\n");

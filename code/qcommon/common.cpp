@@ -1434,13 +1434,13 @@ void G2Time_ResetTimers(void);
 void G2Time_ReportTimers(void);
 #endif
 
-void Com_Frame(void)
+void Com_Frame()
 {
 	try
 	{
-		int timeBeforeFirstEvents = 0, timeBeforeServer = 0, timeBeforeEvents = 0, timeBeforeClient = 0, timeAfter = 0;
-		int minMsec;
-		static int lastTime = 0, bias = 0;
+		int time_before_first_events = 0, time_before_server = 0, time_before_events = 0, time_before_client = 0, time_after = 0;
+		int min_msec;
+		static int last_time = 0, bias = 0;
 
 		// write config file if anything changed
 		Com_WriteConfiguration();
@@ -1450,45 +1450,45 @@ void Com_Frame(void)
 		//
 		if (com_speeds->integer)
 		{
-			timeBeforeFirstEvents = Sys_Milliseconds();
+			time_before_first_events = Sys_Milliseconds();
 		}
 
 		// Figure out how much time we have
 		if (com_minimized->integer && com_maxfpsMinimized->integer > 0)
-			minMsec = 1000 / com_maxfpsMinimized->integer;
+			min_msec = 1000 / com_maxfpsMinimized->integer;
 		else if (com_unfocused->integer && com_maxfpsUnfocused->integer > 0)
-			minMsec = 1000 / com_maxfpsUnfocused->integer;
+			min_msec = 1000 / com_maxfpsUnfocused->integer;
 		else if (com_maxfps->integer > 0)
-			minMsec = 1000 / com_maxfps->integer;
+			min_msec = 1000 / com_maxfps->integer;
 		else
-			minMsec = 1;
+			min_msec = 1;
 
-		int timeVal = com_frameTime - lastTime;
-		bias += timeVal - minMsec;
+		int time_val = com_frameTime - last_time;
+		bias += time_val - min_msec;
 
-		if (bias > minMsec)
-			bias = minMsec;
+		if (bias > min_msec)
+			bias = min_msec;
 
 		// Adjust minMsec if previous frame took too long to render so
 		// that framerate is stable at the requested value.
-		minMsec -= bias;
+		min_msec -= bias;
 
-		timeVal = Com_TimeVal(minMsec);
+		time_val = Com_TimeVal(min_msec);
 		do
 		{
 			// Busy sleep the last millisecond for better timeout precision
-			if (com_busyWait->integer || timeVal < 1)
+			if (com_busyWait->integer || time_val < 1)
 				Sys_Sleep(0);
 			else
-				Sys_Sleep(timeVal - 1);
+				Sys_Sleep(time_val - 1);
 		}
-		while ((timeVal = Com_TimeVal(minMsec)) != 0);
+		while ((time_val = Com_TimeVal(min_msec)) != 0);
 		IN_Frame();
 
-		lastTime = com_frameTime;
+		last_time = com_frameTime;
 		com_frameTime = Com_EventLoop();
 
-		int msec = com_frameTime - lastTime;
+		int msec = com_frameTime - last_time;
 
 		Cbuf_Execute();
 
@@ -1501,7 +1501,7 @@ void Com_Frame(void)
 		//
 		if (com_speeds->integer)
 		{
-			timeBeforeServer = Sys_Milliseconds();
+			time_before_server = Sys_Milliseconds();
 		}
 
 		SV_Frame(msec, fractionMsec);
@@ -1518,7 +1518,7 @@ void Com_Frame(void)
 			//
 			if (com_speeds->integer)
 			{
-				timeBeforeEvents = Sys_Milliseconds();
+				time_before_events = Sys_Milliseconds();
 			}
 			Com_EventLoop();
 			Cbuf_Execute();
@@ -1528,14 +1528,14 @@ void Com_Frame(void)
 			//
 			if (com_speeds->integer)
 			{
-				timeBeforeClient = Sys_Milliseconds();
+				time_before_client = Sys_Milliseconds();
 			}
 
 			CL_Frame(msec, fractionMsec);
 
 			if (com_speeds->integer)
 			{
-				timeAfter = Sys_Milliseconds();
+				time_after = Sys_Milliseconds();
 			}
 		}
 
@@ -1544,10 +1544,10 @@ void Com_Frame(void)
 		//
 		if (com_speeds->integer)
 		{
-			const int all = timeAfter - timeBeforeServer;
-			int sv = timeBeforeEvents - timeBeforeServer;
-			const int ev = timeBeforeServer - timeBeforeFirstEvents + timeBeforeClient - timeBeforeEvents;
-			int cl = timeAfter - timeBeforeClient;
+			const int all = time_after - time_before_server;
+			int sv = time_before_events - time_before_server;
+			const int ev = time_before_server - time_before_first_events + time_before_client - time_before_events;
+			int cl = time_after - time_before_client;
 			sv -= time_game;
 			cl -= time_frontend + time_backend;
 
