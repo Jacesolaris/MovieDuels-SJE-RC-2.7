@@ -687,7 +687,7 @@ extern void ExplodeDeath(gentity_t* self, gentity_t* inflictor, gentity_t* attac
                          int d_flags = 0, int hit_loc = HL_NONE);
 extern void func_usable_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod,
                             int d_flags = 0, int hit_loc = HL_NONE);
-extern void turret_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod, int d_flags = 0,
+extern void turret_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int means_of_death, int d_flags = 0,
                        int hit_loc = HL_NONE);
 extern void funcGlassDie(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod,
                          int d_flags = 0, int hit_loc = HL_NONE);

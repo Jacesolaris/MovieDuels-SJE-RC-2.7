@@ -359,9 +359,9 @@ Check
 -------------------------
 */
 
-inline bool CTaskManager::Check(int targetID, const CBlock* block, int memberNum)
+inline bool CTaskManager::Check(int targetID, const CBlock* block, int member_num)
 {
-	if ((block->GetMember(memberNum))->GetID() == targetID)
+	if ((block->GetMember(member_num))->GetID() == targetID)
 		return true;
 
 	return false;

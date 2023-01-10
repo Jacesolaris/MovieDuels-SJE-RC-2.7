@@ -222,7 +222,7 @@ extern qboolean NPC_UpdateFiringAngles(qboolean doPitch, qboolean doYaw);
 extern void SetTeamNumbers();
 extern qboolean G_ActivateBehavior(gentity_t* self, int bset);
 extern void NPC_AimWiggle(vec3_t enemy_org);
-extern void NPC_SetLookTarget(const gentity_t* self, int entNum, int clearTime);
+extern void NPC_SetLookTarget(const gentity_t* self, int ent_num, int clearTime);
 
 //other modules
 extern void CalcMuzzlePoint(gentity_t* ent, vec3_t forward_vec, vec3_t muzzle_point, float lead_in);

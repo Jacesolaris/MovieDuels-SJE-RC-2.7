@@ -432,14 +432,14 @@ void G_FreeVehicleObject(Vehicle_t* p_veh)
 
 gclient_t* gClPtrs[MAX_GENTITIES];
 
-void G_CreateFakeClient(int entNum, gclient_t** cl)
+void G_CreateFakeClient(int ent_num, gclient_t** cl)
 {
 	//trap->TrueMalloc((void **)cl, sizeof(gclient_t));
-	if (!gClPtrs[entNum])
+	if (!gClPtrs[ent_num])
 	{
-		gClPtrs[entNum] = (gclient_t*)BG_Alloc(sizeof(gclient_t));
+		gClPtrs[ent_num] = (gclient_t*)BG_Alloc(sizeof(gclient_t));
 	}
-	*cl = gClPtrs[entNum];
+	*cl = gClPtrs[ent_num];
 }
 
 //call this on game shutdown to run through and get rid of all the lingering client pointers.
@@ -885,7 +885,7 @@ void G_SendG2KillQueue(void)
 	}
 }
 
-void G_KillG2Queue(int entNum)
+void G_KillG2Queue(int ent_num)
 {
 	if (gG2KillNum >= MAX_G2_KILL_QUEUE)
 	{ //This would be considered a Bad Thing.
@@ -893,11 +893,11 @@ void G_KillG2Queue(int entNum)
 		Com_Printf("WARNING: Exceeded the MAX_G2_KILL_QUEUE count for this frame!\n");
 #endif
 		//Since we're out of queue slots, just send it now as a seperate command (eats more bandwidth, but we have no choice)
-		trap->SendServerCommand(-1, va("kg2 %i", entNum));
+		trap->SendServerCommand(-1, va("kg2 %i", ent_num));
 		return;
 	}
 
-	gG2KillIndex[gG2KillNum] = entNum;
+	gG2KillIndex[gG2KillNum] = ent_num;
 	gG2KillNum++;
 }
 

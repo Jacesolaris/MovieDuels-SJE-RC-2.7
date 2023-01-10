@@ -2807,7 +2807,7 @@ qboolean WP_LobFire(const gentity_t* self, vec3_t start, vec3_t target, vec3_t m
 					if (trace.entity_num < ENTITYNUM_WORLD)
 					{
 						//hit an ent
-						gentity_t* trace_ent = &g_entities[trace.entity_num];
+						const gentity_t* trace_ent = &g_entities[trace.entity_num];
 						if (trace_ent && trace_ent->takedamage && !OnSameTeam(self, trace_ent))
 						{//hit something breakable, so that's okay
 							//we haven't found a clear shot yet so use this as the failcase
@@ -2947,7 +2947,7 @@ void touchLaserTrap(gentity_t* ent, gentity_t* other, trace_t* trace)
 void proxMineThink(gentity_t* ent)
 {
 	int i = 0;
-	gentity_t* owner = NULL;
+	const gentity_t* owner = NULL;
 
 	if (ent->r.ownerNum < ENTITYNUM_WORLD)
 	{
@@ -2968,7 +2968,7 @@ void proxMineThink(gentity_t* ent)
 
 	while (i < MAX_CLIENTS)
 	{ //eh, just check for clients, don't care about anyone else...
-		gentity_t* cl = &g_entities[i];
+		const gentity_t* cl = &g_entities[i];
 
 		if (cl->inuse && cl->client && cl->client->pers.connected == CON_CONNECTED &&
 			owner != cl && cl->client->sess.sessionTeam != TEAM_SPECTATOR &&

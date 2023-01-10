@@ -47,10 +47,10 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 // Sequencer
 
-CSequencer::CSequencer(void)
+CSequencer::CSequencer(): m_ownerID(0), m_taskManager(nullptr)
 {
-	static int uniqueID = 1;
-	m_id = uniqueID++;
+	static int unique_id = 1;
+	m_id = unique_id++;
 
 	m_numCommands = 0;
 
@@ -63,7 +63,7 @@ CSequencer::CSequencer(void)
 	m_curGroup = nullptr;
 }
 
-CSequencer::~CSequencer(void)
+CSequencer::~CSequencer()
 = default;
 
 /*
@@ -74,7 +74,7 @@ Static creation function
 ========================
 */
 
-CSequencer* CSequencer::Create(void)
+CSequencer* CSequencer::Create()
 {
 	const auto sequencer = new CSequencer;
 
@@ -88,10 +88,10 @@ Init
 Initializes the sequencer
 ========================
 */
-int CSequencer::Init(const int ownerID, CTaskManager* taskManager)
+int CSequencer::Init(const int owner_id, CTaskManager* task_manager)
 {
-	m_ownerID = ownerID;
-	m_taskManager = taskManager;
+	m_ownerID = owner_id;
+	m_taskManager = task_manager;
 
 	return SEQ_OK;
 }
@@ -201,7 +201,7 @@ Creates a stream for parsing
 ========================
 */
 
-bstream_t* CSequencer::AddStream(void)
+bstream_t* CSequencer::AddStream()
 {
 	const auto stream = new bstream_t; //deleted in Route()
 	stream->stream = new CBlockStream; //deleted in Route()
@@ -291,7 +291,7 @@ CSequence* CSequencer::AddSequence(CIcarus* icarus)
 	return sequence;
 }
 
-CSequence* CSequencer::AddSequence(CSequence* parent, CSequence* returnSeq, const int flags, CIcarus* icarus)
+CSequence* CSequencer::AddSequence(CSequence* parent, CSequence* return_seq, const int flags, CIcarus* icarus)
 {
 	const auto sequence = icarus->GetSequence();
 
@@ -308,7 +308,7 @@ CSequence* CSequencer::AddSequence(CSequence* parent, CSequence* returnSeq, cons
 
 	sequence->SetFlags(flags);
 	sequence->SetParent(parent);
-	sequence->SetReturn(returnSeq);
+	sequence->SetReturn(return_seq);
 
 	return sequence;
 }
@@ -332,11 +332,11 @@ CSequence* CSequencer::GetSequence(const int id)
 
 		return (*mi).second;*/
 
-	sequence_l::iterator iterSeq;
-	STL_ITERATE(iterSeq, m_sequences)
+	sequence_l::iterator iter_seq;
+	STL_ITERATE(iter_seq, m_sequences)
 	{
-		if ((*iterSeq)->GetID() == id)
-			return *iterSeq;
+		if ((*iter_seq)->GetID() == id)
+			return *iter_seq;
 	}
 
 	return nullptr;
@@ -348,7 +348,7 @@ Interrupt
 -------------------------
 */
 
-void CSequencer::Interrupt(void)
+void CSequencer::Interrupt()
 {
 	CBlock* command = m_taskManager->GetCurrentTask();
 
@@ -373,10 +373,10 @@ int CSequencer::Run(char* buffer, const long size, CIcarus* icarus)
 	Recall(icarus);
 
 	//Create a new stream
-	bstream_t* blockStream = AddStream();
+	bstream_t* block_stream = AddStream();
 
 	//Open the stream as an IBI stream
-	if (!blockStream->stream->Open(buffer, size))
+	if (!block_stream->stream->Open(buffer, size))
 	{
 		game->DebugPrint(IGameInterface::WL_ERROR, "invalid stream");
 		return SEQ_FAILED;
@@ -385,7 +385,7 @@ int CSequencer::Run(char* buffer, const long size, CIcarus* icarus)
 	CSequence* sequence = AddSequence(nullptr, m_curSequence, CSequence::SQ_COMMON, icarus);
 
 	// Interpret the command blocks and route them properly
-	if (S_FAILED(Route(sequence, blockStream, icarus)))
+	if (S_FAILED(Route(sequence, block_stream, icarus)))
 	{
 		//Error code is set inside of Route()
 		return SEQ_FAILED;
@@ -534,7 +534,6 @@ int CSequencer::ParseElse(CBlock* block, bstream_t* bstream, CIcarus* icarus)
 	m_curSequence->AddChild(sequence);
 
 	//Add a unique conditional identifier to the block for reference later
-	//TODO: Emit warning
 	if (m_elseOwner == nullptr)
 	{
 		game->DebugPrint(IGameInterface::WL_ERROR, "Invalid 'else' found!\n");
@@ -565,7 +564,7 @@ Parses a loop command
 int CSequencer::ParseLoop(CBlock* block, bstream_t* bstream, CIcarus* icarus)
 {
 	IGameInterface* game = icarus->GetGame();
-	int memberNum = 0;
+	int member_num = 0;
 
 	//Set the parent
 	CSequence* sequence = AddSequence(m_curSequence, m_curSequence, CSequence::SQ_LOOP | CSequence::SQ_RETAIN,
@@ -585,16 +584,16 @@ int CSequencer::ParseLoop(CBlock* block, bstream_t* bstream, CIcarus* icarus)
 
 	//Set the number of iterations of this sequence
 
-	const CBlockMember* bm = block->GetMember(memberNum++);
+	const CBlockMember* bm = block->GetMember(member_num++);
 
 	if (bm->GetID() == CIcarus::ID_RANDOM)
 	{
 		//Parse out the random number
-		const float min = *static_cast<float*>(block->GetMemberData(memberNum++));
-		const float max = *static_cast<float*>(block->GetMemberData(memberNum++));
+		const float min = *static_cast<float*>(block->GetMemberData(member_num++));
+		const float max = *static_cast<float*>(block->GetMemberData(member_num++));
 
-		const int rIter = static_cast<int>(game->Random(min, max));
-		sequence->SetIterations(rIter);
+		const int r_iter = static_cast<int>(game->Random(min, max));
+		sequence->SetIterations(r_iter);
 	}
 	else
 	{
@@ -924,8 +923,7 @@ int CSequencer::Route(CSequence* sequence, bstream_t* bstream, CIcarus* icarus)
 			break;
 
 		case CIcarus::ID_ELSE:
-
-			//TODO: Emit warning
+			
 			if (m_elseValid == 0)
 			{
 				game->DebugPrint(IGameInterface::WL_ERROR, "Invalid 'else' found!\n");
@@ -1047,8 +1045,7 @@ void CSequencer::CheckRun(CBlock** command, CIcarus* icarus)
 		}
 
 		m_curSequence = GetSequence(id);
-
-		//TODO: Emit warning
+		
 		assert(m_curSequence);
 		if (m_curSequence == nullptr)
 		{
@@ -1108,9 +1105,9 @@ int CSequencer::EvaluateConditional(CBlock* block, CIcarus* icarus) const
 {
 	IGameInterface* game = icarus->GetGame();
 	CBlockMember* bm;
-	char tempString1[128], tempString2[128];
+	char temp_string1[128], temp_string2[128];
 	vec3_t vec;
-	int id, i, oper, memberNum = 0;
+	int id, i, oper, member_num = 0;
 	char *p1 = nullptr, *p2 = nullptr;
 	int t1, t2;
 
@@ -1118,7 +1115,7 @@ int CSequencer::EvaluateConditional(CBlock* block, CIcarus* icarus) const
 	//	Get the first parameter
 	//
 
-	bm = block->GetMember(memberNum++);
+	bm = block->GetMember(member_num++);
 	id = bm->GetID();
 
 	t1 = id;
@@ -1126,22 +1123,22 @@ int CSequencer::EvaluateConditional(CBlock* block, CIcarus* icarus) const
 	switch (id)
 	{
 	case CIcarus::TK_FLOAT:
-		sprintf(static_cast<char*>(tempString1), "%.3f", *static_cast<float*>(bm->GetData()));
-		p1 = static_cast<char*>(tempString1);
+		sprintf(static_cast<char*>(temp_string1), "%.3f", *static_cast<float*>(bm->GetData()));
+		p1 = static_cast<char*>(temp_string1);
 		break;
 
 	case CIcarus::TK_VECTOR:
 
-		tempString1[0] = '\0';
+		temp_string1[0] = '\0';
 
 		for (i = 0; i < 3; i++)
 		{
-			bm = block->GetMember(memberNum++);
+			bm = block->GetMember(member_num++);
 			vec[i] = *static_cast<float*>(bm->GetData());
 		}
 
-		sprintf(static_cast<char*>(tempString1), "%.3f %.3f %.3f", vec[0], vec[1], vec[2]);
-		p1 = static_cast<char*>(tempString1);
+		sprintf(static_cast<char*>(temp_string1), "%.3f %.3f %.3f", vec[0], vec[1], vec[2]);
+		p1 = static_cast<char*>(temp_string1);
 
 		break;
 
@@ -1158,8 +1155,8 @@ int CSequencer::EvaluateConditional(CBlock* block, CIcarus* icarus) const
 			char* name;
 
 			//get( TYPE, NAME )
-			type = static_cast<int>(*static_cast<float*>(block->GetMemberData(memberNum++)));
-			name = static_cast<char*>(block->GetMemberData(memberNum++));
+			type = static_cast<int>(*static_cast<float*>(block->GetMemberData(member_num++)));
+			name = static_cast<char*>(block->GetMemberData(member_num++));
 
 			//Get the type returned and hold onto it
 			t1 = type;
@@ -1168,26 +1165,26 @@ int CSequencer::EvaluateConditional(CBlock* block, CIcarus* icarus) const
 			{
 			case CIcarus::TK_FLOAT:
 				{
-					float fVal;
+					float f_val;
 
-					if (game->GetFloat(m_ownerID, name, &fVal) == false)
+					if (game->GetFloat(m_ownerID, name, &f_val) == false)
 						return false;
 
-					sprintf(static_cast<char*>(tempString1), "%.3f", fVal);
-					p1 = static_cast<char*>(tempString1);
+					sprintf(static_cast<char*>(temp_string1), "%.3f", f_val);
+					p1 = static_cast<char*>(temp_string1);
 				}
 
 				break;
 
 			case CIcarus::TK_INT:
 				{
-					float fVal;
+					float f_val;
 
-					if (game->GetFloat(m_ownerID, name, &fVal) == false)
+					if (game->GetFloat(m_ownerID, name, &f_val) == false)
 						return false;
 
-					sprintf(static_cast<char*>(tempString1), "%d", static_cast<int>(fVal));
-					p1 = static_cast<char*>(tempString1);
+					sprintf(static_cast<char*>(temp_string1), "%d", static_cast<int>(f_val));
+					p1 = static_cast<char*>(temp_string1);
 				}
 				break;
 
@@ -1200,13 +1197,13 @@ int CSequencer::EvaluateConditional(CBlock* block, CIcarus* icarus) const
 
 			case CIcarus::TK_VECTOR:
 				{
-					vec3_t vVal;
+					vec3_t v_val;
 
-					if (game->GetVector(m_ownerID, name, vVal) == false)
+					if (game->GetVector(m_ownerID, name, v_val) == false)
 						return false;
 
-					sprintf(static_cast<char*>(tempString1), "%.3f %.3f %.3f", vVal[0], vVal[1], vVal[2]);
-					p1 = static_cast<char*>(tempString1);
+					sprintf(static_cast<char*>(temp_string1), "%.3f %.3f %.3f", v_val[0], v_val[1], v_val[2]);
+					p1 = static_cast<char*>(temp_string1);
 				}
 
 				break;
@@ -1221,14 +1218,14 @@ int CSequencer::EvaluateConditional(CBlock* block, CIcarus* icarus) const
 			float min, max;
 			//FIXME: This will not account for nested Q_flrand(0.0f, 1.0f) statements
 
-			min = *static_cast<float*>(block->GetMemberData(memberNum++));
-			max = *static_cast<float*>(block->GetMemberData(memberNum++));
+			min = *static_cast<float*>(block->GetMemberData(member_num++));
+			max = *static_cast<float*>(block->GetMemberData(member_num++));
 
 			//A float value is returned from the function
 			t1 = CIcarus::TK_FLOAT;
 
-			sprintf(static_cast<char*>(tempString1), "%.3f", game->Random(min, max));
-			p1 = static_cast<char*>(tempString1);
+			sprintf(static_cast<char*>(temp_string1), "%.3f", game->Random(min, max));
+			p1 = static_cast<char*>(temp_string1);
 		}
 
 		break;
@@ -1238,20 +1235,19 @@ int CSequencer::EvaluateConditional(CBlock* block, CIcarus* icarus) const
 			char* name;
 			float type;
 
-			name = static_cast<char*>(block->GetMemberData(memberNum++));
-			type = *static_cast<float*>(block->GetMemberData(memberNum++));
+			name = static_cast<char*>(block->GetMemberData(member_num++));
+			type = *static_cast<float*>(block->GetMemberData(member_num++));
 
 			t1 = CIcarus::TK_VECTOR;
-
-			//TODO: Emit warning
+			
 			if (game->GetTag(m_ownerID, name, static_cast<int>(type), vec) == false)
 			{
 				game->DebugPrint(IGameInterface::WL_ERROR, "Unable to find tag \"%s\"!\n", name);
 				return false;
 			}
 
-			sprintf(static_cast<char*>(tempString1), "%.3f %.3f %.3f", vec[0], vec[1], vec[2]);
-			p1 = static_cast<char*>(tempString1);
+			sprintf(static_cast<char*>(temp_string1), "%.3f %.3f %.3f", vec[0], vec[1], vec[2]);
+			p1 = static_cast<char*>(temp_string1);
 
 			break;
 		}
@@ -1266,7 +1262,7 @@ int CSequencer::EvaluateConditional(CBlock* block, CIcarus* icarus) const
 	//	Get the comparison operator
 	//
 
-	bm = block->GetMember(memberNum++);
+	bm = block->GetMember(member_num++);
 	id = bm->GetID();
 
 	switch (id)
@@ -1287,7 +1283,7 @@ int CSequencer::EvaluateConditional(CBlock* block, CIcarus* icarus) const
 	//	Get the second parameter
 	//
 
-	bm = block->GetMember(memberNum++);
+	bm = block->GetMember(member_num++);
 	id = bm->GetID();
 
 	t2 = id;
@@ -1295,22 +1291,22 @@ int CSequencer::EvaluateConditional(CBlock* block, CIcarus* icarus) const
 	switch (id)
 	{
 	case CIcarus::TK_FLOAT:
-		sprintf(static_cast<char*>(tempString2), "%.3f", *static_cast<float*>(bm->GetData()));
-		p2 = static_cast<char*>(tempString2);
+		sprintf(static_cast<char*>(temp_string2), "%.3f", *static_cast<float*>(bm->GetData()));
+		p2 = static_cast<char*>(temp_string2);
 		break;
 
 	case CIcarus::TK_VECTOR:
 
-		tempString2[0] = '\0';
+		temp_string2[0] = '\0';
 
 		for (i = 0; i < 3; i++)
 		{
-			bm = block->GetMember(memberNum++);
+			bm = block->GetMember(member_num++);
 			vec[i] = *static_cast<float*>(bm->GetData());
 		}
 
-		sprintf(static_cast<char*>(tempString2), "%.3f %.3f %.3f", vec[0], vec[1], vec[2]);
-		p2 = static_cast<char*>(tempString2);
+		sprintf(static_cast<char*>(temp_string2), "%.3f %.3f %.3f", vec[0], vec[1], vec[2]);
+		p2 = static_cast<char*>(temp_string2);
 
 		break;
 
@@ -1327,8 +1323,8 @@ int CSequencer::EvaluateConditional(CBlock* block, CIcarus* icarus) const
 			char* name;
 
 			//get( TYPE, NAME )
-			type = static_cast<int>(*static_cast<float*>(block->GetMemberData(memberNum++)));
-			name = static_cast<char*>(block->GetMemberData(memberNum++));
+			type = static_cast<int>(*static_cast<float*>(block->GetMemberData(member_num++)));
+			name = static_cast<char*>(block->GetMemberData(member_num++));
 
 			//Get the type returned and hold onto it
 			t2 = type;
@@ -1337,26 +1333,26 @@ int CSequencer::EvaluateConditional(CBlock* block, CIcarus* icarus) const
 			{
 			case CIcarus::TK_FLOAT:
 				{
-					float fVal;
+					float f_val;
 
-					if (game->GetFloat(m_ownerID, name, &fVal) == false)
+					if (game->GetFloat(m_ownerID, name, &f_val) == false)
 						return false;
 
-					sprintf(static_cast<char*>(tempString2), "%.3f", fVal);
-					p2 = static_cast<char*>(tempString2);
+					sprintf(static_cast<char*>(temp_string2), "%.3f", f_val);
+					p2 = static_cast<char*>(temp_string2);
 				}
 
 				break;
 
 			case CIcarus::TK_INT:
 				{
-					float fVal;
+					float f_val;
 
-					if (game->GetFloat(m_ownerID, name, &fVal) == false)
+					if (game->GetFloat(m_ownerID, name, &f_val) == false)
 						return false;
 
-					sprintf(static_cast<char*>(tempString2), "%d", static_cast<int>(fVal));
-					p2 = static_cast<char*>(tempString2);
+					sprintf(static_cast<char*>(temp_string2), "%d", static_cast<int>(f_val));
+					p2 = static_cast<char*>(temp_string2);
 				}
 				break;
 
@@ -1369,13 +1365,13 @@ int CSequencer::EvaluateConditional(CBlock* block, CIcarus* icarus) const
 
 			case CIcarus::TK_VECTOR:
 				{
-					vec3_t vVal;
+					vec3_t v_val;
 
-					if (game->GetVector(m_ownerID, name, vVal) == false)
+					if (game->GetVector(m_ownerID, name, v_val) == false)
 						return false;
 
-					sprintf(static_cast<char*>(tempString2), "%.3f %.3f %.3f", vVal[0], vVal[1], vVal[2]);
-					p2 = static_cast<char*>(tempString2);
+					sprintf(static_cast<char*>(temp_string2), "%.3f %.3f %.3f", v_val[0], v_val[1], v_val[2]);
+					p2 = static_cast<char*>(temp_string2);
 				}
 
 				break;
@@ -1391,14 +1387,14 @@ int CSequencer::EvaluateConditional(CBlock* block, CIcarus* icarus) const
 			float min, max;
 			//FIXME: This will not account for nested Q_flrand(0.0f, 1.0f) statements
 
-			min = *static_cast<float*>(block->GetMemberData(memberNum++));
-			max = *static_cast<float*>(block->GetMemberData(memberNum++));
+			min = *static_cast<float*>(block->GetMemberData(member_num++));
+			max = *static_cast<float*>(block->GetMemberData(member_num++));
 
 			//A float value is returned from the function
 			t2 = CIcarus::TK_FLOAT;
 
-			sprintf(static_cast<char*>(tempString2), "%.3f", game->Random(min, max));
-			p2 = static_cast<char*>(tempString2);
+			sprintf(static_cast<char*>(temp_string2), "%.3f", game->Random(min, max));
+			p2 = static_cast<char*>(temp_string2);
 		}
 
 		break;
@@ -1409,20 +1405,19 @@ int CSequencer::EvaluateConditional(CBlock* block, CIcarus* icarus) const
 			char* name;
 			float type;
 
-			name = static_cast<char*>(block->GetMemberData(memberNum++));
-			type = *static_cast<float*>(block->GetMemberData(memberNum++));
+			name = static_cast<char*>(block->GetMemberData(member_num++));
+			type = *static_cast<float*>(block->GetMemberData(member_num++));
 
 			t2 = CIcarus::TK_VECTOR;
-
-			//TODO: Emit warning
+			
 			if (game->GetTag(m_ownerID, name, static_cast<int>(type), vec) == false)
 			{
 				game->DebugPrint(IGameInterface::WL_ERROR, "Unable to find tag \"%s\"!\n", name);
 				return false;
 			}
 
-			sprintf(static_cast<char*>(tempString2), "%.3f %.3f %.3f", vec[0], vec[1], vec[2]);
-			p2 = static_cast<char*>(tempString2);
+			sprintf(static_cast<char*>(temp_string2), "%.3f %.3f %.3f", vec[0], vec[1], vec[2]);
+			p2 = static_cast<char*>(temp_string2);
 
 			break;
 		}
@@ -1458,21 +1453,20 @@ void CSequencer::CheckIf(CBlock** command, CIcarus* icarus)
 
 		if (ret /*TRUE*/)
 		{
-			int successID;
+			int success_id;
 			if (block->HasFlag(BF_ELSE))
 			{
-				successID = static_cast<int>(*static_cast<float*>(block->GetMemberData(block->GetNumMembers() - 2)));
+				success_id = static_cast<int>(*static_cast<float*>(block->GetMemberData(block->GetNumMembers() - 2)));
 			}
 			else
 			{
-				successID = static_cast<int>(*static_cast<float*>(block->GetMemberData(block->GetNumMembers() - 1)));
+				success_id = static_cast<int>(*static_cast<float*>(block->GetMemberData(block->GetNumMembers() - 1)));
 			}
 
-			CSequence* successSeq = GetSequence(successID);
-
-			//TODO: Emit warning
-			assert(successSeq);
-			if (successSeq == nullptr)
+			CSequence* success_seq = GetSequence(success_id);
+			
+			assert(success_seq);
+			if (success_seq == nullptr)
 			{
 				game->DebugPrint(IGameInterface::WL_ERROR, "Unable to find conditional success sequence!\n");
 				*command = nullptr;
@@ -1492,7 +1486,7 @@ void CSequencer::CheckIf(CBlock** command, CIcarus* icarus)
 				*command = nullptr;
 			}
 
-			m_curSequence = successSeq;
+			m_curSequence = success_seq;
 
 			//Recursively work out any other pre-processors
 			*command = PopCommand(CSequence::POP_BACK);
@@ -1503,13 +1497,12 @@ void CSequencer::CheckIf(CBlock** command, CIcarus* icarus)
 
 		if (ret == false && block->HasFlag(BF_ELSE))
 		{
-			const int failureID = static_cast<int>(*static_cast<float*>(block->
+			const int failure_id = static_cast<int>(*static_cast<float*>(block->
 				GetMemberData(block->GetNumMembers() - 1)));
-			CSequence* failureSeq = GetSequence(failureID);
-
-			//TODO: Emit warning
-			assert(failureSeq);
-			if (failureSeq == nullptr)
+			CSequence* failure_seq = GetSequence(failure_id);
+			
+			assert(failure_seq);
+			if (failure_seq == nullptr)
 			{
 				game->DebugPrint(IGameInterface::WL_ERROR, "Unable to find conditional failure sequence!\n");
 				*command = nullptr;
@@ -1529,7 +1522,7 @@ void CSequencer::CheckIf(CBlock** command, CIcarus* icarus)
 				*command = nullptr;
 			}
 
-			m_curSequence = failureSeq;
+			m_curSequence = failure_seq;
 
 			//Recursively work out any other pre-processors
 			*command = PopCommand(CSequence::POP_BACK);
@@ -1614,16 +1607,16 @@ void CSequencer::CheckLoop(CBlock** command, CIcarus* icarus)
 	//Check for a loop
 	if (block->GetBlockID() == CIcarus::ID_LOOP)
 	{
-		int memberNum = 0;
+		int member_num = 0;
 		int iterations;
 		//Get the loop ID
-		const CBlockMember* bm = block->GetMember(memberNum++);
+		const CBlockMember* bm = block->GetMember(member_num++);
 
 		if (bm->GetID() == CIcarus::ID_RANDOM)
 		{
 			//Parse out the random number
-			const float min = *static_cast<float*>(block->GetMemberData(memberNum++));
-			const float max = *static_cast<float*>(block->GetMemberData(memberNum++));
+			const float min = *static_cast<float*>(block->GetMemberData(member_num++));
+			const float max = *static_cast<float*>(block->GetMemberData(member_num++));
 
 			iterations = static_cast<int>(game->Random(min, max));
 		}
@@ -1632,11 +1625,10 @@ void CSequencer::CheckLoop(CBlock** command, CIcarus* icarus)
 			iterations = static_cast<int>(*static_cast<float*>(bm->GetData()));
 		}
 
-		const int loopID = static_cast<int>(*static_cast<float*>(block->GetMemberData(memberNum++)));
+		const int loop_id = static_cast<int>(*static_cast<float*>(block->GetMemberData(member_num++)));
 
-		CSequence* loop = GetSequence(loopID);
-
-		//TODO: Emit warning
+		CSequence* loop = GetSequence(loop_id);
+		
 		assert(loop);
 		if (loop == nullptr)
 		{
@@ -1789,9 +1781,9 @@ void CSequencer::CheckAffect(CBlock** command, CIcarus* icarus)
 
 	if (block->GetBlockID() == CIcarus::ID_AFFECT)
 	{
-		int memberNum = 0;
+		int member_num = 0;
 		CSequencer* sequencer = nullptr;
-		const char* entname = static_cast<char*>(block->GetMemberData(memberNum++));
+		const char* entname = static_cast<char*>(block->GetMemberData(member_num++));
 		ent = game->GetByName(entname);
 
 		if (ent < 0) // if there wasn't a valid entname in the affect, we need to check if it's a get command
@@ -1817,8 +1809,8 @@ void CSequencer::CheckAffect(CBlock** command, CIcarus* icarus)
 			case CIcarus::ID_GET:
 				{
 					//get( TYPE, NAME )
-					const int type = static_cast<int>(*static_cast<float*>(block->GetMemberData(memberNum++)));
-					const char* name = static_cast<char*>(block->GetMemberData(memberNum++));
+					const int type = static_cast<int>(*static_cast<float*>(block->GetMemberData(member_num++)));
+					const char* name = static_cast<char*>(block->GetMemberData(member_num++));
 
 					switch (type) // what type are they attempting to get
 					{
@@ -1857,16 +1849,16 @@ void CSequencer::CheckAffect(CBlock** command, CIcarus* icarus)
 
 		if (ent >= 0)
 		{
-			const int sequencerID = game->CreateIcarus(ent);
-			sequencer = icarus->FindSequencer(sequencerID);
+			const int sequencer_id = game->CreateIcarus(ent);
+			sequencer = icarus->FindSequencer(sequencer_id);
 		}
-		if (memberNum == 0)
+		if (member_num == 0)
 		{
 			//there was no get, increment manually before next step
-			memberNum++;
+			member_num++;
 		}
-		const int type = static_cast<int>(*static_cast<float*>(block->GetMemberData(memberNum)));
-		const int id = static_cast<int>(*static_cast<float*>(block->GetMemberData(memberNum + 1)));
+		const int type = static_cast<int>(*static_cast<float*>(block->GetMemberData(member_num)));
+		const int id = static_cast<int>(*static_cast<float*>(block->GetMemberData(member_num + 1)));
 
 		if (m_curSequence->HasFlag(CSequence::SQ_RETAIN))
 		{
@@ -1934,8 +1926,8 @@ void CSequencer::CheckAffect(CBlock** command, CIcarus* icarus)
 		if (ent >= 0)
 		{
 			// ents need to update upon being affected
-			const int sequencerID = game->CreateIcarus(ent);
-			const CSequencer* entsequencer = icarus->FindSequencer(sequencerID);
+			const int sequencer_id = game->CreateIcarus(ent);
+			const CSequencer* entsequencer = icarus->FindSequencer(sequencer_id);
 			CTaskManager* taskmanager = entsequencer->GetTaskManager();
 			if (taskmanager)
 			{
@@ -1962,26 +1954,22 @@ void CSequencer::CheckDo(CBlock** command, CIcarus* icarus)
 	if (block->GetBlockID() == CIcarus::ID_DO)
 	{
 		//Get the sequence
-		const auto groupName = static_cast<const char*>(block->GetMemberData(0));
-		CTaskGroup* group = m_taskManager->GetTaskGroup(groupName, icarus);
+		const auto group_name = static_cast<const char*>(block->GetMemberData(0));
+		CTaskGroup* group = m_taskManager->GetTaskGroup(group_name, icarus);
 		CSequence* sequence = GetTaskSequence(group);
-
-		//TODO: Emit warning
+		
 		assert(group);
 		if (group == nullptr)
 		{
-			//TODO: Give name/number of entity trying to execute, too
-			game->DebugPrint(IGameInterface::WL_ERROR, "ICARUS Unable to find task group \"%s\"!\n", groupName);
+			game->DebugPrint(IGameInterface::WL_ERROR, "ICARUS Unable to find task group \"%s\"!\n", group_name);
 			*command = nullptr;
 			return;
 		}
-
-		//TODO: Emit warning
+		
 		assert(sequence);
 		if (sequence == nullptr)
 		{
-			//TODO: Give name/number of entity trying to execute, too
-			game->DebugPrint(IGameInterface::WL_ERROR, "ICARUS Unable to find task 'group' sequence!\n", groupName);
+			game->DebugPrint(IGameInterface::WL_ERROR, "ICARUS Unable to find task 'group' sequence!\n", group_name);
 			*command = nullptr;
 			return;
 		}
@@ -2033,9 +2021,9 @@ void CSequencer::CheckDo(CBlock** command, CIcarus* icarus)
 		m_taskManager->MarkTask(m_curGroup->GetGUID(), TASK_END, icarus);
 		m_curGroup = m_curGroup->GetParent();
 
-		CSequence* returnSeq = ReturnSequence(m_curSequence);
+		CSequence* return_seq = ReturnSequence(m_curSequence);
 		m_curSequence->SetReturn(nullptr);
-		m_curSequence = returnSeq;
+		m_curSequence = return_seq;
 
 		if (m_curSequence == nullptr)
 		{
@@ -2075,13 +2063,13 @@ Starts communication between the task manager and this sequencer
 ========================
 */
 
-int CSequencer::Prime(CTaskManager* taskManager, CBlock* command, CIcarus* icarus)
+int CSequencer::Prime(CTaskManager* task_manager, CBlock* command, CIcarus* icarus)
 {
 	Prep(&command, icarus);
 
 	if (command)
 	{
-		taskManager->SetCommand(command, CSequence::PUSH_BACK, icarus);
+		task_manager->SetCommand(command, CSequence::PUSH_BACK, icarus);
 	}
 
 	return SEQ_OK;
@@ -2095,12 +2083,12 @@ Handles a completed task and returns a new task to be completed
 ========================
 */
 
-int CSequencer::Callback(CTaskManager* taskManager, CBlock* block, const int returnCode, CIcarus* icarus)
+int CSequencer::Callback(CTaskManager* task_manager, CBlock* block, const int return_code, CIcarus* icarus)
 {
 	IGameInterface* game = icarus->GetGame();
 	CBlock* command;
 
-	if (returnCode == TASK_RETURN_COMPLETE)
+	if (return_code == TASK_RETURN_COMPLETE)
 	{
 		//There are no more pending commands
 		if (m_curSequence == nullptr)
@@ -2136,7 +2124,7 @@ int CSequencer::Callback(CTaskManager* taskManager, CBlock* block, const int ret
 		Prep(&command, icarus);
 
 		if (command)
-			taskManager->SetCommand(command, CSequence::PUSH_FRONT, icarus);
+			task_manager->SetCommand(command, CSequence::PUSH_FRONT, icarus);
 
 		return SEQ_OK;
 	}
@@ -2284,14 +2272,13 @@ int CSequencer::RemoveSequence(CSequence* sequence, const CIcarus* icarus)
 {
 	IGameInterface* game = icarus->GetGame();
 
-	const int numChildren = sequence->GetNumChildren();
+	const int num_children = sequence->GetNumChildren();
 
 	//Add all the children
-	for (int i = 0; i < numChildren; i++)
+	for (int i = 0; i < num_children; i++)
 	{
 		CSequence* temp = sequence->GetChildByIndex(i);
-
-		//TODO: Emit warning
+		
 		assert(temp);
 		if (temp == nullptr)
 		{
@@ -2335,13 +2322,13 @@ int CSequencer::DestroySequence(CSequence* sequence, CIcarus* icarus)
 		parent = nullptr;
 	}
 
-	int curChild = sequence->GetNumChildren();
-	while (curChild)
+	int cur_child = sequence->GetNumChildren();
+	while (cur_child)
 	{
 		// Stop if we're about to go negative (invalid index!).
-		if (curChild > 0)
+		if (cur_child > 0)
 		{
-			DestroySequence(sequence->GetChildByIndex(--curChild), icarus);
+			DestroySequence(sequence->GetChildByIndex(--cur_child), icarus);
 		}
 		else
 			break;
@@ -2385,7 +2372,7 @@ Save
 int CSequencer::Save()
 {
 	taskSequence_m::iterator ti;
-	int numSequences, id, numTasks;
+	int num_sequences, id, num_tasks;
 
 	// Data saved here.
 	//	Owner Sequence.
@@ -2400,54 +2387,54 @@ int CSequencer::Save()
 	//	Number of Commands.
 	//	ID of current Sequence.
 
-	const auto pIcarus = static_cast<CIcarus*>(IIcarusInterface::GetIcarus());
+	const auto p_icarus = static_cast<CIcarus*>(IIcarusInterface::GetIcarus());
 
 	//Get the number of sequences to save out
-	numSequences = /*m_sequenceMap.size();*/ m_sequences.size();
+	num_sequences = /*m_sequenceMap.size();*/ m_sequences.size();
 
 	//Save out the owner sequence
-	pIcarus->BufferWrite(&m_ownerID, sizeof m_ownerID);
+	p_icarus->BufferWrite(&m_ownerID, sizeof m_ownerID);
 
 	//Write out the number of sequences we need to read
-	pIcarus->BufferWrite(&numSequences, sizeof numSequences);
+	p_icarus->BufferWrite(&num_sequences, sizeof num_sequences);
 
 	//Second pass, save out all sequences, in order
 	auto iter_seq = m_sequences.end();
 	STL_ITERATE(iter_seq, m_sequences)
 	{
 		id = (*iter_seq)->GetID();
-		pIcarus->BufferWrite(&id, sizeof id);
+		p_icarus->BufferWrite(&id, sizeof id);
 	}
 
 	//Save out the taskManager
 	m_taskManager->Save();
 
 	//Save out the task sequences mapping the name to the GUIDs
-	numTasks = m_taskSequences.size();
-	pIcarus->BufferWrite(&numTasks, sizeof numTasks);
+	num_tasks = m_taskSequences.size();
+	p_icarus->BufferWrite(&num_tasks, sizeof num_tasks);
 
 	STL_ITERATE(ti, m_taskSequences)
 	{
 		//Save the task group's ID
 		id = (*ti).first->GetGUID();
-		pIcarus->BufferWrite(&id, sizeof id);
+		p_icarus->BufferWrite(&id, sizeof id);
 
 		//Save the sequence's ID
 		id = (*ti).second->GetID();
-		pIcarus->BufferWrite(&id, sizeof id);
+		p_icarus->BufferWrite(&id, sizeof id);
 	}
 
-	const int curGroupID = m_curGroup == nullptr ? -1 : m_curGroup->GetGUID();
+	const int cur_group_id = m_curGroup == nullptr ? -1 : m_curGroup->GetGUID();
 
 	// Right the group ID.
-	pIcarus->BufferWrite(&curGroupID, sizeof curGroupID);
+	p_icarus->BufferWrite(&cur_group_id, sizeof cur_group_id);
 
 	//Output the number of commands
-	pIcarus->BufferWrite(&m_numCommands, sizeof m_numCommands);
+	p_icarus->BufferWrite(&m_numCommands, sizeof m_numCommands);
 
 	//Output the ID of the current sequence
 	id = m_curSequence != nullptr ? m_curSequence->GetID() : -1;
-	pIcarus->BufferWrite(&id, sizeof id);
+	p_icarus->BufferWrite(&id, sizeof id);
 
 	return true;
 }
@@ -2473,26 +2460,26 @@ int CSequencer::Load(CIcarus* icarus, IGameInterface* game)
 	//	Number of Commands.
 	//	ID of current Sequence.
 
-	const auto pIcarus = static_cast<CIcarus*>(IIcarusInterface::GetIcarus());
+	const auto p_icarus = static_cast<CIcarus*>(IIcarusInterface::GetIcarus());
 
 	//Get the owner of this sequencer
-	pIcarus->BufferRead(&m_ownerID, sizeof m_ownerID);
+	p_icarus->BufferRead(&m_ownerID, sizeof m_ownerID);
 
 	//Link the entity back to the sequencer
 	game->LinkGame(m_ownerID, m_id);
 
 	CSequence* seq;
-	int numSequences, seqID, taskID, numTasks;
+	int num_sequences, seq_id, task_id, num_tasks;
 
 	//Get the number of sequences to read
-	pIcarus->BufferRead(&numSequences, sizeof numSequences);
+	p_icarus->BufferRead(&num_sequences, sizeof num_sequences);
 
 	//Read in all the sequences
-	for (int i = 0; i < numSequences; i++)
+	for (int i = 0; i < num_sequences; i++)
 	{
-		pIcarus->BufferRead(&seqID, sizeof seqID);
+		p_icarus->BufferRead(&seq_id, sizeof seq_id);
 
-		seq = icarus->GetSequence(seqID);
+		seq = icarus->GetSequence(seq_id);
 
 		assert(seq);
 
@@ -2507,43 +2494,43 @@ int CSequencer::Load(CIcarus* icarus, IGameInterface* game)
 	m_taskManager->Load(icarus);
 
 	//Get the number of tasks in the map
-	pIcarus->BufferRead(&numTasks, sizeof numTasks);
+	p_icarus->BufferRead(&num_tasks, sizeof num_tasks);
 
 	//Read in, and reassociate the tasks to the sequences
-	for (int i = 0; i < numTasks; i++)
+	for (int i = 0; i < num_tasks; i++)
 	{
 		//Read in the task's ID
-		pIcarus->BufferRead(&taskID, sizeof taskID);
+		p_icarus->BufferRead(&task_id, sizeof task_id);
 
 		//Read in the sequence's ID
-		pIcarus->BufferRead(&seqID, sizeof seqID);
+		p_icarus->BufferRead(&seq_id, sizeof seq_id);
 
-		CTaskGroup* taskGroup = m_taskManager->GetTaskGroup(taskID, icarus);
+		CTaskGroup* task_group = m_taskManager->GetTaskGroup(task_id, icarus);
 
-		assert(taskGroup);
+		assert(task_group);
 
-		seq = icarus->GetSequence(seqID);
+		seq = icarus->GetSequence(seq_id);
 
 		assert(seq);
 
 		//Associate the values
-		m_taskSequences[taskGroup] = seq;
+		m_taskSequences[task_group] = seq;
 	}
 
-	int curGroupID;
+	int cur_group_id;
 
 	//Get the current task group
-	pIcarus->BufferRead(&curGroupID, sizeof curGroupID);
+	p_icarus->BufferRead(&cur_group_id, sizeof cur_group_id);
 
-	m_curGroup = curGroupID == -1 ? nullptr : m_taskManager->GetTaskGroup(curGroupID, icarus);
+	m_curGroup = cur_group_id == -1 ? nullptr : m_taskManager->GetTaskGroup(cur_group_id, icarus);
 
 	//Get the number of commands
-	pIcarus->BufferRead(&m_numCommands, sizeof m_numCommands);
+	p_icarus->BufferRead(&m_numCommands, sizeof m_numCommands);
 
 	//Get the current sequence
-	pIcarus->BufferRead(&seqID, sizeof seqID);
+	p_icarus->BufferRead(&seq_id, sizeof seq_id);
 
-	m_curSequence = seqID != -1 ? icarus->GetSequence(seqID) : nullptr;
+	m_curSequence = seq_id != -1 ? icarus->GetSequence(seq_id) : nullptr;
 
 	return true;
 }

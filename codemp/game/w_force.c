@@ -1130,28 +1130,28 @@ void ForceHeal(gentity_t* self)
 	G_Sound(self, CHAN_ITEM, G_SoundIndex("sound/weapons/force/heal.wav"));
 }
 
-void WP_AddToClientBitflags(gentity_t* ent, int entNum)
+void WP_AddToClientBitflags(gentity_t* ent, int ent_num)
 {
 	if (!ent)
 	{
 		return;
 	}
 
-	if (entNum > 47)
+	if (ent_num > 47)
 	{
-		ent->s.trickedentindex4 |= (1 << (entNum - 48));
+		ent->s.trickedentindex4 |= (1 << (ent_num - 48));
 	}
-	else if (entNum > 31)
+	else if (ent_num > 31)
 	{
-		ent->s.trickedentindex3 |= (1 << (entNum - 32));
+		ent->s.trickedentindex3 |= (1 << (ent_num - 32));
 	}
-	else if (entNum > 15)
+	else if (ent_num > 15)
 	{
-		ent->s.trickedentindex2 |= (1 << (entNum - 16));
+		ent->s.trickedentindex2 |= (1 << (ent_num - 16));
 	}
 	else
 	{
-		ent->s.trickedentindex |= (1 << entNum);
+		ent->s.trickedentindex |= (1 << ent_num);
 	}
 }
 
@@ -2341,28 +2341,28 @@ void ForceJump(gentity_t* self, usercmd_t* ucmd)
 	self->client->ps.groundEntityNum = ENTITYNUM_NONE;
 }
 
-void WP_AddAsMindtricked(forcedata_t* fd, int entNum)
+void WP_AddAsMindtricked(forcedata_t* fd, int ent_num)
 {
 	if (!fd)
 	{
 		return;
 	}
 
-	if (entNum > 47)
+	if (ent_num > 47)
 	{
-		fd->forceMindtrickTargetIndex4 |= (1 << (entNum - 48));
+		fd->forceMindtrickTargetIndex4 |= (1 << (ent_num - 48));
 	}
-	else if (entNum > 31)
+	else if (ent_num > 31)
 	{
-		fd->forceMindtrickTargetIndex3 |= (1 << (entNum - 32));
+		fd->forceMindtrickTargetIndex3 |= (1 << (ent_num - 32));
 	}
-	else if (entNum > 15)
+	else if (ent_num > 15)
 	{
-		fd->forceMindtrickTargetIndex2 |= (1 << (entNum - 16));
+		fd->forceMindtrickTargetIndex2 |= (1 << (ent_num - 16));
 	}
 	else
 	{
-		fd->forceMindtrickTargetIndex |= (1 << entNum);
+		fd->forceMindtrickTargetIndex |= (1 << ent_num);
 	}
 }
 
@@ -4503,7 +4503,7 @@ void FindGenericEnemyIndex(gentity_t* self)
 
 	while (i < MAX_CLIENTS)
 	{
-		gentity_t* ent = &g_entities[i];
+		const gentity_t* ent = &g_entities[i];
 
 		if (ent && ent->client && ent->s.number != self->s.number && ent->health > 0 && !OnSameTeam(self, ent) && ent->client->ps.pm_type != PM_INTERMISSION && ent->client->ps.pm_type != PM_SPECTATOR)
 		{

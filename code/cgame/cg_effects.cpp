@@ -998,7 +998,7 @@ void CG_PlayEffectBolted(const char* fx_name, const int model_index, const int b
 	                          -1,
 	                          false,
 	                          i_loop_time,
-	                          is_relative); //iLoopTime 0 = not looping, 1 for infinite, else duration
+	                          is_relative); //i_loop_time 0 = not looping, 1 for infinite, else duration
 }
 
 void CG_PlayEffectIDBolted(const int fx_id, const int model_index, const int bolt_index, const int ent_num,

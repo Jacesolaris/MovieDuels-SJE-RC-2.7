@@ -413,7 +413,7 @@ void SV_AreaEntities_r(const worldSector_t* node, areaParms_t* ap)
 {
 	svEntity_t* next;
 
-	for (svEntity_t* check = node->entities; check; check = next)
+	for (const svEntity_t* check = node->entities; check; check = next)
 	{
 		next = check->nextEntityInWorldSector;
 

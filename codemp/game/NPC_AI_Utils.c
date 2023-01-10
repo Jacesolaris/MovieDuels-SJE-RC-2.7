@@ -940,7 +940,7 @@ void AI_UpdateGroups(void)
 	}
 }
 
-qboolean AI_GroupContainsEntNum(AIGroupInfo_t* group, int entNum)
+qboolean AI_GroupContainsEntNum(AIGroupInfo_t* group, int ent_num)
 {
 	if (!group)
 	{
@@ -948,7 +948,7 @@ qboolean AI_GroupContainsEntNum(AIGroupInfo_t* group, int entNum)
 	}
 	for (int i = 0; i < group->numGroup; i++)
 	{
-		if (group->member[i].number == entNum)
+		if (group->member[i].number == ent_num)
 		{
 			return qtrue;
 		}

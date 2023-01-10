@@ -2550,7 +2550,7 @@ char* ClientConnect(int client_num, qboolean firstTime, qboolean isBot) {
 
 void G_WriteClientSessionData(gclient_t* client);
 
-void WP_SetSaber(int entNum, saberInfo_t* sabers, int saber_num, const char* saberName);
+void WP_SetSaber(int ent_num, saberInfo_t* sabers, int saber_num, const char* saberName);
 
 /*
 ===========

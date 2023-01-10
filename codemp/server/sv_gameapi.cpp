@@ -377,12 +377,12 @@ qboolean GVM_NAV_EntIsBreakable(int entity_num) {
 	return ge->NAV_EntIsBreakable(entity_num);
 }
 
-qboolean GVM_NAV_EntIsRemovableUsable(int entNum) {
+qboolean GVM_NAV_EntIsRemovableUsable(int ent_num) {
 	if (gvm->isLegacy)
-		return static_cast<qboolean>(VM_Call(gvm, GAME_NAV_ENTISREMOVABLEUSABLE, entNum));
+		return static_cast<qboolean>(VM_Call(gvm, GAME_NAV_ENTISREMOVABLEUSABLE, ent_num));
 	VMSwap v(gvm);
 
-	return ge->NAV_EntIsRemovableUsable(entNum);
+	return ge->NAV_EntIsRemovableUsable(ent_num);
 }
 
 void GVM_NAV_FindCombatPointWaypoints(void) {
@@ -1488,12 +1488,12 @@ static qboolean SV_G2API_SetSkin(void* ghoul2, int model_index, qhandle_t custom
 	return re->G2API_SetSkin(g2, model_index, customSkin, renderSkin);
 }
 
-static void SV_G2API_CollisionDetect(CollisionRecord_t* collRecMap, void* ghoul2, const vec3_t angles, const vec3_t position, int frameNumber, int entNum, vec3_t rayStart, vec3_t rayEnd, vec3_t scale, int traceFlags, int use_lod, float fRadius) {
-	re->G2API_CollisionDetect(collRecMap, *static_cast<CGhoul2Info_v*>(ghoul2), angles, position, frameNumber, entNum, rayStart, rayEnd, scale, G2VertSpaceServer, traceFlags, use_lod, fRadius);
+static void SV_G2API_CollisionDetect(CollisionRecord_t* collRecMap, void* ghoul2, const vec3_t angles, const vec3_t position, int frameNumber, int ent_num, vec3_t rayStart, vec3_t rayEnd, vec3_t scale, int traceFlags, int use_lod, float fRadius) {
+	re->G2API_CollisionDetect(collRecMap, *static_cast<CGhoul2Info_v*>(ghoul2), angles, position, frameNumber, ent_num, rayStart, rayEnd, scale, G2VertSpaceServer, traceFlags, use_lod, fRadius);
 }
 
-static void SV_G2API_CollisionDetectCache(CollisionRecord_t* collRecMap, void* ghoul2, const vec3_t angles, const vec3_t position, int frameNumber, int entNum, vec3_t rayStart, vec3_t rayEnd, vec3_t scale, int traceFlags, int use_lod, float fRadius) {
-	re->G2API_CollisionDetectCache(collRecMap, *static_cast<CGhoul2Info_v*>(ghoul2), angles, position, frameNumber, entNum, rayStart, rayEnd, scale, G2VertSpaceServer, traceFlags, use_lod, fRadius);
+static void SV_G2API_CollisionDetectCache(CollisionRecord_t* collRecMap, void* ghoul2, const vec3_t angles, const vec3_t position, int frameNumber, int ent_num, vec3_t rayStart, vec3_t rayEnd, vec3_t scale, int traceFlags, int use_lod, float fRadius) {
+	re->G2API_CollisionDetectCache(collRecMap, *static_cast<CGhoul2Info_v*>(ghoul2), angles, position, frameNumber, ent_num, rayStart, rayEnd, scale, G2VertSpaceServer, traceFlags, use_lod, fRadius);
 }
 
 static void SV_G2API_CleanGhoul2Models(void** ghoul2Ptr) {

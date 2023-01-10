@@ -486,7 +486,7 @@ void CG_ParseSiegeObjectiveStatus(const char* str)
 				trap->Cvar_Set(cvarName, "0");
 			}
 
-			char* s = CG_SiegeObjectiveBuffer(team, objectiveNum);
+			const char* s = CG_SiegeObjectiveBuffer(team, objectiveNum);
 			if (s && s[0])
 			{ //now set the description and graphic cvars to by read by the menu
 				char buffer[8192];

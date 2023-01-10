@@ -482,7 +482,7 @@ static int UI_HeadCountByColor(void);
 static void UI_ParseGameInfo(const char* teamFile);
 static const char* UI_SelectedMap(int index, int* actual);
 static int UI_GetIndexFromSelection(int actual);
-static void UI_SiegeClassCnt(const int team);
+static void UI_SiegeClassCnt(int team);
 
 int	uiSkinColor = TEAM_FREE;
 int	uiHoldSkinColor = TEAM_FREE;	// Stores the skin color so that in non-team games, the player screen remembers the team you chose, in case you're coming back from the force powers screen.
@@ -4994,7 +4994,7 @@ void UI_SetSiegeObjectiveGraphicPos(menuDef_t* menu, const char* itemName, const
 {
 	char		cvarBuf[1024];
 	const char* holdVal;
-	char* holdBuf;
+	char* hold_buf;
 
 	itemDef_t* item = Menu_FindItemByName(menu, itemName);
 
@@ -5003,17 +5003,17 @@ void UI_SetSiegeObjectiveGraphicPos(menuDef_t* menu, const char* itemName, const
 		// get cvar data
 		trap->Cvar_VariableStringBuffer(cvarName, cvarBuf, sizeof(cvarBuf));
 
-		holdBuf = cvarBuf;
-		if (String_Parse(&holdBuf, &holdVal))
+		hold_buf = cvarBuf;
+		if (String_Parse(&hold_buf, &holdVal))
 		{
 			item->window.rectClient.x = atof(holdVal);
-			if (String_Parse(&holdBuf, &holdVal))
+			if (String_Parse(&hold_buf, &holdVal))
 			{
 				item->window.rectClient.y = atof(holdVal);
-				if (String_Parse(&holdBuf, &holdVal))
+				if (String_Parse(&hold_buf, &holdVal))
 				{
 					item->window.rectClient.w = atof(holdVal);
-					if (String_Parse(&holdBuf, &holdVal))
+					if (String_Parse(&hold_buf, &holdVal))
 					{
 						item->window.rectClient.h = atof(holdVal);
 
@@ -5794,10 +5794,10 @@ void UI_UpdateCvarsForClass(const int team, const int baseClass, const int index
 						Menu_SetFeederSelection(NULL, FEEDER_SIEGE_BASE_CLASS, -1, NULL);
 						UI_SiegeSetCvarsForClass(holdClass);
 
-						const char* holdBuf = BG_GetUIPortraitFile(team, baseClass, index);
-						if (holdBuf)
+						const char* hold_buf = BG_GetUIPortraitFile(team, baseClass, index);
+						if (hold_buf)
 						{
-							trap->Cvar_Set("ui_classPortrait", holdBuf);
+							trap->Cvar_Set("ui_classPortrait", hold_buf);
 						}
 					}
 				}

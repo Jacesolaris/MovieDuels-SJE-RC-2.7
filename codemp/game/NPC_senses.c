@@ -40,7 +40,7 @@ qboolean G_ClearLineOfSight(const vec3_t point1, const vec3_t point2, int ignore
 		return qtrue;
 	}
 
-	gentity_t* hit = &g_entities[tr.entity_num];
+	const gentity_t* hit = &g_entities[tr.entity_num];
 	if (EntIsGlass(hit))
 	{
 		vec3_t	newpoint1;

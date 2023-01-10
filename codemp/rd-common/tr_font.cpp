@@ -232,11 +232,11 @@ public:
 	int GetAscender(void) const { return(mAscender); }
 	int GetDescender(void) const { return(mDescender); }
 
-	const glyphInfo_t* GetLetter(const unsigned int uiLetter, int* piShader = nullptr);
+	const glyphInfo_t* GetLetter(unsigned int uiLetter, int* piShader = nullptr);
 	int GetCollapsedAsianCode(ulong uiLetter) const;
 
-	int GetLetterWidth(const unsigned int uiLetter);
-	int GetLetterHorizAdvance(const unsigned int uiLetter);
+	int GetLetterWidth(unsigned int uiLetter);
+	int GetLetterHorizAdvance(unsigned int uiLetter);
 	int GetShader(void) const { return(mShader); }
 
 	void FlagNoAsianGlyphs(void) { m_hAsianShaders[0] = 0; m_iLanguageModificationCount = -1; }	// used during constructor
@@ -1361,7 +1361,7 @@ float RE_Font_StrLenPixelsNew(const char* psText, const int iFontHandle, const f
 			thisLineWidth = 0.0f;
 		}
 		else {
-			float iPixelAdvance = static_cast<float>(curfont->GetLetterHorizAdvance(uiLetter));
+			const float iPixelAdvance = static_cast<float>(curfont->GetLetterHorizAdvance(uiLetter));
 
 			float fValue = iPixelAdvance * ((uiLetter > static_cast<unsigned>(g_iNonScaledCharRange)) ? fScaleAsian : fScale);
 

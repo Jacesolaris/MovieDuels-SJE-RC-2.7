@@ -1289,7 +1289,7 @@ qboolean G_EntIsUnlockedDoor(int entity_num)
 
 	if (G_EntIsDoor(entity_num))
 	{
-		gentity_t* ent = &g_entities[entity_num];
+		const gentity_t* ent = &g_entities[entity_num];
 		gentity_t* owner = NULL;
 		if (ent->flags & FL_TEAMSLAVE)
 		{//not the master door, get the master door
@@ -2991,9 +2991,9 @@ void func_usable_think(gentity_t* self)
 	}
 }
 
-qboolean G_EntIsRemovableUsable(int entNum)
+qboolean G_EntIsRemovableUsable(int ent_num)
 {
-	const gentity_t* ent = &g_entities[entNum];
+	const gentity_t* ent = &g_entities[ent_num];
 	if (ent->classname && !Q_stricmp("func_usable", ent->classname))
 	{
 		if (!(ent->s.eFlags & EF_SHADER_ANIM) && !(ent->spawnflags & 8) && ent->targetname)

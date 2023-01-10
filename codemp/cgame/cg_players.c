@@ -1509,7 +1509,7 @@ static void CG_SetDeferredClientInfo(clientInfo_t* ci) {
 CG_NewClientInfo
 ======================
 */
-void WP_SetSaber(int entNum, saberInfo_t* sabers, int saber_num, const char* saberName);
+void WP_SetSaber(int ent_num, saberInfo_t* sabers, int saber_num, const char* saberName);
 
 void ParseRGBSaber(char* str, vec3_t c);
 void CG_ParseScriptedSaber(char* script, clientInfo_t* ci, int snum);
@@ -2519,12 +2519,12 @@ void CG_PlayerAnimEventDo(centity_t* cent, animevent_t* anim_event)
 }
 
 /*
-void CG_PlayerAnimEvents( int animFileIndex, int eventFileIndex, qboolean torso, int oldFrame, int frame, const vec3_t org, int entNum )
+void CG_PlayerAnimEvents( int animFileIndex, int eventFileIndex, qboolean torso, int oldFrame, int frame, const vec3_t org, int ent_num )
 
 play any keyframed sounds - only when start a new frame
 This func is called once for legs and once for torso
 */
-void CG_PlayerAnimEvents(int animFileIndex, int eventFileIndex, qboolean torso, int oldFrame, int frame, int entNum)
+void CG_PlayerAnimEvents(int animFileIndex, int eventFileIndex, qboolean torso, int oldFrame, int frame, int ent_num)
 {
 	int		firstFrame = 0, lastFrame = 0;
 	qboolean	doEvent = qfalse, inSameAnim = qfalse, loopAnim = qfalse, animBackward = qfalse;
@@ -2546,14 +2546,14 @@ void CG_PlayerAnimEvents(int animFileIndex, int eventFileIndex, qboolean torso, 
 			/*
 			if ( cg_reliableAnimSounds.integer > 1 )
 			{//more precise, slower
-				oldAnim = PM_TorsoAnimForFrame( &g_entities[entNum], oldFrame );
-				anim = PM_TorsoAnimForFrame( &g_entities[entNum], frame );
+				oldAnim = PM_TorsoAnimForFrame( &g_entities[ent_num], oldFrame );
+				anim = PM_TorsoAnimForFrame( &g_entities[ent_num], frame );
 			}
 			else
 			*/
 			{//less precise, but faster
-				oldAnim = cg_entities[entNum].currentState.torsoAnim;
-				anim = cg_entities[entNum].nextState.torsoAnim;
+				oldAnim = cg_entities[ent_num].currentState.torsoAnim;
+				anim = cg_entities[ent_num].nextState.torsoAnim;
 			}
 		}
 		else
@@ -2561,14 +2561,14 @@ void CG_PlayerAnimEvents(int animFileIndex, int eventFileIndex, qboolean torso, 
 			/*
 			if ( cg_reliableAnimSounds.integer > 1 )
 			{//more precise, slower
-				oldAnim = PM_LegsAnimForFrame( &g_entities[entNum], oldFrame );
-				anim = PM_TorsoAnimForFrame( &g_entities[entNum], frame );
+				oldAnim = PM_LegsAnimForFrame( &g_entities[ent_num], oldFrame );
+				anim = PM_TorsoAnimForFrame( &g_entities[ent_num], frame );
 			}
 			else
 			*/
 			{//less precise, but faster
-				oldAnim = cg_entities[entNum].currentState.legsAnim;
-				anim = cg_entities[entNum].nextState.legsAnim;
+				oldAnim = cg_entities[ent_num].currentState.legsAnim;
+				anim = cg_entities[ent_num].nextState.legsAnim;
 			}
 		}
 		if (anim != oldAnim)
@@ -2730,7 +2730,7 @@ void CG_PlayerAnimEvents(int animFileIndex, int eventFileIndex, qboolean torso, 
 			// do event
 			if (doEvent)
 			{
-				CG_PlayerAnimEventDo(&cg_entities[entNum], &animEvents[i]);
+				CG_PlayerAnimEventDo(&cg_entities[ent_num], &animEvents[i]);
 			}
 		}
 	}
@@ -6350,7 +6350,7 @@ void CG_AddGhoul2Mark(int shader, float size, vec3_t start, vec3_t end, int entn
 	goreSkin.baseModelOnly = qfalse;
 
 	goreSkin.currentTime = cg.time;
-	goreSkin.entNum = entnum;
+	goreSkin.ent_num = entnum;
 	goreSkin.SSize = size;
 	goreSkin.TSize = size;
 	goreSkin.theta = flrand(0.0f, 6.28f);

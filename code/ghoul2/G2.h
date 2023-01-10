@@ -106,11 +106,11 @@ void G2_List_Model_Surfaces(const char* fileName);
 void G2_List_Model_Bones(const char* fileName, int frame);
 qboolean G2_GetAnimFileName(const char* fileName, char** filename);
 #ifdef _G2_GORE
-void G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, CCollisionRecord* collRecMap, int entNum,
+void G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, CCollisionRecord* collRecMap, int ent_num,
                     EG2_Collision e_g2_trace_type, int use_lod, float fRadius, float ssize, float tsize, float theta,
                     int shader, SSkinGoreData* gore, qboolean skipIfLODNotMatch);
 #else
-void		G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, CCollisionRecord* collRecMap, int entNum, EG2_Collision e_g2_trace_type, int use_lod, float fRadius);
+void		G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, CCollisionRecord* collRecMap, int ent_num, EG2_Collision e_g2_trace_type, int use_lod, float fRadius);
 #endif
 void TransformAndTranslatePoint(const vec3_t in, vec3_t out, const mdxaBone_t* mat);
 #ifdef _G2_GORE
@@ -177,7 +177,7 @@ int G2API_AddBolt(CGhoul2Info* ghl_info, const char* bone_name);
 int G2API_AddBoltSurfNum(CGhoul2Info* ghl_info, int surf_index);
 qboolean G2API_AttachG2Model(CGhoul2Info* ghl_info, CGhoul2Info* ghlInfoTo, int toBoltIndex, int toModel);
 qboolean G2API_DetachG2Model(CGhoul2Info* ghl_info);
-qboolean G2API_AttachEnt(int* bolt_info, CGhoul2Info* ghlInfoTo, int toBoltIndex, int entNum, int toModelNum);
+qboolean G2API_AttachEnt(int* bolt_info, CGhoul2Info* ghlInfoTo, int toBoltIndex, int ent_num, int toModelNum);
 void G2API_DetachEnt(int* bolt_info);
 
 qboolean G2API_GetBoltMatrix(CGhoul2Info_v& ghoul2, int model_index, int bolt_index, mdxaBone_t* matrix,
@@ -194,7 +194,7 @@ int G2API_GetGhoul2ModelFlags(CGhoul2Info* ghl_info);
 qboolean G2API_GetAnimFileName(CGhoul2Info* ghl_info, char** filename);
 void G2API_CollisionDetect(CCollisionRecord* collRecMap, CGhoul2Info_v& ghoul2, const vec3_t angles,
                            const vec3_t position,
-                           int frameNumber, int entNum, vec3_t rayStart, vec3_t rayEnd, vec3_t scale,
+                           int frameNumber, int ent_num, vec3_t rayStart, vec3_t rayEnd, vec3_t scale,
                            CMiniHeap* G2VertSpace,
                            EG2_Collision e_g2_trace_type, int use_lod, float fRadius);
 void G2API_GiveMeVectorFromMatrix(mdxaBone_t& bolt_matrix, Eorientations flags, vec3_t& vec);

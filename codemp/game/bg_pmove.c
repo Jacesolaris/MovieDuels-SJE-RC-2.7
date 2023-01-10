@@ -40,7 +40,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define MAX_WEAPON_CHARGE_TIME 5000
 
 #ifdef _GAME
-extern void G_CheapWeaponFire(int entNum, int ev);
+extern void G_CheapWeaponFire(int ent_num, int ev);
 extern qboolean TryGrapple(gentity_t* ent); //g_cmds.c
 #endif // _GAME
 
@@ -670,7 +670,7 @@ void BG_VehicleTurnRateForSpeed(Vehicle_t* p_veh, float speed, float* mPitchOver
 #if !defined(MACOS_X) && !defined(__GCC__) && !defined(__GNUC__)
 typedef struct gentity_s gentity_t;
 #endif
-gentity_t* G_PlayEffectID(const int fxID, vec3_t org, vec3_t ang);
+gentity_t* G_PlayEffectID(int fxID, vec3_t org, vec3_t ang);
 #endif
 
 static void PM_GroundTraceMissed(void);

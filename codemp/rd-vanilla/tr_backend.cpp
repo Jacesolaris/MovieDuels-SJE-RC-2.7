@@ -525,7 +525,7 @@ void RB_BeginDrawingView(void) {
 	backEnd.skyRenderedThisView = qfalse;
 
 	// clip to the plane of the portal
-	if (backEnd.viewParms.isPortal) {
+	if (backEnd.viewParms.is_portal) {
 		float	plane[4];
 		double	plane2[4];
 
@@ -609,7 +609,7 @@ RB_RenderDrawSurfList
 
 typedef struct postRender_s {
 	int			fogNum;
-	int			entNum;
+	int			ent_num;
 	int			dlighted;
 	int			depthRange;
 	drawSurf_t* draw_surf;
@@ -744,7 +744,7 @@ void RB_RenderDrawSurfList(drawSurf_t* draw_surfs, int num_draw_surfs) {
 				depthRange = oldDepthRange;
 
 				//store off the ent num
-				pRender->entNum = entity_num;
+				pRender->ent_num = entity_num;
 
 				//remember the other values necessary for rendering this surf
 				pRender->draw_surf = draw_surf;
@@ -791,7 +791,7 @@ void RB_RenderDrawSurfList(drawSurf_t* draw_surfs, int num_draw_surfs) {
 			depthRange = oldDepthRange;
 
 			//store off the ent num
-			pRender->entNum = entity_num;
+			pRender->ent_num = entity_num;
 
 			//remember the other values necessary for rendering this surf
 			pRender->draw_surf = draw_surf;
@@ -937,7 +937,7 @@ void RB_RenderDrawSurfList(drawSurf_t* draw_surfs, int num_draw_surfs) {
 			RB_BeginSurface(pRender->shader, pRender->fogNum);
 
 			/*
-			if (!pRender->eValid && pRender->entNum == REFENTITYNUM_WORLD)
+			if (!pRender->eValid && pRender->ent_num == REFENTITYNUM_WORLD)
 			{ //world/other surface
 				backEnd.currentEntity = &tr.worldEntity;
 				backEnd.refdef.floatTime = originalTime;
@@ -951,7 +951,7 @@ void RB_RenderDrawSurfList(drawSurf_t* draw_surfs, int num_draw_surfs) {
 			else
 			*/
 			{ //ent
-				backEnd.currentEntity = &backEnd.refdef.entities[pRender->entNum];
+				backEnd.currentEntity = &backEnd.refdef.entities[pRender->ent_num];
 
 				backEnd.refdef.floatTime = originalTime - backEnd.currentEntity->e.shaderTime;
 				// we have to reset the shaderTime as well otherwise image animations start
@@ -1057,8 +1057,8 @@ void RB_RenderDrawSurfList(drawSurf_t* draw_surfs, int num_draw_surfs) {
 			if (!pRender->eValid)
 			{
 			}
-			else if ((backEnd.refdef.entities[pRender->entNum].e.renderfx & RF_DISTORTION) &&
-				lastPostEnt != pRender->entNum)
+			else if ((backEnd.refdef.entities[pRender->ent_num].e.renderfx & RF_DISTORTION) &&
+				lastPostEnt != pRender->ent_num)
 			{ //do the capture now, we only need to do it once per ent
 				int x, y;
 				int rad;
@@ -1115,7 +1115,7 @@ void RB_RenderDrawSurfList(drawSurf_t* draw_surfs, int num_draw_surfs) {
 					//now copy a portion of the screen to this texture
 					qglCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16, cX, cY, rad, rad, 0);
 
-					lastPostEnt = pRender->entNum;
+					lastPostEnt = pRender->ent_num;
 				}
 			}
 

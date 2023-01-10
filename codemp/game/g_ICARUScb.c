@@ -316,18 +316,18 @@ void G_DebugPrint(int printLevel, const char* format, ...)
 
 	case WL_DEBUG:
 	{
-		int entNum = atoi(text);
+		int ent_num = atoi(text);
 
-		//if ( ( ICARUS_entFilter >= 0 ) && ( ICARUS_entFilter != entNum ) )
+		//if ( ( ICARUS_entFilter >= 0 ) && ( ICARUS_entFilter != ent_num ) )
 		//	return;
 
 		char* buffer = (char*)text;
 		buffer += 5;
 
-		if ((entNum < 0) || (entNum >= MAX_GENTITIES))
-			entNum = 0;
+		if ((ent_num < 0) || (ent_num >= MAX_GENTITIES))
+			ent_num = 0;
 
-		Com_Printf(S_COLOR_BLUE"DEBUG: %s(%d): %s\n", g_entities[entNum].script_targetname, entNum, buffer);
+		Com_Printf(S_COLOR_BLUE"DEBUG: %s(%d): %s\n", g_entities[ent_num].script_targetname, ent_num, buffer);
 		break;
 	}
 	default:
@@ -3174,7 +3174,7 @@ Q3_SetWeapon
 extern void ChangeWeapon(const gentity_t* ent, int new_weapon);
 static void Q3_SetWeapon(int entID, const char* wp_name)
 {
-	gentity_t* ent = &g_entities[entID];
+	const gentity_t* ent = &g_entities[entID];
 	const int		wp = GetIDForString(WPTable, wp_name);
 
 	ent->client->ps.stats[STAT_WEAPONS] = (1 << wp);
@@ -4431,7 +4431,7 @@ Q3_SetAltFire
 */
 static void Q3_SetAltFire(int entID, qboolean add)
 {
-	gentity_t* ent = &g_entities[entID];
+	const gentity_t* ent = &g_entities[entID];
 
 	if (!ent)
 	{
@@ -5135,7 +5135,7 @@ Q3_LookTarget
 */
 static void Q3_LookTarget(int entID, char* targetName)
 {
-	gentity_t* ent = &g_entities[entID];
+	const gentity_t* ent = &g_entities[entID];
 
 	if (!ent)
 	{

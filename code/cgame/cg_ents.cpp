@@ -3071,12 +3071,12 @@ CG_AddPacketEntities
 
 ===============
 */
-void CG_AddPacketEntities(const qboolean isPortal)
+void CG_AddPacketEntities(const qboolean is_portal)
 {
 	int num;
 	centity_t* cent;
 
-	if (isPortal)
+	if (is_portal)
 	{
 		for (num = 0; num < cg.snap->numEntities; num++)
 		{

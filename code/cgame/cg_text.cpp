@@ -589,7 +589,7 @@ void CG_ScrollText(const char* str, const int iPixelWidth)
 // draws using [textcolor_scroll]...
 //
 constexpr auto SCROLL_LPM = 1 / 50.0; // 1 line per 50 ms;
-void CG_DrawScrollText(void)
+void CG_DrawScrollText()
 {
 	const int fontHeight = static_cast<int>(1.5f * static_cast<float>(cgi_R_Font_HeightPixels(
 		cgs.media.qhFontMedium, 1.0f)));

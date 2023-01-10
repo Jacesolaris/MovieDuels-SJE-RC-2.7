@@ -352,7 +352,7 @@ public:
 	}
 
 	//rww - RAGDOLL_BEGIN
-	const inline mdxaBone_t& EvalRender(const int index)
+	const mdxaBone_t& EvalRender(const int index)
 	{
 		assert(index >= 0 && index < mNumBones);
 		if (mFinalBones[index].touch != mCurrentTouch)
@@ -2529,7 +2529,7 @@ void R_AddGhoulSurfaces(trRefEntity_t* ent)
 	RootMatrix(ghoul2, currentTime, ent->e.modelScale, rootMatrix);
 
 	// don't add third_person objects if not in a portal
-	qboolean personalModel = static_cast<qboolean>((ent->e.renderfx & RF_THIRD_PERSON) && !tr.viewParms.isPortal);
+	qboolean personalModel = static_cast<qboolean>((ent->e.renderfx & RF_THIRD_PERSON) && !tr.viewParms.is_portal);
 
 	int model_list[32];
 	assert(ghoul2.size() <= 31);

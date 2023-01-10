@@ -29,9 +29,9 @@ extern qboolean g_standard_humanoid(gentity_t* ent);
 extern void G_AddVoiceEvent(const gentity_t* self, int event, int speak_debounce_time);
 extern qboolean Q3_TaskIDPending(const gentity_t* ent, taskID_t taskType);
 extern void NPC_AimAdjust(int change);
-extern qboolean WP_LobFire(const gentity_t* self, vec3_t start, vec3_t target, vec3_t mins, vec3_t maxs, const int clipmask,
-                           vec3_t velocity, const qboolean trace_path, const int ignore_ent_num, const int enemy_num,
-                           float ideal_speed, const qboolean must_hit);
+extern qboolean WP_LobFire(const gentity_t* self, vec3_t start, vec3_t target, vec3_t mins, vec3_t maxs, int clipmask,
+                           vec3_t velocity, qboolean trace_path, int ignore_ent_num, int enemy_num,
+                           float ideal_speed, qboolean must_hit);
 extern qboolean InFront(vec3_t spot, vec3_t from, vec3_t fromAngles, float threshHold = 0.0f);
 extern void G_SoundAtSpot(vec3_t org, int sound_index, qboolean broadcast);
 extern void G_SoundOnEnt(const gentity_t* ent, soundChannel_t channel, const char* sound_path);

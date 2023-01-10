@@ -87,7 +87,7 @@ S_TransferPaintBuffer
 */
 void S_TransferPaintBuffer(const int endtime)
 {
-	auto pbuf = (unsigned long*)dma.buffer;
+	const auto pbuf = (unsigned long*)dma.buffer;
 
 	if (s_testsound->integer)
 	{
@@ -114,7 +114,7 @@ void S_TransferPaintBuffer(const int endtime)
 
 		if (dma.samplebits == 16)
 		{
-			auto out = (short*)pbuf;
+			const auto out = (short*)pbuf;
 			while (count--)
 			{
 				val = *p >> 8;
@@ -129,7 +129,7 @@ void S_TransferPaintBuffer(const int endtime)
 		}
 		else if (dma.samplebits == 8)
 		{
-			auto out = (unsigned char*)pbuf;
+			const auto out = (unsigned char*)pbuf;
 			while (count--)
 			{
 				val = *p >> 8;

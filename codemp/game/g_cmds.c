@@ -31,7 +31,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 int AcceptBotCommand(char* cmd, gentity_t* pl);
 //end rww
 
-void WP_SetSaber(int entNum, saberInfo_t* sabers, int saber_num, const char* saberName);
+void WP_SetSaber(int ent_num, saberInfo_t* sabers, int saber_num, const char* saberName);
 
 void Cmd_NPC_f(gentity_t* ent);
 void SetTeamQuick(gentity_t* ent, int team, qboolean doBegin);

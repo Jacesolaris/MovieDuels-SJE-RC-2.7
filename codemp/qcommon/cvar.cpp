@@ -902,7 +902,7 @@ Handles variable inspection and changing from the console
 */
 qboolean Cvar_Command(void) {
 	// check variables
-	cvar_t* v = Cvar_FindVar(Cmd_Argv(0));
+	const cvar_t* v = Cvar_FindVar(Cmd_Argv(0));
 	if (!v) {
 		return qfalse;
 	}
@@ -945,7 +945,7 @@ void Cvar_Print_f(void)
 
 	char* name = Cmd_Argv(1);
 
-	cvar_t* cv = Cvar_FindVar(name);
+	const cvar_t* cv = Cvar_FindVar(name);
 
 	if (cv)
 		Cvar_Print(cv);

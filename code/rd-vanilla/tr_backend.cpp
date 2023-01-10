@@ -534,7 +534,7 @@ static void RB_BeginDrawingView()
 	backEnd.skyRenderedThisView = qfalse;
 
 	// clip to the plane of the portal
-	if (backEnd.viewParms.isPortal) {
+	if (backEnd.viewParms.is_portal) {
 		float	plane[4];
 		double	plane2[4];
 
@@ -617,7 +617,7 @@ RB_RenderDrawSurfList
 using postRender_t = struct
 {
 	int			fogNum;
-	int			entNum;
+	int			ent_num;
 	int			dlighted;
 	int			depthRange;
 	drawSurf_t* draw_surf;
@@ -713,7 +713,7 @@ void RB_RenderDrawSurfList(drawSurf_t* draw_surfs, const int num_draw_surfs)
 				depth_range = old_depth_range;
 
 				//store off the ent num
-				p_render->entNum = entity_num;
+				p_render->ent_num = entity_num;
 
 				//remember the other values necessary for rendering this surf
 				p_render->draw_surf = draw_surf;
@@ -840,7 +840,7 @@ void RB_RenderDrawSurfList(drawSurf_t* draw_surfs, const int num_draw_surfs)
 
 			RB_BeginSurface(p_render->shader, p_render->fogNum);
 
-			backEnd.currentEntity = &backEnd.refdef.entities[p_render->entNum];
+			backEnd.currentEntity = &backEnd.refdef.entities[p_render->ent_num];
 
 			backEnd.refdef.floatTime = original_time - backEnd.currentEntity->e.shaderTime;
 
@@ -873,7 +873,7 @@ void RB_RenderDrawSurfList(drawSurf_t* draw_surfs, const int num_draw_surfs)
 			}
 
 			if (backEnd.currentEntity->e.renderfx & RF_DISTORTION &&
-				last_post_ent != p_render->entNum)
+				last_post_ent != p_render->ent_num)
 			{ //do the capture now, we only need to do it once per ent
 				int x, y;
 				const int rad = backEnd.currentEntity->e.radius;
@@ -907,7 +907,7 @@ void RB_RenderDrawSurfList(drawSurf_t* draw_surfs, const int num_draw_surfs)
 					//now copy a portion of the screen to this texture
 					qglCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16, c_x, c_y, rad, rad, 0);
 
-					last_post_ent = p_render->entNum;
+					last_post_ent = p_render->ent_num;
 				}
 			}
 

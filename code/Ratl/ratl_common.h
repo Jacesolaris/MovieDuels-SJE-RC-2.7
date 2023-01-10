@@ -152,18 +152,18 @@ namespace ratl
 		}
 
 		template<class T>
-		inline 	void	cpy(T* dest, const T* src)
+		void	cpy(T* dest, const T* src)
 		{
 			cpy(dest, src, sizeof(T));
 		}
 		template<class T>
-		inline 	void	set(T* dest, const int c)
+		void	set(T* dest, const int c)
 		{
 			set(dest, c, sizeof(T));
 		}
 
 		template<class T>
-		inline 	void	swap(T* s1, T* s2)
+		void	swap(T* s1, T* s2)
 		{
 			unsigned char temp[sizeof(T)];
 			cpy((T*)temp, s1);
@@ -172,13 +172,13 @@ namespace ratl
 		}
 
 		template<class T>
-		inline 	int		cmp(const T* buf1, const T* buf2)
+		int		cmp(const T* buf1, const T* buf2)
 		{
 			return cmp(buf1, buf2, sizeof(T));
 		}
 
 		template<class T>
-		inline 	bool	eql(const T* buf1, const T* buf2)
+		bool	eql(const T* buf1, const T* buf2)
 		{
 			return cmp(buf1, buf2, sizeof(T)) == 0;
 		}

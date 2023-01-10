@@ -1688,7 +1688,7 @@ qboolean G2API_DetachG2Model(CGhoul2Info* ghl_info)
 	return qfalse;
 }
 
-qboolean G2API_AttachEnt(int* bolt_info, CGhoul2Info* ghlInfoTo, int toBoltIndex, int entNum, int toModelNum)
+qboolean G2API_AttachEnt(int* bolt_info, CGhoul2Info* ghlInfoTo, int toBoltIndex, int ent_num, int toModelNum)
 {
 	qboolean ret = qfalse;
 	G2ERROR(bolt_info, "NULL bolt_info");
@@ -1700,8 +1700,8 @@ qboolean G2API_AttachEnt(int* bolt_info, CGhoul2Info* ghlInfoTo, int toBoltIndex
 			// encode the bolt address into the model bolt link
 			toModelNum &= MODEL_AND;
 			toBoltIndex &= BOLT_AND;
-			entNum &= ENTITY_AND;
-			*bolt_info = toBoltIndex << BOLT_SHIFT | toModelNum << MODEL_SHIFT | entNum << ENTITY_SHIFT;
+			ent_num &= ENTITY_AND;
+			*bolt_info = toBoltIndex << BOLT_SHIFT | toModelNum << MODEL_SHIFT | ent_num << ENTITY_SHIFT;
 			ret = qtrue;
 		}
 	}
@@ -1891,7 +1891,7 @@ static int QDECL QsortDistance(const void* a, const void* b) {
 }
 
 void G2API_CollisionDetect(CCollisionRecord* collRecMap, CGhoul2Info_v& ghoul2, const vec3_t angles, const vec3_t position,
-                           const int AframeNumber, int entNum, vec3_t rayStart, vec3_t rayEnd, vec3_t scale, CMiniHeap*,
+                           const int AframeNumber, int ent_num, vec3_t rayStart, vec3_t rayEnd, vec3_t scale, CMiniHeap*,
 	EG2_Collision e_g2_trace_type, int use_lod, float fRadius)
 {
 	G2ERROR(ghoul2.IsValid(), "Invalid ghl_info");
@@ -1924,9 +1924,9 @@ void G2API_CollisionDetect(CCollisionRecord* collRecMap, CGhoul2Info_v& ghoul2, 
 
 		// now walk each model and check the ray against each poly - sigh, this is SO expensive. I wish there was a better way to do this.
 #ifdef _G2_GORE
-		G2_TraceModels(ghoul2, transRayStart, transRayEnd, collRecMap, entNum, e_g2_trace_type, use_lod, fRadius, 0, 0, 0, 0, nullptr, qfalse);
+		G2_TraceModels(ghoul2, transRayStart, transRayEnd, collRecMap, ent_num, e_g2_trace_type, use_lod, fRadius, 0, 0, 0, 0, nullptr, qfalse);
 #else
-		G2_TraceModels(ghoul2, transRayStart, transRayEnd, collRecMap, entNum, e_g2_trace_type, use_lod, fRadius);
+		G2_TraceModels(ghoul2, transRayStart, transRayEnd, collRecMap, ent_num, e_g2_trace_type, use_lod, fRadius);
 #endif
 
 		ri.GetG2VertSpaceServer()->ResetHeap();
@@ -2182,7 +2182,7 @@ void G2API_AddSkinGore(CGhoul2Info_v& ghoul2, SSkinGoreData& gore)
 		G2_TransformModel(ghoul2, gore.currentTime, gore.scale, ri.GetG2VertSpaceServer(), lod, true, &gore);
 
 		// now walk each model and compute new texture coordinates
-		G2_TraceModels(ghoul2, transHitLocation, transRayDirection, nullptr, gore.entNum, G2_NOCOLLIDE, lod, 1.0f, gore.SSize, gore.TSize, gore.theta, gore.shader, &gore, qtrue);
+		G2_TraceModels(ghoul2, transHitLocation, transRayDirection, nullptr, gore.ent_num, G2_NOCOLLIDE, lod, 1.0f, gore.SSize, gore.TSize, gore.theta, gore.shader, &gore, qtrue);
 	}
 }
 #else

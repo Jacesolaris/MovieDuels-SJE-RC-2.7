@@ -644,20 +644,20 @@ void Q3_DebugPrint(int level, const char* format, ...)
 
 	case WL_DEBUG:
 	{
-		int		entNum;
+		int		ent_num;
 
-		sscanf(text, "%d", &entNum);
+		sscanf(text, "%d", &ent_num);
 
-		if ((ICARUS_entFilter >= 0) && (ICARUS_entFilter != entNum))
+		if ((ICARUS_entFilter >= 0) && (ICARUS_entFilter != ent_num))
 			return;
 
 		char* buffer = (char*)text;
 		buffer += 5;
 
-		if ((entNum < 0) || (entNum >= MAX_GENTITIES))
-			entNum = 0;
+		if ((ent_num < 0) || (ent_num >= MAX_GENTITIES))
+			ent_num = 0;
 
-		Com_Printf(S_COLOR_BLUE"DEBUG: %s(%d): %s\n", SV_GentityNum(entNum)->script_targetname, entNum, buffer);
+		Com_Printf(S_COLOR_BLUE"DEBUG: %s(%d): %s\n", SV_GentityNum(ent_num)->script_targetname, ent_num, buffer);
 		break;
 	}
 	default:

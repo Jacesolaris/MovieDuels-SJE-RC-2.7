@@ -396,13 +396,13 @@ BotAI_GetSnapshotEntity
 ==================
 */
 int BotAI_GetSnapshotEntity(int client_num, int sequence, entityState_t* state) {
-	const int entNum = trap->BotGetSnapshotEntity(client_num, sequence);
-	if (entNum == -1) {
+	const int ent_num = trap->BotGetSnapshotEntity(client_num, sequence);
+	if (ent_num == -1) {
 		memset(state, 0, sizeof(entityState_t));
 		return -1;
 	}
 
-	BotAI_GetEntityState(entNum, state);
+	BotAI_GetEntityState(ent_num, state);
 
 	return sequence + 1;
 }
@@ -1014,7 +1014,7 @@ int WPOrgVisible(gentity_t* bot, vec3_t org1, vec3_t org2, int ignore)
 		{
 			if (g_entities[tr.entity_num].parent && g_entities[tr.entity_num].parent->client)
 			{
-				gentity_t* ownent = g_entities[tr.entity_num].parent;
+				const gentity_t* ownent = g_entities[tr.entity_num].parent;
 
 				if (OnSameTeam(bot, ownent) || bot->s.number == ownent->s.number)
 				{
@@ -2561,7 +2561,7 @@ int BotGetFlagBack(bot_state_t* bs)
 	int i = 0;
 	int myFlag = 0;
 	int foundCarrier = 0;
-	gentity_t* ent = NULL;
+	const gentity_t* ent = NULL;
 	vec3_t usethisvec;
 
 	if (level.clients[bs->client].sess.sessionTeam == TEAM_RED)
@@ -2626,7 +2626,7 @@ int BotGuardFlagCarrier(bot_state_t* bs)
 	int i = 0;
 	int enemyFlag = 0;
 	int foundCarrier = 0;
-	gentity_t* ent = NULL;
+	const gentity_t* ent = NULL;
 	vec3_t usethisvec;
 
 	if (level.clients[bs->client].sess.sessionTeam == TEAM_RED)
@@ -2783,7 +2783,7 @@ void GetNewFlagPoint(wpobject_t* wp, gentity_t* flagEnt, int team)
 //See if our CTF state should take priority in our nav routines
 int CTFTakesPriority(bot_state_t* bs)
 {
-	gentity_t* ent = NULL;
+	const gentity_t* ent = NULL;
 	int enemyFlag = 0;
 	int myFlag = 0;
 	int enemyHasOurFlag = 0;

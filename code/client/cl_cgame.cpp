@@ -63,10 +63,10 @@ qboolean CL_InitCGameVM(void* gameLibrary)
 	using SyscallProc = intptr_t(intptr_t, ...);
 	using DllEntryProc = void(SyscallProc*);
 
-	auto dllEntry = static_cast<DllEntryProc*>(Sys_LoadFunction(gameLibrary, "dllEntry"));
+	const auto dll_entry = static_cast<DllEntryProc*>(Sys_LoadFunction(gameLibrary, "dllEntry"));
 	cgvm.entryPoint = static_cast<intptr_t(*)(int, ...)>(Sys_LoadFunction(gameLibrary, "vmMain"));
 
-	if (!cgvm.entryPoint || !dllEntry)
+	if (!cgvm.entryPoint || !dll_entry)
 	{
 #ifdef JK2_MODE
 		const char* gamename = "jospgame";
@@ -79,7 +79,7 @@ qboolean CL_InitCGameVM(void* gameLibrary)
 		return qfalse;
 	}
 
-	dllEntry(VM_DllSyscall);
+	dll_entry(VM_DllSyscall);
 
 	return qtrue;
 }
@@ -221,8 +221,8 @@ qboolean CL_GetSnapshot(const int snapshotNumber, snapshot_t* snapshot)
 	*/
 	for (int i = 0; i < count; i++)
 	{
-		const int entNum = (clSnap->parseEntitiesNum + i) & (MAX_PARSE_ENTITIES - 1);
-		snapshot->entities[i] = cl.parseEntities[entNum];
+		const int ent_num = (clSnap->parseEntitiesNum + i) & (MAX_PARSE_ENTITIES - 1);
+		snapshot->entities[i] = cl.parseEntities[ent_num];
 	}
 	/*
 	Ghoul2 Insert End
@@ -1327,7 +1327,7 @@ case CG_UI_GETITEMINFO:
 			h = static_cast<int*>(VMA(6));
 			*h = static_cast<int>(item->window.rect.h);
 
-			auto color = static_cast<vec4_t*>(VMA(7));
+			const auto color = static_cast<vec4_t*>(VMA(7));
 			if (!color)
 			{
 				return qfalse;
@@ -1337,7 +1337,7 @@ case CG_UI_GETITEMINFO:
 			(*color)[1] = item->window.foreColor[1];
 			(*color)[2] = item->window.foreColor[2];
 			(*color)[3] = item->window.foreColor[3];
-			auto background = static_cast<qhandle_t*>(VMA(8));
+			const auto background = static_cast<qhandle_t*>(VMA(8));
 			if (!background)
 			{
 				return qfalse;

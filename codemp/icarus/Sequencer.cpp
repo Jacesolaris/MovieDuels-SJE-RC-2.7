@@ -106,7 +106,7 @@ int CSequencer::Free(void)
 
 	while (!m_streamsCreated.empty())
 	{
-		bstream_t* streamToDel = m_streamsCreated.back();
+		const bstream_t* streamToDel = m_streamsCreated.back();
 		DeleteStream(streamToDel);
 	}
 

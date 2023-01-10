@@ -579,18 +579,18 @@ void G2_BoltToGhoul2Model(centity_t* cent, refEntity_t* ent)
 	// extract the wraith ID from the bolt info
 	int modelNum = cent->bolt_info >> MODEL_SHIFT;
 	int boltNum = cent->bolt_info >> BOLT_SHIFT;
-	int	entNum = cent->bolt_info >> ENTITY_SHIFT;
+	int	ent_num = cent->bolt_info >> ENTITY_SHIFT;
 	mdxaBone_t 		bolt_matrix;
 
 	modelNum &= MODEL_AND;
 	boltNum &= BOLT_AND;
-	entNum &= ENTITY_AND;
+	ent_num &= ENTITY_AND;
 
 	//NOTENOTE I put this here because the cgs.gamemodels array no longer gets initialized.
 	assert(0);
 
 	// go away and get me the bolt position for this frame please
-	trap->G2API_GetBoltMatrix(cent->ghoul2, modelNum, boltNum, &bolt_matrix, cg_entities[entNum].currentState.angles, cg_entities[entNum].currentState.origin, cg.time, cgs.gameModels, cent->modelScale);
+	trap->G2API_GetBoltMatrix(cent->ghoul2, modelNum, boltNum, &bolt_matrix, cg_entities[ent_num].currentState.angles, cg_entities[ent_num].currentState.origin, cg.time, cgs.gameModels, cent->modelScale);
 
 	// set up the axis and origin we need for the actual effect spawning
 	ent->origin[0] = bolt_matrix.matrix[0][3];
@@ -3346,11 +3346,11 @@ CG_AddPacketEntities
 
 ===============
 */
-void CG_AddPacketEntities(qboolean isPortal) {
+void CG_AddPacketEntities(qboolean is_portal) {
 	int					num;
 	centity_t* cent;
 
-	if (isPortal)
+	if (is_portal)
 	{
 		for (num = 0; num < cg.snap->numEntities; num++)
 		{

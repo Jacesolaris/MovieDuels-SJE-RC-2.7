@@ -210,7 +210,7 @@ void G_PlayEffect(const int fx_id, const vec3_t origin, const vec3_t axis[3])
 //-----------------------------
 void G_PlayEffect(const int fx_id, const int model_index, const int bolt_index, const int ent_num, const vec3_t origin,
                   const int i_loop_time, const qboolean is_relative)
-//iLoopTime 0 = not looping, 1 for infinite, else duration
+//i_loop_time 0 = not looping, 1 for infinite, else duration
 {
 	gentity_t* tent = G_TempEntity(origin, EV_PLAY_EFFECT);
 	tent->s.eventParm = fx_id;

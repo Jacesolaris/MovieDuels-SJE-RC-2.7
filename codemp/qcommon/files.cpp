@@ -2261,7 +2261,7 @@ char** FS_ListFilteredFiles(const char* path, const char* extension, char* filte
 			char** sysFiles = Sys_ListFiles(netpath, extension, filter, &numSysFiles, qfalse);
 			for (i = 0; i < numSysFiles; i++) {
 				// unique the match
-				char* name = sysFiles[i];
+				const char* name = sysFiles[i];
 				nfiles = FS_AddFileToList(name, list, nfiles);
 			}
 			Sys_FreeFileList(sysFiles);

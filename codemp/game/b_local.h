@@ -133,7 +133,7 @@ extern void G_ClearEnemy(gentity_t* self);
 extern gentity_t* NPC_PickAlly(qboolean facing_each_other, float range, qboolean ignore_group, qboolean moving_only);
 extern void NPC_LostEnemyDecideChase(void);
 extern float NPC_MaxDistSquaredForWeapon(void);
-extern qboolean NPC_EvaluateShot(const int hit);
+extern qboolean NPC_EvaluateShot(int hit);
 extern int NPC_ShotEntity(const gentity_t* ent, vec3_t impact_pos); //impactedPos = NULL
 
 //NPC_formation
@@ -197,7 +197,7 @@ extern void NPC_LoadParms(void);
 extern int	teamNumbers[TEAM_NUM_TEAMS];
 extern int	teamStrength[TEAM_NUM_TEAMS];
 extern int	teamCounter[TEAM_NUM_TEAMS];
-extern void CalcEntitySpot(const gentity_t* ent, const spot_t spot, vec3_t point);
+extern void CalcEntitySpot(const gentity_t* ent, spot_t spot, vec3_t point);
 extern qboolean NPC_UpdateAngles(qboolean doPitch, qboolean doYaw);
 extern void NPC_UpdateShootAngles(vec3_t angles, qboolean doPitch, qboolean doYaw);
 extern qboolean NPC_UpdateFiringAngles(qboolean doPitch, qboolean doYaw);
@@ -205,7 +205,7 @@ extern void SetTeamNumbers(void);
 extern qboolean G_ActivateBehavior(gentity_t* self, int bset);
 extern void NPC_AimWiggle(vec3_t enemy_org);
 extern void NPC_ClearLookTarget(const gentity_t* self);
-extern void NPC_SetLookTarget(const gentity_t* self, int entNum, int clearTime);
+extern void NPC_SetLookTarget(const gentity_t* self, int ent_num, int clearTime);
 
 //g_nav.cpp
 extern int NAV_FindClosestWaypointForEnt(gentity_t* ent, int targWp);
@@ -242,7 +242,7 @@ extern qboolean NPC_ClearLOS2(gentity_t* ent, const vec3_t end);
 
 extern qboolean NPC_ClearShot(const gentity_t* ent);
 
-extern int NPC_FindCombatPoint(const vec3_t position, const vec3_t avoid_position, vec3_t dest_position, const int flags, const float avoid_dist, const int ignore_point); //ignorePoint = -1
+extern int NPC_FindCombatPoint(const vec3_t position, const vec3_t avoid_position, vec3_t dest_position, int flags, float avoid_dist, int ignore_point); //ignorePoint = -1
 
 extern qboolean NPC_ReserveCombatPoint(int combat_point_id);
 extern qboolean NPC_FreeCombatPoint(int combat_point_id, qboolean failed); //failed = qfalse

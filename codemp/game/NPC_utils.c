@@ -1049,7 +1049,7 @@ qboolean NPC_SomeoneLookingAtMe(gentity_t* ent)
 
 	while (i < MAX_CLIENTS)
 	{
-		gentity_t* p_ent = &g_entities[i];
+		const gentity_t* p_ent = &g_entities[i];
 
 		if (p_ent && p_ent->inuse && p_ent->client && p_ent->client->sess.sessionTeam != TEAM_SPECTATOR &&
 			p_ent->client->tempSpectate < level.time && !(p_ent->client->ps.pm_flags & PMF_FOLLOW) && p_ent->s.weapon != WP_NONE)
@@ -1615,7 +1615,7 @@ void NPC_ClearLookTarget(const gentity_t* self)
 NPC_SetLookTarget
 -------------------------
 */
-void NPC_SetLookTarget(const gentity_t* self, int entNum, int clearTime)
+void NPC_SetLookTarget(const gentity_t* self, int ent_num, int clearTime)
 {
 	if (!self->client)
 	{
@@ -1627,7 +1627,7 @@ void NPC_SetLookTarget(const gentity_t* self, int entNum, int clearTime)
 		return;
 	}
 
-	self->client->renderInfo.lookTarget = entNum;
+	self->client->renderInfo.lookTarget = ent_num;
 	self->client->renderInfo.lookTargetClearTime = clearTime;
 }
 

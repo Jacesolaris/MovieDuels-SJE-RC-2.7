@@ -977,7 +977,7 @@ qboolean Script_SetItemRectCvar(itemDef_t* item, char** args)
 	const char* cvarName;
 	char		cvarBuf[1024];
 	const char* holdVal;
-	char* holdBuf;
+	char* hold_buf;
 	itemDef_t* item2 = 0;
 
 	// expecting item group and cvar to get value from
@@ -990,19 +990,19 @@ qboolean Script_SetItemRectCvar(itemDef_t* item, char** args)
 			// get cvar data
 			DC->getCVarString(cvarName, cvarBuf, sizeof(cvarBuf));
 
-			holdBuf = cvarBuf;
-			if (String_Parse(&holdBuf, &holdVal))
+			hold_buf = cvarBuf;
+			if (String_Parse(&hold_buf, &holdVal))
 			{
 				const menuDef_t* menu = (menuDef_t*)item->parent;
 
 				item2->window.rectClient.x = atof(holdVal) + menu->window.rect.x;
-				if (String_Parse(&holdBuf, &holdVal))
+				if (String_Parse(&hold_buf, &holdVal))
 				{
 					item2->window.rectClient.y = atof(holdVal) + menu->window.rect.y;
-					if (String_Parse(&holdBuf, &holdVal))
+					if (String_Parse(&hold_buf, &holdVal))
 					{
 						item2->window.rectClient.w = atof(holdVal);
-						if (String_Parse(&holdBuf, &holdVal))
+						if (String_Parse(&hold_buf, &holdVal))
 						{
 							item2->window.rectClient.h = atof(holdVal);
 
@@ -1150,7 +1150,7 @@ qboolean Script_SetItemColor(itemDef_t* item, char** args)
 qboolean Script_SetItemColorCvar(itemDef_t* item, char** args)
 {
 	const char* itemname;
-	char* colorCvarName, * holdBuf, * holdVal;
+	char* colorCvarName, * hold_buf, * holdVal;
 	char cvarBuf[1024];
 	const char* name;
 	vec4_t color = { 0.0f };
@@ -1177,17 +1177,17 @@ qboolean Script_SetItemColorCvar(itemDef_t* item, char** args)
 		}
 		DC->getCVarString(colorCvarName, cvarBuf, sizeof(cvarBuf));
 
-		holdBuf = cvarBuf;
-		if (String_Parse(&holdBuf, (const char**)&holdVal))
+		hold_buf = cvarBuf;
+		if (String_Parse(&hold_buf, (const char**)&holdVal))
 		{
 			color[0] = atof(holdVal);
-			if (String_Parse(&holdBuf, (const char**)&holdVal))
+			if (String_Parse(&hold_buf, (const char**)&holdVal))
 			{
 				color[1] = atof(holdVal);
-				if (String_Parse(&holdBuf, (const char**)&holdVal))
+				if (String_Parse(&hold_buf, (const char**)&holdVal))
 				{
 					color[2] = atof(holdVal);
-					if (String_Parse(&holdBuf, (const char**)&holdVal))
+					if (String_Parse(&hold_buf, (const char**)&holdVal))
 					{
 						color[3] = atof(holdVal);
 					}
@@ -7175,7 +7175,7 @@ qboolean ItemParse_rectcvar(itemDef_t* item, int handle)
 {
 	char	cvarBuf[1024];
 	const char* holdVal;
-	char* holdBuf;
+	char* hold_buf;
 
 	// get Cvar name
 	pc_token_t token;
@@ -7187,17 +7187,17 @@ qboolean ItemParse_rectcvar(itemDef_t* item, int handle)
 	// get cvar data
 	DC->getCVarString(token.string, cvarBuf, sizeof(cvarBuf));
 
-	holdBuf = cvarBuf;
-	if (String_Parse(&holdBuf, &holdVal))
+	hold_buf = cvarBuf;
+	if (String_Parse(&hold_buf, &holdVal))
 	{
 		item->window.rectClient.x = atof(holdVal);
-		if (String_Parse(&holdBuf, &holdVal))
+		if (String_Parse(&hold_buf, &holdVal))
 		{
 			item->window.rectClient.y = atof(holdVal);
-			if (String_Parse(&holdBuf, &holdVal))
+			if (String_Parse(&hold_buf, &holdVal))
 			{
 				item->window.rectClient.w = atof(holdVal);
-				if (String_Parse(&holdBuf, &holdVal))
+				if (String_Parse(&hold_buf, &holdVal))
 				{
 					item->window.rectClient.h = atof(holdVal);
 					return qtrue;

@@ -1030,8 +1030,8 @@ void BG_SiegeParseClassFile(const char* filename, siegeClassDesc_t* descBuffer)
 					break;
 				}
 
-				const char* holdBuf = parseBuf + (titleLength - arrayTitleLength);
-				if (!strcmp(holdBuf, classTitles[i]))
+				const char* hold_buf = parseBuf + (titleLength - arrayTitleLength);
+				if (!strcmp(hold_buf, classTitles[i]))
 				{
 					bgSiegeClasses[bgNumSiegeClasses].playerClass = i;
 					break;

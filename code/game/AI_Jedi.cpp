@@ -48,7 +48,7 @@ extern void G_StartMatrixEffect(const gentity_t* ent, int me_flags = 0, int leng
                                 int spin_time = 0);
 extern void ForceJump(gentity_t* self, const usercmd_t* ucmd);
 extern void NPC_ClearLookTarget(const gentity_t* self);
-extern void NPC_SetLookTarget(const gentity_t* self, int entNum, int clearTime);
+extern void NPC_SetLookTarget(const gentity_t* self, int ent_num, int clearTime);
 extern void NPC_TempLookTarget(const gentity_t* self, int lookEntNum, int minLookTime, int maxLookTime);
 extern qboolean G_ExpandPointToBBox(vec3_t point, const vec3_t mins, const vec3_t maxs, int ignore, int clipmask);
 extern gitem_t* FindItemForAmmo(ammo_t ammo);

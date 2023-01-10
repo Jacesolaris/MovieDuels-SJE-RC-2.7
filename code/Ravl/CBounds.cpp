@@ -81,9 +81,9 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 ////////////////////////////////////////////////////////////////////////////////////////
 float CBBox::LargestAxisSize() const
 {
-	CVec3 Work(mMax);
-	Work -= mMin;
-	return Work.MaxElement();
+	CVec3 work(mMax);
+	work -= mMin;
+	return work.MaxElement();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -133,10 +133,10 @@ float CBBox::DistanceEstimate(const CVec3& p) const
 ////////////////////////////////////////////////////////////////////////////////////////
 float CBBox::AreaEstimate(const CVec3& p) const
 {
-	const float Distance = DistanceEstimate(p);
-	if (Distance)
+	const float distance = DistanceEstimate(p);
+	if (distance)
 	{
-		return LargestAxisSize() / Distance;
+		return LargestAxisSize() / distance;
 	}
 	return 0;
 }
@@ -259,13 +259,13 @@ TPlanes CBBox::PlaneFlags(const CVec3& p)
 //
 // return true if the segment intersect the box, in that case, return the first contact.
 ////////////////////////////////////////////////////////////////////////////////////////
-bool CBBox::HitTest(CBTrace& Tr) const
+bool CBBox::HitTest(CBTrace& tr) const
 {
 	// Quick Box Cull
 	//----------------
 	CBBox tmp;
-	tmp.AddPoint(Tr.mStart);
-	tmp.AddPoint(Tr.mStop);
+	tmp.AddPoint(tr.mStart);
+	tmp.AddPoint(tr.mStop);
 	if (!BoxTouchTest(tmp))
 	{
 		return false;
@@ -273,17 +273,17 @@ bool CBBox::HitTest(CBTrace& Tr) const
 
 	// Initialize Our Ranges
 	//-----------------------
-	Tr.mRange = -1E30f;
-	Tr.mRangeMax = 1E30f;
+	tr.mRange = -1E30f;
+	tr.mRangeMax = 1E30f;
 
 	for (int axis = 0; axis < 3; axis++)
 	{
-		if (fabs(Tr.mAim[axis]) > 1E-6f)
+		if (fabs(tr.mAim[axis]) > 1E-6f)
 		{
 			// Find Mins And Maxs From The Start Along The Axis Of Aim
 			//---------------------------------------------------------
-			float tmax = (mMax[axis] - Tr.mStart[axis]) / Tr.mAim[axis];
-			float tmin = (mMin[axis] - Tr.mStart[axis]) / Tr.mAim[axis];
+			float tmax = (mMax[axis] - tr.mStart[axis]) / tr.mAim[axis];
+			float tmin = (mMin[axis] - tr.mStart[axis]) / tr.mAim[axis];
 			if (tmax < tmin)
 			{
 				const float temp = tmax;
@@ -293,43 +293,43 @@ bool CBBox::HitTest(CBTrace& Tr) const
 
 			// Adjust Range Max
 			//------------------
-			if (tmax < Tr.mRangeMax)
+			if (tmax < tr.mRangeMax)
 			{
-				Tr.mRangeMax = tmax;
+				tr.mRangeMax = tmax;
 			}
 
 			// Adjust Range Min
 			//------------------
-			if (tmin > Tr.mRange)
+			if (tmin > tr.mRange)
 			{
-				Tr.mRange = tmin;
-				Tr.mNormal.Clear();
-				Tr.mNormal[axis] = -1.0f;
+				tr.mRange = tmin;
+				tr.mNormal.Clear();
+				tr.mNormal[axis] = -1.0f;
 			}
 		}
 	}
 
 	// Missed?
 	//---------
-	if (Tr.mRangeMax < Tr.mRange || Tr.mRangeMax < 0.0f || Tr.mRange > Tr.mLength)
+	if (tr.mRangeMax < tr.mRange || tr.mRangeMax < 0.0f || tr.mRange > tr.mLength)
 	{
 		return false;
 	}
 
 	// Start Solid Conditions
 	//------------------------
-	if (Tr.mRange < 0.0f)
+	if (tr.mRange < 0.0f)
 	{
-		Tr.mRange = 0.0f;
-		Tr.mPoint = Tr.mStart;
+		tr.mRange = 0.0f;
+		tr.mPoint = tr.mStart;
 		return true;
 	}
 
 	// Calculate The End Point
 	//-------------------------
-	Tr.mPoint = Tr.mAim;
-	Tr.mPoint *= Tr.mRange;
-	Tr.mPoint += Tr.mStart;
+	tr.mPoint = tr.mAim;
+	tr.mPoint *= tr.mRange;
+	tr.mPoint += tr.mStart;
 	return true;
 }
 
@@ -340,12 +340,12 @@ void CBBox::FromStr(const char* s)
 {
 	assert(s && s[0]);
 
-	char MinS[256];
-	char MaxS[266];
-	sscanf(s, "(%s|%s)", MinS, MaxS);
+	char min_s[256];
+	char max_s[266];
+	sscanf(s, "(%s|%s)", min_s, max_s);
 
-	mMin.FromStr(MinS);
-	mMax.FromStr(MaxS);
+	mMin.FromStr(min_s);
+	mMax.FromStr(max_s);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -355,12 +355,12 @@ void CBBox::ToStr(char* s) const
 {
 	assert(s && s[0]);
 
-	char MinS[256];
-	char MaxS[266];
+	char min_s[256];
+	char max_s[266];
 
-	mMin.ToStr(MinS);
-	mMax.ToStr(MaxS);
-	sprintf(s, "(%s|%s)", MinS, MaxS);
+	mMin.ToStr(min_s);
+	mMax.ToStr(max_s);
+	sprintf(s, "(%s|%s)", min_s, max_s);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////

@@ -32,13 +32,11 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #include "../qcommon/sstring.h"
 #include "qcommon/ojk_saved_game_helper.h"
 
-extern void OBJ_LoadTacticalInfo(void);
-
-extern void G_LoadSave_WriteMiscData(void);
-extern void G_LoadSave_ReadMiscData(void);
+extern void G_LoadSave_WriteMiscData();
+extern void G_LoadSave_ReadMiscData();
 extern void G_ReloadSaberData(const gentity_t* ent);
-extern void FX_Read(void);
-extern void FX_Write(void);
+extern void FX_Read();
+extern void FX_Write();
 
 static const save_field_t savefields_gEntity[] =
 {
@@ -408,7 +406,7 @@ static void EnumerateField(const save_field_t* pField, const byte* pbBase)
 
 	case F_BEHAVIORSET:
 		{
-			auto p = static_cast<const char**>(pv);
+			const auto p = static_cast<const char**>(pv);
 			for (int i = 0; i < NUM_BSETS; i++)
 			{
 				pv = &p[i]; // since you can't ++ a void ptr
@@ -432,7 +430,7 @@ static void EnumerateField(const save_field_t* pField, const byte* pbBase)
 
 	case F_ALERTEVENT: // convert all gentity_t ptrs in an alert_event array into indexes...
 		{
-			auto p = static_cast<alertEvent_t*>(pv);
+			const auto p = static_cast<alertEvent_t*>(pv);
 
 			for (int i = 0; i < MAX_ALERT_EVENTS; i++)
 			{
@@ -443,7 +441,7 @@ static void EnumerateField(const save_field_t* pField, const byte* pbBase)
 
 	case F_AIGROUPS: // convert to ptrs within this into indexes...
 		{
-			auto p = static_cast<AIGroupInfo_t*>(pv);
+			const auto p = static_cast<AIGroupInfo_t*>(pv);
 
 			for (int i = 0; i < MAX_FRAME_GROUPS; i++)
 			{
@@ -455,18 +453,19 @@ static void EnumerateField(const save_field_t* pField, const byte* pbBase)
 
 	case F_ANIMFILESETS:
 		{
-			auto p = static_cast<animFileSet_t*>(pv);
+			const auto p = static_cast<animFileSet_t*>(pv);
 
 			for (int i = 0; i < MAX_ANIM_FILES; i++)
 			{
 				for (int j = 0; j < MAX_ANIM_EVENTS; j++)
 				{
-					auto baTorso = reinterpret_cast<byteAlias_t*>(&p[i].torsoAnimEvents[j].stringData),
-					     baLegs = reinterpret_cast<byteAlias_t*>(&p[i].legsAnimEvents[j].stringData);
-					const char* ptAnimEventStringData = p[i].torsoAnimEvents[j].stringData;
-					baTorso->i = GetStringNum(ptAnimEventStringData);
+					const auto ba_torso = reinterpret_cast<byteAlias_t*>(&p[i].torsoAnimEvents[j].stringData);
+					const auto
+						ba_legs = reinterpret_cast<byteAlias_t*>(&p[i].legsAnimEvents[j].stringData);
+					const char* pt_anim_event_string_data = p[i].torsoAnimEvents[j].stringData;
+					ba_torso->i = GetStringNum(pt_anim_event_string_data);
 					const char* plAnimEventStringData = p[i].legsAnimEvents[j].stringData;
-					baLegs->i = GetStringNum(plAnimEventStringData);
+					ba_legs->i = GetStringNum(plAnimEventStringData);
 				}
 			}
 		}
@@ -491,23 +490,23 @@ static void EnumerateField(const save_field_t* pField, const byte* pbBase)
 
 template <typename T>
 static void EnumerateFields(
-	const save_field_t* pFields,
+	const save_field_t* p_fields,
 	const T* src_instance,
-	const unsigned int ulChid)
+	const unsigned int ul_chid)
 {
 	strList.clear();
 
-	auto pbData = reinterpret_cast<const byte*>(
+	const auto pb_data = reinterpret_cast<const byte*>(
 		src_instance);
 
 	// enumerate all the fields...
 	//
-	if (pFields)
+	if (p_fields)
 	{
-		for (auto pField = pFields; pField->psName; ++pField)
+		for (auto p_field = p_fields; p_field->psName; ++p_field)
 		{
-			assert(pField->iOffset < sizeof(T));
-			EnumerateField(pField, pbData);
+			assert(p_field->iOffset < sizeof(T));
+			EnumerateField(p_field, pb_data);
 		}
 	}
 
@@ -522,7 +521,7 @@ static void EnumerateFields(
 		saved_game);
 
 	saved_game.write_chunk(
-		ulChid);
+		ul_chid);
 
 	// save out any associated strings..
 	//
@@ -592,7 +591,7 @@ static void EvaluateField(const save_field_t* pField, byte* pbBase, byte* pbOrig
 
 	case F_ALERTEVENT:
 		{
-			auto p = static_cast<alertEvent_t*>(pv);
+			const auto p = static_cast<alertEvent_t*>(pv);
 
 			for (int i = 0; i < MAX_ALERT_EVENTS; i++)
 			{
@@ -603,7 +602,7 @@ static void EvaluateField(const save_field_t* pField, byte* pbBase, byte* pbOrig
 
 	case F_AIGROUPS: // convert to ptrs within this into indexes...
 		{
-			auto p = static_cast<AIGroupInfo_t*>(pv);
+			const auto p = static_cast<AIGroupInfo_t*>(pv);
 
 			for (int i = 0; i < MAX_FRAME_GROUPS; i++)
 			{
@@ -615,7 +614,7 @@ static void EvaluateField(const save_field_t* pField, byte* pbBase, byte* pbOrig
 
 	case F_ANIMFILESETS:
 		{
-			auto p = static_cast<animFileSet_t*>(pv);
+			const auto p = static_cast<animFileSet_t*>(pv);
 			for (int i = 0; i < MAX_ANIM_FILES; i++)
 			{
 				for (int j = 0; j < MAX_ANIM_EVENTS; j++)
@@ -648,7 +647,7 @@ static const char* SG_GetChidText(const unsigned int chid)
 {
 	static char chidtext[5];
 
-	auto ba = reinterpret_cast<byteAlias_t*>(&chidtext);
+	const auto ba = reinterpret_cast<byteAlias_t*>(&chidtext);
 	ba->ui = BigLong(chid);
 	chidtext[4] = '\0';
 
@@ -837,7 +836,7 @@ All pointer variables (except function pointers) must be handled specially.
 */
 static void WriteLevelLocals()
 {
-	auto temp = static_cast<level_locals_t*>(gi.Malloc(sizeof(level_locals_t), TAG_TEMP_WORKSPACE, qfalse));
+	const auto temp = static_cast<level_locals_t*>(gi.Malloc(sizeof(level_locals_t), TAG_TEMP_WORKSPACE, qfalse));
 	*temp = level; // copy out all data into a temp space
 
 	EnumerateFields(savefields_LevelLocals, temp, INT_ID('L', 'V', 'L', 'C'));
@@ -857,7 +856,7 @@ static void ReadLevelLocals()
 	//
 	gclient_t* pClients = level.clients; // save clients
 
-	auto temp = static_cast<level_locals_t*>(gi.Malloc(sizeof(level_locals_t), TAG_TEMP_WORKSPACE, qfalse));
+	const auto temp = static_cast<level_locals_t*>(gi.Malloc(sizeof(level_locals_t), TAG_TEMP_WORKSPACE, qfalse));
 	*temp = level; // struct copy
 	EvaluateFields(savefields_LevelLocals, temp, reinterpret_cast<byte*>(&level), INT_ID('L', 'V', 'L', 'C'));
 	level = *temp; // struct copy
@@ -866,12 +865,12 @@ static void ReadLevelLocals()
 	gi.Free(temp);
 }
 
-static void WriteGEntities(const qboolean qbAutosave)
+static void WriteGEntities(const qboolean qb_autosave)
 {
 	int iCount = 0;
 	int i;
 
-	for (i = 0; i < (qbAutosave ? 1 : globals.num_entities); i++)
+	for (i = 0; i < (qb_autosave ? 1 : globals.num_entities); i++)
 	{
 		const gentity_t* ent = &g_entities[i];
 
@@ -888,7 +887,7 @@ static void WriteGEntities(const qboolean qbAutosave)
 		INT_ID('N', 'M', 'E', 'D'),
 		iCount);
 
-	for (i = 0; i < (qbAutosave ? 1 : globals.num_entities); i++)
+	for (i = 0; i < (qb_autosave ? 1 : globals.num_entities); i++)
 	{
 		gentity_t* ent = &g_entities[i];
 
@@ -948,7 +947,7 @@ static void WriteGEntities(const qboolean qbAutosave)
 	//Write out all entity timers
 	TIMER_Save(); //WriteEntityTimers();
 
-	if (!qbAutosave)
+	if (!qb_autosave)
 	{
 		//Save out ICARUS information
 		IIcarusInterface::GetIcarus()->Save();
@@ -963,7 +962,7 @@ static void WriteGEntities(const qboolean qbAutosave)
 			INT_ID('I', 'C', 'O', 'K'),
 			iBlah);
 	}
-	if (!qbAutosave) //really shouldn't need to write these bits at all, just restore them from the ents...
+	if (!qb_autosave) //really shouldn't need to write these bits at all, just restore them from the ents...
 	{
 		WriteInUseBits();
 	}
@@ -1247,7 +1246,7 @@ void WriteLevel(const qboolean qbAutosave)
 	Quake3Game()->VariableSave();
 	G_LoadSave_WriteMiscData();
 
-	extern void CG_WriteTheEvilCGHackStuff(void);
+	extern void CG_WriteTheEvilCGHackStuff();
 	CG_WriteTheEvilCGHackStuff();
 
 	// (Do NOT put any write-code below this line)
@@ -1264,12 +1263,12 @@ void WriteLevel(const qboolean qbAutosave)
 		iDONE);
 }
 
-void ReadLevel(const qboolean qbAutosave, const qboolean qbLoadTransition)
+void ReadLevel(const qboolean qbAutosave, const qboolean qb_load_transition)
 {
 	ojk::SavedGameHelper saved_game(
 		gi.saved_game);
 
-	if (qbLoadTransition)
+	if (qb_load_transition)
 	{
 		// I STRONGLY SUSPECT THAT THIS WILL JUST ERR_DROP BECAUSE OF THE LOAD SWAPPING OF THE CHUNK-ORDER
 		//	BELOW BETWEEN OBJECTIVES AND LEVEL_LOCALS, SO I'M GUESSING THIS IS SOME OLD EF1 JUNK?
@@ -1324,7 +1323,7 @@ void ReadLevel(const qboolean qbAutosave, const qboolean qbLoadTransition)
 	Quake3Game()->VariableLoad();
 	G_LoadSave_ReadMiscData();
 
-	extern void CG_ReadTheEvilCGHackStuff(void);
+	extern void CG_ReadTheEvilCGHackStuff();
 	CG_ReadTheEvilCGHackStuff();
 
 	// (Do NOT put any read-code below this line)
@@ -1340,7 +1339,7 @@ void ReadLevel(const qboolean qbAutosave, const qboolean qbLoadTransition)
 
 extern int killPlayerTimer;
 
-qboolean GameAllowedToSaveHere(void)
+qboolean GameAllowedToSaveHere()
 {
 	return static_cast<qboolean>(!in_camera && !killPlayerTimer);
 }

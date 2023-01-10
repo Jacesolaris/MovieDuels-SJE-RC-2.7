@@ -257,59 +257,59 @@ void MC_UnCompress(float mat[3][4], const unsigned char* comp)
 
 void MC_UnCompressQuat(float mat[3][4], const unsigned char* comp)
 {
-	const unsigned short* pwIn = (unsigned short*)comp;
+	const unsigned short* pw_in = (unsigned short*)comp;
 
-	float w = *pwIn++;
+	float w = *pw_in++;
 	w /= 16383.0f;
 	w -= 2.0f;
-	float x = *pwIn++;
+	float x = *pw_in++;
 	x /= 16383.0f;
 	x -= 2.0f;
-	float y = *pwIn++;
+	float y = *pw_in++;
 	y /= 16383.0f;
 	y -= 2.0f;
-	float z = *pwIn++;
+	float z = *pw_in++;
 	z /= 16383.0f;
 	z -= 2.0f;
 
-	const float fTx = 2.0f * x;
-	const float fTy = 2.0f * y;
-	const float fTz = 2.0f * z;
-	const float fTwx = fTx * w;
-	const float fTwy = fTy * w;
-	const float fTwz = fTz * w;
-	const float fTxx = fTx * x;
-	const float fTxy = fTy * x;
-	const float fTxz = fTz * x;
-	const float fTyy = fTy * y;
-	const float fTyz = fTz * y;
-	const float fTzz = fTz * z;
+	const float f_tx = 2.0f * x;
+	const float f_ty = 2.0f * y;
+	const float f_tz = 2.0f * z;
+	const float f_twx = f_tx * w;
+	const float f_twy = f_ty * w;
+	const float f_twz = f_tz * w;
+	const float f_txx = f_tx * x;
+	const float f_txy = f_ty * x;
+	const float f_txz = f_tz * x;
+	const float f_tyy = f_ty * y;
+	const float f_tyz = f_tz * y;
+	const float f_tzz = f_tz * z;
 
 	// rot...
 	//
-	mat[0][0] = 1.0f - (fTyy + fTzz);
-	mat[0][1] = fTxy - fTwz;
-	mat[0][2] = fTxz + fTwy;
-	mat[1][0] = fTxy + fTwz;
-	mat[1][1] = 1.0f - (fTxx + fTzz);
-	mat[1][2] = fTyz - fTwx;
-	mat[2][0] = fTxz - fTwy;
-	mat[2][1] = fTyz + fTwx;
-	mat[2][2] = 1.0f - (fTxx + fTyy);
+	mat[0][0] = 1.0f - (f_tyy + f_tzz);
+	mat[0][1] = f_txy - f_twz;
+	mat[0][2] = f_txz + f_twy;
+	mat[1][0] = f_txy + f_twz;
+	mat[1][1] = 1.0f - (f_txx + f_tzz);
+	mat[1][2] = f_tyz - f_twx;
+	mat[2][0] = f_txz - f_twy;
+	mat[2][1] = f_tyz + f_twx;
+	mat[2][2] = 1.0f - (f_txx + f_tyy);
 
 	// xlat...
 	//
-	float f = *pwIn++;
+	float f = *pw_in++;
 	f /= 64;
 	f -= 512;
 	mat[0][3] = f;
 
-	f = *pwIn++;
+	f = *pw_in++;
 	f /= 64;
 	f -= 512;
 	mat[1][3] = f;
 
-	f = *pwIn++;
+	f = *pw_in++;
 	f /= 64;
 	f -= 512;
 	mat[2][3] = f;

@@ -1049,7 +1049,7 @@ Does maintenance and plays the ambient sets (two if crossfading)
 
 void S_UpdateAmbientSet(const char* name, vec3_t origin)
 {
-	ambientSet_t* set = aSets->GetSet(name);
+	const ambientSet_t* set = aSets->GetSet(name);
 
 	if (set == NULL)
 		return;
@@ -1058,7 +1058,7 @@ void S_UpdateAmbientSet(const char* name, vec3_t origin)
 	AS_UpdateCurrentSet(set->id);
 
 	const ambientSet_t* current = aSets->GetSet(currentSet);
-	ambientSet_t* old = aSets->GetSet(oldSet);
+	const ambientSet_t* old = aSets->GetSet(oldSet);
 
 	if (current)
 		AS_PlayAmbientSet(origin, set, &currentSetTime);
@@ -1077,7 +1077,7 @@ int S_AddLocalSet(const char* name, vec3_t listener_origin, vec3_t origin, int e
 {
 	int				currentTime = 0;
 
-	ambientSet_t* set = aSets->GetSet(name);
+	const ambientSet_t* set = aSets->GetSet(name);
 
 	if (set == NULL)
 		return cl.serverTime;

@@ -864,9 +864,9 @@ void G_VehicleAttachDroidUnit(gentity_t* vehEnt)
 
 //called gameside only from pmove code (convenience)
 extern qboolean BG_SabersOff(playerState_t* ps);
-void G_CheapWeaponFire(int entNum, int ev)
+void G_CheapWeaponFire(int ent_num, int ev)
 {
-	gentity_t* ent = &g_entities[entNum];
+	gentity_t* ent = &g_entities[ent_num];
 
 	if (!ent->inuse || !ent->client)
 	{

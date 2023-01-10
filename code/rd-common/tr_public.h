@@ -283,10 +283,10 @@ using refexport_t = struct
 	int (*G2API_AddSurface)(CGhoul2Info* ghl_info, int surface_number, int polyNumber,
 	                        float BarycentricI, float BarycentricJ, int lod);
 	void (*G2API_AnimateG2Models)(CGhoul2Info_v& ghoul2, int acurrent_time, CRagDollUpdateParams* params);
-	qboolean (*G2API_AttachEnt)(int* bolt_info, CGhoul2Info* ghlInfoTo, int toBoltIndex, int entNum, int toModelNum);
+	qboolean (*G2API_AttachEnt)(int* bolt_info, CGhoul2Info* ghlInfoTo, int toBoltIndex, int ent_num, int toModelNum);
 	qboolean (*G2API_AttachG2Model)(CGhoul2Info* ghl_info, CGhoul2Info* ghlInfoTo, int toBoltIndex, int toModel);
 	void (*G2API_CollisionDetect)(CCollisionRecord* collRecMap, CGhoul2Info_v& ghoul2, const vec3_t angles,
-	                              const vec3_t position, int AframeNumber, int entNum, vec3_t rayStart, vec3_t rayEnd,
+	                              const vec3_t position, int AframeNumber, int ent_num, vec3_t rayStart, vec3_t rayEnd,
 	                              vec3_t scale,
 	                              CMiniHeap*, EG2_Collision e_g2_trace_type, int use_lod, float fRadius);
 	void (*G2API_CleanGhoul2Models)(CGhoul2Info_v& ghoul2);

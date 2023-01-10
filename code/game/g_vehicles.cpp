@@ -1604,7 +1604,7 @@ static bool Update(Vehicle_t* p_veh, const usercmd_t* pUmcd)
 	int curTime;
 	int halfMaxSpeed;
 	playerState_t* parent_ps;
-	qboolean linkHeld = qfalse;
+	constexpr qboolean link_held = qfalse;
 
 #ifdef _JK2MP
 	parent_ps = p_veh->m_pParentEntity->playerState;
@@ -1959,12 +1959,6 @@ static bool Update(Vehicle_t* p_veh, const usercmd_t* pUmcd)
 			}
 		}
 	}
-	if (linkHeld)
-	{
-		//so we don't hold it down and toggle it back and forth
-		p_veh->linkWeaponToggleHeld = qtrue;
-	}
-	else
 	{
 		//so we don't hold it down and toggle it back and forth
 		p_veh->linkWeaponToggleHeld = qfalse;

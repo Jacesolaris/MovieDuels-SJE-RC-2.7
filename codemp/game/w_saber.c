@@ -5335,7 +5335,7 @@ qboolean InFOV3(vec3_t spot, vec3_t from, vec3_t fromAngles, int hFOV, int vFOV)
 qboolean jedi_waiting_ambush(const gentity_t* self);
 void jedi_ambush(gentity_t* self);
 evasionType_t Jedi_SaberBlockGo(gentity_t* self, usercmd_t* cmd, vec3_t pHitloc, vec3_t phitDir, gentity_t* incoming, float dist);
-void NPC_SetLookTarget(const gentity_t* self, int entNum, int clearTime);
+void NPC_SetLookTarget(const gentity_t* self, int ent_num, int clearTime);
 void wp_saber_start_missile_block_check(gentity_t* self, usercmd_t* ucmd)
 {
 	gentity_t* incoming = NULL;

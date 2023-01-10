@@ -917,7 +917,7 @@ qboolean R_MirrorViewBySurface(drawSurf_t* draw_surf, int entity_num) {
 	orientation_t	surface, camera;
 
 	// don't recursively mirror
-	if (tr.viewParms.isPortal) {
+	if (tr.viewParms.is_portal) {
 		ri->Printf(PRINT_DEVELOPER, S_COLOR_RED "WARNING: recursive mirror/portal found\n");
 		return qfalse;
 	}
@@ -935,7 +935,7 @@ qboolean R_MirrorViewBySurface(drawSurf_t* draw_surf, int entity_num) {
 	oldParms = tr.viewParms;
 
 	newParms = tr.viewParms;
-	newParms.isPortal = qtrue;
+	newParms.is_portal = qtrue;
 	if (!R_GetPortalOrientations(draw_surf, entity_num, &surface, &camera,
 		newParms.pvsOrigin, &newParms.isMirror)) {
 		return qfalse;		// bad portal, no portalentity
@@ -1176,7 +1176,7 @@ void R_AddEntitySurfaces(void) {
 		// we don't want the hacked weapon position showing in
 		// mirrors, because the true body position will already be drawn
 		//
-		if ((ent->e.renderfx & RF_FIRST_PERSON) && tr.viewParms.isPortal) {
+		if ((ent->e.renderfx & RF_FIRST_PERSON) && tr.viewParms.is_portal) {
 			continue;
 		}
 
@@ -1195,7 +1195,7 @@ void R_AddEntitySurfaces(void) {
 			// self blood sprites, talk balloons, etc should not be drawn in the primary
 			// view.  We can't just do this check for all entities, because md3
 			// entities may still want to cast shadows from them
-			if ((ent->e.renderfx & RF_THIRD_PERSON) && !tr.viewParms.isPortal) {
+			if ((ent->e.renderfx & RF_THIRD_PERSON) && !tr.viewParms.is_portal) {
 				continue;
 			}
 			shader = R_GetShaderByHandle(ent->e.customShader);
@@ -1229,7 +1229,7 @@ void R_AddEntitySurfaces(void) {
 					}
 					break;
 				case MOD_BAD:		// null model axis
-					if ((ent->e.renderfx & RF_THIRD_PERSON) && !tr.viewParms.isPortal)
+					if ((ent->e.renderfx & RF_THIRD_PERSON) && !tr.viewParms.is_portal)
 					{
 						if (!(ent->e.renderfx & RF_SHADOW_ONLY))
 						{

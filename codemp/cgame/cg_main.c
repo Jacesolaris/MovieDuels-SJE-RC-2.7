@@ -241,10 +241,10 @@ static int CG_RagCallback(int callType)
 	case RAG_CALLBACK_BONESNAP:
 	{
 		ragCallbackBoneSnap_t* callData = &cg.sharedBuffer.rcbBoneSnap;
-		centity_t* cent = &cg_entities[callData->entNum];
+		centity_t* cent = &cg_entities[callData->ent_num];
 		const int snapSound = trap->S_RegisterSound(va("sound/player/bodyfall_human%i.wav", Q_irand(1, 3)));
 
-		trap->S_StartSound(cent->lerpOrigin, callData->entNum, CHAN_AUTO, snapSound);
+		trap->S_StartSound(cent->lerpOrigin, callData->ent_num, CHAN_AUTO, snapSound);
 	}
 	case RAG_CALLBACK_BONEIMPACT:
 		break;
@@ -255,7 +255,7 @@ static int CG_RagCallback(int callType)
 
 		if (callData->solidCount > 16)
 		{ //don't bother if we're just tapping into solidity, we'll probably recover on our own
-			centity_t* cent = &cg_entities[callData->entNum];
+			centity_t* cent = &cg_entities[callData->ent_num];
 			vec3_t slideDir;
 
 			VectorSubtract(cent->lerpOrigin, callData->bonePos, slideDir);
@@ -1984,7 +1984,7 @@ static const char* CG_FeederItemText(float feederID, int index, int column,
 		team = TEAM_BLUE;
 	}
 
-	clientInfo_t* info = CG_InfoFromScoreIndex(index, team, &scoreIndex);
+	const clientInfo_t* info = CG_InfoFromScoreIndex(index, team, &scoreIndex);
 	const score_t* sp = &cg.scores[scoreIndex];
 
 	if (info && info->infoValid) {
@@ -2595,7 +2595,7 @@ const char* CG_GetLocationString(const char* loc)
 }
 
 //clean up all the ghoul2 allocations, the nice and non-hackly way -rww
-void CG_KillCEntityG2(int entNum);
+void CG_KillCEntityG2(int ent_num);
 void CG_DestroyAllGhoul2(void)
 {
 	int i = 0;

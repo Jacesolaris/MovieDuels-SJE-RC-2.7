@@ -1090,7 +1090,7 @@ int		G_RadiusList(vec3_t origin, float radius, const gentity_t* ignore, qboolean
 void	G_Throw(gentity_t* targ, vec3_t newDir, float push);
 
 void	G_FreeFakeClient(gclient_t** cl);
-void	G_CreateFakeClient(int entNum, gclient_t** cl);
+void	G_CreateFakeClient(int ent_num, gclient_t** cl);
 void	G_CleanAllFakeClients(void);
 
 void	G_SetAnim(gentity_t* ent, usercmd_t* ucmd, int setAnimParts, int anim, int setAnimFlags, int blend_time);
@@ -1105,7 +1105,7 @@ void	G_InitGentity(gentity_t* e);
 gentity_t* G_Spawn(void);
 gentity_t* G_TempEntity(vec3_t origin, int event);
 gentity_t* G_PlayEffect(int fxID, vec3_t org, vec3_t ang);
-gentity_t* G_PlayEffectID(const int fxID, vec3_t org, vec3_t ang);
+gentity_t* G_PlayEffectID(int fxID, vec3_t org, vec3_t ang);
 gentity_t* G_ScreenShake(vec3_t org, gentity_t* target, float intensity, int duration, qboolean global);
 void	G_MuteSound(int entnum, int channel);
 void	G_Sound(gentity_t* ent, int channel, int soundIndex);
@@ -1113,7 +1113,7 @@ void	G_SoundAtLoc(vec3_t loc, int channel, int soundIndex);
 void	G_EntitySound(gentity_t* ent, int channel, int soundIndex);
 void	TryUse(gentity_t* ent);
 void	G_SendG2KillQueue(void);
-void	G_KillG2Queue(int entNum);
+void	G_KillG2Queue(int ent_num);
 void	G_FreeEntity(gentity_t* ent);
 qboolean	G_EntitiesFree(void);
 

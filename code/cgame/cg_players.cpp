@@ -128,7 +128,7 @@ void CG_AddGhoul2Mark(const int type, const float size, vec3_t hitloc, vec3_t hi
 	gore_skin.lifeTime = life_time;
 	gore_skin.firstModel = first_model;
 	gore_skin.currentTime = cg.time;
-	gore_skin.entNum = entnum;
+	gore_skin.ent_num = entnum;
 	gore_skin.SSize = size;
 	gore_skin.TSize = size;
 	gore_skin.shader = type;

@@ -112,23 +112,24 @@ public:
 
 	CFxRange(void) { mMin = 0.0f; mMax = 0.0f; }
 
-	inline void		SetRange(float min, float max) { mMin = min; mMax = max; }
+	void		SetRange(float min, float max) { mMin = min; mMax = max; }
 
-	inline float	GetMax(void) const { return mMax; }
-	inline float	GetMin(void) const { return mMin; }
-	inline float	GetVal(float fraction) const
+	float	GetMax(void) const { return mMax; }
+	float	GetMin(void) const { return mMin; }
+
+	float	GetVal(float fraction) const
 	{
 		if (mMin != mMax) { return mMin + fraction * (mMax - mMin); }
 		return mMin;
 	}
 
-	inline float	GetVal(void) const
+	float	GetVal(void) const
 	{
 		if (mMin != mMax) { return flrand(mMin, mMax); }
 		return mMin;
 	}
 
-	inline int		GetRoundedVal() const {
+	int		GetRoundedVal() const {
 		if (mMin == mMax) { return static_cast<int>(mMin); }
 		return static_cast<int>(flrand(mMin, mMax) + 0.5f);
 	}
@@ -599,7 +600,7 @@ private:
 
 	SLoopedEffect	mLoopedEffectArray[MAX_LOOPED_FX];
 
-	int		ScheduleLoopedEffect(int id, int bolt_info, CGhoul2Info_v* ghoul2, bool isPortal, int iLoopTime, bool isRelative);
+	int		ScheduleLoopedEffect(int id, int bolt_info, CGhoul2Info_v* ghoul2, bool is_portal, int i_loop_time, bool is_relative);
 	void	AddLoopedEffects();
 
 	class CScheduled2DEffect
@@ -648,27 +649,27 @@ private:
 	static void	AddPrimitiveToEffect(SEffectTemplate* fx, CPrimitiveTemplate* prim);
 	int		ParseEffect(const char* file, CGPGroup* base);
 
-	void	CreateEffect(CPrimitiveTemplate* fx, const vec3_t origin, matrix3_t axis, int lateTime, int fxParm = -1, CGhoul2Info_v* ghoul2 = NULL, int entNum = -1, int modelNum = -1, int boltNum = -1);
+	void	CreateEffect(CPrimitiveTemplate* fx, const vec3_t origin, matrix3_t axis, int lateTime, int fxParm = -1, CGhoul2Info_v* ghoul2 = NULL, int ent_num = -1, int modelNum = -1, int boltNum = -1);
 	void	CreateEffect(CPrimitiveTemplate* fx, SScheduledEffect* schedFx);
 
 public:
 
 	CFxScheduler();
 
-	int		RegisterEffect(const char* file, bool bHasCorrectPath = false);	// handles pre-caching
+	int		RegisterEffect(const char* path, bool b_has_correct_path = false);	// handles pre-caching
 
 	// Nasty overloaded madness
 	//rww - maybe this should be done differently.. it's more than a bit confusing.
 	//Remind me when I don't have 50 files checked out.
-	void	PlayEffect(int id, vec3_t org, vec3_t fwd, int vol = -1, int rad = -1, bool isPortal = false);				// builds arbitrary perp. right vector, does a cross product to define up
-	void	PlayEffect(int id, vec3_t origin, matrix3_t axis, const int bolt_info = -1, CGhoul2Info_v* ghoul2 = NULL,
-		int fxParm = -1, int vol = -1, int rad = -1, bool isPortal = false, int iLoopTime = false, bool isRelative = false);
+	void	PlayEffect(int id, vec3_t org, vec3_t fwd, int vol = -1, int rad = -1, bool is_portal = false);				// builds arbitrary perp. right vector, does a cross product to define up
+	void	PlayEffect(int id, vec3_t origin, matrix3_t axis, int bolt_info = -1, CGhoul2Info_v* ghoul2 = NULL,
+		int fxParm = -1, int vol = -1, int rad = -1, bool is_portal = false, int i_loop_time = false, bool is_relative = false);
 	void	PlayEffect(const char* file, vec3_t org, int vol = -1, int rad = -1);					// uses a default up axis
 	void	PlayEffect(const char* file, vec3_t org, vec3_t fwd, int vol = -1, int rad = -1);		// builds arbitrary perp. right vector, does a cross product to define up
 	void	PlayEffect(const char* file, vec3_t origin,
-		matrix3_t axis, const int bolt_info = -1, CGhoul2Info_v* ghoul2 = NULL, int fxParm = -1, int vol = -1, int rad = -1, int iLoopTime = false, bool isRelative = false);
+		matrix3_t axis, int bolt_info = -1, CGhoul2Info_v* ghoul2 = NULL, int fxParm = -1, int vol = -1, int rad = -1, int i_loop_time = false, bool is_relative = false);
 
-	void	StopEffect(const char* file, const int bolt_info, bool isPortal = false);	//find a scheduled Looping effect with these parms and kill it
+	void	StopEffect(const char* file, int bolt_info, bool is_portal = false);	//find a scheduled Looping effect with these parms and kill it
 	void	AddScheduledEffects(bool portal);								// call once per CGame frame
 
 	// kef -- called for a 2D effect instead of addRefToScene
@@ -678,14 +679,14 @@ public:
 
 	int		GetHighWatermark() const { return mScheduledEffectsPool.GetHighWatermark(); }
 	int		NumScheduledFx() const { return static_cast<int>(mFxSchedule.size()); }
-	void	Clean(bool bRemoveTemplates = true, int idToPreserve = 0);	// clean out the system
+	void	Clean(bool b_remove_templates = true, int id_to_preserve = 0);	// clean out the system
 
 	// FX Override functions
-	SEffectTemplate* GetEffectCopy(int fxHandle, int* newHandle);
+	SEffectTemplate* GetEffectCopy(int fx_handle, int* new_handle);
 	static CPrimitiveTemplate* GetPrimitiveCopy(const SEffectTemplate* effectCopy, char* componentName);
-	SEffectTemplate* GetEffectCopy(const char* file, int* newHandle);
+	SEffectTemplate* GetEffectCopy(const char* file, int* new_handle);
 
-	static CPrimitiveTemplate* GetPrimitiveCopy(const SEffectTemplate* effectCopy, const char* componentName);
+	static CPrimitiveTemplate* GetPrimitiveCopy(const SEffectTemplate* effect_copy, const char* component_name);
 
 	static void	MaterialImpact(trace_t* tr, CEffect* effect);
 };

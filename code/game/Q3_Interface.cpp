@@ -61,7 +61,7 @@ extern int TAG_GetOrigin2(const char* owner, const char* name, vec3_t origin);
 extern cvar_t* g_SerenityJediEngineMode;
 extern void G_PlayDoorLoopSound(gentity_t* ent);
 extern void G_PlayDoorSound(gentity_t* ent, int type);
-extern void NPC_SetLookTarget(const gentity_t* self, int entNum, int clearTime);
+extern void NPC_SetLookTarget(const gentity_t* self, int ent_num, int clearTime);
 extern void NPC_ClearLookTarget(const gentity_t* self);
 extern void WP_SaberSetColor(const gentity_t* ent, int saber_num, int blade_num, const char* colorName);
 extern void WP_SetSaber(gentity_t* ent, int saber_num, const char* saber_name);
@@ -8143,20 +8143,20 @@ void CQuake3GameInterface::DebugPrint(const e_DebugPrintLevel level, const char*
 
 	case WL_DEBUG:
 		{
-			int entNum;
+			int ent_num;
 
-			sscanf(text, "%d", &entNum);
+			sscanf(text, "%d", &ent_num);
 
-			if (m_entFilter >= 0 && m_entFilter != entNum)
+			if (m_entFilter >= 0 && m_entFilter != ent_num)
 				return;
 
 			auto buffer = text;
 			buffer += 5;
 
-			if (entNum < 0 || entNum >= MAX_GENTITIES)
-				entNum = 0;
+			if (ent_num < 0 || ent_num >= MAX_GENTITIES)
+				ent_num = 0;
 
-			Com_Printf(S_COLOR_BLUE"DEBUG: %s(%d): %s\n", g_entities[entNum].script_targetname, entNum, buffer);
+			Com_Printf(S_COLOR_BLUE"DEBUG: %s(%d): %s\n", g_entities[ent_num].script_targetname, ent_num, buffer);
 			break;
 		}
 	default:

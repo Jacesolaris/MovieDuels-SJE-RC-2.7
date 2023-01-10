@@ -253,7 +253,7 @@ static bool GLimp_DetectAvailableModes(void)
 	if (numDisplayModes < 0)
 		Com_Error(ERR_FATAL, "SDL_GetNumDisplayModes() FAILED (%s)", SDL_GetError());
 
-	auto modes = static_cast<SDL_Rect*>(SDL_calloc(static_cast<size_t>(numDisplayModes), sizeof(SDL_Rect)));
+	const auto modes = static_cast<SDL_Rect*>(SDL_calloc(static_cast<size_t>(numDisplayModes), sizeof(SDL_Rect)));
 	if (!modes)
 		Com_Error(ERR_FATAL, "Out of memory");
 

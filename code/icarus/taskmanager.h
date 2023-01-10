@@ -160,7 +160,7 @@ public:
 
 	static int Flush(void);
 
-	int SetCommand(CBlock* block, int type, const CIcarus* icarus);
+	int SetCommand(CBlock* command, int type, const CIcarus* icarus);
 	int Completed(int id);
 
 	int Update(CIcarus* icarus);
@@ -193,13 +193,13 @@ public:
 
 protected:
 	int Go(CIcarus* icarus); //Heartbeat function called once per game frame
-	int CallbackCommand(const CTask* task, int returnCode, CIcarus* icarus);
+	int CallbackCommand(const CTask* task, int return_code, CIcarus* icarus);
 
-	static inline bool Check(int targetID, const CBlock* block, int memberNum);
+	static inline bool Check(int targetID, const CBlock* block, int member_num);
 
-	static int GetVector(int entID, CBlock* block, int& memberNum, vec3_t& value, CIcarus* icarus);
-	static int GetFloat(int entID, const CBlock* block, int& memberNum, float& value, const CIcarus* icarus);
-	static int Get(int entID, CBlock* block, int& memberNum, char** value, CIcarus* icarus);
+	static int GetVector(int ent_id, CBlock* block, int& member_num, vec3_t& value, CIcarus* icarus);
+	static int GetFloat(int ent_id, const CBlock* block, int& member_num, float& value, const CIcarus* icarus);
+	static int Get(int ent_id, CBlock* block, int& member_num, char** value, CIcarus* icarus);
 
 	int PushTask(CTask* task, int flag);
 	CTask* PopTask(int flag);

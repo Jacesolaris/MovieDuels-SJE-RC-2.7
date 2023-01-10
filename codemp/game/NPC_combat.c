@@ -1075,7 +1075,7 @@ qboolean EntIsGlass(const gentity_t* check)
 
 qboolean ShotThroughGlass(trace_t* tr, const gentity_t* target, vec3_t spot, int mask)
 {
-	gentity_t* hit = &g_entities[tr->entity_num];
+	const gentity_t* hit = &g_entities[tr->entity_num];
 	if (hit != target && EntIsGlass(hit))
 	{//ok to shoot through breakable glass
 		const int			skip = hit->s.number;
@@ -1586,9 +1586,9 @@ gentity_t* NPC_PickEnemy(const gentity_t* closest_to, int enemy_team, qboolean c
 	bestDist = Q3_INFINITE;
 	closestEnemy = NULL;
 
-	for (int entNum = 0; entNum < level.num_entities; entNum++)
+	for (int ent_num = 0; ent_num < level.num_entities; ent_num++)
 	{
-		newenemy = &g_entities[entNum];
+		newenemy = &g_entities[ent_num];
 
 		if (newenemy != NPCS.NPC && (newenemy->client /*|| newenemy->svFlags & SVF_NONNPC_ENEMY*/) && !(newenemy->flags & FL_NOTARGET) && !(newenemy->s.eFlags & EF_NODRAW))
 		{
@@ -1726,9 +1726,9 @@ gentity_t* NPC_PickAlly(qboolean facing_each_other, float range, qboolean ignore
 	vec3_t		diff;
 	float		bestDist = range;
 
-	for (int entNum = 0; entNum < level.num_entities; entNum++)
+	for (int ent_num = 0; ent_num < level.num_entities; ent_num++)
 	{
-		gentity_t* ally = &g_entities[entNum];
+		gentity_t* ally = &g_entities[ent_num];
 
 		if (ally->client)
 		{
@@ -1915,7 +1915,7 @@ gentity_t* NPC_CheckEnemy(qboolean find_new, qboolean too_far_ok, qboolean set_e
 		}
 	}
 
-	gentity_t* closestTo = NPCS.NPC;
+	const gentity_t* closestTo = NPCS.NPC;
 	//FIXME: check your defendEnt, if you have one, see if their enemy is different
 	//than yours, or, if they don't have one, pick the closest enemy to THEM?
 	if (NPCS.NPCInfo->defendEnt)
@@ -2174,7 +2174,7 @@ qboolean NPC_CheckCanAttack(float attack_scale)
 	qboolean	dead_on = qfalse;
 	const float		max_aim_off = 128 - (16 * (float)NPCS.NPCInfo->stats.aim);
 	trace_t		tr;
-	gentity_t* trace_ent = NULL;
+	const gentity_t* trace_ent = NULL;
 
 	if (NPCS.NPC->enemy->flags & FL_NOTARGET)
 	{

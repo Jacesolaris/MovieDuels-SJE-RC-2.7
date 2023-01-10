@@ -44,7 +44,7 @@ extern void NPC_CheckPlayerAim(void);
 extern void NPC_CheckAllClear(void);
 extern void G_AddVoiceEvent(const gentity_t* self, int event, int speak_debounce_time);
 extern qboolean NPC_CheckLookTarget(const gentity_t* self);
-extern void NPC_SetLookTarget(const gentity_t* self, int entNum, int clearTime);
+extern void NPC_SetLookTarget(const gentity_t* self, int ent_num, int clearTime);
 extern void Mark1_dying(gentity_t* self);
 extern void NPC_BSCinematic();
 extern int GetTime(int lastTime);

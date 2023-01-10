@@ -5241,7 +5241,7 @@ cvar_t* s_soundpoolmegs = nullptr;
 //
 byte* SND_malloc(const int iSize, sfx_t* sfx)
 {
-	auto p_data = static_cast<byte*>(Z_Malloc(iSize, TAG_SND_RAWDATA, qfalse)); // don't bother asking for zeroed mem
+	const auto p_data = static_cast<byte*>(Z_Malloc(iSize, TAG_SND_RAWDATA, qfalse)); // don't bother asking for zeroed mem
 
 	// if "s_soundpoolmegs" is < 0, then the -ve of the value is the maximum amount of sounds we're allowed to have loaded...
 	//

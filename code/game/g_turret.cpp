@@ -71,7 +71,7 @@ void TurretPain(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, cons
 }
 
 //------------------------------------------------------------------------------------------------------------
-void turret_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, const int damage, const int meansOfDeath,
+void turret_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, const int damage, const int means_of_death,
 	int d_flags,
 	int hit_loc)
 	//------------------------------------------------------------------------------------------------------------

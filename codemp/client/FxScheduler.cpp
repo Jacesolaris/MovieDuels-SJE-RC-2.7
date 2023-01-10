@@ -51,7 +51,7 @@ CFxScheduler::CFxScheduler()
 	memset(&mLoopedEffectArray, 0, sizeof(mLoopedEffectArray));
 }
 
-int CFxScheduler::ScheduleLoopedEffect(int id, int bolt_info, CGhoul2Info_v* ghoul2, bool isPortal, int iLoopTime, bool isRelative)
+int CFxScheduler::ScheduleLoopedEffect(int id, int bolt_info, CGhoul2Info_v* ghoul2, bool is_portal, int i_loop_time, bool is_relative)
 {
 	int i;
 
@@ -62,7 +62,7 @@ int CFxScheduler::ScheduleLoopedEffect(int id, int bolt_info, CGhoul2Info_v* gho
 	{
 		if (mLoopedEffectArray[i].mId == id &&
 			mLoopedEffectArray[i].mBoltInfo == bolt_info &&
-			mLoopedEffectArray[i].mPortalEffect == isPortal
+			mLoopedEffectArray[i].mPortalEffect == is_portal
 			)
 		{
 #ifdef _DEBUG
@@ -92,14 +92,14 @@ int CFxScheduler::ScheduleLoopedEffect(int id, int bolt_info, CGhoul2Info_v* gho
 	mLoopedEffectArray[i].mId = id;
 	mLoopedEffectArray[i].mBoltInfo = bolt_info;
 	mLoopedEffectArray[i].mGhoul2 = ghoul2;
-	mLoopedEffectArray[i].mPortalEffect = isPortal;
-	mLoopedEffectArray[i].mIsRelative = isRelative;
+	mLoopedEffectArray[i].mPortalEffect = is_portal;
+	mLoopedEffectArray[i].mIsRelative = is_relative;
 	mLoopedEffectArray[i].mNextTime = theFxHelper.mTime + mEffectTemplates[id].mRepeatDelay;
-	mLoopedEffectArray[i].mLoopStopTime = (iLoopTime == 1) ? 0 : theFxHelper.mTime + iLoopTime;
+	mLoopedEffectArray[i].mLoopStopTime = (i_loop_time == 1) ? 0 : theFxHelper.mTime + i_loop_time;
 	return i;
 }
 
-void CFxScheduler::StopEffect(const char* file, int bolt_info, bool isPortal)
+void CFxScheduler::StopEffect(const char* file, int bolt_info, bool is_portal)
 {
 	char	sfile[MAX_QPATH];
 
@@ -118,7 +118,7 @@ void CFxScheduler::StopEffect(const char* file, int bolt_info, bool isPortal)
 	{
 		if (mLoopedEffectArray[i].mId == id &&
 			mLoopedEffectArray[i].mBoltInfo == bolt_info &&
-			mLoopedEffectArray[i].mPortalEffect == isPortal
+			mLoopedEffectArray[i].mPortalEffect == is_portal
 			)
 		{
 			memset(&mLoopedEffectArray[i], 0, sizeof(mLoopedEffectArray[i]));
@@ -136,11 +136,11 @@ void CFxScheduler::AddLoopedEffects()
 	{
 		if (mLoopedEffectArray[i].mId && mLoopedEffectArray[i].mNextTime < theFxHelper.mTime)
 		{
-			const int entNum = (mLoopedEffectArray[i].mBoltInfo >> ENTITY_SHIFT) & ENTITY_AND;
+			const int ent_num = (mLoopedEffectArray[i].mBoltInfo >> ENTITY_SHIFT) & ENTITY_AND;
 			// Find out where the entity currently is
 			TCGVectorData* data = (TCGVectorData*)cl.mSharedMemory;
 
-			data->mEntityNum = entNum;
+			data->mEntityNum = ent_num;
 			CGVM_GetLerpOrigin();
 
 			PlayEffect(mLoopedEffectArray[i].mId, data->mPoint, 0, mLoopedEffectArray[i].mBoltInfo, mLoopedEffectArray[i].mGhoul2, -1, mLoopedEffectArray[i].mPortalEffect, false, mLoopedEffectArray[i].mIsRelative);	//very important to send FALSE to not recursively add me!
@@ -183,7 +183,7 @@ SEffectTemplate& SEffectTemplate::operator=(const SEffectTemplate& that)
 //	None
 //
 //------------------------------------------------------
-void CFxScheduler::Clean(bool bRemoveTemplates /*= true*/, int idToPreserve /*= 0*/)
+void CFxScheduler::Clean(bool b_remove_templates /*= true*/, int id_to_preserve /*= 0*/)
 {
 	// Ditch any scheduled effects
 	TScheduledEffect::iterator itr = mFxSchedule.begin();
@@ -199,12 +199,12 @@ void CFxScheduler::Clean(bool bRemoveTemplates /*= true*/, int idToPreserve /*= 
 		itr = next;
 	}
 
-	if (bRemoveTemplates)
+	if (b_remove_templates)
 	{
 		// Ditch any effect templates
 		for (int i = 1; i < FX_MAX_EFFECTS; i++)
 		{
-			if (i == idToPreserve)
+			if (i == id_to_preserve)
 			{
 				continue;
 			}
@@ -221,7 +221,7 @@ void CFxScheduler::Clean(bool bRemoveTemplates /*= true*/, int idToPreserve /*= 
 			mEffectTemplates[i].mInUse = false;
 		}
 
-		if (idToPreserve == 0)
+		if (id_to_preserve == 0)
 		{
 			mEffectIDs.clear();
 		}
@@ -233,7 +233,7 @@ void CFxScheduler::Clean(bool bRemoveTemplates /*= true*/, int idToPreserve /*= 
 
 			for (TEffectID::iterator iter = mEffectIDs.begin(); iter != mEffectIDs.end(); ++iter)
 			{
-				if ((*iter).second == idToPreserve)
+				if ((*iter).second == id_to_preserve)
 				{
 					str = (*iter).first;
 					break;
@@ -242,7 +242,7 @@ void CFxScheduler::Clean(bool bRemoveTemplates /*= true*/, int idToPreserve /*= 
 
 			mEffectIDs.clear();
 
-			mEffectIDs[str] = idToPreserve;
+			mEffectIDs[str] = id_to_preserve;
 		}
 	}
 }
@@ -258,7 +258,7 @@ void CFxScheduler::Clean(bool bRemoveTemplates /*= true*/, int idToPreserve /*= 
 // Return:
 //	int handle to the effect
 //------------------------------------------------------
-int CFxScheduler::RegisterEffect(const char* file, bool bHasCorrectPath /*= false*/)
+int CFxScheduler::RegisterEffect(const char* path, bool b_has_correct_path /*= false*/)
 {
 	// Dealing with file names:
 	// File names can come from two places - the editor, in which case we should use the given
@@ -268,7 +268,7 @@ int CFxScheduler::RegisterEffect(const char* file, bool bHasCorrectPath /*= fals
 
 	char sfile[MAX_QPATH];
 
-	COM_StripExtension(file, sfile, sizeof(sfile));
+	COM_StripExtension(path, sfile, sizeof(sfile));
 
 	std::string s = sfile;
 	std::transform(s.begin(), s.end(), s.begin(), ::tolower);
@@ -288,7 +288,7 @@ int CFxScheduler::RegisterEffect(const char* file, bool bHasCorrectPath /*= fals
 	char* bufParse = 0;
 
 	// if our file doesn't have an extension, add one
-	std::string finalFilename = file;
+	std::string finalFilename = path;
 	const std::string effectsSubstr = finalFilename.substr(0, 7);
 
 	if (finalFilename.find('.') == std::string::npos)
@@ -524,9 +524,9 @@ SEffectTemplate* CFxScheduler::GetNewEffectTemplate(int* id, const char* file)
 // Return:
 //	the pointer to the copy
 //------------------------------------------------------
-SEffectTemplate* CFxScheduler::GetEffectCopy(const char* file, int* newHandle)
+SEffectTemplate* CFxScheduler::GetEffectCopy(const char* file, int* new_handle)
 {
-	return (GetEffectCopy(mEffectIDs[file], newHandle));
+	return (GetEffectCopy(mEffectIDs[file], new_handle));
 }
 
 //------------------------------------------------------
@@ -542,23 +542,23 @@ SEffectTemplate* CFxScheduler::GetEffectCopy(const char* file, int* newHandle)
 // Return:
 //	the pointer to the copy
 //------------------------------------------------------
-SEffectTemplate* CFxScheduler::GetEffectCopy(int fxHandle, int* newHandle)
+SEffectTemplate* CFxScheduler::GetEffectCopy(int fx_handle, int* new_handle)
 {
-	if (fxHandle < 1 || fxHandle >= FX_MAX_EFFECTS)
+	if (fx_handle < 1 || fx_handle >= FX_MAX_EFFECTS)
 	{
 		// Didn't even request a valid effect to copy!!!
-		theFxHelper.Print("FxScheduler: Bad effect file copy request: id = %d\n", fxHandle);
+		theFxHelper.Print("FxScheduler: Bad effect file copy request: id = %d\n", fx_handle);
 
-		*newHandle = 0;
+		*new_handle = 0;
 		return 0;
 	}
 
-	if (!mEffectTemplates[fxHandle].mInUse)
+	if (!mEffectTemplates[fx_handle].mInUse)
 	{
 		// Didn't even request a valid effect to copy!!!
-		theFxHelper.Print("FxScheduler: Bad effect file copy request: id %d not inuse\n", fxHandle);
+		theFxHelper.Print("FxScheduler: Bad effect file copy request: id %d not inuse\n", fx_handle);
 
-		*newHandle = 0;
+		*new_handle = 0;
 		return 0;
 	}
 
@@ -571,12 +571,12 @@ SEffectTemplate* CFxScheduler::GetEffectCopy(int fxHandle, int* newHandle)
 #endif
 
 	// Copies shouldn't have names, otherwise they could trash our stl map used for getting ID from name
-	SEffectTemplate* copy = GetNewEffectTemplate(newHandle, NULL);
+	SEffectTemplate* copy = GetNewEffectTemplate(new_handle, NULL);
 
-	if (copy && *newHandle)
+	if (copy && *new_handle)
 	{
 		// do the effect copy and mark us as what we are
-		*copy = mEffectTemplates[fxHandle];
+		*copy = mEffectTemplates[fx_handle];
 		copy->mCopy = true;
 
 		// the user had better hold onto this handle if they ever hope to call this effect.
@@ -584,7 +584,7 @@ SEffectTemplate* CFxScheduler::GetEffectCopy(int fxHandle, int* newHandle)
 	}
 
 	// No space left to return an effect
-	*newHandle = 0;
+	*new_handle = 0;
 	return 0;
 }
 
@@ -684,7 +684,7 @@ static void ReportPlayEffectError(int id)
 // Return:
 //	none
 //------------------------------------------------------
-void CFxScheduler::PlayEffect(int id, vec3_t origin, vec3_t forward, int vol, int rad, bool isPortal)
+void CFxScheduler::PlayEffect(int id, vec3_t origin, vec3_t forward, int vol, int rad, bool is_portal)
 {
 	matrix3_t	axis;
 
@@ -692,7 +692,7 @@ void CFxScheduler::PlayEffect(int id, vec3_t origin, vec3_t forward, int vol, in
 	VectorCopy(forward, axis[0]);
 	MakeNormalVectors(forward, axis[1], axis[2]);
 
-	PlayEffect(id, origin, axis, -1, 0, -1, vol, rad, isPortal);
+	PlayEffect(id, origin, axis, -1, 0, -1, vol, rad, is_portal);
 }
 
 //------------------------------------------------------
@@ -709,7 +709,7 @@ void CFxScheduler::PlayEffect(int id, vec3_t origin, vec3_t forward, int vol, in
 //	none
 //------------------------------------------------------
 void CFxScheduler::PlayEffect(const char* file, vec3_t origin, matrix3_t axis, const int bolt_info, CGhoul2Info_v* ghoul2,
-	int fxParm /*-1*/, int vol, int rad, int iLoopTime, bool isRelative)
+	int fxParm /*-1*/, int vol, int rad, int i_loop_time, bool is_relative)
 {
 	char	sfile[MAX_QPATH];
 
@@ -724,7 +724,7 @@ void CFxScheduler::PlayEffect(const char* file, vec3_t origin, matrix3_t axis, c
 	}
 #endif
 
-	PlayEffect(mEffectIDs[sfile], origin, axis, bolt_info, ghoul2, fxParm, vol, rad, qfalse, iLoopTime, isRelative);
+	PlayEffect(mEffectIDs[sfile], origin, axis, bolt_info, ghoul2, fxParm, vol, rad, qfalse, i_loop_time, is_relative);
 }
 
 int	totalPrimitives = 0;
@@ -759,7 +759,7 @@ void GetRGB_Colors(CPrimitiveTemplate* fx, vec3_t outStartRGB, vec3_t outEndRGB)
 // Return:
 //	none
 //------------------------------------------------------
-void CFxScheduler::PlayEffect(int id, vec3_t origin, matrix3_t axis, const int bolt_info, CGhoul2Info_v* ghoul2, int fxParm /*-1*/, int vol, int rad, bool isPortal/*false*/, int iLoopTime/*0*/, bool isRelative)
+void CFxScheduler::PlayEffect(int id, vec3_t origin, matrix3_t axis, const int bolt_info, CGhoul2Info_v* ghoul2, int fxParm /*-1*/, int vol, int rad, bool is_portal/*false*/, int i_loop_time/*0*/, bool is_relative)
 {
 	SEffectTemplate* fx;
 	CPrimitiveTemplate* prim;
@@ -795,9 +795,9 @@ void CFxScheduler::PlayEffect(int id, vec3_t origin, matrix3_t axis, const int b
 		// We always force ghoul bolted objects to be scheduled so that they don't play right away.
 		forceScheduling = true;
 
-		if (iLoopTime)//0 = not looping, 1 for infinite, else duration
+		if (i_loop_time)//0 = not looping, 1 for infinite, else duration
 		{//store off the id to reschedule every frame
-			ScheduleLoopedEffect(id, bolt_info, ghoul2, !!isPortal, iLoopTime, isRelative);
+			ScheduleLoopedEffect(id, bolt_info, ghoul2, !!is_portal, i_loop_time, is_relative);
 		}
 	}
 
@@ -877,7 +877,7 @@ void CFxScheduler::PlayEffect(int id, vec3_t origin, matrix3_t axis, const int b
 			}
 
 			// if the delay is so small, we may as well just create this bit right now
-			if (delay < 1 && !forceScheduling && !isPortal)
+			if (delay < 1 && !forceScheduling && !is_portal)
 			{
 				if (bolt_info == -1 && entity_num != -1)
 				{
@@ -904,8 +904,8 @@ void CFxScheduler::PlayEffect(int id, vec3_t origin, matrix3_t axis, const int b
 
 				sfx->mStartTime = theFxHelper.mTime + delay;
 				sfx->mpTemplate = prim;
-				sfx->mIsRelative = isRelative;
-				sfx->mPortalEffect = isPortal;
+				sfx->mIsRelative = is_relative;
+				sfx->mPortalEffect = is_portal;
 
 				if (bolt_info == -1)
 				{
@@ -1166,7 +1166,7 @@ void CFxScheduler::Draw2DEffects(float screenXScale, float screenYScale)
 // Return:
 //	none
 //------------------------------------------------------
-void CFxScheduler::CreateEffect(CPrimitiveTemplate* fx, const vec3_t origin, matrix3_t axis, int lateTime, int fxParm /*-1*/, CGhoul2Info_v* ghoul2, int entNum, int modelNum, int boltNum)
+void CFxScheduler::CreateEffect(CPrimitiveTemplate* fx, const vec3_t origin, matrix3_t axis, int lateTime, int fxParm /*-1*/, CGhoul2Info_v* ghoul2, int ent_num, int modelNum, int boltNum)
 {
 	vec3_t	org, org2, temp,
 		vel, accel,
@@ -1429,7 +1429,7 @@ void CFxScheduler::CreateEffect(CPrimitiveTemplate* fx, const vec3_t origin, mat
 			fx->mMin, fx->mMax, fx->mElasticity.GetVal(),
 			fx->mDeathFxHandles.GetHandle(), fx->mImpactFxHandles.GetHandle(),
 			fx->mLife.GetVal(), fx->mMediaHandles.GetHandle(), flags, fx->mMatImpactFX, fxParm,
-			ghoul2, entNum, modelNum, boltNum);
+			ghoul2, ent_num, modelNum, boltNum);
 		break;
 
 		//---------
@@ -1441,7 +1441,7 @@ void CFxScheduler::CreateEffect(CPrimitiveTemplate* fx, const vec3_t origin, mat
 			fx->mAlphaStart.GetVal(), fx->mAlphaEnd.GetVal(), fx->mAlphaParm.GetVal(),
 			sRGB, eRGB, fx->mRGBParm.GetVal(),
 			fx->mLife.GetVal(), fx->mMediaHandles.GetHandle(), flags, fx->mMatImpactFX, fxParm,
-			ghoul2, entNum, modelNum, boltNum);
+			ghoul2, ent_num, modelNum, boltNum);
 		break;
 
 		//---------
@@ -1456,7 +1456,7 @@ void CFxScheduler::CreateEffect(CPrimitiveTemplate* fx, const vec3_t origin, mat
 			fx->mMin, fx->mMax, fx->mElasticity.GetVal(),
 			fx->mDeathFxHandles.GetHandle(), fx->mImpactFxHandles.GetHandle(),
 			fx->mLife.GetVal(), fx->mMediaHandles.GetHandle(), flags, fx->mMatImpactFX, fxParm,
-			ghoul2, entNum, modelNum, boltNum);
+			ghoul2, ent_num, modelNum, boltNum);
 		break;
 
 		//----------------
@@ -1469,7 +1469,7 @@ void CFxScheduler::CreateEffect(CPrimitiveTemplate* fx, const vec3_t origin, mat
 			sRGB, eRGB, fx->mRGBParm.GetVal(),
 			fx->mElasticity.GetVal(), fx->mLife.GetVal(), fx->mMediaHandles.GetHandle(), flags,
 			fx->mMatImpactFX, fxParm,
-			ghoul2, entNum, modelNum, boltNum);
+			ghoul2, ent_num, modelNum, boltNum);
 		break;
 
 		//---------
@@ -1483,7 +1483,7 @@ void CFxScheduler::CreateEffect(CPrimitiveTemplate* fx, const vec3_t origin, mat
 			fx->mAlphaStart.GetVal(), fx->mAlphaEnd.GetVal(), fx->mAlphaParm.GetVal(),
 			sRGB, eRGB, fx->mRGBParm.GetVal(),
 			fx->mLife.GetVal(), fx->mMediaHandles.GetHandle(), flags, fx->mMatImpactFX, fxParm,
-			ghoul2, entNum, modelNum, boltNum,
+			ghoul2, ent_num, modelNum, boltNum,
 			static_cast<qboolean>(fx->mSpawnFlags & FX_ORG2_FROM_TRACE));
 		break;
 
@@ -1605,7 +1605,7 @@ void CFxScheduler::CreateEffect(CPrimitiveTemplate* fx, const vec3_t origin, mat
 			fx->mMin, fx->mMax, fx->mElasticity.GetVal(),
 			fx->mDeathFxHandles.GetHandle(), fx->mImpactFxHandles.GetHandle(),
 			fx->mLife.GetVal(), fx->mMediaHandles.GetHandle(), flags, fx->mMatImpactFX, fxParm,
-			ghoul2, entNum, modelNum, boltNum);
+			ghoul2, ent_num, modelNum, boltNum);
 		break;
 
 		//---------
@@ -1635,7 +1635,7 @@ void CFxScheduler::CreateEffect(CPrimitiveTemplate* fx, const vec3_t origin, mat
 		FX_AddLight(org, fx->mSizeStart.GetVal(), fx->mSizeEnd.GetVal(), fx->mSizeParm.GetVal(),
 			sRGB, eRGB, fx->mRGBParm.GetVal(),
 			fx->mLife.GetVal(), flags, fx->mMatImpactFX, fxParm,
-			ghoul2, entNum, modelNum, boltNum);
+			ghoul2, ent_num, modelNum, boltNum);
 		break;
 
 		//---------

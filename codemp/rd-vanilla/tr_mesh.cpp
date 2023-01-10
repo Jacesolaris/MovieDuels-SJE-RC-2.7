@@ -277,7 +277,7 @@ void R_AddMD3Surfaces(trRefEntity_t* ent) {
 	shader_t* shader = nullptr;
 
 	// don't add third_person objects if not in a portal
-	const qboolean personalModel = static_cast<qboolean>((ent->e.renderfx & RF_THIRD_PERSON) && !tr.viewParms.isPortal);
+	const qboolean personalModel = static_cast<qboolean>((ent->e.renderfx & RF_THIRD_PERSON) && !tr.viewParms.is_portal);
 
 	if (ent->e.renderfx & RF_WRAP_FRAMES) {
 		ent->e.frame %= tr.currentModel->md3[0]->numFrames;

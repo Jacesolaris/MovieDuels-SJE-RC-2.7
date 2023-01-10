@@ -805,7 +805,7 @@ void CG_CaptionTextStop(void);
 //
 // cg_text.c
 //
-void CG_DrawScrollText(void);
+void CG_DrawScrollText();
 void CG_DrawCaptionText(void);
 void CG_DrawCenterString(void);
 
@@ -840,7 +840,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position);
 // cg_ents.c
 //
 vec3_t* CG_SetEntitySoundPosition(const centity_t* cent);
-void CG_AddPacketEntities(qboolean isPortal);
+void CG_AddPacketEntities(qboolean is_portal);
 void CG_Beam(const centity_t* cent, int color);
 void CG_AdjustPositionForMover(const vec3_t in, int mover_num, int at_time, vec3_t out);
 
@@ -1234,8 +1234,8 @@ void FX_NoghriShotProjectileThink(centity_t* cent, const weaponInfo_s* weapon);
 void FX_NoghriShotWeaponHitWall(vec3_t origin, vec3_t normal);
 void FX_NoghriShotWeaponHitPlayer(gentity_t* hit, vec3_t origin, vec3_t normal, qboolean humanoid);
 
-void CG_BounceEffect(const int weapon, vec3_t origin, vec3_t normal);
-void CG_MissileStick(const centity_t* cent, const int weapon);
+void CG_BounceEffect(int weapon, vec3_t origin, vec3_t normal);
+void CG_MissileStick(const centity_t* cent, int weapon);
 
 void FX_DestructionProjectileThink(centity_t* cent, const weaponInfo_s* weapon);
 void FX_DestructionHitWall(vec3_t origin, vec3_t normal);

@@ -3748,7 +3748,7 @@ static bool G2_RagDollSettlePositionNumeroTrois(CGhoul2Info_v& ghoul2V, const ve
 				ragCallbackBoneInSolid_t *callData = (ragCallbackBoneInSolid_t *)cl.mSharedMemory;
 
 				VectorCopy(e.currentOrigin, callData->bonePos);
-				callData->entNum = params->me;
+				callData->ent_num = params->me;
 				callData->solidCount = bone.solidCount;
 
 				VM_Call(cgvm, CG_RAG_CALLBACK, RAG_CALLBACK_BONEINSOLID);
@@ -3886,7 +3886,7 @@ static inline void G2_BoneSnap(CGhoul2Info_v& ghoul2V, boneInfo_t& bone, CRagDol
 
 	ragCallbackBoneSnap_t *callData = (ragCallbackBoneSnap_t *)cl.mSharedMemory;
 
-	callData->entNum = params->me;
+	callData->ent_num = params->me;
 	strcpy(callData->bone_name, G2_Get_Bone_Name(&ghoul2V[0], ghoul2V[0].mBlist, bone.boneNumber));
 
 	VM_Call(cgvm, CG_RAG_CALLBACK, RAG_CALLBACK_BONESNAP);

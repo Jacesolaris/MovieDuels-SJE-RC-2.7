@@ -679,7 +679,7 @@ private:
 	//
 	SLoopedEffect mLoopedEffectArray[MAX_LOOPED_FX];
 
-	int ScheduleLoopedEffect(int id, int bolt_info, bool isPortal, int iLoopTime, bool isRelative);
+	int ScheduleLoopedEffect(int id, int bolt_info, bool is_portal, int i_loop_time, bool is_relative);
 	void AddLoopedEffects();
 
 	// this makes looking up the index based on the string name much easier
@@ -702,9 +702,9 @@ private:
 	static void AddPrimitiveToEffect(SEffectTemplate* fx, CPrimitiveTemplate* prim);
 	int ParseEffect(const char* file, const CGPGroup& base);
 
-	void CreateEffect(CPrimitiveTemplate* fx, const vec3_t origin, vec3_t axis[3], int lateTime, int client_id = -1,
-	                  int modelNum = -1, int boltNum = -1);
-	void CreateEffect(CPrimitiveTemplate* fx, int client_id, int lateTime) const;
+	void CreateEffect(CPrimitiveTemplate* fx, const vec3_t origin, vec3_t axis[3], int late_time, int client_id = -1,
+	                  int model_num = -1, int bolt_num = -1);
+	void CreateEffect(CPrimitiveTemplate* fx, int client_id) const;
 
 public:
 	CFxScheduler();
@@ -713,37 +713,37 @@ public:
 	void LoadSave_Write();
 	void FX_CopeWithAnyLoadedSaveGames();
 
-	int RegisterEffect(const char* file, bool bHasCorrectPath = false); // handles pre-caching
+	int RegisterEffect(const char* path, bool b_has_correct_path = false); // handles pre-caching
 
 	// Nasty overloaded madness
-	void PlayEffect(int id, vec3_t org, bool isPortal = false); // uses a default up axis
-	void PlayEffect(int id, vec3_t org, vec3_t fwd, bool isPortal = false);
+	void PlayEffect(int id, vec3_t origin, bool is_portal = false); // uses a default up axis
+	void PlayEffect(int id, vec3_t origin, vec3_t forward, bool is_portal = false);
 	// builds arbitrary perp. right vector, does a cross product to define up
-	void PlayEffect(int id, vec3_t origin, vec3_t axis[3], int bolt_info = -1, int entNum = -1, bool isPortal = false,
-	                int iLoopTime = false, bool isRelative = false);
-	void PlayEffect(const char* file, vec3_t org, bool isPortal = false); // uses a default up axis
-	void PlayEffect(const char* file, vec3_t org, vec3_t fwd, bool isPortal = false);
+	void PlayEffect(int id, vec3_t origin, vec3_t axis[3], int bolt_info = -1, int ent_num = -1, bool is_portal = false,
+	                int i_loop_time = false, bool is_relative = false);
+	void PlayEffect(const char* file, vec3_t origin, bool is_portal = false); // uses a default up axis
+	void PlayEffect(const char* file, vec3_t origin, vec3_t forward, bool is_portal = false);
 	// builds arbitrary perp. right vector, does a cross product to define up
-	void PlayEffect(const char* file, vec3_t origin, vec3_t axis[3], int bolt_info, int entNum, bool isPortal = false,
-	                int iLoopTime = false, bool isRelative = false);
+	void PlayEffect(const char* file, vec3_t origin, vec3_t axis[3], int bolt_info, int ent_num, bool is_portal = false,
+	                int i_loop_time = false, bool is_relative = false);
 
 	//for muzzle
-	void PlayEffect(const char* file, int client_id, bool isPortal = false);
+	void PlayEffect(const char* file, int client_id, bool is_portal = false);
 
-	void StopEffect(const char* file, int bolt_info, bool isPortal = false);
+	void StopEffect(const char* file, int bolt_info, bool is_portal = false);
 	//find a scheduled Looping effect with these parms and kill it
 
 	void AddScheduledEffects(bool portal);
 	// call once per CGame frame [rww ammendment - twice now actually, but first only renders portal effects]
 
 	int NumScheduledFx() const { return static_cast<int>(mFxSchedule.size()); }
-	void Clean(bool bRemoveTemplates = true, int idToPreserve = 0); // clean out the system
+	void Clean(bool b_remove_templates = true, int id_to_preserve = 0); // clean out the system
 
 	// FX Override functions
-	SEffectTemplate* GetEffectCopy(int fxHandle, int* newHandle);
-	SEffectTemplate* GetEffectCopy(const char* file, int* newHandle);
+	SEffectTemplate* GetEffectCopy(int fx_handle, int* new_handle);
+	SEffectTemplate* GetEffectCopy(const char* file, int* new_handle);
 
-	static CPrimitiveTemplate* GetPrimitiveCopy(const SEffectTemplate* effectCopy, const char* componentName);
+	static CPrimitiveTemplate* GetPrimitiveCopy(const SEffectTemplate* effect_copy, const char* component_name);
 };
 
 //-------------------

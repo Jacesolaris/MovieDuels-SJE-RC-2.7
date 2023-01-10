@@ -442,7 +442,7 @@ public:
 		return mFinalBones[index].boneMatrix;
 	}
 	//rww - RAGDOLL_BEGIN
-	const inline mdxaBone_t& EvalRender(int index)
+	const mdxaBone_t& EvalRender(int index)
 	{
 		assert(index >= 0 && index < static_cast<int>(mBones.size()));
 		if (mFinalBones[index].touch != mCurrentTouch)
