@@ -247,7 +247,7 @@ void WP_Explode(gentity_t* self)
 // We need to have a dieFunc, otherwise G_Damage won't actually make us die.  I could modify G_Damage, but that entails too many changes
 //-----------------------------------------------------------------------------
 void WP_ExplosiveDie(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int meansOfDeath,
-                     int dFlags, int hit_loc)
+                     int d_flags, int hit_loc)
 //-----------------------------------------------------------------------------
 {
 	self->enemy = attacker;
@@ -787,35 +787,35 @@ void WP_RocketLock(const gentity_t* ent, const float lock_dist)
 	vec3_t ang;
 	trace_t tr;
 
-	vec3_t muzzleOffPoint, muzzlePoint, forwardVec, right, up;
+	vec3_t muzzle_off_point, muzzle_point, forward_vec, right, up;
 
-	AngleVectors(ent->client->ps.viewangles, forwardVec, right, up);
+	AngleVectors(ent->client->ps.viewangles, forward_vec, right, up);
 
 	AngleVectors(ent->client->ps.viewangles, ang, nullptr, nullptr);
 
-	VectorCopy(ent->client->ps.origin, muzzlePoint);
-	VectorCopy(WP_MuzzlePoint[WP_ROCKET_LAUNCHER], muzzleOffPoint);
+	VectorCopy(ent->client->ps.origin, muzzle_point);
+	VectorCopy(WP_MuzzlePoint[WP_ROCKET_LAUNCHER], muzzle_off_point);
 
-	VectorMA(muzzlePoint, muzzleOffPoint[0], forwardVec, muzzlePoint);
-	VectorMA(muzzlePoint, muzzleOffPoint[1], right, muzzlePoint);
-	muzzlePoint[2] += ent->client->ps.viewheight + muzzleOffPoint[2];
+	VectorMA(muzzle_point, muzzle_off_point[0], forward_vec, muzzle_point);
+	VectorMA(muzzle_point, muzzle_off_point[1], right, muzzle_point);
+	muzzle_point[2] += ent->client->ps.viewheight + muzzle_off_point[2];
 
-	ang[0] = muzzlePoint[0] + ang[0] * lock_dist;
-	ang[1] = muzzlePoint[1] + ang[1] * lock_dist;
-	ang[2] = muzzlePoint[2] + ang[2] * lock_dist;
+	ang[0] = muzzle_point[0] + ang[0] * lock_dist;
+	ang[1] = muzzle_point[1] + ang[1] * lock_dist;
+	ang[2] = muzzle_point[2] + ang[2] * lock_dist;
 
-	gi.trace(&tr, muzzlePoint, nullptr, nullptr, ang, ent->client->ps.client_num, MASK_PLAYERSOLID,
+	gi.trace(&tr, muzzle_point, nullptr, nullptr, ang, ent->client->ps.client_num, MASK_PLAYERSOLID,
 	         static_cast<EG2_Collision>(0), 0);
 
 	if (tr.fraction != 1 && tr.entity_num < ENTITYNUM_NONE && tr.entity_num != ent->client->ps.client_num)
 	{
-		const gentity_t* bgEnt = &g_entities[tr.entity_num];
-		if (bgEnt && bgEnt->s.powerups & PW_CLOAKED)
+		const gentity_t* bg_ent = &g_entities[tr.entity_num];
+		if (bg_ent && bg_ent->s.powerups & PW_CLOAKED)
 		{
 			ent->client->rocketLockIndex = ENTITYNUM_NONE;
 			ent->client->rocketLockTime = 0;
 		}
-		else if (bgEnt && bgEnt->s.eType == ET_PLAYER)
+		else if (bg_ent && bg_ent->s.eType == ET_PLAYER)
 		{
 			if (ent->client->rocketLockIndex == ENTITYNUM_NONE)
 			{
@@ -1096,21 +1096,21 @@ void FireVehicleWeapon(gentity_t* ent, const qboolean alt_fire)
 	// NOTE: Wings open also denotes that it has already launched.
 	{
 		//fighters can only fire when wings are open
-		int weaponNum;
-		qboolean linkedFiring = qfalse;
+		int weapon_num;
+		qboolean linked_firing = qfalse;
 
 		if (!alt_fire)
 		{
-			weaponNum = 0;
+			weapon_num = 0;
 		}
 		else
 		{
-			weaponNum = 1;
+			weapon_num = 1;
 		}
 
-		const int vehWeaponIndex = p_veh->m_pVehicleInfo->weapon[weaponNum].ID;
+		const int veh_weapon_index = p_veh->m_pVehicleInfo->weapon[weapon_num].ID;
 
-		if (p_veh->weaponStatus[weaponNum].ammo <= 0)
+		if (p_veh->weaponStatus[weapon_num].ammo <= 0)
 		{
 			//no ammo for this weapon
 			if (p_veh->m_pPilot && p_veh->m_pPilot->s.number < MAX_CLIENTS)
@@ -1119,7 +1119,7 @@ void FireVehicleWeapon(gentity_t* ent, const qboolean alt_fire)
 				//but only if one of the vehicle muzzles is actually ready to fire this weapon
 				for (int i = 0; i < MAX_VEHICLE_MUZZLES; i++)
 				{
-					if (p_veh->m_pVehicleInfo->weapMuzzle[i] != vehWeaponIndex)
+					if (p_veh->m_pVehicleInfo->weapMuzzle[i] != veh_weapon_index)
 					{
 						//this muzzle doesn't match the weapon we're trying to use
 						continue;
@@ -1128,7 +1128,7 @@ void FireVehicleWeapon(gentity_t* ent, const qboolean alt_fire)
 						&& p_veh->m_Muzzles[i].m_iMuzzleWait < level.time)
 					{
 						//this one would have fired, send the no ammo message
-						G_AddEvent(p_veh->m_pPilot, EV_NOAMMO, weaponNum);
+						G_AddEvent(p_veh->m_pPilot, EV_NOAMMO, weapon_num);
 						break;
 					}
 				}
@@ -1136,27 +1136,27 @@ void FireVehicleWeapon(gentity_t* ent, const qboolean alt_fire)
 			return;
 		}
 
-		const int delay = p_veh->m_pVehicleInfo->weapon[weaponNum].delay;
-		const qboolean aimCorrect = p_veh->m_pVehicleInfo->weapon[weaponNum].aimCorrect;
-		if (p_veh->m_pVehicleInfo->weapon[weaponNum].linkable == 2 //always linked
-			|| p_veh->m_pVehicleInfo->weapon[weaponNum].linkable == 1 //optionally linkable
-			&& p_veh->weaponStatus[weaponNum].linked) //linked
+		const int delay = p_veh->m_pVehicleInfo->weapon[weapon_num].delay;
+		const qboolean aim_correct = p_veh->m_pVehicleInfo->weapon[weapon_num].aimCorrect;
+		if (p_veh->m_pVehicleInfo->weapon[weapon_num].linkable == 2 //always linked
+			|| p_veh->m_pVehicleInfo->weapon[weapon_num].linkable == 1 //optionally linkable
+			&& p_veh->weaponStatus[weapon_num].linked) //linked
 		{
 			//we're linking the primary or alternate weapons, so we'll do *all* the muzzles
-			linkedFiring = qtrue;
+			linked_firing = qtrue;
 		}
 
-		if (vehWeaponIndex <= VEH_WEAPON_BASE || vehWeaponIndex >= MAX_VEH_WEAPONS)
+		if (veh_weapon_index <= VEH_WEAPON_BASE || veh_weapon_index >= MAX_VEH_WEAPONS)
 		{
 			//invalid vehicle weapon
 			return;
 		}
-		int i, numMuzzles = 0, numMuzzlesReady = 0, cumulativeDelay = 0, cumulativeAmmo = 0;
-		qboolean sentAmmoWarning = qfalse;
+		int i, num_muzzles = 0, num_muzzles_ready = 0, cumulativeDelay = 0, cumulativeAmmo = 0;
+		qboolean sent_ammo_warning = qfalse;
 
-		const vehWeaponInfo_t* veh_weapon = &g_vehWeaponInfo[vehWeaponIndex];
+		const vehWeaponInfo_t* veh_weapon = &g_vehWeaponInfo[veh_weapon_index];
 
-		if (p_veh->m_pVehicleInfo->weapon[weaponNum].linkable == 2)
+		if (p_veh->m_pVehicleInfo->weapon[weapon_num].linkable == 2)
 		{
 			//always linked weapons don't accumulate delay, just use specified delay
 			cumulativeDelay = delay;
@@ -1164,49 +1164,49 @@ void FireVehicleWeapon(gentity_t* ent, const qboolean alt_fire)
 		//find out how many we've got for this weapon
 		for (i = 0; i < MAX_VEHICLE_MUZZLES; i++)
 		{
-			if (p_veh->m_pVehicleInfo->weapMuzzle[i] != vehWeaponIndex)
+			if (p_veh->m_pVehicleInfo->weapMuzzle[i] != veh_weapon_index)
 			{
 				//this muzzle doesn't match the weapon we're trying to use
 				continue;
 			}
 			if (p_veh->m_iMuzzleTag[i] != -1 && p_veh->m_Muzzles[i].m_iMuzzleWait < level.time)
 			{
-				numMuzzlesReady++;
+				num_muzzles_ready++;
 			}
-			if (p_veh->m_pVehicleInfo->weapMuzzle[p_veh->weaponStatus[weaponNum].nextMuzzle] != vehWeaponIndex)
+			if (p_veh->m_pVehicleInfo->weapMuzzle[p_veh->weaponStatus[weapon_num].nextMuzzle] != veh_weapon_index)
 			{
 				//Our designated next muzzle for this weapon isn't valid for this weapon (happens when ships fire for the first time)
 				//set the next to this one
-				p_veh->weaponStatus[weaponNum].nextMuzzle = i;
+				p_veh->weaponStatus[weapon_num].nextMuzzle = i;
 			}
-			if (linkedFiring)
+			if (linked_firing)
 			{
 				cumulativeAmmo += veh_weapon->iAmmoPerShot;
-				if (p_veh->m_pVehicleInfo->weapon[weaponNum].linkable != 2)
+				if (p_veh->m_pVehicleInfo->weapon[weapon_num].linkable != 2)
 				{
 					//always linked weapons don't accumulate delay, just use specified delay
 					cumulativeDelay += delay;
 				}
 			}
-			numMuzzles++;
+			num_muzzles++;
 		}
 
-		if (linkedFiring)
+		if (linked_firing)
 		{
 			//firing all muzzles at once
-			if (numMuzzlesReady != numMuzzles)
+			if (num_muzzles_ready != num_muzzles)
 			{
 				//can't fire all linked muzzles yet
 				return;
 			}
 			//can fire all linked muzzles, check ammo
-			if (p_veh->weaponStatus[weaponNum].ammo < cumulativeAmmo)
+			if (p_veh->weaponStatus[weapon_num].ammo < cumulativeAmmo)
 			{
 				//can't fire, not enough ammo
 				if (p_veh->m_pPilot && p_veh->m_pPilot->s.number < MAX_CLIENTS)
 				{
 					// let the client know he's out of ammo
-					G_AddEvent(p_veh->m_pPilot, EV_NOAMMO, weaponNum);
+					G_AddEvent(p_veh->m_pPilot, EV_NOAMMO, weapon_num);
 				}
 				return;
 			}
@@ -1214,13 +1214,13 @@ void FireVehicleWeapon(gentity_t* ent, const qboolean alt_fire)
 
 		for (i = 0; i < MAX_VEHICLE_MUZZLES; i++)
 		{
-			if (p_veh->m_pVehicleInfo->weapMuzzle[i] != vehWeaponIndex)
+			if (p_veh->m_pVehicleInfo->weapMuzzle[i] != veh_weapon_index)
 			{
 				//this muzzle doesn't match the weapon we're trying to use
 				continue;
 			}
-			if (!linkedFiring
-				&& i != p_veh->weaponStatus[weaponNum].nextMuzzle)
+			if (!linked_firing
+				&& i != p_veh->weaponStatus[weapon_num].nextMuzzle)
 			{
 				//we're only firing one muzzle and this isn't it
 				continue;
@@ -1229,16 +1229,16 @@ void FireVehicleWeapon(gentity_t* ent, const qboolean alt_fire)
 			// Fire this muzzle.
 			if (p_veh->m_iMuzzleTag[i] != -1 && p_veh->m_Muzzles[i].m_iMuzzleWait < level.time)
 			{
-				if (p_veh->weaponStatus[weaponNum].ammo < veh_weapon->iAmmoPerShot)
+				if (p_veh->weaponStatus[weapon_num].ammo < veh_weapon->iAmmoPerShot)
 				{
 					//out of ammo!
-					if (!sentAmmoWarning)
+					if (!sent_ammo_warning)
 					{
-						sentAmmoWarning = qtrue;
+						sent_ammo_warning = qtrue;
 						if (p_veh->m_pPilot && p_veh->m_pPilot->s.number < MAX_CLIENTS)
 						{
 							// let the client know he's out of ammo
-							G_AddEvent(p_veh->m_pPilot, EV_NOAMMO, weaponNum);
+							G_AddEvent(p_veh->m_pPilot, EV_NOAMMO, weapon_num);
 						}
 					}
 				}
@@ -1255,7 +1255,7 @@ void FireVehicleWeapon(gentity_t* ent, const qboolean alt_fire)
 					{
 						//auto-aim at whatever crosshair would be over from camera's point of view (if closer)
 					}
-					else if (aimCorrect)
+					else if (aim_correct)
 					{
 						//auto-aim the missile at the crosshair if there's anything there
 						trace_t trace;
@@ -1278,9 +1278,9 @@ void FireVehicleWeapon(gentity_t* ent, const qboolean alt_fire)
 						         static_cast<EG2_Collision>(0), 0);
 						if (trace.fraction < 1.0f && !trace.allsolid && !trace.startsolid)
 						{
-							vec3_t newEnd;
-							VectorCopy(trace.endpos, newEnd);
-							WP_VehLeadCrosshairVeh(&g_entities[trace.entity_num], newEnd, fixedDir, start, dir);
+							vec3_t new_end;
+							VectorCopy(trace.endpos, new_end);
+							WP_VehLeadCrosshairVeh(&g_entities[trace.entity_num], new_end, fixedDir, start, dir);
 						}
 					}
 
@@ -1293,45 +1293,45 @@ void FireVehicleWeapon(gentity_t* ent, const qboolean alt_fire)
 					WP_FireVehicleWeapon(ent, start, dir, veh_weapon);
 				}
 
-				if (linkedFiring)
+				if (linked_firing)
 				{
 					//we're linking the weapon, so continue on and fire all appropriate muzzles
 					continue;
 				}
 				//else just firing one
 				//take the ammo, set the next muzzle and set the delay on it
-				if (numMuzzles > 1)
+				if (num_muzzles > 1)
 				{
 					//more than one, look for it
-					int nextMuzzle = p_veh->weaponStatus[weaponNum].nextMuzzle;
+					int next_muzzle = p_veh->weaponStatus[weapon_num].nextMuzzle;
 					while (true)
 					{
-						nextMuzzle++;
-						if (nextMuzzle >= MAX_VEHICLE_MUZZLES)
+						next_muzzle++;
+						if (next_muzzle >= MAX_VEHICLE_MUZZLES)
 						{
-							nextMuzzle = 0;
+							next_muzzle = 0;
 						}
-						if (nextMuzzle == p_veh->weaponStatus[weaponNum].nextMuzzle)
+						if (next_muzzle == p_veh->weaponStatus[weapon_num].nextMuzzle)
 						{
 							//WTF?  Wrapped without finding another valid one!
 							break;
 						}
-						if (p_veh->m_pVehicleInfo->weapMuzzle[nextMuzzle] == vehWeaponIndex)
+						if (p_veh->m_pVehicleInfo->weapMuzzle[next_muzzle] == veh_weapon_index)
 						{
 							//this is the next muzzle for this weapon
-							p_veh->weaponStatus[weaponNum].nextMuzzle = nextMuzzle;
+							p_veh->weaponStatus[weapon_num].nextMuzzle = next_muzzle;
 							break;
 						}
 					}
 				} //else, just stay on the one we just fired
 				//set the delay on the next muzzle
-				p_veh->m_Muzzles[p_veh->weaponStatus[weaponNum].nextMuzzle].m_iMuzzleWait = level.time + delay;
+				p_veh->m_Muzzles[p_veh->weaponStatus[weapon_num].nextMuzzle].m_iMuzzleWait = level.time + delay;
 				//take away the ammo
-				p_veh->weaponStatus[weaponNum].ammo -= veh_weapon->iAmmoPerShot;
+				p_veh->weaponStatus[weapon_num].ammo -= veh_weapon->iAmmoPerShot;
 				//NOTE: in order to send the vehicle's ammo info to the client, we copy the ammo into the first 2 ammo slots on the vehicle NPC's client->ps.ammo array
 				if (p_veh->m_pParentEntity && p_veh->m_pParentEntity->client)
 				{
-					p_veh->m_pParentEntity->client->ps.ammo[weaponNum] = p_veh->weaponStatus[weaponNum].ammo;
+					p_veh->m_pParentEntity->client->ps.ammo[weapon_num] = p_veh->weaponStatus[weapon_num].ammo;
 				}
 				//done!
 				//we'll get in here again next frame and try the next muzzle...
@@ -1344,11 +1344,11 @@ void FireVehicleWeapon(gentity_t* ent, const qboolean alt_fire)
 		{
 			//taking ammo one shot at a time
 			//take the ammo
-			p_veh->weaponStatus[weaponNum].ammo -= cumulativeAmmo;
+			p_veh->weaponStatus[weapon_num].ammo -= cumulativeAmmo;
 			//NOTE: in order to send the vehicle's ammo info to the client, we copy the ammo into the first 2 ammo slots on the vehicle NPC's client->ps.ammo array
 			if (p_veh->m_pParentEntity && p_veh->m_pParentEntity->client)
 			{
-				p_veh->m_pParentEntity->client->ps.ammo[weaponNum] = p_veh->weaponStatus[weaponNum].ammo;
+				p_veh->m_pParentEntity->client->ps.ammo[weapon_num] = p_veh->weaponStatus[weapon_num].ammo;
 			}
 		}
 		if (cumulativeDelay)
@@ -1356,7 +1356,7 @@ void FireVehicleWeapon(gentity_t* ent, const qboolean alt_fire)
 			//we linked muzzles so we need to apply the cumulative delay now, to each of the linked muzzles
 			for (i = 0; i < MAX_VEHICLE_MUZZLES; i++)
 			{
-				if (p_veh->m_pVehicleInfo->weapMuzzle[i] != vehWeaponIndex)
+				if (p_veh->m_pVehicleInfo->weapMuzzle[i] != veh_weapon_index)
 				{
 					//this muzzle doesn't match the weapon we're trying to use
 					continue;
@@ -1368,7 +1368,7 @@ void FireVehicleWeapon(gentity_t* ent, const qboolean alt_fire)
 	}
 }
 
-void WP_FireScepter(gentity_t* ent, qboolean alt_fire)
+void WP_FireScepter(gentity_t* ent)
 {
 	//just a straight beam
 	vec3_t start, end;
@@ -1412,19 +1412,6 @@ void WP_FireScepter(gentity_t* ent, qboolean alt_fire)
 			G_PlayEffect(G_EffectIndex("disruptor/wall_impact"), tr.endpos, tr.plane.normal);
 		}
 	}
-
-	/*
-	shotDist = shotRange * tr.fraction;
-
-	for ( dist = 0; dist < shotDist; dist += 64 )
-	{
-		//FIXME: on a really long shot, this could make a LOT of alerts in one frame...
-		VectorMA( start, dist, forwardVec, spot );
-		AddSightEvent( ent, spot, 256, AEL_DISCOVERED, 50 );
-	}
-	VectorMA( start, shotDist-4, forwardVec, spot );
-	AddSightEvent( ent, spot, 256, AEL_DISCOVERED, 50 );
-	*/
 }
 
 extern qboolean WalkCheck(const gentity_t* self);
@@ -1579,12 +1566,12 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 				}
 			}
 
-			vec3_t yawOnlyAngles = {0, ent->currentAngles[YAW], 0};
+			vec3_t yaw_only_angles = {0, ent->currentAngles[YAW], 0};
 			if (ent->currentAngles[YAW] != ent->client->ps.legsYaw)
 			{
-				yawOnlyAngles[YAW] = ent->client->ps.legsYaw;
+				yaw_only_angles[YAW] = ent->client->ps.legsYaw;
 			}
-			gi.G2API_GetBoltMatrix(ent->ghoul2, ent->playerModel, bolt, &bolt_matrix, yawOnlyAngles, ent->currentOrigin,
+			gi.G2API_GetBoltMatrix(ent->ghoul2, ent->playerModel, bolt, &bolt_matrix, yaw_only_angles, ent->currentOrigin,
 			                       cg.time ? cg.time : level.time, nullptr, ent->s.modelScale);
 
 			// work the matrix axis stuff into the original axis and origins used.
@@ -1601,7 +1588,7 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 		}
 		else
 		{
-			vec3_t angleToEnemy1;
+			vec3_t angle_to_enemy1;
 			vec3_t enemy_org1;
 			vec3_t delta1;
 			//NPC, auto-aim at enemy
@@ -1609,22 +1596,22 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 
 			VectorSubtract(enemy_org1, muzzle1, delta1);
 
-			vectoangles(delta1, angleToEnemy1);
-			AngleVectors(angleToEnemy1, forwardVec, vrightVec, up);
+			vectoangles(delta1, angle_to_enemy1);
+			AngleVectors(angle_to_enemy1, forwardVec, vrightVec, up);
 		}
 	}
 	else if (ent->s.weapon == WP_BOT_LASER && ent->enemy)
 	{
 		vec3_t delta1, enemy_org1, muzzle1;
-		vec3_t angleToEnemy1;
+		vec3_t angle_to_enemy1;
 
 		CalcEntitySpot(ent->enemy, SPOT_HEAD, enemy_org1);
 		CalcEntitySpot(ent, SPOT_WEAPON, muzzle1);
 
 		VectorSubtract(enemy_org1, muzzle1, delta1);
 
-		vectoangles(delta1, angleToEnemy1);
-		AngleVectors(angleToEnemy1, forwardVec, vrightVec, up);
+		vectoangles(delta1, angle_to_enemy1);
+		AngleVectors(angle_to_enemy1, forwardVec, vrightVec, up);
 	}
 	else
 	{
@@ -1633,54 +1620,54 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 			//use our muzzleDir, can't use viewangles or vehicle m_vOrientation because we may be animated to shoot left or right...
 			if (ent->s.eFlags & EF_NODRAW) //we're inside it
 			{
-				vec3_t aimAngles;
+				vec3_t aim_angles;
 				VectorCopy(ent->client->renderInfo.muzzleDir, forwardVec);
-				vectoangles(forwardVec, aimAngles);
+				vectoangles(forwardVec, aim_angles);
 				//we're only keeping the yaw
-				aimAngles[PITCH] = ent->client->ps.viewangles[PITCH];
-				aimAngles[ROLL] = 0;
-				AngleVectors(aimAngles, forwardVec, vrightVec, up);
+				aim_angles[PITCH] = ent->client->ps.viewangles[PITCH];
+				aim_angles[ROLL] = 0;
+				AngleVectors(aim_angles, forwardVec, vrightVec, up);
 			}
 			else
 			{
-				vec3_t actorRight;
-				vec3_t actorFwd;
+				vec3_t actor_right;
+				vec3_t actor_fwd;
 
 				VectorCopy(ent->client->renderInfo.muzzlePoint, muzzle);
-				AngleVectors(ent->currentAngles, actorFwd, actorRight, nullptr);
+				AngleVectors(ent->currentAngles, actor_fwd, actor_right, nullptr);
 
 				// Aiming Left
 				//-------------
 				if (ent->client->ps.torsoAnim == BOTH_VT_ATL_G || ent->client->ps.torsoAnim == BOTH_VS_ATL_G)
 				{
-					VectorScale(actorRight, -1.0f, forwardVec);
+					VectorScale(actor_right, -1.0f, forwardVec);
 				}
 
 				// Aiming Right
 				//--------------
 				else if (ent->client->ps.torsoAnim == BOTH_VT_ATR_G || ent->client->ps.torsoAnim == BOTH_VS_ATR_G)
 				{
-					VectorCopy(actorRight, forwardVec);
+					VectorCopy(actor_right, forwardVec);
 				}
 
 				// Aiming Forward
 				//----------------
 				else
 				{
-					VectorCopy(actorFwd, forwardVec);
+					VectorCopy(actor_fwd, forwardVec);
 				}
 
 				// If We Have An Enemy, Fudge The Aim To Hit The Enemy
 				if (ent->enemy)
 				{
-					vec3_t toEnemy;
-					VectorSubtract(ent->enemy->currentOrigin, ent->currentOrigin, toEnemy);
-					VectorNormalize(toEnemy);
-					if (DotProduct(toEnemy, forwardVec) > 0.75f &&
+					vec3_t to_enemy;
+					VectorSubtract(ent->enemy->currentOrigin, ent->currentOrigin, to_enemy);
+					VectorNormalize(to_enemy);
+					if (DotProduct(to_enemy, forwardVec) > 0.75f &&
 						(ent->s.number == 0 && !Q_irand(0, 2) || // the player has a 1 in 3 chance
 							ent->s.number != 0 && !Q_irand(0, 5))) // other guys have a 1 in 6 chance
 					{
-						VectorCopy(toEnemy, forwardVec);
+						VectorCopy(to_enemy, forwardVec);
 					}
 					else
 					{
@@ -1901,7 +1888,7 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 		break;
 
 	case WP_SCEPTER:
-		WP_FireScepter(ent, alt_fire);
+		WP_FireScepter(ent);
 		break;
 
 	case WP_NOGHRI_STICK:
@@ -2221,6 +2208,19 @@ void Weapon_GrapplingHook_Fire(gentity_t* ent)
 	AngleVectors(ent->client->ps.viewangles, forward, right, vup);
 	CalcMuzzlePoint(ent, forward, muzzle, 0);
 	if (!ent->client->fireHeld && !ent->client->hook)
+	{
+		fire_grapple(ent, muzzle, forward);
+	}
+	ent->client->fireHeld = qtrue;
+}
+
+void Weapon_MandolingHook_Fire(gentity_t* ent)
+{
+	vec3_t forward, right, vup;
+
+	AngleVectors(ent->client->ps.viewangles, forward, right, vup);
+	CalcMuzzlePoint(ent, forward, muzzle, 0);
+	if (!ent->client->hook)
 	{
 		fire_grapple(ent, muzzle, forward);
 	}

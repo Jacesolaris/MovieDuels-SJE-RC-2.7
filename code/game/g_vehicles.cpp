@@ -69,7 +69,7 @@ extern qboolean G_ClearLineOfSight(const vec3_t point1, const vec3_t point2, int
 extern qboolean g_set_g2_player_model_info(gentity_t* p_ent, const char* model_name,
                                            const char* surf_off, const char* surf_on);
 extern void G_RemovePlayerModel(gentity_t* p_ent);
-extern void G_ChangePlayerModel(gentity_t* p_ent, const char* newModel);
+extern void G_ChangePlayerModel(gentity_t* p_ent, const char* new_model);
 extern void G_RemoveWeaponModels(gentity_t* p_ent);
 extern void CG_ChangeWeapon(int num);
 extern float DotToSpot(vec3_t spot, vec3_t from, vec3_t fromAngles);

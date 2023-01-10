@@ -9166,7 +9166,7 @@ Jedi_Attack
 
 static void jedi_attack()
 {
-	int curmove = NPC->client->ps.saberMove;
+	const int curmove = NPC->client->ps.saberMove;
 
 	//Don't do anything if we're in a pain anim
 	if (NPC->painDebounceTime > level.time)

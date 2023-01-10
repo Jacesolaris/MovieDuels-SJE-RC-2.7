@@ -483,7 +483,7 @@ void G_RadiusDamage(const vec3_t origin, gentity_t* attacker, float damage, floa
                     int mod);
 gentity_t* TossClientItems(gentity_t* self);
 void ExplodeDeath_Wait(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int meansOfDeath,
-                       int dFlags, int hit_loc);
+                       int d_flags, int hit_loc);
 void ExplodeDeath(gentity_t* self);
 void GoExplodeDeath(gentity_t* self, gentity_t* other, gentity_t* activator);
 void G_ApplyKnockback(gentity_t* targ, vec3_t new_dir, float knockback);
@@ -551,7 +551,7 @@ void R_LoadWeatherParms(void);
 // g_client.c
 //
 void SetClientViewAngle(gentity_t* ent, vec3_t angle);
-gentity_t* SelectSpawnPoint(vec3_t avoidPoint, team_t team, vec3_t origin, vec3_t angles);
+gentity_t* SelectSpawnPoint(vec3_t avoid_point, vec3_t origin, vec3_t angles);
 void respawn(gentity_t* ent);
 
 qboolean ClientSpawn(gentity_t* ent, SavedGameJustLoaded_e e_saved_game_just_loaded);

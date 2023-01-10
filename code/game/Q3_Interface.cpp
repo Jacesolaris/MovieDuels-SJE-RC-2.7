@@ -67,8 +67,8 @@ extern void WP_SaberSetColor(const gentity_t* ent, int saber_num, int blade_num,
 extern void WP_SetSaber(gentity_t* ent, int saber_num, const char* saber_name);
 extern void WP_SetNPCSaber(gentity_t* ent, int saber_num, const char* saberName);
 extern qboolean PM_HasAnimation(const gentity_t* ent, int animation);
-extern void G_ChangePlayerModel(gentity_t* ent, const char* newModel);
-extern void G_ChangeModel(gentity_t* ent, const char* newModel);
+extern void G_ChangePlayerModel(gentity_t* ent, const char* new_model);
+extern void G_ChangeModel(const char* new_model);
 extern void WP_SetSaberOrigin(gentity_t* self, vec3_t new_org);
 extern void Rail_LockCenterOfTrack(const char* trackName);
 extern void Rail_UnLockCenterOfTrack(const char* trackName);
@@ -10022,7 +10022,7 @@ void CQuake3GameInterface::Set(int taskID, int entID, const char* type_name, con
 		break;
 
 	case SET_MODEL:
-		G_ChangeModel(&g_entities[entID], data);
+		G_ChangeModel(data);
 		break;
 
 	case SET_PLAYERSKIN:

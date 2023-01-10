@@ -185,7 +185,7 @@ void funcBBrushDieGo(gentity_t* self)
 	//G_FreeEntity( self );
 }
 
-void funcBBrushDie(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod, int dFlags,
+void funcBBrushDie(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod, int d_flags,
                    int hit_loc)
 {
 	self->takedamage = qfalse; //stop chain reaction runaway loops
@@ -492,8 +492,8 @@ void misc_model_breakable_pain(gentity_t* self, gentity_t* inflictor, gentity_t*
 }
 
 void misc_model_breakable_die(gentity_t* self, const gentity_t* inflictor, gentity_t* attacker, int damage,
-                              int meansOfDeath,
-                              int dFlags, int hit_loc)
+                              int means_of_death,
+                              int d_flags, int hit_loc)
 {
 	float size = 0;
 	vec3_t dir, up, dis;
@@ -1263,9 +1263,9 @@ void SP_misc_model_breakable(gentity_t* ent)
 
 		//scale the z axis of the bbox up and adjust origin accordingly
 		ent->maxs[2] *= ent->s.modelScale[2];
-		const float oldMins2 = ent->mins[2];
+		const float old_mins2 = ent->mins[2];
 		ent->mins[2] *= ent->s.modelScale[2];
-		ent->s.origin[2] += oldMins2 - ent->mins[2];
+		ent->s.origin[2] += old_mins2 - ent->mins[2];
 	}
 
 	if (ent->spawnflags & 2)
@@ -1431,7 +1431,7 @@ extern void CG_DoGlass(vec3_t verts[], vec3_t dmg_pt, vec3_t dmg_dir, float dmg_
 extern cgs_t cgs;
 
 //-----------------------------------------------------
-void funcGlassDie(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod, int dFlags,
+void funcGlassDie(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod, int d_flags,
                   int hit_loc)
 {
 	vec3_t verts[4], normal;

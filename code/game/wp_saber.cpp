@@ -2701,7 +2701,7 @@ qboolean WP_SaberApplyDamageJKA(gentity_t* ent, const float base_damage, const i
 							{
 								totalDmg[i] = max_dmg;
 							}
-							//dFlags |= DAMAGE_NO_HIT_LOC;
+							//d_flags |= DAMAGE_NO_HIT_LOC;
 						}
 						//clamp the dmg
 						if (victim->s.weapon != WP_SABER)
@@ -2991,7 +2991,7 @@ qboolean WP_SaberApplyDamageJKA(gentity_t* ent, const float base_damage, const i
 #ifndef FINAL_BUILD
 						if (d_saberCombat->integer)
 						{
-							if ((dFlags & DAMAGE_NO_DAMAGE))
+							if ((d_flags & DAMAGE_NO_DAMAGE))
 							{
 								gi.Printf(S_COLOR_RED"damage: fake, hit_loc %d\n", hit_loc[i]);
 							}
@@ -3732,7 +3732,7 @@ qboolean WP_SaberApplyDamageMD(gentity_t* ent, const float base_damage, const in
 #ifndef FINAL_BUILD
 						if (d_saberCombat->integer)
 						{
-							if ((dFlags & DAMAGE_NO_DAMAGE))
+							if ((d_flags & DAMAGE_NO_DAMAGE))
 							{
 								gi.Printf(S_COLOR_RED"damage: fake, hit_loc %d\n", hit_loc[i]);
 							}

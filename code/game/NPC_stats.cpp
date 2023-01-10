@@ -45,7 +45,7 @@ extern cvar_t* g_playerArmourSync;
 
 extern cvar_t* g_allowAlignmentChange;
 
-extern qboolean G_StandardHumanoid(const char* GLAName);
+extern qboolean G_StandardHumanoid(const char* gla_name);
 
 constexpr auto MAX_MODELS_PER_LEVEL = 120;
 

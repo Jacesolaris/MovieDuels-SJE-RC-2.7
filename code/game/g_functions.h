@@ -232,7 +232,7 @@ extern void TieFighterThink(gentity_t* self);
 extern void TieBomberThink(gentity_t* self);
 extern void rocketThink(gentity_t* ent);
 extern void prox_mine_think(gentity_t* ent);
-extern void emplaced_blow(gentity_t* self);
+extern void emplaced_blow(gentity_t* ent);
 extern void WP_Explode(gentity_t* self);
 extern void pas_think(gentity_t* self);
 extern void ion_cannon_think(gentity_t* self);
@@ -265,11 +265,11 @@ extern void beacon_think(gentity_t* self);
 extern void shipboundary_think(gentity_t* ent);
 extern void asteroid_field_think(gentity_t* self);
 
-extern void Weapon_StunFree(gentity_t* self);
-extern void Weapon_StunThink(gentity_t* self);
+extern void Weapon_StunFree(gentity_t* ent);
+extern void Weapon_StunThink(gentity_t* ent);
 
-extern void Weapon_HookThink(gentity_t* self);
-extern void Weapon_HookFree(gentity_t* self);
+extern void Weapon_HookThink(gentity_t* ent);
+extern void Weapon_HookFree(gentity_t* ent);
 
 extern void asteroid_move_to_start(gentity_t* self);
 
@@ -670,50 +670,50 @@ using dieFunc_t = enum
 // DIE functions...
 //
 extern void funcBBrushDie(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod,
-                          int dFlags = 0, int hit_loc = HL_NONE);
+                          int d_flags = 0, int hit_loc = HL_NONE);
 extern void misc_model_breakable_die(gentity_t* self, const gentity_t* inflictor, gentity_t* attacker, int damage,
-                                     int mod,
-                                     int dFlags = 0, int hit_loc = HL_NONE);
+                                     int means_of_death,
+                                     int d_flags = 0, int hit_loc = HL_NONE);
 extern void misc_model_cargo_die(gentity_t* self, const gentity_t* inflictor, gentity_t* attacker, int damage, int mod,
-                                 int dFlags = 0, int hit_loc = HL_NONE);
+                                 int d_flags = 0, int hit_loc = HL_NONE);
 extern void func_train_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod,
-                           int dFlags = 0, int hit_loc = HL_NONE);
+                           int d_flags = 0, int hit_loc = HL_NONE);
 extern void player_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int means_of_death,
                        int d_flags = 0,
                        int hit_loc = HL_NONE);
 extern void ExplodeDeath_Wait(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod,
-                              int dFlags = 0, int hit_loc = HL_NONE);
+                              int d_flags = 0, int hit_loc = HL_NONE);
 extern void ExplodeDeath(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod,
-                         int dFlags = 0, int hit_loc = HL_NONE);
+                         int d_flags = 0, int hit_loc = HL_NONE);
 extern void func_usable_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod,
-                            int dFlags = 0, int hit_loc = HL_NONE);
-extern void turret_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod, int dFlags = 0,
+                            int d_flags = 0, int hit_loc = HL_NONE);
+extern void turret_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod, int d_flags = 0,
                        int hit_loc = HL_NONE);
 extern void funcGlassDie(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod,
-                         int dFlags = 0, int hit_loc = HL_NONE);
+                         int d_flags = 0, int hit_loc = HL_NONE);
 extern void laserTrapDelayedExplode(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod,
-                                    int dFlags = 0, int hit_loc = HL_NONE);
+                                    int d_flags = 0, int hit_loc = HL_NONE);
 extern void emplaced_gun_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod,
-                             int dFlags = 0, int hit_loc = HL_NONE);
+                             int d_flags = 0, int hit_loc = HL_NONE);
 extern void WP_ExplosiveDie(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod,
-                            int dFlags = 0, int hit_loc = HL_NONE);
+                            int d_flags = 0, int hit_loc = HL_NONE);
 extern void ion_cannon_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod,
-                           int dFlags = 0, int hit_loc = HL_NONE);
-extern void maglock_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod, int dFlags = 0,
+                           int d_flags = 0, int hit_loc = HL_NONE);
+extern void maglock_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod, int d_flags = 0,
                         int hit_loc = HL_NONE);
-extern void camera_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod, int dFlags = 0,
+extern void camera_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod, int d_flags = 0,
                        int hit_loc = HL_NONE);
-extern void Mark1_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod, int dFlags = 0,
+extern void Mark1_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod, int d_flags = 0,
                       int hit_loc = HL_NONE);
 extern void Interrogator_die(const gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod,
-                             int dFlags = 0, int hit_loc = HL_NONE);
+                             int d_flags = 0, int hit_loc = HL_NONE);
 extern void misc_atst_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod,
-                          int dFlags = 0, int hit_loc = HL_NONE);
+                          int d_flags = 0, int hit_loc = HL_NONE);
 extern void misc_panel_turret_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod,
-                                  int dFlags = 0, int hit_loc = HL_NONE);
-extern void thermal_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod, int dFlags = 0,
+                                  int d_flags = 0, int hit_loc = HL_NONE);
+extern void thermal_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod, int d_flags = 0,
                         int hit_loc = HL_NONE);
-extern void eweb_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod, int dFlags = 0,
+extern void eweb_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod, int d_flags = 0,
                      int hit_loc = HL_NONE);
 
 void GEntity_ThinkFunc(gentity_t* self);
@@ -724,7 +724,7 @@ void GEntity_TouchFunc(gentity_t* self, gentity_t* other, trace_t* trace);
 void GEntity_UseFunc(gentity_t* self, gentity_t* other, gentity_t* activator);
 void GEntity_PainFunc(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, const vec3_t point, int damage,
                       int mod, int hit_loc = HL_NONE);
-void GEntity_DieFunc(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod, int dFlags = 0,
+void GEntity_DieFunc(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod, int d_flags = 0,
                      int hit_loc = HL_NONE);
 
 // external functions that I now refer to...

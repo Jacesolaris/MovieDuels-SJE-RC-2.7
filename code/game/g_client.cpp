@@ -54,7 +54,7 @@ extern cvar_t* g_saber_color;
 extern cvar_t* g_saber2_color;
 extern cvar_t* g_saberDarkSideSaberColor;
 extern cvar_t* g_SerenityJediEngineMode;
-void G_ChangePlayerModel(gentity_t* ent, const char* newModel);
+void G_ChangePlayerModel(gentity_t* ent, const char* new_model);
 extern cvar_t* com_outcast;
 extern cvar_t* com_freeMelee;
 
@@ -325,35 +325,28 @@ Find the spot that we DON'T want to use
 */
 constexpr auto MAX_SPAWN_POINTS = 128;
 
-gentity_t* SelectNearestDeathmatchSpawnPoint(vec3_t from, team_t team)
+gentity_t* SelectNearestDeathmatchSpawnPoint(vec3_t from)
 {
-	float nearestDist = static_cast<float>(WORLD_SIZE) * static_cast<float>(WORLD_SIZE);
-	gentity_t* nearestSpot = nullptr;
+	float nearest_dist = static_cast<float>(WORLD_SIZE) * static_cast<float>(WORLD_SIZE);
+	gentity_t* nearest_spot = nullptr;
 	gentity_t* spot = nullptr;
 
 	while ((spot = G_Find(spot, FOFS(classname), "info_player_deathmatch")) != nullptr)
 	{
-		/*if ( team == TEAM_RED && ( spot->spawnflags & 2 ) ) {
-			continue;
-		}
-		if ( team == TEAM_BLUE && ( spot->spawnflags & 1 ) ) {
-			continue;
-		}*/
-
 		if (spot->targetname != nullptr)
 		{
 			//this search routine should never find a spot that is targetted
 			continue;
 		}
 		const float dist = DistanceSquared(spot->s.origin, from);
-		if (dist < nearestDist)
+		if (dist < nearest_dist)
 		{
-			nearestDist = dist;
-			nearestSpot = spot;
+			nearest_dist = dist;
+			nearest_spot = spot;
 		}
 	}
 
-	return nearestSpot;
+	return nearest_spot;
 }
 
 /*
@@ -363,7 +356,7 @@ SelectRandomDeathmatchSpawnPoint
 go to a random point that doesn't telefrag
 ================
 */
-gentity_t* SelectRandomDeathmatchSpawnPoint(team_t team)
+gentity_t* SelectRandomDeathmatchSpawnPoint()
 {
 	gentity_t* spots[MAX_SPAWN_POINTS];
 
@@ -372,13 +365,6 @@ gentity_t* SelectRandomDeathmatchSpawnPoint(team_t team)
 
 	while ((spot = G_Find(spot, FOFS(classname), "info_player_deathmatch")) != nullptr)
 	{
-		/*if ( team == TEAM_RED && ( spot->spawnflags & 2 ) ) {
-			continue;
-		}
-		if ( team == TEAM_BLUE && ( spot->spawnflags & 1 ) ) {
-			continue;
-		}*/
-
 		if (spot->targetname != nullptr)
 		{
 			//this search routine should never find a spot that is targetted
@@ -419,15 +405,15 @@ SelectSpawnPoint
 Chooses a player start, deathmatch start, etc
 ============
 */
-gentity_t* SelectSpawnPoint(vec3_t avoidPoint, const team_t team, vec3_t origin, vec3_t angles)
+gentity_t* SelectSpawnPoint(vec3_t avoid_point, vec3_t origin, vec3_t angles)
 {
 	gentity_t* spot;
-	gentity_t* nearestSpot;
+	gentity_t* nearest_spot;
 
 	if (level.spawntarget[0])
 	{
 		//we have a spawnpoint specified, try to find it
-		if ((nearestSpot = spot = G_Find(nullptr, FOFS(targetname), level.spawntarget)) == nullptr)
+		if ((nearest_spot = spot = G_Find(nullptr, FOFS(targetname), level.spawntarget)) == nullptr)
 		{
 			//you HAVE to be able to find the desired spot
 			G_Error("Couldn't find spawntarget %s\n", level.spawntarget);
@@ -436,13 +422,13 @@ gentity_t* SelectSpawnPoint(vec3_t avoidPoint, const team_t team, vec3_t origin,
 	else
 	{
 		//not looking for a special startspot
-		nearestSpot = SelectNearestDeathmatchSpawnPoint(avoidPoint, team);
+		nearest_spot = SelectNearestDeathmatchSpawnPoint(avoid_point);
 
-		spot = SelectRandomDeathmatchSpawnPoint(team);
-		if (spot == nearestSpot)
+		spot = SelectRandomDeathmatchSpawnPoint();
+		if (spot == nearest_spot)
 		{
 			// roll again if it would be real close to point of death
-			spot = SelectRandomDeathmatchSpawnPoint(team);
+			spot = SelectRandomDeathmatchSpawnPoint();
 		}
 	}
 
@@ -512,9 +498,9 @@ void respawn(gentity_t* ent)
 ClientCheckName
 ============
 */
-static void ClientCleanName(const char* in, char* out, const int outSize)
+static void ClientCleanName(const char* in, char* out, const int out_size)
 {
-	int outpos = 0, colorlessLen = 0, spaces = 0, ats = 0;
+	int outpos = 0, colorless_len = 0, spaces = 0, ats = 0;
 
 	// discard leading spaces
 	// ReSharper disable once CppPossiblyErroneousEmptyStatements
@@ -524,7 +510,7 @@ static void ClientCleanName(const char* in, char* out, const int outSize)
 	// apparently .* causes the issue too so... derp
 	//for(; *in == '*'; in++);
 
-	for (; *in && outpos < outSize - 1; in++)
+	for (; *in && outpos < out_size - 1; in++)
 	{
 		out[outpos] = *in;
 
@@ -548,7 +534,7 @@ static void ClientCleanName(const char* in, char* out, const int outSize)
 		{
 			if (Q_IsColorStringExt(&out[outpos - 1]))
 			{
-				colorlessLen--;
+				colorless_len--;
 
 #if 0
 				if (ColorIndex(*in) == 0)
@@ -561,13 +547,13 @@ static void ClientCleanName(const char* in, char* out, const int outSize)
 			else
 			{
 				spaces = ats = 0;
-				colorlessLen++;
+				colorless_len++;
 			}
 		}
 		else
 		{
 			spaces = ats = 0;
-			colorlessLen++;
+			colorless_len++;
 		}
 
 		outpos++;
@@ -576,8 +562,8 @@ static void ClientCleanName(const char* in, char* out, const int outSize)
 	out[outpos] = '\0';
 
 	// don't allow empty names
-	if (*out == '\0' || colorlessLen == 0)
-		Q_strncpyz(out, "Padawan", outSize);
+	if (*out == '\0' || colorless_len == 0)
+		Q_strncpyz(out, "Padawan", out_size);
 }
 
 /*
@@ -834,7 +820,7 @@ Player_RestoreFromPrevLevel
   Argument		: gentity_t *ent
 ============
 */
-static void Player_RestoreFromPrevLevel(gentity_t* ent, SavedGameJustLoaded_e e_saved_game_just_loaded)
+static void Player_RestoreFromPrevLevel(gentity_t* ent)
 {
 	gclient_t* client = ent->client;
 
@@ -847,13 +833,13 @@ static void Player_RestoreFromPrevLevel(gentity_t* ent, SavedGameJustLoaded_e e_
 
 		if (strlen(s)) // actually this would be safe anyway because of the way sscanf() works, but this is clearer
 		{
-			char saber1Name[MAX_QPATH];
-			char saber0Name[MAX_QPATH];
+			char saber1_name[MAX_QPATH];
+			char saber0_name[MAX_QPATH];
 			//				|general info				  |-force powers |-saber 1										   |-saber 2										  |-general saber
-			int saber1BladeActive[8];
-			int saber2BladeActive[8];
-			unsigned int saber1BladeColor[8];
-			unsigned int saber2BladeColor[8];
+			int saber1_blade_active[8];
+			int saber2_blade_active[8];
+			unsigned int saber1_blade_color[8];
+			unsigned int saber2_blade_color[8];
 
 			sscanf(
 				s,
@@ -874,41 +860,41 @@ static void Player_RestoreFromPrevLevel(gentity_t* ent, SavedGameJustLoaded_e e_
 				&client->ps.forcePowerRegenRate,
 				&client->ps.forcePowerRegenAmount,
 				//saber 1 data
-				saber0Name,
-				&saber1BladeActive[0],
-				&saber1BladeActive[1],
-				&saber1BladeActive[2],
-				&saber1BladeActive[3],
-				&saber1BladeActive[4],
-				&saber1BladeActive[5],
-				&saber1BladeActive[6],
-				&saber1BladeActive[7],
-				&saber1BladeColor[0],
-				&saber1BladeColor[1],
-				&saber1BladeColor[2],
-				&saber1BladeColor[3],
-				&saber1BladeColor[4],
-				&saber1BladeColor[5],
-				&saber1BladeColor[6],
-				&saber1BladeColor[7],
+				saber0_name,
+				&saber1_blade_active[0],
+				&saber1_blade_active[1],
+				&saber1_blade_active[2],
+				&saber1_blade_active[3],
+				&saber1_blade_active[4],
+				&saber1_blade_active[5],
+				&saber1_blade_active[6],
+				&saber1_blade_active[7],
+				&saber1_blade_color[0],
+				&saber1_blade_color[1],
+				&saber1_blade_color[2],
+				&saber1_blade_color[3],
+				&saber1_blade_color[4],
+				&saber1_blade_color[5],
+				&saber1_blade_color[6],
+				&saber1_blade_color[7],
 				//saber 2 data
-				saber1Name,
-				&saber2BladeActive[0],
-				&saber2BladeActive[1],
-				&saber2BladeActive[2],
-				&saber2BladeActive[3],
-				&saber2BladeActive[4],
-				&saber2BladeActive[5],
-				&saber2BladeActive[6],
-				&saber2BladeActive[7],
-				&saber2BladeColor[0],
-				&saber2BladeColor[1],
-				&saber2BladeColor[2],
-				&saber2BladeColor[3],
-				&saber2BladeColor[4],
-				&saber2BladeColor[5],
-				&saber2BladeColor[6],
-				&saber2BladeColor[7],
+				saber1_name,
+				&saber2_blade_active[0],
+				&saber2_blade_active[1],
+				&saber2_blade_active[2],
+				&saber2_blade_active[3],
+				&saber2_blade_active[4],
+				&saber2_blade_active[5],
+				&saber2_blade_active[6],
+				&saber2_blade_active[7],
+				&saber2_blade_color[0],
+				&saber2_blade_color[1],
+				&saber2_blade_color[2],
+				&saber2_blade_color[3],
+				&saber2_blade_color[4],
+				&saber2_blade_color[5],
+				&saber2_blade_color[6],
+				&saber2_blade_color[7],
 				//general saber data
 				&client->ps.saberStylesKnown,
 				&client->ps.saberAnimLevel,
@@ -917,10 +903,10 @@ static void Player_RestoreFromPrevLevel(gentity_t* ent, SavedGameJustLoaded_e e_
 			);
 			for (int j = 0; j < 8; j++)
 			{
-				client->ps.saber[0].blade[j].active = saber1BladeActive[j] ? qtrue : qfalse;
-				client->ps.saber[0].blade[j].color = static_cast<saber_colors_t>(saber1BladeColor[j]);
-				client->ps.saber[1].blade[j].active = saber2BladeActive[j] ? qtrue : qfalse;
-				client->ps.saber[1].blade[j].color = static_cast<saber_colors_t>(saber2BladeColor[j]);
+				client->ps.saber[0].blade[j].active = saber1_blade_active[j] ? qtrue : qfalse;
+				client->ps.saber[0].blade[j].color = static_cast<saber_colors_t>(saber1_blade_color[j]);
+				client->ps.saber[1].blade[j].active = saber2_blade_active[j] ? qtrue : qfalse;
+				client->ps.saber[1].blade[j].color = static_cast<saber_colors_t>(saber2_blade_color[j]);
 			}
 
 			ent->health = client->ps.stats[STAT_HEALTH];
@@ -937,14 +923,14 @@ static void Player_RestoreFromPrevLevel(gentity_t* ent, SavedGameJustLoaded_e e_
 			}
 			ent->client->ps.saber[1].name = nullptr;
 			//NOTE: if sscanf can get a "(null)" out of strings that had NULL string pointers plugged into the original string
-			if (saber0Name[0] && Q_stricmp("(null)", saber0Name) != 0)
+			if (saber0_name[0] && Q_stricmp("(null)", saber0_name) != 0)
 			{
-				ent->client->ps.saber[0].name = G_NewString(saber0Name);
+				ent->client->ps.saber[0].name = G_NewString(saber0_name);
 			}
-			if (saber1Name[0] && Q_stricmp("(null)", saber1Name) != 0)
+			if (saber1_name[0] && Q_stricmp("(null)", saber1_name) != 0)
 			{
 				//have a second saber
-				ent->client->ps.saber[1].name = G_NewString(saber1Name);
+				ent->client->ps.saber[1].name = G_NewString(saber1_name);
 				ent->client->ps.dualSabers = qtrue;
 			}
 			else
@@ -1013,36 +999,36 @@ static void Player_RestoreFromPrevLevel(gentity_t* ent, SavedGameJustLoaded_e e_
 
 static void G_SetSkin(gentity_t* ent)
 {
-	char skinName[MAX_QPATH];
+	char skin_name[MAX_QPATH];
 	//ok, lets register the skin name, and then pass that name to the config strings so the client can get it too.
 	if (Q_stricmp("hoth2", level.mapname) == 0 //hack, is this the only map?
 		||
 		Q_stricmp("hoth3", level.mapname) == 0 // no! ;-)
 	)
 	{
-		Com_sprintf(skinName, sizeof skinName, "models/players/%s/|%s|%s|%s", g_char_model->string,
+		Com_sprintf(skin_name, sizeof skin_name, "models/players/%s/|%s|%s|%s", g_char_model->string,
 		            g_char_skin_head->string, "torso_g1", "lower_e1");
 	}
 	else if (Q_stricmp(g_char_skin_head->string, "model_default") == 0 &&
 		Q_stricmp(g_char_skin_torso->string, "model_default") == 0 && Q_stricmp(
 			g_char_skin_legs->string, "model_default") == 0)
 	{
-		Com_sprintf(skinName, sizeof skinName, "models/players/%s/model_default.skin", g_char_model->string);
+		Com_sprintf(skin_name, sizeof skin_name, "models/players/%s/model_default.skin", g_char_model->string);
 	}
 	else
 	{
-		Com_sprintf(skinName, sizeof skinName, "models/players/%s/|%s|%s|%s", g_char_model->string,
+		Com_sprintf(skin_name, sizeof skin_name, "models/players/%s/|%s|%s|%s", g_char_model->string,
 		            g_char_skin_head->string, g_char_skin_torso->string, g_char_skin_legs->string);
 	}
 
 	// lets see if it's out there
-	const int skin = gi.RE_RegisterSkin(skinName);
+	const int skin = gi.RE_RegisterSkin(skin_name);
 	if (skin)
 	{
 		//what if this returns 0 because *one* part of a multi-skin didn't load?
 		// put it in the config strings
 		// and set the ghoul2 model to use it
-		gi.G2API_SetSkin(&ent->ghoul2[ent->playerModel], G_SkinIndex(skinName), skin);
+		gi.G2API_SetSkin(&ent->ghoul2[ent->playerModel], G_SkinIndex(skin_name), skin);
 	}
 
 	//color tinting
@@ -1067,172 +1053,172 @@ qboolean g_standard_humanoid(gentity_t* self)
 	{
 		return qfalse;
 	}
-	const char* GLAName = gi.G2API_GetGLAName(&self->ghoul2[self->playerModel]);
-	assert(GLAName);
-	if (GLAName)
+	const char* gla_name = gi.G2API_GetGLAName(&self->ghoul2[self->playerModel]);
+	assert(gla_name);
+	if (gla_name)
 	{
-		if (!Q_stricmpn("models/players/_humanoid", GLAName, 24))
+		if (!Q_stricmpn("models/players/_humanoid", gla_name, 24))
 		{
 			//only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmpn("models/players/JK2anims/", GLAName, 24))
+		if (!Q_stricmpn("models/players/JK2anims/", gla_name, 24))
 		{
 			//only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmpn("models/players/_humanoid_ani", GLAName, 24))
+		if (!Q_stricmpn("models/players/_humanoid_ani", gla_name, 24))
 		{
 			//only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmpn("models/players/_humanoid_bdroid", GLAName, 24))
+		if (!Q_stricmpn("models/players/_humanoid_bdroid", gla_name, 24))
 		{
 			//only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmpn("models/players/_humanoid_ben", GLAName, 24))
+		if (!Q_stricmpn("models/players/_humanoid_ben", gla_name, 24))
 		{
 			//only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmpn("models/players/_humanoid_df2", GLAName, 24))
+		if (!Q_stricmpn("models/players/_humanoid_df2", gla_name, 24))
 		{
 			//only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmpn("models/players/_humanoid_cal", GLAName, 24))
+		if (!Q_stricmpn("models/players/_humanoid_cal", gla_name, 24))
 		{
 			//only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmpn("models/players/_humanoid_clo", GLAName, 24))
+		if (!Q_stricmpn("models/players/_humanoid_clo", gla_name, 24))
 		{
 			//only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmpn("models/players/_humanoid_dooku", GLAName, 24))
+		if (!Q_stricmpn("models/players/_humanoid_dooku", gla_name, 24))
 		{
 			//only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmpn("models/players/_humanoid_galen", GLAName, 24))
+		if (!Q_stricmpn("models/players/_humanoid_galen", gla_name, 24))
 		{
 			//only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmpn("models/players/_humanoid_gon", GLAName, 24))
+		if (!Q_stricmpn("models/players/_humanoid_gon", gla_name, 24))
 		{
 			//only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmpn("models/players/_humanoid_grievous", GLAName, 24))
+		if (!Q_stricmpn("models/players/_humanoid_grievous", gla_name, 24))
 		{
 			//only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmpn("models/players/_humanoid_jango", GLAName, 24))
+		if (!Q_stricmpn("models/players/_humanoid_jango", gla_name, 24))
 		{
 			//only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmpn("models/players/_humanoid_kotor", GLAName, 24))
+		if (!Q_stricmpn("models/players/_humanoid_kotor", gla_name, 24))
 		{
 			//only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmpn("models/players/_humanoid_luke", GLAName, 24))
+		if (!Q_stricmpn("models/players/_humanoid_luke", gla_name, 24))
 		{
 			//only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmpn("models/players/_humanoid_mace", GLAName, 24))
+		if (!Q_stricmpn("models/players/_humanoid_mace", gla_name, 24))
 		{
 			//only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmpn("models/players/_humanoid_maul", GLAName, 24))
+		if (!Q_stricmpn("models/players/_humanoid_maul", gla_name, 24))
 		{
 			//only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmpn("models/players/_humanoid_md", GLAName, 24))
+		if (!Q_stricmpn("models/players/_humanoid_md", gla_name, 24))
 		{
 			//only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmpn("models/players/_humanoid_obi", GLAName, 24))
+		if (!Q_stricmpn("models/players/_humanoid_obi", gla_name, 24))
 		{
 			//only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmpn("models/players/_humanoid_obi3", GLAName, 24))
+		if (!Q_stricmpn("models/players/_humanoid_obi3", gla_name, 24))
 		{
 			//only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmpn("models/players/_humanoid_pal", GLAName, 24))
+		if (!Q_stricmpn("models/players/_humanoid_pal", gla_name, 24))
 		{
 			//only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmpn("models/players/_humanoid_ren", GLAName, 24))
+		if (!Q_stricmpn("models/players/_humanoid_ren", gla_name, 24))
 		{
 			//only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmpn("models/players/_humanoid_rey", GLAName, 24))
+		if (!Q_stricmpn("models/players/_humanoid_rey", gla_name, 24))
 		{
 			//only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmpn("models/players/_humanoid_sbd", GLAName, 24))
+		if (!Q_stricmpn("models/players/_humanoid_sbd", gla_name, 24))
 		{
 			//only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmpn("models/players/_humanoid_vader", GLAName, 24))
+		if (!Q_stricmpn("models/players/_humanoid_vader", gla_name, 24))
 		{
 			//only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmpn("models/players/_humanoid_yoda", GLAName, 24))
+		if (!Q_stricmpn("models/players/_humanoid_yoda", gla_name, 24))
 		{
 			//only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
 		//
-		if (!Q_stricmp("models/players/protocol/protocol", GLAName))
+		if (!Q_stricmp("models/players/protocol/protocol", gla_name))
 		{
 			//protocol droid duplicates many of these
 			return qtrue;
 		}
-		if (!Q_stricmp("models/players/assassin_droid/model", GLAName))
+		if (!Q_stricmp("models/players/assassin_droid/model", gla_name))
 		{
 			//assassin_droid duplicates many of these
 			return qtrue;
 		}
-		if (!Q_stricmp("models/players/saber_droid/model", GLAName))
+		if (!Q_stricmp("models/players/saber_droid/model", gla_name))
 		{
 			//saber_droid duplicates many of these
 			return qtrue;
 		}
-		if (!Q_stricmp("models/players/hazardtrooper/hazardtrooper", GLAName))
+		if (!Q_stricmp("models/players/hazardtrooper/hazardtrooper", gla_name))
 		{
 			//hazardtrooper duplicates many of these
 			return qtrue;
 		}
-		if (!Q_stricmp("models/players/rockettrooper/rockettrooper", GLAName))
+		if (!Q_stricmp("models/players/rockettrooper/rockettrooper", gla_name))
 		{
 			//rockettrooper duplicates many of these
 			return qtrue;
 		}
-		if (!Q_stricmp("models/players/wampa/wampa", GLAName))
+		if (!Q_stricmp("models/players/wampa/wampa", gla_name))
 		{
 			//rockettrooper duplicates many of these
 			return qtrue;
 		}
-		if (!Q_stricmp("models/players/galak_mech/galak_mech", GLAName))
+		if (!Q_stricmp("models/players/galak_mech/galak_mech", gla_name))
 		{
 			//galak duplicates many of these
 			return qtrue;
@@ -1241,136 +1227,136 @@ qboolean g_standard_humanoid(gentity_t* self)
 	return qfalse;
 }
 
-qboolean G_StandardHumanoid(const char* GLAName)
+qboolean G_StandardHumanoid(const char* gla_name)
 {
-	if (GLAName)
+	if (gla_name)
 	{
-		if (!Q_stricmp("_humanoid", GLAName))
+		if (!Q_stricmp("_humanoid", gla_name))
 		{
 			// only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmp("JK2anims", GLAName))
+		if (!Q_stricmp("JK2anims", gla_name))
 		{
 			// only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmp("_humanoid_ani", GLAName))
+		if (!Q_stricmp("_humanoid_ani", gla_name))
 		{
 			// only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmp("_humanoid_bdroid", GLAName))
+		if (!Q_stricmp("_humanoid_bdroid", gla_name))
 		{
 			// only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmp("_humanoid_ben", GLAName))
+		if (!Q_stricmp("_humanoid_ben", gla_name))
 		{
 			// only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmp("_humanoid_df2", GLAName))
+		if (!Q_stricmp("_humanoid_df2", gla_name))
 		{
 			// only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmp("_humanoid_cal", GLAName))
+		if (!Q_stricmp("_humanoid_cal", gla_name))
 		{
 			// only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmp("_humanoid_clo", GLAName))
+		if (!Q_stricmp("_humanoid_clo", gla_name))
 		{
 			// only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmp("_humanoid_dooku", GLAName))
+		if (!Q_stricmp("_humanoid_dooku", gla_name))
 		{
 			// only _humanoid skeleton is expected eto have these
 			return qtrue;
 		}
-		if (!Q_stricmp("_humanoid_galen", GLAName))
+		if (!Q_stricmp("_humanoid_galen", gla_name))
 		{
 			// only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmp("_humanoid_gon", GLAName))
+		if (!Q_stricmp("_humanoid_gon", gla_name))
 		{
 			// only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmp("_humanoid_grievous", GLAName))
+		if (!Q_stricmp("_humanoid_grievous", gla_name))
 		{
 			// only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmp("_humanoid_jango", GLAName))
+		if (!Q_stricmp("_humanoid_jango", gla_name))
 		{
 			// only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmp("_humanoid_kotor", GLAName))
+		if (!Q_stricmp("_humanoid_kotor", gla_name))
 		{
 			// only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmp("_humanoid_luke", GLAName))
+		if (!Q_stricmp("_humanoid_luke", gla_name))
 		{
 			// only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmp("_humanoid_mace", GLAName))
+		if (!Q_stricmp("_humanoid_mace", gla_name))
 		{
 			// only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmp("_humanoid_maul", GLAName))
+		if (!Q_stricmp("_humanoid_maul", gla_name))
 		{
 			// only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmp("_humanoid_md", GLAName))
+		if (!Q_stricmp("_humanoid_md", gla_name))
 		{
 			// only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmp("_humanoid_obi", GLAName))
+		if (!Q_stricmp("_humanoid_obi", gla_name))
 		{
 			// only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmp("_humanoid_obi3", GLAName))
+		if (!Q_stricmp("_humanoid_obi3", gla_name))
 		{
 			// only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmp("_humanoid_pal", GLAName))
+		if (!Q_stricmp("_humanoid_pal", gla_name))
 		{
 			// only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmp("_humanoid_ren", GLAName))
+		if (!Q_stricmp("_humanoid_ren", gla_name))
 		{
 			// only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmp("_humanoid_rey", GLAName))
+		if (!Q_stricmp("_humanoid_rey", gla_name))
 		{
 			// only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmp("_humanoid_sbd", GLAName))
+		if (!Q_stricmp("_humanoid_sbd", gla_name))
 		{
 			// only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmp("_humanoid_vader", GLAName))
+		if (!Q_stricmp("_humanoid_vader", gla_name))
 		{
 			// only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmp("_humanoid_yoda", GLAName))
+		if (!Q_stricmp("_humanoid_yoda", gla_name))
 		{
 			// only _humanoid skeleton is expected to have these
 			return qtrue;
@@ -1379,9 +1365,9 @@ qboolean G_StandardHumanoid(const char* GLAName)
 	return qfalse;
 }
 
-qboolean G_ClassHasBadBones(const int NPC_class)
+qboolean G_ClassHasBadBones(const int npc_class)
 {
-	switch (NPC_class)
+	switch (npc_class)
 	{
 	case CLASS_WAMPA:
 	case CLASS_ROCKETTROOPER:
@@ -1423,19 +1409,19 @@ void G_NextTestAxes()
 			Com_Printf(S_COLOR_RED"WRAPPED\n");
 			break;
 		}
-		int axesCount = 0;
+		int axes_count = 0;
 		axes_0 = 0;
 		axes_1 = 0;
 		axes_2 = 0;
-		for (axes_0 = 0; axes_0 < 6 && axesCount < which_axes; axes_0++)
+		for (axes_0 = 0; axes_0 < 6 && axes_count < which_axes; axes_0++)
 		{
-			axesCount++;
-			for (axes_1 = 0; axes_1 < 6 && axesCount < which_axes; axes_1++)
+			axes_count++;
+			for (axes_1 = 0; axes_1 < 6 && axes_count < which_axes; axes_1++)
 			{
-				axesCount++;
-				for (axes_2 = 0; axes_2 < 6 && axesCount < which_axes; axes_2++)
+				axes_count++;
+				for (axes_2 = 0; axes_2 < 6 && axes_count < which_axes; axes_2++)
 				{
-					axesCount++;
+					axes_count++;
 				}
 			}
 		}
@@ -1457,20 +1443,20 @@ void G_NextTestAxes()
 	}
 }
 
-void G_BoneOrientationsForClass(const int NPC_class, const char* bone_name, Eorientations* oUp, Eorientations* oRt,
-                                Eorientations* oFwd)
+void G_BoneOrientationsForClass(const int npc_class, const char* bone_name, Eorientations* o_up, Eorientations* o_rt,
+                                Eorientations* o_fwd)
 {
 	//defaults
-	*oUp = POSITIVE_X;
-	*oRt = NEGATIVE_Y;
-	*oFwd = NEGATIVE_Z;
+	*o_up = POSITIVE_X;
+	*o_rt = NEGATIVE_Y;
+	*o_fwd = NEGATIVE_Z;
 	//switch off class
-	switch (NPC_class)
+	switch (npc_class)
 	{
 	case CLASS_RANCOR:
-		*oUp = NEGATIVE_X;
-		*oRt = POSITIVE_Y;
-		*oFwd = POSITIVE_Z;
+		*o_up = NEGATIVE_X;
+		*o_rt = POSITIVE_Y;
+		*o_fwd = POSITIVE_Z;
 	//*oUp = testAxes[0];
 	//*oRt = testAxes[1];
 	//*oFwd = testAxes[2];
@@ -1489,9 +1475,9 @@ void G_BoneOrientationsForClass(const int NPC_class, const char* bone_name, Eori
 			//*oRt = NEGATIVE_Z;
 			//*oFwd = NEGATIVE_Y;
 			//actual, when differences with root are accounted for:
-			*oUp = POSITIVE_Z;
-			*oRt = NEGATIVE_X;
-			*oFwd = NEGATIVE_Y;
+			*o_up = POSITIVE_Z;
+			*o_rt = NEGATIVE_X;
+			*o_fwd = NEGATIVE_Y;
 		}
 		else
 		{
@@ -1504,32 +1490,32 @@ void G_BoneOrientationsForClass(const int NPC_class, const char* bone_name, Eori
 			//*oUp = POSITIVE_Z;
 			//*oRt = NEGATIVE_Y;
 			//*oFwd = NEGATIVE_X;
-			*oUp = NEGATIVE_X;
-			*oRt = POSITIVE_Y;
-			*oFwd = POSITIVE_Z;
+			*o_up = NEGATIVE_X;
+			*o_rt = POSITIVE_Y;
+			*o_fwd = POSITIVE_Z;
 		}
 		break;
 	case CLASS_SABER_DROID:
 		if (Q_stricmp("pelvis", bone_name) == 0
 			|| Q_stricmp("thoracic", bone_name) == 0)
 		{
-			*oUp = NEGATIVE_X;
-			*oRt = NEGATIVE_Z;
-			*oFwd = NEGATIVE_Y;
+			*o_up = NEGATIVE_X;
+			*o_rt = NEGATIVE_Z;
+			*o_fwd = NEGATIVE_Y;
 		}
 		else
 		{
-			*oUp = NEGATIVE_X; //POSITIVE_X;
-			*oRt = POSITIVE_Y;
-			*oFwd = POSITIVE_Z;
+			*o_up = NEGATIVE_X; //POSITIVE_X;
+			*o_rt = POSITIVE_Y;
+			*o_fwd = POSITIVE_Z;
 		}
 		break;
 	case CLASS_WAMPA:
 		if (Q_stricmp("pelvis", bone_name) == 0)
 		{
-			*oUp = NEGATIVE_X;
-			*oRt = POSITIVE_Y;
-			*oFwd = NEGATIVE_Z;
+			*o_up = NEGATIVE_X;
+			*o_rt = POSITIVE_Y;
+			*o_fwd = NEGATIVE_Z;
 		}
 		else
 		{
@@ -1537,9 +1523,9 @@ void G_BoneOrientationsForClass(const int NPC_class, const char* bone_name, Eori
 			//*oRt = POSITIVE_Y;
 			//*oFwd = POSITIVE_Z;
 			//kinda worked
-			*oUp = NEGATIVE_X;
-			*oRt = POSITIVE_Y;
-			*oFwd = POSITIVE_Z;
+			*o_up = NEGATIVE_X;
+			*o_rt = POSITIVE_Y;
+			*o_fwd = POSITIVE_Z;
 		}
 		break;
 	case CLASS_ASSASSIN_DROID:
@@ -1551,16 +1537,16 @@ void G_BoneOrientationsForClass(const int NPC_class, const char* bone_name, Eori
 			//*oUp = POSITIVE_X;
 			//*oRt = POSITIVE_Y;
 			//*oFwd = POSITIVE_Z;
-			*oUp = NEGATIVE_X;
-			*oRt = POSITIVE_Y;
-			*oFwd = POSITIVE_Z;
+			*o_up = NEGATIVE_X;
+			*o_rt = POSITIVE_Y;
+			*o_fwd = POSITIVE_Z;
 		}
 		break;
 	default: ;
 	}
 }
 
-extern void G_LoadAnimFileSet(gentity_t* ent, const char* modelName);
+extern void G_LoadAnimFileSet(gentity_t* ent, const char* p_model_name);
 
 qboolean g_set_g2_player_model_info(gentity_t* ent, const char* model_name, const char* surf_off,
                                     const char* surf_on)
@@ -1675,25 +1661,25 @@ qboolean g_set_g2_player_model_info(gentity_t* ent, const char* model_name, cons
 				// Setup the droid unit (or other misc tag we're using this for).
 				ent->m_pVehicle->m_iDroidUnitTag = gi.G2API_AddBolt(&ent->ghoul2[ent->playerModel], "*droidunit");
 
-				char strTemp[128];
+				char str_temp[128];
 
 				// Setup the Exhausts.
 				for (int i = 0; i < MAX_VEHICLE_EXHAUSTS; i++)
 				{
-					Com_sprintf(strTemp, 128, "*exhaust%d", i + 1);
-					ent->m_pVehicle->m_iExhaustTag[i] = gi.G2API_AddBolt(&ent->ghoul2[ent->playerModel], strTemp);
+					Com_sprintf(str_temp, 128, "*exhaust%d", i + 1);
+					ent->m_pVehicle->m_iExhaustTag[i] = gi.G2API_AddBolt(&ent->ghoul2[ent->playerModel], str_temp);
 				}
 
 				// Setup the Muzzles.
 				for (int i = 0; i < MAX_VEHICLE_MUZZLES; i++)
 				{
-					Com_sprintf(strTemp, 128, "*muzzle%d", i + 1);
-					ent->m_pVehicle->m_iMuzzleTag[i] = gi.G2API_AddBolt(&ent->ghoul2[ent->playerModel], strTemp);
+					Com_sprintf(str_temp, 128, "*muzzle%d", i + 1);
+					ent->m_pVehicle->m_iMuzzleTag[i] = gi.G2API_AddBolt(&ent->ghoul2[ent->playerModel], str_temp);
 					if (ent->m_pVehicle->m_iMuzzleTag[i] == -1)
 					{
 						//ergh, try *flash?
-						Com_sprintf(strTemp, 128, "*flash%d", i + 1);
-						ent->m_pVehicle->m_iMuzzleTag[i] = gi.G2API_AddBolt(&ent->ghoul2[ent->playerModel], strTemp);
+						Com_sprintf(str_temp, 128, "*flash%d", i + 1);
+						ent->m_pVehicle->m_iMuzzleTag[i] = gi.G2API_AddBolt(&ent->ghoul2[ent->playerModel], str_temp);
 					}
 				}
 			}
@@ -2579,9 +2565,9 @@ qboolean AllowedDualPistol(const gentity_t* ent)
 	return qfalse;
 }
 
-void G_ChangeModel(gentity_t* ent, const char* newModel)
+void G_ChangeModel(const char* new_model)
 {
-	gi.cvar_set("g_char_model", newModel);
+	gi.cvar_set("g_char_model", new_model);
 	gi.cvar_set("g_char_skin_head", "model_default");
 	gi.cvar_set("g_char_skin_torso", "model_default");
 	gi.cvar_set("g_char_skin_legs", "model_default");
@@ -2596,9 +2582,9 @@ void G_ChangeScale(const char* data)
 
 extern const char* GetSaberColor(int color);
 
-void G_ChangePlayerModel(gentity_t* ent, const char* newModel)
+void G_ChangePlayerModel(gentity_t* ent, const char* new_model)
 {
-	if (!ent || !ent->client || !newModel)
+	if (!ent || !ent->client || !new_model)
 	{
 		return;
 	}
@@ -2666,7 +2652,7 @@ void G_ChangePlayerModel(gentity_t* ent, const char* newModel)
 
 		G_RemovePlayerModel(ent);
 
-		if (Q_stricmp("player", newModel) == 0)
+		if (Q_stricmp("player", new_model) == 0)
 		{
 			G_InitPlayerFromCvars(ent);
 			return;
@@ -2676,15 +2662,15 @@ void G_ChangePlayerModel(gentity_t* ent, const char* newModel)
 		{
 			gi.Free(ent->NPC_type);
 		}
-		ent->NPC_type = G_NewString(newModel);
+		ent->NPC_type = G_NewString(new_model);
 
 		G_RemoveWeaponModels(ent);
 		G_RemoveHolsterModels(ent);
 
-		if (strchr(newModel, '|'))
+		if (strchr(new_model, '|'))
 		{
 			char name[MAX_QPATH];
-			strcpy(name, newModel);
+			strcpy(name, new_model);
 			char* p = strchr(name, '|');
 			*p = 0;
 			p++;
@@ -2792,7 +2778,7 @@ void G_ChangePlayerModel(gentity_t* ent, const char* newModel)
 			}
 			else
 			{
-				gi.Printf(S_COLOR_RED"G_ChangePlayerModel: cannot find NPC %s\n", newModel);
+				gi.Printf(S_COLOR_RED"G_ChangePlayerModel: cannot find NPC %s\n", new_model);
 				G_ChangePlayerModel(ent, "stormtrooper"); //need a better fallback?
 			}
 		}
@@ -2801,7 +2787,7 @@ void G_ChangePlayerModel(gentity_t* ent, const char* newModel)
 	{
 		G_RemovePlayerModel(ent);
 
-		if (Q_stricmp("player", newModel) == 0)
+		if (Q_stricmp("player", new_model) == 0)
 		{
 			G_InitPlayerFromCvars(ent);
 			return;
@@ -2811,15 +2797,15 @@ void G_ChangePlayerModel(gentity_t* ent, const char* newModel)
 		{
 			gi.Free(ent->NPC_type);
 		}
-		ent->NPC_type = G_NewString(newModel);
+		ent->NPC_type = G_NewString(new_model);
 
 		G_RemoveWeaponModels(ent);
 		G_RemoveHolsterModels(ent);
 
-		if (strchr(newModel, '|'))
+		if (strchr(new_model, '|'))
 		{
 			char name[MAX_QPATH];
-			strcpy(name, newModel);
+			strcpy(name, new_model);
 			char* p = strchr(name, '|');
 			*p = 0;
 			p++;
@@ -2927,7 +2913,7 @@ void G_ChangePlayerModel(gentity_t* ent, const char* newModel)
 			}
 			else
 			{
-				gi.Printf(S_COLOR_RED"G_ChangePlayerModel: cannot find NPC %s\n", newModel);
+				gi.Printf(S_COLOR_RED"G_ChangePlayerModel: cannot find NPC %s\n", new_model);
 				G_ChangePlayerModel(ent, "stormtrooper"); //need a better fallback?
 			}
 		}
@@ -3015,9 +3001,9 @@ qboolean ClientSpawn(gentity_t* ent, SavedGameJustLoaded_e e_saved_game_just_loa
 	int index;
 	gclient_t* client;
 	int i;
-	clientInfo_t savedCi;
+	clientInfo_t saved_ci;
 	usercmd_t ucmd;
-	qboolean beamInEffect = qfalse;
+	qboolean beam_in_effect = qfalse;
 	extern qboolean g_qbLoadTransition;
 
 	index = ent - g_entities;
@@ -3071,7 +3057,7 @@ qboolean ClientSpawn(gentity_t* ent, SavedGameJustLoaded_e e_saved_game_just_loa
 	}
 	else
 	{
-		gentity_t* spawnPoint;
+		gentity_t* spawn_point;
 		int persistant[MAX_PERSISTANT];
 		clientSession_t savedSess;
 		clientPersistant_t saved;
@@ -3081,9 +3067,8 @@ qboolean ClientSpawn(gentity_t* ent, SavedGameJustLoaded_e e_saved_game_just_loa
 		// do it before setting health back up, so farthest
 		// ranging doesn't count this client
 		// don't spawn near existing origin if possible
-		spawnPoint = SelectSpawnPoint(ent->client->ps.origin,
-		                              static_cast<team_t>(ent->client->ps.persistant[PERS_TEAM]), spawn_origin,
-		                              spawn_angles);
+		spawn_point = SelectSpawnPoint(ent->client->ps.origin,
+		                              spawn_origin, spawn_angles);
 
 		ent->client->pers.teamState.state = TEAM_ACTIVE;
 
@@ -3095,11 +3080,11 @@ qboolean ClientSpawn(gentity_t* ent, SavedGameJustLoaded_e e_saved_game_just_loa
 			persistant[i] = client->ps.persistant[i];
 		}
 		//Preserve clientInfo
-		memcpy(&savedCi, &client->clientInfo, sizeof(clientInfo_t));
+		memcpy(&saved_ci, &client->clientInfo, sizeof(clientInfo_t));
 
 		memset(client, 0, sizeof *client);
 
-		memcpy(&client->clientInfo, &savedCi, sizeof(clientInfo_t));
+		memcpy(&client->clientInfo, &saved_ci, sizeof(clientInfo_t));
 
 		client->pers = saved;
 		client->sess = savedSess;
@@ -3227,7 +3212,7 @@ qboolean ClientSpawn(gentity_t* ent, SavedGameJustLoaded_e e_saved_game_just_loa
 		}
 
 		// give EITHER the saber or the stun baton..never both
-		if (spawnPoint->spawnflags & 32) // STUN_BATON
+		if (spawn_point->spawnflags & 32) // STUN_BATON
 		{
 			client->ps.weapons[WP_STUN_BATON] = 1;
 			client->ps.weapon = WP_STUN_BATON;
@@ -3308,13 +3293,13 @@ qboolean ClientSpawn(gentity_t* ent, SavedGameJustLoaded_e e_saved_game_just_loa
 
 		// restore some player data
 		//
-		Player_RestoreFromPrevLevel(ent, e_saved_game_just_loaded);
+		Player_RestoreFromPrevLevel(ent);
 
 		//FIXME: put this BEFORE the Player_RestoreFromPrevLevel check above?
 		if (e_saved_game_just_loaded == eNO)
 		{
 			//fresh start
-			if (!(spawnPoint->spawnflags & 1)) // not KEEP_PREV
+			if (!(spawn_point->spawnflags & 1)) // not KEEP_PREV
 			{
 				//then restore health and armor
 				ent->health = client->ps.stats[STAT_ARMOR] = client->ps.stats[STAT_HEALTH] = client->ps.stats[
@@ -3377,7 +3362,7 @@ qboolean ClientSpawn(gentity_t* ent, SavedGameJustLoaded_e e_saved_game_just_loa
 		IIcarusInterface::GetIcarus()->DeleteIcarusID(ent->m_iIcarusID);
 		ent->m_iIcarusID = IIcarusInterface::GetIcarus()->GetIcarusID(ent->s.number);
 
-		if (spawnPoint->spawnflags & 64) //NOWEAPON
+		if (spawn_point->spawnflags & 64) //NOWEAPON
 		{
 			//player starts with absolutely no weapons
 			for (char& weapon : ent->client->ps.weapons)
@@ -3420,9 +3405,9 @@ qboolean ClientSpawn(gentity_t* ent, SavedGameJustLoaded_e e_saved_game_just_loa
 
 		{
 			// fire the targets of the spawn point
-			G_UseTargets(spawnPoint, ent);
+			G_UseTargets(spawn_point, ent);
 			//Designers needed them to fire off target2's as well... this is kind of messy
-			G_UseTargets2(spawnPoint, ent, spawnPoint->target2);
+			G_UseTargets2(spawn_point, ent, spawn_point->target2);
 		}
 	}
 
@@ -3452,7 +3437,7 @@ qboolean ClientSpawn(gentity_t* ent, SavedGameJustLoaded_e e_saved_game_just_loa
 	Player_CheckBurn(ent);
 	Player_CheckFreeze(ent);
 
-	return beamInEffect;
+	return beam_in_effect;
 }
 
 /*

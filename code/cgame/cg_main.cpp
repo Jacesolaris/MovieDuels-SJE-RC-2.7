@@ -4294,7 +4294,7 @@ void CG_NextInventory_f()
 	{
 		cg.inventorySelect++;
 
-		if (cg.inventorySelect < INV_ELECTROBINOCULARS || cg.inventorySelect >= INV_MAX)
+		if (cg.inventorySelect < INV_ELECTROBINOCULARS || cg.inventorySelect >= INV_GRAPPLEHOOK)
 		{
 			cg.inventorySelect = INV_ELECTROBINOCULARS;
 		}
@@ -4346,7 +4346,7 @@ void CG_PrevInventory_f()
 	{
 		cg.inventorySelect--;
 
-		if (cg.inventorySelect < INV_ELECTROBINOCULARS || cg.inventorySelect >= INV_MAX)
+		if (cg.inventorySelect < INV_ELECTROBINOCULARS || cg.inventorySelect >= INV_GRAPPLEHOOK)
 		{
 			cg.inventorySelect = INV_MAX - 1;
 		}

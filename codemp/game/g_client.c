@@ -1347,7 +1347,7 @@ static void ForceClientSkin( gclient_t *client, char *model, const char *skin ) 
 ClientCheckName
 ============
 */
-static void ClientCleanName(const char* in, char* out, int outSize)
+static void ClientCleanName(const char* in, char* out, int out_size)
 {
 	int outpos = 0, colorlessLen = 0, spaces = 0, ats = 0;
 
@@ -1358,7 +1358,7 @@ static void ClientCleanName(const char* in, char* out, int outSize)
 	// apparently .* causes the issue too so... derp
 	//for(; *in == '*'; in++);
 
-	for (; *in && outpos < outSize - 1; in++)
+	for (; *in && outpos < out_size - 1; in++)
 	{
 		out[outpos] = *in;
 
@@ -1416,7 +1416,7 @@ static void ClientCleanName(const char* in, char* out, int outSize)
 
 	// don't allow empty names
 	if (*out == '\0' || colorlessLen == 0)
-		Q_strncpyz(out, "Padawan", outSize);
+		Q_strncpyz(out, "Padawan", out_size);
 }
 
 #ifdef _DEBUG

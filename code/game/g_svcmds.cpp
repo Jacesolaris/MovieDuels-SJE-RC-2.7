@@ -29,7 +29,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #include "g_functions.h"
 
 extern void G_NextTestAxes();
-extern void G_ChangePlayerModel(gentity_t* ent, const char* newModel);
+extern void G_ChangePlayerModel(gentity_t* ent, const char* new_model);
 extern void G_InitPlayerFromCvars(gentity_t* ent);
 extern void Q3_SetViewEntity(int entID, const char* name);
 extern qboolean G_ClearViewEntity(gentity_t* ent);

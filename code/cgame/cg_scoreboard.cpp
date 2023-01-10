@@ -382,7 +382,7 @@ qboolean CG_DrawScoreboard(void)
 	return qfalse;
 }
 
-void ScoreBoardReset(void)
+void ScoreBoardReset()
 {
 }
 

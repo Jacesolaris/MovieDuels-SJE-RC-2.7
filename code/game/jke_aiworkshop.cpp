@@ -176,15 +176,15 @@ static void WorkshopDrawEntityInformation(const gentity_t* ent, const int x, con
 		add += OL_H;
 		for (int i = 0; i < ent->NPC->group->numGroup; i++)
 		{
-			const AIGroupMember_t* memberAI = &ent->NPC->group->member[i];
-			const int memberNum = memberAI->number;
-			const gentity_t* member = &g_entities[memberNum];
-			const char* memberText = va("* entity %i, closestBuddy: %i, class: %s, rank: %s (%i), health: %i/%i",
-			                            memberNum, memberAI->closestBuddy,
+			const AIGroupMember_t* member_ai = &ent->NPC->group->member[i];
+			const int member_num = member_ai->number;
+			const gentity_t* member = &g_entities[member_num];
+			const char* member_text = va("* entity %i, closestBuddy: %i, class: %s, rank: %s (%i), health: %i/%i",
+			                            member_num, member_ai->closestBuddy,
 			                            NPCClassTable[member->client->NPC_class].name,
 			                            RankTable[member->NPC->rank].name, member->NPC->rank, member->health,
 			                            member->max_health);
-			cgi_R_Font_DrawString(x, OL_Y + add, memberText, textcolor, cgs.media.qhFontSmall, -1, OL_S);
+			cgi_R_Font_DrawString(x, OL_Y + add, member_text, textcolor, cgs.media.qhFontSmall, -1, OL_S);
 			add += OL_H;
 		}
 	}
@@ -220,14 +220,14 @@ void workshop_draw_clientside_information()
 	if (cg.crosshairclient_num != ENTITYNUM_NONE && cg.crosshairclient_num != 0 && g_entities[cg.crosshairclient_num].
 		client)
 	{
-		gentity_t* crossEnt = &g_entities[cg.crosshairclient_num];
+		const gentity_t* crossEnt = &g_entities[cg.crosshairclient_num];
 		WorkshopDrawEntityInformation(crossEnt, 10, "Crosshair AI");
 	}
 
 	// Draw the information for the AI that we have selected
 	if (selectedAI != ENTITYNUM_NONE)
 	{
-		gentity_t* selectedEnt = &g_entities[selectedAI];
+		const gentity_t* selectedEnt = &g_entities[selectedAI];
 		WorkshopDrawEntityInformation(selectedEnt, 500, "Selected AI");
 	}
 }
@@ -235,11 +235,11 @@ void workshop_draw_clientside_information()
 //
 //	Draws a box around the bounding box of the entity
 //
-void WorkshopDrawEntBox(const gentity_t* ent, const int colorOverride = -1)
+void WorkshopDrawEntBox(const gentity_t* ent, const int color_override = -1)
 {
 	unsigned color = 0x666666; // G_SoundOnEnt(ent, "satan.mp3");
 
-	if (colorOverride == -1 && selectedAI == ent->s.number)
+	if (color_override == -1 && selectedAI == ent->s.number)
 	{
 		// Draw a box around our goal ent
 		if (ent->NPC->goalEntity != nullptr)
@@ -248,21 +248,21 @@ void WorkshopDrawEntBox(const gentity_t* ent, const int colorOverride = -1)
 		}
 		color = 0x0000FFFF; // Yellow = selected AI
 	}
-	else if (colorOverride == -1 && ent->client->playerTeam == TEAM_ENEMY)
+	else if (color_override == -1 && ent->client->playerTeam == TEAM_ENEMY)
 	{
 		color = 0x000000FF; // Red = enemy
 	}
-	else if (colorOverride == -1 && ent->client->playerTeam == TEAM_PLAYER)
+	else if (color_override == -1 && ent->client->playerTeam == TEAM_PLAYER)
 	{
 		color = 0x0000FF00; // Green = ally
 	}
-	else if (colorOverride == -1 && ent->client->playerTeam == TEAM_NEUTRAL)
+	else if (color_override == -1 && ent->client->playerTeam == TEAM_NEUTRAL)
 	{
 		color = 0x00FF0000; // Blue = neutral
 	}
-	else if (colorOverride != -1)
+	else if (color_override != -1)
 	{
-		color = colorOverride;
+		color = color_override;
 	}
 
 	// This is going to look like a mess and I can't really comment on this, but I drew this out manually and it works.
