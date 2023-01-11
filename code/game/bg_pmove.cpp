@@ -12291,7 +12291,15 @@ int PM_ReadyPoseForSaberAnimLevel()
 			{
 				if (pm->gent->client->NPC_class == CLASS_SITHLORD)
 				{
-					anim = BOTH_STAND9;
+					if (g_RealisticBlockingMode->integer) // Cosmetic mode OFF
+					{
+						anim = BOTH_STAND9;
+					}
+					else
+					{
+						anim = PM_ReadyPoseForSaberAnimLevelAMD();
+						// this is the SABER STYLE block box in wrong position in many cases.// Cosmetic mode ON
+					}
 				}
 				else
 				{
@@ -12316,7 +12324,15 @@ int PM_ReadyPoseForSaberAnimLevel()
 			{
 				if (pm->gent->client->NPC_class == CLASS_SITHLORD)
 				{
-					anim = BOTH_STAND9;
+					if (g_RealisticBlockingMode->integer) // Cosmetic mode OFF
+					{
+						anim = BOTH_STAND9;
+					}
+					else
+					{
+						anim = PM_ReadyPoseForSaberAnimLevelAMD();
+						// this is the SABER STYLE block box in wrong position in many cases.// Cosmetic mode ON
+					}
 				}
 				else
 				{
@@ -12341,7 +12357,15 @@ int PM_ReadyPoseForSaberAnimLevel()
 			{
 				if (pm->gent->client->NPC_class == CLASS_SITHLORD)
 				{
-					anim = BOTH_STAND9;
+					if (g_RealisticBlockingMode->integer) // Cosmetic mode OFF
+					{
+						anim = BOTH_STAND9;
+					}
+					else
+					{
+						anim = PM_ReadyPoseForSaberAnimLevelAMD();
+						// this is the SABER STYLE block box in wrong position in many cases.// Cosmetic mode ON
+					}
 				}
 				else
 				{
@@ -12366,7 +12390,15 @@ int PM_ReadyPoseForSaberAnimLevel()
 			{
 				if (pm->gent->client->NPC_class == CLASS_SITHLORD)
 				{
-					anim = BOTH_STAND9;
+					if (g_RealisticBlockingMode->integer) // Cosmetic mode OFF
+					{
+						anim = BOTH_STAND9;
+					}
+					else
+					{
+						anim = PM_ReadyPoseForSaberAnimLevelAMD();
+						// this is the SABER STYLE block box in wrong position in many cases.// Cosmetic mode ON
+					}
 				}
 				else
 				{
@@ -12391,7 +12423,15 @@ int PM_ReadyPoseForSaberAnimLevel()
 			{
 				if (pm->gent->client->NPC_class == CLASS_SITHLORD)
 				{
-					anim = BOTH_STAND9;
+					if (g_RealisticBlockingMode->integer) // Cosmetic mode OFF
+					{
+						anim = BOTH_STAND9;
+					}
+					else
+					{
+						anim = PM_ReadyPoseForSaberAnimLevelAMD();
+						// this is the SABER STYLE block box in wrong position in many cases.// Cosmetic mode ON
+					}
 				}
 				else
 				{
@@ -12416,7 +12456,15 @@ int PM_ReadyPoseForSaberAnimLevel()
 			{
 				if (pm->gent->client->NPC_class == CLASS_SITHLORD)
 				{
-					anim = BOTH_STAND9;
+					if (g_RealisticBlockingMode->integer) // Cosmetic mode OFF
+					{
+						anim = BOTH_STAND9;
+					}
+					else
+					{
+						anim = PM_ReadyPoseForSaberAnimLevelAMD();
+						// this is the SABER STYLE block box in wrong position in many cases.// Cosmetic mode ON
+					}
 				}
 				else
 				{
@@ -12441,7 +12489,15 @@ int PM_ReadyPoseForSaberAnimLevel()
 			{
 				if (pm->gent->client->NPC_class == CLASS_SITHLORD)
 				{
-					anim = BOTH_STAND9;
+					if (g_RealisticBlockingMode->integer) // Cosmetic mode OFF
+					{
+						anim = BOTH_STAND9;
+					}
+					else
+					{
+						anim = PM_ReadyPoseForSaberAnimLevelAMD();
+						// this is the SABER STYLE block box in wrong position in many cases.// Cosmetic mode ON
+					}
 				}
 				else
 				{
@@ -12467,7 +12523,15 @@ int PM_ReadyPoseForSaberAnimLevel()
 			{
 				if (pm->gent->client->NPC_class == CLASS_SITHLORD)
 				{
-					anim = BOTH_STAND9;
+					if (g_RealisticBlockingMode->integer) // Cosmetic mode OFF
+					{
+						anim = BOTH_STAND9;
+					}
+					else
+					{
+						anim = PM_ReadyPoseForSaberAnimLevelAMD();
+						// this is the SABER STYLE block box in wrong position in many cases.// Cosmetic mode ON
+					}
 				}
 				else
 				{
