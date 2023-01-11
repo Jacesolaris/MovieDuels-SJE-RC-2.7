@@ -53,7 +53,7 @@ public:
 	CTask();
 	~CTask();
 
-	static CTask* Create(int GUID, CBlock* block);
+	static CTask* Create(int guid, CBlock* block);
 
 	void Free(void) const;
 
@@ -100,7 +100,7 @@ public:
 
 	int Add(const CTask* task);
 
-	void SetGUID(int GUID);
+	void SetGUID(int guid);
 	void SetParent(CTaskGroup* group) { m_parent = group; }
 
 	bool Complete(void) const { return m_numCompleted == m_completedTasks.size(); }
@@ -195,7 +195,7 @@ protected:
 	int Go(CIcarus* icarus); //Heartbeat function called once per game frame
 	int CallbackCommand(const CTask* task, int return_code, CIcarus* icarus);
 
-	static inline bool Check(int targetID, const CBlock* block, int member_num);
+	static inline bool Check(int target_id, const CBlock* block, int member_num);
 
 	static int GetVector(int ent_id, CBlock* block, int& member_num, vec3_t& value, CIcarus* icarus);
 	static int GetFloat(int ent_id, const CBlock* block, int& member_num, float& value, const CIcarus* icarus);

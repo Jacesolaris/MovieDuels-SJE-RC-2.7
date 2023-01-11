@@ -1309,7 +1309,7 @@ static void CG_DoMuzzleFlash(centity_t* cent, vec3_t org, vec3_t dir, const weap
 			effect = &w_data->mMuzzleEffect[0];
 		}
 
-		if (cent->altFire)
+		if (cent->alt_fire)
 		{
 			// We're alt-firing, so see if we need to override with a custom alt-fire effect
 			if (w_data->mAltMuzzleEffect[0])
@@ -4254,7 +4254,7 @@ void CG_FireWeapon(centity_t* cent, const qboolean alt_fire)
 		cent->muzzleFlashTimeL = cg.time;
 	}
 
-	cent->altFire = alt_fire;
+	cent->alt_fire = alt_fire;
 
 	if (ent->weapon == WP_SABER)
 	{

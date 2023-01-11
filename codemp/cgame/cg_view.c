@@ -1592,7 +1592,7 @@ static int CG_CalcViewValues(void) {
 		else if (cg.renderingThirdPerson) {
 			// back away from character
 			if (cg_thirdPersonSpecialCam.integer &&
-				BG_SaberInSpecial(cg.snap->ps.saberMove))
+				BG_SaberInSpecial(cg.snap->ps.saber_move))
 			{ //the action cam
 				if (!CG_ThirdPersonActionCam())
 				{ //couldn't do it for whatever reason, resort back to third person then

@@ -248,12 +248,12 @@ static void CL_G2API_ListModelBones(void* ghl_info, int frame) {
 	re->G2API_ListBones(static_cast<CGhoul2Info*>(ghl_info), frame);
 }
 
-static void CL_G2API_SetGhoul2ModelIndexes(void* ghoul2, qhandle_t* model_list, qhandle_t* skinList) {
+static void CL_G2API_SetGhoul2ModelIndexes(void* ghoul2, qhandle_t* model_list, qhandle_t* skin_list) {
 	if (!ghoul2) {
 		return;
 	}
 
-	re->G2API_SetGhoul2ModelIndexes(*static_cast<CGhoul2Info_v*>(ghoul2), model_list, skinList);
+	re->G2API_SetGhoul2ModelIndexes(*static_cast<CGhoul2Info_v*>(ghoul2), model_list, skin_list);
 }
 
 static qboolean CL_G2API_HaveWeGhoul2Models(void* ghoul2) {
@@ -399,7 +399,7 @@ static qboolean CL_G2API_SetBoneAngles(
 	const int forward,
 	qhandle_t* model_list,
 	int blend_time,
-	int currentTime)
+	int current_time)
 {
 	if (!ghoul2) {
 		return qfalse;
@@ -416,7 +416,7 @@ static qboolean CL_G2API_SetBoneAngles(
 		static_cast<const Eorientations>(forward),
 		model_list,
 		blend_time,
-		currentTime);
+		current_time);
 }
 
 static qboolean CL_G2API_SetBoneAnim(
@@ -427,7 +427,7 @@ static qboolean CL_G2API_SetBoneAnim(
 	const int end_frame,
 	const int flags,
 	const float anim_speed,
-	const int currentTime,
+	const int current_time,
 	const float setFrame,
 	const int blend_time)
 {
@@ -443,7 +443,7 @@ static qboolean CL_G2API_SetBoneAnim(
 		end_frame,
 		flags,
 		anim_speed,
-		currentTime,
+		current_time,
 		setFrame,
 		blend_time);
 }
@@ -451,7 +451,7 @@ static qboolean CL_G2API_SetBoneAnim(
 static qboolean CL_G2API_GetBoneAnim(
 	void* ghoul2,
 	const char* bone_name,
-	const int currentTime,
+	const int current_time,
 	float* current_frame,
 	int* start_frame,
 	int* end_frame,
@@ -469,7 +469,7 @@ static qboolean CL_G2API_GetBoneAnim(
 		g2,
 		model_index,
 		bone_name,
-		currentTime,
+		current_time,
 		current_frame,
 		start_frame,
 		end_frame,
@@ -481,7 +481,7 @@ static qboolean CL_G2API_GetBoneAnim(
 static qboolean CL_G2API_GetBoneFrame(
 	void* ghoul2,
 	const char* bone_name,
-	const int currentTime,
+	const int current_time,
 	float* current_frame,
 	int* model_list,
 	const int model_index)
@@ -498,7 +498,7 @@ static qboolean CL_G2API_GetBoneFrame(
 		g2,
 		model_index,
 		bone_name,
-		currentTime,
+		current_time,
 		current_frame,
 		&iDontCare1,
 		&iDontCare2,

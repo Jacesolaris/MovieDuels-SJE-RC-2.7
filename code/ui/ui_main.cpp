@@ -749,7 +749,7 @@ static void UI_LoadMods()
 	{
 		const int dirlen = strlen(dirptr) + 1;
 		const char* descptr = dirptr + dirlen;
-		uiInfo.modList[uiInfo.modCount].modName = String_Alloc(dirptr);
+		uiInfo.modList[uiInfo.modCount].mod_name = String_Alloc(dirptr);
 		uiInfo.modList[uiInfo.modCount].modDescr = String_Alloc(descptr);
 		dirptr += dirlen + strlen(descptr) + 1;
 		uiInfo.modCount++;
@@ -947,7 +947,7 @@ const char* UI_FeederItemText(const float feederID, const int index, const int c
 			{
 				return uiInfo.modList[index].modDescr;
 			}
-			return uiInfo.modList[index].modName;
+			return uiInfo.modList[index].mod_name;
 		}
 	}
 
@@ -1182,9 +1182,9 @@ static qboolean UI_RunMenuScript(const char** args)
 		}
 		else if (Q_stricmp(name, "RunMod") == 0)
 		{
-			if (uiInfo.modList[uiInfo.modIndex].modName)
+			if (uiInfo.modList[uiInfo.modIndex].mod_name)
 			{
-				Cvar_Set("fs_game", uiInfo.modList[uiInfo.modIndex].modName);
+				Cvar_Set("fs_game", uiInfo.modList[uiInfo.modIndex].mod_name);
 				FS_Restart();
 				Cbuf_ExecuteText(EXEC_APPEND, "vid_restart;");
 			}
@@ -2476,13 +2476,13 @@ qboolean UI_ParseAnimationFile(const char* af_filename)
 	// parse the text
 	text_p = text;
 
-	//FIXME: have some way of playing anims backwards... negative numFrames?
+	//FIXME: have some way of playing anims backwards... negative num_frames?
 
 	//initialize anim array so that from 0 to MAX_ANIMATIONS, set default values of 0 1 0 100
 	for (int i = 0; i < MAX_ANIMATIONS; i++)
 	{
 		animations[i].firstFrame = 0;
-		animations[i].numFrames = 0;
+		animations[i].num_frames = 0;
 		animations[i].loopFrames = -1;
 		animations[i].frameLerp = 100;
 		//		animations[i].initialLerp = 100;
@@ -2528,7 +2528,7 @@ qboolean UI_ParseAnimationFile(const char* af_filename)
 		{
 			break;
 		}
-		animations[animNum].numFrames = atoi(token);
+		animations[animNum].num_frames = atoi(token);
 
 		token = COM_Parse(&text_p);
 		if (!token)
@@ -2634,12 +2634,12 @@ int UI_G2SetAnim(CGhoul2Info* ghl_info, const char* bone_name, const int animNum
 	if (animIndex != -1)
 	{
 		const animation_t* anim = &ui_knownAnimFileSets[animIndex].animations[animNum];
-		if (anim->numFrames <= 0)
+		if (anim->num_frames <= 0)
 		{
 			return 0;
 		}
 		const int sFrame = anim->firstFrame;
-		const int eFrame = anim->firstFrame + anim->numFrames;
+		const int eFrame = anim->firstFrame + anim->num_frames;
 		int flags = BONE_ANIM_OVERRIDE;
 		const int time = uiInfo.uiDC.realTime;
 		const float anim_speed = 50.0f / anim->frameLerp;
@@ -2665,7 +2665,7 @@ int UI_G2SetAnim(CGhoul2Info* ghl_info, const char* bone_name, const int animNum
 
 		re.G2API_SetBoneAnim(ghl_info, bone_name, sFrame, eFrame, flags, anim_speed, time, -1, blend_time);
 
-		return anim->frameLerp * (anim->numFrames - 2);
+		return anim->frameLerp * (anim->num_frames - 2);
 	}
 
 	return 0;
@@ -3319,7 +3319,7 @@ void UI_LoadMenus(const char* menuFile, const qboolean reset)
 	Com_Printf("---------------- MovieDuels-SJE-RC-2.7---------------------------\n");
 	Com_Printf("-----------------------------------------------------------------\n");
 	Com_Printf("------------------------Update 7---------------------------------\n");
-	Com_Printf("------------------Build Date 10/01/2023--------------------------\n");
+	Com_Printf("------------------Build Date 11/01/2023--------------------------\n");
 	Com_Printf("-----------------------------------------------------------------\n");
 	Com_Printf("------------------------LightSaber-------------------------------\n");
 	Com_Printf("-----------An elegant weapon for a more civilized age------------\n");
@@ -5022,11 +5022,11 @@ static void UI_UpdateFightingStyleChoices(void)
 			}
 
 			// Determine current style
-			if (pState->saberAnimLevel == SS_FAST)
+			if (pState->saber_anim_level == SS_FAST)
 			{
 				Cvar_Set("ui_currentfightingstyle", "0"); // FAST
 			}
-			else if (pState->saberAnimLevel == SS_STRONG)
+			else if (pState->saber_anim_level == SS_STRONG)
 			{
 				Cvar_Set("ui_currentfightingstyle", "2"); // STRONG
 			}

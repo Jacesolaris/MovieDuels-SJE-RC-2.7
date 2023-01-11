@@ -160,16 +160,16 @@
   }                                         \
 }
 
-qboolean coplanar_tri_tri(vec3_t N, vec3_t V0, vec3_t V1, vec3_t V2,
-	vec3_t U0, vec3_t U1, vec3_t U2)
+qboolean coplanar_tri_tri(vec3_t n, vec3_t v0, vec3_t v1, vec3_t v2,
+	vec3_t u0, vec3_t u1, vec3_t u2)
 {
 	vec3_t A;
 	short i0, i1;
 	/* first project onto an axis-aligned plane, that maximizes the area */
 	/* of the triangles, compute indices: i0,i1. */
-	A[0] = fabs(N[0]);
-	A[1] = fabs(N[1]);
-	A[2] = fabs(N[2]);
+	A[0] = fabs(n[0]);
+	A[1] = fabs(n[1]);
+	A[2] = fabs(n[2]);
 	if (A[0] > A[1])
 	{
 		if (A[0] > A[2])
@@ -198,13 +198,13 @@ qboolean coplanar_tri_tri(vec3_t N, vec3_t V0, vec3_t V1, vec3_t V2,
 	}
 
 	/* test all edges of triangle 1 against the edges of triangle 2 */
-	EDGE_AGAINST_TRI_EDGES(V0, V1, U0, U1, U2);
-	EDGE_AGAINST_TRI_EDGES(V1, V2, U0, U1, U2);
-	EDGE_AGAINST_TRI_EDGES(V2, V0, U0, U1, U2);
+	EDGE_AGAINST_TRI_EDGES(v0, v1, u0, u1, u2);
+	EDGE_AGAINST_TRI_EDGES(v1, v2, u0, u1, u2);
+	EDGE_AGAINST_TRI_EDGES(v2, v0, u0, u1, u2);
 
 	/* finally, test if tri1 is totally contained in tri2 or vice versa */
-	POINT_IN_TRI(V0, U0, U1, U2);
-	POINT_IN_TRI(U0, V0, V1, V2);
+	POINT_IN_TRI(v0, u0, u1, u2);
+	POINT_IN_TRI(u0, v0, v1, v2);
 
 	return qfalse;
 }

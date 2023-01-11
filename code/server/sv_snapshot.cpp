@@ -70,7 +70,7 @@ static void SV_EmitPacketEntities(const clientSnapshot_t* from, const clientSnap
 		from_num_entities = from->num_entities;
 	}
 
-	entityState_t* newent = nullptr;
+	const entityState_t* newent = nullptr;
 	const entityState_t* oldent = nullptr;
 	int newindex = 0;
 	int oldindex = 0;

@@ -1911,13 +1911,13 @@ void CG_NewClientInfo(int client_num, qboolean entitiesInitialized) {
 				flags = BONE_ANIM_OVERRIDE_LOOP;
 			}
 
-			if (cent->pe.legs.frame >= anim->firstFrame && cent->pe.legs.frame <= (anim->firstFrame + anim->numFrames))
+			if (cent->pe.legs.frame >= anim->firstFrame && cent->pe.legs.frame <= (anim->firstFrame + anim->num_frames))
 			{
 				setFrame = cent->pe.legs.frame;
 			}
 
 			//rww - Set the animation again because it just got reset due to the model change
-			trap->G2API_SetBoneAnim(ci->ghoul2Model, 0, "model_root", firstFrame, anim->firstFrame + anim->numFrames, flags, anim_speed, cg.time, setFrame, 150);
+			trap->G2API_SetBoneAnim(ci->ghoul2Model, 0, "model_root", firstFrame, anim->firstFrame + anim->num_frames, flags, anim_speed, cg.time, setFrame, 150);
 
 			cg_entities[client_num].currentState.legsAnim = 0;
 		}
@@ -1936,13 +1936,13 @@ void CG_NewClientInfo(int client_num, qboolean entitiesInitialized) {
 				flags = BONE_ANIM_OVERRIDE_LOOP;
 			}
 
-			if (cent->pe.torso.frame >= anim->firstFrame && cent->pe.torso.frame <= (anim->firstFrame + anim->numFrames))
+			if (cent->pe.torso.frame >= anim->firstFrame && cent->pe.torso.frame <= (anim->firstFrame + anim->num_frames))
 			{
 				setFrame = cent->pe.torso.frame;
 			}
 
 			//rww - Set the animation again because it just got reset due to the model change
-			trap->G2API_SetBoneAnim(ci->ghoul2Model, 0, "lower_lumbar", firstFrame, anim->firstFrame + anim->numFrames, flags, anim_speed, cg.time, setFrame, 150);
+			trap->G2API_SetBoneAnim(ci->ghoul2Model, 0, "lower_lumbar", firstFrame, anim->firstFrame + anim->num_frames, flags, anim_speed, cg.time, setFrame, 150);
 
 			cg_entities[client_num].currentState.torsoAnim = 0;
 		}
@@ -2585,7 +2585,7 @@ void CG_PlayerAnimEvents(int animFileIndex, int eventFileIndex, qboolean torso, 
 			{//a looping anim!
 				loopAnim = qtrue;
 				firstFrame = animation->firstFrame;
-				lastFrame = animation->firstFrame + animation->numFrames;
+				lastFrame = animation->firstFrame + animation->num_frames;
 			}
 		}
 	}
@@ -2850,7 +2850,7 @@ static void CG_SetLerpFrameAnimation(centity_t* cent, clientInfo_t* ci, lerpFram
 
 	if (cent->localAnimIndex > 1 &&
 		anim->firstFrame == 0 &&
-		anim->numFrames == 0)
+		anim->num_frames == 0)
 	{ //We'll allow this for non-humanoids.
 		return;
 	}
@@ -2885,12 +2885,12 @@ static void CG_SetLerpFrameAnimation(centity_t* cent, clientInfo_t* ci, lerpFram
 		if (anim_speed < 0)
 		{
 			lastFrame = anim->firstFrame;
-			firstFrame = anim->firstFrame + anim->numFrames;
+			firstFrame = anim->firstFrame + anim->num_frames;
 		}
 		else
 		{
 			firstFrame = anim->firstFrame;
-			lastFrame = anim->firstFrame + anim->numFrames;
+			lastFrame = anim->firstFrame + anim->num_frames;
 		}
 
 		if (cg_animBlend.integer)
@@ -2963,7 +2963,7 @@ static void CG_SetLerpFrameAnimation(centity_t* cent, clientInfo_t* ci, lerpFram
 			//even if resuming, also be sure to check if we are running the same frame on the legs. If so, we want to use their frame no matter what.
 			trap->G2API_GetBoneFrame(cent->ghoul2, "model_root", cg.time, &GBAcFrame, NULL, 0);
 
-			if ((cent->currentState.torsoAnim) == (cent->currentState.legsAnim) && GBAcFrame >= anim->firstFrame && GBAcFrame <= (anim->firstFrame + anim->numFrames))
+			if ((cent->currentState.torsoAnim) == (cent->currentState.legsAnim) && GBAcFrame >= anim->firstFrame && GBAcFrame <= (anim->firstFrame + anim->num_frames))
 			{ //if the legs are already running this anim, pick up on the exact same frame to avoid the "wobbly spine" problem.
 				beginFrame = GBAcFrame;
 			}
@@ -3039,7 +3039,7 @@ static void CG_SetLerpFrameAnimation(centity_t* cent, clientInfo_t* ci, lerpFram
 			ci->brokenLimbs = cent->currentState.brokenLimbs;
 
 			armFirstFrame = armAnim->firstFrame;
-			armLastFrame = armAnim->firstFrame + armAnim->numFrames;
+			armLastFrame = armAnim->firstFrame + armAnim->num_frames;
 			armAnimSpeed = 50.0f / armAnim->frameLerp;
 			armFlags = BONE_ANIM_OVERRIDE_LOOP;
 
@@ -3080,8 +3080,8 @@ static void CG_SetLerpFrameAnimation(centity_t* cent, clientInfo_t* ci, lerpFram
 					armAnim = &bgAllAnims[cent->localAnimIndex].anims[BOTH_ATTACK2];
 
 					//armFirstFrame = armAnim->firstFrame;
-					armFirstFrame = armAnim->firstFrame + armAnim->numFrames;
-					armLastFrame = armAnim->firstFrame + armAnim->numFrames;
+					armFirstFrame = armAnim->firstFrame + armAnim->num_frames;
+					armLastFrame = armAnim->firstFrame + armAnim->num_frames;
 					armAnimSpeed = 50.0f / armAnim->frameLerp;
 					armFlags = BONE_ANIM_OVERRIDE_LOOP;
 
@@ -3107,7 +3107,7 @@ static void CG_SetLerpFrameAnimation(centity_t* cent, clientInfo_t* ci, lerpFram
 					//Now set the left arm to "support" the right one
 					armAnim = &bgAllAnims[cent->localAnimIndex].anims[BOTH_STAND2];
 					armFirstFrame = armAnim->firstFrame;
-					armLastFrame = armAnim->firstFrame + armAnim->numFrames;
+					armLastFrame = armAnim->firstFrame + armAnim->num_frames;
 					armAnimSpeed = 50.0f / armAnim->frameLerp;
 					armFlags = BONE_ANIM_OVERRIDE_LOOP;
 
@@ -3216,7 +3216,7 @@ static qboolean CG_FirstAnimFrame(lerpFrame_t* lf, qboolean torsoOnly, float spe
 
 	//I don't care where it is in the anim now, I am going to pick up from the same bone frame.
 /*
-	if (lf->animation->numFrames < 2)
+	if (lf->animation->num_frames < 2)
 	{
 		return qtrue;
 	}
@@ -3302,7 +3302,7 @@ static void CG_ClearLerpFrame(centity_t* cent, clientInfo_t* ci, lerpFrame_t* lf
 
 	if (lf->animation->frameLerp < 0)
 	{//Plays backwards
-		lf->oldFrame = lf->frame = (lf->animation->firstFrame + lf->animation->numFrames);
+		lf->oldFrame = lf->frame = (lf->animation->firstFrame + lf->animation->num_frames);
 	}
 	else
 	{
@@ -3403,7 +3403,7 @@ typedef struct boneAngleParms_s {
 	int forward;
 	qhandle_t* model_list;
 	int blend_time;
-	int currentTime;
+	int current_time;
 
 	qboolean refreshSet;
 } boneAngleParms_t;
@@ -3413,7 +3413,7 @@ boneAngleParms_t cgBoneAnglePostSet;
 
 void CG_G2SetBoneAngles(void* ghoul2, int model_index, const char* bone_name, const vec3_t angles, const int flags,
 	const int up, const int right, const int forward, qhandle_t* model_list,
-	int blend_time, int currentTime)
+	int blend_time, int current_time)
 { //we want to hold off on setting the bone angles until the end of the frame, because every time we set
   //them the entire skeleton has to be reconstructed.
 #if 0
@@ -3434,14 +3434,14 @@ void CG_G2SetBoneAngles(void* ghoul2, int model_index, const char* bone_name, co
 	cgBoneAnglePostSet.forward = forward;
 	cgBoneAnglePostSet.model_list = model_list;
 	cgBoneAnglePostSet.blend_time = blend_time;
-	cgBoneAnglePostSet.currentTime = currentTime;
+	cgBoneAnglePostSet.current_time = current_time;
 
 	cgBoneAnglePostSet.refreshSet = qtrue;
 #endif
 	//We don't want to go with the delayed approach, we want out bolt points and everything to be updated in realtime.
 	//We'll just take the reconstructs and live with them.
 	trap->G2API_SetBoneAngles(ghoul2, model_index, bone_name, angles, flags, up, right, forward, model_list,
-		blend_time, currentTime);
+		blend_time, current_time);
 }
 
 /*
@@ -3581,7 +3581,7 @@ qboolean CG_RagDoll(centity_t* cent, vec3_t forcedAngles)
 		if (!inSomething)
 		{
 			const int anim = (cent->currentState.legsAnim);
-			const int dur = (bgAllAnims[cent->localAnimIndex].anims[anim].numFrames - 1) * fabs((float)(bgAllAnims[cent->localAnimIndex].anims[anim].frameLerp));
+			const int dur = (bgAllAnims[cent->localAnimIndex].anims[anim].num_frames - 1) * fabs((float)(bgAllAnims[cent->localAnimIndex].anims[anim].frameLerp));
 			int i = 0;
 			int boltChecks[5];
 			vec3_t boltPoints[5];
@@ -3690,8 +3690,8 @@ qboolean CG_RagDoll(centity_t* cent, vec3_t forcedAngles)
 		}
 
 		//these will be used as "base" frames for the ragoll settling.
-		tParms.start_frame = bgAllAnims[cent->localAnimIndex].anims[ragAnim].firstFrame;// + bgAllAnims[cent->localAnimIndex].anims[ragAnim].numFrames;
-		tParms.end_frame = bgAllAnims[cent->localAnimIndex].anims[ragAnim].firstFrame + bgAllAnims[cent->localAnimIndex].anims[ragAnim].numFrames;
+		tParms.start_frame = bgAllAnims[cent->localAnimIndex].anims[ragAnim].firstFrame;// + bgAllAnims[cent->localAnimIndex].anims[ragAnim].num_frames;
+		tParms.end_frame = bgAllAnims[cent->localAnimIndex].anims[ragAnim].firstFrame + bgAllAnims[cent->localAnimIndex].anims[ragAnim].num_frames;
 #if 0
 		{
 			float anim_speed = 0;
@@ -3727,9 +3727,9 @@ qboolean CG_RagDoll(centity_t* cent, vec3_t forcedAngles)
 				int blend_time = 500;
 				const animation_t* curAnim = &bgAllAnims[cent->localAnimIndex].anims[cent->currentState.legsAnim];
 
-				if (current_frame >= (curAnim->firstFrame + curAnim->numFrames - 1))
+				if (current_frame >= (curAnim->firstFrame + curAnim->num_frames - 1))
 				{ //this is sort of silly but it works for now.
-					current_frame = (curAnim->firstFrame + curAnim->numFrames - 2);
+					current_frame = (curAnim->firstFrame + curAnim->num_frames - 2);
 				}
 
 				trap->G2API_SetBoneAnim(cent->ghoul2, 0, "lower_lumbar", current_frame, current_frame + 1, flags, anim_speed, cg.time, current_frame, blend_time);
@@ -4065,7 +4065,7 @@ static void CG_G2SetHeadAnim(centity_t* cent, int anim)
 	int	firstFrame;
 	int	lastFrame;
 
-	if (animations[anim].numFrames <= 0)
+	if (animations[anim].num_frames <= 0)
 	{
 		return;
 	}
@@ -4077,12 +4077,12 @@ static void CG_G2SetHeadAnim(centity_t* cent, int anim)
 	if (anim_speed < 0)
 	{//play anim backwards
 		lastFrame = animations[anim].firstFrame - 1;
-		firstFrame = (animations[anim].numFrames - 1) + animations[anim].firstFrame;
+		firstFrame = (animations[anim].num_frames - 1) + animations[anim].firstFrame;
 	}
 	else
 	{
 		firstFrame = animations[anim].firstFrame;
-		lastFrame = (animations[anim].numFrames) + animations[anim].firstFrame;
+		lastFrame = (animations[anim].num_frames) + animations[anim].firstFrame;
 	}
 
 	// first decide if we are doing an animation on the head already
@@ -6349,7 +6349,7 @@ void CG_AddGhoul2Mark(int shader, float size, vec3_t start, vec3_t end, int entn
 
 	goreSkin.baseModelOnly = qfalse;
 
-	goreSkin.currentTime = cg.time;
+	goreSkin.current_time = cg.time;
 	goreSkin.ent_num = entnum;
 	goreSkin.SSize = size;
 	goreSkin.TSize = size;
@@ -6837,7 +6837,7 @@ CheckTrail:
 
 	if (cg_SFXSabers.integer == 0)
 	{
-		saberTrail->duration = saberMoveData[cent->currentState.saberMove].trailLength;
+		saberTrail->duration = saberMoveData[cent->currentState.saber_move].trailLength;
 
 		trailDur = (saberTrail->duration / 5.0f);
 		if (!trailDur)
@@ -6858,7 +6858,7 @@ CheckTrail:
 		{
 			if (!dontDraw)
 			{
-				if ((BG_SuperBreakWinAnim(cent->currentState.torsoAnim) || saberMoveData[cent->currentState.saberMove].trailLength > 0 || ((cent->currentState.powerups & (1 << PW_SPEED) && cg_speedTrail.integer)) || (cent->currentState.saberInFlight && saber_num == 0)) && cg.time < saberTrail->lastTime + 2000) // if we have a stale segment, don't draw until we have a fresh one
+				if ((BG_SuperBreakWinAnim(cent->currentState.torsoAnim) || saberMoveData[cent->currentState.saber_move].trailLength > 0 || ((cent->currentState.powerups & (1 << PW_SPEED) && cg_speedTrail.integer)) || (cent->currentState.saberInFlight && saber_num == 0)) && cg.time < saberTrail->lastTime + 2000) // if we have a stale segment, don't draw until we have a fresh one
 				{
 #if 0
 					if (cg_saberTrail.integer == 2 && cg_shadows.integer != 2 && cgs.glconfig.stencilBits >= 4)
@@ -7042,7 +7042,7 @@ CheckTrail:
 							{
 								trap->R_SetRefractionProperties(1.0f, 0.0f, qtrue, qtrue); //don't need to do this every frame.. but..
 
-								if (BG_SaberInAttack(cent->currentState.saberMove)
+								if (BG_SaberInAttack(cent->currentState.saber_move)
 									|| BG_SuperBreakWinAnim(cent->currentState.torsoAnim))
 								{ //in attack, strong trail
 									fx.mKillTime = 300;
@@ -7108,7 +7108,7 @@ CheckTrail:
 			dirlen1 = VectorLength(dir1);
 			dirlen2 = VectorLength(dir2);
 
-			if (saberMoveData[cent->currentState.saberMove].trailLength == 0)
+			if (saberMoveData[cent->currentState.saber_move].trailLength == 0)
 			{
 				dirlen0 *= 0.5;
 				dirlen1 *= 0.3;
@@ -8419,12 +8419,12 @@ void CG_ForceFPLSPlayerModel(centity_t* cent, clientInfo_t* ci)
 			flags = BONE_ANIM_OVERRIDE_LOOP;
 		}
 
-		if (cent->pe.legs.frame >= anim->firstFrame && cent->pe.legs.frame <= (anim->firstFrame + anim->numFrames))
+		if (cent->pe.legs.frame >= anim->firstFrame && cent->pe.legs.frame <= (anim->firstFrame + anim->num_frames))
 		{
 			setFrame = cent->pe.legs.frame;
 		}
 
-		trap->G2API_SetBoneAnim(ci->ghoul2Model, 0, "model_root", firstFrame, anim->firstFrame + anim->numFrames, flags, anim_speed, cg.time, setFrame, 150);
+		trap->G2API_SetBoneAnim(ci->ghoul2Model, 0, "model_root", firstFrame, anim->firstFrame + anim->num_frames, flags, anim_speed, cg.time, setFrame, 150);
 
 		cent->currentState.legsAnim = 0;
 	}
@@ -8443,12 +8443,12 @@ void CG_ForceFPLSPlayerModel(centity_t* cent, clientInfo_t* ci)
 			flags = BONE_ANIM_OVERRIDE_LOOP;
 		}
 
-		if (cent->pe.torso.frame >= anim->firstFrame && cent->pe.torso.frame <= (anim->firstFrame + anim->numFrames))
+		if (cent->pe.torso.frame >= anim->firstFrame && cent->pe.torso.frame <= (anim->firstFrame + anim->num_frames))
 		{
 			setFrame = cent->pe.torso.frame;
 		}
 
-		trap->G2API_SetBoneAnim(ci->ghoul2Model, 0, "lower_lumbar", firstFrame, anim->firstFrame + anim->numFrames, flags, anim_speed, cg.time, setFrame, 150);
+		trap->G2API_SetBoneAnim(ci->ghoul2Model, 0, "lower_lumbar", firstFrame, anim->firstFrame + anim->num_frames, flags, anim_speed, cg.time, setFrame, 150);
 
 		cent->currentState.torsoAnim = 0;
 	}
@@ -11843,7 +11843,7 @@ stillDoSaber:
 	{
 		trap->G2API_SetBoneAngles(cgBoneAnglePostSet.ghoul2, cgBoneAnglePostSet.model_index, cgBoneAnglePostSet.bone_name,
 			cgBoneAnglePostSet.angles, cgBoneAnglePostSet.flags, cgBoneAnglePostSet.up, cgBoneAnglePostSet.right,
-			cgBoneAnglePostSet.forward, cgBoneAnglePostSet.model_list, cgBoneAnglePostSet.blend_time, cgBoneAnglePostSet.currentTime);
+			cgBoneAnglePostSet.forward, cgBoneAnglePostSet.model_list, cgBoneAnglePostSet.blend_time, cgBoneAnglePostSet.current_time);
 
 		cgBoneAnglePostSet.refreshSet = qfalse;
 	}

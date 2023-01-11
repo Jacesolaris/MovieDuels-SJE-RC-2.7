@@ -504,9 +504,9 @@ void cgi_SetUserCmdAngles(const float pitchOverride, const float yawOverride, co
 Ghoul2 Insert Start
 */
 // CG Specific API calls
-void trap_G2_SetGhoul2ModelIndexes(CGhoul2Info_v& ghoul2, qhandle_t* model_list, qhandle_t* skinList)
+void trap_G2_SetGhoul2ModelIndexes(CGhoul2Info_v& ghoul2, qhandle_t* model_list, qhandle_t* skin_list)
 {
-	Q_syscall(CG_G2_SETMODELS, &ghoul2, model_list, skinList);
+	Q_syscall(CG_G2_SETMODELS, &ghoul2, model_list, skin_list);
 }
 
 /*

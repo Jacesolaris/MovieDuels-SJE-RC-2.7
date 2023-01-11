@@ -1249,14 +1249,14 @@ static void CG_BodyQueueCopy(centity_t* cent, int client_num, int knownWeapon)
 			//this will just set us to the last frame of the animation, in theory
 			aNum = cgs.clientinfo[source->currentState.number].frame + 1;
 
-			while (aNum >= anim->firstFrame + anim->numFrames)
+			while (aNum >= anim->firstFrame + anim->num_frames)
 			{
 				aNum--;
 			}
 
 			if (aNum < anim->firstFrame - 1)
 			{ //wrong animation...?
-				aNum = (anim->firstFrame + anim->numFrames) - 1;
+				aNum = (anim->firstFrame + anim->num_frames) - 1;
 			}
 		}
 		else
@@ -1264,11 +1264,11 @@ static void CG_BodyQueueCopy(centity_t* cent, int client_num, int knownWeapon)
 			aNum = anim->firstFrame;
 		}
 
-		const int eFrame = anim->firstFrame + anim->numFrames;
+		const int eFrame = anim->firstFrame + anim->num_frames;
 
 		//if (!cgs.clientinfo[source->currentState.number].frame || (cent->currentState.torsoAnim) != (source->currentState.torsoAnim) )
 		//{
-		//	aNum = (anim->firstFrame+anim->numFrames)-1;
+		//	aNum = (anim->firstFrame+anim->num_frames)-1;
 		//}
 
 		trap->G2API_SetBoneAnim(cent->ghoul2, 0, "upper_lumbar", aNum, eFrame, flags, anim_speed, cg.time, -1, 150);

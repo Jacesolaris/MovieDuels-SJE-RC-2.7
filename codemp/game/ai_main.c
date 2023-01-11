@@ -4440,12 +4440,12 @@ void SaberCombatHandling(bot_state_t* bs)
 
 		if (bs->currentEnemy && bs->currentEnemy->client)
 		{
-			if (!BG_SaberInSpecial(bs->currentEnemy->client->ps.saberMove) && bs->frame_Enemy_Len > 90 && bs->saberBFTime > level.time && bs->saberBTime > level.time && bs->beStill < level.time && bs->saberSTime < level.time)
+			if (!BG_SaberInSpecial(bs->currentEnemy->client->ps.saber_move) && bs->frame_Enemy_Len > 90 && bs->saberBFTime > level.time && bs->saberBTime > level.time && bs->beStill < level.time && bs->saberSTime < level.time)
 			{
 				bs->beStill = level.time + Q_irand(500, 1000);
 				bs->saberSTime = level.time + Q_irand(1200, 1800);
 			}
-			else if (bs->currentEnemy->client->ps.weapon == WP_SABER && bs->frame_Enemy_Len < 80 && ((Q_irand(1, 10) < 8 && bs->saberBFTime < level.time) || bs->saberBTime > level.time || BG_SaberInKata(bs->currentEnemy->client->ps.saberMove) || bs->currentEnemy->client->ps.saberMove == LS_SPINATTACK || bs->currentEnemy->client->ps.saberMove == LS_SPINATTACK_DUAL))
+			else if (bs->currentEnemy->client->ps.weapon == WP_SABER && bs->frame_Enemy_Len < 80 && ((Q_irand(1, 10) < 8 && bs->saberBFTime < level.time) || bs->saberBTime > level.time || BG_SaberInKata(bs->currentEnemy->client->ps.saber_move) || bs->currentEnemy->client->ps.saber_move == LS_SPINATTACK || bs->currentEnemy->client->ps.saber_move == LS_SPINATTACK_DUAL))
 			{
 				vec3_t vs;
 				vec3_t groundcheck;
@@ -4455,7 +4455,7 @@ void SaberCombatHandling(bot_state_t* bs)
 				VectorSubtract(bs->origin, usethisvec, vs);
 				VectorNormalize(vs);
 
-				if (BG_SaberInKata(bs->currentEnemy->client->ps.saberMove) || bs->currentEnemy->client->ps.saberMove == LS_SPINATTACK || bs->currentEnemy->client->ps.saberMove == LS_SPINATTACK_DUAL)
+				if (BG_SaberInKata(bs->currentEnemy->client->ps.saber_move) || bs->currentEnemy->client->ps.saber_move == LS_SPINATTACK || bs->currentEnemy->client->ps.saber_move == LS_SPINATTACK_DUAL)
 				{
 					idealDist = 256;
 				}
@@ -6892,13 +6892,13 @@ void StandardBotAI(bot_state_t* bs, float thinktime)
 				bs->saberPowerTime = level.time + Q_irand(3000, 15000);
 			}
 
-			if (g_entities[bs->client].client->ps.fd.saberAnimLevel != SS_STAFF
-				&& g_entities[bs->client].client->ps.fd.saberAnimLevel != SS_DUAL)
+			if (g_entities[bs->client].client->ps.fd.saber_anim_level != SS_STAFF
+				&& g_entities[bs->client].client->ps.fd.saber_anim_level != SS_DUAL)
 			{
 				if (bs->currentEnemy->health > 75
 					&& g_entities[bs->client].client->ps.fd.forcePowerLevel[FP_SABER_OFFENSE] > 2)
 				{
-					if (g_entities[bs->client].client->ps.fd.saberAnimLevel != SS_STRONG
+					if (g_entities[bs->client].client->ps.fd.saber_anim_level != SS_STRONG
 						&& bs->saberPower)
 					{ //if we are up against someone with a lot of health and we have a strong attack available, then h4q them
 						Cmd_SaberAttackCycle_f(&g_entities[bs->client]);
@@ -6907,14 +6907,14 @@ void StandardBotAI(bot_state_t* bs, float thinktime)
 				else if (bs->currentEnemy->health > 40
 					&& g_entities[bs->client].client->ps.fd.forcePowerLevel[FP_SABER_OFFENSE] > 1)
 				{
-					if (g_entities[bs->client].client->ps.fd.saberAnimLevel != SS_MEDIUM)
+					if (g_entities[bs->client].client->ps.fd.saber_anim_level != SS_MEDIUM)
 					{ //they're down on health a little, use level 2 if we can
 						Cmd_SaberAttackCycle_f(&g_entities[bs->client]);
 					}
 				}
 				else
 				{
-					if (g_entities[bs->client].client->ps.fd.saberAnimLevel != SS_FAST)
+					if (g_entities[bs->client].client->ps.fd.saber_anim_level != SS_FAST)
 					{ //they've gone below 40 health, go at them with quick attacks
 						Cmd_SaberAttackCycle_f(&g_entities[bs->client]);
 					}
@@ -6939,7 +6939,7 @@ void StandardBotAI(bot_state_t* bs, float thinktime)
 				(bs->cur_ps.fd.forcePowersKnown & (1 << FP_SABERTHROW)) &&
 				in_field_of_vision(bs->viewangles, 30, a_fo) &&
 				bs->frame_Enemy_Len < BOT_SABER_THROW_RANGE &&
-				bs->cur_ps.fd.saberAnimLevel != SS_STAFF)
+				bs->cur_ps.fd.saber_anim_level != SS_STAFF)
 			{
 				bs->doAltAttack = 1;
 				bs->doAttack = 0;

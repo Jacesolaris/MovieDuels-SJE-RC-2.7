@@ -781,7 +781,7 @@ usercmd_t CL_CreateCmd(void)
 	// keyboard angle adjustment
 	CL_AdjustAngles();
 
-	memset(&cmd, 0, sizeof(cmd));
+	memset(&cmd, 0, sizeof cmd);
 
 	CL_CmdButtons(&cmd);
 
@@ -928,14 +928,14 @@ void CL_WritePacket(void)
 		return;
 	}
 
-	MSG_Init(&buf, data, sizeof(data));
+	MSG_Init(&buf, data, sizeof data);
 
 	// write any unacknowledged clientCommands
 	for (i = clc.reliableAcknowledge + 1; i <= clc.reliableSequence; i++)
 	{
 		MSG_WriteByte(&buf, clc_clientCommand);
 		MSG_WriteLong(&buf, i);
-		MSG_WriteString(&buf, clc.reliableCommands[i & (MAX_RELIABLE_COMMANDS - 1)]);
+		MSG_WriteString(&buf, clc.reliableCommands[i & MAX_RELIABLE_COMMANDS - 1]);
 	}
 
 	// we want to send all the usercmds that were generated in the last
@@ -949,7 +949,7 @@ void CL_WritePacket(void)
 	{
 		Cvar_Set("cl_packetdup", "5");
 	}
-	const int oldPacketNum = (clc.netchan.outgoingSequence - 1 - cl_packetdup->integer) & PACKET_MASK;
+	const int oldPacketNum = clc.netchan.outgoingSequence - 1 - cl_packetdup->integer & PACKET_MASK;
 	int count = cl.cmdNumber - cl.packetCmdNumber[oldPacketNum];
 	if (count > MAX_PACKET_USERCMDS)
 	{
@@ -992,12 +992,12 @@ void CL_WritePacket(void)
 		MSG_WriteByte(&buf, count);
 
 		// write all the commands, including the predicted command
-		memset(&nullcmd, 0, sizeof(nullcmd));
-		usercmd_t* oldcmd = &nullcmd;
+		memset(&nullcmd, 0, sizeof nullcmd);
+		const usercmd_t* oldcmd = &nullcmd;
 		for (i = 0; i < count; i++)
 		{
-			const int j = (cl.cmdNumber - count + i + 1) & CMD_MASK;
-			usercmd_t* cmd = &cl.cmds[j];
+			const int j = cl.cmdNumber - count + i + 1 & CMD_MASK;
+			const usercmd_t* cmd = &cl.cmds[j];
 			MSG_WriteDeltaUsercmd(&buf, oldcmd, cmd);
 			oldcmd = cmd;
 		}
@@ -1006,9 +1006,9 @@ void CL_WritePacket(void)
 	//
 	// deliver the message
 	//
-	const int packetNum = clc.netchan.outgoingSequence & PACKET_MASK;
-	cl.packetTime[packetNum] = cls.realtime;
-	cl.packetCmdNumber[packetNum] = cl.cmdNumber;
+	const int packet_num = clc.netchan.outgoingSequence & PACKET_MASK;
+	cl.packetTime[packet_num] = cls.realtime;
+	cl.packetCmdNumber[packet_num] = cl.cmdNumber;
 	clc.lastPacketSentTime = cls.realtime;
 	Netchan_Transmit(&clc.netchan, buf.cursize, buf.data);
 }

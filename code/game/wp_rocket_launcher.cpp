@@ -58,8 +58,8 @@ void rocketThink(gentity_t* ent)
 		vec3_t targetdir;
 		vec3_t newdir;
 		float vel = ent->spawnflags & 1 ? ent->speed : ROCKET_VELOCITY;
-		const float newDirMult = ent->angle ? ent->angle * 2.0f : 1.0f;
-		const float oldDirMult = ent->angle ? (1.0f - ent->angle) * 2.0f : 1.0f;
+		const float new_dir_mult = ent->angle ? ent->angle * 2.0f : 1.0f;
+		const float old_dir_mult = ent->angle ? (1.0f - ent->angle) * 2.0f : 1.0f;
 
 		if (ent->spawnflags & 1)
 		{
@@ -116,16 +116,16 @@ void rocketThink(gentity_t* ent)
 			if (dot2 > 0)
 			{
 				// Turn 45 degrees right.
-				VectorMA(ent->movedir, 0.3f * newDirMult, right, newdir);
+				VectorMA(ent->movedir, 0.3f * new_dir_mult, right, newdir);
 			}
 			else
 			{
 				// Turn 45 degrees left.
-				VectorMA(ent->movedir, -0.3f * newDirMult, right, newdir);
+				VectorMA(ent->movedir, -0.3f * new_dir_mult, right, newdir);
 			}
 
 			// Yeah we've adjusted horizontally, but let's split the difference vertically, so we kinda try to move towards it.
-			newdir[2] = (targetdir[2] * newDirMult + ent->movedir[2] * oldDirMult) * 0.5;
+			newdir[2] = (targetdir[2] * new_dir_mult + ent->movedir[2] * old_dir_mult) * 0.5;
 
 			// slowing down coupled with fairly tight turns can lead us to orbit an enemy..looks bad so don't do it!
 			//			vel *= 0.5f;
@@ -133,12 +133,12 @@ void rocketThink(gentity_t* ent)
 		else if (dot < 0.70f)
 		{
 			// Still a bit off, so we turn a bit softer
-			VectorMA(ent->movedir, 0.5f * newDirMult, targetdir, newdir);
+			VectorMA(ent->movedir, 0.5f * new_dir_mult, targetdir, newdir);
 		}
 		else
 		{
 			// getting close, so turn a bit harder
-			VectorMA(ent->movedir, 0.9f * newDirMult, targetdir, newdir);
+			VectorMA(ent->movedir, 0.9f * new_dir_mult, targetdir, newdir);
 		}
 
 		// add crazy drunkenness

@@ -150,11 +150,11 @@ WriteMember
 -------------------------
 */
 
-int CBlockMember::WriteMember(FILE* m_fileHandle) const
+int CBlockMember::WriteMember(FILE* m_file_handle) const
 {
-	fwrite(&m_id, sizeof(m_id), 1, m_fileHandle);
-	fwrite(&m_size, sizeof(m_size), 1, m_fileHandle);
-	fwrite(m_data, m_size, 1, m_fileHandle);
+	fwrite(&m_id, sizeof(m_id), 1, m_file_handle);
+	fwrite(&m_size, sizeof(m_size), 1, m_file_handle);
+	fwrite(m_data, m_size, 1, m_file_handle);
 
 	return true;
 }
@@ -342,13 +342,13 @@ GetMember
 -------------------------
 */
 
-CBlockMember* CBlock::GetMember(int memberNum) const
+CBlockMember* CBlock::GetMember(int member_num) const
 {
-	if (memberNum > GetNumMembers() - 1)
+	if (member_num > GetNumMembers() - 1)
 	{
 		return nullptr;
 	}
-	return m_members[memberNum];
+	return m_members[member_num];
 }
 
 /*
@@ -357,13 +357,13 @@ GetMemberData
 -------------------------
 */
 
-void* CBlock::GetMemberData(int memberNum) const
+void* CBlock::GetMemberData(int member_num) const
 {
-	if (memberNum >= GetNumMembers())
+	if (member_num >= GetNumMembers())
 	{
 		return nullptr;
 	}
-	return (void*)((GetMember(memberNum))->GetData());
+	return (void*)((GetMember(member_num))->GetData());
 }
 
 /*

@@ -300,9 +300,9 @@ qboolean BG_SaberInAttack(int move)
 	return qfalse;
 }
 
-qboolean BG_SaberInKata(int saberMove)
+qboolean BG_SaberInKata(int saber_move)
 {
-	switch (saberMove)
+	switch (saber_move)
 	{
 	case LS_A1_SPECIAL:
 	case LS_A2_SPECIAL:
@@ -1526,7 +1526,7 @@ int BG_AnimLength(int index, animNumber_t anim) {
 		return 0;
 	}
 
-	return bgAllAnims[index].anims[anim].numFrames * fabs((float)(bgAllAnims[index].anims[anim].frameLerp));
+	return bgAllAnims[index].anims[anim].num_frames * fabs((float)(bgAllAnims[index].anims[anim].frameLerp));
 }
 
 //just use whatever pm->animations is
@@ -1535,7 +1535,7 @@ int PM_AnimLength(int index, animNumber_t anim) {
 		return 0;
 	}
 
-	return pm->animations[anim].numFrames * fabs((float)(pm->animations[anim].frameLerp));
+	return pm->animations[anim].num_frames * fabs((float)(pm->animations[anim].frameLerp));
 }
 
 void PM_DebugLegsAnim(int anim)
@@ -1763,7 +1763,7 @@ void ParseAnimationEvtBlock(const char* aeb_filename, animevent_t* animEvents, a
 			continue;
 		}
 
-		if (animations[animNum].numFrames == 0)
+		if (animations[animNum].num_frames == 0)
 		{//we don't use this anim
 			Com_Printf(S_COLOR_YELLOW"WARNING: %s animevents.cfg: anim %s not used by this model\n", aeb_filename, token);
 			//skip this entry
@@ -2323,13 +2323,13 @@ int BG_ParseAnimationFile(const char* filename, animation_t* animset, qboolean i
 	// parse the text
 	text_p = BGPAFtext;
 
-	//FIXME: have some way of playing anims backwards... negative numFrames?
+	//FIXME: have some way of playing anims backwards... negative num_frames?
 
 	//initialize anim array so that from 0 to MAX_ANIMATIONS, set default values of 0 1 0 100
 	for (i = 0; i < MAX_ANIMATIONS; i++)
 	{
 		animset[i].firstFrame = 0;
-		animset[i].numFrames = 0;
+		animset[i].num_frames = 0;
 		animset[i].loopFrames = -1;
 		animset[i].frameLerp = 100;
 	}
@@ -2373,7 +2373,7 @@ int BG_ParseAnimationFile(const char* filename, animation_t* animset, qboolean i
 		{
 			break;
 		}
-		animset[animNum].numFrames = atoi(token);
+		animset[animNum].num_frames = atoi(token);
 
 		token = COM_Parse((const char**)(&text_p));
 		if (!token)
@@ -2408,7 +2408,7 @@ int BG_ParseAnimationFile(const char* filename, animation_t* animset, qboolean i
 		{
 			if (animTable[i].name != NULL)		// This animation reference exists.
 			{
-				if (animset[i].firstFrame <= 0 && animset[i].numFrames <=0)
+				if (animset[i].firstFrame <= 0 && animset[i].num_frames <=0)
 				{	// This is an empty animation reference.
 					Com_Printf("***ANIMTABLE reference #%d (%s) is empty!\n", i, animTable[i].name);
 				}
@@ -2605,7 +2605,7 @@ void PM_SetTorsoAnimTimer(int time)
 	BG_SetTorsoAnimTimer(pm->ps, time);
 }
 
-void BG_SaberStartTransAnim(int client_num, int saberAnimLevel, int weapon, int anim, float* anim_speed, int broken)
+void BG_SaberStartTransAnim(int client_num, int saber_anim_level, int weapon, int anim, float* anim_speed, int broken)
 {
 	if (anim >= BOTH_A1_T__B_ && anim <= BOTH_ROLL_STAB)
 	{
@@ -2633,11 +2633,11 @@ void BG_SaberStartTransAnim(int client_num, int saberAnimLevel, int weapon, int 
 		((anim) >= BOTH_T3_BR__R &&
 			(anim) <= BOTH_T3_BL_TL))
 	{
-		if (saberAnimLevel == FORCE_LEVEL_1)
+		if (saber_anim_level == FORCE_LEVEL_1)
 		{
 			*anim_speed *= 1.5f;
 		}
-		else if (saberAnimLevel == FORCE_LEVEL_3)
+		else if (saber_anim_level == FORCE_LEVEL_3)
 		{
 			*anim_speed *= 0.75f;
 		}
@@ -2683,9 +2683,9 @@ void BG_SetAnimFinal(playerState_t* ps, animation_t* animations,
 	}
 
 	assert(anim > -1);
-	assert(animations[anim].firstFrame > 0 || animations[anim].numFrames > 0);
+	assert(animations[anim].firstFrame > 0 || animations[anim].num_frames > 0);
 
-	BG_SaberStartTransAnim(ps->client_num, ps->fd.saberAnimLevel, ps->weapon, anim, &editAnimSpeed, ps->brokenLimbs);
+	BG_SaberStartTransAnim(ps->client_num, ps->fd.saber_anim_level, ps->weapon, anim, &editAnimSpeed, ps->brokenLimbs);
 
 	// Set torso anim
 	if (setAnimParts & SETANIM_TORSO)
@@ -2707,7 +2707,7 @@ void BG_SetAnimFinal(playerState_t* ps, animation_t* animations,
 		{
 			if (setAnimFlags & SETANIM_FLAG_HOLDLESS)
 			{	// Make sure to only wait in full 1/20 sec server frame intervals.
-				int dur = (animations[anim].numFrames - 1) * fabs((float)(animations[anim].frameLerp));
+				int dur = (animations[anim].num_frames - 1) * fabs((float)(animations[anim].frameLerp));
 				const int speedDif = dur - (dur * editAnimSpeed);
 				dur += speedDif;
 				if (dur > 1)
@@ -2721,7 +2721,7 @@ void BG_SetAnimFinal(playerState_t* ps, animation_t* animations,
 			}
 			else
 			{
-				ps->torsoTimer = ((animations[anim].numFrames) * fabs((float)(animations[anim].frameLerp)));
+				ps->torsoTimer = ((animations[anim].num_frames) * fabs((float)(animations[anim].frameLerp)));
 			}
 
 			if (ps->fd.forcePowersActive & (1 << FP_RAGE))
@@ -2752,7 +2752,7 @@ setAnimLegs:
 		{
 			if (setAnimFlags & SETANIM_FLAG_HOLDLESS)
 			{	// Make sure to only wait in full 1/20 sec server frame intervals.
-				int dur = (animations[anim].numFrames - 1) * fabs((float)(animations[anim].frameLerp));
+				int dur = (animations[anim].num_frames - 1) * fabs((float)(animations[anim].frameLerp));
 				const int speedDif = dur - (dur * editAnimSpeed);
 				dur += speedDif;
 				if (dur > 1)
@@ -2766,7 +2766,7 @@ setAnimLegs:
 			}
 			else
 			{
-				ps->legsTimer = ((animations[anim].numFrames) * fabs((float)(animations[anim].frameLerp)));
+				ps->legsTimer = ((animations[anim].num_frames) * fabs((float)(animations[anim].frameLerp)));
 			}
 
 			if (PM_RunningAnim(anim) ||
@@ -2808,7 +2808,7 @@ qboolean BG_HasAnimation(int animIndex, int animation)
 	const animation_t* animations = bgAllAnims[animIndex].anims;
 
 	//No frames, no anim
-	if (animations[animation].numFrames == 0)
+	if (animations[animation].num_frames == 0)
 		return qfalse;
 
 	//Has the sequence
@@ -2845,7 +2845,7 @@ void BG_SetAnim(playerState_t* ps, animation_t* animations, int setAnimParts, in
 		animations = bgAllAnims[0].anims;
 	}
 
-	if (animations[anim].firstFrame == 0 && animations[anim].numFrames == 0)
+	if (animations[anim].firstFrame == 0 && animations[anim].num_frames == 0)
 	{
 		if (anim == BOTH_RUNBACK1 ||
 			anim == BOTH_WALKBACK1 ||
@@ -2854,7 +2854,7 @@ void BG_SetAnim(playerState_t* ps, animation_t* animations, int setAnimParts, in
 			anim = BOTH_WALK2;
 		}
 
-		if (animations[anim].firstFrame == 0 && animations[anim].numFrames == 0)
+		if (animations[anim].firstFrame == 0 && animations[anim].num_frames == 0)
 		{ //still? Just return then I guess.
 			return;
 		}

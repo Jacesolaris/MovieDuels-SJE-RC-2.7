@@ -235,7 +235,7 @@ using displayContextDef_t = struct
 	//rww - ghoul2 stuff. Add whatever you need here, remember to set it in _UI_Init or it will crash when you try to use it.
 	qboolean (*g2_SetSkin)(CGhoul2Info* ghl_info, qhandle_t customSkin, qhandle_t renderSkin);
 	qboolean (*g2_SetBoneAnim)(CGhoul2Info* ghl_info, const char* bone_name, int start_frame, int end_frame,
-	                           int flags, float anim_speed, int currentTime, float setFrame, int blend_time);
+	                           int flags, float anim_speed, int current_time, float setFrame, int blend_time);
 	qboolean (*g2_RemoveGhoul2Model)(CGhoul2Info_v& ghl_info, int model_index);
 	int (*g2_InitGhoul2Model)(CGhoul2Info_v& ghoul2, const char* fileName, int, qhandle_t customSkin,
 	                          qhandle_t customShader, int modelFlags, int lodBias);

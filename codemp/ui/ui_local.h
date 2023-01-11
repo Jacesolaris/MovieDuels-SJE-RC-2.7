@@ -251,7 +251,7 @@ typedef struct serverStatusInfo_s {
 } serverStatusInfo_t;
 
 typedef struct modInfo_s {
-	const char* modName;
+	const char* mod_name;
 	const char* modDescr;
 } modInfo_t;
 

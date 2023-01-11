@@ -240,7 +240,7 @@ void multi_trigger(gentity_t* ent, gentity_t* activator)
 		int team2ClNum = 0;
 		const int owningTeam = ent->genericValue3;
 		int newOwningTeam = 0;
-		int entityList[MAX_GENTITIES];
+		int entity_list[MAX_GENTITIES];
 
 		if (level.gametype != GT_SIEGE)
 		{
@@ -254,13 +254,13 @@ void multi_trigger(gentity_t* ent, gentity_t* activator)
 		}
 
 		//Count up the number of clients standing within the bounds of the trigger and the number of them on each team
-		const int num_ents = trap->EntitiesInBox(ent->r.absmin, ent->r.absmax, entityList, MAX_GENTITIES);
+		const int num_ents = trap->EntitiesInBox(ent->r.absmin, ent->r.absmax, entity_list, MAX_GENTITIES);
 		while (i < num_ents)
 		{
-			if (entityList[i] < MAX_CLIENTS)
+			if (entity_list[i] < MAX_CLIENTS)
 			{
 				//only care about clients
-				const gentity_t* cl = &g_entities[entityList[i]];
+				const gentity_t* cl = &g_entities[entity_list[i]];
 
 				//the client is valid
 				if (cl->inuse && cl->client &&

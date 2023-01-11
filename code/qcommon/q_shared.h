@@ -2007,7 +2007,7 @@ public:
 	};
 #endif // !JK2_MODE
 
-	short saberMove;
+	short saber_move;
 
 #ifndef JK2_MODE
 	short saberMoveNext;
@@ -2042,7 +2042,7 @@ public:
 	int saberDamageDebounceTime;
 	int saberHitWallSoundDebounceTime;
 	int saberEventFlags;
-	int saberAnimLevel;
+	int saber_anim_level;
 	int saberAttackChainCount;
 	int saberFatigueChainCount;
 	int BlasterAttackChainCount;
@@ -2298,7 +2298,7 @@ public:
 		saved_game.write<int32_t>(dualSabers);
 #endif // !JK2_MODE
 
-		saved_game.write<int16_t>(saberMove);
+		saved_game.write<int16_t>(saber_move);
 
 #ifndef JK2_MODE
 		saved_game.write<int16_t>(saberMoveNext);
@@ -2320,7 +2320,7 @@ public:
 		saved_game.write<int32_t>(saberDamageDebounceTime);
 		saved_game.write<int32_t>(saberHitWallSoundDebounceTime);
 		saved_game.write<int32_t>(saberEventFlags);
-		saved_game.write<int32_t>(saberAnimLevel);
+		saved_game.write<int32_t>(saber_anim_level);
 		saved_game.write<int32_t>(saberAttackChainCount);
 		saved_game.write<int32_t>(saberFatigueChainCount);
 		saved_game.write<int32_t>(BlasterAttackChainCount);
@@ -2569,7 +2569,7 @@ public:
 		saved_game.read<int32_t>(dualSabers);
 #endif // !JK2_MODE
 
-		saved_game.read<int16_t>(saberMove);
+		saved_game.read<int16_t>(saber_move);
 
 #ifndef JK2_MODE
 		saved_game.read<int16_t>(saberMoveNext);
@@ -2591,7 +2591,7 @@ public:
 		saved_game.read<int32_t>(saberEntityState);
 		saved_game.read<int32_t>(saberHitWallSoundDebounceTime);
 		saved_game.read<int32_t>(saberEventFlags);
-		saved_game.read<int32_t>(saberAnimLevel);
+		saved_game.read<int32_t>(saber_anim_level);
 		saved_game.read<int32_t>(saberAttackChainCount);
 		saved_game.read<int32_t>(saberFatigueChainCount);
 		saved_game.read<int32_t>(BlasterAttackChainCount);
@@ -3015,7 +3015,7 @@ using entityState_t = struct entityState_s
 
 	int radarIcon;
 
-	int saberMove;
+	int saber_move;
 
 	int genericenemyindex;
 
@@ -3340,7 +3340,7 @@ using SSkinGoreData = struct SSkinGoreData_s
 {
 	vec3_t angles;
 	vec3_t position;
-	int currentTime;
+	int current_time;
 	int ent_num;
 	vec3_t rayDirection; // in world space
 	vec3_t hitLocation; // in world space

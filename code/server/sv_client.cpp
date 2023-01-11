@@ -446,7 +446,7 @@ static void SV_UserMove(client_t* cl, msg_t* msg)
 	}
 
 	memset(&nullcmd, 0, sizeof(nullcmd));
-	usercmd_t* oldcmd = &nullcmd;
+	const usercmd_t* oldcmd = &nullcmd;
 	for (i = 0; i < cmdCount; i++)
 	{
 		usercmd_t* cmd = &cmds[i];

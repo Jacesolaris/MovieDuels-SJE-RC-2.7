@@ -196,13 +196,13 @@ void WP_FireBryarPistol(gentity_t* ent, const qboolean alt_fire)
 }
 
 //---------------------------------------------------------
-void WP_FireBryarPistolDuals(gentity_t* ent, const qboolean alt_fire, const qboolean secondPistol)
+void WP_FireBryarPistolDuals(gentity_t* ent, const qboolean alt_fire, const qboolean second_pistol)
 //---------------------------------------------------------
 {
 	vec3_t start;
 	int damage = !alt_fire ? weaponData[WP_BLASTER_PISTOL].damage : weaponData[WP_BLASTER_PISTOL].altDamage;
 
-	if (secondPistol)
+	if (second_pistol)
 	{
 		VectorCopy(muzzle2, start);
 	}
@@ -533,13 +533,13 @@ void WP_FireReyPistol(gentity_t* ent, const qboolean alt_fire)
 }
 
 //---------------------------------------------------------
-void WP_FireReyPistolDuals(gentity_t* ent, const qboolean alt_fire, const qboolean secondPistol)
+void WP_FireReyPistolDuals(gentity_t* ent, const qboolean alt_fire, const qboolean second_pistol)
 //---------------------------------------------------------
 {
 	vec3_t start;
 	int damage = !alt_fire ? weaponData[WP_REY].damage : weaponData[WP_REY].altDamage;
 
-	if (secondPistol)
+	if (second_pistol)
 	{
 		VectorCopy(muzzle2, start);
 	}
@@ -869,13 +869,13 @@ void WP_FireClonePistol(gentity_t* ent, const qboolean alt_fire)
 }
 
 //---------------------------------------------------------
-void WP_FireClonePistolDuals(gentity_t* ent, const qboolean alt_fire, const qboolean secondPistol)
+void WP_FireClonePistolDuals(gentity_t* ent, const qboolean alt_fire, const qboolean second_pistol)
 //---------------------------------------------------------
 {
 	vec3_t start;
 	int damage = !alt_fire ? weaponData[WP_CLONEPISTOL].damage : weaponData[WP_CLONEPISTOL].altDamage;
 
-	if (secondPistol)
+	if (second_pistol)
 	{
 		VectorCopy(muzzle2, start);
 	}

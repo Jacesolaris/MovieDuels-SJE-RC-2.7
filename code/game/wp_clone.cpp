@@ -32,11 +32,11 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 extern cvar_t* g_SerenityJediEngineMode;
 //---------------------------------------------------------
-void WP_FireCloneMissile(gentity_t* ent, vec3_t start, vec3_t dir, const qboolean altFire)
+void WP_FireCloneMissile(gentity_t* ent, vec3_t start, vec3_t dir, const qboolean alt_fire)
 //---------------------------------------------------------
 {
 	int velocity = BLASTER_VELOCITY;
-	int damage = altFire ? weaponData[WP_CLONECARBINE].altDamage : weaponData[WP_CLONECARBINE].damage;
+	int damage = alt_fire ? weaponData[WP_CLONECARBINE].altDamage : weaponData[WP_CLONECARBINE].damage;
 
 	if (ent && ent->client && ent->client->NPC_class == CLASS_VEHICLE)
 	{
@@ -67,7 +67,7 @@ void WP_FireCloneMissile(gentity_t* ent, vec3_t start, vec3_t dir, const qboolea
 
 	WP_MissileTargetHint(ent, start, dir);
 
-	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, altFire);
+	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, alt_fire);
 
 	missile->classname = "clone_proj";
 	missile->s.weapon = WP_CLONECARBINE;
@@ -102,7 +102,7 @@ void WP_FireCloneMissile(gentity_t* ent, vec3_t start, vec3_t dir, const qboolea
 	{
 		missile->dflags = DAMAGE_DEATH_KNOCKBACK;
 	}
-	if (altFire)
+	if (alt_fire)
 	{
 		missile->methodOfDeath = MOD_BLASTER_ALT;
 	}
@@ -227,11 +227,11 @@ void WP_FireClone(gentity_t* ent, const qboolean alt_fire)
 //---------------
 
 //---------------------------------------------------------
-void WP_FireCloneRifleMissile(gentity_t* ent, vec3_t start, vec3_t dir, const qboolean altFire)
+void WP_FireCloneRifleMissile(gentity_t* ent, vec3_t start, vec3_t dir, const qboolean alt_fire)
 //---------------------------------------------------------
 {
 	int velocity = CLONERIFLE_VELOCITY;
-	int damage = altFire ? weaponData[WP_CLONERIFLE].altDamage : weaponData[WP_CLONERIFLE].damage;
+	int damage = alt_fire ? weaponData[WP_CLONERIFLE].altDamage : weaponData[WP_CLONERIFLE].damage;
 
 	if (ent && ent->client && ent->client->NPC_class == CLASS_VEHICLE)
 	{
@@ -262,7 +262,7 @@ void WP_FireCloneRifleMissile(gentity_t* ent, vec3_t start, vec3_t dir, const qb
 
 	WP_MissileTargetHint(ent, start, dir);
 
-	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, altFire);
+	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, alt_fire);
 
 	missile->classname = "clone_proj";
 	missile->s.weapon = WP_CLONERIFLE;
@@ -296,7 +296,7 @@ void WP_FireCloneRifleMissile(gentity_t* ent, vec3_t start, vec3_t dir, const qb
 	{
 		missile->dflags = DAMAGE_DEATH_KNOCKBACK;
 	}
-	if (altFire)
+	if (alt_fire)
 	{
 		missile->methodOfDeath = MOD_CLONERIFLE_ALT;
 	}
@@ -417,11 +417,11 @@ void WP_FireCloneRifle(gentity_t* ent, const qboolean alt_fire)
 //---------------
 
 //---------------------------------------------------------
-void WP_FireCloneCommandoMissile(gentity_t* ent, vec3_t start, vec3_t dir, const qboolean altFire)
+void WP_FireCloneCommandoMissile(gentity_t* ent, vec3_t start, vec3_t dir, const qboolean alt_fire)
 //---------------------------------------------------------
 {
 	int velocity = CLONECOMMANDO_VELOCITY;
-	int damage = altFire ? weaponData[WP_CLONECOMMANDO].altDamage : weaponData[WP_CLONECOMMANDO].damage;
+	int damage = alt_fire ? weaponData[WP_CLONECOMMANDO].altDamage : weaponData[WP_CLONECOMMANDO].damage;
 
 	if (ent && ent->client && ent->client->NPC_class == CLASS_VEHICLE)
 	{
@@ -452,7 +452,7 @@ void WP_FireCloneCommandoMissile(gentity_t* ent, vec3_t start, vec3_t dir, const
 
 	WP_MissileTargetHint(ent, start, dir);
 
-	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, altFire);
+	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, alt_fire);
 
 	missile->classname = "clone_proj";
 	missile->s.weapon = WP_CLONECOMMANDO;
@@ -486,7 +486,7 @@ void WP_FireCloneCommandoMissile(gentity_t* ent, vec3_t start, vec3_t dir, const
 	{
 		missile->dflags = DAMAGE_DEATH_KNOCKBACK;
 	}
-	if (altFire)
+	if (alt_fire)
 	{
 		missile->methodOfDeath = MOD_CLONECOMMANDO_ALT;
 	}

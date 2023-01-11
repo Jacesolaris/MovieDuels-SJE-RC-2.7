@@ -225,8 +225,8 @@ void CIcarus::DeleteIcarusID(int& icarus_id)
 		return;
 	}
 
-	CTaskManager* taskManager = sequencer->GetTaskManager();
-	if (taskManager->IsResident())
+	CTaskManager* task_manager = sequencer->GetTaskManager();
+	if (task_manager->IsResident())
 	{
 		IGameInterface::GetGame()->DebugPrint(IGameInterface::WL_ERROR,
 		                                      "Refusing DeleteIcarusID(%d) because it is running!\n", icarus_id);
@@ -239,10 +239,10 @@ void CIcarus::DeleteIcarusID(int& icarus_id)
 	// added 2/12/2 to properly delete blocks that were passed to the task manager
 	sequencer->Recall(this);
 
-	if (taskManager)
+	if (task_manager)
 	{
-		taskManager->Free();
-		delete taskManager;
+		task_manager->Free();
+		delete task_manager;
 	}
 
 	m_sequencers.remove(sequencer);
@@ -332,7 +332,7 @@ void CIcarus::Precache(char* buffer, const long length)
 	if (stream.Open(buffer, length) == 0)
 		return;
 
-	const char* sVal1;
+	const char* s_val1;
 
 	//Now iterate through all blocks of the script, searching for keywords
 	while (stream.BlockAvailable())
@@ -350,34 +350,34 @@ void CIcarus::Precache(char* buffer, const long length)
 
 				if (f == TYPE_PATH)
 				{
-					sVal1 = static_cast<const char*>(block.GetMemberData(1));
+					s_val1 = static_cast<const char*>(block.GetMemberData(1));
 
-					game->PrecacheRoff(sVal1);
+					game->PrecacheRoff(s_val1);
 				}
 			}
 			break;
 
 		case ID_PLAY: // to cache ROFF files
 
-			sVal1 = static_cast<const char*>(block.GetMemberData(0));
+			s_val1 = static_cast<const char*>(block.GetMemberData(0));
 
-			if (!Q_stricmp(sVal1, "PLAY_ROFF"))
+			if (!Q_stricmp(s_val1, "PLAY_ROFF"))
 			{
-				sVal1 = static_cast<const char*>(block.GetMemberData(1));
+				s_val1 = static_cast<const char*>(block.GetMemberData(1));
 
-				game->PrecacheRoff(sVal1);
+				game->PrecacheRoff(s_val1);
 			}
 			break;
 
 		//Run commands
 		case ID_RUN:
-			sVal1 = static_cast<const char*>(block.GetMemberData(0));
-			game->PrecacheScript(sVal1);
+			s_val1 = static_cast<const char*>(block.GetMemberData(0));
+			game->PrecacheScript(s_val1);
 			break;
 
 		case ID_SOUND:
-			sVal1 = static_cast<const char*>(block.GetMemberData(1)); //0 is channel, 1 is filename
-			game->PrecacheSound(sVal1);
+			s_val1 = static_cast<const char*>(block.GetMemberData(1)); //0 is channel, 1 is filename
+			game->PrecacheSound(s_val1);
 			break;
 
 		case ID_SET:
@@ -388,10 +388,10 @@ void CIcarus::Precache(char* buffer, const long length)
 		//Make sure we're testing against strings
 			if (block_member->GetID() == TK_STRING)
 			{
-				sVal1 = static_cast<const char*>(block.GetMemberData(0));
-				const auto sVal2 = static_cast<const char*>(block.GetMemberData(1));
+				s_val1 = static_cast<const char*>(block.GetMemberData(0));
+				const auto s_val2 = static_cast<const char*>(block.GetMemberData(1));
 
-				game->PrecacheFromSet(sVal1, sVal2);
+				game->PrecacheFromSet(s_val1, s_val2);
 			}
 			break;
 

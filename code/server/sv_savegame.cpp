@@ -1225,12 +1225,12 @@ qboolean SG_ReadSavegame(
 	const int iPrevTestSave = sv_testsave->integer;
 
 	ojk::ScopeGuard scope_guard(
-		[&]()
+		[&]
 		{
 			sv_testsave->integer = 0;
 		},
 
-		[&]()
+		[&]
 		{
 			saved_game.close();
 

@@ -520,7 +520,7 @@ static void ParseAnimationEvtBlock(const int gla_index, const unsigned short mod
 			continue;
 		}
 
-		if (animations[anim_num].numFrames == 0)
+		if (animations[anim_num].num_frames == 0)
 		{
 			//we don't use this anim
 #ifndef FINAL_BUILD
@@ -551,17 +551,17 @@ static void ParseAnimationEvtBlock(const int gla_index, const unsigned short mod
 		int key_frame = atoi(token);
 
 		if (b_is_frame_skipped &&
-			animations[anim_num].numFrames > 2)
+			animations[anim_num].num_frames > 2)
 		// important, else frame 1 gets divided down and becomes frame 0. Carcass & Assimilate also work this way
 		{
 			key_frame /= 2;
 			// if we ever use any other value in frame-skipping we'll have to figure out some way of reading it, since it's not stored anywhere
 		}
-		if (key_frame >= animations[anim_num].numFrames)
+		if (key_frame >= animations[anim_num].num_frames)
 		{
 			//Com_Printf(S_COLOR_YELLOW"WARNING: Event out of range on %s in %s\n", GetStringForID(animTable,animNum), aeb_filename );
-			//assert(keyFrame < animations[animNum].numFrames);
-			key_frame = animations[anim_num].numFrames - 1; //clamp it
+			//assert(keyFrame < animations[animNum].num_frames);
+			key_frame = animations[anim_num].num_frames - 1; //clamp it
 		}
 
 		//set our start frame
@@ -1049,7 +1049,7 @@ qboolean G_ParseAnimationFile(const int gla_index, const char* skeleton_name, co
 			break;
 		}
 		assert(atoi(token) >= 0 && atoi(token) < 65536);
-		animations[anim_num].numFrames = atoi(token);
+		animations[anim_num].num_frames = atoi(token);
 
 		// Loop Frames
 		//-------------
@@ -1155,7 +1155,7 @@ int G_ParseAnimFileSet(const char* skeleton_name, const char* model_name = nullp
 		for (i = 0; i < MAX_ANIMATIONS; i++)
 		{
 			animations[i].firstFrame = 0;
-			animations[i].numFrames = 0;
+			animations[i].num_frames = 0;
 			animations[i].loopFrames = -1;
 			animations[i].frameLerp = 100;
 			//			animations[i].initialLerp	= 100;
@@ -3763,8 +3763,8 @@ qboolean NPC_ParseParms(const char* npc_name, gentity_t* npc)
 
 			if (!parsing_player)
 			{
-				//altFire
-				if (!Q_stricmp(token, "altFire"))
+				//alt_fire
+				if (!Q_stricmp(token, "alt_fire"))
 				{
 					if (COM_ParseInt(&p, &n))
 					{
@@ -4338,7 +4338,7 @@ qboolean NPC_ParseParms(const char* npc_name, gentity_t* npc)
 					//clear
 					npc->client->ps.saberStylesKnown &= ~(1 << n);
 				}
-				npc->client->ps.saberAnimLevel = n;
+				npc->client->ps.saber_anim_level = n;
 				if (parsing_player)
 				{
 					cg.saberAnimLevelPending = n;

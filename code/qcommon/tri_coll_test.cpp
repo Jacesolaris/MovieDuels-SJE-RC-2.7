@@ -158,19 +158,19 @@
   }                                         \
 }
 
-qboolean coplanar_tri_tri(vec3_t N, vec3_t V0, vec3_t V1, vec3_t V2,
-                          vec3_t U0, vec3_t U1, vec3_t U2)
+qboolean coplanar_tri_tri(vec3_t n, vec3_t v0, vec3_t v1, vec3_t v2,
+                          vec3_t u0, vec3_t u1, vec3_t u2)
 {
-	vec3_t A;
+	vec3_t a;
 	short i0, i1;
 	/* first project onto an axis-aligned plane, that maximizes the area */
 	/* of the triangles, compute indices: i0,i1. */
-	A[0] = fabs(N[0]);
-	A[1] = fabs(N[1]);
-	A[2] = fabs(N[2]);
-	if (A[0] > A[1])
+	a[0] = fabs(n[0]);
+	a[1] = fabs(n[1]);
+	a[2] = fabs(n[2]);
+	if (a[0] > a[1])
 	{
-		if (A[0] > A[2])
+		if (a[0] > a[2])
 		{
 			i0 = 1; /* A[0] is greatest */
 			i1 = 2;
@@ -183,7 +183,7 @@ qboolean coplanar_tri_tri(vec3_t N, vec3_t V0, vec3_t V1, vec3_t V2,
 	}
 	else /* A[0]<=A[1] */
 	{
-		if (A[2] > A[1])
+		if (a[2] > a[1])
 		{
 			i0 = 0; /* A[2] is greatest */
 			i1 = 1;
@@ -196,13 +196,13 @@ qboolean coplanar_tri_tri(vec3_t N, vec3_t V0, vec3_t V1, vec3_t V2,
 	}
 
 	/* test all edges of triangle 1 against the edges of triangle 2 */
-	EDGE_AGAINST_TRI_EDGES(V0, V1, U0, U1, U2);
-	EDGE_AGAINST_TRI_EDGES(V1, V2, U0, U1, U2);
-	EDGE_AGAINST_TRI_EDGES(V2, V0, U0, U1, U2);
+	EDGE_AGAINST_TRI_EDGES(v0, v1, u0, u1, u2);
+	EDGE_AGAINST_TRI_EDGES(v1, v2, u0, u1, u2);
+	EDGE_AGAINST_TRI_EDGES(v2, v0, u0, u1, u2);
 
 	/* finally, test if tri1 is totally contained in tri2 or vice versa */
-	POINT_IN_TRI(V0, U0, U1, U2);
-	POINT_IN_TRI(U0, V0, V1, V2);
+	POINT_IN_TRI(v0, u0, u1, u2);
+	POINT_IN_TRI(u0, v0, v1, v2);
 
 	return qfalse;
 }
@@ -357,19 +357,19 @@ float ShortestLineSegBewteen2LineSegs(vec3_t start1, vec3_t end1, vec3_t start2,
 	vec3_t v2;
 	VectorSubtract(end2, start2, v2);
 	//
-	const float v1v1 = DotProduct(v1, v1);
-	const float v2v2 = DotProduct(v2, v2);
-	const float v1v2 = DotProduct(v1, v2);
+	const float v1_v1 = DotProduct(v1, v1);
+	const float v2_v2 = DotProduct(v2, v2);
+	const float v1_v2 = DotProduct(v1, v2);
 
 	//the main computation
 
-	const float denom = v1v2 * v1v2 - v1v1 * v2v2;
+	const float denom = v1_v2 * v1_v2 - v1_v1 * v2_v2;
 
 	//if denom is small, then skip all this and jump to the section marked below
 	if (fabs(denom) > 0.001f)
 	{
-		float s = -(v2v2 * DotProduct(v1, start_dif) - v1v2 * DotProduct(v2, start_dif)) / denom;
-		float t = (v1v1 * DotProduct(v2, start_dif) - v1v2 * DotProduct(v1, start_dif)) / denom;
+		float s = -(v2_v2 * DotProduct(v1, start_dif) - v1_v2 * DotProduct(v2, start_dif)) / denom;
+		float t = (v1_v1 * DotProduct(v2, start_dif) - v1_v2 * DotProduct(v1, start_dif)) / denom;
 		qboolean done = qtrue;
 
 		if (s < 0)

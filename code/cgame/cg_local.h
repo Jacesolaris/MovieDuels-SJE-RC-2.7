@@ -164,7 +164,7 @@ struct centity_s
 	int muzzleFlashTime; // move to playerEntity?
 	int muzzleFlashTimeL; // move to playerEntity?
 	int muzzleFlashTimeR; // move to playerEntity?
-	qboolean altFire; // move to playerEntity?
+	qboolean alt_fire; // move to playerEntity?
 
 	int previousEvent;
 	//	int				teleportFlag;
@@ -1262,7 +1262,7 @@ qboolean CG_VehicleWeaponImpact(centity_t* cent);
 Ghoul2 Insert Start
 */
 // CG specific API access
-void trap_G2_SetGhoul2ModelIndexes(CGhoul2Info_v& ghoul2, qhandle_t* model_list, qhandle_t* skinList);
+void trap_G2_SetGhoul2ModelIndexes(CGhoul2Info_v& ghoul2, qhandle_t* model_list, qhandle_t* skin_list);
 void CG_Init_CG(void);
 
 void CG_SetGhoul2Info(refEntity_t* ent, const centity_t* cent);

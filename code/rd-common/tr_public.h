@@ -364,7 +364,7 @@ using refexport_t = struct
 	qboolean (*G2API_SetBoneIKState)(CGhoul2Info_v& ghoul2, int time, const char* bone_name, int ikState,
 	                                 sharedSetBoneIKStateParams_t* params);
 	qboolean (*G2API_SetGhoul2ModelFlags)(CGhoul2Info* ghl_info, int flags);
-	void (*G2API_SetGhoul2ModelIndexes)(CGhoul2Info_v& ghoul2, qhandle_t* model_list, qhandle_t* skinList);
+	void (*G2API_SetGhoul2ModelIndexes)(CGhoul2Info_v& ghoul2, qhandle_t* model_list, qhandle_t* skin_list);
 	qboolean (*G2API_SetLodBias)(CGhoul2Info* ghl_info, int lodBias);
 	qboolean (*G2API_SetNewOrigin)(CGhoul2Info* ghl_info, int bolt_index);
 	void (*G2API_SetRagDoll)(CGhoul2Info_v& ghoul2, CRagDollParams* parms);
@@ -372,7 +372,7 @@ using refexport_t = struct
 	qboolean (*G2API_SetShader)(CGhoul2Info* ghl_info, qhandle_t customShader);
 	qboolean (*G2API_SetSkin)(CGhoul2Info* ghl_info, qhandle_t customSkin, qhandle_t renderSkin);
 	qboolean (*G2API_SetSurfaceOnOff)(CGhoul2Info* ghl_info, const char* surface_name, int flags);
-	void (*G2API_SetTime)(int currentTime, int clock);
+	void (*G2API_SetTime)(int current_time, int clock);
 	qboolean (*G2API_StopBoneAnim)(CGhoul2Info* ghl_info, const char* bone_name);
 	qboolean (*G2API_StopBoneAnimIndex)(CGhoul2Info* ghl_info, int index);
 	qboolean (*G2API_StopBoneAngles)(CGhoul2Info* ghl_info, const char* bone_name);

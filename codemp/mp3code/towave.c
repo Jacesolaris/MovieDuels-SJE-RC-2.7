@@ -363,7 +363,6 @@ char* C_MP3_GetUnpackedSize(void* pvData, int iSourceBytesRemaining, int* piUnpa
 	char* pPCM_Buffer = PCM_Buffer;
 	char* psReturn = NULL;
 	//	int  iSourceReadIndex = 0;
-	int	 iDestWriteIndex = 0;
 
 	DEC_INFO decinfo;
 
@@ -389,11 +388,12 @@ char* C_MP3_GetUnpackedSize(void* pvData, int iSourceBytesRemaining, int* piUnpa
 
 			if (audio.decode_init(&head, iFrameBytes, reduction_code, iRealDataStart, bStereoDesired ? convert_code_stereo : convert_code_mono, freq_limit))
 			{
+				int i_dest_write_index = 0;
 				audio.decode_info(&decinfo);
 
 				// decode...
 				//
-				for (int iFrameCounter = 0;; iFrameCounter++)
+				for (int i_frame_counter = 0;; i_frame_counter++)
 				{
 					if (iSourceBytesRemaining == 0 || iSourceBytesRemaining < iFrameBytes)
 						break;	// end of file
@@ -410,7 +410,7 @@ char* C_MP3_GetUnpackedSize(void* pvData, int iSourceBytesRemaining, int* piUnpa
 
 					iSourceReadIndex += x.in_bytes;
 					iSourceBytesRemaining -= x.in_bytes;
-					iDestWriteIndex += x.out_bytes;
+					i_dest_write_index += x.out_bytes;
 
 					if (x.in_bytes <= 0)
 					{
@@ -419,7 +419,7 @@ char* C_MP3_GetUnpackedSize(void* pvData, int iSourceBytesRemaining, int* piUnpa
 					}
 				}
 
-				*piUnpackedSize = iDestWriteIndex;	// yeeehaaa!
+				*piUnpackedSize = i_dest_write_index;	// yeeehaaa!
 			}
 			else
 			{

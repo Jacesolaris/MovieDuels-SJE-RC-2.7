@@ -715,7 +715,7 @@ static QINLINE void CG_EntityStateToPlayerState(entityState_t* s, playerState_t*
 	ps->legsFlip = s->legsFlip;
 	ps->torsoFlip = s->torsoFlip;
 	ps->client_num = s->client_num;
-	ps->saberMove = s->saberMove;
+	ps->saber_move = s->saber_move;
 
 	/*
 	VectorCopy( s->apos.trBase, ps->viewangles );
@@ -1045,7 +1045,7 @@ void CG_PredictPlayerState(void) {
 			cgSendPS[i]->legsFlip = cg_entities[i].currentState.legsFlip;
 			cgSendPS[i]->torsoFlip = cg_entities[i].currentState.torsoFlip;
 			cgSendPS[i]->client_num = cg_entities[i].currentState.client_num;
-			cgSendPS[i]->saberMove = cg_entities[i].currentState.saberMove;
+			cgSendPS[i]->saber_move = cg_entities[i].currentState.saber_move;
 		}
 	}
 
@@ -1220,7 +1220,7 @@ void CG_PredictPlayerState(void) {
 		}
 
 		//THIS is pretty much bad, but...
-		cg_pmove.ps->fd.saberAnimLevelBase = cg_pmove.ps->fd.saberAnimLevel;
+		cg_pmove.ps->fd.saberAnimLevelBase = cg_pmove.ps->fd.saber_anim_level;
 		if (cg_pmove.ps->saberHolstered == 1)
 		{
 			if (ci->saber[0].numBlades > 0)
@@ -1421,7 +1421,7 @@ revertES:
 			cg_entities[i].currentState.torsoAnim = cgSendPS[i]->torsoAnim;
 			cg_entities[i].currentState.legsAnim = cgSendPS[i]->legsAnim;
 			cg_entities[i].currentState.forceFrame = cgSendPS[i]->saberLockFrame;
-			cg_entities[i].currentState.saberMove = cgSendPS[i]->saberMove;
+			cg_entities[i].currentState.saber_move = cgSendPS[i]->saber_move;
 		}
 	}
 }

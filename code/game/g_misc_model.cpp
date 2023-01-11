@@ -161,7 +161,7 @@ void set_MiscAnim(gentity_t* ent)
 
 		// yes, its the same animation, so work out where we are in the leg anim, and blend us
 		gi.G2API_SetBoneAnim(&ent->ghoul2[0], "model_root", animations[anim].firstFrame,
-		                     animations[anim].numFrames - 1 + animations[anim].firstFrame,
+		                     animations[anim].num_frames - 1 + animations[anim].firstFrame,
 		                     BONE_ANIM_OVERRIDE_FREEZE | BONE_ANIM_BLEND, anim_speed, cg.time ? cg.time : level.time,
 		                     -1, 350);
 	}
@@ -170,7 +170,7 @@ void set_MiscAnim(gentity_t* ent)
 		constexpr int anim = BOTH_PAIN3;
 		const float anim_speed = 50.0f / animations[anim].frameLerp;
 		gi.G2API_SetBoneAnim(&ent->ghoul2[0], "model_root", animations[anim].firstFrame,
-		                     animations[anim].numFrames - 1 + animations[anim].firstFrame,
+		                     animations[anim].num_frames - 1 + animations[anim].firstFrame,
 		                     BONE_ANIM_OVERRIDE_FREEZE | BONE_ANIM_BLEND, anim_speed, cg.time ? cg.time : level.time,
 		                     -1, 350);
 	}
@@ -264,7 +264,7 @@ void SP_misc_model_ghoul(gentity_t* ent)
 	int anim = BOTH_STAND3;
 	float anim_speed = 50.0f / animations[anim].frameLerp;
 	gi.G2API_SetBoneAnim(&ent->ghoul2[0], "model_root", animations[anim].firstFrame,
-		(animations[anim].numFrames - 1) + animations[anim].firstFrame,
+		(animations[anim].num_frames - 1) + animations[anim].firstFrame,
 		BONE_ANIM_OVERRIDE_FREEZE, anim_speed, cg.time);
 
 	//	int test = gi.G2API_GetSurfaceRenderStatus(&ent->ghoul2[0], "l_hand");

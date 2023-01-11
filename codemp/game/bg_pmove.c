@@ -306,7 +306,7 @@ int PM_GetSaberStance(void)
 		return BOTH_SABERDUAL_STANCE;
 	}
 
-	switch (pm->ps->fd.saberAnimLevel)
+	switch (pm->ps->fd.saber_anim_level)
 	{
 	case SS_DUAL:
 		anim = BOTH_SABERDUAL_STANCE;
@@ -1213,7 +1213,7 @@ qboolean PM_ForceJumpingUp(void)
 		return qfalse;
 	}
 
-	if (BG_SaberInSpecial(pm->ps->saberMove))
+	if (BG_SaberInSpecial(pm->ps->saber_move))
 	{
 		return qfalse;
 	}
@@ -2259,7 +2259,7 @@ static qboolean PM_CheckJump(void)
 						{
 							parts = SETANIM_BOTH;
 							pm->cmd.buttons &= ~BUTTON_ATTACK;
-							pm->ps->saberMove = LS_NONE;
+							pm->ps->saber_move = LS_NONE;
 						}
 						else if (!pm->ps->weaponTime)
 						{
@@ -2632,14 +2632,14 @@ static qboolean PM_CheckJump(void)
 			&& !BG_FlippingAnim( pm->ps->legsAnim )
 			&& !PM_SpinningAnim( pm->ps->legsAnim )
 			&& !BG_SaberInSpecialAttack( pm->ps->torsoAnim )
-			&& ( BG_SaberInAttack( pm->ps->saberMove ) ) )
+			&& ( BG_SaberInAttack( pm->ps->saber_move ) ) )
 		{//not in an anim we shouldn't interrupt
 			//see if it's not too late to start a special jump-attack
 			float animLength = PM_AnimLength( 0, (animNumber_t)pm->ps->torsoAnim );
 			if ( animLength - pm->ps->torsoTimer < 500 )
-			{//just started the saberMove
+			{//just started the saber_move
 				//check for special-case jump attacks
-				if ( pm->ps->fd.saberAnimLevel == FORCE_LEVEL_2 )
+				if ( pm->ps->fd.saber_anim_level == FORCE_LEVEL_2 )
 				{//using medium attacks
 					if (PM_GroundDistance() < 32 &&
 						!BG_InSpecialJump(pm->ps->legsAnim))
@@ -2659,7 +2659,7 @@ static qboolean PM_CheckJump(void)
 						}
 					}
 				}
-				else if ( pm->ps->fd.saberAnimLevel == FORCE_LEVEL_3 )
+				else if ( pm->ps->fd.saber_anim_level == FORCE_LEVEL_3 )
 				{//using strong attacks
 					if ( pm->cmd.forwardmove > 0 && //going forward
 						(pm->cmd.buttons & BUTTON_ATTACK) && //must be holding attack still
@@ -3498,9 +3498,9 @@ static int PM_TryRoll(void)
 	int		anim = -1;
 	vec3_t fwd, right, traceto, mins, maxs, fwdAngles;
 
-	if (BG_SaberInAttack(pm->ps->saberMove) || BG_SaberInSpecialAttack(pm->ps->torsoAnim)
+	if (BG_SaberInAttack(pm->ps->saber_move) || BG_SaberInSpecialAttack(pm->ps->torsoAnim)
 		|| BG_SpinningSaberAnim(pm->ps->legsAnim)
-		|| PM_SaberInStart(pm->ps->saberMove))
+		|| PM_SaberInStart(pm->ps->saber_move))
 	{//attacking or spinning (or, if player, starting an attack)
 		if (PM_CanRollFromSoulCal(pm->ps))
 		{//hehe
@@ -3571,7 +3571,7 @@ static int PM_TryRoll(void)
 		pm->trace(&trace, pm->ps->origin, mins, maxs, traceto, pm->ps->client_num, CONTENTS_SOLID);
 		if (trace.fraction >= 1.0f)
 		{
-			pm->ps->saberMove = LS_NONE;
+			pm->ps->saber_move = LS_NONE;
 			return anim;
 		}
 	}
@@ -3714,7 +3714,7 @@ static void PM_CrashLand(void) {
 	// decide which landing animation to use
 	else if (!BG_InRoll(pm->ps, pm->ps->legsAnim) && pm->ps->inAirAnim && !pm->ps->m_iVehicleNum)
 	{ //only play a land animation if we transitioned into an in-air animation while off the ground
-		if (!BG_SaberInSpecial(pm->ps->saberMove))
+		if (!BG_SaberInSpecial(pm->ps->saber_move))
 		{
 			if (pm->ps->pm_flags & PMF_BACKWARDS_JUMP) {
 				PM_ForceLegsAnim(BOTH_LANDBACK1);
@@ -3752,7 +3752,7 @@ static void PM_CrashLand(void) {
 	{ //Only set the timer if we're in an anim that can be interrupted (this would not be, say, a flip)
 		if (!BG_InRoll(pm->ps, pm->ps->legsAnim) && pm->ps->inAirAnim)
 		{
-			if (!BG_SaberInSpecial(pm->ps->saberMove) || pm->ps->weapon != WP_SABER)
+			if (!BG_SaberInSpecial(pm->ps->saber_move) || pm->ps->weapon != WP_SABER)
 			{
 				if (pm->ps->legsAnim != BOTH_FORCELAND1 && pm->ps->legsAnim != BOTH_FORCELANDBACK1 &&
 					pm->ps->legsAnim != BOTH_FORCELANDRIGHT1 && pm->ps->legsAnim != BOTH_FORCELANDLEFT1)
@@ -4136,7 +4136,7 @@ static void PM_GroundTrace(void) {
 				trEnt->m_pVehicle->m_pVehicleInfo->type != VH_WALKER &&
 				trEnt->m_pVehicle->m_pVehicleInfo->type != VH_FIGHTER)
 			{ //it's a vehicle alright, let's board it.. if it's not an atst or ship
-				if (!BG_SaberInSpecial(pm->ps->saberMove) &&
+				if (!BG_SaberInSpecial(pm->ps->saber_move) &&
 					pm->ps->forceHandExtend == HANDEXTEND_NONE &&
 					pm->ps->weaponTime <= 0)
 				{
@@ -5094,7 +5094,7 @@ static void PM_Footsteps(void) {
 	pm->xyspeed = sqrt(pm->ps->velocity[0] * pm->ps->velocity[0]
 		+ pm->ps->velocity[1] * pm->ps->velocity[1]);
 
-	if (pm->ps->saberMove == LS_SPINATTACK)
+	if (pm->ps->saber_move == LS_SPINATTACK)
 	{
 		PM_ContinueLegsAnim(pm->ps->torsoAnim);
 	}
@@ -5199,7 +5199,7 @@ static void PM_Footsteps(void) {
 		return;
 	}
 
-	if (pm->ps->saberMove == LS_SPINATTACK)
+	if (pm->ps->saber_move == LS_SPINATTACK)
 	{
 		bobmove = 0.2f;
 		PM_ContinueLegsAnim(pm->ps->torsoAnim);
@@ -5339,7 +5339,7 @@ static void PM_Footsteps(void) {
 				else
 				{
 #endif
-					switch (pm->ps->fd.saberAnimLevel)
+					switch (pm->ps->fd.saber_anim_level)
 					{
 					case SS_STAFF:
 						if (pm->ps->saberHolstered > 1)
@@ -5390,7 +5390,7 @@ static void PM_Footsteps(void) {
 				else
 				{
 #endif
-					switch (pm->ps->fd.saberAnimLevel)
+					switch (pm->ps->fd.saber_anim_level)
 					{
 					case SS_STAFF:
 						if (pm->ps->saberHolstered > 1)
@@ -5456,7 +5456,7 @@ static void PM_Footsteps(void) {
 				else
 				{
 #endif
-					switch (pm->ps->fd.saberAnimLevel)
+					switch (pm->ps->fd.saber_anim_level)
 					{
 					case SS_STAFF:
 						if (pm->ps->saberHolstered > 1)
@@ -5519,7 +5519,7 @@ static void PM_Footsteps(void) {
 #endif
 				else
 				{
-					switch (pm->ps->fd.saberAnimLevel)
+					switch (pm->ps->fd.saber_anim_level)
 					{
 					case SS_STAFF:
 						if (pm->ps->saberHolstered > 1)
@@ -5911,7 +5911,7 @@ static qboolean PM_DoChargedWeapons(qboolean vehicleRocketLock, bgEntity_t* veh)
 //---------------------------------------
 {
 	qboolean	charging = qfalse,
-		altFire = qfalse;
+		alt_fire = qfalse;
 
 	if (vehicleRocketLock)
 	{
@@ -5933,7 +5933,7 @@ static qboolean PM_DoChargedWeapons(qboolean vehicleRocketLock, bgEntity_t* veh)
 				}
 				if (pm->cmd.buttons & BUTTON_ALT_ATTACK)
 				{
-					altFire = qtrue;
+					alt_fire = qtrue;
 				}
 			}
 		}
@@ -5954,7 +5954,7 @@ static qboolean PM_DoChargedWeapons(qboolean vehicleRocketLock, bgEntity_t* veh)
 				if (pm->cmd.buttons & BUTTON_ALT_ATTACK)
 				{
 					charging = qtrue;
-					altFire = qtrue;
+					alt_fire = qtrue;
 				}
 			}
 			break;
@@ -5962,7 +5962,7 @@ static qboolean PM_DoChargedWeapons(qboolean vehicleRocketLock, bgEntity_t* veh)
 		case WP_CONCUSSION:
 			if (pm->cmd.buttons & BUTTON_ALT_ATTACK)
 			{
-				altFire = qtrue;
+				alt_fire = qtrue;
 			}
 			break;
 
@@ -5972,7 +5972,7 @@ static qboolean PM_DoChargedWeapons(qboolean vehicleRocketLock, bgEntity_t* veh)
 			if (pm->cmd.buttons & BUTTON_ALT_ATTACK)
 			{
 				charging = qtrue;
-				altFire = qtrue;
+				alt_fire = qtrue;
 			}
 			break;
 
@@ -5993,7 +5993,7 @@ static qboolean PM_DoChargedWeapons(qboolean vehicleRocketLock, bgEntity_t* veh)
 			{
 				PM_RocketLock(2048, qfalse);
 				charging = qtrue;
-				altFire = qtrue;
+				alt_fire = qtrue;
 			}
 			break;
 
@@ -6002,7 +6002,7 @@ static qboolean PM_DoChargedWeapons(qboolean vehicleRocketLock, bgEntity_t* veh)
 
 			if (pm->cmd.buttons & BUTTON_ALT_ATTACK)
 			{
-				altFire = qtrue; // override default of not being an alt-fire
+				alt_fire = qtrue; // override default of not being an alt-fire
 				charging = qtrue;
 			}
 			else if (pm->cmd.buttons & BUTTON_ATTACK)
@@ -6014,7 +6014,7 @@ static qboolean PM_DoChargedWeapons(qboolean vehicleRocketLock, bgEntity_t* veh)
 		case WP_DEMP2:
 			if (pm->cmd.buttons & BUTTON_ALT_ATTACK)
 			{
-				altFire = qtrue; // override default of not being an alt-fire
+				alt_fire = qtrue; // override default of not being an alt-fire
 				charging = qtrue;
 			}
 			break;
@@ -6028,7 +6028,7 @@ static qboolean PM_DoChargedWeapons(qboolean vehicleRocketLock, bgEntity_t* veh)
 				if (pm->cmd.buttons & BUTTON_ALT_ATTACK)
 				{
 					charging = qtrue;
-					altFire = qtrue;
+					alt_fire = qtrue;
 				}
 			}
 			break;
@@ -6042,7 +6042,7 @@ static qboolean PM_DoChargedWeapons(qboolean vehicleRocketLock, bgEntity_t* veh)
 				if (pm->cmd.buttons & BUTTON_ALT_ATTACK)
 				{
 					charging = qtrue;
-					altFire = qtrue;
+					alt_fire = qtrue;
 				}
 			}
 			break;
@@ -6057,12 +6057,12 @@ static qboolean PM_DoChargedWeapons(qboolean vehicleRocketLock, bgEntity_t* veh)
 					pm->cmd.upmove <= 0)
 				{
 					charging = qtrue;
-					altFire = qtrue;
+					alt_fire = qtrue;
 				}
 				else
 				{
 					charging = qfalse;
-					altFire = qfalse;
+					alt_fire = qfalse;
 				}
 			}
 
@@ -6071,7 +6071,7 @@ static qboolean PM_DoChargedWeapons(qboolean vehicleRocketLock, bgEntity_t* veh)
 			{
 				pm->ps->weaponstate = WEAPON_READY;
 				charging = qfalse;
-				altFire = qfalse;
+				alt_fire = qfalse;
 			}
 		} // end switch
 	}
@@ -6080,7 +6080,7 @@ static qboolean PM_DoChargedWeapons(qboolean vehicleRocketLock, bgEntity_t* veh)
 	//	Note that we ALWAYS return if charging is set ( meaning the buttons are still down )
 	if (charging)
 	{
-		if (altFire)
+		if (alt_fire)
 		{
 			if (pm->ps->weaponstate != WEAPON_CHARGING_ALT)
 			{
@@ -6377,7 +6377,7 @@ backAgain:
 
 			//just set it to something so we have a proper trail. This is a stupid
 			//hack (much like the rest of this function)
-			pm->ps->saberMove = LS_R_TL2BR;
+			pm->ps->saber_move = LS_R_TL2BR;
 
 			if (pm->ps->torsoTimer > 0 && (pm->ps->torsoAnim == BOTH_VS_ATR_S ||
 				pm->ps->torsoAnim == BOTH_VS_ATL_S))
@@ -6903,7 +6903,7 @@ static void PM_Weapon(void)
 		}
 	}
 
-	if (pm->ps->weapon == WP_SABER && pm->ps->saberMove != LS_READY && pm->ps->saberMove != LS_NONE)
+	if (pm->ps->weapon == WP_SABER && pm->ps->saber_move != LS_READY && pm->ps->saber_move != LS_NONE)
 	{
 		pm->cmd.weapon = WP_SABER; //don't allow switching out mid-attack
 	}
@@ -8303,9 +8303,9 @@ void BG_AdjustClientSpeed(playerState_t* ps, usercmd_t* cmd, int svTime)
 			ps->speed *= 0.2f;
 	}
 
-	if (BG_SaberInAttack(ps->saberMove) && cmd->forwardmove < 0)
+	if (BG_SaberInAttack(ps->saber_move) && cmd->forwardmove < 0)
 	{//if running backwards while attacking, don't run as fast.
-		switch (ps->fd.saberAnimLevel)
+		switch (ps->fd.saber_anim_level)
 		{
 		case FORCE_LEVEL_1:
 			ps->speed *= 0.75f;
@@ -8324,7 +8324,7 @@ void BG_AdjustClientSpeed(playerState_t* ps, usercmd_t* cmd, int svTime)
 	}
 	else if (BG_SpinningSaberAnim(ps->legsAnim))
 	{
-		if (ps->fd.saberAnimLevel == FORCE_LEVEL_3)
+		if (ps->fd.saber_anim_level == FORCE_LEVEL_3)
 		{
 			ps->speed *= 0.3f;
 		}
@@ -8333,9 +8333,9 @@ void BG_AdjustClientSpeed(playerState_t* ps, usercmd_t* cmd, int svTime)
 			ps->speed *= 0.5f;
 		}
 	}
-	else if (ps->weapon == WP_SABER && BG_SaberInAttack(ps->saberMove))
+	else if (ps->weapon == WP_SABER && BG_SaberInAttack(ps->saber_move))
 	{//if attacking with saber while running, drop your speed
-		switch (ps->fd.saberAnimLevel)
+		switch (ps->fd.saber_anim_level)
 		{
 		case FORCE_LEVEL_2:
 		case SS_DUAL:
@@ -8349,8 +8349,8 @@ void BG_AdjustClientSpeed(playerState_t* ps, usercmd_t* cmd, int svTime)
 			break;
 		}
 	}
-	else if (ps->weapon == WP_SABER && ps->fd.saberAnimLevel == FORCE_LEVEL_3 &&
-		PM_SaberInTransition(ps->saberMove))
+	else if (ps->weapon == WP_SABER && ps->fd.saber_anim_level == FORCE_LEVEL_3 &&
+		PM_SaberInTransition(ps->saber_move))
 	{ //Now, we want to even slow down in transitions for level 3 (since it has chains and stuff now)
 		if (cmd->forwardmove < 0)
 		{
@@ -8507,8 +8507,8 @@ void BG_IK_MoveArm(void* ghoul2, int lHandBolt, int time, entityState_t* ent, in
 		VectorCopy(scale, ikP.scale);
 
 		//base pose frames for the limb
-		ikP.start_frame = bgHumanoidAnimations[baseposeAnim].firstFrame + bgHumanoidAnimations[baseposeAnim].numFrames;
-		ikP.end_frame = bgHumanoidAnimations[baseposeAnim].firstFrame + bgHumanoidAnimations[baseposeAnim].numFrames;
+		ikP.start_frame = bgHumanoidAnimations[baseposeAnim].firstFrame + bgHumanoidAnimations[baseposeAnim].num_frames;
+		ikP.end_frame = bgHumanoidAnimations[baseposeAnim].firstFrame + bgHumanoidAnimations[baseposeAnim].num_frames;
 
 		ikP.forceAnimOnBone = qfalse; //let it use existing anim if it's the same as this one.
 
@@ -8781,7 +8781,7 @@ static void BG_G2ClientSpineAngles(void* ghoul2, int motionBolt, vec3_t cent_ler
 		!BG_InDeathAnim(cent->torsoAnim) &&
 		!BG_InRollES(cent, cent->legsAnim) &&
 		!BG_InRollAnim(cent) &&
-		!BG_SaberInSpecial(cent->saberMove) &&
+		!BG_SaberInSpecial(cent->saber_move) &&
 		!BG_SaberInSpecialAttack(cent->torsoAnim) &&
 		!BG_SaberInSpecialAttack(cent->legsAnim) &&
 
@@ -9074,7 +9074,7 @@ void BG_G2PlayerAngles(void* ghoul2, int motionBolt, entityState_t* cent, int ti
 		VectorClear(velocity);
 	}
 	else if (cent->weapon == WP_SABER &&
-		BG_SaberInSpecial(cent->saberMove))
+		BG_SaberInSpecial(cent->saber_move))
 	{
 		VectorClear(velocity);
 	}
@@ -9364,11 +9364,11 @@ static qboolean PM_AdjustAnglesForDualJumpAttack(playerState_t* ps, usercmd_t* u
 static QINLINE void PM_CmdForSaberMoves(usercmd_t* ucmd)
 {
 	//DUAL FORWARD+JUMP+ATTACK
-	if ((pm->ps->legsAnim == BOTH_JUMPATTACK6 && pm->ps->saberMove == LS_JUMPATTACK_DUAL) ||
-		(pm->ps->legsAnim == BOTH_BUTTERFLY_FL1 && pm->ps->saberMove == LS_JUMPATTACK_STAFF_LEFT) ||
-		(pm->ps->legsAnim == BOTH_BUTTERFLY_FR1 && pm->ps->saberMove == LS_JUMPATTACK_STAFF_RIGHT) ||
-		(pm->ps->legsAnim == BOTH_BUTTERFLY_RIGHT && pm->ps->saberMove == LS_BUTTERFLY_RIGHT) ||
-		(pm->ps->legsAnim == BOTH_BUTTERFLY_LEFT && pm->ps->saberMove == LS_BUTTERFLY_LEFT))
+	if ((pm->ps->legsAnim == BOTH_JUMPATTACK6 && pm->ps->saber_move == LS_JUMPATTACK_DUAL) ||
+		(pm->ps->legsAnim == BOTH_BUTTERFLY_FL1 && pm->ps->saber_move == LS_JUMPATTACK_STAFF_LEFT) ||
+		(pm->ps->legsAnim == BOTH_BUTTERFLY_FR1 && pm->ps->saber_move == LS_JUMPATTACK_STAFF_RIGHT) ||
+		(pm->ps->legsAnim == BOTH_BUTTERFLY_RIGHT && pm->ps->saber_move == LS_BUTTERFLY_RIGHT) ||
+		(pm->ps->legsAnim == BOTH_BUTTERFLY_LEFT && pm->ps->saber_move == LS_BUTTERFLY_LEFT))
 	{
 		int aLen = PM_AnimLength(0, BOTH_JUMPATTACK6);
 
@@ -9483,7 +9483,7 @@ static QINLINE void PM_CmdForSaberMoves(usercmd_t* ucmd)
 		//rwwFIXMEFIXME: Bother with bbox resizing like sp?
 	}
 	//STAFF BACK+JUMP+ATTACK
-	else if (pm->ps->saberMove == LS_A_BACKFLIP_ATK &&
+	else if (pm->ps->saber_move == LS_A_BACKFLIP_ATK &&
 		pm->ps->legsAnim == BOTH_JUMPATTACK7)
 	{
 		const int aLen = PM_AnimLength(0, BOTH_JUMPATTACK7);
@@ -9514,8 +9514,8 @@ static QINLINE void PM_CmdForSaberMoves(usercmd_t* ucmd)
 		ucmd->forwardmove = ucmd->rightmove = ucmd->upmove = 0;
 	}
 	//STAFF/DUAL SPIN ATTACK
-	else if (pm->ps->saberMove == LS_SPINATTACK ||
-		pm->ps->saberMove == LS_SPINATTACK_DUAL)
+	else if (pm->ps->saber_move == LS_SPINATTACK ||
+		pm->ps->saber_move == LS_SPINATTACK_DUAL)
 	{
 		ucmd->forwardmove = ucmd->rightmove = ucmd->upmove = 0;
 		//lock their viewangles during these attacks.
@@ -9960,7 +9960,7 @@ extern qboolean BG_FighterUpdate(Vehicle_t* p_veh, const usercmd_t* pUcmd, vec3_
 void PM_MoveForKata(usercmd_t* ucmd)
 {
 	if (pm->ps->legsAnim == BOTH_A7_SOULCAL
-		&& pm->ps->saberMove == LS_STAFF_SOULCAL)
+		&& pm->ps->saber_move == LS_STAFF_SOULCAL)
 	{//forward spinning staff attack
 		ucmd->upmove = 0;
 
@@ -10119,10 +10119,10 @@ void PmoveSingle(pmove_t* pmove) {
 		stiffenedUp = qtrue;
 		PM_SetPMViewAngle(pm->ps, pm->ps->viewangles, &pm->cmd);
 	}
-	else if (pm->ps->saberMove == LS_A_BACK || pm->ps->saberMove == LS_A_BACK_CR ||
-		pm->ps->saberMove == LS_A_BACKSTAB || pm->ps->saberMove == LS_A_FLIP_STAB ||
-		pm->ps->saberMove == LS_A_FLIP_SLASH || pm->ps->saberMove == LS_A_JUMP_T__B_ ||
-		pm->ps->saberMove == LS_DUAL_LR || pm->ps->saberMove == LS_DUAL_FB)
+	else if (pm->ps->saber_move == LS_A_BACK || pm->ps->saber_move == LS_A_BACK_CR ||
+		pm->ps->saber_move == LS_A_BACKSTAB || pm->ps->saber_move == LS_A_FLIP_STAB ||
+		pm->ps->saber_move == LS_A_FLIP_SLASH || pm->ps->saber_move == LS_A_JUMP_T__B_ ||
+		pm->ps->saber_move == LS_DUAL_LR || pm->ps->saber_move == LS_DUAL_FB)
 	{
 		if (pm->ps->legsAnim == BOTH_JUMPFLIPSTABDOWN ||
 			pm->ps->legsAnim == BOTH_JUMPFLIPSLASHDOWN1)
@@ -10153,7 +10153,7 @@ void PmoveSingle(pmove_t* pmove) {
 	{
 		stiffenedUp = qtrue;
 	}
-	else if (BG_KickMove(pm->ps->saberMove) || BG_KickingAnim(pm->ps->legsAnim))
+	else if (BG_KickMove(pm->ps->saber_move) || BG_KickingAnim(pm->ps->legsAnim))
 	{
 		stiffenedUp = qtrue;
 	}
@@ -10162,9 +10162,9 @@ void PmoveSingle(pmove_t* pmove) {
 		stiffenedUp = qtrue;
 		PM_SetPMViewAngle(pm->ps, pm->ps->viewangles, &pm->cmd);
 	}
-	else if (pm->ps->saberMove == LS_STABDOWN_DUAL ||
-		pm->ps->saberMove == LS_STABDOWN_STAFF ||
-		pm->ps->saberMove == LS_STABDOWN)
+	else if (pm->ps->saber_move == LS_STABDOWN_DUAL ||
+		pm->ps->saber_move == LS_STABDOWN_STAFF ||
+		pm->ps->saber_move == LS_STABDOWN)
 	{//FIXME: need to only move forward until we bump into our target...?
 		if (pm->ps->legsTimer < 800)
 		{ //freeze movement near end of anim
@@ -10178,12 +10178,12 @@ void PmoveSingle(pmove_t* pmove) {
 			pm->cmd.forwardmove = 64;
 		}
 	}
-	else if (pm->ps->saberMove == LS_PULL_ATTACK_STAB ||
-		pm->ps->saberMove == LS_PULL_ATTACK_SWING)
+	else if (pm->ps->saber_move == LS_PULL_ATTACK_STAB ||
+		pm->ps->saber_move == LS_PULL_ATTACK_SWING)
 	{
 		stiffenedUp = qtrue;
 	}
-	else if (BG_SaberInKata(pm->ps->saberMove) ||
+	else if (BG_SaberInKata(pm->ps->saber_move) ||
 		BG_InKataAnim(pm->ps->torsoAnim) ||
 		BG_InKataAnim(pm->ps->legsAnim))
 	{
@@ -10261,7 +10261,7 @@ void PmoveSingle(pmove_t* pmove) {
 		stiffenedUp = qtrue;
 	}
 
-	if (pm->ps->saberMove == LS_A_LUNGE)
+	if (pm->ps->saber_move == LS_A_LUNGE)
 	{//can't move during lunge
 		pm->cmd.rightmove = pm->cmd.upmove = 0;
 		if (pm->ps->legsTimer > 500)
@@ -10274,7 +10274,7 @@ void PmoveSingle(pmove_t* pmove) {
 		}
 	}
 
-	if (pm->ps->saberMove == LS_A_JUMP_T__B_)
+	if (pm->ps->saber_move == LS_A_JUMP_T__B_)
 	{//can't move during leap
 		if (pm->ps->groundEntityNum != ENTITYNUM_NONE)
 		{//hit the ground
@@ -10494,9 +10494,9 @@ void PmoveSingle(pmove_t* pmove) {
 	PM_AdjustAngleForWallRunUp(pm->ps, &pm->cmd, qtrue);
 	PM_AdjustAngleForWallRun(pm->ps, &pm->cmd, qtrue);
 
-	if (pm->ps->saberMove == LS_A_JUMP_T__B_ || pm->ps->saberMove == LS_A_LUNGE ||
-		pm->ps->saberMove == LS_A_BACK_CR || pm->ps->saberMove == LS_A_BACK ||
-		pm->ps->saberMove == LS_A_BACKSTAB)
+	if (pm->ps->saber_move == LS_A_JUMP_T__B_ || pm->ps->saber_move == LS_A_LUNGE ||
+		pm->ps->saber_move == LS_A_BACK_CR || pm->ps->saber_move == LS_A_BACK ||
+		pm->ps->saber_move == LS_A_BACKSTAB)
 	{
 		PM_SetPMViewAngle(pm->ps, pm->ps->viewangles, &pm->cmd);
 	}
@@ -10537,7 +10537,7 @@ void PmoveSingle(pmove_t* pmove) {
 	}
 
 	/*
-	if (pm->ps->fd.saberAnimLevel == SS_STAFF &&
+	if (pm->ps->fd.saber_anim_level == SS_STAFF &&
 		(pm->cmd.buttons & BUTTON_ALT_ATTACK) &&
 		pm->cmd.upmove > 0)
 	{ //this is how you do kick-for-condition

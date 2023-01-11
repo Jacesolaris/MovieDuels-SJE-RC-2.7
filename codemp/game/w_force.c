@@ -169,10 +169,10 @@ void WP_InitForcePowers(gentity_t* ent)
 	if (!ent || !ent->client)
 		return;
 
-	ent->client->ps.fd.saberAnimLevel = ent->client->sess.saberLevel;
+	ent->client->ps.fd.saber_anim_level = ent->client->sess.saberLevel;
 
-	if (ent->client->ps.fd.saberAnimLevel < FORCE_LEVEL_1 || ent->client->ps.fd.saberAnimLevel > FORCE_LEVEL_3)
-		ent->client->ps.fd.saberAnimLevel = FORCE_LEVEL_1;
+	if (ent->client->ps.fd.saber_anim_level < FORCE_LEVEL_1 || ent->client->ps.fd.saber_anim_level > FORCE_LEVEL_3)
+		ent->client->ps.fd.saber_anim_level = FORCE_LEVEL_1;
 
 	// so that the client configstring is already modified with this when we need it
 	if (!speedLoopSound)
@@ -576,7 +576,7 @@ int ForcePowerUsableOn(gentity_t* attacker, gentity_t* other, forcePowers_t forc
 		}
 		if (other && other->client &&
 			other->client->ps.weapon == WP_SABER &&
-			BG_SaberInSpecial(other->client->ps.saberMove))
+			BG_SaberInSpecial(other->client->ps.saber_move))
 		{ //don't grip person while they are in a special or some really bad things can happen.
 			return 0;
 		}
@@ -1755,7 +1755,7 @@ void ForceShootLightning(gentity_t* self)
 	{//arc
 		vec3_t	center, mins, maxs, dir, ent_org, size, v;
 		float	radius = FORCE_LIGHTNING_RADIUS, dot;
-		gentity_t* entityList[MAX_GENTITIES];
+		gentity_t* entity_list[MAX_GENTITIES];
 		int			iEntityList[MAX_GENTITIES];
 		int i;
 
@@ -1770,14 +1770,14 @@ void ForceShootLightning(gentity_t* self)
 		i = 0;
 		while (i < num_listed_entities)
 		{
-			entityList[i] = &g_entities[iEntityList[i]];
+			entity_list[i] = &g_entities[iEntityList[i]];
 
 			i++;
 		}
 
 		for (int e = 0; e < num_listed_entities; e++)
 		{
-			trace_ent = entityList[e];
+			trace_ent = entity_list[e];
 
 			if (!trace_ent)
 				continue;
@@ -2038,7 +2038,7 @@ int ForceShootDrain(gentity_t* self)
 	{//arc
 		vec3_t	center, mins, maxs, dir, ent_org, size, v;
 		float	radius = MAX_DRAIN_DISTANCE, dot;
-		gentity_t* entityList[MAX_GENTITIES];
+		gentity_t* entity_list[MAX_GENTITIES];
 		int			iEntityList[MAX_GENTITIES];
 		int i;
 
@@ -2053,14 +2053,14 @@ int ForceShootDrain(gentity_t* self)
 		i = 0;
 		while (i < num_listed_entities)
 		{
-			entityList[i] = &g_entities[iEntityList[i]];
+			entity_list[i] = &g_entities[iEntityList[i]];
 
 			i++;
 		}
 
 		for (int e = 0; e < num_listed_entities; e++)
 		{
-			trace_ent = entityList[e];
+			trace_ent = entity_list[e];
 
 			if (!trace_ent)
 				continue;
@@ -2548,7 +2548,7 @@ qboolean ForceTelepathyCheckDirectNPCTarget(gentity_t* self, trace_t* tr, qboole
 		}
 		//NPC_SetAnim( self, SETANIM_TORSO, BOTH_MINDTRICK2, SETANIM_FLAG_OVERRIDE|SETANIM_FLAG_RESTART|SETANIM_FLAG_HOLD );
 	}
-	//self->client->ps.saberMove = self->client->ps.saberBounceMove = LS_READY;//don't finish whatever saber anim you may have been in
+	//self->client->ps.saber_move = self->client->ps.saberBounceMove = LS_READY;//don't finish whatever saber anim you may have been in
 	self->client->ps.saberBlocked = BLOCKED_NONE;
 	self->client->ps.weaponTime = 1000;
 	/*
@@ -2659,15 +2659,15 @@ void ForceTelepathy(gentity_t* self)
 		return;
 	}
 	//level 2 & 3
-	int entityList[MAX_GENTITIES];
+	int entity_list[MAX_GENTITIES];
 	int e = 0;
 	qboolean gotatleastone = qfalse;
 
-	const int num_listed_entities = trap->EntitiesInBox(mins, maxs, entityList, MAX_GENTITIES);
+	const int num_listed_entities = trap->EntitiesInBox(mins, maxs, entity_list, MAX_GENTITIES);
 
 	while (e < num_listed_entities)
 	{
-		gentity_t* ent = &g_entities[entityList[e]];
+		gentity_t* ent = &g_entities[entity_list[e]];
 
 		if (ent)
 		{ //not in the arc, don't consider it
@@ -2686,22 +2686,22 @@ void ForceTelepathy(gentity_t* self)
 
 			if (!ent->client)
 			{
-				entityList[e] = ENTITYNUM_NONE;
+				entity_list[e] = ENTITYNUM_NONE;
 			}
 			else if (!in_field_of_vision(self->client->ps.viewangles, visionArc, a))
 			{ //only bother with arc rules if the victim is a client
-				entityList[e] = ENTITYNUM_NONE;
+				entity_list[e] = ENTITYNUM_NONE;
 			}
 			else if (!ForcePowerUsableOn(self, ent, FP_TELEPATHY))
 			{
-				entityList[e] = ENTITYNUM_NONE;
+				entity_list[e] = ENTITYNUM_NONE;
 			}
 			else if (OnSameTeam(self, ent))
 			{
-				entityList[e] = ENTITYNUM_NONE;
+				entity_list[e] = ENTITYNUM_NONE;
 			}
 		}
-		ent = &g_entities[entityList[e]];
+		ent = &g_entities[entity_list[e]];
 		if (ent && ent != self && ent->client)
 		{
 			gotatleastone = qtrue;
@@ -2888,7 +2888,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 	//shove things in front of you away
 	float		dist;
 	gentity_t* ent;
-	int			entityList[MAX_GENTITIES];
+	int			entity_list[MAX_GENTITIES];
 	gentity_t* push_list[MAX_GENTITIES];
 	int			num_listed_entities;
 	vec3_t		mins, maxs;
@@ -3061,7 +3061,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 			}
 
 			num_listed_entities = 0;
-			entityList[num_listed_entities] = tr.entity_num;
+			entity_list[num_listed_entities] = tr.entity_num;
 
 			if (pull)
 			{
@@ -3087,13 +3087,13 @@ void ForceThrow(gentity_t* self, qboolean pull)
 	}
 	else
 	{
-		num_listed_entities = trap->EntitiesInBox(mins, maxs, entityList, MAX_GENTITIES);
+		num_listed_entities = trap->EntitiesInBox(mins, maxs, entity_list, MAX_GENTITIES);
 
 		e = 0;
 
 		while (e < num_listed_entities)
 		{
-			ent = &g_entities[entityList[e]];
+			ent = &g_entities[entity_list[e]];
 
 			if (!ent->client && ent->s.eType == ET_NPC)
 			{ //g2animent
@@ -3125,7 +3125,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 				if (ent->client && !in_field_of_vision(self->client->ps.viewangles, visionArc, a) &&
 					ForcePowerUsableOn(self, ent, powerUse))
 				{ //only bother with arc rules if the victim is a client
-					entityList[e] = ENTITYNUM_NONE;
+					entity_list[e] = ENTITYNUM_NONE;
 				}
 				else if (ent->client)
 				{
@@ -3133,14 +3133,14 @@ void ForceThrow(gentity_t* self, qboolean pull)
 					{
 						if (!ForcePowerUsableOn(self, ent, FP_PULL))
 						{
-							entityList[e] = ENTITYNUM_NONE;
+							entity_list[e] = ENTITYNUM_NONE;
 						}
 					}
 					else
 					{
 						if (!ForcePowerUsableOn(self, ent, FP_PUSH))
 						{
-							entityList[e] = ENTITYNUM_NONE;
+							entity_list[e] = ENTITYNUM_NONE;
 						}
 					}
 				}
@@ -3151,11 +3151,11 @@ void ForceThrow(gentity_t* self, qboolean pull)
 
 	for (e = 0; e < num_listed_entities; e++)
 	{
-		if (entityList[e] != ENTITYNUM_NONE &&
-			entityList[e] >= 0 &&
-			entityList[e] < MAX_GENTITIES)
+		if (entity_list[e] != ENTITYNUM_NONE &&
+			entity_list[e] >= 0 &&
+			entity_list[e] < MAX_GENTITIES)
 		{
-			ent = &g_entities[entityList[e]];
+			ent = &g_entities[entity_list[e]];
 		}
 		else
 		{
@@ -4936,19 +4936,19 @@ void WP_ForcePowersUpdate(gentity_t* self, usercmd_t* ucmd)
 	}
 
 	/*
-	if (self->client->ps.fd.saberAnimLevel > self->client->ps.fd.forcePowerLevel[FP_SABER_OFFENSE])
+	if (self->client->ps.fd.saber_anim_level > self->client->ps.fd.forcePowerLevel[FP_SABER_OFFENSE])
 	{
-		self->client->ps.fd.saberAnimLevel = self->client->ps.fd.forcePowerLevel[FP_SABER_OFFENSE];
+		self->client->ps.fd.saber_anim_level = self->client->ps.fd.forcePowerLevel[FP_SABER_OFFENSE];
 	}
-	else if (!self->client->ps.fd.saberAnimLevel)
+	else if (!self->client->ps.fd.saber_anim_level)
 	{
-		self->client->ps.fd.saberAnimLevel = FORCE_LEVEL_1;
+		self->client->ps.fd.saber_anim_level = FORCE_LEVEL_1;
 	}
 	*/
 	//The stance in relation to power level is no longer applicable with the crazy new akimbo/staff stances.
-	if (!self->client->ps.fd.saberAnimLevel)
+	if (!self->client->ps.fd.saber_anim_level)
 	{
-		self->client->ps.fd.saberAnimLevel = FORCE_LEVEL_1;
+		self->client->ps.fd.saber_anim_level = FORCE_LEVEL_1;
 	}
 
 	if (level.gametype != GT_SIEGE)
@@ -4970,7 +4970,7 @@ void WP_ForcePowersUpdate(gentity_t* self, usercmd_t* ucmd)
 	}
 
 	if (((self->client->sess.selectedFP != self->client->ps.fd.forcePowerSelected) ||
-		(self->client->sess.saberLevel != self->client->ps.fd.saberAnimLevel)) &&
+		(self->client->sess.saberLevel != self->client->ps.fd.saber_anim_level)) &&
 		!(self->r.svFlags & SVF_BOT))
 	{
 		if (self->client->sess.updateUITime < level.time)
@@ -4978,7 +4978,7 @@ void WP_ForcePowersUpdate(gentity_t* self, usercmd_t* ucmd)
 		  //through their force powers or saber attack levels
 
 			self->client->sess.selectedFP = self->client->ps.fd.forcePowerSelected;
-			self->client->sess.saberLevel = self->client->ps.fd.saberAnimLevel;
+			self->client->sess.saberLevel = self->client->ps.fd.saber_anim_level;
 		}
 	}
 
@@ -4998,7 +4998,7 @@ void WP_ForcePowersUpdate(gentity_t* self, usercmd_t* ucmd)
 	if (self->client->ps.forceHandExtend == HANDEXTEND_KNOCKDOWN &&
 		self->client->ps.forceHandExtendTime >= level.time)
 	{
-		self->client->ps.saberMove = 0;
+		self->client->ps.saber_move = 0;
 		self->client->ps.saberBlocking = 0;
 		self->client->ps.saberBlocked = 0;
 		self->client->ps.weaponTime = 0;
@@ -5363,7 +5363,7 @@ void WP_ForcePowersUpdate(gentity_t* self, usercmd_t* ucmd)
 		self->client->force.lightningDebounce = level.time;
 
 	if ((!self->client->ps.fd.forcePowersActive || self->client->ps.fd.forcePowersActive == (1 << FP_DRAIN)) &&
-		!self->client->ps.saberInFlight && (self->client->ps.weapon != WP_SABER || !BG_SaberInSpecial(self->client->ps.saberMove)))
+		!self->client->ps.saberInFlight && (self->client->ps.weapon != WP_SABER || !BG_SaberInSpecial(self->client->ps.saber_move)))
 	{//when not using the force, regenerate at 1 point per half second
 		while (self->client->ps.fd.forcePowerRegenDebounceTime < level.time)
 		{

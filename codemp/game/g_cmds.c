@@ -937,7 +937,7 @@ void StopFollowing(gentity_t* ent) {
 	ent->client->ps.zoomMode = 0;
 	ent->client->ps.zoomLocked = qfalse;
 	ent->client->ps.zoomLockTime = 0;
-	ent->client->ps.saberMove = LS_NONE;
+	ent->client->ps.saber_move = LS_NONE;
 	ent->client->ps.legsAnim = 0;
 	ent->client->ps.legsTimer = 0;
 	ent->client->ps.torsoAnim = 0;
@@ -1294,8 +1294,8 @@ argCheck:
 	}
 }
 
-extern qboolean WP_SaberStyleValidForSaber(saberInfo_t* saber1, saberInfo_t* saber2, int saberHolstered, int saberAnimLevel);
-extern qboolean WP_UseFirstValidSaberStyle(saberInfo_t* saber1, saberInfo_t* saber2, int saberHolstered, int* saberAnimLevel);
+extern qboolean WP_SaberStyleValidForSaber(saberInfo_t* saber1, saberInfo_t* saber2, int saberHolstered, int saber_anim_level);
+extern qboolean WP_UseFirstValidSaberStyle(saberInfo_t* saber1, saberInfo_t* saber2, int saberHolstered, int* saber_anim_level);
 qboolean G_SetSaber(gentity_t* ent, int saber_num, char* saberName, qboolean siegeOverride)
 {
 	char truncSaberName[MAX_QPATH] = { 0 };
@@ -1330,10 +1330,10 @@ qboolean G_SetSaber(gentity_t* ent, int saber_num, char* saberName, qboolean sie
 	else
 		Q_strncpyz(ent->client->pers.saber2, ent->client->saber[1].name, sizeof(ent->client->pers.saber2));
 
-	if (!WP_SaberStyleValidForSaber(&ent->client->saber[0], &ent->client->saber[1], ent->client->ps.saberHolstered, ent->client->ps.fd.saberAnimLevel))
+	if (!WP_SaberStyleValidForSaber(&ent->client->saber[0], &ent->client->saber[1], ent->client->ps.saberHolstered, ent->client->ps.fd.saber_anim_level))
 	{
-		WP_UseFirstValidSaberStyle(&ent->client->saber[0], &ent->client->saber[1], ent->client->ps.saberHolstered, &ent->client->ps.fd.saberAnimLevel);
-		ent->client->ps.fd.saberAnimLevelBase = ent->client->saberCycleQueue = ent->client->ps.fd.saberAnimLevel;
+		WP_UseFirstValidSaberStyle(&ent->client->saber[0], &ent->client->saber[1], ent->client->ps.saberHolstered, &ent->client->ps.fd.saber_anim_level);
+		ent->client->ps.fd.saberAnimLevelBase = ent->client->saberCycleQueue = ent->client->ps.fd.saber_anim_level;
 	}
 
 	return qtrue;
@@ -2743,7 +2743,7 @@ void Cmd_SaberAttackCycle_f(gentity_t* ent)
 				G_Sound(ent, CHAN_AUTO, ent->client->saber[1].soundOn);
 				ent->client->ps.saberHolstered = 0;
 				//g_active should take care of this, but...
-				ent->client->ps.fd.saberAnimLevel = SS_DUAL;
+				ent->client->ps.fd.saber_anim_level = SS_DUAL;
 			}
 			else if (ent->client->ps.saberHolstered == 0)
 			{//have none holstered
@@ -2760,7 +2760,7 @@ void Cmd_SaberAttackCycle_f(gentity_t* ent)
 					G_Sound(ent, CHAN_AUTO, ent->client->saber[1].soundOff);
 					ent->client->ps.saberHolstered = 1;
 					//g_active should take care of this, but...
-					ent->client->ps.fd.saberAnimLevel = SS_FAST;
+					ent->client->ps.fd.saber_anim_level = SS_FAST;
 				}
 			}
 
@@ -2793,7 +2793,7 @@ void Cmd_SaberAttackCycle_f(gentity_t* ent)
 				WP_UseFirstValidSaberStyle(&ent->client->saber[0], &ent->client->saber[1], ent->client->ps.saberHolstered, &selectLevel);
 				if (ent->client->ps.weaponTime <= 0)
 				{ //not busy, set it now
-					ent->client->ps.fd.saberAnimLevel = selectLevel;
+					ent->client->ps.fd.saber_anim_level = selectLevel;
 				}
 				else
 				{ //can't set it now or we might cause unexpected chaining, so queue it
@@ -2820,7 +2820,7 @@ void Cmd_SaberAttackCycle_f(gentity_t* ent)
 				{
 					if (ent->client->ps.weaponTime <= 0)
 					{ //not busy, set it now
-						ent->client->ps.fd.saberAnimLevel = ent->client->saber[0].singleBladeStyle;
+						ent->client->ps.fd.saber_anim_level = ent->client->saber[0].singleBladeStyle;
 					}
 					else
 					{ //can't set it now or we might cause unexpected chaining, so queue it
@@ -2842,7 +2842,7 @@ void Cmd_SaberAttackCycle_f(gentity_t* ent)
 	}
 	else
 	{
-		selectLevel = ent->client->ps.fd.saberAnimLevel;
+		selectLevel = ent->client->ps.fd.saber_anim_level;
 	}
 
 	if (level.gametype == GT_SIEGE &&
@@ -2909,7 +2909,7 @@ void Cmd_SaberAttackCycle_f(gentity_t* ent)
 
 	if (ent->client->ps.weaponTime <= 0)
 	{ //not busy, set it now
-		ent->client->ps.fd.saberAnimLevelBase = ent->client->ps.fd.saberAnimLevel = selectLevel;
+		ent->client->ps.fd.saberAnimLevelBase = ent->client->ps.fd.saber_anim_level = selectLevel;
 	}
 	else
 	{ //can't set it now or we might cause unexpected chaining, so queue it
@@ -3128,15 +3128,15 @@ void Cmd_DebugSetSaberMove_f(gentity_t* self)
 		return;
 	}
 
-	self->client->ps.saberMove = atoi(arg);
+	self->client->ps.saber_move = atoi(arg);
 	self->client->ps.saberBlocked = BLOCKED_BOUNCE_MOVE;
 
-	if (self->client->ps.saberMove >= LS_MOVE_MAX)
+	if (self->client->ps.saber_move >= LS_MOVE_MAX)
 	{
-		self->client->ps.saberMove = LS_MOVE_MAX - 1;
+		self->client->ps.saber_move = LS_MOVE_MAX - 1;
 	}
 
-	Com_Printf("Anim for move: %s\n", animTable[saberMoveData[self->client->ps.saberMove].animToUse].name);
+	Com_Printf("Anim for move: %s\n", animTable[saberMoveData[self->client->ps.saber_move].animToUse].name);
 }
 
 void Cmd_DebugSetBodyAnim_f(gentity_t* self)

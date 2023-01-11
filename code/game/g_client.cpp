@@ -897,7 +897,7 @@ static void Player_RestoreFromPrevLevel(gentity_t* ent)
 				&saber2_blade_color[7],
 				//general saber data
 				&client->ps.saberStylesKnown,
-				&client->ps.saberAnimLevel,
+				&client->ps.saber_anim_level,
 				&client->ps.saberLockEnemy,
 				&client->ps.saberLockTime
 			);

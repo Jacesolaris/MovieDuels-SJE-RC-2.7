@@ -246,7 +246,7 @@ extern qboolean G_BoxInBounds(vec3_t point, vec3_t mins, vec3_t maxs, vec3_t bou
 extern qboolean G_HeavyMelee(gentity_t* attacker);
 extern void jedi_decloak(gentity_t* self);
 
-static void WP_FireEmplaced(gentity_t* ent, qboolean altFire);
+static void WP_FireEmplaced(gentity_t* ent, qboolean alt_fire);
 
 void laserTrapStick(gentity_t* ent, vec3_t endpos, vec3_t normal);
 
@@ -317,17 +317,17 @@ BRYAR PISTOL
 */
 
 //----------------------------------------------
-static void WP_FireBryarPistol(gentity_t* ent, qboolean altFire)
+static void WP_FireBryarPistol(gentity_t* ent, qboolean alt_fire)
 //---------------------------------------------------------
 {
 	int damage = BRYAR_PISTOL_DAMAGE;
 
-	gentity_t* missile = CreateMissile(muzzle, forward, BRYAR_PISTOL_VEL, 10000, ent, altFire);
+	gentity_t* missile = CreateMissile(muzzle, forward, BRYAR_PISTOL_VEL, 10000, ent, alt_fire);
 
 	missile->classname = "bryar_proj";
 	missile->s.weapon = WP_BRYAR_PISTOL;
 
-	if (altFire)
+	if (alt_fire)
 	{
 		int count = (level.time - ent->client->ps.weaponChargeTime) / BRYAR_CHARGE_UNIT;
 
@@ -359,7 +359,7 @@ static void WP_FireBryarPistol(gentity_t* ent, qboolean altFire)
 
 	missile->damage = damage;
 	missile->dflags = DAMAGE_DEATH_KNOCKBACK;
-	if (altFire)
+	if (alt_fire)
 	{
 		missile->methodOfDeath = MOD_BRYAR_PISTOL_ALT;
 	}
@@ -374,17 +374,17 @@ static void WP_FireBryarPistol(gentity_t* ent, qboolean altFire)
 }
 
 //----------------------------------------------
-static void WP_FireReyPistol(gentity_t* ent, qboolean altFire)
+static void WP_FireReyPistol(gentity_t* ent, qboolean alt_fire)
 //---------------------------------------------------------
 {
 	int damage = REY_DAMAGE;
 
-	gentity_t* missile = CreateMissile(muzzle, forward, REY_VEL, 10000, ent, altFire);
+	gentity_t* missile = CreateMissile(muzzle, forward, REY_VEL, 10000, ent, alt_fire);
 
 	missile->classname = "bryar_proj";
 	missile->s.weapon = WP_REY;
 
-	if (altFire)
+	if (alt_fire)
 	{
 		int count = (level.time - ent->client->ps.weaponChargeTime) / REY_CHARGE_UNIT;
 
@@ -416,7 +416,7 @@ static void WP_FireReyPistol(gentity_t* ent, qboolean altFire)
 
 	missile->damage = damage;
 	missile->dflags = DAMAGE_DEATH_KNOCKBACK;
-	if (altFire)
+	if (alt_fire)
 	{
 		missile->methodOfDeath = MOD_REY_ALT;
 	}
@@ -431,17 +431,17 @@ static void WP_FireReyPistol(gentity_t* ent, qboolean altFire)
 }
 
 //----------------------------------------------
-static void WP_FireClonePistol(gentity_t* ent, qboolean altFire)
+static void WP_FireClonePistol(gentity_t* ent, qboolean alt_fire)
 //---------------------------------------------------------
 {
 	int damage = CLONEPISTOL_DAMAGE;
 
-	gentity_t* missile = CreateMissile(muzzle, forward, CLONEPISTOL_VEL, 10000, ent, altFire);
+	gentity_t* missile = CreateMissile(muzzle, forward, CLONEPISTOL_VEL, 10000, ent, alt_fire);
 
 	missile->classname = "clone_proj";
 	missile->s.weapon = WP_CLONEPISTOL;
 
-	if (altFire)
+	if (alt_fire)
 	{
 		int count = (level.time - ent->client->ps.weaponChargeTime) / CLONEPISTOL_CHARGE_UNIT;
 
@@ -473,7 +473,7 @@ static void WP_FireClonePistol(gentity_t* ent, qboolean altFire)
 
 	missile->damage = damage;
 	missile->dflags = DAMAGE_DEATH_KNOCKBACK;
-	if (altFire)
+	if (alt_fire)
 	{
 		missile->methodOfDeath = MOD_CLONEPISTOL_ALT;
 	}
@@ -496,10 +496,10 @@ GENERIC
 */
 
 //---------------------------------------------------------
-void WP_FireTurretMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean altFire, int damage, int velocity, int mod, gentity_t* ignore)
+void WP_FireTurretMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean alt_fire, int damage, int velocity, int mod, gentity_t* ignore)
 //---------------------------------------------------------
 {
-	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, altFire);
+	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, alt_fire);
 
 	missile->classname = "generic_proj";
 	missile->s.weapon = WP_TURRET;
@@ -574,10 +574,10 @@ void WP_Explode(gentity_t* self)
 //Currently only the seeker drone uses this, but it might be useful for other things as well.
 
 //---------------------------------------------------------
-void WP_FireGenericBlasterMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean altFire, int damage, int velocity, int mod)
+void WP_FireGenericBlasterMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean alt_fire, int damage, int velocity, int mod)
 //---------------------------------------------------------
 {
-	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, altFire);
+	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, alt_fire);
 
 	missile->classname = "generic_proj";
 	missile->s.weapon = WP_BRYAR_PISTOL;
@@ -600,7 +600,7 @@ BLASTER
 */
 
 //---------------------------------------------------------
-void WP_FireBlasterMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean altFire)
+void WP_FireBlasterMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean alt_fire)
 //---------------------------------------------------------
 {
 	const int velocity = BLASTER_VELOCITY;
@@ -611,7 +611,7 @@ void WP_FireBlasterMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean al
 		damage = 10;
 	}
 
-	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, altFire);
+	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, alt_fire);
 
 	missile->classname = "blaster_proj";
 	missile->s.weapon = WP_BLASTER;
@@ -626,7 +626,7 @@ void WP_FireBlasterMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean al
 }
 
 //---------------------------------------------------------
-void WP_FireBattleDroidMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean altFire)
+void WP_FireBattleDroidMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean alt_fire)
 //---------------------------------------------------------
 {
 	const int velocity = BATTLEDROID_VELOCITY;
@@ -637,7 +637,7 @@ void WP_FireBattleDroidMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolea
 		damage = 10;
 	}
 
-	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, altFire);
+	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, alt_fire);
 
 	missile->classname = "blaster_proj";
 	missile->s.weapon = WP_BATTLEDROID;
@@ -652,7 +652,7 @@ void WP_FireBattleDroidMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolea
 }
 
 //---------------------------------------------------------
-void WP_FireFirstOrderMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean altFire)
+void WP_FireFirstOrderMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean alt_fire)
 //---------------------------------------------------------
 {
 	const int velocity = THEFIRSTORDER_VELOCITY;
@@ -663,7 +663,7 @@ void WP_FireFirstOrderMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean
 		damage = 10;
 	}
 
-	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, altFire);
+	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, alt_fire);
 
 	missile->classname = "blaster_proj";
 	missile->s.weapon = WP_THEFIRSTORDER;
@@ -677,7 +677,7 @@ void WP_FireFirstOrderMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean
 	missile->bounceCount = 8;
 }
 //---------------------------------------------------------
-void WP_FireCloneCarbineMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean altFire)
+void WP_FireCloneCarbineMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean alt_fire)
 //---------------------------------------------------------
 {
 	const int velocity = CLONECARBINE_VELOCITY;
@@ -688,7 +688,7 @@ void WP_FireCloneCarbineMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboole
 		damage = 10;
 	}
 
-	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, altFire);
+	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, alt_fire);
 
 	missile->classname = "clone_proj";
 	missile->s.weapon = WP_CLONECARBINE;
@@ -703,7 +703,7 @@ void WP_FireCloneCarbineMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboole
 }
 
 //---------------------------------------------------------
-void WP_FireRebelBlasterMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean altFire)
+void WP_FireRebelBlasterMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean alt_fire)
 //---------------------------------------------------------
 {
 	const int velocity = REBELBLASTER_VELOCITY;
@@ -714,7 +714,7 @@ void WP_FireRebelBlasterMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboole
 		damage = 10;
 	}
 
-	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, altFire);
+	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, alt_fire);
 
 	missile->classname = "blaster_proj";
 	missile->s.weapon = WP_REBELBLASTER;
@@ -729,7 +729,7 @@ void WP_FireRebelBlasterMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboole
 }
 
 //---------------------------------------------------------
-void WP_FireCloneRifleMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean altFire)
+void WP_FireCloneRifleMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean alt_fire)
 //---------------------------------------------------------
 {
 	const int velocity = CLONERIFLE_VELOCITY;
@@ -740,7 +740,7 @@ void WP_FireCloneRifleMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean
 		damage = 10;
 	}
 
-	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, altFire);
+	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, alt_fire);
 
 	missile->classname = "clone_proj";
 	missile->s.weapon = WP_CLONERIFLE;
@@ -755,7 +755,7 @@ void WP_FireCloneRifleMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean
 }
 
 //---------------------------------------------------------
-void WP_FireCloneCommandoMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean altFire)
+void WP_FireCloneCommandoMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean alt_fire)
 //---------------------------------------------------------
 {
 	const int velocity = CLONECOMMANDO_VELOCITY;
@@ -766,7 +766,7 @@ void WP_FireCloneCommandoMissile(gentity_t* ent, vec3_t start, vec3_t dir, qbool
 		damage = 10;
 	}
 
-	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, altFire);
+	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, alt_fire);
 
 	missile->classname = "clone_proj";
 	missile->s.weapon = WP_CLONECOMMANDO;
@@ -781,7 +781,7 @@ void WP_FireCloneCommandoMissile(gentity_t* ent, vec3_t start, vec3_t dir, qbool
 }
 
 //---------------------------------------------------------
-void WP_FireRebelRifleMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean altFire)
+void WP_FireRebelRifleMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean alt_fire)
 //---------------------------------------------------------
 {
 	const int velocity = REBELRIFLE_VELOCITY;
@@ -792,7 +792,7 @@ void WP_FireRebelRifleMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean
 		damage = 10;
 	}
 
-	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, altFire);
+	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, alt_fire);
 
 	missile->classname = "blaster_proj";
 	missile->s.weapon = WP_REBELRIFLE;
@@ -807,7 +807,7 @@ void WP_FireRebelRifleMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean
 }
 
 //---------------------------------------------------------
-void WP_FireJangoPistolMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean altFire)
+void WP_FireJangoPistolMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean alt_fire)
 //---------------------------------------------------------
 {
 	const int velocity = JANGO_VELOCITY;
@@ -818,7 +818,7 @@ void WP_FireJangoPistolMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolea
 		damage = 10;
 	}
 
-	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, altFire);
+	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, alt_fire);
 
 	missile->classname = "blaster_proj";
 	missile->s.weapon = WP_JANGO;
@@ -833,13 +833,13 @@ void WP_FireJangoPistolMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolea
 }
 
 //---------------------------------------------------------
-void WP_FireBobaRifleMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean altFire)
+void WP_FireBobaRifleMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean alt_fire)
 //---------------------------------------------------------
 {
 	int velocity = BOBA_VELOCITY;
 	int	damage = BOBA_DAMAGE;
 
-	if (altFire)
+	if (alt_fire)
 	{
 		velocity = Q_irand(1500, 3000);
 	}
@@ -849,7 +849,7 @@ void WP_FireBobaRifleMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean 
 		damage = 10;
 	}
 
-	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, altFire);
+	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, alt_fire);
 
 	missile->classname = "blaster_proj";
 	missile->s.weapon = WP_BOBA;
@@ -899,13 +899,13 @@ void WP_FireTurboLaserMissile(gentity_t* ent, vec3_t start, vec3_t dir)
 }
 
 //---------------------------------------------------------
-void WP_FireEmplacedMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean altFire, gentity_t* ignore)
+void WP_FireEmplacedMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean alt_fire, gentity_t* ignore)
 //---------------------------------------------------------
 {
 	const int velocity = BLASTER_VELOCITY;
 	const int	damage = BLASTER_DAMAGE;
 
-	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, altFire);
+	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, alt_fire);
 
 	missile->classname = "emplaced_gun_proj";
 	missile->s.weapon = WP_TURRET;//WP_EMPLACED_GUN;
@@ -927,14 +927,14 @@ void WP_FireEmplacedMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean a
 }
 
 //---------------------------------------------------------
-static void WP_FireBlaster(gentity_t* ent, qboolean altFire)
+static void WP_FireBlaster(gentity_t* ent, qboolean alt_fire)
 //---------------------------------------------------------
 {
 	vec3_t  dir, angs;
 
 	vectoangles(forward, angs);
 
-	if (altFire)
+	if (alt_fire)
 	{
 		// add some slop to the alt-fire direction
 		angs[PITCH] += Q_flrand(-1.0f, 1.0f) * BLASTER_SPREAD;
@@ -944,18 +944,18 @@ static void WP_FireBlaster(gentity_t* ent, qboolean altFire)
 	AngleVectors(angs, dir, NULL, NULL);
 
 	// FIXME: if temp_org does not have clear trace to inside the bbox, don't shoot!
-	WP_FireBlasterMissile(ent, muzzle, dir, altFire);
+	WP_FireBlasterMissile(ent, muzzle, dir, alt_fire);
 }
 
 //---------------------------------------------------------
-static void WP_FireBattleDroid(gentity_t* ent, qboolean altFire)
+static void WP_FireBattleDroid(gentity_t* ent, qboolean alt_fire)
 //---------------------------------------------------------
 {
 	vec3_t  dir, angs;
 
 	vectoangles(forward, angs);
 
-	if (altFire)
+	if (alt_fire)
 	{
 		// add some slop to the alt-fire direction
 		angs[PITCH] += Q_flrand(-1.0f, 1.0f) * BATTLEDROID_SPREAD;
@@ -965,18 +965,18 @@ static void WP_FireBattleDroid(gentity_t* ent, qboolean altFire)
 	AngleVectors(angs, dir, NULL, NULL);
 
 	// FIXME: if temp_org does not have clear trace to inside the bbox, don't shoot!
-	WP_FireBattleDroidMissile(ent, muzzle, dir, altFire);
+	WP_FireBattleDroidMissile(ent, muzzle, dir, alt_fire);
 }
 
 //---------------------------------------------------------
-static void WP_FireFirstOrder(gentity_t* ent, qboolean altFire)
+static void WP_FireFirstOrder(gentity_t* ent, qboolean alt_fire)
 //---------------------------------------------------------
 {
 	vec3_t  dir, angs;
 
 	vectoangles(forward, angs);
 
-	if (altFire)
+	if (alt_fire)
 	{
 		// add some slop to the alt-fire direction
 		angs[PITCH] += Q_flrand(-1.0f, 1.0f) * THEFIRSTORDER_SPREAD;
@@ -986,18 +986,18 @@ static void WP_FireFirstOrder(gentity_t* ent, qboolean altFire)
 	AngleVectors(angs, dir, NULL, NULL);
 
 	// FIXME: if temp_org does not have clear trace to inside the bbox, don't shoot!
-	WP_FireFirstOrderMissile(ent, muzzle, dir, altFire);
+	WP_FireFirstOrderMissile(ent, muzzle, dir, alt_fire);
 }
 
 //---------------------------------------------------------
-static void WP_FireCloneCarbine(gentity_t* ent, qboolean altFire)
+static void WP_FireCloneCarbine(gentity_t* ent, qboolean alt_fire)
 //---------------------------------------------------------
 {
 	vec3_t  dir, angs;
 
 	vectoangles(forward, angs);
 
-	if (altFire)
+	if (alt_fire)
 	{
 		// add some slop to the alt-fire direction
 		angs[PITCH] += Q_flrand(-1.0f, 1.0f) * CLONECARBINE_SPREAD;
@@ -1007,18 +1007,18 @@ static void WP_FireCloneCarbine(gentity_t* ent, qboolean altFire)
 	AngleVectors(angs, dir, NULL, NULL);
 
 	// FIXME: if temp_org does not have clear trace to inside the bbox, don't shoot!
-	WP_FireCloneCarbineMissile(ent, muzzle, dir, altFire);
+	WP_FireCloneCarbineMissile(ent, muzzle, dir, alt_fire);
 }
 
 //---------------------------------------------------------
-static void WP_FireRebelBlaster(gentity_t* ent, qboolean altFire)
+static void WP_FireRebelBlaster(gentity_t* ent, qboolean alt_fire)
 //---------------------------------------------------------
 {
 	vec3_t  dir, angs;
 
 	vectoangles(forward, angs);
 
-	if (altFire)
+	if (alt_fire)
 	{
 		// add some slop to the alt-fire direction
 		angs[PITCH] += Q_flrand(-1.6f, 1.6f) * REBELBLASTER_SPREAD;
@@ -1028,18 +1028,18 @@ static void WP_FireRebelBlaster(gentity_t* ent, qboolean altFire)
 	AngleVectors(angs, dir, NULL, NULL);
 
 	// FIXME: if temp_org does not have clear trace to inside the bbox, don't shoot!
-	WP_FireRebelBlasterMissile(ent, muzzle, dir, altFire);
+	WP_FireRebelBlasterMissile(ent, muzzle, dir, alt_fire);
 }
 
 //---------------------------------------------------------
-static void WP_FireCloneRifle(gentity_t* ent, qboolean altFire)
+static void WP_FireCloneRifle(gentity_t* ent, qboolean alt_fire)
 //---------------------------------------------------------
 {
 	vec3_t  dir, angs;
 
 	vectoangles(forward, angs);
 
-	if (altFire)
+	if (alt_fire)
 	{
 		// add some slop to the alt-fire direction
 		angs[PITCH] += Q_flrand(-1.0f, 1.0f) * CLONERIFLE_SPREAD;
@@ -1049,18 +1049,18 @@ static void WP_FireCloneRifle(gentity_t* ent, qboolean altFire)
 	AngleVectors(angs, dir, NULL, NULL);
 
 	// FIXME: if temp_org does not have clear trace to inside the bbox, don't shoot!
-	WP_FireCloneRifleMissile(ent, muzzle, dir, altFire);
+	WP_FireCloneRifleMissile(ent, muzzle, dir, alt_fire);
 }
 
 //---------------------------------------------------------
-static void WP_FireCloneCommando(gentity_t* ent, qboolean altFire)
+static void WP_FireCloneCommando(gentity_t* ent, qboolean alt_fire)
 //---------------------------------------------------------
 {
 	vec3_t  dir, angs;
 
 	vectoangles(forward, angs);
 
-	if (altFire)
+	if (alt_fire)
 	{
 		// add some slop to the alt-fire direction
 		angs[PITCH] += Q_flrand(-1.0f, 1.0f) * CLONECOMMANDO_SPREAD;
@@ -1070,18 +1070,18 @@ static void WP_FireCloneCommando(gentity_t* ent, qboolean altFire)
 	AngleVectors(angs, dir, NULL, NULL);
 
 	// FIXME: if temp_org does not have clear trace to inside the bbox, don't shoot!
-	WP_FireCloneCommandoMissile(ent, muzzle, dir, altFire);
+	WP_FireCloneCommandoMissile(ent, muzzle, dir, alt_fire);
 }
 
 //---------------------------------------------------------
-static void WP_FireRebelRifle(gentity_t* ent, qboolean altFire)
+static void WP_FireRebelRifle(gentity_t* ent, qboolean alt_fire)
 //---------------------------------------------------------
 {
 	vec3_t  dir, angs;
 
 	vectoangles(forward, angs);
 
-	if (altFire)
+	if (alt_fire)
 	{
 		// add some slop to the alt-fire direction
 		angs[PITCH] += Q_flrand(-1.4f, 1.4f) * REBELRIFLE_SPREAD;
@@ -1091,18 +1091,18 @@ static void WP_FireRebelRifle(gentity_t* ent, qboolean altFire)
 	AngleVectors(angs, dir, NULL, NULL);
 
 	// FIXME: if temp_org does not have clear trace to inside the bbox, don't shoot!
-	WP_FireRebelRifleMissile(ent, muzzle, dir, altFire);
+	WP_FireRebelRifleMissile(ent, muzzle, dir, alt_fire);
 }
 
 //---------------------------------------------------------
-static void WP_FireJangoPistol(gentity_t* ent, qboolean altFire)
+static void WP_FireJangoPistol(gentity_t* ent, qboolean alt_fire)
 //---------------------------------------------------------
 {
 	vec3_t  dir, angs;
 
 	vectoangles(forward, angs);
 
-	if (altFire)
+	if (alt_fire)
 	{
 		// add some slop to the alt-fire direction
 		angs[PITCH] += Q_flrand(-1.0f, 1.0f) * JANGO_SPREAD;
@@ -1112,18 +1112,18 @@ static void WP_FireJangoPistol(gentity_t* ent, qboolean altFire)
 	AngleVectors(angs, dir, NULL, NULL);
 
 	// FIXME: if temp_org does not have clear trace to inside the bbox, don't shoot!
-	WP_FireJangoPistolMissile(ent, muzzle, dir, altFire);
+	WP_FireJangoPistolMissile(ent, muzzle, dir, alt_fire);
 }
 
 //---------------------------------------------------------
-static void WP_FireBobaRifle(gentity_t* ent, qboolean altFire)
+static void WP_FireBobaRifle(gentity_t* ent, qboolean alt_fire)
 //---------------------------------------------------------
 {
 	vec3_t  dir, angs;
 
 	vectoangles(forward, angs);
 
-	if (altFire)
+	if (alt_fire)
 	{
 		// add some slop to the alt-fire direction
 		angs[PITCH] += Q_flrand(-1.0f, 1.0f) * BOBA_SPREAD;
@@ -1133,7 +1133,7 @@ static void WP_FireBobaRifle(gentity_t* ent, qboolean altFire)
 	AngleVectors(angs, dir, NULL, NULL);
 
 	// FIXME: if temp_org does not have clear trace to inside the bbox, don't shoot!
-	WP_FireBobaRifleMissile(ent, muzzle, dir, altFire);
+	WP_FireBobaRifleMissile(ent, muzzle, dir, alt_fire);
 }
 
 int G_GetHitLocation(gentity_t* target, vec3_t ppoint);
@@ -1557,12 +1557,12 @@ void WP_DisruptorAltFire(gentity_t* ent)
 }
 
 //---------------------------------------------------------
-static void WP_FireDisruptor(gentity_t* ent, qboolean altFire)
+static void WP_FireDisruptor(gentity_t* ent, qboolean alt_fire)
 //---------------------------------------------------------
 {
 	if (!ent || !ent->client || ent->client->ps.zoomMode != 1)
 	{ //do not ever let it do the alt fire when not zoomed
-		altFire = qfalse;
+		alt_fire = qfalse;
 	}
 
 	if (ent && ent->s.eType == ET_NPC && !ent->client)
@@ -1571,7 +1571,7 @@ static void WP_FireDisruptor(gentity_t* ent, qboolean altFire)
 		return;
 	}
 
-	if (altFire)
+	if (alt_fire)
 	{
 		WP_DisruptorAltFire(ent);
 	}
@@ -1695,10 +1695,10 @@ static void WP_BowcasterMainFire(gentity_t* ent)
 }
 
 //---------------------------------------------------------
-static void WP_FireBowcaster(gentity_t* ent, qboolean altFire)
+static void WP_FireBowcaster(gentity_t* ent, qboolean alt_fire)
 //---------------------------------------------------------
 {
-	if (altFire)
+	if (alt_fire)
 	{
 		WP_BowcasterAltFire(ent);
 	}
@@ -1771,14 +1771,14 @@ static void WP_RepeaterAltFire(gentity_t* ent)
 }
 
 //---------------------------------------------------------
-static void WP_FireRepeater(gentity_t* ent, qboolean altFire)
+static void WP_FireRepeater(gentity_t* ent, qboolean alt_fire)
 //---------------------------------------------------------
 {
 	vec3_t	dir, angs;
 
 	vectoangles(forward, angs);
 
-	if (altFire)
+	if (alt_fire)
 	{
 		WP_RepeaterAltFire(ent);
 	}
@@ -1828,7 +1828,7 @@ void DEMP2_AltRadiusDamage(gentity_t* ent)
 {
 	float		frac = (level.time - ent->genericValue5) / 800.0f; // / 1600.0f; // synchronize with demp2 effect
 	int			iEntityList[MAX_GENTITIES];
-	gentity_t* entityList[MAX_GENTITIES];
+	gentity_t* entity_list[MAX_GENTITIES];
 	gentity_t* myOwner = NULL;
 	int i;
 	vec3_t		mins, maxs;
@@ -1871,13 +1871,13 @@ void DEMP2_AltRadiusDamage(gentity_t* ent)
 	i = 0;
 	while (i < num_listed_entities)
 	{
-		entityList[i] = &g_entities[iEntityList[i]];
+		entity_list[i] = &g_entities[iEntityList[i]];
 		i++;
 	}
 
 	for (int e = 0; e < num_listed_entities; e++)
 	{
-		gentity_t* gent = entityList[e];
+		gentity_t* gent = entity_list[e];
 
 		if (!gent || !gent->takedamage || !gent->r.contents)
 		{
@@ -2059,10 +2059,10 @@ static void WP_DEMP2_AltFire(gentity_t* ent)
 }
 
 //---------------------------------------------------------
-static void WP_FireDEMP2(gentity_t* ent, qboolean altFire)
+static void WP_FireDEMP2(gentity_t* ent, qboolean alt_fire)
 //---------------------------------------------------------
 {
-	if (altFire)
+	if (alt_fire)
 	{
 		WP_DEMP2_AltFire(ent);
 	}
@@ -2273,10 +2273,10 @@ static void WP_FlechetteAltFire(gentity_t* self)
 }
 
 //---------------------------------------------------------
-static void WP_FireFlechette(gentity_t* ent, qboolean altFire)
+static void WP_FireFlechette(gentity_t* ent, qboolean alt_fire)
 //---------------------------------------------------------
 {
-	if (altFire)
+	if (alt_fire)
 	{
 		//WP_FlechetteProxMine( ent );
 		WP_FlechetteAltFire(ent);
@@ -2468,18 +2468,18 @@ void RocketDie(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int d
 }
 
 //---------------------------------------------------------
-static void WP_FireRocket(gentity_t* ent, qboolean altFire)
+static void WP_FireRocket(gentity_t* ent, qboolean alt_fire)
 //---------------------------------------------------------
 {
 	const int	damage = ROCKET_DAMAGE;
 	int	vel = ROCKET_VELOCITY;
 
-	if (altFire)
+	if (alt_fire)
 	{
 		vel *= 0.5f;
 	}
 
-	gentity_t* missile = CreateMissile(muzzle, forward, vel, 30000, ent, altFire);
+	gentity_t* missile = CreateMissile(muzzle, forward, vel, 30000, ent, alt_fire);
 
 	if (ent->client && ent->client->ps.rocketLockIndex != ENTITYNUM_NONE)
 	{
@@ -2524,7 +2524,7 @@ static void WP_FireRocket(gentity_t* ent, qboolean altFire)
 
 	missile->damage = damage;
 	missile->dflags = DAMAGE_DEATH_KNOCKBACK;
-	if (altFire)
+	if (alt_fire)
 	{
 		missile->methodOfDeath = MOD_ROCKET_HOMING;
 		missile->splashMethodOfDeath = MOD_ROCKET_HOMING_SPLASH;
@@ -2625,7 +2625,7 @@ void thermalThinkStandard(gentity_t* ent)
 }
 
 //---------------------------------------------------------
-gentity_t* WP_FireThermalDetonator(gentity_t* ent, qboolean altFire)
+gentity_t* WP_FireThermalDetonator(gentity_t* ent, qboolean alt_fire)
 //---------------------------------------------------------
 {
 	vec3_t		dir, start;
@@ -2679,7 +2679,7 @@ gentity_t* WP_FireThermalDetonator(gentity_t* ent, qboolean altFire)
 		bolt->s.pos.trDelta[2] += 120;
 	}
 
-	if (!altFire)
+	if (!alt_fire)
 	{
 		bolt->flags |= FL_BOUNCE_HALF;
 	}
@@ -3097,60 +3097,60 @@ void TrapThink(gentity_t* ent)
 	G_RunObject(ent);
 }
 
-void CreateLaserTrap(gentity_t* laserTrap, vec3_t start, gentity_t* owner)
+void CreateLaserTrap(gentity_t* laser_trap, vec3_t start, gentity_t* owner)
 { //create a laser trap entity
-	laserTrap->classname = "laserTrap";
-	laserTrap->flags |= FL_BOUNCE_HALF;
-	laserTrap->s.eFlags |= EF_MISSILE_STICK;
-	laserTrap->splashDamage = LT_SPLASH_DAM;
-	laserTrap->splashRadius = LT_SPLASH_RAD;
-	laserTrap->damage = LT_DAMAGE;
-	laserTrap->methodOfDeath = MOD_TRIP_MINE_SPLASH;
-	laserTrap->splashMethodOfDeath = MOD_TRIP_MINE_SPLASH;
-	laserTrap->s.eType = ET_GENERAL;
-	laserTrap->r.svFlags = SVF_USE_CURRENT_ORIGIN;
-	laserTrap->s.weapon = WP_TRIP_MINE;
-	laserTrap->s.pos.trType = TR_GRAVITY;
-	laserTrap->r.contents = MASK_SHOT;
-	laserTrap->parent = owner;
-	laserTrap->activator = owner;
-	laserTrap->r.ownerNum = owner->s.number;
-	VectorSet(laserTrap->r.mins, -LT_SIZE, -LT_SIZE, -LT_SIZE);
-	VectorSet(laserTrap->r.maxs, LT_SIZE, LT_SIZE, LT_SIZE);
-	laserTrap->clipmask = MASK_SHOT;
-	laserTrap->s.solid = 2;
-	laserTrap->s.modelindex = G_ModelIndex("models/weapons2/laser_trap/laser_trap_w.glm");
-	laserTrap->s.modelGhoul2 = 1;
-	laserTrap->s.g2radius = 40;
+	laser_trap->classname = "laserTrap";
+	laser_trap->flags |= FL_BOUNCE_HALF;
+	laser_trap->s.eFlags |= EF_MISSILE_STICK;
+	laser_trap->splashDamage = LT_SPLASH_DAM;
+	laser_trap->splashRadius = LT_SPLASH_RAD;
+	laser_trap->damage = LT_DAMAGE;
+	laser_trap->methodOfDeath = MOD_TRIP_MINE_SPLASH;
+	laser_trap->splashMethodOfDeath = MOD_TRIP_MINE_SPLASH;
+	laser_trap->s.eType = ET_GENERAL;
+	laser_trap->r.svFlags = SVF_USE_CURRENT_ORIGIN;
+	laser_trap->s.weapon = WP_TRIP_MINE;
+	laser_trap->s.pos.trType = TR_GRAVITY;
+	laser_trap->r.contents = MASK_SHOT;
+	laser_trap->parent = owner;
+	laser_trap->activator = owner;
+	laser_trap->r.ownerNum = owner->s.number;
+	VectorSet(laser_trap->r.mins, -LT_SIZE, -LT_SIZE, -LT_SIZE);
+	VectorSet(laser_trap->r.maxs, LT_SIZE, LT_SIZE, LT_SIZE);
+	laser_trap->clipmask = MASK_SHOT;
+	laser_trap->s.solid = 2;
+	laser_trap->s.modelindex = G_ModelIndex("models/weapons2/laser_trap/laser_trap_w.glm");
+	laser_trap->s.modelGhoul2 = 1;
+	laser_trap->s.g2radius = 40;
 
-	laserTrap->s.genericenemyindex = owner->s.number + MAX_GENTITIES;
+	laser_trap->s.genericenemyindex = owner->s.number + MAX_GENTITIES;
 
-	laserTrap->health = 1;
+	laser_trap->health = 1;
 
-	laserTrap->s.time = 0;
+	laser_trap->s.time = 0;
 
-	laserTrap->s.pos.trTime = level.time;		// move a bit on the very first frame
-	VectorCopy(start, laserTrap->s.pos.trBase);
-	SnapVector(laserTrap->s.pos.trBase);			// save net bandwidth
+	laser_trap->s.pos.trTime = level.time;		// move a bit on the very first frame
+	VectorCopy(start, laser_trap->s.pos.trBase);
+	SnapVector(laser_trap->s.pos.trBase);			// save net bandwidth
 
-	SnapVector(laserTrap->s.pos.trDelta);			// save net bandwidth
-	VectorCopy(start, laserTrap->r.currentOrigin);
+	SnapVector(laser_trap->s.pos.trDelta);			// save net bandwidth
+	VectorCopy(start, laser_trap->r.currentOrigin);
 
-	laserTrap->s.apos.trType = TR_GRAVITY;
-	laserTrap->s.apos.trTime = level.time;
-	laserTrap->s.apos.trBase[YAW] = rand() % 360;
-	laserTrap->s.apos.trBase[PITCH] = rand() % 360;
-	laserTrap->s.apos.trBase[ROLL] = rand() % 360;
+	laser_trap->s.apos.trType = TR_GRAVITY;
+	laser_trap->s.apos.trTime = level.time;
+	laser_trap->s.apos.trBase[YAW] = rand() % 360;
+	laser_trap->s.apos.trBase[PITCH] = rand() % 360;
+	laser_trap->s.apos.trBase[ROLL] = rand() % 360;
 
 	if (rand() % 10 < 5)
 	{
-		laserTrap->s.apos.trBase[YAW] = -laserTrap->s.apos.trBase[YAW];
+		laser_trap->s.apos.trBase[YAW] = -laser_trap->s.apos.trBase[YAW];
 	}
 
-	VectorCopy(start, laserTrap->pos2);
-	laserTrap->touch = touchLaserTrap;
-	laserTrap->think = TrapThink;
-	laserTrap->nextthink = level.time + 50;
+	VectorCopy(start, laser_trap->pos2);
+	laser_trap->touch = touchLaserTrap;
+	laser_trap->think = TrapThink;
+	laser_trap->nextthink = level.time + 50;
 }
 
 void WP_PlaceLaserTrap(gentity_t* ent, qboolean alt_fire)
@@ -4984,7 +4984,7 @@ FireWeapon
 */
 int BG_EmplacedView(vec3_t base_angles, vec3_t angles, float* new_yaw, float constraint);
 
-void FireWeapon(gentity_t* ent, qboolean altFire) {
+void FireWeapon(gentity_t* ent, qboolean alt_fire) {
 	// track shots taken for accuracy tracking. melee weapons are not tracked.
 	if (ent->s.weapon != WP_SABER && ent->s.weapon != WP_STUN_BATON && ent->s.weapon != WP_MELEE)
 	{
@@ -4998,7 +4998,7 @@ void FireWeapon(gentity_t* ent, qboolean altFire) {
 
 	if (ent && ent->client && ent->client->NPC_class == CLASS_VEHICLE)
 	{
-		FireVehicleWeapon(ent, altFire);
+		FireVehicleWeapon(ent, alt_fire);
 		return;
 	}
 	// set aiming directions
@@ -5069,122 +5069,122 @@ void FireWeapon(gentity_t* ent, qboolean altFire) {
 	// fire the specific weapon
 	switch (ent->s.weapon) {
 	case WP_STUN_BATON:
-		WP_FireStunBaton(ent, altFire);
+		WP_FireStunBaton(ent, alt_fire);
 		break;
 
 	case WP_MELEE:
-		WP_FireMelee(ent, altFire);
+		WP_FireMelee(ent, alt_fire);
 		break;
 
 	case WP_SABER:
 		break;
 
 	case WP_BRYAR_PISTOL:
-		WP_FireBryarPistol(ent, altFire);
+		WP_FireBryarPistol(ent, alt_fire);
 		break;
 
 	case WP_CONCUSSION:
-		if (altFire)
+		if (alt_fire)
 			WP_FireConcussionAlt(ent);
 		else
 			WP_FireConcussion(ent);
 		break;
 
 	case WP_BRYAR_OLD:
-		WP_FireBryarPistol(ent, altFire);
+		WP_FireBryarPistol(ent, alt_fire);
 		break;
 
 	case WP_BLASTER:
-		WP_FireBlaster(ent, altFire);
+		WP_FireBlaster(ent, alt_fire);
 		break;
 
 	case WP_DISRUPTOR:
-		WP_FireDisruptor(ent, altFire);
+		WP_FireDisruptor(ent, alt_fire);
 		break;
 
 	case WP_BOWCASTER:
-		WP_FireBowcaster(ent, altFire);
+		WP_FireBowcaster(ent, alt_fire);
 		break;
 
 	case WP_REPEATER:
-		WP_FireRepeater(ent, altFire);
+		WP_FireRepeater(ent, alt_fire);
 		break;
 
 	case WP_DEMP2:
-		WP_FireDEMP2(ent, altFire);
+		WP_FireDEMP2(ent, alt_fire);
 		break;
 
 	case WP_FLECHETTE:
-		WP_FireFlechette(ent, altFire);
+		WP_FireFlechette(ent, alt_fire);
 		break;
 
 	case WP_ROCKET_LAUNCHER:
-		WP_FireRocket(ent, altFire);
+		WP_FireRocket(ent, alt_fire);
 		break;
 
 	case WP_THERMAL:
-		WP_FireThermalDetonator(ent, altFire);
+		WP_FireThermalDetonator(ent, alt_fire);
 		break;
 
 	case WP_TRIP_MINE:
-		WP_PlaceLaserTrap(ent, altFire);
+		WP_PlaceLaserTrap(ent, alt_fire);
 		break;
 
 	case WP_DET_PACK:
-		WP_DropDetPack(ent, altFire);
+		WP_DropDetPack(ent, alt_fire);
 		break;
 
 	case WP_BATTLEDROID:
-		WP_FireBattleDroid(ent, altFire);
+		WP_FireBattleDroid(ent, alt_fire);
 		break;
 
 	case WP_THEFIRSTORDER:
-		WP_FireFirstOrder(ent, altFire);
+		WP_FireFirstOrder(ent, alt_fire);
 		break;
 
 	case WP_CLONECARBINE:
-		WP_FireCloneCarbine(ent, altFire);
+		WP_FireCloneCarbine(ent, alt_fire);
 		break;
 
 	case WP_REBELBLASTER:
-		WP_FireRebelBlaster(ent, altFire);
+		WP_FireRebelBlaster(ent, alt_fire);
 		break;
 
 	case WP_CLONERIFLE:
-		WP_FireCloneRifle(ent, altFire);
+		WP_FireCloneRifle(ent, alt_fire);
 		break;
 
 	case WP_CLONECOMMANDO:
-		WP_FireCloneCommando(ent, altFire);
+		WP_FireCloneCommando(ent, alt_fire);
 		break;
 
 	case WP_REBELRIFLE:
-		WP_FireRebelRifle(ent, altFire);
+		WP_FireRebelRifle(ent, alt_fire);
 		break;
 
 	case WP_REY:
-		WP_FireReyPistol(ent, altFire);
+		WP_FireReyPistol(ent, alt_fire);
 		break;
 
 	case WP_JANGO:
-		WP_FireJangoPistol(ent, altFire);
+		WP_FireJangoPistol(ent, alt_fire);
 		break;
 
 	case WP_BOBA:
 	{
-		if (altFire)
+		if (alt_fire)
 		{
-			WP_FireBobaRifle(ent, altFire);
-			WP_FireBobaRifle(ent, altFire);
-			WP_FireBobaRifle(ent, altFire);
+			WP_FireBobaRifle(ent, alt_fire);
+			WP_FireBobaRifle(ent, alt_fire);
+			WP_FireBobaRifle(ent, alt_fire);
 			break;
 		}
-		WP_FireBobaRifle(ent, altFire);
+		WP_FireBobaRifle(ent, alt_fire);
 		break;
 	}
 
 	case WP_CLONEPISTOL:
-		WP_FireClonePistol(ent, altFire);
+		WP_FireClonePistol(ent, alt_fire);
 		break;
 
 	case WP_EMPLACED_GUN:
@@ -5192,7 +5192,7 @@ void FireWeapon(gentity_t* ent, qboolean altFire) {
 		{ //specially handled by the e-web itself
 			break;
 		}
-		WP_FireEmplaced(ent, altFire);
+		WP_FireEmplaced(ent, alt_fire);
 		break;
 	default:
 		//			assert(!"unknown weapon fire");
@@ -5203,7 +5203,7 @@ void FireWeapon(gentity_t* ent, qboolean altFire) {
 }
 
 //---------------------------------------------------------
-static void WP_FireEmplaced(gentity_t* ent, qboolean altFire)
+static void WP_FireEmplaced(gentity_t* ent, qboolean alt_fire)
 //---------------------------------------------------------
 {
 	vec3_t	dir, angs, gunpoint;
@@ -5250,7 +5250,7 @@ static void WP_FireEmplaced(gentity_t* ent, qboolean altFire)
 
 	AngleVectors(angs, dir, NULL, NULL);
 
-	WP_FireEmplacedMissile(gun, gunpoint, dir, altFire, ent);
+	WP_FireEmplacedMissile(gun, gunpoint, dir, alt_fire, ent);
 }
 
 #define EMPLACED_CANRESPAWN 1

@@ -31,7 +31,7 @@ extern void jedi_decloak(gentity_t* self);
 qboolean PM_SaberInTransition(int move);
 qboolean PM_SaberInStart(int move);
 qboolean PM_SaberInReturn(int move);
-qboolean WP_SaberStyleValidForSaber(saberInfo_t* saber1, saberInfo_t* saber2, int saberHolstered, int saberAnimLevel);
+qboolean WP_SaberStyleValidForSaber(saberInfo_t* saber1, saberInfo_t* saber2, int saberHolstered, int saber_anim_level);
 qboolean saberCheckKnockdown_DuelLoss(gentity_t* saberent, gentity_t* saberOwner, gentity_t* other);
 
 void P_SetTwitchInfo(gclient_t* client)
@@ -1310,7 +1310,7 @@ void G_CheckClientIdle(gentity_t* ent, usercmd_t* ucmd)
 			case BOTH_STAND5IDLE1:
 				ent->client->ps.torsoTimer = 0;
 				ent->client->ps.weaponTime = 0;
-				ent->client->ps.saberMove = LS_READY;
+				ent->client->ps.saber_move = LS_READY;
 				brokeOut = qtrue;
 				break;
 			}
@@ -1614,7 +1614,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 			}
 			else
 			{
-				switch (ent->client->ps.fd.saberAnimLevel)
+				switch (ent->client->ps.fd.saber_anim_level)
 				{
 				case SS_FAST:
 				case SS_TAVION:
@@ -1733,7 +1733,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 				}
 				else
 				{
-					switch (ent->client->ps.fd.saberAnimLevel)
+					switch (ent->client->ps.fd.saber_anim_level)
 					{
 					case SS_FAST:
 					case SS_TAVION:
@@ -1768,7 +1768,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 			}
 			else
 			{
-				switch (ent->client->ps.fd.saberAnimLevel)
+				switch (ent->client->ps.fd.saber_anim_level)
 				{
 				case SS_FAST:
 				case SS_TAVION:
@@ -1891,7 +1891,7 @@ void ClientThink_real(gentity_t* ent) {
 			client->siegeClass != -1 &&
 			bgSiegeClasses[client->siegeClass].saberStance)
 		{ //the class says we have to use this stance set.
-			if (!(bgSiegeClasses[client->siegeClass].saberStance & (1 << client->ps.fd.saberAnimLevel)))
+			if (!(bgSiegeClasses[client->siegeClass].saberStance & (1 << client->ps.fd.saber_anim_level)))
 			{ //the current stance is not in the bitmask, so find the first one that is.
 				int i = SS_FAST;
 
@@ -1901,22 +1901,22 @@ void ClientThink_real(gentity_t* ent) {
 					{
 						if (i == SS_DUAL
 							&& client->ps.saberHolstered == 1)
-						{//one saber should be off, adjust saberAnimLevel accordinly
+						{//one saber should be off, adjust saber_anim_level accordinly
 							client->ps.fd.saberAnimLevelBase = i;
-							client->ps.fd.saberAnimLevel = SS_FAST;
-							client->ps.fd.saberDrawAnimLevel = client->ps.fd.saberAnimLevel;
+							client->ps.fd.saber_anim_level = SS_FAST;
+							client->ps.fd.saberDrawAnimLevel = client->ps.fd.saber_anim_level;
 						}
 						else if (i == SS_STAFF
 							&& client->ps.saberHolstered == 1
 							&& client->saber[0].singleBladeStyle != SS_NONE)
-						{//one saber or blade should be off, adjust saberAnimLevel accordinly
+						{//one saber or blade should be off, adjust saber_anim_level accordinly
 							client->ps.fd.saberAnimLevelBase = i;
-							client->ps.fd.saberAnimLevel = client->saber[0].singleBladeStyle;
-							client->ps.fd.saberDrawAnimLevel = client->ps.fd.saberAnimLevel;
+							client->ps.fd.saber_anim_level = client->saber[0].singleBladeStyle;
+							client->ps.fd.saberDrawAnimLevel = client->ps.fd.saber_anim_level;
 						}
 						else
 						{
-							client->ps.fd.saberAnimLevelBase = client->ps.fd.saberAnimLevel = i;
+							client->ps.fd.saberAnimLevelBase = client->ps.fd.saber_anim_level = i;
 							client->ps.fd.saberDrawAnimLevel = i;
 						}
 						break;
@@ -1929,18 +1929,18 @@ void ClientThink_real(gentity_t* ent) {
 		else if (client->saber[0].model[0] && client->saber[1].model[0])
 		{ //with two sabs always use akimbo style
 			if (client->ps.saberHolstered == 1)
-			{//one saber should be off, adjust saberAnimLevel accordinly
+			{//one saber should be off, adjust saber_anim_level accordinly
 				client->ps.fd.saberAnimLevelBase = SS_DUAL;
-				client->ps.fd.saberAnimLevel = SS_FAST;
-				client->ps.fd.saberDrawAnimLevel = client->ps.fd.saberAnimLevel;
+				client->ps.fd.saber_anim_level = SS_FAST;
+				client->ps.fd.saberDrawAnimLevel = client->ps.fd.saber_anim_level;
 			}
 			else
 			{
-				if (!WP_SaberStyleValidForSaber(&client->saber[0], &client->saber[1], client->ps.saberHolstered, client->ps.fd.saberAnimLevel))
+				if (!WP_SaberStyleValidForSaber(&client->saber[0], &client->saber[1], client->ps.saberHolstered, client->ps.fd.saber_anim_level))
 				{//only use dual style if the style we're trying to use isn't valid
-					client->ps.fd.saberAnimLevelBase = client->ps.fd.saberAnimLevel = SS_DUAL;
+					client->ps.fd.saberAnimLevelBase = client->ps.fd.saber_anim_level = SS_DUAL;
 				}
-				client->ps.fd.saberDrawAnimLevel = client->ps.fd.saberAnimLevel;
+				client->ps.fd.saberDrawAnimLevel = client->ps.fd.saber_anim_level;
 			}
 		}
 		else
@@ -1953,14 +1953,14 @@ void ClientThink_real(gentity_t* ent) {
 			{//using staff style
 				if (client->ps.saberHolstered == 1
 					&& client->saber[0].singleBladeStyle != SS_NONE)
-				{//one blade should be off, adjust saberAnimLevel accordingly
-					client->ps.fd.saberAnimLevel = client->saber[0].singleBladeStyle;
-					client->ps.fd.saberDrawAnimLevel = client->ps.fd.saberAnimLevel;
+				{//one blade should be off, adjust saber_anim_level accordingly
+					client->ps.fd.saber_anim_level = client->saber[0].singleBladeStyle;
+					client->ps.fd.saberDrawAnimLevel = client->ps.fd.saber_anim_level;
 				}
 				else
 				{
-					client->ps.fd.saberAnimLevel = SS_STAFF;
-					client->ps.fd.saberDrawAnimLevel = client->ps.fd.saberAnimLevel;
+					client->ps.fd.saber_anim_level = SS_STAFF;
+					client->ps.fd.saberDrawAnimLevel = client->ps.fd.saber_anim_level;
 				}
 			}
 		}
@@ -2913,7 +2913,7 @@ void ClientThink_real(gentity_t* ent) {
 					}
 					else
 					{//normal attack
-						switch (ent->client->ps.fd.saberAnimLevel)
+						switch (ent->client->ps.fd.saber_anim_level)
 						{
 						case SS_FAST:
 							lockHits = 1;
@@ -3387,8 +3387,8 @@ void ClientThink_real(gentity_t* ent) {
 				G_Damage(faceKicked, ent, ent, oppDir, client->ps.origin, strength, DAMAGE_NO_ARMOR, MOD_MELEE);
 
 				if (faceKicked->client->ps.weapon != WP_SABER ||
-					faceKicked->client->ps.fd.saberAnimLevel != FORCE_LEVEL_3 ||
-					(!BG_SaberInAttack(faceKicked->client->ps.saberMove) && !PM_SaberInStart(faceKicked->client->ps.saberMove) && !PM_SaberInReturn(faceKicked->client->ps.saberMove) && !PM_SaberInTransition(faceKicked->client->ps.saberMove)))
+					faceKicked->client->ps.fd.saber_anim_level != FORCE_LEVEL_3 ||
+					(!BG_SaberInAttack(faceKicked->client->ps.saber_move) && !PM_SaberInStart(faceKicked->client->ps.saber_move) && !PM_SaberInReturn(faceKicked->client->ps.saber_move) && !PM_SaberInTransition(faceKicked->client->ps.saber_move)))
 				{
 					if (faceKicked->health > 0 &&
 						faceKicked->client->ps.stats[STAT_HEALTH] > 0 &&

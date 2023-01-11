@@ -2444,7 +2444,7 @@ void NPC_InitAnimTable( void )
   before table is filled in with
   values, causes tasks that wait for
   anim completion to never finish.
-  (frameLerp of 0 * numFrames of 0 = 0)
+  (frameLerp of 0 * num_frames of 0 = 0)
 ==================================
 */
 void NPC_InitAnimTable()
@@ -2455,7 +2455,7 @@ void NPC_InitAnimTable()
 		{
 			animation.firstFrame = 0;
 			animation.frameLerp = 100;
-			animation.numFrames = 0;
+			animation.num_frames = 0;
 		}
 	}
 }

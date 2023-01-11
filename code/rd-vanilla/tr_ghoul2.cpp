@@ -898,7 +898,7 @@ void Multiply_3x4Matrix(mdxaBone_t* out, const  mdxaBone_t* in2, const mdxaBone_
 
 static int G2_GetBonePoolIndex(const mdxaHeader_t* pMDXAHeader, const int iFrame, const int iBone)
 {
-	assert(iFrame >= 0 && iFrame < pMDXAHeader->numFrames);
+	assert(iFrame >= 0 && iFrame < pMDXAHeader->num_frames);
 	assert(iBone >= 0 && iBone < pMDXAHeader->numBones);
 	const int iOffsetToIndex = (iFrame * pMDXAHeader->numBones * 3) + (iBone * 3);
 
@@ -922,7 +922,7 @@ static int G2_GetBonePoolIndex(const mdxaHeader_t* pMDXAHeader, const int iFrame
 #define DEBUG_G2_TIMING (0)
 #define DEBUG_G2_TIMING_RENDER_ONLY (1)
 
-void G2_TimingModel(boneInfo_t& bone, const int currentTime, const int numFramesInFile, int& current_frame, int& newFrame, float& lerp)
+void G2_TimingModel(boneInfo_t& bone, const int current_time, const int numFramesInFile, int& current_frame, int& newFrame, float& lerp)
 {
 	assert(bone.start_frame >= 0);
 	assert(bone.start_frame <= numFramesInFile);
@@ -938,7 +938,7 @@ void G2_TimingModel(boneInfo_t& bone, const int currentTime, const int numFrames
 	}
 	else
 	{
-		time = (currentTime - bone.startTime) / 50.0f;
+		time = (current_time - bone.startTime) / 50.0f;
 	}
 	if (time < 0.0f)
 	{
@@ -1349,7 +1349,7 @@ void G2_TransformBone(const int child, CBoneCache& BC)
 		// should this animation be overridden by an animation in the bone list?
 		if ((boneList[boneListIndex].flags) & (BONE_ANIM_OVERRIDE_LOOP | BONE_ANIM_OVERRIDE))
 		{
-			G2_TimingModel(boneList[boneListIndex], BC.incomingTime, BC.header->numFrames, TB.current_frame, TB.newFrame, TB.backlerp);
+			G2_TimingModel(boneList[boneListIndex], BC.incomingTime, BC.header->num_frames, TB.current_frame, TB.newFrame, TB.backlerp);
 		}
 #if DEBUG_G2_TIMING
 		printTiming = true;
@@ -1360,28 +1360,28 @@ void G2_TransformBone(const int child, CBoneCache& BC)
 		}
 	}
 	// figure out where the location of the bone animation data is
-	assert(TB.newFrame >= 0 && TB.newFrame < BC.header->numFrames);
-	if (!(TB.newFrame >= 0 && TB.newFrame < BC.header->numFrames))
+	assert(TB.newFrame >= 0 && TB.newFrame < BC.header->num_frames);
+	if (!(TB.newFrame >= 0 && TB.newFrame < BC.header->num_frames))
 	{
 		TB.newFrame = 0;
 	}
 	//	aFrame = (mdxaFrame_t *)((byte *)BC.header + BC.header->ofsFrames + TB.newFrame * BC.frameSize );
-	assert(TB.current_frame >= 0 && TB.current_frame < BC.header->numFrames);
-	if (!(TB.current_frame >= 0 && TB.current_frame < BC.header->numFrames))
+	assert(TB.current_frame >= 0 && TB.current_frame < BC.header->num_frames);
+	if (!(TB.current_frame >= 0 && TB.current_frame < BC.header->num_frames))
 	{
 		TB.current_frame = 0;
 	}
 	//	aoldFrame = (mdxaFrame_t *)((byte *)BC.header + BC.header->ofsFrames + TB.current_frame * BC.frameSize );
 
 		// figure out where the location of the blended animation data is
-	assert(!(TB.blendFrame < 0.0 || TB.blendFrame >= (BC.header->numFrames + 1)));
-	if (TB.blendFrame < 0.0 || TB.blendFrame >= (BC.header->numFrames + 1))
+	assert(!(TB.blendFrame < 0.0 || TB.blendFrame >= (BC.header->num_frames + 1)));
+	if (TB.blendFrame < 0.0 || TB.blendFrame >= (BC.header->num_frames + 1))
 	{
 		TB.blendFrame = 0.0;
 	}
 	//	bFrame = (mdxaFrame_t *)((byte *)BC.header + BC.header->ofsFrames + (int)TB.blendFrame * BC.frameSize );
-	assert(TB.blendOldFrame >= 0 && TB.blendOldFrame < BC.header->numFrames);
-	if (!(TB.blendOldFrame >= 0 && TB.blendOldFrame < BC.header->numFrames))
+	assert(TB.blendOldFrame >= 0 && TB.blendOldFrame < BC.header->num_frames);
+	if (!(TB.blendOldFrame >= 0 && TB.blendOldFrame < BC.header->num_frames))
 	{
 		TB.blendOldFrame = 0;
 	}
@@ -2515,7 +2515,7 @@ void R_AddGhoulSurfaces(trRefEntity_t* ent)
 		return;
 	}
 
-	const int currentTime = G2API_GetTime(tr.refdef.time);
+	const int current_time = G2API_GetTime(tr.refdef.time);
 
 	// cull the entire model if merged bounding box of both frames
 	// is outside the view frustum.
@@ -2526,7 +2526,7 @@ void R_AddGhoulSurfaces(trRefEntity_t* ent)
 	}
 	HackadelicOnClient = true;
 	// are any of these models setting a new origin?
-	RootMatrix(ghoul2, currentTime, ent->e.modelScale, rootMatrix);
+	RootMatrix(ghoul2, current_time, ent->e.modelScale, rootMatrix);
 
 	// don't add third_person objects if not in a portal
 	qboolean personalModel = static_cast<qboolean>((ent->e.renderfx & RF_THIRD_PERSON) && !tr.viewParms.is_portal);
@@ -2592,11 +2592,11 @@ void R_AddGhoulSurfaces(trRefEntity_t* ent)
 				const int	boltNum = (ghoul2[i].mModelBoltLink >> BOLT_SHIFT) & BOLT_AND;
 				mdxaBone_t bolt;
 				G2_GetBoltMatrixLow(ghoul2[boltMod], boltNum, ent->e.modelScale, bolt);
-				G2_TransformGhoulBones(ghoul2[i].mBlist, bolt, ghoul2[i], currentTime);
+				G2_TransformGhoulBones(ghoul2[i].mBlist, bolt, ghoul2[i], current_time);
 			}
 			else
 			{
-				G2_TransformGhoulBones(ghoul2[i].mBlist, rootMatrix, ghoul2[i], currentTime);
+				G2_TransformGhoulBones(ghoul2[i].mBlist, rootMatrix, ghoul2[i], current_time);
 			}
 			if (ent->e.renderfx & RF_G2MINLOD)
 			{
@@ -3792,7 +3792,7 @@ qboolean R_LoadMDXA(model_t* mod, void* buffer, const char* mod_name, qboolean& 
 		LL(mdxa->ident);
 		LL(mdxa->version);
 		//LF(mdxa->fScale);
-		LL(mdxa->numFrames);
+		LL(mdxa->num_frames);
 		LL(mdxa->ofsFrames);
 		LL(mdxa->numBones);
 		LL(mdxa->ofsCompBonePool);
@@ -3800,7 +3800,7 @@ qboolean R_LoadMDXA(model_t* mod, void* buffer, const char* mod_name, qboolean& 
 		LL(mdxa->ofsEnd);
 	}
 
-	if (mdxa->numFrames < 1) {
+	if (mdxa->num_frames < 1) {
 		ri.Printf(PRINT_WARNING, "R_LoadMDXA: %s has no frames\n", mod_name);
 		return qfalse;
 	}
@@ -3836,7 +3836,7 @@ qboolean R_LoadMDXA(model_t* mod, void* buffer, const char* mod_name, qboolean& 
 	}
 
 	// find the largest index, since the actual number of compressed bone pools is not stored anywhere
-	for (i = 0; i < mdxa->numFrames; i++)
+	for (i = 0; i < mdxa->num_frames; i++)
 	{
 		for (j = 0; j < mdxa->numBones; j++)
 		{

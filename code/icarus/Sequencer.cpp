@@ -127,8 +127,8 @@ void CSequencer::Free(CIcarus* icarus)
 
 	while (!m_streamsCreated.empty())
 	{
-		const bstream_t* streamToDel = m_streamsCreated.back();
-		DeleteStream(streamToDel);
+		const bstream_t* stream_to_del = m_streamsCreated.back();
+		DeleteStream(stream_to_del);
 	}
 
 	delete this;
@@ -146,25 +146,6 @@ int CSequencer::Flush(CSequence* owner, CIcarus* icarus)
 		return SEQ_FAILED;
 
 	Recall(icarus);
-
-	//Flush the sequences
-	/*	sequenceID_m::iterator iterSeq = NULL;
-		for ( iterSeq = m_sequenceMap.begin(); iterSeq != m_sequenceMap.end(); )
-		{
-			if ( ( (*iterSeq).second == owner ) || ( owner->HasChild( (*iterSeq).second ) ) || ( (*iterSeq).second->HasFlag( CSequence::SQ_PENDING ) ) || ( (*iterSeq).second->HasFlag( CSequence::SQ_TASK ) ) )
-			{
-				iterSeq++;
-				continue;
-			}
-
-			//Delete it, and remove all references
-			RemoveSequence( (*iterSeq).second, icarus );
-			icarus->DeleteSequence( (*iterSeq).second );
-
-			//Remove it from the map
-			//Delete from the sequence list and move on
-			iterSeq = m_sequenceMap.erase( iterSeq );
-		}*/
 
 	for (auto sli = m_sequences.begin(); sli != m_sequences.end();)
 	{
@@ -747,13 +728,13 @@ int CSequencer::ParseAffect(CBlock* block, bstream_t* bstream, CIcarus* icarus)
 		game->DebugPrint(IGameInterface::WL_WARNING, "'%s' : invalid affect() target\n", entname);
 
 		//Fast-forward out of this affect block onto the next valid code
-		CSequence* backSeq = m_curSequence;
+		CSequence* back_seq = m_curSequence;
 
-		const auto trashSeq = icarus->GetSequence();
-		Route(trashSeq, bstream, icarus);
+		const auto trash_seq = icarus->GetSequence();
+		Route(trash_seq, bstream, icarus);
 		Recall(icarus);
-		DestroySequence(trashSeq, icarus);
-		m_curSequence = backSeq;
+		DestroySequence(trash_seq, icarus);
+		m_curSequence = back_seq;
 		block->Free(icarus);
 		delete block;
 		block = nullptr;
@@ -800,10 +781,10 @@ int CSequencer::ParseTask(CBlock* block, bstream_t* bstream, CIcarus* icarus)
 	m_curSequence->AddChild(sequence);
 
 	//Get the name of this task for reference later
-	const auto taskName = static_cast<const char*>(block->GetMemberData(0));
+	const auto task_name = static_cast<const char*>(block->GetMemberData(0));
 
 	//Get a new task group from the task manager
-	CTaskGroup* group = m_taskManager->AddTaskGroup(taskName, icarus);
+	CTaskGroup* group = m_taskManager->AddTaskGroup(task_name, icarus);
 
 	if (group == nullptr)
 	{
@@ -1887,8 +1868,8 @@ void CSequencer::CheckAffect(CBlock** command, CIcarus* icarus)
 		if (ent >= 0)
 		{
 			// ents need to update upon being affected
-			const int sequencerID = game->CreateIcarus(ent);
-			const CSequencer* entsequencer = icarus->FindSequencer(sequencerID);
+			const int sequencer_id = game->CreateIcarus(ent);
+			const CSequencer* entsequencer = icarus->FindSequencer(sequencer_id);
 			CTaskManager* taskmanager = entsequencer->GetTaskManager();
 			if (taskmanager)
 			{

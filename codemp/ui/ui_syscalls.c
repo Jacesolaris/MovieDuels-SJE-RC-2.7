@@ -349,8 +349,8 @@ void trap_G2_ListModelSurfaces(void* ghl_info) {
 void trap_G2_ListModelBones(void* ghl_info, int frame) {
 	Q_syscall(UI_G2_LISTBONES, ghl_info, frame);
 }
-void trap_G2_SetGhoul2ModelIndexes(void* ghoul2, qhandle_t* model_list, qhandle_t* skinList) {
-	Q_syscall(UI_G2_SETMODELS, ghoul2, model_list, skinList);
+void trap_G2_SetGhoul2ModelIndexes(void* ghoul2, qhandle_t* model_list, qhandle_t* skin_list) {
+	Q_syscall(UI_G2_SETMODELS, ghoul2, model_list, skin_list);
 }
 qboolean trap_G2_HaveWeGhoul2Models(void* ghoul2) {
 	return (qboolean)(Q_syscall(UI_G2_HAVEWEGHOULMODELS, ghoul2));
@@ -379,17 +379,17 @@ void trap_G2API_CollisionDetectCache(CollisionRecord_t* collRecMap, void* ghoul2
 void trap_G2API_CleanGhoul2Models(void** ghoul2Ptr) {
 	Q_syscall(UI_G2_CLEANMODELS, ghoul2Ptr);
 }
-qboolean trap_G2API_SetBoneAngles(void* ghoul2, int model_index, const char* bone_name, const vec3_t angles, const int flags, const int up, const int right, const int forward, qhandle_t* model_list, int blend_time, int currentTime) {
-	return (Q_syscall(UI_G2_ANGLEOVERRIDE, ghoul2, model_index, bone_name, angles, flags, up, right, forward, model_list, blend_time, currentTime));
+qboolean trap_G2API_SetBoneAngles(void* ghoul2, int model_index, const char* bone_name, const vec3_t angles, const int flags, const int up, const int right, const int forward, qhandle_t* model_list, int blend_time, int current_time) {
+	return (Q_syscall(UI_G2_ANGLEOVERRIDE, ghoul2, model_index, bone_name, angles, flags, up, right, forward, model_list, blend_time, current_time));
 }
-qboolean trap_G2API_SetBoneAnim(void* ghoul2, const int model_index, const char* bone_name, const int start_frame, const int end_frame, const int flags, const float anim_speed, const int currentTime, const float setFrame, const int blend_time) {
-	return Q_syscall(UI_G2_PLAYANIM, ghoul2, model_index, bone_name, start_frame, end_frame, flags, PASSFLOAT(anim_speed), currentTime, PASSFLOAT(setFrame), blend_time);
+qboolean trap_G2API_SetBoneAnim(void* ghoul2, const int model_index, const char* bone_name, const int start_frame, const int end_frame, const int flags, const float anim_speed, const int current_time, const float setFrame, const int blend_time) {
+	return Q_syscall(UI_G2_PLAYANIM, ghoul2, model_index, bone_name, start_frame, end_frame, flags, PASSFLOAT(anim_speed), current_time, PASSFLOAT(setFrame), blend_time);
 }
-qboolean trap_G2API_GetBoneAnim(void* ghoul2, const char* bone_name, const int currentTime, float* current_frame, int* start_frame, int* end_frame, int* flags, float* anim_speed, int* model_list, const int model_index) {
-	return Q_syscall(UI_G2_GETBONEANIM, ghoul2, bone_name, currentTime, current_frame, start_frame, end_frame, flags, anim_speed, model_list, model_index);
+qboolean trap_G2API_GetBoneAnim(void* ghoul2, const char* bone_name, const int current_time, float* current_frame, int* start_frame, int* end_frame, int* flags, float* anim_speed, int* model_list, const int model_index) {
+	return Q_syscall(UI_G2_GETBONEANIM, ghoul2, bone_name, current_time, current_frame, start_frame, end_frame, flags, anim_speed, model_list, model_index);
 }
-qboolean trap_G2API_GetBoneFrame(void* ghoul2, const char* bone_name, const int currentTime, float* current_frame, int* model_list, const int model_index) {
-	return Q_syscall(UI_G2_GETBONEFRAME, ghoul2, bone_name, currentTime, current_frame, model_list, model_index);
+qboolean trap_G2API_GetBoneFrame(void* ghoul2, const char* bone_name, const int current_time, float* current_frame, int* model_list, const int model_index) {
+	return Q_syscall(UI_G2_GETBONEFRAME, ghoul2, bone_name, current_time, current_frame, model_list, model_index);
 }
 void trap_G2API_GetGLAName(void* ghoul2, int model_index, char* fillBuf) {
 	Q_syscall(UI_G2_GETGLANAME, ghoul2, model_index, fillBuf);

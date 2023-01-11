@@ -64,13 +64,6 @@ static void WP_RepeaterMainFire(gentity_t* ent, vec3_t dir)
 		}
 	}
 
-	//	if ( ent->client && ent->client->ps.powerups[PW_WEAPON_OVERCHARGE] > 0 && ent->client->ps.powerups[PW_WEAPON_OVERCHARGE] > cg.time )
-	//	{
-	//		// in overcharge mode, so doing double damage
-	//		missile->flags |= FL_OVERCHARGED;
-	//		damage *= 2;
-	//	}
-
 	missile->damage = damage;
 	missile->dflags = DAMAGE_DEATH_KNOCKBACK;
 	missile->methodOfDeath = MOD_REPEATER;

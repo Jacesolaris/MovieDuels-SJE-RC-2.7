@@ -846,7 +846,7 @@ netField_t	entityStateFields[] =
 // why was this changed from 0 to 8 ?
 { NETF(eventParm), 8 },
 // unknown about size?
-{ NETF(saberMove), 8 },
+{ NETF(saber_move), 8 },
 { NETF(apos.trDelta[1]), 0 },
 { NETF(boneAngles1[1]), 0 },
 // why raised from 8 to -16?
@@ -1287,7 +1287,7 @@ netField_t	playerStateFields[] =
 { PSF(torsoTimer), 16 },
 { PSF(legsTimer), 16 },
 { PSF(viewheight), -8 },
-{ PSF(fd.saberAnimLevel), 4 },
+{ PSF(fd.saber_anim_level), 4 },
 { PSF(rocketLockIndex), GENTITYNUM_BITS },
 { PSF(fd.saberDrawAnimLevel), 4 },
 { PSF(genericEnemyIndex), 32 }, //NOTE: This isn't just an index all the time, it's often used as a time value, and thus needs 32 bits
@@ -1298,7 +1298,7 @@ netField_t	playerStateFields[] =
 { PSF(saberEntityNum), GENTITYNUM_BITS }, //Also used for channel tracker storage, but should never exceed entity number
 { PSF(customRGBA[3]), 8 }, //0-255
 { PSF(weaponstate), 4 },
-{ PSF(saberMove), 32 }, //This value sometimes exceeds the max LS_ value and gets set to a crazy amount, so it needs 32 bits
+{ PSF(saber_move), 32 }, //This value sometimes exceeds the max LS_ value and gets set to a crazy amount, so it needs 32 bits
 { PSF(standheight), 10 },
 { PSF(crouchheight), 10 },
 { PSF(basespeed), -16 },
@@ -1489,14 +1489,14 @@ netField_t	pilotPlayerStateFields[] =
 { PSF(speed), 0 }, //sadly, the vehicles require negative speed values, so..
 { PSF(groundEntityNum), GENTITYNUM_BITS },
 { PSF(viewheight), -8 },
-{ PSF(fd.saberAnimLevel), 4 },
+{ PSF(fd.saber_anim_level), 4 },
 { PSF(fd.saberDrawAnimLevel), 4 },
 { PSF(genericEnemyIndex), 32 }, //NOTE: This isn't just an index all the time, it's often used as a time value, and thus needs 32 bits
 { PSF(customRGBA[0]), 8 }, //0-255
 { PSF(movementDir), 4 },
 { PSF(saberEntityNum), GENTITYNUM_BITS }, //Also used for channel tracker storage, but should never exceed entity number
 { PSF(customRGBA[3]), 8 }, //0-255
-{ PSF(saberMove), 32 }, //This value sometimes exceeds the max LS_ value and gets set to a crazy amount, so it needs 32 bits
+{ PSF(saber_move), 32 }, //This value sometimes exceeds the max LS_ value and gets set to a crazy amount, so it needs 32 bits
 { PSF(standheight), 10 },
 { PSF(crouchheight), 10 },
 { PSF(basespeed), -16 },
@@ -1700,7 +1700,7 @@ netField_t	playerStateFields[] =
 { PSF(torsoTimer), 16 },
 { PSF(legsTimer), 16 },
 { PSF(viewheight), -8 },
-{ PSF(fd.saberAnimLevel), 4 },
+{ PSF(fd.saber_anim_level), 4 },
 { PSF(rocketLockIndex), GENTITYNUM_BITS },
 { PSF(fd.saberDrawAnimLevel), 4 },
 { PSF(genericEnemyIndex), 32 }, //NOTE: This isn't just an index all the time, it's often used as a time value, and thus needs 32 bits
@@ -1711,7 +1711,7 @@ netField_t	playerStateFields[] =
 { PSF(saberEntityNum), GENTITYNUM_BITS }, //Also used for channel tracker storage, but should never exceed entity number
 { PSF(customRGBA[3]), 8 }, //0-255
 { PSF(weaponstate), 4 },
-{ PSF(saberMove), 32 }, //This value sometimes exceeds the max LS_ value and gets set to a crazy amount, so it needs 32 bits
+{ PSF(saber_move), 32 }, //This value sometimes exceeds the max LS_ value and gets set to a crazy amount, so it needs 32 bits
 { PSF(standheight), 10 },
 { PSF(crouchheight), 10 },
 { PSF(basespeed), -16 },

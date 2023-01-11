@@ -842,7 +842,7 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* mod_n
 
 		LL(mod->md3[lod]->ident);
 		LL(mod->md3[lod]->version);
-		LL(mod->md3[lod]->numFrames);
+		LL(mod->md3[lod]->num_frames);
 		LL(mod->md3[lod]->numTags);
 		LL(mod->md3[lod]->numSurfaces);
 		LL(mod->md3[lod]->ofsFrames);
@@ -851,7 +851,7 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* mod_n
 		LL(mod->md3[lod]->ofsEnd);
 	}
 
-	if (mod->md3[lod]->numFrames < 1) {
+	if (mod->md3[lod]->num_frames < 1) {
 		ri.Printf(PRINT_WARNING, "R_LoadMD3: %s has no frames\n", mod_name);
 		return qfalse;
 	}
@@ -864,7 +864,7 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* mod_n
 #ifdef Q3_BIG_ENDIAN
 	// swap all the frames
 	frame = (md3Frame_t*)((byte*)mod->md3[lod] + mod->md3[lod]->ofsFrames);
-	for (i = 0; i < mod->md3[lod]->numFrames; i++, frame++) {
+	for (i = 0; i < mod->md3[lod]->num_frames; i++, frame++) {
 		LF(frame->radius);
 		for (j = 0; j < 3; j++) {
 			LF(frame->bounds[0][j]);
@@ -875,7 +875,7 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* mod_n
 
 	// swap all the tags
 	tag = (md3Tag_t*)((byte*)mod->md3[lod] + mod->md3[lod]->ofsTags);
-	for (i = 0; i < mod->md3[lod]->numTags * mod->md3[lod]->numFrames; i++, tag++) {
+	for (i = 0; i < mod->md3[lod]->numTags * mod->md3[lod]->num_frames; i++, tag++) {
 		for (j = 0; j < 3; j++) {
 			LF(tag->origin[j]);
 			LF(tag->axis[0][j]);
@@ -889,7 +889,7 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* mod_n
 	surf = reinterpret_cast<md3Surface_t*>(reinterpret_cast<byte*>(mod->md3[lod]) + mod->md3[lod]->ofsSurfaces);
 	for (int i = 0; i < mod->md3[lod]->numSurfaces; i++) {
 		LL(surf->flags);
-		LL(surf->numFrames);
+		LL(surf->num_frames);
 		LL(surf->numShaders);
 		LL(surf->numTriangles);
 		LL(surf->ofsTriangles);
@@ -952,7 +952,7 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* mod_n
 
 		// swap all the XyzNormals
 		xyz = (md3XyzNormal_t*)((byte*)surf + surf->ofsXyzNormals);
-		for (j = 0; j < surf->num_verts * surf->numFrames; j++, xyz++)
+		for (j = 0; j < surf->num_verts * surf->num_frames; j++, xyz++)
 		{
 			LS(xyz->xyz[0]);
 			LS(xyz->xyz[1]);
@@ -1086,9 +1086,9 @@ R_GetTag for MD3s
 ================
 */
 static md3Tag_t* R_GetTag(md3Header_t* mod, int frame, const char* tag_name) {
-	if (frame >= mod->numFrames) {
+	if (frame >= mod->num_frames) {
 		// it is possible to have a bad frame while changing models, so don't error
-		frame = mod->numFrames - 1;
+		frame = mod->num_frames - 1;
 	}
 
 	md3Tag_t* tag = reinterpret_cast<md3Tag_t*>(reinterpret_cast<byte*>(mod) + mod->ofsTags) + frame * mod->numTags;

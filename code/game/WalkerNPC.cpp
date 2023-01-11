@@ -154,7 +154,7 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 	/************************************************************************************/
 
 	//Client sets ucmds and such for speed alterations
-	float speedInc, speedIdleDec, speedIdle, /*speedIdleAccel, */speedMin, speedMax;
+	float speed_inc, speed_idle_dec, speed_idle, /*speedIdleAccel, */speed_min, speed_max;
 	float fWalkSpeedMax;
 	bgEntity_t* parent = p_veh->m_pParentEntity;
 #ifdef _JK2MP
@@ -163,12 +163,12 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 	playerState_t* parent_ps = &parent->client->ps;
 #endif
 
-	speedIdleDec = p_veh->m_pVehicleInfo->decelIdle * p_veh->m_fTimeModifier;
-	speedMax = p_veh->m_pVehicleInfo->speedMax;
+	speed_idle_dec = p_veh->m_pVehicleInfo->decelIdle * p_veh->m_fTimeModifier;
+	speed_max = p_veh->m_pVehicleInfo->speedMax;
 
-	speedIdle = p_veh->m_pVehicleInfo->speedIdle;
+	speed_idle = p_veh->m_pVehicleInfo->speedIdle;
 	//speedIdleAccel = p_veh->m_pVehicleInfo->accelIdle * p_veh->m_fTimeModifier;
-	speedMin = p_veh->m_pVehicleInfo->speedMin;
+	speed_min = p_veh->m_pVehicleInfo->speedMin;
 
 #ifdef _JK2MP
 	if (!parent_ps->m_iVehicleNum)
@@ -177,38 +177,38 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 #endif
 	{
 		//drifts to a stop
-		speedInc = speedIdle * p_veh->m_fTimeModifier;
+		speed_inc = speed_idle * p_veh->m_fTimeModifier;
 		VectorClear(parent_ps->moveDir);
 		//m_ucmd.forwardmove = 127;
 		parent_ps->speed = 0;
 	}
 	else
 	{
-		speedInc = p_veh->m_pVehicleInfo->acceleration * p_veh->m_fTimeModifier;
+		speed_inc = p_veh->m_pVehicleInfo->acceleration * p_veh->m_fTimeModifier;
 	}
 
 	if (parent_ps->speed || parent_ps->groundEntityNum == ENTITYNUM_NONE ||
 		p_veh->m_ucmd.forwardmove || p_veh->m_ucmd.upmove > 0)
 	{
-		if (p_veh->m_ucmd.forwardmove > 0 && speedInc)
+		if (p_veh->m_ucmd.forwardmove > 0 && speed_inc)
 		{
-			parent_ps->speed += speedInc;
+			parent_ps->speed += speed_inc;
 		}
 		else if (p_veh->m_ucmd.forwardmove < 0)
 		{
-			if (parent_ps->speed > speedIdle)
+			if (parent_ps->speed > speed_idle)
 			{
-				parent_ps->speed -= speedInc;
+				parent_ps->speed -= speed_inc;
 			}
-			else if (parent_ps->speed > speedMin)
+			else if (parent_ps->speed > speed_min)
 			{
-				parent_ps->speed -= speedIdleDec;
+				parent_ps->speed -= speed_idle_dec;
 			}
 		}
 		// No input, so coast to stop.
 		else if (parent_ps->speed > 0.0f)
 		{
-			parent_ps->speed -= speedIdleDec;
+			parent_ps->speed -= speed_idle_dec;
 			if (parent_ps->speed < 0.0f)
 			{
 				parent_ps->speed = 0.0f;
@@ -216,7 +216,7 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 		}
 		else if (parent_ps->speed < 0.0f)
 		{
-			parent_ps->speed += speedIdleDec;
+			parent_ps->speed += speed_idle_dec;
 			if (parent_ps->speed > 0.0f)
 			{
 				parent_ps->speed = 0.0f;
@@ -237,18 +237,18 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 		p_veh->m_ucmd.rightmove = 0;
 	}
 
-	fWalkSpeedMax = speedMax * 0.275f;
+	fWalkSpeedMax = speed_max * 0.275f;
 	if (p_veh->m_ucmd.buttons & BUTTON_WALKING && parent_ps->speed > fWalkSpeedMax)
 	{
 		parent_ps->speed = fWalkSpeedMax;
 	}
-	else if (parent_ps->speed > speedMax)
+	else if (parent_ps->speed > speed_max)
 	{
-		parent_ps->speed = speedMax;
+		parent_ps->speed = speed_max;
 	}
-	else if (parent_ps->speed < speedMin)
+	else if (parent_ps->speed < speed_min)
 	{
-		parent_ps->speed = speedMin;
+		parent_ps->speed = speed_min;
 	}
 
 	/********************************************************************************/

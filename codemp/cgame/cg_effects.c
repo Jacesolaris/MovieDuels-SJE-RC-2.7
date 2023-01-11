@@ -1008,7 +1008,7 @@ CG_MakeExplosion
 ====================
 */
 localEntity_t* CG_MakeExplosion(vec3_t origin, vec3_t dir,
-	qhandle_t hModel, int numFrames, qhandle_t shader,
+	qhandle_t hModel, int num_frames, qhandle_t shader,
 	int msec, qboolean isSprite, float scale, int flags)
 {
 	float			ang = 0;
@@ -1055,7 +1055,7 @@ localEntity_t* CG_MakeExplosion(vec3_t origin, vec3_t dir,
 
 	ex->refEntity.hModel = hModel;
 	ex->refEntity.customShader = shader;
-	ex->lifeRate = (float)numFrames / msec;
+	ex->lifeRate = (float)num_frames / msec;
 	ex->leFlags = flags;
 
 	//Scale the explosion

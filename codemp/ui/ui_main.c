@@ -339,13 +339,13 @@ int UI_ParseAnimationFile(const char* filename, animation_t* animset, qboolean i
 	// parse the text
 	text_p = UIPAFtext;
 
-	//FIXME: have some way of playing anims backwards... negative numFrames?
+	//FIXME: have some way of playing anims backwards... negative num_frames?
 
 	//initialize anim array so that from 0 to MAX_ANIMATIONS, set default values of 0 1 0 100
 	for (i = 0; i < MAX_ANIMATIONS; i++)
 	{
 		animset[i].firstFrame = 0;
-		animset[i].numFrames = 0;
+		animset[i].num_frames = 0;
 		animset[i].loopFrames = -1;
 		animset[i].frameLerp = 100;
 		//		animset[i].initialLerp = 100;
@@ -385,7 +385,7 @@ int UI_ParseAnimationFile(const char* filename, animation_t* animset, qboolean i
 		{
 			break;
 		}
-		animset[animNum].numFrames = atoi(token);
+		animset[animNum].num_frames = atoi(token);
 
 		token = COM_Parse((const char**)(&text_p));
 		if (!token)
@@ -423,7 +423,7 @@ int UI_ParseAnimationFile(const char* filename, animation_t* animset, qboolean i
 	{
 		if (animTable[i].name != NULL)		// This animation reference exists.
 		{
-			if (animset[i].firstFrame <= 0 && animset[i].numFrames <=0)
+			if (animset[i].firstFrame <= 0 && animset[i].num_frames <=0)
 			{	// This is an empty animation reference.
 				Com_Printf("***ANIMTABLE reference #%d (%s) is empty!\n", i, animTable[i].name);
 			}
@@ -1496,7 +1496,7 @@ const char* UI_FilterDir(int value) {
 		return "";
 	}
 
-	return uiInfo.modList[value - 1].modName;
+	return uiInfo.modList[value - 1].mod_name;
 }
 
 static const char* handicapValues[] = { "None","95","90","85","80","75","70","65","60","55","50","45","40","35","30","25","20","15","10","5",NULL };
@@ -4295,7 +4295,7 @@ static void UI_LoadMods() {
 	Q_strncpyz(version, UI_Cvar_VariableString("version"), sizeof(version));
 	if (strstr(version, "2003")) {
 		trap->SE_GetStringTextString("MENUS_JEDI_ACADEMY", sJediAcademy, sizeof(sJediAcademy));
-		uiInfo.modList[0].modName = String_Alloc("");
+		uiInfo.modList[0].mod_name = String_Alloc("");
 		uiInfo.modList[0].modDescr = String_Alloc(sJediAcademy);
 		uiInfo.modCount = 1;
 	}
@@ -4307,7 +4307,7 @@ static void UI_LoadMods() {
 	for (int i = 0; i < numdirs; i++) {
 		const int dirlen = strlen(dirptr) + 1;
 		const char* descptr = dirptr + dirlen;
-		uiInfo.modList[uiInfo.modCount].modName = String_Alloc(dirptr);
+		uiInfo.modList[uiInfo.modCount].mod_name = String_Alloc(dirptr);
 		uiInfo.modList[uiInfo.modCount].modDescr = String_Alloc(descptr);
 		dirptr += dirlen + strlen(descptr) + 1;
 		uiInfo.modCount++;
@@ -6008,7 +6008,7 @@ static void UI_RunMenuScript(char** args)
 			trap->Cmd_ExecuteText(EXEC_APPEND, va("cinematic %s.roq 2\n", uiInfo.movieList[uiInfo.movieIndex]));
 		}
 		else if (Q_stricmp(name, "RunMod") == 0) {
-			trap->Cvar_Set("fs_game", uiInfo.modList[uiInfo.modIndex].modName);
+			trap->Cvar_Set("fs_game", uiInfo.modList[uiInfo.modIndex].mod_name);
 			trap->Cmd_ExecuteText(EXEC_APPEND, "vid_restart;");
 		}
 		else if (Q_stricmp(name, "RunDemo") == 0) {
@@ -8385,7 +8385,7 @@ static const char* UI_FeederItemText(float feederID, int index, int column,
 			if (uiInfo.modList[index].modDescr && *uiInfo.modList[index].modDescr) {
 				return uiInfo.modList[index].modDescr;
 			}
-			return uiInfo.modList[index].modName;
+			return uiInfo.modList[index].mod_name;
 		}
 	}
 	else if (feederID == FEEDER_CINEMATICS) {

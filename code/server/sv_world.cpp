@@ -89,7 +89,7 @@ using worldSector_t = struct worldSector_s
 {
 	int axis; // -1 = leaf node
 	float dist;
-	struct worldSector_s* children[2];
+	worldSector_s* children[2];
 	svEntity_t* entities;
 };
 

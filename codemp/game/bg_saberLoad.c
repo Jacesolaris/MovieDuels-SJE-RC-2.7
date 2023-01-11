@@ -249,7 +249,7 @@ qboolean WP_SaberBladeDoTransitionDamage(saberInfo_t* saber, int blade_num) {
 	return qfalse;
 }
 
-qboolean WP_UseFirstValidSaberStyle(saberInfo_t* saber1, saberInfo_t* saber2, int saberHolstered, int* saberAnimLevel)
+qboolean WP_UseFirstValidSaberStyle(saberInfo_t* saber1, saberInfo_t* saber2, int saberHolstered, int* saber_anim_level)
 {
 	qboolean styleInvalid = qfalse;
 	qboolean saber1Active, saber2Active;
@@ -295,7 +295,7 @@ qboolean WP_UseFirstValidSaberStyle(saberInfo_t* saber1, saberInfo_t* saber2, in
 
 	// check for invalid styles
 	if (saber1Active && saber1 && saber1->model[0] && saber1->stylesForbidden) {
-		if ((saber1->stylesForbidden & (1 << *saberAnimLevel))) {
+		if ((saber1->stylesForbidden & (1 << *saber_anim_level))) {
 			//not a valid style for first saber!
 			styleInvalid = qtrue;
 			validStyles &= ~saber1->stylesForbidden;
@@ -305,7 +305,7 @@ qboolean WP_UseFirstValidSaberStyle(saberInfo_t* saber1, saberInfo_t* saber2, in
 	if (dualSabers)
 	{
 		if (saber2Active && saber2->stylesForbidden) {
-			if ((saber2->stylesForbidden & (1 << *saberAnimLevel))) {
+			if ((saber2->stylesForbidden & (1 << *saber_anim_level))) {
 				//not a valid style for second saber!
 				styleInvalid = qtrue;
 				//only the ones both sabers allow is valid
@@ -330,7 +330,7 @@ qboolean WP_UseFirstValidSaberStyle(saberInfo_t* saber1, saberInfo_t* saber2, in
 	else if (styleInvalid) {
 		for (int styleNum = SS_FAST; styleNum < SS_NUM_SABER_STYLES; styleNum++) {
 			if ((validStyles & (1 << styleNum))) {
-				*saberAnimLevel = styleNum;
+				*saber_anim_level = styleNum;
 				return qtrue;
 			}
 		}
@@ -338,7 +338,7 @@ qboolean WP_UseFirstValidSaberStyle(saberInfo_t* saber1, saberInfo_t* saber2, in
 	return qfalse;
 }
 
-qboolean WP_SaberStyleValidForSaber(saberInfo_t* saber1, saberInfo_t* saber2, int saberHolstered, int saberAnimLevel)
+qboolean WP_SaberStyleValidForSaber(saberInfo_t* saber1, saberInfo_t* saber2, int saberHolstered, int saber_anim_level)
 {
 	qboolean saber1Active, saber2Active;
 	qboolean dualSabers = qfalse;
@@ -371,19 +371,19 @@ qboolean WP_SaberStyleValidForSaber(saberInfo_t* saber1, saberInfo_t* saber2, in
 	}
 
 	if (saber1Active && saber1 && saber1->model[0] && saber1->stylesForbidden) {
-		if ((saber1->stylesForbidden & (1 << saberAnimLevel)))
+		if ((saber1->stylesForbidden & (1 << saber_anim_level)))
 			return qfalse;
 	}
 	if (dualSabers && saber2Active && saber2 && saber2->model[0])
 	{
 		if (saber2->stylesForbidden) {
-			if ((saber2->stylesForbidden & (1 << saberAnimLevel)))
+			if ((saber2->stylesForbidden & (1 << saber_anim_level)))
 				return qfalse;
 		}
 		//now: if using dual sabers, only dual and tavion (if given with this saber) are allowed
-		if (saberAnimLevel != SS_DUAL)
+		if (saber_anim_level != SS_DUAL)
 		{
-			if (saberAnimLevel != SS_TAVION)
+			if (saber_anim_level != SS_TAVION)
 				return qfalse;
 			//see if "tavion" style is okay
 			if (!(saber1Active && (saber1->stylesLearned & (1 << SS_TAVION))) || !(saber2->stylesLearned & (1 << SS_TAVION)))
@@ -1043,57 +1043,57 @@ static void Saber_ParseKataMove(saberInfo_t* saber, const char** p) {
 	const char* value;
 	if (COM_ParseString(p, &value))
 		return;
-	const int saberMove = GetIDForString(saberMoveTable, value);
-	if (saberMove >= LS_INVALID && saberMove < LS_MOVE_MAX)
-		saber->kataMove = saberMove; //LS_INVALID - if set, player will execute this move when they press both attack buttons at the same time
+	const int saber_move = GetIDForString(saberMoveTable, value);
+	if (saber_move >= LS_INVALID && saber_move < LS_MOVE_MAX)
+		saber->kataMove = saber_move; //LS_INVALID - if set, player will execute this move when they press both attack buttons at the same time
 }
 static void Saber_ParseLungeAtkMove(saberInfo_t* saber, const char** p) {
 	const char* value;
 	if (COM_ParseString(p, &value))
 		return;
-	const int saberMove = GetIDForString(saberMoveTable, value);
-	if (saberMove >= LS_INVALID && saberMove < LS_MOVE_MAX)
-		saber->lungeAtkMove = saberMove;
+	const int saber_move = GetIDForString(saberMoveTable, value);
+	if (saber_move >= LS_INVALID && saber_move < LS_MOVE_MAX)
+		saber->lungeAtkMove = saber_move;
 }
 static void Saber_ParseJumpAtkUpMove(saberInfo_t* saber, const char** p) {
 	const char* value;
 	if (COM_ParseString(p, &value))
 		return;
-	const int saberMove = GetIDForString(saberMoveTable, value);
-	if (saberMove >= LS_INVALID && saberMove < LS_MOVE_MAX)
-		saber->jumpAtkUpMove = saberMove;
+	const int saber_move = GetIDForString(saberMoveTable, value);
+	if (saber_move >= LS_INVALID && saber_move < LS_MOVE_MAX)
+		saber->jumpAtkUpMove = saber_move;
 }
 static void Saber_ParseJumpAtkFwdMove(saberInfo_t* saber, const char** p) {
 	const char* value;
 	if (COM_ParseString(p, &value))
 		return;
-	const int saberMove = GetIDForString(saberMoveTable, value);
-	if (saberMove >= LS_INVALID && saberMove < LS_MOVE_MAX)
-		saber->jumpAtkFwdMove = saberMove;
+	const int saber_move = GetIDForString(saberMoveTable, value);
+	if (saber_move >= LS_INVALID && saber_move < LS_MOVE_MAX)
+		saber->jumpAtkFwdMove = saber_move;
 }
 static void Saber_ParseJumpAtkBackMove(saberInfo_t* saber, const char** p) {
 	const char* value;
 	if (COM_ParseString(p, &value))
 		return;
-	const int saberMove = GetIDForString(saberMoveTable, value);
-	if (saberMove >= LS_INVALID && saberMove < LS_MOVE_MAX)
-		saber->jumpAtkBackMove = saberMove;
+	const int saber_move = GetIDForString(saberMoveTable, value);
+	if (saber_move >= LS_INVALID && saber_move < LS_MOVE_MAX)
+		saber->jumpAtkBackMove = saber_move;
 }
 static void Saber_ParseJumpAtkRightMove(saberInfo_t* saber, const char** p) {
 	const char* value;
 	if (COM_ParseString(p, &value))
 		return;
-	const int saberMove = GetIDForString(saberMoveTable, value);
-	if (saberMove >= LS_INVALID && saberMove < LS_MOVE_MAX)
-		saber->jumpAtkRightMove = saberMove;
+	const int saber_move = GetIDForString(saberMoveTable, value);
+	if (saber_move >= LS_INVALID && saber_move < LS_MOVE_MAX)
+		saber->jumpAtkRightMove = saber_move;
 }
 static void Saber_ParseJumpAtkLeftMove(saberInfo_t* saber, const char** p) {
 	const char* value;
 	if (COM_ParseString(p, &value))
 		return;
-	const int saberMove = GetIDForString(saberMoveTable, value);
-	if (saberMove >= LS_INVALID && saberMove < LS_MOVE_MAX)
-		saber->jumpAtkLeftMove = saberMove;
+	const int saber_move = GetIDForString(saberMoveTable, value);
+	if (saber_move >= LS_INVALID && saber_move < LS_MOVE_MAX)
+		saber->jumpAtkLeftMove = saber_move;
 }
 static void Saber_ParseReadyAnim(saberInfo_t* saber, const char** p) {
 	const char* value;

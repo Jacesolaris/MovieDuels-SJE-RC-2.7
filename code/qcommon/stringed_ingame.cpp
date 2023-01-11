@@ -370,10 +370,10 @@ SE_BOOL CStringEdPackage::ReadLine(const char*& psParsePos, char* psDest) const
 		//
 		if (psDest[0])
 		{
-			int iWhiteSpaceScanPos = strlen(psDest) - 1;
-			while (iWhiteSpaceScanPos >= 0 && isspace(psDest[iWhiteSpaceScanPos]))
+			int i_white_space_scan_pos = strlen(psDest) - 1;
+			while (i_white_space_scan_pos >= 0 && isspace(psDest[i_white_space_scan_pos]))
 			{
-				psDest[iWhiteSpaceScanPos--] = '\0';
+				psDest[i_white_space_scan_pos--] = '\0';
 			}
 
 			REMKill(psDest);

@@ -323,8 +323,8 @@ void NPC_ChoosePainAnimation(gentity_t* self, gentity_t* other, vec3_t point, in
 			{
 				pain_anim = BG_PickAnim(self->localAnimIndex, BOTH_PAIN1, BOTH_PAIN18);
 			}
-			self->client->ps.fd.saberAnimLevel = FORCE_LEVEL_1;//next attack must be a quick attack
-			self->client->ps.saberMove = LS_READY;//don't finish whatever saber move you may have been in
+			self->client->ps.fd.saber_anim_level = FORCE_LEVEL_1;//next attack must be a quick attack
+			self->client->ps.saber_move = LS_READY;//don't finish whatever saber move you may have been in
 			int parts = SETANIM_BOTH;
 			if (BG_CrouchAnim(self->client->ps.legsAnim) || PM_InCartwheel(self->client->ps.legsAnim))
 			{
@@ -356,7 +356,7 @@ void NPC_ChoosePainAnimation(gentity_t* self, gentity_t* other, vec3_t point, in
 			self->painDebounceTime = level.time + 4000;
 		}
 		*/
-		const int animLength = bgAllAnims[self->localAnimIndex].anims[pain_anim].numFrames * fabs(
+		const int animLength = bgAllAnims[self->localAnimIndex].anims[pain_anim].num_frames * fabs(
 			(float)(bgHumanoidAnimations[pain_anim].frameLerp));
 
 		self->painDebounceTime = level.time + animLength;

@@ -105,7 +105,7 @@ typedef struct md3Tag_s {
 ** shaders			sizeof( md3Shader_t ) * numShaders
 ** triangles[0]		sizeof( md3Triangle_t ) * numTriangles
 ** st				sizeof( md3St_t ) * num_verts
-** XyzNormals		sizeof( md3XyzNormal_t ) * num_verts * numFrames
+** XyzNormals		sizeof( md3XyzNormal_t ) * num_verts * num_frames
 */
 typedef struct md3Surface_s {
 	int		ident;				//
@@ -113,7 +113,7 @@ typedef struct md3Surface_s {
 	char	name[MAX_QPATH];	// polyset name
 
 	int		flags;
-	int		numFrames;			// all surfaces in a model should have the same
+	int		num_frames;			// all surfaces in a model should have the same
 
 	int		numShaders;			// all surfaces in a model should have the same
 	int		num_verts;
@@ -123,7 +123,7 @@ typedef struct md3Surface_s {
 
 	int		ofsShaders;			// offset from start of md3Surface_t
 	int		ofsSt;				// texture coords are common for all frames
-	int		ofsXyzNormals;		// num_verts * numFrames
+	int		ofsXyzNormals;		// num_verts * num_frames
 
 	int		ofsEnd;				// next surface follows
 } md3Surface_t;
@@ -154,14 +154,14 @@ typedef struct md3Header_s {
 
 	int			flags;
 
-	int			numFrames;
+	int			num_frames;
 	int			numTags;
 	int			numSurfaces;
 
 	int			numSkins;
 
 	int			ofsFrames;			// offset for first frame
-	int			ofsTags;			// numFrames * numTags
+	int			ofsTags;			// num_frames * numTags
 	int			ofsSurfaces;		// first surface, others follow
 
 	int			ofsEnd;				// end of file

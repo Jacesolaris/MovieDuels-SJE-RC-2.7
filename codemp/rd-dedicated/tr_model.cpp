@@ -660,13 +660,13 @@ qboolean ServerLoadMDXA(model_t* mod, void* buffer, const char* mod_name, qboole
 
 		LL(mdxa->ident);
 		LL(mdxa->version);
-		LL(mdxa->numFrames);
+		LL(mdxa->num_frames);
 		LL(mdxa->numBones);
 		LL(mdxa->ofsFrames);
 		LL(mdxa->ofsEnd);
 	}
 
-	if (mdxa->numFrames < 1) {
+	if (mdxa->num_frames < 1) {
 		return qfalse;
 	}
 
@@ -698,7 +698,7 @@ qboolean ServerLoadMDXA(model_t* mod, void* buffer, const char* mod_name, qboole
 
 	// swap all the frames
 	frameSize = (int)(&((mdxaFrame_t*)0)->bones[mdxa->numBones]);
-	for (i = 0; i < mdxa->numFrames; i++)
+	for (i = 0; i < mdxa->num_frames; i++)
 	{
 		cframe = (mdxaFrame_t*)((byte*)mdxa + mdxa->ofsFrames + i * frameSize);
 		cframe->radius = LittleFloat(cframe->radius);
@@ -1365,7 +1365,7 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* mod_n
 
 		LL(mod->md3[lod]->ident);
 		LL(mod->md3[lod]->version);
-		LL(mod->md3[lod]->numFrames);
+		LL(mod->md3[lod]->num_frames);
 		LL(mod->md3[lod]->numTags);
 		LL(mod->md3[lod]->numSurfaces);
 		LL(mod->md3[lod]->ofsFrames);
@@ -1374,7 +1374,7 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* mod_n
 		LL(mod->md3[lod]->ofsEnd);
 	}
 
-	if (mod->md3[lod]->numFrames < 1) {
+	if (mod->md3[lod]->num_frames < 1) {
 		Com_Printf(S_COLOR_YELLOW  "R_LoadMD3: %s has no frames\n", mod_name);
 		return qfalse;
 	}
@@ -1391,7 +1391,7 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* mod_n
 
 	// swap all the frames
 	frame = (md3Frame_t*)((byte*)mod->md3[lod] + mod->md3[lod]->ofsFrames);
-	for (i = 0; i < mod->md3[lod]->numFrames; i++, frame++) {
+	for (i = 0; i < mod->md3[lod]->num_frames; i++, frame++) {
 		frame->radius = LittleFloat(frame->radius);
 		for (j = 0; j < 3; j++) {
 			frame->bounds[0][j] = LittleFloat(frame->bounds[0][j]);
@@ -1402,7 +1402,7 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* mod_n
 
 	// swap all the tags
 	tag = (md3Tag_t*)((byte*)mod->md3[lod] + mod->md3[lod]->ofsTags);
-	for (i = 0; i < mod->md3[lod]->numTags * mod->md3[lod]->numFrames; i++, tag++) {
+	for (i = 0; i < mod->md3[lod]->numTags * mod->md3[lod]->num_frames; i++, tag++) {
 		for (j = 0; j < 3; j++) {
 			tag->origin[j] = LittleFloat(tag->origin[j]);
 			tag->axis[0][j] = LittleFloat(tag->axis[0][j]);
@@ -1416,7 +1416,7 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* mod_n
 	surf = (md3Surface_t*)((byte*)mod->md3[lod] + mod->md3[lod]->ofsSurfaces);
 	for (int i = 0; i < mod->md3[lod]->numSurfaces; i++) {
 		LL(surf->flags);
-		LL(surf->numFrames);
+		LL(surf->num_frames);
 		LL(surf->numShaders);
 		LL(surf->numTriangles);
 		LL(surf->ofsTriangles);
@@ -1469,7 +1469,7 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* mod_n
 
 		// swap all the XyzNormals
 		xyz = (md3XyzNormal_t*)((byte*)surf + surf->ofsXyzNormals);
-		for (j = 0; j < surf->num_verts * surf->numFrames; j++, xyz++)
+		for (j = 0; j < surf->num_verts * surf->num_frames; j++, xyz++)
 		{
 			xyz->xyz[0] = LittleShort(xyz->xyz[0]);
 			xyz->xyz[1] = LittleShort(xyz->xyz[1]);
@@ -1567,9 +1567,9 @@ R_GetTag
 ================
 */
 static md3Tag_t* R_GetTag(md3Header_t* mod, int frame, const char* tagName) {
-	if (frame >= mod->numFrames) {
+	if (frame >= mod->num_frames) {
 		// it is possible to have a bad frame while changing models, so don't error
-		frame = mod->numFrames - 1;
+		frame = mod->num_frames - 1;
 	}
 
 	md3Tag_t* tag = (md3Tag_t*)((byte*)mod + mod->ofsTags) + frame * mod->numTags;

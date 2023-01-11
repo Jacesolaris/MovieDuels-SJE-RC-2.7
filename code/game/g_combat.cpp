@@ -2289,7 +2289,7 @@ static qboolean G_Dismember(gentity_t* ent, vec3_t point,
 		const animation_t* animations = level.knownAnimFileSets[ent->client->clientInfo.animFileIndex].animations;
 		//play the proper dismember anim on the limb
 		gi.G2API_SetBoneAnim(&limb->ghoul2[limb->playerModel], nullptr, animations[limb_anim].firstFrame,
-			animations[limb_anim].numFrames + animations[limb_anim].firstFrame,
+			animations[limb_anim].num_frames + animations[limb_anim].firstFrame,
 			BONE_ANIM_OVERRIDE_FREEZE, 1, cg.time, -1, -1);
 	}
 	if (rotate_bone)
@@ -5602,10 +5602,10 @@ qboolean G_CheckForStrongAttackMomentum(const gentity_t* self)
 	if (PM_PowerLevelForSaberAnim(&self->client->ps) > FORCE_LEVEL_2)
 	{
 		//strong attacks can't be interrupted
-		if (PM_InAnimForSaberMove(self->client->ps.torsoAnim, self->client->ps.saberMove))
+		if (PM_InAnimForSaberMove(self->client->ps.torsoAnim, self->client->ps.saber_move))
 		{
-			//our saberMove was not already interupted by some other anim (like pain)
-			if (PM_SaberInStart(self->client->ps.saberMove))
+			//our saber_move was not already interupted by some other anim (like pain)
+			if (PM_SaberInStart(self->client->ps.saber_move))
 			{
 				const float animLength = PM_AnimLength(self->client->clientInfo.animFileIndex,
 					static_cast<animNumber_t>(self->client->ps.torsoAnim));
@@ -5615,7 +5615,7 @@ qboolean G_CheckForStrongAttackMomentum(const gentity_t* self)
 					return qtrue;
 				}
 			}
-			else if (PM_SaberInReturn(self->client->ps.saberMove))
+			else if (PM_SaberInReturn(self->client->ps.saber_move))
 			{
 				if (self->client->ps.torsoAnimTimer > 750)
 				{
@@ -5724,7 +5724,7 @@ void PlayerPain(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, cons
 						//temp HACK: these are the only 2 pain anims that look good when holding a saber
 						NPC_SetAnim(self, parts, PM_PickAnim(self, BOTH_PAIN2, BOTH_PAIN3),
 							SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
-						self->client->ps.saberMove = LS_READY; //don't finish whatever saber move you may have been in
+						self->client->ps.saber_move = LS_READY; //don't finish whatever saber move you may have been in
 						//WTF - insn't working
 						if (self->health < 10 && d_slowmodeath->integer > 5)
 						{
@@ -8464,7 +8464,7 @@ void G_Damage(gentity_t* targ, gentity_t* inflictor, gentity_t* attacker, const 
 					//play the proper dismember anim on the limb
 					gi.G2API_SetBoneAnim(&limb->ghoul2[limb->playerModel], nullptr,
 						animations[BOTH_A1_BL_TR].firstFrame,
-						animations[BOTH_A1_BL_TR].numFrames + animations[BOTH_A1_BL_TR].firstFrame,
+						animations[BOTH_A1_BL_TR].num_frames + animations[BOTH_A1_BL_TR].firstFrame,
 						BONE_ANIM_OVERRIDE_FREEZE, 1, level.time, -1, -1);
 
 					// Check For Start In Solid

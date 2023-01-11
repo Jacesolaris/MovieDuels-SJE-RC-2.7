@@ -169,21 +169,21 @@ int head_info(const unsigned char* buf, unsigned int n, MPEG_HEAD* h)
 	return framebytes;
 }
 
-int head_info3(unsigned char* buf, const unsigned int n, MPEG_HEAD* h, int* br, unsigned int* searchForward)
+int head_info3(const unsigned char* buf, const unsigned int n, MPEG_HEAD* h, int* br, unsigned int* searchForward)
 {
-	unsigned int pBuf = 0;
+	unsigned int p_buf = 0;
 
 	// jdw insertion...
-	while ((pBuf < n) && !((buf[pBuf] == 0xFF) &&
-		((buf[pBuf + 1] & 0xF0) == 0xF0 || (buf[pBuf + 1] & 0xF0) == 0xE0)))
+	while ((p_buf < n) && !((buf[p_buf] == 0xFF) &&
+		((buf[p_buf + 1] & 0xF0) == 0xF0 || (buf[p_buf + 1] & 0xF0) == 0xE0)))
 	{
-		pBuf++;
+		p_buf++;
 	}
 
-	if (pBuf == n) return 0;
+	if (p_buf == n) return 0;
 
-	*searchForward = pBuf;
-	return head_info2(&(buf[pBuf]), n, h, br);
+	*searchForward = p_buf;
+	return head_info2(&(buf[p_buf]), n, h, br);
 }
 
 /*--------------------------------------------------------------*/

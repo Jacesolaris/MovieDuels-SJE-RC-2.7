@@ -3524,14 +3524,14 @@ int S_MP3PreProcessLipSync(channel_t* ch, short* data)
 void S_SetLipSyncs()
 {
 	unsigned int samples;
-	int currentTime, timePlayed;
+	int current_time, timePlayed;
 	channel_t* ch;
 
 #ifdef _WIN32
-	currentTime = timeGetTime();
+	current_time = timeGetTime();
 #else
 	// FIXME: alternative to timeGetTime ?
-	currentTime = 0;
+	current_time = 0;
 #endif
 
 	memset(s_entityWavVol, 0, sizeof(s_entityWavVol));
@@ -3545,7 +3545,7 @@ void S_SetLipSyncs()
 		if (ch->entchannel == CHAN_VOICE || ch->entchannel == CHAN_VOICE_ATTEN || ch->entchannel == CHAN_VOICE_GLOBAL)
 		{
 			// Calculate how much time has passed since the sample was started
-			timePlayed = currentTime - ch->iStartTime;
+			timePlayed = current_time - ch->iStartTime;
 
 			if (ch->thesfx->eSoundCompressionMethod == ct_16)
 			{

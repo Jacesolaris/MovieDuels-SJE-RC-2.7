@@ -1826,7 +1826,7 @@ targetname - starts off, when used, turns on (toggles)
 FIXME: sometimes we want these to not be shootable... maybe just put them behind a force field?
 */
 extern void touchLaserTrap(gentity_t* ent, gentity_t* other, const trace_t* trace);
-extern void CreateLaserTrap(gentity_t* laserTrap, vec3_t start, gentity_t* owner);
+extern void CreateLaserTrap(gentity_t* laser_trap, vec3_t start, gentity_t* owner);
 
 void misc_trip_mine_activate(gentity_t* self, gentity_t* other, gentity_t* activator)
 {
@@ -2995,7 +2995,7 @@ void misc_atst_setanim(gentity_t* self, const int bone, const int anim)
 		if (!Q_stricmp("atst", level.knownAnimFileSets[i].filename))
 		{
 			firstFrame = level.knownAnimFileSets[i].animations[anim].firstFrame;
-			lastFrame = firstFrame + level.knownAnimFileSets[i].animations[anim].numFrames;
+			lastFrame = firstFrame + level.knownAnimFileSets[i].animations[anim].num_frames;
 			anim_speed = 50.0f / level.knownAnimFileSets[i].animations[anim].frameLerp;
 			break;
 		}

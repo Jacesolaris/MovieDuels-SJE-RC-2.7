@@ -127,7 +127,7 @@ void CG_AddGhoul2Mark(const int type, const float size, vec3_t hitloc, vec3_t hi
 	gore_skin.backFaces = false; // no back
 	gore_skin.lifeTime = life_time;
 	gore_skin.firstModel = first_model;
-	gore_skin.currentTime = cg.time;
+	gore_skin.current_time = cg.time;
 	gore_skin.ent_num = entnum;
 	gore_skin.SSize = size;
 	gore_skin.TSize = size;
@@ -804,26 +804,26 @@ static qboolean CG_RunLerpFrame(clientInfo_t* ci, lerpFrame_t* lf, const int new
 		}
 
 		int f = (lf->frameTime - lf->animationTime) / anim_frame_time;
-		if (f >= anim->numFrames)
+		if (f >= anim->num_frames)
 		{
 			//Reached the end of the anim
 			//FIXME: Need to set a flag here to TASK_COMPLETE
-			f -= anim->numFrames;
+			f -= anim->num_frames;
 			if (anim->loopFrames != -1) //Before 0 meant no loop
 			{
-				if (anim->numFrames - anim->loopFrames == 0)
+				if (anim->num_frames - anim->loopFrames == 0)
 				{
-					f %= anim->numFrames;
+					f %= anim->num_frames;
 				}
 				else
 				{
-					f %= anim->numFrames - anim->loopFrames;
+					f %= anim->num_frames - anim->loopFrames;
 				}
 				f += anim->loopFrames;
 			}
 			else
 			{
-				f = anim->numFrames - 1;
+				f = anim->num_frames - 1;
 				if (f < 0)
 				{
 					f = 0;
@@ -836,7 +836,7 @@ static qboolean CG_RunLerpFrame(clientInfo_t* ci, lerpFrame_t* lf, const int new
 
 		if (anim->frameLerp < 0)
 		{
-			lf->frame = anim->firstFrame + anim->numFrames - 1 - f;
+			lf->frame = anim->firstFrame + anim->num_frames - 1 - f;
 		}
 		else
 		{
@@ -885,7 +885,7 @@ static void CG_ClearLerpFrame(clientInfo_t* ci, lerpFrame_t* lf, const int anima
 	if (lf->animation->frameLerp < 0)
 	{
 		//Plays backwards
-		lf->oldFrame = lf->frame = lf->animation->firstFrame + lf->animation->numFrames;
+		lf->oldFrame = lf->frame = lf->animation->firstFrame + lf->animation->num_frames;
 	}
 	else
 	{
@@ -1258,7 +1258,7 @@ static void CG_PlayerAnimEvents(const int anim_file_index, const qboolean torso,
 				//a looping anim!
 				loop_anim = qtrue;
 				first_frame = animation->firstFrame;
-				lastFrame = animation->firstFrame + animation->numFrames;
+				lastFrame = animation->firstFrame + animation->num_frames;
 			}
 		}
 	}
@@ -2913,7 +2913,7 @@ static void CG_G2PlayerAngles(centity_t* cent, vec3_t legs[], vec3_t angles)
 							                          cent->gent->hipsBone,
 							                          animations[turn_anim].firstFrame,
 							                          animations[turn_anim].firstFrame + animations[turn_anim].
-							                          numFrames,
+							                          num_frames,
 							                          BONE_ANIM_OVERRIDE_LOOP
 							                          /*|BONE_ANIM_OVERRIDE_FREEZE|BONE_ANIM_BLEND*/, anim_speed,
 							                          cg.time, -1, 100);
@@ -6431,7 +6431,7 @@ static void CG_G2SetHeadAnim(const centity_t* cent, const int anim)
 	const float time_scale_mod = cg_timescale.value ? 1.0 / cg_timescale.value : 1.0;
 	const float anim_speed = 50.0f / animations[anim].frameLerp * time_scale_mod;
 
-	if (animations[anim].numFrames <= 0)
+	if (animations[anim].num_frames <= 0)
 	{
 		return;
 	}
@@ -6446,12 +6446,12 @@ static void CG_G2SetHeadAnim(const centity_t* cent, const int anim)
 	{
 		//play anim backwards
 		last_frame = animations[anim].firstFrame - 1;
-		first_frame = animations[anim].numFrames - 1 + animations[anim].firstFrame;
+		first_frame = animations[anim].num_frames - 1 + animations[anim].firstFrame;
 	}
 	else
 	{
 		first_frame = animations[anim].firstFrame;
-		last_frame = animations[anim].numFrames + animations[anim].firstFrame;
+		last_frame = animations[anim].num_frames + animations[anim].firstFrame;
 	}
 
 	// first decide if we are doing an animation on the head already
@@ -13305,8 +13305,8 @@ static void CG_AddSaberBladeGo(centity_t* cent, centity_t* scent, const int rend
 		{
 			//do no effects when idle
 			if (!cent->gent->client->ps.saberInFlight
-				&& !PM_SaberInAttack(cent->gent->client->ps.saberMove)
-				&& !PM_SaberInTransitionAny(cent->gent->client->ps.saberMove)
+				&& !PM_SaberInAttack(cent->gent->client->ps.saber_move)
+				&& !PM_SaberInTransitionAny(cent->gent->client->ps.saber_move)
 				&& !PM_SaberInSpecialAttack(cent->gent->client->ps.torsoAnim))
 			{
 				//idle, do no marks
@@ -13316,7 +13316,7 @@ static void CG_AddSaberBladeGo(centity_t* cent, centity_t* scent, const int rend
 		if (cg_saberEntMarks.integer)
 		{
 			if (cent->gent->client->ps.saberInFlight
-				|| PM_SaberInAttack(cent->gent->client->ps.saberMove)
+				|| PM_SaberInAttack(cent->gent->client->ps.saber_move)
 				|| PM_SaberInSpecialAttack(cent->gent->client->ps.torsoAnim))
 			{
 				trace_mask |= CONTENTS_BODY | CONTENTS_CORPSE;
@@ -13414,7 +13414,7 @@ static void CG_AddSaberBladeGo(centity_t* cent, centity_t* scent, const int rend
 
 											if (cg_SerenityJediEngineMode.integer == 2)
 											{
-												if (PM_SaberInAttack(cent->gent->client->ps.saberMove)
+												if (PM_SaberInAttack(cent->gent->client->ps.saber_move)
 													|| PM_SaberInSpecialAttack(cent->gent->client->ps.torsoAnim))
 												{
 													cgi_S_StartSound(cent->lerpOrigin, cent->currentState.client_num,
@@ -13779,7 +13779,7 @@ static void CG_AddSaberBladeGo(centity_t* cent, centity_t* scent, const int rend
 			float dirlen1 = VectorLength(dir1);
 			const float dirlen2 = VectorLength(dir2);
 
-			if (saberMoveData[client->ps.saberMove].trailLength == 0)
+			if (saberMoveData[client->ps.saber_move].trailLength == 0)
 			{
 				dirlen0 *= 0.5f;
 				dirlen1 *= 0.3f;
@@ -15406,7 +15406,7 @@ void CG_Player(centity_t* cent)
 								}
 								else
 								{
-									switch (cent->gent->client->ps.saberAnimLevel)
+									switch (cent->gent->client->ps.saber_anim_level)
 									{
 									case SS_FAST:
 										cent->gent->client->ps.saber[saber_num].blade[blade_num].length += cent->gent->
@@ -15962,7 +15962,7 @@ void CG_Player(centity_t* cent)
 					effect = &w_data->mMuzzleEffect[0];
 				}
 
-				if (cent->altFire)
+				if (cent->alt_fire)
 				{
 					// We're alt-firing, so see if we need to override with a custom alt-fire effect
 					if (w_data->mAltMuzzleEffect[0])

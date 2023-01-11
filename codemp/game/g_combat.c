@@ -885,7 +885,7 @@ static int G_CheckSpecialDeathAnim(gentity_t* self)
 	}
 	else if (G_InKnockDown(&self->client->ps))
 	{//since these happen a lot, let's handle them case by case
-		int animLength = bgAllAnims[self->localAnimIndex].anims[self->client->ps.legsAnim].numFrames * fabs((float)(bgHumanoidAnimations[self->client->ps.legsAnim].frameLerp));
+		int animLength = bgAllAnims[self->localAnimIndex].anims[self->client->ps.legsAnim].num_frames * fabs((float)(bgHumanoidAnimations[self->client->ps.legsAnim].frameLerp));
 		switch (self->client->ps.legsAnim)
 		{
 		case BOTH_KNOCKDOWN1:
@@ -2469,7 +2469,7 @@ extern void RunEmplacedWeapon( gentity_t *ent, usercmd_t **ucmd );
 			//also - if MOD_SABER, list the animation and saber style
 			if (meansOfDeath == MOD_SABER)
 			{
-				G_LogPrintf("killer saber style: %d, killer saber anim %s\n", attacker->client->ps.fd.saberAnimLevel, animTable[(attacker->client->ps.torsoAnim)].name);
+				G_LogPrintf("killer saber style: %d, killer saber anim %s\n", attacker->client->ps.fd.saber_anim_level, animTable[(attacker->client->ps.torsoAnim)].name);
 			}
 		}
 	}
@@ -2760,7 +2760,7 @@ extern void RunEmplacedWeapon( gentity_t *ent, usercmd_t **ucmd );
 				self->health = GIB_HEALTH + 1;
 			}
 
-			self->client->respawnTime = level.time + 1000;//((self->client->animations[anim].numFrames*40)/(50.0f / self->client->animations[anim].frameLerp))+300;
+			self->client->respawnTime = level.time + 1000;//((self->client->animations[anim].num_frames*40)/(50.0f / self->client->animations[anim].frameLerp))+300;
 
 			const int sPMType = self->client->ps.pm_type;
 			self->client->ps.pm_type = PM_NORMAL; //don't want pm type interfering with our setanim calls.
@@ -5563,7 +5563,7 @@ G_RadiusDamage
 */
 qboolean G_RadiusDamage(vec3_t origin, gentity_t* attacker, float damage, float radius,
 	gentity_t* ignore, gentity_t* missile, int mod) {
-	int			entityList[MAX_GENTITIES];
+	int			entity_list[MAX_GENTITIES];
 	vec3_t		mins, maxs;
 	vec3_t		v;
 	vec3_t		dir;
@@ -5601,10 +5601,10 @@ qboolean G_RadiusDamage(vec3_t origin, gentity_t* attacker, float damage, float 
 		maxs[i] = origin[i] + radius;
 	}
 
-	const int num_listed_entities = trap->EntitiesInBox(mins, maxs, entityList, MAX_GENTITIES);
+	const int num_listed_entities = trap->EntitiesInBox(mins, maxs, entity_list, MAX_GENTITIES);
 
 	for (int e = 0; e < num_listed_entities; e++) {
-		gentity_t* ent = &g_entities[entityList[e]];
+		gentity_t* ent = &g_entities[entity_list[e]];
 
 		if (ent == ignore)
 			continue;

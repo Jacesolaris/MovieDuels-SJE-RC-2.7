@@ -336,7 +336,7 @@ static void G_DynamicMusicUpdate( usercmd_t *ucmd )
 */
 static void G_DynamicMusicUpdate(void)
 {
-	gentity_t* entityList[MAX_GENTITIES];
+	gentity_t* entity_list[MAX_GENTITIES];
 	vec3_t mins, maxs;
 	vec3_t center;
 	int danger = 0;
@@ -413,10 +413,10 @@ static void G_DynamicMusicUpdate(void)
 		maxs[i] = center[i] + radius;
 	}
 
-	const int num_listed_entities = gi.EntitiesInBox(mins, maxs, entityList, MAX_GENTITIES);
+	const int num_listed_entities = gi.EntitiesInBox(mins, maxs, entity_list, MAX_GENTITIES);
 	for (int e = 0; e < num_listed_entities; e++)
 	{
-		gentity_t* ent = entityList[e];
+		gentity_t* ent = entity_list[e];
 		if (!ent || !ent->inuse)
 		{
 			continue;
@@ -1160,7 +1160,7 @@ extern "C" Q_EXPORT game_export_t* QDECL GetGameAPI(const game_import_t* import)
 	gameinfo_import.Cvar_VariableStringBuffer = gi.Cvar_VariableStringBuffer;
 	gameinfo_import.Cvar_Create = G_Cvar_Create;
 
-	GI_Init(&gameinfo_import);
+	GI_Init();
 
 	return &globals;
 }
@@ -2056,7 +2056,7 @@ qboolean G_RagDoll(gentity_t* ent, vec3_t forcedAngles)
 		tParms.start_frame = level.knownAnimFileSets[ent->client->clientInfo.animFileIndex].animations[ragAnim].
 			firstFrame;
 		tParms.end_frame = level.knownAnimFileSets[ent->client->clientInfo.animFileIndex].animations[ragAnim].firstFrame
-			+ level.knownAnimFileSets[ent->client->clientInfo.animFileIndex].animations[ragAnim].numFrames;
+			+ level.knownAnimFileSets[ent->client->clientInfo.animFileIndex].animations[ragAnim].num_frames;
 #if 1
 		{
 			float current_frame;

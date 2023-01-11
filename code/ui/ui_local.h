@@ -117,7 +117,7 @@ constexpr auto MAX_MODS = 64;
 
 using modInfo_t = struct
 {
-	const char* modName;
+	const char* mod_name;
 	const char* modDescr;
 };
 

@@ -199,7 +199,7 @@ void WP_DisruptorAltFire(gentity_t* ent)
 	vec3_t muzzle2, spot, dir;
 	trace_t tr;
 	gentity_t* tent;
-	qboolean hitDodged = qfalse, fullCharge = qfalse;
+	qboolean hit_dodged = qfalse, full_charge = qfalse;
 
 	VectorCopy(muzzle, muzzle2); // making a backup copy
 
@@ -221,7 +221,7 @@ void WP_DisruptorAltFire(gentity_t* ent)
 		}
 		VectorCopy(muzzle, start);
 
-		fullCharge = qtrue;
+		full_charge = qtrue;
 	}
 	else
 	{
@@ -238,7 +238,7 @@ void WP_DisruptorAltFire(gentity_t* ent)
 		else if (count >= 10)
 		{
 			count = 10;
-			fullCharge = qtrue;
+			full_charge = qtrue;
 		}
 
 		// more powerful charges go through more things
@@ -301,22 +301,22 @@ void WP_DisruptorAltFire(gentity_t* ent)
 				G_MissileReflectEffect(trace_ent, tr.endpos, tr.plane.normal);
 				WP_ForcePowerDrain(trace_ent, FP_SABER_DEFENSE, WP_SaberBlockCost(trace_ent, ent, tr.endpos));
 				//force player into a projective block move.
-				hitDodged = WP_SaberBlockBolt_MD(trace_ent, tr.endpos, qtrue);
+				hit_dodged = WP_SaberBlockBolt_MD(trace_ent, tr.endpos, qtrue);
 			}
 			else
 			{
 				if (trace_ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(trace_ent))
 				{
-					hitDodged = jedi_disruptor_dodge_evasion(trace_ent, ent, &tr, HL_NONE);
+					hit_dodged = jedi_disruptor_dodge_evasion(trace_ent, ent, &tr, HL_NONE);
 				}
 				else
 				{
-					hitDodged = jedi_npc_disruptor_dodge_evasion(trace_ent, ent, &tr, HL_NONE);
+					hit_dodged = jedi_npc_disruptor_dodge_evasion(trace_ent, ent, &tr, HL_NONE);
 				}
 				//acts like we didn't even hit him
 			}
 		}
-		if (!hitDodged)
+		if (!hit_dodged)
 		{
 			if (render_impact)
 			{
@@ -339,12 +339,12 @@ void WP_DisruptorAltFire(gentity_t* ent)
 						//hehe
 						G_Damage(trace_ent, ent, ent, forwardVec, tr.endpos, 10,
 						         DAMAGE_NO_KNOCKBACK | DAMAGE_NO_HIT_LOC,
-						         fullCharge ? MOD_SNIPER : MOD_DISRUPTOR, hit_loc);
+						         full_charge ? MOD_SNIPER : MOD_DISRUPTOR, hit_loc);
 						break;
 					}
 					G_Damage(trace_ent, ent, ent, forwardVec, tr.endpos, damage,
 					         DAMAGE_NO_KNOCKBACK | DAMAGE_NO_HIT_LOC,
-					         fullCharge ? MOD_SNIPER : MOD_DISRUPTOR, hit_loc);
+					         full_charge ? MOD_SNIPER : MOD_DISRUPTOR, hit_loc);
 					if (trace_ent->s.eType == ET_MOVER)
 					{
 						//stop the traces on any mover
@@ -370,28 +370,28 @@ void WP_DisruptorAltFire(gentity_t* ent)
 		VectorCopy(tr.endpos, muzzle2);
 		VectorCopy(tr.endpos, start);
 		skip = tr.entity_num;
-		hitDodged = qfalse;
+		hit_dodged = qfalse;
 	}
 	//just draw one solid beam all the way to the end...
 	tent = G_TempEntity(tr.endpos, EV_DISRUPTOR_MAIN_SHOT);
 	tent->svFlags |= SVF_BROADCAST;
-	tent->alt_fire = fullCharge; // mark us so we can alter the effect
+	tent->alt_fire = full_charge; // mark us so we can alter the effect
 	VectorCopy(muzzle, tent->s.origin2);
 
 	// now go along the trail and make sight events
 	VectorSubtract(tr.endpos, muzzle, dir);
 
-	const float shotDist = VectorNormalize(dir);
+	const float shot_dist = VectorNormalize(dir);
 
 	//FIXME: if shoot *really* close to someone, the alert could be way out of their FOV
-	for (float dist = 0; dist < shotDist; dist += 64)
+	for (float dist = 0; dist < shot_dist; dist += 64)
 	{
 		//FIXME: on a really long shot, this could make a LOT of alerts in one frame...
 		VectorMA(muzzle, dist, dir, spot);
 		AddSightEvent(ent, spot, 256, AEL_DISCOVERED, 50);
 	}
 	//FIXME: spawn a temp ent that continuously spawns sight alerts here?  And 1 sound alert to draw their attention?
-	VectorMA(start, shotDist - 4, forwardVec, spot);
+	VectorMA(start, shot_dist - 4, forwardVec, spot);
 	AddSightEvent(ent, spot, 256, AEL_DISCOVERED, 50);
 }
 

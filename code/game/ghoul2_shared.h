@@ -31,7 +31,7 @@ constexpr auto G2T_SV_TIME = 0;
 constexpr auto G2T_CG_TIME = 1;
 constexpr auto NUM_G2T_TIME = 2;
 
-void G2API_SetTime(int currentTime, int clock);
+void G2API_SetTime(int current_time, int clock);
 int G2API_GetTime(int argTime); // this may or may not return arg depending on ghoul2_time cvar
 
 //===================================================================

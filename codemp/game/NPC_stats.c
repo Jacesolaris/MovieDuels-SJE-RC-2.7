@@ -2559,8 +2559,8 @@ qboolean NPC_ParseParms(const char* npc_name, gentity_t* npc)
 
 		if (!parsingPlayer)
 		{
-			//altFire
-			if (!Q_stricmp(token, "altFire"))
+			//alt_fire
+			if (!Q_stricmp(token, "alt_fire"))
 			{
 				if (COM_ParseInt(&p, &n))
 				{
@@ -3464,7 +3464,7 @@ qboolean NPC_ParseParms(const char* npc_name, gentity_t* npc)
 			{
 				n = 5;
 			}
-			npc->client->ps.fd.saberAnimLevel = n;
+			npc->client->ps.fd.saber_anim_level = n;
 			/*
 				if ( parsingPlayer )
 				{

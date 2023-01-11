@@ -476,7 +476,7 @@ static void DeadThink(void)
 		NPC->bounceCount = -1; // This is a cheap hack for optimizing the pointcontents check below
 
 		//ghoul doesn't tell us this anymore
-		//if ( NPC->client->renderInfo.legsFrame == animations[legsAnim].firstFrame + (animations[legsAnim].numFrames - 1) )
+		//if ( NPC->client->renderInfo.legsFrame == animations[legsAnim].firstFrame + (animations[legsAnim].num_frames - 1) )
 		{
 			//reached the end of the death anim
 			NPCInfo->timeOfDeath = level.time + BodyRemovalPadTime( NPC );
@@ -1921,7 +1921,7 @@ void NPC_InitAnimTable( void )
   before table is filled in with
   values, causes tasks that wait for
   anim completion to never finish.
-  (frameLerp of 0 * numFrames of 0 = 0)
+  (frameLerp of 0 * num_frames of 0 = 0)
 ==================================
 */
 /*
@@ -1936,7 +1936,7 @@ void NPC_InitAnimTable( void )
 			level.knownAnimFileSets[i].animations[j].firstFrame = 0;
 			level.knownAnimFileSets[i].animations[j].frameLerp = 100;
 			level.knownAnimFileSets[i].animations[j].initialLerp = 100;
-			level.knownAnimFileSets[i].animations[j].numFrames = 0;
+			level.knownAnimFileSets[i].animations[j].num_frames = 0;
 		}
 	}
 }

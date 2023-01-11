@@ -910,7 +910,7 @@ static int G2_GetBonePoolIndex(const mdxaHeader_t* pMDXAHeader, int iFrame, int 
 #define DEBUG_G2_TIMING (0)
 #define DEBUG_G2_TIMING_RENDER_ONLY (1)
 
-void G2_TimingModel(boneInfo_t& bone, int currentTime, int numFramesInFile, int& current_frame, int& newFrame, float& lerp)
+void G2_TimingModel(boneInfo_t& bone, int current_time, int numFramesInFile, int& current_frame, int& newFrame, float& lerp)
 {
 	assert(bone.start_frame >= 0);
 	assert(bone.start_frame <= numFramesInFile);
@@ -926,7 +926,7 @@ void G2_TimingModel(boneInfo_t& bone, int currentTime, int numFramesInFile, int&
 	}
 	else
 	{
-		time = (currentTime - bone.startTime) / 50.0f;
+		time = (current_time - bone.startTime) / 50.0f;
 	}
 	if (time < 0.0f)
 	{
@@ -1337,7 +1337,7 @@ void G2_TransformBone(int child, CBoneCache& BC)
 		// should this animation be overridden by an animation in the bone list?
 		if ((boneList[boneListIndex].flags) & (BONE_ANIM_OVERRIDE_LOOP | BONE_ANIM_OVERRIDE))
 		{
-			G2_TimingModel(boneList[boneListIndex], BC.incomingTime, BC.header->numFrames, TB.current_frame, TB.newFrame, TB.backlerp);
+			G2_TimingModel(boneList[boneListIndex], BC.incomingTime, BC.header->num_frames, TB.current_frame, TB.newFrame, TB.backlerp);
 		}
 #if DEBUG_G2_TIMING
 		printTiming = true;
@@ -1351,28 +1351,28 @@ void G2_TransformBone(int child, CBoneCache& BC)
 		//rwwFIXMEFIXME: Use?
 	}
 	// figure out where the location of the bone animation data is
-	assert(TB.newFrame >= 0 && TB.newFrame < BC.header->numFrames);
-	if (!(TB.newFrame >= 0 && TB.newFrame < BC.header->numFrames))
+	assert(TB.newFrame >= 0 && TB.newFrame < BC.header->num_frames);
+	if (!(TB.newFrame >= 0 && TB.newFrame < BC.header->num_frames))
 	{
 		TB.newFrame = 0;
 	}
 	//	aFrame = (mdxaFrame_t *)((byte *)BC.header + BC.header->ofsFrames + TB.newFrame * BC.frameSize );
-	assert(TB.current_frame >= 0 && TB.current_frame < BC.header->numFrames);
-	if (!(TB.current_frame >= 0 && TB.current_frame < BC.header->numFrames))
+	assert(TB.current_frame >= 0 && TB.current_frame < BC.header->num_frames);
+	if (!(TB.current_frame >= 0 && TB.current_frame < BC.header->num_frames))
 	{
 		TB.current_frame = 0;
 	}
 	//	aoldFrame = (mdxaFrame_t *)((byte *)BC.header + BC.header->ofsFrames + TB.current_frame * BC.frameSize );
 
 		// figure out where the location of the blended animation data is
-	assert(!(TB.blendFrame < 0.0 || TB.blendFrame >= (BC.header->numFrames + 1)));
-	if (TB.blendFrame < 0.0 || TB.blendFrame >= (BC.header->numFrames + 1))
+	assert(!(TB.blendFrame < 0.0 || TB.blendFrame >= (BC.header->num_frames + 1)));
+	if (TB.blendFrame < 0.0 || TB.blendFrame >= (BC.header->num_frames + 1))
 	{
 		TB.blendFrame = 0.0;
 	}
 	//	bFrame = (mdxaFrame_t *)((byte *)BC.header + BC.header->ofsFrames + (int)TB.blendFrame * BC.frameSize );
-	assert(TB.blendOldFrame >= 0 && TB.blendOldFrame < BC.header->numFrames);
-	if (!(TB.blendOldFrame >= 0 && TB.blendOldFrame < BC.header->numFrames))
+	assert(TB.blendOldFrame >= 0 && TB.blendOldFrame < BC.header->num_frames);
+	if (!(TB.blendOldFrame >= 0 && TB.blendOldFrame < BC.header->num_frames))
 	{
 		TB.blendOldFrame = 0;
 	}
@@ -3745,7 +3745,7 @@ qboolean R_LoadMDXA(model_t* mod, void* buffer, const char* mod_name, qboolean& 
 #endif
 		LL(mdxa->ident);
 		LL(mdxa->version);
-		LL(mdxa->numFrames);
+		LL(mdxa->num_frames);
 		LL(mdxa->numBones);
 		LL(mdxa->ofsFrames);
 		LL(mdxa->ofsEnd);
@@ -3864,7 +3864,7 @@ qboolean R_LoadMDXA(model_t* mod, void* buffer, const char* mod_name, qboolean& 
 	}
 #endif //CREATE_LIMB_HIERARCHY
 
-	if (mdxa->numFrames < 1) {
+	if (mdxa->num_frames < 1) {
 		Com_Printf(S_COLOR_YELLOW  "R_LoadMDXA: %s has no frames\n", mod_name);
 		return qfalse;
 	}
@@ -3897,7 +3897,7 @@ qboolean R_LoadMDXA(model_t* mod, void* buffer, const char* mod_name, qboolean& 
 
 	// swap all the frames
 	frameSize = (size_t)(&((mdxaFrame_t*)0)->bones[mdxa->numBones]);
-	for (i = 0; i < mdxa->numFrames; i++)
+	for (i = 0; i < mdxa->num_frames; i++)
 	{
 		cframe = (mdxaFrame_t*)((byte*)mdxa + mdxa->ofsFrames + i * frameSize);
 		cframe->radius = LittleFloat(cframe->radius);

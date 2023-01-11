@@ -289,10 +289,10 @@ movement on the server game.
 #pragma pack(push, 1)
 typedef struct animation_s {
 	unsigned short		firstFrame;
-	unsigned short		numFrames;
+	unsigned short		num_frames;
 	short				frameLerp;			// msec between frames
 	//initialLerp is abs(frameLerp)
-	signed char			loopFrames;			// 0 to numFrames
+	signed char			loopFrames;			// 0 to num_frames
 } animation_t;
 #pragma pack(pop)
 
@@ -1689,7 +1689,7 @@ qboolean BG_SaberInIdle(int move);
 qboolean BG_FlippingAnim(int anim);
 qboolean BG_SpinningSaberAnim(int anim);
 qboolean BG_SaberInSpecialAttack(int anim);
-qboolean BG_SaberInKata(int saberMove);
+qboolean BG_SaberInKata(int saber_move);
 qboolean BG_InKataAnim(int anim);
 qboolean BG_KickingAnim(int anim);
 int BG_InGrappleMove(int anim);
@@ -1701,7 +1701,7 @@ qboolean BG_InDeathAnim(int anim);
 qboolean BG_InSaberLockOld(int anim);
 qboolean BG_InSaberLock(int anim);
 
-void BG_SaberStartTransAnim(int client_num, int saberAnimLevel, int weapon, int anim, float* anim_speed, int broken);
+void BG_SaberStartTransAnim(int client_num, int saber_anim_level, int weapon, int anim, float* anim_speed, int broken);
 
 void BG_ForcePowerDrain(playerState_t* ps, forcePowers_t forcePower, int overrideAmt);
 

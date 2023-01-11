@@ -1007,7 +1007,7 @@ typedef struct forcedata_s {
 	qboolean	sentryDeployed;
 
 	int			saberAnimLevelBase;//sigh...
-	int			saberAnimLevel;
+	int			saber_anim_level;
 	int			saberDrawAnimLevel;
 
 	int			suicides;
@@ -1152,7 +1152,7 @@ typedef struct playerState_s {
 
 	qboolean	saberInFlight;
 
-	int			saberMove;
+	int			saber_move;
 	int			saberBlocking;
 	int			saberBlocked;
 
@@ -1613,7 +1613,7 @@ typedef struct entityState_s {
 
 	qboolean	saberInFlight;
 	int			saberEntityNum;
-	int			saberMove;
+	int			saber_move;
 	int			forcePowersActive;
 	int			saberHolstered;//sent in only only 2 bits - should be 0, 1 or 2
 
@@ -1814,7 +1814,7 @@ typedef struct SSkinGoreData_s
 {
 	vec3_t			angles;
 	vec3_t			position;
-	int				currentTime;
+	int				current_time;
 	int				ent_num;
 	vec3_t			rayDirection;	// in world space
 	vec3_t			hitLocation;	// in world space

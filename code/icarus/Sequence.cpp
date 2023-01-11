@@ -34,7 +34,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define STL_ITERATE( a, b )		for ( a = b.begin(); a != b.end(); ++a )
 #define STL_INSERT( a, b )		a.insert( a.end(), b );
 
-inline CSequence::CSequence(void) : m_id(0)
+inline CSequence::CSequence() : m_id(0)
 {
 	m_numCommands = 0;
 	//	m_numChildren	= 0;
@@ -48,7 +48,6 @@ inline CSequence::CSequence(void) : m_id(0)
 CSequence::~CSequence()
 {
 	assert(!m_commands.size());
-	//assert(!m_numChildren);
 }
 
 /*
@@ -87,18 +86,12 @@ void CSequence::Delete(const CIcarus* icarus)
 	//Clear all children
 	if (m_children.size() > 0)
 	{
-		/*for ( iterSeq = m_childrenMap.begin(); iterSeq != m_childrenMap.end(); iterSeq++ )
-		{
-			(*iterSeq).second->SetParent( NULL );
-		}*/
-
 		for (auto si = m_children.begin(); si != m_children.end(); ++si)
 		{
 			(*si)->SetParent(nullptr);
 		}
 	}
 	m_children.clear();
-	//m_childrenMap.clear();
 
 	//Clear all held commands
 	for (auto bi = m_commands.begin(); bi != m_commands.end(); ++bi)
@@ -123,8 +116,6 @@ void CSequence::AddChild(CSequence* child)
 		return;
 
 	m_children.insert(m_children.end(), child);
-	//	m_childrenMap[ m_numChildren ] = child;
-	//	m_numChildren++;
 }
 
 /*
@@ -140,15 +131,6 @@ void CSequence::RemoveChild(CSequence* child)
 		return;
 
 	m_children.remove(child);
-
-	//Remove the child
-	/*	sequenceID_m::iterator iterSeq = m_childrenMap.find( child->GetID() );
-		if ( iterSeq != m_childrenMap.end() )
-		{
-			m_childrenMap.erase( iterSeq );
-		}
-
-		m_numChildren--;*/
 }
 
 /*
@@ -167,16 +149,6 @@ bool CSequence::HasChild(CSequence* sequence)
 		if ((*ci)->HasChild(sequence))
 			return true;
 	}
-
-	/*	sequenceID_m::iterator iterSeq = NULL;
-		for ( iterSeq = m_childrenMap.begin(); iterSeq != m_childrenMap.end(); iterSeq++ )
-		{
-			if ( ((*iterSeq).second) == sequence )
-				return true;
-
-			if ( (*iterSeq).second->HasChild( sequence ) )
-				return true;
-		}*/
 
 	return false;
 }
@@ -299,12 +271,6 @@ void CSequence::RemoveFlag(const int flag, const bool children)
 
 	if (children)
 	{
-		/*		sequenceID_m::iterator iterSeq = NULL;
-				for ( iterSeq = m_childrenMap.begin(); iterSeq != m_childrenMap.end(); iterSeq++ )
-				{
-					(*iterSeq).second->RemoveFlag( flag, true );
-				}*/
-
 		for (auto si = m_children.begin(); si != m_children.end(); ++si)
 		{
 			(*si)->RemoveFlag(flag, true);
@@ -346,19 +312,11 @@ CSequence* CSequence::GetChildByID(const int id)
 	if (id < 0)
 		return nullptr;
 
-	//NOTENOTE: Done for safety reasons, I don't know what this template will return on underflow ( sigh... )
-	/*	sequenceID_m::iterator mi = m_childrenMap.find( id );
-
-		if ( mi == m_childrenMap.end() )
-			return NULL;
-
-		return (*mi).second;*/
-
-	sequence_l::iterator iterSeq;
-	STL_ITERATE(iterSeq, m_children)
+	sequence_l::iterator iter_seq;
+	STL_ITERATE(iter_seq, m_children)
 	{
-		if ((*iterSeq)->GetID() == id)
-			return *iterSeq;
+		if ((*iter_seq)->GetID() == id)
+			return *iter_seq;
 	}
 
 	return nullptr;
@@ -370,13 +328,13 @@ GetChildByIndex
 -------------------------
 */
 
-CSequence* CSequence::GetChildByIndex(const int iIndex)
+CSequence* CSequence::GetChildByIndex(const int i_index)
 {
-	if (iIndex < 0 || iIndex >= static_cast<int>(m_children.size()))
+	if (i_index < 0 || i_index >= static_cast<int>(m_children.size()))
 		return nullptr;
 
 	auto iterSeq = m_children.begin();
-	for (int i = 0; i < iIndex; i++)
+	for (int i = 0; i < i_index; i++)
 	{
 		++iterSeq;
 	}
@@ -395,15 +353,6 @@ int CSequence::SaveCommand(const CBlock* block)
 
 	unsigned char flags;
 	int num_members, b_id, size;
-
-	// Data saved here (IBLK):
-	//	Block ID.
-	//	Block Flags.
-	//	Number of Block Members.
-	//	Block Members:
-	//				- Block Member ID.
-	//				- Block Data Size.
-	//				- Block (Raw) Data.
 
 	//Save out the block ID
 	b_id = block->GetBlockID();
@@ -578,10 +527,10 @@ int CSequence::Save()
 		id = (*iterSeq).second->GetID();
 		pIcarus->BufferWrite( &id, sizeof( id ) );
 	}*/
-	sequence_l::iterator iterSeq;
-	STL_ITERATE(iterSeq, m_children)
+	sequence_l::iterator iter_seq;
+	STL_ITERATE(iter_seq, m_children)
 	{
-		id = (*iterSeq)->GetID();
+		id = (*iter_seq)->GetID();
 		p_icarus->BufferWrite(&id, sizeof id);
 	}
 
