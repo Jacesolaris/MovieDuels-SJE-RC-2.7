@@ -138,7 +138,7 @@ void SV_SendServerCommand(client_t* cl, const char* fmt, ...)
 	va_end(argptr);
 
 	// Fix to http://aluigi.altervista.org/adv/q3msgboom-adv.txt
-	// The actual cause of the bug is probably further downstream
+	// The actual cause of the error is probably further downstream
 	// and should maybe be addressed later, but this certainly
 	// fixes the problem for now
 	if (strlen((char*)message + 1) > 1022)
@@ -541,8 +541,6 @@ void SV_Frame(int msec, const float fraction_msec)
 		start_time = Sys_Milliseconds();
 	}
 
-	//	SV_BotFrame( sv.time );
-
 	// run the game simulation in chunks
 	while (sv.timeResidual >= frame_msec)
 	{
@@ -550,8 +548,14 @@ void SV_Frame(int msec, const float fraction_msec)
 		sv.time += frame_msec;
 		re.G2API_SetTime(sv.time, G2T_SV_TIME);
 
-		// let everything in the world think and move
-		ge->RunFrame(sv.time);
+		try
+		{// let everything in the world think and move
+			ge->RunFrame(sv.time);
+		}
+		catch (...)
+		{
+			Com_Printf(S_COLOR_RED "ERROR: You just tried to crash the game! Shame on you!\n");
+		}
 	}
 
 	if (com_speeds->integer)

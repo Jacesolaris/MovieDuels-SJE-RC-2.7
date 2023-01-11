@@ -5911,7 +5911,7 @@ static qboolean PM_DoChargedWeapons(qboolean vehicleRocketLock, bgEntity_t* veh)
 //---------------------------------------
 {
 	qboolean	charging = qfalse,
-		alt_fire = qfalse;
+		altFire = qfalse;
 
 	if (vehicleRocketLock)
 	{
@@ -5933,7 +5933,7 @@ static qboolean PM_DoChargedWeapons(qboolean vehicleRocketLock, bgEntity_t* veh)
 				}
 				if (pm->cmd.buttons & BUTTON_ALT_ATTACK)
 				{
-					alt_fire = qtrue;
+					altFire = qtrue;
 				}
 			}
 		}
@@ -5954,7 +5954,7 @@ static qboolean PM_DoChargedWeapons(qboolean vehicleRocketLock, bgEntity_t* veh)
 				if (pm->cmd.buttons & BUTTON_ALT_ATTACK)
 				{
 					charging = qtrue;
-					alt_fire = qtrue;
+					altFire = qtrue;
 				}
 			}
 			break;
@@ -5962,7 +5962,7 @@ static qboolean PM_DoChargedWeapons(qboolean vehicleRocketLock, bgEntity_t* veh)
 		case WP_CONCUSSION:
 			if (pm->cmd.buttons & BUTTON_ALT_ATTACK)
 			{
-				alt_fire = qtrue;
+				altFire = qtrue;
 			}
 			break;
 
@@ -5972,7 +5972,7 @@ static qboolean PM_DoChargedWeapons(qboolean vehicleRocketLock, bgEntity_t* veh)
 			if (pm->cmd.buttons & BUTTON_ALT_ATTACK)
 			{
 				charging = qtrue;
-				alt_fire = qtrue;
+				altFire = qtrue;
 			}
 			break;
 
@@ -5993,7 +5993,7 @@ static qboolean PM_DoChargedWeapons(qboolean vehicleRocketLock, bgEntity_t* veh)
 			{
 				PM_RocketLock(2048, qfalse);
 				charging = qtrue;
-				alt_fire = qtrue;
+				altFire = qtrue;
 			}
 			break;
 
@@ -6002,7 +6002,7 @@ static qboolean PM_DoChargedWeapons(qboolean vehicleRocketLock, bgEntity_t* veh)
 
 			if (pm->cmd.buttons & BUTTON_ALT_ATTACK)
 			{
-				alt_fire = qtrue; // override default of not being an alt-fire
+				altFire = qtrue; // override default of not being an alt-fire
 				charging = qtrue;
 			}
 			else if (pm->cmd.buttons & BUTTON_ATTACK)
@@ -6014,7 +6014,7 @@ static qboolean PM_DoChargedWeapons(qboolean vehicleRocketLock, bgEntity_t* veh)
 		case WP_DEMP2:
 			if (pm->cmd.buttons & BUTTON_ALT_ATTACK)
 			{
-				alt_fire = qtrue; // override default of not being an alt-fire
+				altFire = qtrue; // override default of not being an alt-fire
 				charging = qtrue;
 			}
 			break;
@@ -6028,7 +6028,7 @@ static qboolean PM_DoChargedWeapons(qboolean vehicleRocketLock, bgEntity_t* veh)
 				if (pm->cmd.buttons & BUTTON_ALT_ATTACK)
 				{
 					charging = qtrue;
-					alt_fire = qtrue;
+					altFire = qtrue;
 				}
 			}
 			break;
@@ -6042,7 +6042,7 @@ static qboolean PM_DoChargedWeapons(qboolean vehicleRocketLock, bgEntity_t* veh)
 				if (pm->cmd.buttons & BUTTON_ALT_ATTACK)
 				{
 					charging = qtrue;
-					alt_fire = qtrue;
+					altFire = qtrue;
 				}
 			}
 			break;
@@ -6057,12 +6057,12 @@ static qboolean PM_DoChargedWeapons(qboolean vehicleRocketLock, bgEntity_t* veh)
 					pm->cmd.upmove <= 0)
 				{
 					charging = qtrue;
-					alt_fire = qtrue;
+					altFire = qtrue;
 				}
 				else
 				{
 					charging = qfalse;
-					alt_fire = qfalse;
+					altFire = qfalse;
 				}
 			}
 
@@ -6071,7 +6071,7 @@ static qboolean PM_DoChargedWeapons(qboolean vehicleRocketLock, bgEntity_t* veh)
 			{
 				pm->ps->weaponstate = WEAPON_READY;
 				charging = qfalse;
-				alt_fire = qfalse;
+				altFire = qfalse;
 			}
 		} // end switch
 	}
@@ -6080,7 +6080,7 @@ static qboolean PM_DoChargedWeapons(qboolean vehicleRocketLock, bgEntity_t* veh)
 	//	Note that we ALWAYS return if charging is set ( meaning the buttons are still down )
 	if (charging)
 	{
-		if (alt_fire)
+		if (altFire)
 		{
 			if (pm->ps->weaponstate != WEAPON_CHARGING_ALT)
 			{

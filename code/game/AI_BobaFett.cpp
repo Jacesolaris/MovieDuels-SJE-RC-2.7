@@ -979,7 +979,7 @@ void Boba_FireWristMissile(gentity_t* self, const int whichMissile)
 	const int old_weapon = self->s.weapon;
 
 	self->s.weapon = missileStates[whichMissile].whichWeapon;
-	const qboolean alt_fire = missileStates[whichMissile].alt_fire;
+	const qboolean altFire = missileStates[whichMissile].altFire;
 	if (missileStates[whichMissile].fullyCharged)
 	{
 		self->client->ps.weaponChargeTime = 0;
@@ -999,7 +999,7 @@ void Boba_FireWristMissile(gentity_t* self, const int whichMissile)
 		effect = &wData->mMuzzleEffect[0];
 	}
 
-	if (alt_fire)
+	if (altFire)
 	{
 		// We're alt-firing, so see if we need to override with a custom alt-fire effect
 		if (wData->mAltMuzzleEffect[0])
@@ -1027,7 +1027,7 @@ void Boba_FireWristMissile(gentity_t* self, const int whichMissile)
 		G_PlayEffect(effect, muzzle_point, muzzle_dir);
 	}
 
-	FireWeapon(self, alt_fire);
+	FireWeapon(self, altFire);
 	shots_fired++;
 
 	self->s.weapon = old_weapon;

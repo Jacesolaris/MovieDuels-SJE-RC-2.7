@@ -2035,8 +2035,8 @@ void NPC_BuildRandom()
 
 extern void G_MatchPlayerWeapon(gentity_t* ent);
 extern void G_InitPlayerFromCvars(gentity_t* ent);
-extern void g_set_g2_player_model(gentity_t* ent, const char* model_name, const char* custom_skin, const char* surf_off,
-                                  const char* surf_on);
+extern void g_set_g2_player_model(gentity_t* ent, const char* model_name, const char* custom_skin, const char* surfOff,
+                                  const char* surfOn);
 
 qboolean NPC_ParseParms(const char* npc_name, gentity_t* npc)
 {
@@ -2050,8 +2050,8 @@ qboolean NPC_ParseParms(const char* npc_name, gentity_t* npc)
 	renderInfo_t* ri = &npc->client->renderInfo;
 	gNPCstats_t* stats;
 	qboolean md3_model = qtrue;
-	char surf_off[1024] = {0};
-	char surf_on[1024] = {0};
+	char surfOff[1024] = {0};
+	char surfOn[1024] = {0};
 	qboolean parsing_player = qfalse;
 
 	qboolean forced_rgb_saber_colours[MAX_SABERS][MAX_BLADES] = {
@@ -2715,14 +2715,14 @@ qboolean NPC_ParseParms(const char* npc_name, gentity_t* npc)
 				{
 					continue;
 				}
-				if (surf_off[0])
+				if (surfOff[0])
 				{
-					Q_strcat(surf_off, sizeof surf_off, ",");
-					Q_strcat(surf_off, sizeof surf_off, value);
+					Q_strcat(surfOff, sizeof surfOff, ",");
+					Q_strcat(surfOff, sizeof surfOff, value);
 				}
 				else
 				{
-					Q_strncpyz(surf_off, value, sizeof surf_off);
+					Q_strncpyz(surfOff, value, sizeof surfOff);
 				}
 				continue;
 			}
@@ -2734,14 +2734,14 @@ qboolean NPC_ParseParms(const char* npc_name, gentity_t* npc)
 				{
 					continue;
 				}
-				if (surf_on[0])
+				if (surfOn[0])
 				{
-					Q_strcat(surf_on, sizeof surf_on, ",");
-					Q_strcat(surf_on, sizeof surf_on, value);
+					Q_strcat(surfOn, sizeof surfOn, ",");
+					Q_strcat(surfOn, sizeof surfOn, value);
 				}
 				else
 				{
-					Q_strncpyz(surf_on, value, sizeof surf_on);
+					Q_strncpyz(surfOn, value, sizeof surfOn);
 				}
 				continue;
 			}
@@ -3763,8 +3763,8 @@ qboolean NPC_ParseParms(const char* npc_name, gentity_t* npc)
 
 			if (!parsing_player)
 			{
-				//alt_fire
-				if (!Q_stricmp(token, "alt_fire"))
+				//altFire
+				if (!Q_stricmp(token, "altFire"))
 				{
 					if (COM_ParseInt(&p, &n))
 					{
@@ -4425,7 +4425,7 @@ qboolean NPC_ParseParms(const char* npc_name, gentity_t* npc)
 				}
 			}
 
-			g_set_g2_player_model(npc, player_model, custom_skin, surf_off, surf_on);
+			g_set_g2_player_model(npc, player_model, custom_skin, surfOff, surfOn);
 		}
 	}
 	/*

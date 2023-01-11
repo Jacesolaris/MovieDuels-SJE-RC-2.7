@@ -354,7 +354,7 @@ struct gentity_s {
 
 	int			count;
 	int			bounceCount;
-	qboolean	alt_fire;
+	qboolean	altFire;
 
 	gentity_t* chain;
 	gentity_t* enemy;
@@ -1196,11 +1196,11 @@ void G_ReflectMissile(gentity_t* ent, gentity_t* missile, vec3_t forward);
 void G_RunMissile(gentity_t* ent);
 
 gentity_t* CreateMissile(vec3_t org, vec3_t dir, float vel, int life,
-	gentity_t* owner, qboolean alt_fire);
+	gentity_t* owner, qboolean altFire);
 void G_BounceProjectile(vec3_t start, vec3_t impact, vec3_t dir, vec3_t endout);
 void G_ExplodeMissile(gentity_t* ent);
 
-void WP_FireBlasterMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean alt_fire);
+void WP_FireBlasterMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean altFire);
 
 //
 // g_mover.c
@@ -1254,8 +1254,8 @@ void TeleportPlayer(gentity_t* player, vec3_t origin, vec3_t angles);
 //
 // g_weapon.c
 //
-void WP_FireTurretMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean alt_fire, int damage, int velocity, int mod, gentity_t* ignore);
-void WP_FireGenericBlasterMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean alt_fire, int damage, int velocity, int mod);
+void WP_FireTurretMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean altFire, int damage, int velocity, int mod, gentity_t* ignore);
+void WP_FireGenericBlasterMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean altFire, int damage, int velocity, int mod);
 qboolean LogAccuracyHit(const gentity_t* target, const gentity_t* attacker);
 void CalcMuzzlePoint(gentity_t* ent, const vec3_t inForward, const vec3_t inRight, const vec3_t inUp, vec3_t muzzlePoint);
 void SnapVectorTowards(vec3_t v, vec3_t to);
@@ -1291,7 +1291,7 @@ qboolean G_FilterPacket(char* from);
 //
 // g_weapon.c
 //
-void FireWeapon(gentity_t* ent, qboolean alt_fire);
+void FireWeapon(gentity_t* ent, qboolean altFire);
 void BlowDetpacks(gentity_t* ent);
 void RemoveDetpacks(gentity_t* ent);
 

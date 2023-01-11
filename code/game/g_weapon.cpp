@@ -93,9 +93,9 @@ float weaponSpeed[WP_NUM_WEAPONS][2] =
 	{CLONEPISTOL_VEL,CLONEPISTOL_VEL}, //WP_CLONEPISTOL,
 };
 
-float WP_SpeedOfMissileForWeapon(const int wp, const qboolean alt_fire)
+float WP_SpeedOfMissileForWeapon(const int wp, const qboolean altFire)
 {
-	if (alt_fire)
+	if (altFire)
 	{
 		return weaponSpeed[wp][1];
 	}
@@ -140,7 +140,7 @@ void WP_TraceSetStart(const gentity_t* ent, vec3_t start)
 extern Vehicle_t* G_IsRidingVehicle(const gentity_t* p_ent);
 //-----------------------------------------------------------------------------
 gentity_t* CreateMissile(vec3_t org, vec3_t dir, const float vel, const int life, gentity_t* owner,
-                         const qboolean alt_fire)
+                         const qboolean altFire)
 //-----------------------------------------------------------------------------
 {
 	gentity_t* missile = G_Spawn();
@@ -152,7 +152,7 @@ gentity_t* CreateMissile(vec3_t org, vec3_t dir, const float vel, const int life
 
 	const Vehicle_t* p_veh = G_IsRidingVehicle(owner);
 
-	missile->alt_fire = alt_fire;
+	missile->altFire = altFire;
 
 	missile->s.pos.trType = TR_LINEAR;
 	missile->s.pos.trTime = level.time; // - 10;	// move a bit on the very first frame
@@ -355,7 +355,7 @@ void ViewHeightFix(const gentity_t* const ent)
 	}
 }
 
-qboolean W_AccuracyLoggableWeapon(const int weapon, const qboolean alt_fire, const int mod)
+qboolean W_AccuracyLoggableWeapon(const int weapon, const qboolean altFire, const int mod)
 {
 	if (mod != MOD_UNKNOWN)
 	{
@@ -441,7 +441,7 @@ qboolean W_AccuracyLoggableWeapon(const int weapon, const qboolean alt_fire, con
 		case WP_REPEATER:
 		case WP_DEMP2:
 		case WP_FLECHETTE:
-			if (!alt_fire)
+			if (!altFire)
 			{
 				return qtrue;
 			}
@@ -876,7 +876,7 @@ void WP_FireVehicleWeapon(gentity_t* ent, vec3_t start, vec3_t dir, const vehWea
 		//make sure our start point isn't on the other side of a wall
 		WP_TraceSetStart(ent, start);
 
-		//QUERY: alt_fire true or not?  Does it matter?
+		//QUERY: altFire true or not?  Does it matter?
 		gentity_t* missile = CreateMissile(start, dir, veh_weapon->fSpeed, 10000, ent, qfalse);
 		if (veh_weapon->bHasGravity)
 		{
@@ -1065,7 +1065,7 @@ qboolean WP_VehCheckTraceFromCamPos(gentity_t* ent, const vec3_t shotStart, vec3
 }
 
 //---------------------------------------------------------
-void FireVehicleWeapon(gentity_t* ent, const qboolean alt_fire)
+void FireVehicleWeapon(gentity_t* ent, const qboolean altFire)
 //---------------------------------------------------------
 {
 	Vehicle_t* p_veh = ent->m_pVehicle;
@@ -1099,7 +1099,7 @@ void FireVehicleWeapon(gentity_t* ent, const qboolean alt_fire)
 		int weapon_num;
 		qboolean linked_firing = qfalse;
 
-		if (!alt_fire)
+		if (!altFire)
 		{
 			weapon_num = 0;
 		}
@@ -1488,7 +1488,7 @@ extern qboolean PM_ReloadAnim(int anim);
 extern qboolean PM_WeponRestAnim(int anim);
 extern qboolean PM_CrouchAnim(int anim);
 //---------------------------------------------------------
-void FireWeapon(gentity_t* ent, const qboolean alt_fire)
+void FireWeapon(gentity_t* ent, const qboolean altFire)
 //---------------------------------------------------------
 {
 	float alert = 256;
@@ -1505,12 +1505,12 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 	// If this is a vehicle, fire it's weapon and we're done.
 	if (ent && ent->client && ent->client->NPC_class == CLASS_VEHICLE)
 	{
-		FireVehicleWeapon(ent, alt_fire);
+		FireVehicleWeapon(ent, altFire);
 		return;
 	}
 
 	// set aiming directions
-	if (ent && ent->client && ent->s.weapon == WP_DISRUPTOR && alt_fire)
+	if (ent && ent->client && ent->s.weapon == WP_DISRUPTOR && altFire)
 	{
 		if (ent->NPC)
 		{
@@ -1533,8 +1533,8 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 
 			if (ent->client->ps.weapon == WP_ATST_MAIN)
 			{
-				//FIXME: alt_fire should fire both barrels, but slower?
-				if (ent->alt_fire)
+				//FIXME: altFire should fire both barrels, but slower?
+				if (ent->altFire)
 				{
 					bolt = ent->handRBolt;
 				}
@@ -1546,7 +1546,7 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 			else
 			{
 				// ATST SIDE weapons
-				if (ent->alt_fire)
+				if (ent->altFire)
 				{
 					if (gi.G2API_GetSurfaceRenderStatus(&ent->ghoul2[ent->playerModel], "head_light_blaster_cann"))
 					{
@@ -1684,7 +1684,7 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 		}
 	}
 
-	ent->alt_fire = alt_fire;
+	ent->altFire = altFire;
 	if (!p_veh)
 	{
 		if (ent->NPC && ent->NPC->scriptFlags & SCF_FIRE_WEAPON_NO_ANIM)
@@ -1752,30 +1752,30 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 		return;
 
 	case WP_BRYAR_PISTOL:
-		WP_FireBryarPistol(ent, alt_fire);
+		WP_FireBryarPistol(ent, altFire);
 		break;
 	case WP_BLASTER_PISTOL:
 		if (!cg_trueguns.integer && !cg.renderingThirdPerson)
 		{
-			WP_FireBryarPistolDuals(ent, alt_fire, qfalse);
+			WP_FireBryarPistolDuals(ent, altFire, qfalse);
 
 			if (ent->client->ps.eFlags & EF2_DUAL_PISTOLS)
 			{
-				WP_FireBryarPistolDuals(ent, alt_fire, qtrue);
+				WP_FireBryarPistolDuals(ent, altFire, qtrue);
 			}
 		}
 		else
 		{
-			WP_FireBryarPistol(ent, alt_fire);
+			WP_FireBryarPistol(ent, altFire);
 		}
 		break;
 
 	case WP_BLASTER:
-		WP_FireBlaster(ent, alt_fire);
+		WP_FireBlaster(ent, altFire);
 		break;
 
 	case WP_TUSKEN_RIFLE:
-		if (alt_fire)
+		if (altFire)
 		{
 			WP_FireTuskenRifle(ent);
 		}
@@ -1787,45 +1787,45 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 
 	case WP_DISRUPTOR:
 		alert = 50; // if you want it to alert enemies, remove this
-		WP_FireDisruptor(ent, alt_fire);
+		WP_FireDisruptor(ent, altFire);
 		break;
 
 	case WP_BOWCASTER:
-		WP_FireBowcaster(ent, alt_fire);
+		WP_FireBowcaster(ent, altFire);
 		break;
 
 	case WP_REPEATER:
-		WP_FireRepeater(ent, alt_fire);
+		WP_FireRepeater(ent, altFire);
 		break;
 
 	case WP_DEMP2:
-		WP_FireDEMP2(ent, alt_fire);
+		WP_FireDEMP2(ent, altFire);
 		break;
 
 	case WP_FLECHETTE:
-		WP_FireFlechette(ent, alt_fire);
+		WP_FireFlechette(ent, altFire);
 		break;
 
 	case WP_ROCKET_LAUNCHER:
-		WP_FireRocket(ent, alt_fire);
+		WP_FireRocket(ent, altFire);
 		break;
 
 	case WP_CONCUSSION:
-		WP_Concussion(ent, alt_fire);
+		WP_Concussion(ent, altFire);
 		break;
 
 	case WP_THERMAL:
-		WP_FireThermalDetonator(ent, alt_fire);
+		WP_FireThermalDetonator(ent, altFire);
 		break;
 
 	case WP_TRIP_MINE:
 		alert = 0; // if you want it to alert enemies, remove this
-		WP_PlaceLaserTrap(ent, alt_fire);
+		WP_PlaceLaserTrap(ent, altFire);
 		break;
 
 	case WP_DET_PACK:
 		alert = 0; // if you want it to alert enemies, remove this
-		WP_FireDetPack(ent, alt_fire);
+		WP_FireDetPack(ent, altFire);
 		break;
 
 	case WP_BOT_LASER:
@@ -1839,7 +1839,7 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 
 	case WP_MELEE:
 		alert = 0; // if you want it to alert enemies, remove this
-		if (!alt_fire)
+		if (!altFire)
 		{
 			WP_Melee(ent);
 		}
@@ -1852,7 +1852,7 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 	case WP_ATST_SIDE:
 
 		// TEMP
-		if (alt_fire)
+		if (altFire)
 		{
 			WP_ATSTSideAltFire(ent);
 		}
@@ -1869,9 +1869,9 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 
 	case WP_RAPID_FIRE_CONC:
 		// TEMP
-		if (alt_fire)
+		if (altFire)
 		{
-			WP_FireRepeater(ent, alt_fire);
+			WP_FireRepeater(ent, altFire);
 		}
 		else
 		{
@@ -1880,7 +1880,7 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 		break;
 
 	case WP_STUN_BATON:
-		WP_FireStunBaton(ent, alt_fire);
+		WP_FireStunBaton(ent, altFire);
 		break;
 
 	case WP_JAWA:
@@ -1892,7 +1892,7 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 		break;
 
 	case WP_NOGHRI_STICK:
-		if (!alt_fire)
+		if (!altFire)
 		{
 			WP_FireNoghriStick(ent);
 		}
@@ -1903,126 +1903,126 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 		break;
 
 	case WP_BATTLEDROID:
-		WP_FireBattleDroid(ent, alt_fire);
+		WP_FireBattleDroid(ent, altFire);
 		break;
 
 	case WP_THEFIRSTORDER:
-		WP_FireFirstOrder(ent, alt_fire);
+		WP_FireFirstOrder(ent, altFire);
 		break;
 
 	case WP_CLONECARBINE:
-		WP_FireClone(ent, alt_fire);
+		WP_FireClone(ent, altFire);
 		break;
 
 	case WP_REBELBLASTER:
 		if (!cg_trueguns.integer && !cg.renderingThirdPerson)
 		{
-			WP_FireRebelBlasterDuals(ent, alt_fire, qfalse);
+			WP_FireRebelBlasterDuals(ent, altFire, qfalse);
 
 			if (ent->client->ps.eFlags & EF2_DUAL_PISTOLS)
 			{
-				WP_FireRebelBlasterDuals(ent, alt_fire, qtrue);
+				WP_FireRebelBlasterDuals(ent, altFire, qtrue);
 			}
 		}
 		else
 		{
-			WP_FireRebelBlaster(ent, alt_fire);
+			WP_FireRebelBlaster(ent, altFire);
 		}
 		break;
 
 	case WP_CLONERIFLE:
-		WP_FireCloneRifle(ent, alt_fire);
+		WP_FireCloneRifle(ent, altFire);
 		break;
 
 	case WP_CLONECOMMANDO:
-		WP_FireCloneCommando(ent, alt_fire);
+		WP_FireCloneCommando(ent, altFire);
 		break;
 
 	case WP_REBELRIFLE:
-		WP_FireRebelRifle(ent, alt_fire);
+		WP_FireRebelRifle(ent, altFire);
 		break;
 
 	case WP_REY:
 		if (!cg_trueguns.integer && !cg.renderingThirdPerson)
 		{
-			WP_FireReyPistolDuals(ent, alt_fire, qfalse);
+			WP_FireReyPistolDuals(ent, altFire, qfalse);
 
 			if (ent->client->ps.eFlags & EF2_DUAL_PISTOLS)
 			{
-				WP_FireReyPistolDuals(ent, alt_fire, qtrue);
+				WP_FireReyPistolDuals(ent, altFire, qtrue);
 			}
 		}
 		else
 		{
-			WP_FireReyPistol(ent, alt_fire);
+			WP_FireReyPistol(ent, altFire);
 		}
 		break;
 
 	case WP_JANGO:
 		if (!cg_trueguns.integer && !cg.renderingThirdPerson)
 		{
-			WP_FireJangoPistol(ent, alt_fire, qfalse);
+			WP_FireJangoPistol(ent, altFire, qfalse);
 
 			if (ent->client->ps.eFlags & EF2_DUAL_PISTOLS)
 			{
-				WP_FireJangoPistol(ent, alt_fire, qtrue);
+				WP_FireJangoPistol(ent, altFire, qtrue);
 			}
 		}
 		else
 		{
-			WP_FireJangoPistol(ent, alt_fire, qfalse);
+			WP_FireJangoPistol(ent, altFire, qfalse);
 		}
 		break;
 	case WP_DUAL_PISTOL:
 		if (!cg_trueguns.integer && !cg.renderingThirdPerson)
 		{
-			WP_FireJangoFPPistolDuals(ent, alt_fire, qfalse);
+			WP_FireJangoFPPistolDuals(ent, altFire, qfalse);
 
 			if (ent->client->ps.eFlags & EF2_JANGO_DUALS)
 			{
-				WP_FireJangoFPPistolDuals(ent, alt_fire, qtrue);
+				WP_FireJangoFPPistolDuals(ent, altFire, qtrue);
 			}
 		}
 		else
 		{
-			WP_FireJangoDualPistol(ent, alt_fire);
+			WP_FireJangoDualPistol(ent, altFire);
 		}
 		break;
 
 	case WP_BOBA:
 		{
-			if (alt_fire)
+			if (altFire)
 			{
 				for (int i = 0; i < 3; i++)
 				{
-					WP_FireBobaRifle(ent, alt_fire);
+					WP_FireBobaRifle(ent, altFire);
 				}
 				break;
 			}
-			WP_FireBobaRifle(ent, alt_fire);
+			WP_FireBobaRifle(ent, altFire);
 			break;
 		}
 
 	case WP_CLONEPISTOL:
 		if (!cg_trueguns.integer && !cg.renderingThirdPerson)
 		{
-			WP_FireClonePistolDuals(ent, alt_fire, qfalse);
+			WP_FireClonePistolDuals(ent, altFire, qfalse);
 
 			if (ent->client->ps.eFlags & EF2_DUAL_PISTOLS)
 			{
-				WP_FireClonePistolDuals(ent, alt_fire, qtrue);
+				WP_FireClonePistolDuals(ent, altFire, qtrue);
 			}
 		}
 		else
 		{
-			WP_FireClonePistol(ent, alt_fire);
+			WP_FireClonePistol(ent, altFire);
 		}
 		break;
 	case WP_SBD_BLASTER:
-		WP_FireSBDPistol(ent, alt_fire);
+		WP_FireSBDPistol(ent, altFire);
 		break;
 	case WP_WRIST_BLASTER:
-		WP_FireWristPistol(ent, alt_fire);
+		WP_FireWristPistol(ent, altFire);
 		break;
 
 	case WP_TUSKEN_STAFF:
@@ -2032,11 +2032,11 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 
 	if (!ent->s.number)
 	{
-		if (ent->s.weapon == WP_FLECHETTE || ent->s.weapon == WP_BOWCASTER && !alt_fire)
+		if (ent->s.weapon == WP_FLECHETTE || ent->s.weapon == WP_BOWCASTER && !altFire)
 		{
 			//these can fire multiple shots, count them individually within the firing functions
 		}
-		else if (W_AccuracyLoggableWeapon(ent->s.weapon, alt_fire, MOD_UNKNOWN))
+		else if (W_AccuracyLoggableWeapon(ent->s.weapon, altFire, MOD_UNKNOWN))
 		{
 			ent->client->sess.missionStats.shotsFired++;
 		}

@@ -843,7 +843,7 @@ void Q3_Lerp2Pos(int taskID, int entID, vec3_t origin, vec3_t angles, float dura
 
 		VectorCopy(ent->r.currentAngles, ent->s.apos.trBase);
 
-		if (ent->alt_fire)
+		if (ent->altFire)
 		{
 			ent->s.apos.trType = TR_LINEAR_STOP;
 		}
@@ -912,7 +912,7 @@ void Q3_Lerp2Angles(int taskID, int entID, vec3_t angles, float duration)
 
 	VectorCopy(ent->r.currentAngles, ent->s.apos.trBase);
 
-	if (ent->alt_fire)
+	if (ent->altFire)
 	{
 		ent->s.apos.trType = TR_LINEAR_STOP;
 	}

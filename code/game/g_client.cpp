@@ -1548,8 +1548,8 @@ void G_BoneOrientationsForClass(const int npc_class, const char* bone_name, Eori
 
 extern void G_LoadAnimFileSet(gentity_t* ent, const char* p_model_name);
 
-qboolean g_set_g2_player_model_info(gentity_t* ent, const char* model_name, const char* surf_off,
-                                    const char* surf_on)
+qboolean g_set_g2_player_model_info(gentity_t* ent, const char* model_name, const char* surfOff,
+                                    const char* surfOn)
 {
 	if (ent->playerModel != -1)
 	{
@@ -1559,9 +1559,9 @@ qboolean g_set_g2_player_model_info(gentity_t* ent, const char* model_name, cons
 		const char* p;
 
 		//Now turn on/off any surfaces
-		if (surf_off && surf_off[0])
+		if (surfOff && surfOff[0])
 		{
-			p = surf_off;
+			p = surfOff;
 			COM_BeginParseSession();
 			while (true)
 			{
@@ -1576,9 +1576,9 @@ qboolean g_set_g2_player_model_info(gentity_t* ent, const char* model_name, cons
 			}
 			COM_EndParseSession();
 		}
-		if (surf_on && surf_on[0])
+		if (surfOn && surfOn[0])
 		{
-			p = surf_on;
+			p = surfOn;
 			COM_BeginParseSession();
 			while (true)
 			{
@@ -2246,8 +2246,8 @@ qboolean g_set_g2_player_model_info(gentity_t* ent, const char* model_name, cons
 	return qtrue;
 }
 
-void g_set_g2_player_model(gentity_t* ent, const char* model_name, const char* custom_skin, const char* surf_off,
-                           const char* surf_on)
+void g_set_g2_player_model(gentity_t* ent, const char* model_name, const char* custom_skin, const char* surfOff,
+                           const char* surfOn)
 {
 	char skin_name[MAX_QPATH];
 
@@ -2309,7 +2309,7 @@ void g_set_g2_player_model(gentity_t* ent, const char* model_name, const char* c
 	//this is going to set the surfs on/off matching the skin file
 
 	// did we find a ghoul2 model? if so, load the animation.cfg file
-	if (!g_set_g2_player_model_info(ent, model_name, surf_off, surf_on))
+	if (!g_set_g2_player_model_info(ent, model_name, surfOff, surfOn))
 	{
 		//couldn't set g2 info, fall back to a mouse md3
 		NPC_ParseParms("mouse", ent);

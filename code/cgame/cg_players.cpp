@@ -15654,7 +15654,7 @@ void CG_Player(centity_t* cent)
 						if (!es->number)
 						{
 							//player, just use left one, I guess
-							if (cent->gent->alt_fire)
+							if (cent->gent->altFire)
 							{
 								bolt = cent->gent->handRBolt;
 							}
@@ -15676,7 +15676,7 @@ void CG_Player(centity_t* cent)
 					}
 					else // ATST SIDE weapons
 					{
-						if (cent->gent->alt_fire)
+						if (cent->gent->altFire)
 						{
 							bolt = cent->gent->genericBolt2;
 						}
@@ -15703,7 +15703,7 @@ void CG_Player(centity_t* cent)
 					}
 					else //repeater
 					{
-						if (cent->gent->alt_fire)
+						if (cent->gent->altFire)
 						{
 							//fire from the lower barrel (not that anyone will ever notice this, but...)
 							bolt = cent->gent->genericBolt3;
@@ -15962,7 +15962,7 @@ void CG_Player(centity_t* cent)
 					effect = &w_data->mMuzzleEffect[0];
 				}
 
-				if (cent->alt_fire)
+				if (cent->altFire)
 				{
 					// We're alt-firing, so see if we need to override with a custom alt-fire effect
 					if (w_data->mAltMuzzleEffect[0])

@@ -35816,7 +35816,7 @@ constexpr auto DESTRUCTION_NPC_DAMAGE_NORMAL = 60;
 constexpr auto DESTRUCTION_NPC_DAMAGE_HARD = 90;
 constexpr auto DESTRUCTION_SIZE = 3;
 
-gentity_t* CreateMissile(vec3_t org, vec3_t dir, float vel, int life, gentity_t* owner, qboolean alt_fire = qfalse);
+gentity_t* CreateMissile(vec3_t org, vec3_t dir, float vel, int life, gentity_t* owner, qboolean altFire = qfalse);
 //---------------------------------------------------------
 void WP_FireDestruction(gentity_t* ent, const int force_level)
 //---------------------------------------------------------

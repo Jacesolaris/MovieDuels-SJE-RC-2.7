@@ -1493,8 +1493,8 @@ void Com_Frame()
 		Cbuf_Execute();
 
 		// mess with msec if needed
-		float fractionMsec = 0.0f;
-		msec = Com_ModifyMsec(msec, fractionMsec);
+		float fraction_msec = 0.0f;
+		msec = Com_ModifyMsec(msec, fraction_msec);
 
 		//
 		// server side
@@ -1504,7 +1504,7 @@ void Com_Frame()
 			time_before_server = Sys_Milliseconds();
 		}
 
-		SV_Frame(msec, fractionMsec);
+		SV_Frame(msec, fraction_msec);
 
 		//
 		// client system
@@ -1531,7 +1531,7 @@ void Com_Frame()
 				time_before_client = Sys_Milliseconds();
 			}
 
-			CL_Frame(msec, fractionMsec);
+			CL_Frame(msec, fraction_msec);
 
 			if (com_speeds->integer)
 			{

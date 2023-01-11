@@ -1887,9 +1887,9 @@ void CG_WeaponClean_f(void);
 void CG_RegisterWeapon(int weapon_num);
 void CG_RegisterItemVisuals(int item_num);
 
-void CG_FireWeapon(centity_t* cent, qboolean alt_fire);
-void CG_MissileHitWall(int weapon, int client_num, vec3_t origin, vec3_t dir, impactSound_t soundType, qboolean alt_fire, int charge);
-void CG_MissileHitPlayer(int weapon, vec3_t origin, vec3_t dir, int entity_num, qboolean alt_fire);
+void CG_FireWeapon(centity_t* cent, qboolean altFire);
+void CG_MissileHitWall(int weapon, int client_num, vec3_t origin, vec3_t dir, impactSound_t soundType, qboolean altFire, int charge);
+void CG_MissileHitPlayer(int weapon, vec3_t origin, vec3_t dir, int entity_num, qboolean altFire);
 
 void CG_AddViewWeapon(playerState_t* ps);
 void CG_AddPlayerWeapon(refEntity_t* parent, playerState_t* ps, centity_t* cent, int team, vec3_t newAngles, qboolean thirdPerson);

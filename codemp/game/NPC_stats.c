@@ -2559,8 +2559,8 @@ qboolean NPC_ParseParms(const char* npc_name, gentity_t* npc)
 
 		if (!parsingPlayer)
 		{
-			//alt_fire
-			if (!Q_stricmp(token, "alt_fire"))
+			//altFire
+			if (!Q_stricmp(token, "altFire"))
 			{
 				if (COM_ParseInt(&p, &n))
 				{

@@ -469,7 +469,7 @@ void G_AttackDelay(const gentity_t* self, const gentity_t* enemy)
 				att_delay += Q_irand(500, 1500);
 			}
 			break;
-		default: ;
+		default:;
 		}
 
 		if (self->client->playerTeam == TEAM_PLAYER)
@@ -588,13 +588,18 @@ void G_SetEnemy(gentity_t* self, gentity_t* enemy)
 			TIMER_Set(self, "decloakwait", 3000); // Wait 3 sec before decloak and attack
 		}
 
-		//Special case- if player is being hunted by his own people, set the player's team to team_free
-		if (self->client->playerTeam == TEAM_PLAYER
-			&& enemy->client->playerTeam == TEAM_PLAYER
-			&& enemy->s.number == 0
-			&& enemy->client)
+		//Special case- if player is being hunted by his own people, set the player's team to team_free	 // jko version
+		/*if (self->client->playerTeam == TEAM_PLAYER && enemy->s.number == 0)
 		{
-			//make the player "evil" so that everyone goes after him
+			self->client->enemyTeam = TEAM_PLAYER;
+		}*/
+
+		// Special case-if player is being hunted by his own people, set the player's team to team_free // jka version
+		if (self->client->playerTeam == TEAM_PLAYER
+			&& enemy->s.number == 0 // controlled by player
+			&& enemy->client && enemy->client->ps.weapon != WP_TURRET
+			&& enemy->client->playerTeam == TEAM_PLAYER)
+		{//make the player "evil" so that everyone goes after him
 			enemy->client->enemyTeam = TEAM_FREE;
 			enemy->client->playerTeam = TEAM_FREE;
 		}
@@ -639,7 +644,7 @@ void G_SetEnemy(gentity_t* self, gentity_t* enemy)
 						case 2:
 							G_SoundOnEnt(self, CHAN_VOICE, "sound/chars/jedi2/28je2012.wav");
 							break;
-						default: ;
+						default:;
 						}
 						self->NPC->blockedSpeechDebounceTime = level.time + 2000;
 					}
@@ -692,7 +697,7 @@ void G_SetEnemy(gentity_t* self, gentity_t* enemy)
 			if (self->client->playerTeam == TEAM_PLAYER)
 			{
 				G_AimSet(self, Q_irand(self->NPC->stats.aim - 5 * g_spskill->integer,
-				                       self->NPC->stats.aim - g_spskill->integer));
+					self->NPC->stats.aim - g_spskill->integer));
 			}
 			else
 			{
@@ -710,7 +715,7 @@ void G_SetEnemy(gentity_t* self, gentity_t* enemy)
 				}
 
 				G_AimSet(self, Q_irand(self->NPC->stats.aim - max_err * (3 - g_spskill->integer),
-				                       self->NPC->stats.aim - min_err * (3 - g_spskill->integer)));
+					self->NPC->stats.aim - min_err * (3 - g_spskill->integer)));
 			}
 		}
 
@@ -865,7 +870,7 @@ void ChangeWeapon(const gentity_t* ent, const int new_weapon)
 			case 2:
 				ent->NPC->burstSpacing = 1500; //attackdebounce
 				break;
-			default: ;
+			default:;
 			}
 		}
 		else
@@ -889,7 +894,7 @@ void ChangeWeapon(const gentity_t* ent, const int new_weapon)
 			case 2:
 				ent->NPC->burstSpacing = 1500; //attackdebounce
 				break;
-			default: ;
+			default:;
 			}
 		}
 		else
@@ -1043,7 +1048,7 @@ void ChangeWeapon(const gentity_t* ent, const int new_weapon)
 			ent->NPC->burstMax = 2;
 
 			if (ent->owner)
-			// if we have an owner, it should be the chair at this point...so query the chair for its shot debounce times, etc.
+				// if we have an owner, it should be the chair at this point...so query the chair for its shot debounce times, etc.
 			{
 				if (g_spskill->integer == 0)
 				{
@@ -1830,14 +1835,14 @@ int NPC_AttackDebounceForWeapon()
 	switch (NPC->client->ps.weapon)
 	{
 	case WP_SABER:
+	{
+		if (NPC->client->NPC_class == CLASS_KYLE
+			&& NPC->spawnflags & 1)
 		{
-			if (NPC->client->NPC_class == CLASS_KYLE
-				&& NPC->spawnflags & 1)
-			{
-				return Q_irand(1500, 5000);
-			}
-			return 0;
+			return Q_irand(1500, 5000);
 		}
+		return 0;
+	}
 
 	case WP_BOT_LASER:
 
@@ -1888,23 +1893,23 @@ float NPC_MaxDistSquaredForWeapon()
 
 	case WP_DISRUPTOR: //disruptor
 	case WP_TUSKEN_RIFLE:
+	{
+		if (NPCInfo->scriptFlags & SCF_ALT_FIRE)
 		{
-			if (NPCInfo->scriptFlags & SCF_ALT_FIRE)
-			{
-				return 4096 * 4096;
-			}
-			return 1024 * 1024;
+			return 4096 * 4096;
 		}
+		return 1024 * 1024;
+	}
 	case WP_SABER:
+	{
+		if (NPC->client && NPC->client->ps.SaberLength())
 		{
-			if (NPC->client && NPC->client->ps.SaberLength())
-			{
-				//FIXME: account for whether enemy and I are heading towards each other!
-				return (NPC->client->ps.SaberLength() + NPC->maxs[0] * 1.5) * (NPC->client->ps.SaberLength() + NPC->maxs
-					[0] * 1.5);
-			}
-			return 48 * 48;
+			//FIXME: account for whether enemy and I are heading towards each other!
+			return (NPC->client->ps.SaberLength() + NPC->maxs[0] * 1.5) * (NPC->client->ps.SaberLength() + NPC->maxs
+				[0] * 1.5);
 		}
+		return 48 * 48;
+	}
 
 	default:
 		return 1024 * 1024; //was 0
@@ -1954,7 +1959,7 @@ You can mix and match any of those options (example: find closest visible player
 FIXME: this should go through the snapshot and find the closest enemy
 */
 gentity_t* NPC_PickEnemy(const gentity_t* closest_to, const int enemy_team, const qboolean check_vis,
-                         const qboolean find_players_first, const qboolean find_closest)
+	const qboolean find_players_first, const qboolean find_closest)
 {
 	int num_choices = 0;
 	int choice[128]; //FIXME: need a different way to determine how many choices?
@@ -1991,7 +1996,7 @@ gentity_t* NPC_PickEnemy(const gentity_t* closest_to, const int enemy_team, cons
 			if (newenemy->health > 0)
 			{
 				if (NPC_ValidEnemy(newenemy))
-				//enemyTeam == TEAM_PLAYER || newenemy->client->playerTeam == enemyTeam || ( enemyTeam == TEAM_PLAYER ) )
+					//enemyTeam == TEAM_PLAYER || newenemy->client->playerTeam == enemyTeam || ( enemyTeam == TEAM_PLAYER ) )
 				{
 					//FIXME:  check for range and FOV or vis?
 					if (newenemy != NPC->lastEnemy)
@@ -2037,9 +2042,9 @@ gentity_t* NPC_PickEnemy(const gentity_t* closest_to, const int enemy_team, cons
 											else
 											{
 												Debug_Printf(debugNPCAI, DEBUG_LEVEL_INFO,
-												             "%s saw %s trying to hide - hiddenDir %s targetDir %s dot %f\n",
-												             NPC->targetname, newenemy->targetname,
-												             vtos(newenemy->client->hiddenDir), vtos(diff), dot);
+													"%s saw %s trying to hide - hiddenDir %s targetDir %s dot %f\n",
+													NPC->targetname, newenemy->targetname,
+													vtos(newenemy->client->hiddenDir), vtos(diff), dot);
 											}
 										}
 										else
@@ -2050,8 +2055,8 @@ gentity_t* NPC_PickEnemy(const gentity_t* closest_to, const int enemy_team, cons
 									else
 									{
 										Debug_Printf(debugNPCAI, DEBUG_LEVEL_INFO,
-										             "%s saw %s trying to hide - hiddenDist %f\n", NPC->targetname,
-										             newenemy->targetname, newenemy->client->hiddenDist);
+											"%s saw %s trying to hide - hiddenDist %f\n", NPC->targetname,
+											newenemy->targetname, newenemy->client->hiddenDist);
 									}
 								}
 
@@ -2180,9 +2185,9 @@ gentity_t* NPC_PickEnemy(const gentity_t* closest_to, const int enemy_team, cons
 										continue;
 									}
 									Debug_Printf(debugNPCAI, DEBUG_LEVEL_INFO,
-									             "%s saw %s trying to hide - hiddenDir %s targetDir %s dot %f\n",
-									             NPC->targetname, newenemy->targetname,
-									             vtos(newenemy->client->hiddenDir), vtos(diff), dot);
+										"%s saw %s trying to hide - hiddenDir %s targetDir %s dot %f\n",
+										NPC->targetname, newenemy->targetname,
+										vtos(newenemy->client->hiddenDir), vtos(diff), dot);
 								}
 								else
 								{
@@ -2192,7 +2197,7 @@ gentity_t* NPC_PickEnemy(const gentity_t* closest_to, const int enemy_team, cons
 							else
 							{
 								Debug_Printf(debugNPCAI, DEBUG_LEVEL_INFO, "%s saw %s trying to hide - hiddenDist %f\n",
-								             NPC->targetname, newenemy->targetname, newenemy->client->hiddenDist);
+									NPC->targetname, newenemy->targetname, newenemy->client->hiddenDist);
 							}
 						}
 
@@ -2259,7 +2264,7 @@ gentity_t *NPC_PickAlly ( void )
 */
 
 gentity_t* NPC_PickAlly(const qboolean facing_each_other, const float range, const qboolean ignore_group,
-                        const qboolean moving_only)
+	const qboolean moving_only)
 {
 	gentity_t* closest_ally = nullptr;
 	float best_dist = range;
@@ -2594,18 +2599,18 @@ qboolean NPC_ClearShot(const gentity_t* ent)
 	// add aim error
 	// use weapon instead of specific npc types, although you could add certain npc classes if you wanted
 	if (NPC->s.weapon == WP_BLASTER || NPC->s.weapon == WP_BLASTER_PISTOL || NPC->s.weapon == WP_DUAL_PISTOL)
-	// any other guns to check for?
+		// any other guns to check for?
 	{
-		constexpr vec3_t mins = {-2, -2, -2};
-		constexpr vec3_t maxs = {2, 2, 2};
+		constexpr vec3_t mins = { -2, -2, -2 };
+		constexpr vec3_t maxs = { 2, 2, 2 };
 
 		gi.trace(&tr, muzzle, mins, maxs, ent->currentOrigin, NPC->s.number, MASK_SHOT, static_cast<EG2_Collision>(0),
-		         0);
+			0);
 	}
 	else
 	{
 		gi.trace(&tr, muzzle, nullptr, nullptr, ent->currentOrigin, NPC->s.number, MASK_SHOT,
-		         static_cast<EG2_Collision>(0), 0);
+			static_cast<EG2_Collision>(0), 0);
 	}
 
 	if (tr.startsolid || tr.allsolid)
@@ -2646,7 +2651,7 @@ int NPC_ShotEntity(const gentity_t* ent, vec3_t impact_pos)
 		VectorMA(muzzle, 8, forward, end);
 		end[2] += 24;
 		gi.trace(&tr, muzzle, vec3_origin, vec3_origin, end, NPC->s.number, MASK_SHOT, static_cast<EG2_Collision>(0),
-		         0);
+			0);
 		VectorCopy(tr.endpos, muzzle);
 	}
 	else
@@ -2659,10 +2664,10 @@ int NPC_ShotEntity(const gentity_t* ent, vec3_t impact_pos)
 	// use weapon instead of specific npc types, although you could add certain npc classes if you wanted
 	//	if ( NPC->client->playerTeam == TEAM_SCAVENGERS )
 	if (NPC->s.weapon == WP_BLASTER || NPC->s.weapon == WP_BLASTER_PISTOL || NPC->s.weapon == WP_DUAL_PISTOL)
-	// any other guns to check for?
+		// any other guns to check for?
 	{
-		constexpr vec3_t mins = {-2, -2, -2};
-		constexpr vec3_t maxs = {2, 2, 2};
+		constexpr vec3_t mins = { -2, -2, -2 };
+		constexpr vec3_t maxs = { 2, 2, 2 };
 
 		gi.trace(&tr, muzzle, mins, maxs, targ, NPC->s.number, MASK_SHOT, static_cast<EG2_Collision>(0), 0);
 	}
@@ -2832,7 +2837,7 @@ qboolean NPC_CheckCanAttack(float attack_scale)
 			AngleVectors(client->ps.viewangles, forward, nullptr, nullptr);
 			VectorMA(muzzle, distance_to_enemy, forward, hitspot);
 			gi.trace(&tr, muzzle, nullptr, nullptr, hitspot, NPC->s.number, MASK_SHOT, static_cast<EG2_Collision>(0),
-			         0);
+				0);
 			ShotThroughGlass(&tr, NPC->enemy, hitspot, MASK_SHOT);
 
 			trace_ent = &g_entities[tr.entity_num];
@@ -2999,7 +3004,7 @@ void SP_point_combat(gentity_t* self)
 #endif
 		G_FreeEntity(self);
 		return;
-	}
+}
 
 	self->s.origin[2] += 0.125;
 	G_SetOrigin(self, self->s.origin);
@@ -3119,7 +3124,7 @@ constexpr auto MIN_AVOID_DISTANCE = 128;
 constexpr auto CP_COLLECT_RADIUS = 512.0f;
 
 int NPC_FindCombatPoint(const vec3_t position, const vec3_t avoid_position, vec3_t dest_position, const int flags,
-                        float avoid_dist, const int ignore_point)
+	float avoid_dist, const int ignore_point)
 {
 	combatPoint_m points;
 
@@ -3180,8 +3185,8 @@ int NPC_FindCombatPoint(const vec3_t position, const vec3_t avoid_position, vec3
 		float dist_sq_point_to_enemy = DistanceSquared(level.combatPoints[i].origin, enemyPosition);
 		float dist_sq_point_to_enemy_horiz = DistanceHorizontalSquared(level.combatPoints[i].origin, enemyPosition);
 		const float dist_sq_point_to_enemy_check = use_horiz_dist
-			                                           ? dist_sq_point_to_enemy_horiz
-			                                           : dist_sq_point_to_enemy;
+			? dist_sq_point_to_enemy_horiz
+			: dist_sq_point_to_enemy;
 
 		float dist_sq_npc_to_enemy = DistanceSquared(NPC->currentOrigin, enemyPosition);
 		float dist_sq_npc_to_enemy_horiz = DistanceHorizontalSquared(NPC->currentOrigin, enemyPosition);
@@ -3257,7 +3262,7 @@ int NPC_FindCombatPoint(const vec3_t position, const vec3_t avoid_position, vec3
 
 		//Okay, now make sure it's not blocked
 		gi.trace(&tr, level.combatPoints[i].origin, NPC->mins, NPC->maxs, level.combatPoints[i].origin, NPC->s.number,
-		         NPC->clipmask, static_cast<EG2_Collision>(0), 0);
+			NPC->clipmask, static_cast<EG2_Collision>(0), 0);
 		if (tr.allsolid || tr.startsolid)
 		{
 			continue;
@@ -3294,18 +3299,18 @@ int NPC_FindCombatPoint(const vec3_t position, const vec3_t avoid_position, vec3
 }
 
 int NPC_FindCombatPointRetry(const vec3_t position,
-                             const vec3_t avoid_position,
-                             vec3_t dest_position,
-                             int* cp_flags,
-                             const float avoid_dist,
-                             const int ignore_point)
+	const vec3_t avoid_position,
+	vec3_t dest_position,
+	int* cp_flags,
+	const float avoid_dist,
+	const int ignore_point)
 {
 	int cp = NPC_FindCombatPoint(position,
-	                             avoid_position,
-	                             dest_position,
-	                             *cp_flags,
-	                             avoid_dist,
-	                             ignore_point);
+		avoid_position,
+		dest_position,
+		*cp_flags,
+		avoid_dist,
+		ignore_point);
 	while (cp == -1 && (*cp_flags & ~CP_HAS_ROUTE) != CP_ANY)
 	{
 		//start "OR"ing out certain flags to see if we can find *any* point
@@ -3406,11 +3411,11 @@ int NPC_FindCombatPointRetry(const vec3_t position,
 		}
 		//now try again
 		cp = NPC_FindCombatPoint(position,
-		                         avoid_position,
-		                         dest_position,
-		                         *cp_flags,
-		                         avoid_dist,
-		                         ignore_point);
+			avoid_position,
+			dest_position,
+			*cp_flags,
+			avoid_dist,
+			ignore_point);
 	}
 	return cp;
 }

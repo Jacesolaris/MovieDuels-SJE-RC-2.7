@@ -1831,7 +1831,7 @@ Lerps the origin and angles of an entity to the destination values
 
 		VectorCopy( ent->currentAngles, ent->s.apos.trBase );
 
-		if ( ent->alt_fire )
+		if ( ent->altFire )
 		{
 			ent->s.apos.trType = TR_LINEAR_STOP;
 		}
@@ -2006,7 +2006,7 @@ Lerps the angles to the destination value
 
 	VectorCopy( ent->currentAngles, ent->s.apos.trBase );
 
-	if ( ent->alt_fire )
+	if ( ent->altFire )
 	{
 		ent->s.apos.trType = TR_LINEAR_STOP;
 	}
@@ -8366,7 +8366,7 @@ void CQuake3GameInterface::Lerp2Pos(const int taskID, const int entID, vec3_t or
 
 		VectorCopy(ent->currentAngles, ent->s.apos.trBase);
 
-		if (ent->alt_fire)
+		if (ent->altFire)
 		{
 			ent->s.apos.trType = TR_LINEAR_STOP;
 		}
@@ -8431,7 +8431,7 @@ void CQuake3GameInterface::Lerp2Angles(const int taskID, const int entID, vec3_t
 
 	VectorCopy(ent->currentAngles, ent->s.apos.trBase);
 
-	if (ent->alt_fire)
+	if (ent->altFire)
 	{
 		ent->s.apos.trType = TR_LINEAR_STOP;
 	}
