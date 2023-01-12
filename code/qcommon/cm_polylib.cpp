@@ -32,7 +32,7 @@ int c_peak_windings;
 int c_winding_allocs;
 int c_winding_points;
 
-void pw(winding_t* w)
+void pw(const winding_t* w)
 {
 	for (int i = 0; i < w->numpoints; i++)
 		printf("(%5.1f, %5.1f, %5.1f)\n", w->p[i][0], w->p[i][1], w->p[i][2]);
@@ -59,9 +59,9 @@ winding_t* AllocWinding(const int points)
 
 void FreeWinding(winding_t* w)
 {
-	if (*(unsigned*)w == 0xdeaddead)
+	if (*reinterpret_cast<unsigned*>(w) == 0xdeaddead)
 		Com_Error(ERR_FATAL, "FreeWinding: freed a freed winding");
-	*(unsigned*)w = 0xdeaddead;
+	*reinterpret_cast<unsigned*>(w) = 0xdeaddead;
 
 	c_active_windings--;
 	Z_Free(w);
@@ -121,6 +121,7 @@ winding_t* BaseWindingForPlane(vec3_t normal, const vec_t dist)
 	case 2:
 		vup[0] = 1;
 		break;
+	default: ;
 	}
 
 	v = DotProduct(vup, normal);
@@ -162,7 +163,7 @@ CopyWinding
 winding_t* CopyWinding(winding_t* w)
 {
 	winding_t* c = AllocWinding(w->numpoints);
-	const intptr_t size = (intptr_t)static_cast<winding_t*>(nullptr)->p[w->numpoints];
+	const intptr_t size = reinterpret_cast<intptr_t>(static_cast<winding_t*>(nullptr)->p[w->numpoints]);
 	memcpy(c, w, size);
 	return c;
 }

@@ -195,7 +195,7 @@ static qboolean	CM_NeedsSubdivision(vec3_t a, vec3_t b, vec3_t c) {
 	VectorSubtract(cmid, lmid, delta);
 	const float dist = VectorLengthSquared(delta);
 
-	return static_cast<qboolean>(dist >= (SUBDIVIDE_DISTANCE * SUBDIVIDE_DISTANCE));
+	return static_cast<qboolean>(dist >= SUBDIVIDE_DISTANCE * SUBDIVIDE_DISTANCE);
 }
 
 /*
@@ -262,9 +262,9 @@ static void CM_TransposeGrid(cGrid_t* grid) {
 	grid->width = grid->height;
 	grid->height = l;
 
-	const qboolean tempWrap = grid->wrapWidth;
+	const qboolean temp_wrap = grid->wrapWidth;
 	grid->wrapWidth = grid->wrapHeight;
-	grid->wrapHeight = tempWrap;
+	grid->wrapHeight = temp_wrap;
 }
 
 /*
@@ -604,7 +604,7 @@ static int	CM_GridPlane(int gridPlanes[CM_MAX_GRID_SIZE][CM_MAX_GRID_SIZE][2], c
 CM_EdgePlaneNum
 ==================
 */
-static int CM_EdgePlaneNum(cGrid_t* grid, int gridPlanes[CM_MAX_GRID_SIZE][CM_MAX_GRID_SIZE][2], const int i, const int j, const int k) {
+static int CM_EdgePlaneNum(cGrid_t* grid, int grid_planes[CM_MAX_GRID_SIZE][CM_MAX_GRID_SIZE][2], const int i, const int j, const int k) {
 	float* p1, * p2;
 	vec3_t		up;
 	int			p;
@@ -613,7 +613,7 @@ static int CM_EdgePlaneNum(cGrid_t* grid, int gridPlanes[CM_MAX_GRID_SIZE][CM_MA
 	case 0:	// top border
 		p1 = grid->points[i][j];
 		p2 = grid->points[i + 1][j];
-		p = CM_GridPlane(gridPlanes, i, j, 0);
+		p = CM_GridPlane(grid_planes, i, j, 0);
 		if (p == -1) {
 			return -1;
 		}
@@ -623,7 +623,7 @@ static int CM_EdgePlaneNum(cGrid_t* grid, int gridPlanes[CM_MAX_GRID_SIZE][CM_MA
 	case 2:	// bottom border
 		p1 = grid->points[i][j + 1];
 		p2 = grid->points[i + 1][j + 1];
-		p = CM_GridPlane(gridPlanes, i, j, 1);
+		p = CM_GridPlane(grid_planes, i, j, 1);
 		if (p == -1) {
 			return -1;
 		}
@@ -633,7 +633,7 @@ static int CM_EdgePlaneNum(cGrid_t* grid, int gridPlanes[CM_MAX_GRID_SIZE][CM_MA
 	case 3: // left border
 		p1 = grid->points[i][j];
 		p2 = grid->points[i][j + 1];
-		p = CM_GridPlane(gridPlanes, i, j, 1);
+		p = CM_GridPlane(grid_planes, i, j, 1);
 		if (p == -1) {
 			return -1;
 		}
@@ -643,7 +643,7 @@ static int CM_EdgePlaneNum(cGrid_t* grid, int gridPlanes[CM_MAX_GRID_SIZE][CM_MA
 	case 1:	// right border
 		p1 = grid->points[i + 1][j];
 		p2 = grid->points[i + 1][j + 1];
-		p = CM_GridPlane(gridPlanes, i, j, 0);
+		p = CM_GridPlane(grid_planes, i, j, 0);
 		if (p == -1) {
 			return -1;
 		}
@@ -653,7 +653,7 @@ static int CM_EdgePlaneNum(cGrid_t* grid, int gridPlanes[CM_MAX_GRID_SIZE][CM_MA
 	case 4:	// diagonal out of triangle 0
 		p1 = grid->points[i + 1][j + 1];
 		p2 = grid->points[i][j];
-		p = CM_GridPlane(gridPlanes, i, j, 0);
+		p = CM_GridPlane(grid_planes, i, j, 0);
 		if (p == -1) {
 			return -1;
 		}
@@ -663,7 +663,7 @@ static int CM_EdgePlaneNum(cGrid_t* grid, int gridPlanes[CM_MAX_GRID_SIZE][CM_MA
 	case 5:	// diagonal out of triangle 1
 		p1 = grid->points[i][j];
 		p2 = grid->points[i + 1][j + 1];
-		p = CM_GridPlane(gridPlanes, i, j, 1);
+		p = CM_GridPlane(grid_planes, i, j, 1);
 		if (p == -1) {
 			return -1;
 		}
@@ -680,10 +680,10 @@ static int CM_EdgePlaneNum(cGrid_t* grid, int gridPlanes[CM_MAX_GRID_SIZE][CM_MA
 CM_SetBorderInward
 ===================
 */
-static void CM_SetBorderInward(facet_t* facet, cGrid_t* grid, int gridPlanes[CM_MAX_GRID_SIZE][CM_MAX_GRID_SIZE][2],
+static void CM_SetBorderInward(facet_t* facet, cGrid_t* grid,
                                const int i, const int j, const int which) {
 	float* points[4];
-	int		numPoints;
+	int		num_points;
 
 	switch (which) {
 	case -1:
@@ -691,19 +691,19 @@ static void CM_SetBorderInward(facet_t* facet, cGrid_t* grid, int gridPlanes[CM_
 		points[1] = grid->points[i + 1][j];
 		points[2] = grid->points[i + 1][j + 1];
 		points[3] = grid->points[i][j + 1];
-		numPoints = 4;
+		num_points = 4;
 		break;
 	case 0:
 		points[0] = grid->points[i][j];
 		points[1] = grid->points[i + 1][j];
 		points[2] = grid->points[i + 1][j + 1];
-		numPoints = 3;
+		num_points = 3;
 		break;
 	case 1:
 		points[0] = grid->points[i + 1][j + 1];
 		points[1] = grid->points[i][j + 1];
 		points[2] = grid->points[i][j];
-		numPoints = 3;
+		num_points = 3;
 		break;
 	default:
 		Com_Error(ERR_FATAL, "CM_SetBorderInward: bad parameter");
@@ -713,7 +713,7 @@ static void CM_SetBorderInward(facet_t* facet, cGrid_t* grid, int gridPlanes[CM_
 		int front = 0;
 		int back = 0;
 
-		for (int l = 0; l < numPoints; l++) {
+		for (int l = 0; l < num_points; l++) {
 			const int side = CM_PointOnPlaneSide(points[l], facet->borderPlanes[k]);
 			if (side == SIDE_FRONT) {
 				front++;
@@ -982,14 +982,14 @@ CM_PatchCollideFromGrid
 */
 static void CM_PatchCollideFromGrid(cGrid_t* grid, patchCollide_t* pf) {
 	int				i, j;
-	int				gridPlanes[CM_MAX_GRID_SIZE][CM_MAX_GRID_SIZE][2];
+	int				grid_planes[CM_MAX_GRID_SIZE][CM_MAX_GRID_SIZE][2];
 	int				borders[4];
-	qboolean		noAdjust[4];
+	qboolean		no_adjust[4];
 
 	facets = static_cast<facet_t*>(Z_Malloc(MAX_FACETS * sizeof(facet_t), TAG_TEMP_WORKSPACE, qfalse));
 
 	numPlanes = 0;
-	int numFacets = 0;
+	int num_facets = 0;
 
 	// find the planes for each triangle of the grid
 	for (i = 0; i < grid->width - 1; i++) {
@@ -997,12 +997,12 @@ static void CM_PatchCollideFromGrid(cGrid_t* grid, patchCollide_t* pf) {
 			float* p1 = grid->points[i][j];
 			float* p2 = grid->points[i + 1][j];
 			float* p3 = grid->points[i + 1][j + 1];
-			gridPlanes[i][j][0] = CM_FindPlane(p1, p2, p3);
+			grid_planes[i][j][0] = CM_FindPlane(p1, p2, p3);
 
 			p1 = grid->points[i + 1][j + 1];
 			p2 = grid->points[i][j + 1];
 			p3 = grid->points[i][j];
-			gridPlanes[i][j][1] = CM_FindPlane(p1, p2, p3);
+			grid_planes[i][j][1] = CM_FindPlane(p1, p2, p3);
 		}
 	}
 
@@ -1011,122 +1011,122 @@ static void CM_PatchCollideFromGrid(cGrid_t* grid, patchCollide_t* pf) {
 		for (j = 0; j < grid->height - 1; j++) {
 			borders[EN_TOP] = -1;
 			if (j > 0) {
-				borders[EN_TOP] = gridPlanes[i][j - 1][1];
+				borders[EN_TOP] = grid_planes[i][j - 1][1];
 			}
 			else if (grid->wrapHeight) {
-				borders[EN_TOP] = gridPlanes[i][grid->height - 2][1];
+				borders[EN_TOP] = grid_planes[i][grid->height - 2][1];
 			}
-			noAdjust[EN_TOP] = static_cast<qboolean>(borders[EN_TOP] == gridPlanes[i][j][0]);
-			if (borders[EN_TOP] == -1 || noAdjust[EN_TOP]) {
-				borders[EN_TOP] = CM_EdgePlaneNum(grid, gridPlanes, i, j, 0);
+			no_adjust[EN_TOP] = static_cast<qboolean>(borders[EN_TOP] == grid_planes[i][j][0]);
+			if (borders[EN_TOP] == -1 || no_adjust[EN_TOP]) {
+				borders[EN_TOP] = CM_EdgePlaneNum(grid, grid_planes, i, j, 0);
 			}
 
 			borders[EN_BOTTOM] = -1;
 			if (j < grid->height - 2) {
-				borders[EN_BOTTOM] = gridPlanes[i][j + 1][0];
+				borders[EN_BOTTOM] = grid_planes[i][j + 1][0];
 			}
 			else if (grid->wrapHeight) {
-				borders[EN_BOTTOM] = gridPlanes[i][0][0];
+				borders[EN_BOTTOM] = grid_planes[i][0][0];
 			}
-			noAdjust[EN_BOTTOM] = static_cast<qboolean>(borders[EN_BOTTOM] == gridPlanes[i][j][1]);
-			if (borders[EN_BOTTOM] == -1 || noAdjust[EN_BOTTOM]) {
-				borders[EN_BOTTOM] = CM_EdgePlaneNum(grid, gridPlanes, i, j, 2);
+			no_adjust[EN_BOTTOM] = static_cast<qboolean>(borders[EN_BOTTOM] == grid_planes[i][j][1]);
+			if (borders[EN_BOTTOM] == -1 || no_adjust[EN_BOTTOM]) {
+				borders[EN_BOTTOM] = CM_EdgePlaneNum(grid, grid_planes, i, j, 2);
 			}
 
 			borders[EN_LEFT] = -1;
 			if (i > 0) {
-				borders[EN_LEFT] = gridPlanes[i - 1][j][0];
+				borders[EN_LEFT] = grid_planes[i - 1][j][0];
 			}
 			else if (grid->wrapWidth) {
-				borders[EN_LEFT] = gridPlanes[grid->width - 2][j][0];
+				borders[EN_LEFT] = grid_planes[grid->width - 2][j][0];
 			}
-			noAdjust[EN_LEFT] = static_cast<qboolean>(borders[EN_LEFT] == gridPlanes[i][j][1]);
-			if (borders[EN_LEFT] == -1 || noAdjust[EN_LEFT]) {
-				borders[EN_LEFT] = CM_EdgePlaneNum(grid, gridPlanes, i, j, 3);
+			no_adjust[EN_LEFT] = static_cast<qboolean>(borders[EN_LEFT] == grid_planes[i][j][1]);
+			if (borders[EN_LEFT] == -1 || no_adjust[EN_LEFT]) {
+				borders[EN_LEFT] = CM_EdgePlaneNum(grid, grid_planes, i, j, 3);
 			}
 
 			borders[EN_RIGHT] = -1;
 			if (i < grid->width - 2) {
-				borders[EN_RIGHT] = gridPlanes[i + 1][j][1];
+				borders[EN_RIGHT] = grid_planes[i + 1][j][1];
 			}
 			else if (grid->wrapWidth) {
-				borders[EN_RIGHT] = gridPlanes[0][j][1];
+				borders[EN_RIGHT] = grid_planes[0][j][1];
 			}
-			noAdjust[EN_RIGHT] = static_cast<qboolean>(borders[EN_RIGHT] == gridPlanes[i][j][0]);
-			if (borders[EN_RIGHT] == -1 || noAdjust[EN_RIGHT]) {
-				borders[EN_RIGHT] = CM_EdgePlaneNum(grid, gridPlanes, i, j, 1);
+			no_adjust[EN_RIGHT] = static_cast<qboolean>(borders[EN_RIGHT] == grid_planes[i][j][0]);
+			if (borders[EN_RIGHT] == -1 || no_adjust[EN_RIGHT]) {
+				borders[EN_RIGHT] = CM_EdgePlaneNum(grid, grid_planes, i, j, 1);
 			}
 
-			if (numFacets == MAX_FACETS) {
+			if (num_facets == MAX_FACETS) {
 				Com_Error(ERR_DROP, "MAX_FACETS");
 			}
-			facet_t* facet = &facets[numFacets];
+			facet_t* facet = &facets[num_facets];
 			memset(facet, 0, sizeof(*facet));
 
-			if (gridPlanes[i][j][0] == gridPlanes[i][j][1]) {
-				if (gridPlanes[i][j][0] == -1) {
+			if (grid_planes[i][j][0] == grid_planes[i][j][1]) {
+				if (grid_planes[i][j][0] == -1) {
 					continue;		// degenrate
 				}
-				facet->surfacePlane = gridPlanes[i][j][0];
+				facet->surfacePlane = grid_planes[i][j][0];
 				facet->numBorders = 4;
 				facet->borderPlanes[0] = borders[EN_TOP];
-				facet->borderNoAdjust[0] = noAdjust[EN_TOP];
+				facet->borderNoAdjust[0] = no_adjust[EN_TOP];
 				facet->borderPlanes[1] = borders[EN_RIGHT];
-				facet->borderNoAdjust[1] = noAdjust[EN_RIGHT];
+				facet->borderNoAdjust[1] = no_adjust[EN_RIGHT];
 				facet->borderPlanes[2] = borders[EN_BOTTOM];
-				facet->borderNoAdjust[2] = noAdjust[EN_BOTTOM];
+				facet->borderNoAdjust[2] = no_adjust[EN_BOTTOM];
 				facet->borderPlanes[3] = borders[EN_LEFT];
-				facet->borderNoAdjust[3] = noAdjust[EN_LEFT];
-				CM_SetBorderInward(facet, grid, gridPlanes, i, j, -1);
+				facet->borderNoAdjust[3] = no_adjust[EN_LEFT];
+				CM_SetBorderInward(facet, grid, i, j, -1);
 				if (CM_ValidateFacet(facet)) {
 					CM_AddFacetBevels(facet);
-					numFacets++;
+					num_facets++;
 				}
 			}
 			else {
 				// two seperate triangles
-				facet->surfacePlane = gridPlanes[i][j][0];
+				facet->surfacePlane = grid_planes[i][j][0];
 				facet->numBorders = 3;
 				facet->borderPlanes[0] = borders[EN_TOP];
-				facet->borderNoAdjust[0] = noAdjust[EN_TOP];
+				facet->borderNoAdjust[0] = no_adjust[EN_TOP];
 				facet->borderPlanes[1] = borders[EN_RIGHT];
-				facet->borderNoAdjust[1] = noAdjust[EN_RIGHT];
-				facet->borderPlanes[2] = gridPlanes[i][j][1];
+				facet->borderNoAdjust[1] = no_adjust[EN_RIGHT];
+				facet->borderPlanes[2] = grid_planes[i][j][1];
 				if (facet->borderPlanes[2] == -1) {
 					facet->borderPlanes[2] = borders[EN_BOTTOM];
 					if (facet->borderPlanes[2] == -1) {
-						facet->borderPlanes[2] = CM_EdgePlaneNum(grid, gridPlanes, i, j, 4);
+						facet->borderPlanes[2] = CM_EdgePlaneNum(grid, grid_planes, i, j, 4);
 					}
 				}
-				CM_SetBorderInward(facet, grid, gridPlanes, i, j, 0);
+				CM_SetBorderInward(facet, grid, i, j, 0);
 				if (CM_ValidateFacet(facet)) {
 					CM_AddFacetBevels(facet);
-					numFacets++;
+					num_facets++;
 				}
 
-				if (numFacets == MAX_FACETS) {
+				if (num_facets == MAX_FACETS) {
 					Com_Error(ERR_DROP, "MAX_FACETS");
 				}
-				facet = &facets[numFacets];
+				facet = &facets[num_facets];
 				memset(facet, 0, sizeof(*facet));
 
-				facet->surfacePlane = gridPlanes[i][j][1];
+				facet->surfacePlane = grid_planes[i][j][1];
 				facet->numBorders = 3;
 				facet->borderPlanes[0] = borders[EN_BOTTOM];
-				facet->borderNoAdjust[0] = noAdjust[EN_BOTTOM];
+				facet->borderNoAdjust[0] = no_adjust[EN_BOTTOM];
 				facet->borderPlanes[1] = borders[EN_LEFT];
-				facet->borderNoAdjust[1] = noAdjust[EN_LEFT];
-				facet->borderPlanes[2] = gridPlanes[i][j][0];
+				facet->borderNoAdjust[1] = no_adjust[EN_LEFT];
+				facet->borderPlanes[2] = grid_planes[i][j][0];
 				if (facet->borderPlanes[2] == -1) {
 					facet->borderPlanes[2] = borders[EN_TOP];
 					if (facet->borderPlanes[2] == -1) {
-						facet->borderPlanes[2] = CM_EdgePlaneNum(grid, gridPlanes, i, j, 5);
+						facet->borderPlanes[2] = CM_EdgePlaneNum(grid, grid_planes, i, j, 5);
 					}
 				}
-				CM_SetBorderInward(facet, grid, gridPlanes, i, j, 1);
+				CM_SetBorderInward(facet, grid, i, j, 1);
 				if (CM_ValidateFacet(facet)) {
 					CM_AddFacetBevels(facet);
-					numFacets++;
+					num_facets++;
 				}
 			}
 		}
@@ -1134,11 +1134,11 @@ static void CM_PatchCollideFromGrid(cGrid_t* grid, patchCollide_t* pf) {
 
 	// copy the results out
 	pf->numPlanes = numPlanes;
-	pf->numFacets = numFacets;
-	if (numFacets)
+	pf->numFacets = num_facets;
+	if (num_facets)
 	{
-		pf->facets = static_cast<facet_t*>(Z_Malloc(numFacets * sizeof(*pf->facets), TAG_BSP, qfalse));
-		memcpy(pf->facets, facets, numFacets * sizeof(*pf->facets));
+		pf->facets = static_cast<facet_t*>(Z_Malloc(num_facets * sizeof(*pf->facets), TAG_BSP, qfalse));
+		memcpy(pf->facets, facets, num_facets * sizeof(*pf->facets));
 	}
 	else
 	{
@@ -1361,7 +1361,7 @@ CM_TracePointThroughPatchCollide
 ====================
 */
 void CM_TracePointThroughPatchCollide(traceWork_t* tw, const patchCollide_s* pc) {
-	qboolean	frontFacing[MAX_PATCH_PLANES];
+	qboolean	front_facing[MAX_PATCH_PLANES];
 	float		intersection[MAX_PATCH_PLANES];
 	float		intersect;
 	const patchPlane_t* planes;
@@ -1390,10 +1390,10 @@ void CM_TracePointThroughPatchCollide(traceWork_t* tw, const patchCollide_s* pc)
 		d1 = DotProduct(tw->start, planes->plane) - planes->plane[3] + offset;
 		d2 = DotProduct(tw->end, planes->plane) - planes->plane[3] + offset;
 		if (d1 <= 0) {
-			frontFacing[i] = qfalse;
+			front_facing[i] = qfalse;
 		}
 		else {
-			frontFacing[i] = qtrue;
+			front_facing[i] = qtrue;
 		}
 		if (d1 == d2) {
 			intersection[i] = WORLD_SIZE;
@@ -1409,7 +1409,7 @@ void CM_TracePointThroughPatchCollide(traceWork_t* tw, const patchCollide_s* pc)
 	// see if any of the surface planes are intersected
 	facet = pc->facets;
 	for (i = 0; i < pc->numFacets; i++, facet++) {
-		if (!frontFacing[facet->surfacePlane]) {
+		if (!front_facing[facet->surfacePlane]) {
 			continue;
 		}
 		intersect = intersection[facet->surfacePlane];
@@ -1421,7 +1421,7 @@ void CM_TracePointThroughPatchCollide(traceWork_t* tw, const patchCollide_s* pc)
 		}
 		for (j = 0; j < facet->numBorders; j++) {
 			k = facet->borderPlanes[j];
-			if (frontFacing[k] ^ facet->borderInward[j]) {
+			if (front_facing[k] ^ facet->borderInward[j]) {
 				if (intersection[k] > intersect) {
 					break;
 				}
@@ -1466,7 +1466,7 @@ void CM_TracePointThroughPatchCollide(traceWork_t* tw, const patchCollide_s* pc)
 CM_CheckFacetPlane
 ====================
 */
-int CM_CheckFacetPlane(const float* plane, vec3_t start, vec3_t end, float* enterFrac, float* leaveFrac, int* hit) {
+int CM_CheckFacetPlane(const float* plane, vec3_t start, vec3_t end, float* enter_frac, float* leave_frac, int* hit) {
 	float f;
 
 	*hit = qfalse;
@@ -1491,8 +1491,8 @@ int CM_CheckFacetPlane(const float* plane, vec3_t start, vec3_t end, float* ente
 			f = 0;
 		}
 		//always favor previous plane hits and thus also the surface plane hit
-		if (f > *enterFrac) {
-			*enterFrac = f;
+		if (f > *enter_frac) {
+			*enter_frac = f;
 			*hit = qtrue;
 		}
 	}
@@ -1501,8 +1501,8 @@ int CM_CheckFacetPlane(const float* plane, vec3_t start, vec3_t end, float* ente
 		if (f > 1) {
 			f = 1;
 		}
-		if (f < *leaveFrac) {
-			*leaveFrac = f;
+		if (f < *leave_frac) {
+			*leave_frac = f;
 		}
 	}
 	return qtrue;
@@ -1516,7 +1516,7 @@ CM_TraceThroughPatchCollide
 void CM_TraceThroughPatchCollide(traceWork_t* tw, const patchCollide_s* pc)
 {
 	int j, hit, hitnum;
-	float offset, enterFrac, leaveFrac, t;
+	float offset, enter_frac, leave_frac, t;
 	patchPlane_t* planes;
 	facet_t* facet;
 	float plane[4] = { 0.0f }, bestplane[4] = { 0.0f };
@@ -1537,8 +1537,8 @@ void CM_TraceThroughPatchCollide(traceWork_t* tw, const patchCollide_s* pc)
 	for (int i = 0; i < pc->numFacets; i++, facet++) {
 		vec3_t endp;
 		vec3_t startp;
-		enterFrac = -1.0;
-		leaveFrac = 1.0;
+		enter_frac = -1.0;
+		leave_frac = 1.0;
 		hitnum = -1;
 		//
 		planes = &pc->planes[facet->surfacePlane];
@@ -1567,7 +1567,7 @@ void CM_TraceThroughPatchCollide(traceWork_t* tw, const patchCollide_s* pc)
 			VectorCopy(tw->start, startp);
 			VectorCopy(tw->end, endp);
 		}
-		if (!CM_CheckFacetPlane(plane, startp, endp, &enterFrac, &leaveFrac, &hit)) {
+		if (!CM_CheckFacetPlane(plane, startp, endp, &enter_frac, &leave_frac, &hit)) {
 			continue;
 		}
 		if (hit) {
@@ -1607,7 +1607,7 @@ void CM_TraceThroughPatchCollide(traceWork_t* tw, const patchCollide_s* pc)
 				VectorCopy(tw->start, startp);
 				VectorCopy(tw->end, endp);
 			}
-			if (!CM_CheckFacetPlane(plane, startp, endp, &enterFrac, &leaveFrac, &hit)) {
+			if (!CM_CheckFacetPlane(plane, startp, endp, &enter_frac, &leave_frac, &hit)) {
 				break;
 			}
 			if (hit) {
@@ -1618,10 +1618,10 @@ void CM_TraceThroughPatchCollide(traceWork_t* tw, const patchCollide_s* pc)
 		if (j < facet->numBorders) continue;
 		//never clip against the back side
 		if (hitnum == facet->numBorders - 1) continue;
-		if (enterFrac < leaveFrac && enterFrac >= 0) {
-			if (enterFrac < tw->trace.fraction) {
-				if (enterFrac < 0) {
-					enterFrac = 0;
+		if (enter_frac < leave_frac && enter_frac >= 0) {
+			if (enter_frac < tw->trace.fraction) {
+				if (enter_frac < 0) {
+					enter_frac = 0;
 				}
 #ifndef BSPC
 				if (!cv) {
@@ -1633,7 +1633,7 @@ void CM_TraceThroughPatchCollide(traceWork_t* tw, const patchCollide_s* pc)
 				}
 #endif // BSPC
 
-				tw->trace.fraction = enterFrac;
+				tw->trace.fraction = enter_frac;
 				VectorCopy(bestplane, tw->trace.plane.normal);
 				tw->trace.plane.dist = bestplane[3];
 			}

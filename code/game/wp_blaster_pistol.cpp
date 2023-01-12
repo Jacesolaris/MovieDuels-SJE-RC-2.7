@@ -139,7 +139,7 @@ void WP_FireBryarPistol(gentity_t* ent, const qboolean altFire)
 
 	WP_MissileTargetHint(ent, start, forwardVec);
 
-	gentity_t* missile = CreateMissile(start, forwardVec, BRYAR_PISTOL_VEL, 10000, ent, altFire);
+	gentity_t* missile = create_missile(start, forwardVec, BRYAR_PISTOL_VEL, 10000, ent, altFire);
 
 	missile->classname = "bryar_proj";
 
@@ -310,7 +310,7 @@ void WP_FireBryarPistolDuals(gentity_t* ent, const qboolean altFire, const qbool
 
 	WP_MissileTargetHint(ent, start, forwardVec);
 
-	gentity_t* missile = CreateMissile(start, forwardVec, BRYAR_PISTOL_VEL, 10000, ent, altFire);
+	gentity_t* missile = create_missile(start, forwardVec, BRYAR_PISTOL_VEL, 10000, ent, altFire);
 
 	missile->classname = "bryar_proj";
 
@@ -477,7 +477,7 @@ void WP_FireReyPistol(gentity_t* ent, const qboolean altFire)
 
 	WP_MissileTargetHint(ent, start, forwardVec);
 
-	gentity_t* missile = CreateMissile(start, forwardVec, BRYAR_PISTOL_VEL, 10000, ent, altFire);
+	gentity_t* missile = create_missile(start, forwardVec, BRYAR_PISTOL_VEL, 10000, ent, altFire);
 
 	missile->classname = "bryar_proj";
 	if (ent->s.weapon == WP_BLASTER_PISTOL
@@ -647,7 +647,7 @@ void WP_FireReyPistolDuals(gentity_t* ent, const qboolean altFire, const qboolea
 
 	WP_MissileTargetHint(ent, start, forwardVec);
 
-	gentity_t* missile = CreateMissile(start, forwardVec, BRYAR_PISTOL_VEL, 10000, ent, altFire);
+	gentity_t* missile = create_missile(start, forwardVec, BRYAR_PISTOL_VEL, 10000, ent, altFire);
 
 	missile->classname = "bryar_proj";
 	if (ent->s.weapon == WP_BLASTER_PISTOL
@@ -813,7 +813,7 @@ void WP_FireClonePistol(gentity_t* ent, const qboolean altFire)
 
 	WP_MissileTargetHint(ent, start, forwardVec);
 
-	gentity_t* missile = CreateMissile(start, forwardVec, BRYAR_PISTOL_VEL, 10000, ent, altFire);
+	gentity_t* missile = create_missile(start, forwardVec, BRYAR_PISTOL_VEL, 10000, ent, altFire);
 
 	missile->classname = "clone_proj";
 	if (ent->s.weapon == WP_BLASTER_PISTOL
@@ -983,7 +983,7 @@ void WP_FireClonePistolDuals(gentity_t* ent, const qboolean altFire, const qbool
 
 	WP_MissileTargetHint(ent, start, forwardVec);
 
-	gentity_t* missile = CreateMissile(start, forwardVec, BRYAR_PISTOL_VEL, 10000, ent, altFire);
+	gentity_t* missile = create_missile(start, forwardVec, BRYAR_PISTOL_VEL, 10000, ent, altFire);
 
 	missile->classname = "clone_proj";
 	if (ent->s.weapon == WP_BLASTER_PISTOL
@@ -1145,7 +1145,7 @@ void WP_FireSBDPistol(gentity_t* ent, const qboolean altFire)
 
 	WP_MissileTargetHint(ent, start, forwardVec);
 
-	gentity_t* missile = CreateMissile(start, forwardVec, BRYAR_PISTOL_VEL, 10000, ent, altFire);
+	gentity_t* missile = create_missile(start, forwardVec, BRYAR_PISTOL_VEL, 10000, ent, altFire);
 
 	missile->classname = "bryar_proj";
 
@@ -1293,7 +1293,7 @@ void WP_FireJawaPistol(gentity_t* ent, const qboolean altFire)
 
 	WP_MissileTargetHint(ent, start, forwardVec);
 
-	gentity_t* missile = CreateMissile(start, forwardVec, BRYAR_PISTOL_VEL, 10000, ent, altFire);
+	gentity_t* missile = create_missile(start, forwardVec, BRYAR_PISTOL_VEL, 10000, ent, altFire);
 
 	missile->classname = "bryar_proj";
 	if (ent->s.weapon == WP_BLASTER_PISTOL)

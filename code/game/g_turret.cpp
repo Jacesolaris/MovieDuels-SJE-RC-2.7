@@ -33,6 +33,13 @@ void ObjectDie(gentity_t* self, gentity_t* attacker);
 //special routine for tracking angles between client and server -rww
 void turret_SetBoneAngles(gentity_t* ent, const char* bone, const vec3_t angles);
 
+extern gentity_t* player;
+extern qboolean G_ClearViewEntity(gentity_t* ent);
+extern void G_SetViewEntity(gentity_t* self, gentity_t* view_entity);
+extern gentity_t* create_missile(vec3_t org, vec3_t dir, float vel, int life, gentity_t* owner,
+	qboolean altFire = qfalse);
+extern cvar_t* com_outcast;
+
 constexpr auto ARM_ANGLE_RANGE = 60;
 constexpr auto HEAD_ANGLE_RANGE = 90;
 
@@ -239,6 +246,46 @@ static void turret_fire(gentity_t* ent, vec3_t start, vec3_t dir)
 	}
 }
 
+//----------------------------------------------------------------
+static void turret_fire_JKO(gentity_t* ent, vec3_t start, vec3_t dir)
+//----------------------------------------------------------------
+{
+	vec3_t		org;
+
+	if (gi.pointcontents(start, MASK_SHOT))
+	{
+		return;
+	}
+
+	VectorMA(start, -START_DIS, dir, org); // dumb....
+	G_PlayEffect("blaster/muzzle_flash", org, dir);
+
+	gentity_t* bolt = G_Spawn();
+
+	bolt->classname = "turret_proj";
+	bolt->nextthink = level.time + 10000;
+	bolt->e_ThinkFunc = thinkF_G_FreeEntity;
+	bolt->s.eType = ET_MISSILE;
+	bolt->s.weapon = WP_BLASTER;
+	bolt->owner = ent;
+	bolt->damage = ent->damage;
+	bolt->dflags = DAMAGE_NO_KNOCKBACK | DAMAGE_HEAVY_WEAP_CLASS;		// Don't push them around, or else we are constantly re-aiming
+	bolt->splashDamage = 0;
+	bolt->splashRadius = 0;
+	bolt->methodOfDeath = MOD_ENERGY;
+	bolt->clipmask = MASK_SHOT | CONTENTS_LIGHTSABER;
+	bolt->trigger_formation = qfalse;		// don't draw tail on first frame
+
+	VectorSet(bolt->maxs, 1.5, 1.5, 1.5);
+	VectorScale(bolt->maxs, -1, bolt->mins);
+	bolt->s.pos.trType = TR_LINEAR;
+	bolt->s.pos.trTime = level.time;
+	VectorCopy(start, bolt->s.pos.trBase);
+	VectorScale(dir, 1100, bolt->s.pos.trDelta);
+	SnapVector(bolt->s.pos.trDelta);		// save net bandwidth
+	VectorCopy(start, bolt->currentOrigin);
+}
+
 //-----------------------------------------------------
 void turret_head_think(gentity_t* self)
 //-----------------------------------------------------
@@ -284,7 +331,14 @@ void turret_head_think(gentity_t* self)
 
 		VectorMA(org, START_DIS, fwd, org);
 
-		turret_fire(self, org, fwd);
+		if (com_outcast->integer == 1) //playing outcast
+		{
+			turret_fire_JKO(self, org, fwd);
+		}
+		else
+		{
+			turret_fire(self, org, fwd);
+		}
 		self->fly_sound_debounce_time = level.time; //used as lastShotTime
 	}
 }
@@ -2267,15 +2321,9 @@ Creates a turret that, when the player uses a panel, takes control of this turre
   heatlh - how much heatlh the thing has, (default 200) only works if HEALTH is checked, otherwise it can't be destroyed.
 */
 
-extern gentity_t* player;
-extern qboolean G_ClearViewEntity(gentity_t* ent);
-extern void G_SetViewEntity(gentity_t* self, gentity_t* view_entity);
-extern gentity_t* CreateMissile(vec3_t org, vec3_t dir, float vel, int life, gentity_t* owner,
-	qboolean altFire = qfalse);
-
 void panel_turret_shoot(gentity_t* self, vec3_t org, vec3_t dir)
 {
-	gentity_t* missile = CreateMissile(org, dir, self->speed, 10000, self);
+	gentity_t* missile = create_missile(org, dir, self->speed, 10000, self);
 
 	missile->classname = "b_proj";
 	missile->s.weapon = WP_TIE_FIGHTER;
@@ -2296,6 +2344,31 @@ void panel_turret_shoot(gentity_t* self, vec3_t org, vec3_t dir)
 	org[2] -= 4;
 	G_PlayEffect("ships/imp_blastermuzzleflash", org, dir);
 }
+
+void panel_turret_shoot_jko(gentity_t* self, vec3_t org, vec3_t dir)
+{
+	gentity_t* missile = create_missile(org, dir, self->speed, 10000, self);
+
+	missile->classname = "b_proj";
+	missile->s.weapon = WP_EMPLACED_GUN;
+
+	VectorSet(missile->maxs, 7, 7, 7);
+	VectorScale(missile->maxs, -1, missile->mins);
+
+	missile->bounceCount = 0;
+
+	missile->damage = self->damage;
+	missile->dflags = DAMAGE_DEATH_KNOCKBACK;
+	missile->methodOfDeath = MOD_ENERGY;
+	missile->clipmask = MASK_SHOT | CONTENTS_LIGHTSABER;
+
+	G_SoundOnEnt(self, CHAN_AUTO, "sound/movers/objects/ladygun_fire");
+
+	VectorMA(org, 32, dir, org);
+	org[2] -= 5;
+	G_PlayEffect("ships/imp_blastermuzzleflash", org, dir);
+}
+
 
 //-----------------------------------------
 void misc_panel_turret_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod, int d_flags,
@@ -2348,17 +2421,17 @@ void panel_turret_think(gentity_t* self)
 		// Only clamp if we have a YAW clamp
 		if (self->radius != 0.0f)
 		{
-			const float yawDif = AngleSubtract(self->s.apos.trBase[YAW], self->s.angles[YAW]);
+			const float yaw_dif = AngleSubtract(self->s.apos.trBase[YAW], self->s.angles[YAW]);
 
 			// Angle clamping -- YAW
-			if (yawDif > self->radius) // radius is YAW
+			if (yaw_dif > self->radius) // radius is YAW
 			{
-				self->pos3[YAW] += ANGLE2SHORT(self->radius - yawDif);
+				self->pos3[YAW] += ANGLE2SHORT(self->radius - yaw_dif);
 				self->s.apos.trBase[YAW] = AngleNormalize180(self->s.angles[YAW] + self->radius);
 			}
-			else if (yawDif < -self->radius) // radius is YAW
+			else if (yaw_dif < -self->radius) // radius is YAW
 			{
-				self->pos3[YAW] -= ANGLE2SHORT(self->radius + yawDif);
+				self->pos3[YAW] -= ANGLE2SHORT(self->radius + yaw_dif);
 				self->s.apos.trBase[YAW] = AngleNormalize180(self->s.angles[YAW] - self->radius);
 			}
 		}
@@ -2410,7 +2483,15 @@ void panel_turret_think(gentity_t* self)
 
 				VectorCopy(self->currentOrigin, pt);
 				pt[2] -= 4;
-				panel_turret_shoot(self, pt, dir);
+
+				if (com_outcast->integer == 1) //playing outcast
+				{
+					panel_turret_shoot_jko(self, pt, dir);
+				}
+				else
+				{
+					panel_turret_shoot(self, pt, dir);
+				}
 
 				self->attackDebounceTime = level.time + self->delay;
 			}
@@ -2484,7 +2565,15 @@ void SP_misc_panel_turret(gentity_t* self)
 	self->soundPos2 = G_SoundIndex("sound/movers/camera_off.mp3");
 
 	G_SoundIndex("sound/movers/objects/ladygun_fire");
-	G_EffectIndex("ships/imp_blastermuzzleflash");
+
+	if (com_outcast->integer == 1) //playing outcast
+	{
+		G_EffectIndex("ships/imp_blastermuzzleflash");		//
+	}
+	else
+	{
+		G_EffectIndex("ships/imp_blastermuzzleflash");
+	}
 
 	G_SetOrigin(self, self->s.origin);
 	G_SetAngles(self, self->s.angles);

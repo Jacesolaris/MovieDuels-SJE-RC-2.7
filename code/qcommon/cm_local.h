@@ -228,11 +228,11 @@ void CM_StoreBrushes(leafList_t* ll, int nodenum);
 
 void CM_BoxLeafnums_r(leafList_t* ll, int nodenum);
 
-cmodel_t* CM_ClipHandleToModel(clipHandle_t handle, clipMap_t** clipMap = nullptr);
+cmodel_t* CM_ClipHandleToModel(clipHandle_t handle, clipMap_t** clip_map = nullptr);
 void CM_CleanLeafCache();
 
 // cm_load.c
-void CM_ModelBounds(clipMap_t& cm, clipHandle_t model, vec3_t mins, vec3_t maxs);
+void CM_ModelBounds(const clipHandle_t model, vec3_t mins, vec3_t maxs);
 
 // cm_patch.c
 

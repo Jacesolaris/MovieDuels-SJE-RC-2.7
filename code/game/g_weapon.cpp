@@ -139,7 +139,7 @@ void WP_TraceSetStart(const gentity_t* ent, vec3_t start)
 
 extern Vehicle_t* G_IsRidingVehicle(const gentity_t* p_ent);
 //-----------------------------------------------------------------------------
-gentity_t* CreateMissile(vec3_t org, vec3_t dir, const float vel, const int life, gentity_t* owner,
+gentity_t* create_missile(vec3_t org, vec3_t dir, const float vel, const int life, gentity_t* owner,
                          const qboolean altFire)
 //-----------------------------------------------------------------------------
 {
@@ -877,7 +877,7 @@ void WP_FireVehicleWeapon(gentity_t* ent, vec3_t start, vec3_t dir, const vehWea
 		WP_TraceSetStart(ent, start);
 
 		//QUERY: altFire true or not?  Does it matter?
-		gentity_t* missile = CreateMissile(start, dir, veh_weapon->fSpeed, 10000, ent, qfalse);
+		gentity_t* missile = create_missile(start, dir, veh_weapon->fSpeed, 10000, ent, qfalse);
 		if (veh_weapon->bHasGravity)
 		{
 			//TESTME: is this all we need to do?

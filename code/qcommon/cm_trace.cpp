@@ -36,7 +36,7 @@ POSITION TESTING
 CM_TestBoxInBrush
 ================
 */
-void CM_TestBoxInBrush(traceWork_t* tw, cbrush_t* brush)
+void CM_TestBoxInBrush(traceWork_t* tw, const cbrush_t* brush)
 {
 	if (!brush->numsides)
 	{
@@ -167,7 +167,7 @@ bool CM_PlaneCollision(traceWork_t* tw, cbrushside_t* side)
 CM_TraceThroughBrush
 ================
 */
-void CM_TraceThroughBrush(traceWork_t* tw, trace_t& trace, cbrush_t* brush, const bool info_only)
+void CM_TraceThroughBrush(traceWork_t* tw, trace_t& trace, const cbrush_t* brush, const bool info_only)
 {
 	tw->enterFrac = -1.0f;
 	tw->leaveFrac = 1.0f;
@@ -367,7 +367,7 @@ CM_TraceThroughPatch
 ================
 */
 
-void CM_TraceThroughPatch(traceWork_t* tw, cPatch_t* patch)
+void CM_TraceThroughPatch(traceWork_t* tw, const cPatch_t* patch)
 {
 	c_patch_traces++;
 
@@ -387,7 +387,7 @@ void CM_TraceThroughPatch(traceWork_t* tw, cPatch_t* patch)
 CM_TraceThroughBrush
 ================
 */
-void CM_TraceThroughBrush(traceWork_t* tw, cbrush_t* brush)
+void CM_TraceThroughBrush(traceWork_t* tw, const cbrush_t* brush)
 {
 	float f;
 
@@ -626,7 +626,7 @@ trace volumes it is possible to hit something in a later leaf with
 a smaller intercept fraction.
 ==================
 */
-void CM_TraceThroughTree(traceWork_t* tw, clipMap_t* local, const int num, float p1_f, float p2_f, vec3_t p1, vec3_t p2)
+void CM_TraceThroughTree(traceWork_t* tw, clipMap_t* local, const int num, const float p1_f, const float p2_f, vec3_t p1, vec3_t p2)
 {
 	float t1, t2, offset;
 	float frac, frac2;

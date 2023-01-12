@@ -162,11 +162,11 @@ void SV_SetBrushModel(gentity_t* ent, const char* name)
 
 		if (sv.mLocalSubBSPIndex != -1)
 		{
-			CM_ModelBounds(SubBSP[sv.mLocalSubBSPIndex], h, mins, maxs);
+			CM_ModelBounds(h, mins, maxs);
 		}
 		else
 		{
-			CM_ModelBounds(cmg, h, mins, maxs);
+			CM_ModelBounds(h, mins, maxs);
 		}
 
 		//CM_ModelBounds( h, mins, maxs );
@@ -180,7 +180,7 @@ void SV_SetBrushModel(gentity_t* ent, const char* name)
 	else if (name[0] == '#')
 	{
 		ent->s.modelindex = CM_LoadSubBSP(va("maps/%s.bsp", name + 1), qfalse);
-		CM_ModelBounds(SubBSP[CM_FindSubBSP(ent->s.modelindex)], ent->s.modelindex, mins, maxs);
+		CM_ModelBounds(ent->s.modelindex, mins, maxs);
 
 		VectorCopy(mins, ent->mins);
 		VectorCopy(maxs, ent->maxs);

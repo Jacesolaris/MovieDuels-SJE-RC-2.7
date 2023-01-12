@@ -33,7 +33,7 @@ void WP_FireTurboLaserMissile(gentity_t* ent, vec3_t start, vec3_t dir)
 {
 	const int velocity = ent->mass; //FIXME: externalize
 
-	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, qfalse);
+	gentity_t* missile = create_missile(start, dir, velocity, 10000, ent, qfalse);
 
 	//use a custom shot effect
 	//missile->s.otherEntityNum2 = G_EffectIndex( "turret/turb_shot" );
@@ -79,7 +79,7 @@ void WP_EmplacedFire(gentity_t* ent)
 
 	WP_MissileTargetHint(ent, muzzle, forwardVec);
 
-	gentity_t* missile = CreateMissile(muzzle, forwardVec, vel, 10000, ent);
+	gentity_t* missile = create_missile(muzzle, forwardVec, vel, 10000, ent);
 
 	missile->classname = "emplaced_proj";
 	missile->s.weapon = WP_EMPLACED_GUN;

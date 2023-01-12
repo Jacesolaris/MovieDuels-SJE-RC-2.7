@@ -322,7 +322,7 @@ static void WP_FireConcussion(gentity_t* ent)
 	WP_TraceSetStart(ent, start);
 	//make sure our start point isn't on the other side of a wall
 
-	gentity_t* missile = CreateMissile(start, forwardVec, vel, 10000, ent, qfalse);
+	gentity_t* missile = create_missile(start, forwardVec, vel, 10000, ent, qfalse);
 
 	missile->classname = "conc_proj";
 	missile->s.weapon = WP_CONCUSSION;

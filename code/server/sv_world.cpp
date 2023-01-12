@@ -160,7 +160,7 @@ void SV_ClearWorld(void)
 
 	// get world map bounds
 	const clipHandle_t h = CM_InlineModel(0);
-	CM_ModelBounds(cmg, h, mins, maxs);
+	CM_ModelBounds(h, mins, maxs);
 	SV_CreateworldSector(0, mins, maxs);
 }
 

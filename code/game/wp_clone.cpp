@@ -67,7 +67,7 @@ void WP_FireCloneMissile(gentity_t* ent, vec3_t start, vec3_t dir, const qboolea
 
 	WP_MissileTargetHint(ent, start, dir);
 
-	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, altFire);
+	gentity_t* missile = create_missile(start, dir, velocity, 10000, ent, altFire);
 
 	missile->classname = "clone_proj";
 	missile->s.weapon = WP_CLONECARBINE;
@@ -262,7 +262,7 @@ void WP_FireCloneRifleMissile(gentity_t* ent, vec3_t start, vec3_t dir, const qb
 
 	WP_MissileTargetHint(ent, start, dir);
 
-	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, altFire);
+	gentity_t* missile = create_missile(start, dir, velocity, 10000, ent, altFire);
 
 	missile->classname = "clone_proj";
 	missile->s.weapon = WP_CLONERIFLE;
@@ -452,7 +452,7 @@ void WP_FireCloneCommandoMissile(gentity_t* ent, vec3_t start, vec3_t dir, const
 
 	WP_MissileTargetHint(ent, start, dir);
 
-	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, altFire);
+	gentity_t* missile = create_missile(start, dir, velocity, 10000, ent, altFire);
 
 	missile->classname = "clone_proj";
 	missile->s.weapon = WP_CLONECOMMANDO;

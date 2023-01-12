@@ -68,7 +68,7 @@ void WP_FireBlasterMissile(gentity_t* ent, vec3_t start, vec3_t dir, const qbool
 
 	WP_MissileTargetHint(ent, start, dir);
 
-	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, altFire);
+	gentity_t* missile = create_missile(start, dir, velocity, 10000, ent, altFire);
 
 	missile->classname = "blaster_proj";
 	missile->s.weapon = WP_BLASTER;
@@ -265,7 +265,7 @@ void WP_FireBattleDroidMissile(gentity_t* ent, vec3_t start, vec3_t dir, const q
 
 	WP_MissileTargetHint(ent, start, dir);
 
-	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, altFire);
+	gentity_t* missile = create_missile(start, dir, velocity, 10000, ent, altFire);
 
 	missile->classname = "blaster_proj";
 	missile->s.weapon = WP_BATTLEDROID;
@@ -462,7 +462,7 @@ void WP_FireFirstOrderMissile(gentity_t* ent, vec3_t start, vec3_t dir, const qb
 
 	WP_MissileTargetHint(ent, start, dir);
 
-	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, altFire);
+	gentity_t* missile = create_missile(start, dir, velocity, 10000, ent, altFire);
 
 	missile->classname = "blaster_proj";
 	missile->s.weapon = WP_THEFIRSTORDER;
@@ -656,7 +656,7 @@ void WP_FireRebelBlasterMissile(gentity_t* ent, vec3_t start, vec3_t dir, const 
 
 	WP_MissileTargetHint(ent, start, dir);
 
-	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, altFire);
+	gentity_t* missile = create_missile(start, dir, velocity, 10000, ent, altFire);
 
 	missile->classname = "blaster_proj";
 	missile->s.weapon = WP_REBELBLASTER;
@@ -964,7 +964,7 @@ void WP_FireRebelRifleMissile(gentity_t* ent, vec3_t start, vec3_t dir, const qb
 
 	WP_MissileTargetHint(ent, start, dir);
 
-	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, altFire);
+	gentity_t* missile = create_missile(start, dir, velocity, 10000, ent, altFire);
 
 	missile->classname = "blaster_proj";
 	missile->s.weapon = WP_REBELRIFLE;
@@ -1158,7 +1158,7 @@ void WP_FireJangoPistolMissile(gentity_t* ent, vec3_t start, vec3_t dir, const q
 
 	WP_MissileTargetHint(ent, start, dir);
 
-	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, altFire);
+	gentity_t* missile = create_missile(start, dir, velocity, 10000, ent, altFire);
 
 	missile->classname = "blaster_proj";
 	missile->s.weapon = WP_JANGO;
@@ -1249,7 +1249,7 @@ void WP_FireJangoWristMissile(gentity_t* ent, vec3_t start, vec3_t dir, const qb
 
 	WP_MissileTargetHint(ent, start, dir);
 
-	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, altFire);
+	gentity_t* missile = create_missile(start, dir, velocity, 10000, ent, altFire);
 
 	missile->classname = "clone_proj";
 	missile->s.weapon = WP_WRIST_BLASTER;
@@ -1334,7 +1334,7 @@ void WP_FireJangoDualPistolMissile(gentity_t* ent, vec3_t start, vec3_t dir, con
 
 	WP_MissileTargetHint(ent, start, dir);
 
-	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, altFire);
+	gentity_t* missile = create_missile(start, dir, velocity, 10000, ent, altFire);
 
 	missile->classname = "blaster_proj";
 
@@ -1427,7 +1427,7 @@ void WP_FireJangoDualPistolMissileDuals(gentity_t* ent, vec3_t start, vec3_t dir
 
 	WP_MissileTargetHint(ent, start, dir);
 
-	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, altFire);
+	gentity_t* missile = create_missile(start, dir, velocity, 10000, ent, altFire);
 
 	missile->classname = "blaster_proj";
 
@@ -1975,7 +1975,7 @@ void WP_FireBobaRifleMissile(gentity_t* ent, vec3_t start, vec3_t dir, const qbo
 
 	WP_MissileTargetHint(ent, start, dir);
 
-	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, altFire);
+	gentity_t* missile = create_missile(start, dir, velocity, 10000, ent, altFire);
 
 	missile->classname = "blaster_proj";
 	missile->s.weapon = WP_BOBA;

@@ -24,7 +24,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #include "../cgame/cg_local.h"
 #include "g_functions.h"
 
-gentity_t* CreateMissile(vec3_t org, vec3_t dir, float vel, int life, gentity_t* owner, qboolean altFire = qfalse);
+gentity_t* create_missile(vec3_t org, vec3_t dir, float vel, int life, gentity_t* owner, qboolean altFire = qfalse);
 void Remote_Strafe();
 
 constexpr auto VELOCITY_DECAY = 0.85f;
@@ -260,7 +260,7 @@ void Remote_Fire()
 	vectoangles(delta1, angle_to_enemy1);
 	AngleVectors(angle_to_enemy1, forward, vright, up);
 
-	gentity_t* missile = CreateMissile(NPC->currentOrigin, forward, 1000, 10000, NPC);
+	gentity_t* missile = create_missile(NPC->currentOrigin, forward, 1000, 10000, NPC);
 
 	G_PlayEffect("bryar/muzzle_flash", NPC->currentOrigin, forward);
 

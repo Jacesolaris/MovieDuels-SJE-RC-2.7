@@ -182,7 +182,7 @@ void Mark2_FireBlaster()
 
 	G_Sound(NPCS.NPC, CHAN_AUTO, G_SoundIndex("sound/chars/mark2/misc/mark2_fire"));
 
-	gentity_t* missile = CreateMissile(muzzle1, forward, 1600, 10000, NPCS.NPC, qfalse);
+	gentity_t* missile = create_missile(muzzle1, forward, 1600, 10000, NPCS.NPC, qfalse);
 
 	missile->classname = "bryar_proj";
 	missile->s.weapon = WP_BRYAR_PISTOL;

@@ -35,7 +35,7 @@ public:
 	{
 	}
 
-	bool operator==(const CPoint& P) const { return ((x == P.x) && (y == P.y) && (z == P.z)); }
+	bool operator==(const CPoint& p) const { return x == p.x && y == p.y && z == p.z; }
 };
 
 /*
@@ -141,12 +141,12 @@ LEAF LISTING
 
 void CM_StoreLeafs(leafList_t* ll, const int nodenum)
 {
-	const int leafNum = -1 - nodenum;
+	const int leaf_num = -1 - nodenum;
 
 	// store the lastLeaf even if the list is overflowed
-	if (cmg.leafs[leafNum].cluster != -1)
+	if (cmg.leafs[leaf_num].cluster != -1)
 	{
-		ll->lastLeaf = leafNum;
+		ll->lastLeaf = leaf_num;
 	}
 
 	if (ll->count >= ll->maxcount)
@@ -154,7 +154,7 @@ void CM_StoreLeafs(leafList_t* ll, const int nodenum)
 		ll->overflowed = qtrue;
 		return;
 	}
-	ll->list[ll->count++] = leafNum;
+	ll->list[ll->count++] = leaf_num;
 }
 
 void CM_StoreBrushes(leafList_t* ll, const int nodenum)
@@ -246,7 +246,7 @@ void CM_BoxLeafnums_r(leafList_t* ll, int nodenum)
 CM_BoxLeafnums
 ==================
 */
-int CM_BoxLeafnums(const vec3_t mins, const vec3_t maxs, int* boxList, const int listsize, int* lastLeaf)
+int CM_BoxLeafnums(const vec3_t mins, const vec3_t maxs, int* box_list, const int listsize, int* last_leaf)
 {
 	leafList_t ll;
 
@@ -256,14 +256,14 @@ int CM_BoxLeafnums(const vec3_t mins, const vec3_t maxs, int* boxList, const int
 	VectorCopy(maxs, ll.bounds[1]);
 	ll.count = 0;
 	ll.maxcount = listsize;
-	ll.list = boxList;
+	ll.list = box_list;
 	ll.storeLeafs = CM_StoreLeafs;
 	ll.lastLeaf = 0;
 	ll.overflowed = qfalse;
 
 	CM_BoxLeafnums_r(&ll, 0);
 
-	*lastLeaf = ll.lastLeaf;
+	*last_leaf = ll.lastLeaf;
 	return ll.count;
 }
 
@@ -323,7 +323,7 @@ int CM_PointContents(const vec3_t p, const clipHandle_t model)
 			{
 				// Put it in the "oldest" slot
 				l = oldestPointToLeaf++;
-				oldestPointToLeaf &= (MAX_POINTS_TO_LEAVES - 1);
+				oldestPointToLeaf &= MAX_POINTS_TO_LEAVES - 1;
 			}
 
 			leafnum = CM_PointLeafnum_r(p, 0, local);
@@ -497,9 +497,9 @@ AREAPORTALS
 ===============================================================================
 */
 
-void CM_FloodArea_r(const int areaNum, const int floodnum, clipMap_t& cm)
+void CM_FloodArea_r(const int area_num, const int floodnum, clipMap_t& cm)
 {
-	cArea_t* area = &cmg.areas[areaNum];
+	cArea_t* area = &cmg.areas[area_num];
 
 	if (area->floodvalid == cmg.floodvalid)
 	{
@@ -510,7 +510,7 @@ void CM_FloodArea_r(const int areaNum, const int floodnum, clipMap_t& cm)
 
 	area->floodnum = floodnum;
 	area->floodvalid = cmg.floodvalid;
-	const int* con = cmg.areaPortals + areaNum * cmg.numAreas;
+	const int* con = cmg.areaPortals + area_num * cmg.numAreas;
 	for (int i = 0; i < cmg.numAreas; i++)
 	{
 		if (con[i] > 0)

@@ -322,7 +322,7 @@ static void WP_FireBryarPistol(gentity_t* ent, qboolean altFire)
 {
 	int damage = BRYAR_PISTOL_DAMAGE;
 
-	gentity_t* missile = CreateMissile(muzzle, forward, BRYAR_PISTOL_VEL, 10000, ent, altFire);
+	gentity_t* missile = create_missile(muzzle, forward, BRYAR_PISTOL_VEL, 10000, ent, altFire);
 
 	missile->classname = "bryar_proj";
 	missile->s.weapon = WP_BRYAR_PISTOL;
@@ -379,7 +379,7 @@ static void WP_FireReyPistol(gentity_t* ent, qboolean altFire)
 {
 	int damage = REY_DAMAGE;
 
-	gentity_t* missile = CreateMissile(muzzle, forward, REY_VEL, 10000, ent, altFire);
+	gentity_t* missile = create_missile(muzzle, forward, REY_VEL, 10000, ent, altFire);
 
 	missile->classname = "bryar_proj";
 	missile->s.weapon = WP_REY;
@@ -436,7 +436,7 @@ static void WP_FireClonePistol(gentity_t* ent, qboolean altFire)
 {
 	int damage = CLONEPISTOL_DAMAGE;
 
-	gentity_t* missile = CreateMissile(muzzle, forward, CLONEPISTOL_VEL, 10000, ent, altFire);
+	gentity_t* missile = create_missile(muzzle, forward, CLONEPISTOL_VEL, 10000, ent, altFire);
 
 	missile->classname = "clone_proj";
 	missile->s.weapon = WP_CLONEPISTOL;
@@ -499,7 +499,7 @@ GENERIC
 void WP_FireTurretMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean altFire, int damage, int velocity, int mod, gentity_t* ignore)
 //---------------------------------------------------------
 {
-	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, altFire);
+	gentity_t* missile = create_missile(start, dir, velocity, 10000, ent, altFire);
 
 	missile->classname = "generic_proj";
 	missile->s.weapon = WP_TURRET;
@@ -577,7 +577,7 @@ void WP_Explode(gentity_t* self)
 void WP_FireGenericBlasterMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean altFire, int damage, int velocity, int mod)
 //---------------------------------------------------------
 {
-	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, altFire);
+	gentity_t* missile = create_missile(start, dir, velocity, 10000, ent, altFire);
 
 	missile->classname = "generic_proj";
 	missile->s.weapon = WP_BRYAR_PISTOL;
@@ -611,7 +611,7 @@ void WP_FireBlasterMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean al
 		damage = 10;
 	}
 
-	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, altFire);
+	gentity_t* missile = create_missile(start, dir, velocity, 10000, ent, altFire);
 
 	missile->classname = "blaster_proj";
 	missile->s.weapon = WP_BLASTER;
@@ -637,7 +637,7 @@ void WP_FireBattleDroidMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolea
 		damage = 10;
 	}
 
-	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, altFire);
+	gentity_t* missile = create_missile(start, dir, velocity, 10000, ent, altFire);
 
 	missile->classname = "blaster_proj";
 	missile->s.weapon = WP_BATTLEDROID;
@@ -663,7 +663,7 @@ void WP_FireFirstOrderMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean
 		damage = 10;
 	}
 
-	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, altFire);
+	gentity_t* missile = create_missile(start, dir, velocity, 10000, ent, altFire);
 
 	missile->classname = "blaster_proj";
 	missile->s.weapon = WP_THEFIRSTORDER;
@@ -688,7 +688,7 @@ void WP_FireCloneCarbineMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboole
 		damage = 10;
 	}
 
-	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, altFire);
+	gentity_t* missile = create_missile(start, dir, velocity, 10000, ent, altFire);
 
 	missile->classname = "clone_proj";
 	missile->s.weapon = WP_CLONECARBINE;
@@ -714,7 +714,7 @@ void WP_FireRebelBlasterMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboole
 		damage = 10;
 	}
 
-	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, altFire);
+	gentity_t* missile = create_missile(start, dir, velocity, 10000, ent, altFire);
 
 	missile->classname = "blaster_proj";
 	missile->s.weapon = WP_REBELBLASTER;
@@ -740,7 +740,7 @@ void WP_FireCloneRifleMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean
 		damage = 10;
 	}
 
-	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, altFire);
+	gentity_t* missile = create_missile(start, dir, velocity, 10000, ent, altFire);
 
 	missile->classname = "clone_proj";
 	missile->s.weapon = WP_CLONERIFLE;
@@ -766,7 +766,7 @@ void WP_FireCloneCommandoMissile(gentity_t* ent, vec3_t start, vec3_t dir, qbool
 		damage = 10;
 	}
 
-	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, altFire);
+	gentity_t* missile = create_missile(start, dir, velocity, 10000, ent, altFire);
 
 	missile->classname = "clone_proj";
 	missile->s.weapon = WP_CLONECOMMANDO;
@@ -792,7 +792,7 @@ void WP_FireRebelRifleMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean
 		damage = 10;
 	}
 
-	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, altFire);
+	gentity_t* missile = create_missile(start, dir, velocity, 10000, ent, altFire);
 
 	missile->classname = "blaster_proj";
 	missile->s.weapon = WP_REBELRIFLE;
@@ -818,7 +818,7 @@ void WP_FireJangoPistolMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolea
 		damage = 10;
 	}
 
-	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, altFire);
+	gentity_t* missile = create_missile(start, dir, velocity, 10000, ent, altFire);
 
 	missile->classname = "blaster_proj";
 	missile->s.weapon = WP_JANGO;
@@ -849,7 +849,7 @@ void WP_FireBobaRifleMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean 
 		damage = 10;
 	}
 
-	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, altFire);
+	gentity_t* missile = create_missile(start, dir, velocity, 10000, ent, altFire);
 
 	missile->classname = "blaster_proj";
 	missile->s.weapon = WP_BOBA;
@@ -869,7 +869,7 @@ void WP_FireTurboLaserMissile(gentity_t* ent, vec3_t start, vec3_t dir)
 {
 	const int velocity = ent->mass; //FIXME: externalize
 
-	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, qfalse);
+	gentity_t* missile = create_missile(start, dir, velocity, 10000, ent, qfalse);
 
 	//use a custom shot effect
 	missile->s.otherEntityNum2 = ent->genericValue14;
@@ -905,7 +905,7 @@ void WP_FireEmplacedMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean a
 	const int velocity = BLASTER_VELOCITY;
 	const int	damage = BLASTER_DAMAGE;
 
-	gentity_t* missile = CreateMissile(start, dir, velocity, 10000, ent, altFire);
+	gentity_t* missile = create_missile(start, dir, velocity, 10000, ent, altFire);
 
 	missile->classname = "emplaced_gun_proj";
 	missile->s.weapon = WP_TURRET;//WP_EMPLACED_GUN;
@@ -1593,7 +1593,7 @@ static void WP_BowcasterAltFire(gentity_t* ent)
 {
 	const int	damage = BOWCASTER_DAMAGE;
 
-	gentity_t* missile = CreateMissile(muzzle, forward, BOWCASTER_VELOCITY, 10000, ent, qfalse);
+	gentity_t* missile = create_missile(muzzle, forward, BOWCASTER_VELOCITY, 10000, ent, qfalse);
 
 	missile->classname = "bowcaster_proj";
 	missile->s.weapon = WP_BOWCASTER;
@@ -1676,7 +1676,7 @@ static void WP_BowcasterMainFire(gentity_t* ent)
 
 		AngleVectors(angs, dir, NULL, NULL);
 
-		gentity_t* missile = CreateMissile(muzzle, dir, vel, 10000, ent, qtrue);
+		gentity_t* missile = create_missile(muzzle, dir, vel, 10000, ent, qtrue);
 
 		missile->classname = "bowcaster_alt_proj";
 		missile->s.weapon = WP_BOWCASTER;
@@ -1722,7 +1722,7 @@ static void WP_RepeaterMainFire(gentity_t* ent, vec3_t dir)
 {
 	const int	damage = REPEATER_DAMAGE;
 
-	gentity_t* missile = CreateMissile(muzzle, dir, REPEATER_VELOCITY, 10000, ent, qfalse);
+	gentity_t* missile = create_missile(muzzle, dir, REPEATER_VELOCITY, 10000, ent, qfalse);
 
 	missile->classname = "repeater_proj";
 	missile->s.weapon = WP_REPEATER;
@@ -1742,7 +1742,7 @@ static void WP_RepeaterAltFire(gentity_t* ent)
 {
 	const int	damage = REPEATER_ALT_DAMAGE;
 
-	gentity_t* missile = CreateMissile(muzzle, forward, REPEATER_ALT_VELOCITY, 10000, ent, qtrue);
+	gentity_t* missile = create_missile(muzzle, forward, REPEATER_ALT_VELOCITY, 10000, ent, qtrue);
 
 	missile->classname = "repeater_alt_proj";
 	missile->s.weapon = WP_REPEATER;
@@ -1806,7 +1806,7 @@ static void WP_DEMP2_MainFire(gentity_t* ent)
 {
 	const int	damage = DEMP2_DAMAGE;
 
-	gentity_t* missile = CreateMissile(muzzle, forward, DEMP2_VELOCITY, 10000, ent, qfalse);
+	gentity_t* missile = create_missile(muzzle, forward, DEMP2_VELOCITY, 10000, ent, qfalse);
 
 	missile->classname = "demp2_proj";
 	missile->s.weapon = WP_DEMP2;
@@ -2098,7 +2098,7 @@ static void WP_FlechetteMainFire(gentity_t* ent)
 
 		AngleVectors(angs, fwd, NULL, NULL);
 
-		gentity_t* missile = CreateMissile(muzzle, fwd, FLECHETTE_VEL, 10000, ent, qfalse);
+		gentity_t* missile = create_missile(muzzle, fwd, FLECHETTE_VEL, 10000, ent, qfalse);
 
 		missile->classname = "flech_proj";
 		missile->s.weapon = WP_FLECHETTE;
@@ -2211,7 +2211,7 @@ void WP_flechette_alt_blow(gentity_t* ent)
 static void WP_CreateFlechetteBouncyThing(vec3_t start, vec3_t fwd, gentity_t* self)
 //------------------------------------------------------------------------------
 {
-	gentity_t* missile = CreateMissile(start, fwd, 700 + Q_flrand(0.0f, 1.0f) * 700, 1500 + Q_flrand(0.0f, 1.0f) * 2000, self, qtrue);
+	gentity_t* missile = create_missile(start, fwd, 700 + Q_flrand(0.0f, 1.0f) * 700, 1500 + Q_flrand(0.0f, 1.0f) * 2000, self, qtrue);
 
 	missile->think = WP_flechette_alt_blow;
 
@@ -2479,7 +2479,7 @@ static void WP_FireRocket(gentity_t* ent, qboolean altFire)
 		vel *= 0.5f;
 	}
 
-	gentity_t* missile = CreateMissile(muzzle, forward, vel, 30000, ent, altFire);
+	gentity_t* missile = create_missile(muzzle, forward, vel, 30000, ent, altFire);
 
 	if (ent->client && ent->client->ps.rocketLockIndex != ENTITYNUM_NONE)
 	{
@@ -3877,7 +3877,7 @@ static void WP_FireConcussion(gentity_t* ent)
 	VectorCopy(muzzle, start);
 	WP_TraceSetStart(ent, start, vec3_origin, vec3_origin);//make sure our start point isn't on the other side of a wall
 
-	gentity_t* missile = CreateMissile(start, forward, vel, 10000, ent, qfalse);
+	gentity_t* missile = create_missile(start, forward, vel, 10000, ent, qfalse);
 
 	missile->classname = "conc_proj";
 	missile->s.weapon = WP_CONCUSSION;
@@ -4247,7 +4247,7 @@ gentity_t* WP_FireVehicleWeapon(gentity_t* ent, vec3_t start, vec3_t dir, vehWea
 
 		//FIXME: CUSTOM MODEL?
 		//QUERY: altFire true or not?  Does it matter?
-		missile = CreateMissile(start, dir, vehWeapon->fSpeed, 10000, ent, qfalse);
+		missile = create_missile(start, dir, vehWeapon->fSpeed, 10000, ent, qfalse);
 
 		missile->classname = "vehicle_proj";
 

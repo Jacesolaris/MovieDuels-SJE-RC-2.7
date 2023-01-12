@@ -50,7 +50,7 @@ enum
 };
 
 qboolean NPC_CheckPlayerTeamStealth();
-gentity_t* CreateMissile(vec3_t org, vec3_t dir, float vel, int life, gentity_t* owner, qboolean altFire = qfalse);
+gentity_t* create_missile(vec3_t org, vec3_t dir, float vel, int life, gentity_t* owner, qboolean altFire = qfalse);
 void Mark1_BlasterAttack(qboolean advance);
 void DeathFX(const gentity_t* ent);
 extern gitem_t* FindItemForAmmo(ammo_t ammo);
@@ -148,7 +148,7 @@ void Mark1Dead_FireRocket()
 
 	G_Sound(NPC, G_SoundIndex("sound/chars/mark1/misc/mark1_fire"));
 
-	gentity_t* missile = CreateMissile(muzzle1, muzzle_dir, BOWCASTER_VELOCITY, 10000, NPC);
+	gentity_t* missile = create_missile(muzzle1, muzzle_dir, BOWCASTER_VELOCITY, 10000, NPC);
 
 	missile->classname = "bowcaster_proj";
 	missile->s.weapon = WP_BOWCASTER;
@@ -190,7 +190,7 @@ void Mark1Dead_FireBlaster()
 
 	G_PlayEffect("bryar/muzzle_flash", muzzle1, muzzle_dir);
 
-	gentity_t* missile = CreateMissile(muzzle1, muzzle_dir, 1600, 10000, NPC);
+	gentity_t* missile = create_missile(muzzle1, muzzle_dir, 1600, 10000, NPC);
 
 	G_Sound(NPC, G_SoundIndex("sound/chars/mark1/misc/mark1_fire"));
 
@@ -449,7 +449,7 @@ void Mark1_FireBlaster()
 
 	G_Sound(NPC, G_SoundIndex("sound/chars/mark1/misc/mark1_fire"));
 
-	gentity_t* missile = CreateMissile(muzzle1, forward, 1600, 10000, NPC);
+	gentity_t* missile = create_missile(muzzle1, forward, 1600, 10000, NPC);
 
 	missile->classname = "bryar_proj";
 	missile->s.weapon = WP_BRYAR_PISTOL;
@@ -546,7 +546,7 @@ void Mark1_FireRocket()
 
 	G_Sound(NPC, G_SoundIndex("sound/chars/mark1/misc/mark1_fire"));
 
-	gentity_t* missile = CreateMissile(muzzle1, forward, BOWCASTER_VELOCITY, 10000, NPC);
+	gentity_t* missile = create_missile(muzzle1, forward, BOWCASTER_VELOCITY, 10000, NPC);
 
 	missile->classname = "bowcaster_proj";
 	missile->s.weapon = WP_BOWCASTER;

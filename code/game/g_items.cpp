@@ -2064,8 +2064,6 @@ void PlaceBarrier(gentity_t* ent)
 	{
 		if (!ent->client->ps.powerups[PW_GALAK_SHIELD])
 		{
-			//VectorCopy(shieldMins, ent->mins);
-			//VectorCopy(shieldMaxs, ent->maxs);
 			ent->client->ps.powerups[PW_GALAK_SHIELD] = Q3_INFINITE;
 			G_AddEvent(ent, EV_GENERAL_SOUND, shieldActivateSound);
 			ent->client->ps.BarrierFuel -= 15;

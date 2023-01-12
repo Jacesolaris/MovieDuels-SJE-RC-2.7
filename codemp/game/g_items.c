@@ -1630,7 +1630,7 @@ void EWebFire(gentity_t* owner, gentity_t* eweb)
 	VectorMA(p, -16.0f, d, bPoint);
 
 	//create the missile
-	gentity_t* missile = CreateMissile(bPoint, d, 1200.0f, 10000, owner, qfalse);
+	gentity_t* missile = create_missile(bPoint, d, 1200.0f, 10000, owner, qfalse);
 
 	missile->classname = "generic_proj";
 	missile->s.weapon = WP_TURRET;

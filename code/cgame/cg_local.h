@@ -1025,7 +1025,7 @@ void cgi_RE_InitRendererTerrain(const char* terrainInfo);
 
 // model collision
 void cgi_CM_LoadMap(const char* mapname, qboolean subBSP);
-int cgi_CM_NumInlineModels(void);
+int cgi_CM_NumInlineModels();
 clipHandle_t cgi_CM_InlineModel(int index); // 0 = world, 1+ = bmodels
 clipHandle_t cgi_CM_TempBoxModel(const vec3_t mins, const vec3_t maxs); //, const int contents );
 int cgi_CM_PointContents(const vec3_t p, clipHandle_t model);

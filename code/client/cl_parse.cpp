@@ -223,54 +223,54 @@ for any reason, no changes to the state will be made at all.
 void CL_ParseSnapshot(msg_t* msg)
 {
 	clSnapshot_t* old;
-	clSnapshot_t newSnap;
+	clSnapshot_t new_snap;
 
 	// get the reliable sequence acknowledge number
 	clc.reliableAcknowledge = MSG_ReadLong(msg);
 
 	// read in the new snapshot to a temporary buffer
 	// we will only copy to cl.frame if it is valid
-	memset(&newSnap, 0, sizeof(newSnap));
+	memset(&new_snap, 0, sizeof new_snap);
 
-	newSnap.serverCommandNum = clc.serverCommandSequence;
+	new_snap.serverCommandNum = clc.serverCommandSequence;
 
-	newSnap.serverTime = MSG_ReadLong(msg);
+	new_snap.serverTime = MSG_ReadLong(msg);
 
 	// if we were just unpaused, we can only *now* really let the
 	// change come into effect or the client hangs.
 	cl_paused->modified = qfalse;
 
-	newSnap.messageNum = MSG_ReadLong(msg);
-	const int deltaNum = MSG_ReadByte(msg);
-	if (!deltaNum)
+	new_snap.messageNum = MSG_ReadLong(msg);
+	const int delta_num = MSG_ReadByte(msg);
+	if (!delta_num)
 	{
-		newSnap.deltaNum = -1;
+		new_snap.deltaNum = -1;
 	}
 	else
 	{
-		newSnap.deltaNum = newSnap.messageNum - deltaNum;
+		new_snap.deltaNum = new_snap.messageNum - delta_num;
 	}
-	newSnap.cmdNum = MSG_ReadLong(msg);
-	newSnap.snapFlags = MSG_ReadByte(msg);
+	new_snap.cmdNum = MSG_ReadLong(msg);
+	new_snap.snapFlags = MSG_ReadByte(msg);
 
 	// If the frame is delta compressed from data that we
 	// no longer have available, we must suck up the rest of
 	// the frame, but not use it, then ask for a non-compressed
 	// message
-	if (newSnap.deltaNum <= 0)
+	if (new_snap.deltaNum <= 0)
 	{
-		newSnap.valid = qtrue; // uncompressed frame
+		new_snap.valid = qtrue; // uncompressed frame
 		old = nullptr;
 	}
 	else
 	{
-		old = &cl.frames[newSnap.deltaNum & PACKET_MASK];
+		old = &cl.frames[new_snap.deltaNum & PACKET_MASK];
 		if (!old->valid)
 		{
 			// should never happen
 			Com_Printf("Delta from invalid frame (not supposed to happen!).\n");
 		}
-		else if (old->messageNum != newSnap.deltaNum)
+		else if (old->messageNum != new_snap.deltaNum)
 		{
 			// The frame that the server did the delta from
 			// is too old, so we can't reconstruct it properly.
@@ -282,32 +282,32 @@ void CL_ParseSnapshot(msg_t* msg)
 		}
 		else
 		{
-			newSnap.valid = qtrue; // valid delta parse
+			new_snap.valid = qtrue; // valid delta parse
 		}
 	}
 
 	// read areamask
 	const int len = MSG_ReadByte(msg);
-	MSG_ReadData(msg, &newSnap.areamask, len);
+	MSG_ReadData(msg, &new_snap.areamask, len);
 
 	// read playerinfo
 	SHOWNET(msg, "playerstate");
 	if (old)
 	{
-		MSG_ReadDeltaPlayerstate(msg, &old->ps, &newSnap.ps);
+		MSG_ReadDeltaPlayerstate(msg, &old->ps, &new_snap.ps);
 	}
 	else
 	{
-		MSG_ReadDeltaPlayerstate(msg, nullptr, &newSnap.ps);
+		MSG_ReadDeltaPlayerstate(msg, nullptr, &new_snap.ps);
 	}
 
 	// read packet entities
 	SHOWNET(msg, "packet entities");
-	CL_ParsePacketEntities(msg, old, &newSnap);
+	CL_ParsePacketEntities(msg, old, &new_snap);
 
 	// if not valid, dump the entire thing now that it has
 	// been properly read
-	if (!newSnap.valid)
+	if (!new_snap.valid)
 	{
 		return;
 	}
@@ -320,13 +320,13 @@ void CL_ParseSnapshot(msg_t* msg)
 	{
 		oldMessageNum = cl.frame.messageNum - (PACKET_BACKUP - 1);
 	}
-	for (; oldMessageNum < newSnap.messageNum; oldMessageNum++)
+	for (; oldMessageNum < new_snap.messageNum; oldMessageNum++)
 	{
 		cl.frames[oldMessageNum & PACKET_MASK].valid = qfalse;
 	}
 
 	// copy to the current good spot
-	cl.frame = newSnap;
+	cl.frame = new_snap;
 
 	// calculate ping time
 	for (int i = 0; i < PACKET_BACKUP; i++)

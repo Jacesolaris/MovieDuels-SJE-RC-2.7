@@ -284,7 +284,7 @@ void G_BounceProjectile(vec3_t start, vec3_t impact, vec3_t dir, vec3_t endout) 
 }
 
 //-----------------------------------------------------------------------------
-gentity_t* CreateMissile(vec3_t org, vec3_t dir, float vel, int life,
+gentity_t* create_missile(vec3_t org, vec3_t dir, float vel, int life,
 	gentity_t* owner, qboolean altFire)
 	//-----------------------------------------------------------------------------
 {

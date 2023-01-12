@@ -158,7 +158,7 @@ void Mark1Dead_FireRocket(void)
 
 	G_Sound(NPCS.NPC, CHAN_AUTO, G_SoundIndex("sound/chars/mark1/misc/mark1_fire"));
 
-	gentity_t* missile = CreateMissile(muzzle1, muzzle_dir, BOWCASTER_VELOCITY, 10000, NPCS.NPC, qfalse);
+	gentity_t* missile = create_missile(muzzle1, muzzle_dir, BOWCASTER_VELOCITY, 10000, NPCS.NPC, qfalse);
 
 	missile->classname = "bowcaster_proj";
 	missile->s.weapon = WP_BOWCASTER;
@@ -201,7 +201,7 @@ void Mark1Dead_FireBlaster(void)
 
 	G_PlayEffectID(G_EffectIndex("bryar/muzzle_flash"), muzzle1, muzzle_dir);
 
-	gentity_t* missile = CreateMissile(muzzle1, muzzle_dir, 1600, 10000, NPCS.NPC, qfalse);
+	gentity_t* missile = create_missile(muzzle1, muzzle_dir, 1600, 10000, NPCS.NPC, qfalse);
 
 	G_Sound(NPCS.NPC, CHAN_AUTO, G_SoundIndex("sound/chars/mark1/misc/mark1_fire"));
 
@@ -483,7 +483,7 @@ void Mark1_FireBlaster(void)
 
 	G_Sound(NPCS.NPC, CHAN_AUTO, G_SoundIndex("sound/chars/mark1/misc/mark1_fire"));
 
-	gentity_t* missile = CreateMissile(muzzle1, forward, 1600, 10000, NPCS.NPC, qfalse);
+	gentity_t* missile = create_missile(muzzle1, forward, 1600, 10000, NPCS.NPC, qfalse);
 
 	missile->classname = "bryar_proj";
 	missile->s.weapon = WP_BRYAR_PISTOL;
@@ -581,7 +581,7 @@ void Mark1_FireRocket(void)
 
 	G_Sound(NPCS.NPC, CHAN_AUTO, G_SoundIndex("sound/chars/mark1/misc/mark1_fire"));
 
-	gentity_t* missile = CreateMissile(muzzle1, forward, BOWCASTER_VELOCITY, 10000, NPCS.NPC, qfalse);
+	gentity_t* missile = create_missile(muzzle1, forward, BOWCASTER_VELOCITY, 10000, NPCS.NPC, qfalse);
 
 	missile->classname = "bowcaster_proj";
 	missile->s.weapon = WP_BOWCASTER;

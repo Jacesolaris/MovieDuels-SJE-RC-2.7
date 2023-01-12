@@ -54,8 +54,8 @@ winding_t* BaseWindingForPlane(vec3_t normal, vec_t dist);
 void FreeWinding(winding_t* w);
 void WindingBounds(winding_t* w, vec3_t mins, vec3_t maxs);
 
-void ChopWindingInPlace(winding_t** w, vec3_t normal, vec_t dist, vec_t epsilon);
+void ChopWindingInPlace(winding_t** inout, vec3_t normal, vec_t dist, vec_t epsilon);
 // frees the original if clipped
 
-void pw(winding_t* w);
+void pw(const winding_t* w);
 #endif

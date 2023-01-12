@@ -1799,6 +1799,10 @@ void NPC_RunBehavior(const int team, const int b_state)
 		}
 		G_CheckCharmed(NPC);
 	}
+	else if (NPC->client->NPC_class == CLASS_SBD)
+	{
+		NPC_BehaviorSet_Stormtrooper(b_state);
+	}
 	else if (NPC->client->NPC_class == CLASS_RANCOR)
 	{
 		NPC_BehaviorSet_Rancor(b_state);

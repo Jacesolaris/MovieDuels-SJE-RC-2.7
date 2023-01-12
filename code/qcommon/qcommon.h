@@ -316,20 +316,20 @@ using completionFunc_t = void (*)(char* args, int argNum);
 void Cmd_CommandCompletion(callbackFunc_t callback);
 // callback with each valid string
 void Cmd_SetCommandCompletionFunc(const char* command, completionFunc_t complete);
-void Cmd_CompleteArgument(const char* command, char* args, int argNum);
-void Cmd_CompleteCfgName(char* args, int argNum);
+void Cmd_CompleteArgument(const char* command, char* args, int arg_num);
+void Cmd_CompleteCfgName(char* args, int arg_num);
 
 int Cmd_Argc(void);
 char* Cmd_Argv(int arg);
-void Cmd_ArgvBuffer(int arg, char* buffer, int bufferLength);
+void Cmd_ArgvBuffer(int arg, char* buffer, int buffer_length);
 char* Cmd_Args(void);
 char* Cmd_ArgsFrom(int arg);
-void Cmd_ArgsBuffer(char* buffer, int bufferLength);
+void Cmd_ArgsBuffer(char* buffer, int buffer_length);
 // The functions that execute commands get their parameters with these
 // functions. Cmd_Argv () will return an empty string, not a NULL
 // if arg > argc, so string operations are allways safe.
 
-void Cmd_TokenizeString(const char* text);
+void Cmd_TokenizeString(const char* text_in);
 void Cmd_TokenizeStringIgnoreQuotes(const char* text_in);
 // Takes a null terminated string.  Does not need to be /n terminated.
 // breaks the string up into arg tokens.

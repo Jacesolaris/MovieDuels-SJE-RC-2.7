@@ -52,7 +52,7 @@ next frame.  This allows commands like:
 bind g "cmd use rocket ; +attack ; wait ; -attack ; cmd use blaster"
 ============
 */
-void Cmd_Wait_f(void)
+void Cmd_Wait_f()
 {
 	if (Cmd_Argc() == 2)
 	{
@@ -79,7 +79,7 @@ void Cmd_Wait_f(void)
 Cbuf_Init
 ============
 */
-void Cbuf_Init(void)
+void Cbuf_Init()
 {
 	cmd_text.data = cmd_text_buf;
 	cmd_text.maxsize = MAX_CMD_BUFFER;
@@ -175,7 +175,7 @@ void Cbuf_ExecuteText(const int exec_when, const char* text)
 Cbuf_Execute
 ============
 */
-void Cbuf_Execute(void)
+void Cbuf_Execute()
 {
 	int i;
 	char line[MAX_CMD_LINE];
@@ -197,7 +197,7 @@ void Cbuf_Execute(void)
 		}
 
 		// find a \n or ; line break or comment: // or /* */
-		const auto text = (char*)cmd_text.data;
+		const auto text = reinterpret_cast<char*>(cmd_text.data);
 
 		int quotes = 0;
 		for (i = 0; i < cmd_text.cursize; i++)
@@ -273,7 +273,7 @@ void Cbuf_Execute(void)
 Cmd_Exec_f
 ===============
 */
-void Cmd_Exec_f(void)
+void Cmd_Exec_f()
 {
 	union
 	{
@@ -314,7 +314,7 @@ Cmd_Vstr_f
 Inserts the current value of a variable as command text
 ===============
 */
-void Cmd_Vstr_f(void)
+void Cmd_Vstr_f()
 {
 	if (Cmd_Argc() != 2)
 	{
@@ -333,7 +333,7 @@ Cmd_Echo_f
 Just prints the rest of the line to the console
 ===============
 */
-void Cmd_Echo_f(void)
+void Cmd_Echo_f()
 {
 	Com_Printf("%s\n", Cmd_Args());
 }
@@ -379,7 +379,7 @@ cmd_function_t* Cmd_FindCommand(const char* cmd_name)
 Cmd_Argc
 ============
 */
-int Cmd_Argc(void)
+int Cmd_Argc()
 {
 	return cmd_argc;
 }
@@ -405,9 +405,9 @@ The interpreted versions use this because
 they can't have pointers returned to them
 ============
 */
-void Cmd_ArgvBuffer(const int arg, char* buffer, const int bufferLength)
+void Cmd_ArgvBuffer(const int arg, char* buffer, const int buffer_length)
 {
-	Q_strncpyz(buffer, Cmd_Argv(arg), bufferLength);
+	Q_strncpyz(buffer, Cmd_Argv(arg), buffer_length);
 }
 
 /*
@@ -443,7 +443,7 @@ Cmd_Args
 Returns a single string containing argv(1) to argv(argc()-1)
 ============
 */
-char* Cmd_Args(void)
+char* Cmd_Args()
 {
 	return Cmd_ArgsFrom(1);
 }
@@ -456,9 +456,9 @@ The interpreted versions use this because
 they can't have pointers returned to them
 ============
 */
-void Cmd_ArgsBuffer(char* buffer, const int bufferLength)
+void Cmd_ArgsBuffer(char* buffer, const int buffer_length)
 {
-	Q_strncpyz(buffer, Cmd_ArgsFrom(1), bufferLength);
+	Q_strncpyz(buffer, Cmd_ArgsFrom(1), buffer_length);
 }
 
 /*
@@ -469,9 +469,9 @@ The interpreted versions use this because
 they can't have pointers returned to them
 ============
 */
-void Cmd_ArgsFromBuffer(int arg, char* buffer, const int bufferLength)
+void Cmd_ArgsFromBuffer(char* buffer, const int buffer_length)
 {
-	Q_strncpyz(buffer, Cmd_Args(), bufferLength);
+	Q_strncpyz(buffer, Cmd_Args(), buffer_length);
 }
 
 /*
@@ -483,7 +483,7 @@ For rcon use when you want to transmit without altering quoting
 https://zerowing.idsoftware.com/bugzilla/show_bug.cgi?id=543
 ============
 */
-char* Cmd_Cmd(void)
+char* Cmd_Cmd()
 {
 	return cmd_cmd;
 }
@@ -498,7 +498,7 @@ are inserted in the apropriate place, The argv array
 will point into this temporary buffer.
 ============
 */
-static void Cmd_TokenizeString2(const char* text_in, const qboolean ignoreQuotes)
+static void Cmd_TokenizeString2(const char* text_in, const qboolean ignore_quotes)
 {
 	// clear previous args
 	cmd_argc = 0;
@@ -511,7 +511,7 @@ static void Cmd_TokenizeString2(const char* text_in, const qboolean ignoreQuotes
 	Q_strncpyz(cmd_cmd, text_in, sizeof(cmd_cmd));
 
 	const char* text = text_in;
-	char* textOut = cmd_tokenized;
+	char* text_out = cmd_tokenized;
 
 	while (true)
 	{
@@ -559,16 +559,16 @@ static void Cmd_TokenizeString2(const char* text_in, const qboolean ignoreQuotes
 
 		// handle quoted strings
 		// NOTE TTimo this doesn't handle \" escaping
-		if (!ignoreQuotes && *text == '"')
+		if (!ignore_quotes && *text == '"')
 		{
-			cmd_argv[cmd_argc] = textOut;
+			cmd_argv[cmd_argc] = text_out;
 			cmd_argc++;
 			text++;
 			while (*text && *text != '"')
 			{
-				*textOut++ = *text++;
+				*text_out++ = *text++;
 			}
-			*textOut++ = 0;
+			*text_out++ = 0;
 			if (!*text)
 			{
 				return; // all tokens parsed
@@ -578,13 +578,13 @@ static void Cmd_TokenizeString2(const char* text_in, const qboolean ignoreQuotes
 		}
 
 		// regular token
-		cmd_argv[cmd_argc] = textOut;
+		cmd_argv[cmd_argc] = text_out;
 		cmd_argc++;
 
 		// skip until whitespace, quote, or command
-		while (*(const unsigned char* /*eurofix*/)text > ' ')
+		while (*reinterpret_cast<const unsigned char*>(text) > ' ')
 		{
-			if (!ignoreQuotes && text[0] == '"')
+			if (!ignore_quotes && text[0] == '"')
 			{
 				break;
 			}
@@ -600,10 +600,10 @@ static void Cmd_TokenizeString2(const char* text_in, const qboolean ignoreQuotes
 				break;
 			}
 
-			*textOut++ = *text++;
+			*text_out++ = *text++;
 		}
 
-		*textOut++ = 0;
+		*text_out++ = 0;
 
 		if (!*text)
 		{
@@ -721,12 +721,12 @@ void Cmd_CommandCompletion(const callbackFunc_t callback)
 Cmd_CompleteArgument
 ============
 */
-void Cmd_CompleteArgument(const char* command, char* args, const int argNum)
+void Cmd_CompleteArgument(const char* command, char* args, const int arg_num)
 {
 	for (const cmd_function_t* cmd = cmd_functions; cmd; cmd = cmd->next)
 	{
 		if (!Q_stricmp(command, cmd->name) && cmd->complete)
-			cmd->complete(args, argNum);
+			cmd->complete(args, arg_num);
 	}
 }
 
@@ -805,7 +805,7 @@ void Cmd_ExecuteString(const char* text)
 Cmd_List_f
 ============
 */
-void Cmd_List_f(void)
+void Cmd_List_f()
 {
 	const cmd_function_t* cmd = nullptr;
 	int i, j;
@@ -837,9 +837,9 @@ void Cmd_List_f(void)
 Cmd_CompleteCfgName
 ==================
 */
-void Cmd_CompleteCfgName(char* args, const int argNum)
+void Cmd_CompleteCfgName(char* args, const int arg_num)
 {
-	if (argNum == 2)
+	if (arg_num == 2)
 	{
 		Field_CompleteFilename("", "cfg", qfalse, qtrue);
 	}
@@ -850,7 +850,7 @@ void Cmd_CompleteCfgName(char* args, const int argNum)
 Cmd_Init
 ============
 */
-void Cmd_Init(void)
+void Cmd_Init()
 {
 	Cmd_AddCommand("cmdlist", Cmd_List_f);
 	Cmd_AddCommand("exec", Cmd_Exec_f);
