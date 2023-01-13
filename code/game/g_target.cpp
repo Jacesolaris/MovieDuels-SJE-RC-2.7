@@ -967,7 +967,7 @@ void SP_target_friction_change(gentity_t* self)
 	self->e_UseFunc = useF_target_friction_change_use;
 }
 
-void set_mission_stats_cvars(void)
+void set_mission_stats_cvars()
 {
 	char text[1024] = {0};
 

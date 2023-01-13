@@ -57,14 +57,14 @@ extern cvar_t* se_language;
 
 // available API calls...
 //
-void SE_Init(void);
-void SE_ShutDown(void);
+void SE_Init();
+void SE_ShutDown();
 void SE_CheckForLanguageUpdates();
-int SE_GetNumLanguages(void);
+int SE_GetNumLanguages();
 const char* SE_GetLanguageName(int iLangIndex); // eg "german"
 const char* SE_GetLanguageDir(int iLangIndex); // eg "strings/german"
 const char* SE_LoadLanguage(const char* psLanguage, SE_BOOL bLoadDebug = SE_TRUE);
-void SE_NewLanguage(void);
+void SE_NewLanguage();
 //
 // for convenience, two ways of getting at the same data...
 //
@@ -78,44 +78,44 @@ int SE_GetFlags(const char* psPackageAndStringReference);
 //
 // general flag functions... (SEP_GetFlagMask() return should be used with SEP_GetFlags() return)
 //
-int SE_GetNumFlags(void);
+int SE_GetNumFlags();
 const char* SE_GetFlagName(int iFlagIndex);
 int SE_GetFlagMask(const char* psFlagName);
 
 // note that so far the only place in the game that needs to know these is the font system so it can know how to
 //	interpret char codes, for this reason I'm only exposing these simple bool queries...
 //
-inline SE_BOOL Language_IsRussian(void)
+inline SE_BOOL Language_IsRussian()
 {
 	return (se_language && !Q_stricmp(se_language->string, "russian")) ? SE_TRUE : SE_FALSE;
 }
 
-inline SE_BOOL Language_IsPolish(void)
+inline SE_BOOL Language_IsPolish()
 {
 	return (se_language && !Q_stricmp(se_language->string, "polish")) ? SE_TRUE : SE_FALSE;
 }
 
-inline SE_BOOL Language_IsKorean(void)
+inline SE_BOOL Language_IsKorean()
 {
 	return (se_language && !Q_stricmp(se_language->string, "korean")) ? SE_TRUE : SE_FALSE;
 }
 
-inline SE_BOOL Language_IsTaiwanese(void)
+inline SE_BOOL Language_IsTaiwanese()
 {
 	return (se_language && !Q_stricmp(se_language->string, "taiwanese")) ? SE_TRUE : SE_FALSE;
 }
 
-inline SE_BOOL Language_IsJapanese(void)
+inline SE_BOOL Language_IsJapanese()
 {
 	return (se_language && !Q_stricmp(se_language->string, "japanese")) ? SE_TRUE : SE_FALSE;
 }
 
-inline SE_BOOL Language_IsChinese(void)
+inline SE_BOOL Language_IsChinese()
 {
 	return (se_language && !Q_stricmp(se_language->string, "chinese")) ? SE_TRUE : SE_FALSE;
 }
 
-inline SE_BOOL Language_IsThai(void)
+inline SE_BOOL Language_IsThai()
 {
 	return (se_language && !Q_stricmp(se_language->string, "thai")) ? SE_TRUE : SE_FALSE;
 }

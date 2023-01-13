@@ -509,7 +509,7 @@ static void Cvar_QSortByName(cvar_t** a, const int n)
 	if (n > i) Cvar_QSortByName(a + i, n - i);
 }
 
-static void Cvar_Sort(void)
+static void Cvar_Sort()
 {
 	cvar_t *list[MAX_CVARS], *var;
 	int count;
@@ -779,7 +779,7 @@ Cvar_SetCheatState
 Any testing variables will be reset to the safe values
 ============
 */
-void Cvar_SetCheatState(void)
+void Cvar_SetCheatState()
 {
 	// set all default vars to the safe value
 	for (cvar_t* var = cvar_vars; var; var = var->next)
@@ -808,7 +808,7 @@ Cvar_Command
 Handles variable inspection and changing from the console
 ============
 */
-qboolean Cvar_Command(void)
+qboolean Cvar_Command()
 {
 	// check variables
 	const cvar_t* v = Cvar_FindVar(Cmd_Argv(0));
@@ -846,7 +846,7 @@ Prints the contents of a cvar
 (preferred over Cvar_Command where cvar names and commands conflict)
 ============
 */
-void Cvar_Print_f(void)
+void Cvar_Print_f()
 {
 	if (Cmd_Argc() != 2)
 	{
@@ -872,7 +872,7 @@ Toggles a cvar for easy single key binding, optionally through a list of
 given values
 ============
 */
-void Cvar_Toggle_f(void)
+void Cvar_Toggle_f()
 {
 	const int c = Cmd_Argc();
 
@@ -921,7 +921,7 @@ Allows setting and defining of arbitrary cvars from console, even if they
 weren't declared in C code.
 ============
 */
-void Cvar_Set_f(void)
+void Cvar_Set_f()
 {
 	const int c = Cmd_Argc();
 	char* cmd = Cmd_Argv(0);
@@ -965,6 +965,7 @@ void Cvar_Set_f(void)
 			cvar_modifiedFlags |= CVAR_SERVERINFO;
 		}
 		break;
+	default: ;
 	}
 }
 
@@ -973,7 +974,7 @@ void Cvar_Set_f(void)
 Cvar_Reset_f
 ============
 */
-void Cvar_Reset_f(void)
+void Cvar_Reset_f()
 {
 	if (Cmd_Argc() != 2)
 	{
@@ -1047,7 +1048,7 @@ void Cvar_WriteVariables(const fileHandle_t f)
 Cvar_List_f
 ============
 */
-void Cvar_List_f(void)
+void Cvar_List_f()
 {
 	const cvar_t* var = nullptr;
 	int i = 0;
@@ -1118,7 +1119,7 @@ void Cvar_SerenityJediEngine_f()
 	}
 }
 
-void Cvar_ListModified_f(void)
+void Cvar_ListModified_f()
 {
 	// build a list of cvars that are modified
 	for (const cvar_t* var = cvar_vars;
@@ -1136,7 +1137,7 @@ void Cvar_ListModified_f(void)
 	}
 }
 
-void Cvar_ListUserCreated_f(void)
+void Cvar_ListUserCreated_f()
 {
 	uint32_t count = 0;
 
@@ -1213,7 +1214,7 @@ Unsets a userdefined cvar
 ============
 */
 
-void Cvar_Unset_f(void)
+void Cvar_Unset_f()
 {
 	if (Cmd_Argc() != 2)
 	{
@@ -1232,7 +1233,7 @@ void Cvar_Unset_f(void)
 		Com_Printf("Error: %s: Variable %s is not user created.\n", Cmd_Argv(0), cv->name);
 }
 
-void Cvar_UnsetUserCreated_f(void)
+void Cvar_UnsetUserCreated_f()
 {
 	cvar_t* curvar = cvar_vars;
 	uint32_t count = 0;
@@ -1296,7 +1297,7 @@ Cvar_Restart_f
 Resets all cvars to their hardcoded values
 ============
 */
-void Cvar_Restart_f(void)
+void Cvar_Restart_f()
 {
 	Cvar_Restart(qfalse);
 }
@@ -1438,7 +1439,7 @@ Cvar_Init
 Reads in all archived cvars
 ============
 */
-void Cvar_Init(void)
+void Cvar_Init()
 {
 	memset(cvar_indexes, 0, sizeof(cvar_indexes));
 	memset(hashTable, 0, sizeof(hashTable));
@@ -1491,7 +1492,7 @@ static void Cvar_Realloc(char** string, char* memPool, int& memPoolUsed)
 }
 
 //Turns many small allocation blocks into one big one.
-void Cvar_Defrag(void)
+void Cvar_Defrag()
 {
 	cvar_t* var;
 	int totalMem = 0;

@@ -53,7 +53,7 @@ float GetNoiseTime(const int t)
 	return 1 + s_noise_table[index];
 }
 
-void R_NoiseInit(void)
+void R_NoiseInit()
 {
 	srand(1001);
 

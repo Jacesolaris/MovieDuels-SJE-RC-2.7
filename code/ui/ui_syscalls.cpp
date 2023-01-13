@@ -30,7 +30,7 @@ float trap_Cvar_VariableValue(const char* var_name)
 	return Cvar_VariableValue(var_name);
 }
 
-void trap_R_ClearScene(void)
+void trap_R_ClearScene()
 {
 	ui.R_ClearScene();
 }
@@ -74,7 +74,7 @@ void trap_S_StartLocalSound(const sfxHandle_t sfx, const int channelNum)
 	S_StartLocalSound(sfx, channelNum);
 }
 
-void trap_S_StopSounds(void)
+void trap_S_StopSounds()
 {
 	S_StopSounds();
 }
@@ -89,7 +89,7 @@ void trap_Key_SetBinding(const int keynum, const char* binding)
 	Key_SetBinding(keynum, binding);
 }
 
-qboolean trap_Key_GetOverstrikeMode(void)
+qboolean trap_Key_GetOverstrikeMode()
 {
 	return Key_GetOverstrikeMode();
 }
@@ -99,14 +99,14 @@ void trap_Key_SetOverstrikeMode(const qboolean state)
 	Key_SetOverstrikeMode(state);
 }
 
-void trap_Key_ClearStates(void)
+void trap_Key_ClearStates()
 {
 	Key_ClearStates();
 }
 
-int Key_GetCatcher(void);
+int Key_GetCatcher();
 
-int trap_Key_GetCatcher(void)
+int trap_Key_GetCatcher()
 {
 	return Key_GetCatcher();
 }

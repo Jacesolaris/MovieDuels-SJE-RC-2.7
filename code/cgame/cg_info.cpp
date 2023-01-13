@@ -367,7 +367,7 @@ void CG_DrawDataPadObjectives(const centity_t* cent)
 	}
 }
 
-static void CG_LoadBar(void)
+static void CG_LoadBar()
 {
 	constexpr int numticks = 9, tickwidth = 40, tickheight = 8;
 	constexpr int tickpadx = 20, tickpady = 12;

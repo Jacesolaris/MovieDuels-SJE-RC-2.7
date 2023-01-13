@@ -67,7 +67,7 @@ void FreeWinding(winding_t* w)
 	Z_Free(w);
 }
 
-void WindingBounds(winding_t* w, vec3_t mins, vec3_t maxs)
+void WindingBounds(const winding_t* w, vec3_t mins, vec3_t maxs)
 {
 	mins[0] = mins[1] = mins[2] = WORLD_SIZE; // 99999;	// WORLD_SIZE instead of MAX_WORLD_COORD so that...
 	maxs[0] = maxs[1] = maxs[2] = -WORLD_SIZE; //-99999;	// ... it's guaranteed to be outide of legal
@@ -160,7 +160,7 @@ winding_t* BaseWindingForPlane(vec3_t normal, const vec_t dist)
 CopyWinding
 ==================
 */
-winding_t* CopyWinding(winding_t* w)
+winding_t* CopyWinding(const winding_t* w)
 {
 	winding_t* c = AllocWinding(w->numpoints);
 	const intptr_t size = reinterpret_cast<intptr_t>(static_cast<winding_t*>(nullptr)->p[w->numpoints]);

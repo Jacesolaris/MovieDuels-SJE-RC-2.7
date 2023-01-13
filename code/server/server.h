@@ -189,8 +189,8 @@ extern cvar_t* sv_compress_saved_games;
 void SV_FinalMessage(char* message);
 void QDECL SV_SendServerCommand(client_t* cl, const char* fmt, ...);
 
-void SV_AddOperatorCommands(void);
-void SV_RemoveOperatorCommands(void);
+void SV_AddOperatorCommands();
+void SV_RemoveOperatorCommands();
 
 //
 // sv_init.c
@@ -221,8 +221,8 @@ void SV_ClientThink(client_t* cl, usercmd_t* cmd);
 // sv_snapshot.c
 //
 void SV_AddServerCommand(client_t* client, const char* cmd);
-void SV_SendMessageToClient(msg_t* msg, client_t* client);
-void SV_SendClientMessages(void);
+void SV_SendMessageToClient(const msg_t* msg, client_t* client);
+void SV_SendClientMessages();
 void SV_SendClientSnapshot(client_t* client);
 
 //
@@ -240,7 +240,7 @@ qboolean SV_inPVS(const vec3_t p1, const vec3_t p2);
 // high level object sorting to reduce interaction tests
 //
 
-void SV_ClearWorld(void);
+void SV_ClearWorld();
 // called after the world model has been loaded, before linking any entities
 
 void SV_UnlinkEntity(gentity_t* ent);
@@ -256,7 +256,7 @@ void SV_LinkEntity(gentity_t* ent);
 
 clipHandle_t SV_ClipHandleForEntity(const gentity_t* ent);
 
-void SV_SectorList_f(void);
+void SV_SectorList_f();
 
 int SV_AreaEntities(const vec3_t mins, const vec3_t maxs, gentity_t** elist, int maxcount);
 // fills in a table of entity pointers with entities that have bounding boxes
@@ -291,10 +291,10 @@ Ghoul2 Insert End
 //
 // sv_savegame.cpp
 //
-void SV_LoadGame_f(void);
-void SV_LoadTransition_f(void);
-void SV_SaveGame_f(void);
-void SV_WipeGame_f(void);
+void SV_LoadGame_f();
+void SV_LoadTransition_f();
+void SV_SaveGame_f();
+void SV_WipeGame_f();
 qboolean SV_TryLoadTransition(const char* mapname);
 qboolean SG_WriteSavegame(const char* psPathlessBaseName, qboolean qbAutosave);
 qboolean SG_ReadSavegame(const char* psPathlessBaseName);
@@ -303,7 +303,7 @@ qboolean SG_Append(unsigned int chid, const void* data, int length);
 int SG_Read(unsigned int chid, void* pvAddress, int iLength, void** ppvAddressPtr = nullptr);
 int SG_ReadOptional(unsigned int chid, void* pvAddress, int iLength, void** ppvAddressPtr = nullptr);
 void SG_Shutdown();
-void SG_TestSave(void);
+void SG_TestSave();
 //
 // note that this version number does not mean that a savegame with the same version can necessarily be loaded,
 //	since anyone can change any loadsave-affecting structure somewhere in a header and change a chunk size.
@@ -311,7 +311,7 @@ void SG_TestSave(void);
 //	any new enhanced ones that need to ask for new chunks during loading.
 //
 #define iSAVEGAME_VERSION 1
-int SG_Version(void); // call this to know what version number a successfully-opened savegame file was
+int SG_Version(); // call this to know what version number a successfully-opened savegame file was
 //
 extern SavedGameJustLoaded_e e_saved_game_just_loaded;
 extern qboolean qbLoadTransition;

@@ -151,7 +151,7 @@ SV_ClearWorld
 
 ===============
 */
-void SV_ClearWorld(void)
+void SV_ClearWorld()
 {
 	vec3_t mins, maxs;
 
@@ -482,7 +482,7 @@ SV_SectorList_f
 */
 #if 1
 
-void SV_SectorList_f(void)
+void SV_SectorList_f()
 {
 	for (int i = 0; i < AREA_NODES; i++)
 	{

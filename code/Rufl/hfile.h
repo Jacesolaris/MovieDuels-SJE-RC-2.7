@@ -61,9 +61,9 @@ public:
 	bool load(void* data, int datasize) const;
 	bool save(const void* data, int datasize) const;
 
-	bool is_open(void) const;
-	bool is_open_for_read(void) const;
-	bool is_open_for_write(void) const;
+	bool is_open() const;
+	bool is_open_for_read() const;
+	bool is_open_for_write() const;
 
 	bool open_read(const float version = 1.0f, const int checksum = 0) const { return open(version, checksum, true); }
 	bool open_write(const float version = 1.0f, const int checksum = 0) const { return open(version, checksum, false); }

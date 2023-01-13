@@ -163,6 +163,7 @@ public:
 			v[1].Set(s, c, 0, 0);
 			v[2].Set(0, 0, 1, 0);
 			break;
+		default: ;
 		}
 		v[3].Set(0, 0, 0, 1);
 	}

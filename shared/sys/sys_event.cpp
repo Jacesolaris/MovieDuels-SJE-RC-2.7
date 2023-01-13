@@ -59,7 +59,7 @@ static const char* Sys_EventName(const sysEventType_t evType)
 	return evNames[evType];
 }
 
-sysEvent_t Sys_GetEvent(void)
+sysEvent_t Sys_GetEvent()
 {
 	sysEvent_t ev;
 

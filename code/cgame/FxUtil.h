@@ -28,10 +28,10 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #ifndef FX_UTIL_H_INC
 #define FX_UTIL_H_INC
 
-bool FX_Free(void); // ditches all active effects;
-int FX_Init(void); // called in CG_Init to purge the fx system.
+bool FX_Free(); // ditches all active effects;
+int FX_Init(); // called in CG_Init to purge the fx system.
 void FX_Add(bool portal); // called every cgame frame to add all fx into the scene.
-void FX_Stop(void); // ditches all active effects without touching the templates.
+void FX_Stop(); // ditches all active effects without touching the templates.
 
 bool FX_ActiveFx(); // returns whether there are any active or scheduled effects
 

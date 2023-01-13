@@ -86,7 +86,7 @@ extern sfxHandle_t	trap_S_RegisterSound(const char* sample);		// returns buzz if
 #include "../namespace_end.h"
 #endif
 
-extern stringID_table_t animTable[MAX_ANIMATIONS + 1];
+extern stringID_table_t anim_table[MAX_ANIMATIONS + 1];
 
 // These buffers are filled in with the same contents and then just read from in
 // a few places. We only need one copy on Xbox.
@@ -97,7 +97,7 @@ constexpr auto MAX_VEHICLE_DATA_SIZE = 0x100000;
 char VehWeaponParms[MAX_VEH_WEAPON_DATA_SIZE];
 char VehicleParms[MAX_VEHICLE_DATA_SIZE];
 
-void BG_ClearVehicleParseParms(void)
+void BG_ClearVehicleParseParms()
 {
 	//You can't strcat to these forever without clearing them!
 	VehWeaponParms[0] = 0;
@@ -127,7 +127,7 @@ int numVehicleWeapons = 1; //first one is null/default
 vehicleInfo_t g_vehicleInfo[MAX_VEHICLES];
 int numVehicles = 0; //first one is null/default
 
-void BG_VehicleLoadParms(void);
+void BG_VehicleLoadParms();
 
 using vehFieldType_t = enum
 {
@@ -274,7 +274,7 @@ static qboolean BG_ParseVehWeaponParm(vehWeaponInfo_t* vehWeapon, const char* pa
 		break;
 	case VF_ANIM:
 		{
-			const int anim = GetIDForString(animTable, value);
+			const int anim = GetIDForString(anim_table, value);
 			*reinterpret_cast<int*>(b + vehWeaponField->ofs) = anim;
 		}
 		break;
@@ -914,7 +914,7 @@ static qboolean BG_ParseVehicleParm(vehicleInfo_t* vehicle, const char* parmName
 		break;
 	case VF_ANIM:
 		{
-			const int anim = GetIDForString(animTable, value);
+			const int anim = GetIDForString(anim_table, value);
 			*reinterpret_cast<int*>(b + vehField->ofs) = anim;
 		}
 		break;
@@ -1426,7 +1426,7 @@ int VEH_VehicleIndexForName(const char* vehicleName)
 	return v;
 }
 
-void BG_VehWeaponLoadParms(void)
+void BG_VehWeaponLoadParms()
 {
 	int vehExtFNLen, mainBlockLen, fileCnt;
 	char* holdChar;
@@ -1520,7 +1520,7 @@ void BG_VehWeaponLoadParms(void)
 #endif
 }
 
-void BG_VehicleLoadParms(void)
+void BG_VehicleLoadParms()
 {
 	//HMM... only do this if there's a vehicle on the level?
 	int vehExtFNLen, mainBlockLen, fileCnt;

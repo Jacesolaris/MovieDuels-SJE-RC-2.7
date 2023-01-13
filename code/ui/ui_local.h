@@ -53,7 +53,7 @@ using uifield_t = struct
 	int textcolor2; // Highlight color
 };
 
-extern void Menu_Cache(void);
+extern void Menu_Cache();
 
 //
 // ui_field.c
@@ -67,8 +67,8 @@ extern void Field_Draw(field_t* edit, int x, int y, int width, qboolean showCurs
 //
 extern void UI_MainMenu();
 extern void UI_InGameMenu(const char* holoFlag);
-extern void AssetCache(void);
-extern void UI_DataPadMenu(void);
+extern void AssetCache();
+extern void UI_DataPadMenu();
 
 //
 // ui_connect.c
@@ -104,7 +104,7 @@ using uiStatic_t = struct
 
 extern void UI_FillRect(float x, float y, float width, float height, const float* color);
 extern void UI_DrawHandlePic(float x, float y, float w, float h, qhandle_t h_shader);
-extern void UI_UpdateScreen(void);
+extern void UI_UpdateScreen();
 extern int UI_RegisterFont(const char* fontName);
 extern void UI_SetColor(const float* rgba);
 extern char* UI_Cvar_VariableString(const char* var_name);
@@ -223,7 +223,7 @@ void _UI_Init(qboolean inGameLoad);
 void _UI_DrawRect(float x, float y, float width, float height, float size, const float* color);
 void _UI_MouseEvent(int dx, int dy);
 void _UI_KeyEvent(int key, qboolean down);
-void UI_Report(void);
+void UI_Report();
 
 extern char GoToMenu[];
 
@@ -236,9 +236,9 @@ int trap_CIN_StopCinematic(int handle);
 void trap_Cvar_Set(const char* var_name, const char* value);
 float trap_Cvar_VariableValue(const char* var_name);
 void trap_GetGlconfig(glconfig_t* glconfig);
-void trap_Key_ClearStates(void);
-int trap_Key_GetCatcher(void);
-qboolean trap_Key_GetOverstrikeMode(void);
+void trap_Key_ClearStates();
+int trap_Key_GetCatcher();
+qboolean trap_Key_GetOverstrikeMode();
 void trap_Key_SetBinding(int keynum, const char* binding);
 void trap_Key_SetCatcher(int catcher);
 void trap_Key_SetOverstrikeMode(qboolean state);
@@ -246,10 +246,10 @@ void trap_R_DrawStretchPic(float x, float y, float w, float h, float s1, float t
                            qhandle_t h_shader);
 void trap_R_ModelBounds(clipHandle_t model, vec3_t mins, vec3_t maxs);
 void trap_R_SetColor(const float* rgba);
-void trap_R_ClearScene(void);
+void trap_R_ClearScene();
 void trap_R_AddRefEntityToScene(const refEntity_t* re);
 void trap_R_RenderScene(const refdef_t* fd);
-void trap_S_StopSounds(void);
+void trap_S_StopSounds();
 sfxHandle_t trap_S_RegisterSound(const char* sample, qboolean compressed);
 void trap_S_StartLocalSound(sfxHandle_t sfx, int channelNum);
 

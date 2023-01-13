@@ -72,7 +72,7 @@ TAG_Init
 -------------------------
 */
 
-void TAG_Init(void)
+void TAG_Init()
 {
 	//Delete all owners
 	for (auto rtoi = refTagOwnerMap.begin(); rtoi != refTagOwnerMap.end(); ++rtoi)

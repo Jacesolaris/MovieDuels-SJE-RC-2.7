@@ -364,7 +364,7 @@ new information out of it.  This will happen at every
 gamestate, and possibly during gameplay.
 ==================
 */
-void CL_SystemInfoChanged(void)
+void CL_SystemInfoChanged()
 {
 	const char* systemInfo = cl.gameState.stringData + cl.gameState.stringOffsets[CS_SYSTEMINFO];
 	cl.serverId = atoi(Info_ValueForKey(systemInfo, "sv_serverid"));
@@ -480,7 +480,7 @@ void CL_ParseGamestate(msg_t* msg)
 
 //=====================================================================
 
-void CL_FreeServerCommands(void)
+void CL_FreeServerCommands()
 {
 	for (int i = 0; i < MAX_RELIABLE_COMMANDS; i++)
 	{

@@ -479,8 +479,9 @@ static void blitVQQuad32fs(byte** status, unsigned char* data)
 		case	0x0000:
 			index += 5;
 			break;
+		default: ;
 		}
-	} while (status[index] != NULL);
+	} while (status[index] != nullptr);
 }
 
 /******************************************************************************

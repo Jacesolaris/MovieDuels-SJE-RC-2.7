@@ -37,8 +37,8 @@ uiimport_t ui;
 uiStatic_t uis;
 
 //externs
-static void UI_LoadMenu_f(void);
-static void UI_SaveMenu_f(void);
+static void UI_LoadMenu_f();
+static void UI_SaveMenu_f();
 
 //locals
 
@@ -47,7 +47,7 @@ static void UI_SaveMenu_f(void);
 UI_ForceMenuOff
 =================
 */
-void UI_ForceMenuOff(void)
+void UI_ForceMenuOff()
 {
 	ui.Key_SetCatcher(ui.Key_GetCatcher() & ~KEYCATCH_UI);
 	ui.Key_ClearStates();
@@ -146,7 +146,7 @@ char* UI_Cvar_VariableString(const char* var_name)
 UI_Cache
 =================
 */
-static void UI_Cache_f(void)
+static void UI_Cache_f()
 {
 	Menu_Cache();
 #ifndef JK2_MODE
@@ -190,10 +190,10 @@ UI_ConsoleCommand
 =================
 */
 #ifndef JK2_MODE
-void UI_Load(void); //in UI_main.cpp
+void UI_Load(); //in UI_main.cpp
 #endif
 
-qboolean UI_ConsoleCommand(void)
+qboolean UI_ConsoleCommand()
 {
 	if (!ui.SG_GameAllowedToSaveHere(qtrue)) //only check if incamera
 	{
@@ -386,7 +386,7 @@ void UI_FillRect(const float x, const float y, const float width, const float he
 UI_UpdateScreen
 =================
 */
-void UI_UpdateScreen(void)
+void UI_UpdateScreen()
 {
 	ui.UpdateScreen();
 }
@@ -396,7 +396,7 @@ void UI_UpdateScreen(void)
 UI_LoadMenu_f
 ===============
 */
-static void UI_LoadMenu_f(void)
+static void UI_LoadMenu_f()
 {
 	trap_Key_SetCatcher(KEYCATCH_UI);
 	Menus_ActivateByName("ingameloadMenu");
@@ -407,7 +407,7 @@ static void UI_LoadMenu_f(void)
 UI_SaveMenu_f
 ===============
 */
-static void UI_SaveMenu_f(void)
+static void UI_SaveMenu_f()
 {
 #ifdef JK2_MODE
 	ui.PrecacheScreenshot();

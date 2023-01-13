@@ -882,7 +882,7 @@ static char* Q3_GetAnimLower(const gentity_t* ent)
 
 	const int anim = ent->client->ps.legsAnim;
 
-	return const_cast<char*>(GetStringForID(animTable, anim));
+	return const_cast<char*>(GetStringForID(anim_table, anim));
 }
 
 /*
@@ -901,7 +901,7 @@ static char* Q3_GetAnimUpper(const gentity_t* ent)
 
 	const int anim = ent->client->ps.torsoAnim;
 
-	return const_cast<char*>(GetStringForID(animTable, anim));
+	return const_cast<char*>(GetStringForID(anim_table, anim));
 }
 
 /*
@@ -1002,7 +1002,7 @@ static void Q3_SetObjective(const char* ObjEnum, const int status)
 Q3_SetMissionFailed
 -------------------------
 */
-extern void G_PlayerGuiltDeath(void);
+extern void G_PlayerGuiltDeath();
 
 static void Q3_SetMissionFailed(const char* TextEnum)
 {
@@ -1057,7 +1057,7 @@ static void Q3_SetStatusText(const char* StatusTextEnum)
 Q3_ObjectiveClearAll
 -------------------------
 */
-static void Q3_ObjectiveClearAll(void)
+static void Q3_ObjectiveClearAll()
 {
 	client = &level.clients[0];
 	memset(client->sess.mission_objectives, 0, sizeof client->sess.mission_objectives);
@@ -2199,7 +2199,7 @@ Sets the upper animation of an entity
 */
 qboolean Q3_SetAnimUpper(const int entID, const char* anim_name)
 {
-	const int animID = GetIDForString(animTable, anim_name);
+	const int animID = GetIDForString(anim_table, anim_name);
 
 	if (animID == -1)
 	{
@@ -2228,7 +2228,7 @@ qboolean Q3_SetAnimLower(const int entID, const char* anim_name)
 {
 	//FIXME: Setting duck anim does not actually duck!
 
-	const int animID = GetIDForString(animTable, anim_name);
+	const int animID = GetIDForString(anim_table, anim_name);
 
 	if (animID == -1)
 	{
@@ -6836,7 +6836,7 @@ Q3_SetCleanDamagingEnts
   Return type	: void
 ============
 */
-static void Q3_SetCleanDamagingEnts(void)
+static void Q3_SetCleanDamagingEnts()
 {
 	for (int i = 0; i < ENTITYNUM_WORLD; i++)
 	{
@@ -7416,7 +7416,7 @@ InitVariables
 -------------------------
 */
 
-void CQuake3GameInterface::InitVariables(void)
+void CQuake3GameInterface::InitVariables()
 {
 	m_varStrings.clear();
 	m_varFloats.clear();
@@ -7578,7 +7578,7 @@ VariableSave
 -------------------------
 */
 
-int CQuake3GameInterface::VariableSave(void)
+int CQuake3GameInterface::VariableSave()
 {
 	VariableSaveFloats(m_varFloats);
 	VariableSaveStrings(m_varStrings);
@@ -7715,7 +7715,7 @@ VariableLoad
 -------------------------
 */
 
-int CQuake3GameInterface::VariableLoad(void)
+int CQuake3GameInterface::VariableLoad()
 {
 	InitVariables();
 
@@ -8045,7 +8045,7 @@ void CQuake3GameInterface::RunScript(const gentity_t* pEntity, const char* strSc
 	}
 }
 
-void CQuake3GameInterface::Svcmd(void)
+void CQuake3GameInterface::Svcmd()
 {
 	const char* cmd = gi.argv(1);
 
@@ -8167,7 +8167,7 @@ void CQuake3GameInterface::DebugPrint(const e_DebugPrintLevel level, const char*
 }
 
 //Gets the current time
-unsigned int CQuake3GameInterface::GetTime(void)
+unsigned int CQuake3GameInterface::GetTime()
 {
 	return level.time;
 }
@@ -9953,16 +9953,16 @@ void CQuake3GameInterface::Set(int taskID, int entID, const char* type_name, con
 
 	//////////
 	case SET_ANIM_LOWER_FORCED:
-		ent->client->ps.forceLowerAnim = GetIDForString(animTable, data);
+		ent->client->ps.forceLowerAnim = GetIDForString(anim_table, data);
 		return; //Don't call it back
 
 	case SET_ANIM_UPPER_FORCED:
-		ent->client->ps.forceUpperAnim = GetIDForString(animTable, data);
+		ent->client->ps.forceUpperAnim = GetIDForString(anim_table, data);
 		return; //Don't call it back
 
 	case SET_ANIM_BOTH_FORCED:
-		ent->client->ps.forceUpperAnim = GetIDForString(animTable, data);
-		ent->client->ps.forceLowerAnim = GetIDForString(animTable, data);
+		ent->client->ps.forceUpperAnim = GetIDForString(anim_table, data);
+		ent->client->ps.forceLowerAnim = GetIDForString(anim_table, data);
 		return; //Don't call it back
 
 	case SET_ANIM_HOLDTIME_LOWER_FORCED:
@@ -10378,12 +10378,12 @@ void CQuake3GameInterface::CameraPath(const char* name)
 	CGCam_StartRoff(G_NewString(name));
 }
 
-void CQuake3GameInterface::CameraEnable(void)
+void CQuake3GameInterface::CameraEnable()
 {
 	CGCam_Enable();
 }
 
-void CQuake3GameInterface::CameraDisable(void)
+void CQuake3GameInterface::CameraDisable()
 {
 	CGCam_Disable();
 }
@@ -11759,7 +11759,7 @@ void* CQuake3GameInterface::Malloc(const int size)
 	return gi.Malloc(size, TAG_ICARUS, qtrue);
 }
 
-float CQuake3GameInterface::MaxFloat(void)
+float CQuake3GameInterface::MaxFloat()
 {
 	// CHANGE!
 	return 34000000;

@@ -133,7 +133,7 @@ void SG_Shutdown()
 	gbAlreadyDoingLoad = qfalse;
 }
 
-void SV_WipeGame_f(void)
+void SV_WipeGame_f()
 {
 	if (Cmd_Argc() != 2)
 	{
@@ -181,7 +181,7 @@ qboolean SV_TryLoadTransition(const char* mapname)
 
 qboolean gbAlreadyDoingLoad = qfalse;
 
-void SV_LoadGame_f(void)
+void SV_LoadGame_f()
 {
 	if (gbAlreadyDoingLoad)
 	{
@@ -290,7 +290,7 @@ qboolean SG_GameAllowedToSaveHere(qboolean inCamera);
 
 //JLF notes
 //	save game will be in charge of creating a new directory
-void SV_SaveGame_f(void)
+void SV_SaveGame_f()
 {
 	// check server is running
 	//
@@ -447,7 +447,7 @@ static void WriteGame(const qboolean autosave)
 	}
 }
 
-static qboolean ReadGame(void)
+static qboolean ReadGame()
 {
 	qboolean qbAutoSave = qfalse;
 
@@ -514,7 +514,7 @@ static qboolean ReadGame(void)
 extern cvar_t* cvar_vars;
 // I know this is really unpleasant, but I need access for scanning/writing latched cvars during save games
 
-void SG_WriteCvars(void)
+void SG_WriteCvars()
 {
 	cvar_t* var;
 	int iCount = 0;
@@ -645,7 +645,7 @@ void SG_WriteServerConfigStrings()
 	}
 }
 
-void SG_ReadServerConfigStrings(void)
+void SG_ReadServerConfigStrings()
 {
 	// trash the whole table...
 	//
@@ -1319,7 +1319,7 @@ qboolean SG_ReadSavegame(
 	return qtrue;
 }
 
-void SG_TestSave(void)
+void SG_TestSave()
 {
 	if (sv_testsave->integer && sv.state == SS_GAME)
 	{

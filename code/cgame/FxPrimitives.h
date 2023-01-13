@@ -319,7 +319,7 @@ public:
 		mRefEnt.customShader = sh;
 	}
 
-	void Init(void);
+	void Init();
 };
 
 //------------------------------

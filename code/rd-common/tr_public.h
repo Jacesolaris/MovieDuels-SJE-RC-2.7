@@ -38,16 +38,16 @@ using refimport_t = struct
 	void (QDECL* Error)(int errorLevel, const char* fmt, ...) NORETURN_PTR __attribute__((format(printf, 2, 3)));
 
 	// milliseconds should only be used for profiling, never for anything game related. Get time from the refdef
-	int (*Milliseconds)(void);
+	int (*Milliseconds)();
 
-	void (*Hunk_ClearToMark)(void);
+	void (*Hunk_ClearToMark)();
 	void* (*Malloc)(int iSize, memtag_t eTag, qboolean zeroIt, int iAlign);
 	int (*Z_Free)(void* memory);
 	int (*Z_MemSize)(memtag_t eTag);
 	void (*Z_MorphMallocTag)(void* pvBuffer, memtag_t eDesiredTag);
 
 	void (*Cmd_ExecuteString)(const char* text);
-	int (*Cmd_Argc)(void);
+	int (*Cmd_Argc)();
 	char* (*Cmd_Argv)(int arg);
 	void (*Cmd_ArgsBuffer)(char* buffer, int bufferLength);
 	void (*Cmd_AddCommand)(const char* cmd_name, xcommand_t function);
@@ -61,7 +61,7 @@ using refimport_t = struct
 	float (*Cvar_VariableValue)(const char* var_name);
 	int (*Cvar_VariableIntegerValue)(const char* var_name);
 
-	qboolean (*LowPhysicalMemory)(void);
+	qboolean (*LowPhysicalMemory)();
 	const char* (*SE_GetString)(const char* reference);
 
 	void (*FS_FreeFile)(void* buffer);
@@ -82,7 +82,7 @@ using refimport_t = struct
 	bool (*CM_CullWorldBox)(const cplane_t* frustrum, const vec3pair_t bounds);
 	byte* (*CM_ClusterPVS)(int cluster);
 	int (*CM_PointContents)(const vec3_t p, clipHandle_t model);
-	void (*S_RestartMusic)(void);
+	void (*S_RestartMusic)();
 	qboolean (*SND_RegisterAudio_LevelLoadEnd)(qboolean bDeleteEverythingNotUsedThisLevel);
 
 	e_status (*CIN_RunCinematic)(int handle);
@@ -94,13 +94,13 @@ using refimport_t = struct
 	window_t (*WIN_Init)(const windowDesc_t* desc, glconfig_t* glConfig);
 	void (*WIN_SetGamma)(glconfig_t* glConfig, byte red[256], byte green[256], byte blue[256]);
 	void (*WIN_Present)(window_t* window);
-	void (*WIN_Shutdown)(void);
+	void (*WIN_Shutdown)();
 
 	// OpenGL-specific
 	void* (*GL_GetProcAddress)(const char* name);
 	qboolean (*GL_ExtensionSupported)(const char* extension);
 
-	CMiniHeap* (*GetG2VertSpaceServer)(void);
+	CMiniHeap* (*GetG2VertSpaceServer)();
 
 	// Persistent data store
 	bool (*PD_Store)(const char* name, const void* data, size_t size);
@@ -119,11 +119,11 @@ using refimport_t = struct
 
 	qboolean (*CL_IsRunningInGameCinematic)();
 
-	void* (*gpvCachedMapDiskImage)(void);
-	char* (*gsCachedMapDiskImage)(void);
-	qboolean* (*gbUsingCachedMapDataRightNow)(void);
-	qboolean* (*gbAlreadyDoingLoad)(void);
-	int (*com_frameTime)(void);
+	void* (*gpvCachedMapDiskImage)();
+	char* (*gsCachedMapDiskImage)();
+	qboolean* (*gbUsingCachedMapDataRightNow)();
+	qboolean* (*gbAlreadyDoingLoad)();
+	int (*com_frameTime)();
 };
 
 extern refimport_t ri;
@@ -160,10 +160,10 @@ using refexport_t = struct
 	//
 	void (*RegisterMedia_LevelLoadBegin)(const char* psMapName, ForceReload_e e_force_reload,
 	                                     qboolean bAllowScreenDissolve);
-	void (*RegisterMedia_LevelLoadEnd)(void);
-	int (*RegisterMedia_GetLevel)(void);
+	void (*RegisterMedia_LevelLoadEnd)();
+	int (*RegisterMedia_GetLevel)();
 	qboolean (*RegisterModels_LevelLoadEnd)(qboolean bDeleteEverythingNotUsedThisLevel);
-	qboolean (*RegisterImages_LevelLoadEnd)(void);
+	qboolean (*RegisterImages_LevelLoadEnd)();
 
 	// the vis data is a large enough block of data that we go to the trouble
 	// of sharing it with the clipmodel subsystem
@@ -171,11 +171,11 @@ using refexport_t = struct
 
 	// EndRegistration will draw a tiny polygon with each texture, forcing
 	// them to be loaded into card memory
-	void (*EndRegistration)(void);
+	void (*EndRegistration)();
 
 	// a scene is built up by calls to R_ClearScene and the various R_Add functions.
 	// Nothing is drawn until R_RenderScene is called.
-	void (*ClearScene)(void);
+	void (*ClearScene)();
 	void (*AddRefEntityToScene)(const refEntity_t* re);
 	void (*AddPolyToScene)(qhandle_t h_shader, int num_verts, const polyVert_t* verts);
 	void (*AddLightToScene)(const vec3_t org, float intensity, float r, float g, float b);
@@ -189,7 +189,7 @@ using refexport_t = struct
 	                      float s1, float t1, float s2, float t2, float a1, qhandle_t h_shader); // 0 = white
 	void (*DrawRotatePic2)(float x, float y, float w, float h,
 	                       float s1, float t1, float s2, float t2, float a1, qhandle_t h_shader); // 0 = white
-	void (*LAGoggles)(void);
+	void (*LAGoggles)();
 	void (*Scissor)(float x, float y, float w, float h); // 0 = white
 
 	// Draw images for cinematic rendering, pass as 32 bit rgba
@@ -202,7 +202,7 @@ using refexport_t = struct
 	// if the pointers are not NULL, timing info will be returned
 	void (*EndFrame)(int* frontEndMsec, int* backEndMsec);
 
-	qboolean (*ProcessDissolve)(void);
+	qboolean (*ProcessDissolve)();
 	qboolean (*InitDissolve)(qboolean bForceCircularExtroWipe);
 
 	// for use with save-games mainly...
@@ -243,31 +243,31 @@ using refexport_t = struct
 	void (*Font_DrawString)(int x, int y, const char* s, const float* rgba, int iFontHandle, int iMaxPixelWidth,
 	                        float scale);
 	int (*Font_StrLenChars)(const char* s);
-	qboolean (*Language_IsAsian)(void);
-	qboolean (*Language_UsesSpaces)(void);
+	qboolean (*Language_IsAsian)();
+	qboolean (*Language_UsesSpaces)();
 	unsigned int (*AnyLanguage_ReadCharFromString)(char* psText, int* piAdvanceCount,
 	                                               qboolean* pbIsTrailingPunctuation /* = NULL */);
 	unsigned int (*AnyLanguage_ReadCharFromString2)(char** psText, qboolean* pbIsTrailingPunctuation /* = NULL */);
 
 	// Misc
-	void (*R_InitWorldEffects)(void);
+	void (*R_InitWorldEffects)();
 	void (*R_ClearStuffToStopGhoul2CrashingThings)();
 	qboolean (*R_inPVS)(vec3_t p1, vec3_t p2);
 
-	void (*SVModelInit)(void);
+	void (*SVModelInit)();
 
 	// Distortion effects
-	float* (*tr_distortionAlpha)(void);
-	float* (*tr_distortionStretch)(void);
-	qboolean* (*tr_distortionPrePost)(void);
-	qboolean* (*tr_distortionNegate)(void);
+	float* (*tr_distortionAlpha)();
+	float* (*tr_distortionStretch)();
+	qboolean* (*tr_distortionPrePost)();
+	qboolean* (*tr_distortionNegate)();
 
 	// Weather effects
 	bool (*GetWindVector)(vec3_t windVector, vec3_t atPoint);
 	bool (*GetWindGusting)(vec3_t atpoint);
 	bool (*IsOutside)(vec3_t pos);
 	float (*IsOutsideCausingPain)(vec3_t pos);
-	float (*GetChanceOfSaberFizz)(void);
+	float (*GetChanceOfSaberFizz)();
 	bool (*IsShaking)(vec3_t pos);
 	void (*AddWeatherZone)(vec3_t mins, vec3_t maxs);
 	bool (*SetTempGlobalFogColor)(vec3_t color);
@@ -275,7 +275,7 @@ using refexport_t = struct
 	void (*SetRangedFog)(float dist);
 
 	// GHOUL 2
-	IGhoul2InfoArray& (*TheGhoul2InfoArray)(void);
+	IGhoul2InfoArray& (*TheGhoul2InfoArray)();
 
 	// GHOUL 2 API
 	int (*G2API_AddBolt)(CGhoul2Info* ghl_info, const char* bone_name);
@@ -384,8 +384,8 @@ using refexport_t = struct
 #endif
 
 	// Performance analysis (perform anal)
-	void (*G2Time_ResetTimers)(void);
-	void (*G2Time_ReportTimers)(void);
+	void (*G2Time_ResetTimers)();
+	void (*G2Time_ReportTimers)();
 };
 
 // this is the only function actually exported at the linker level

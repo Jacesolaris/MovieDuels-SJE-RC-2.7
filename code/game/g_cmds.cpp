@@ -48,7 +48,7 @@ extern void G_CreateG2AttachedWeaponModel(gentity_t* ent, const char* ps_weapon_
 extern void G_StartMatrixEffect(const gentity_t* ent, int me_flags = 0, int length = 1000, float time_scale = 0.0f,
 	int spin_time = 0);
 extern void ItemUse_Bacta(gentity_t* ent);
-extern gentity_t* G_GetSelfForPlayerCmd(void);
+extern gentity_t* G_GetSelfForPlayerCmd();
 extern void ForceDestruction(gentity_t* self);
 extern void ForceStasis(gentity_t* self);
 extern int IsPressingDashButton(const gentity_t* self);
@@ -2342,7 +2342,7 @@ void Cmd_SaberDrop_f(gentity_t* ent, const int saber_num)
 	}
 }
 
-void G_RemoveWeather(void)
+void G_RemoveWeather()
 {
 	gi.SendConsoleCommand(va("exec Weather/clear.cfg"));
 }

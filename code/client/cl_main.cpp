@@ -88,14 +88,14 @@ refexport_t re;
 static void* rendererLib = nullptr;
 
 //RAZFIXME: BAD BAD, maybe? had to move it out of ghoul2_shared.h -> CGhoul2Info_v at the least..
-IGhoul2InfoArray& _TheGhoul2InfoArray(void)
+IGhoul2InfoArray& _TheGhoul2InfoArray()
 {
 	return re.TheGhoul2InfoArray();
 }
 
 static void CL_ShutdownRef(qboolean restarting);
-void CL_InitRef(void);
-void CL_CheckForResend(void);
+void CL_InitRef();
+void CL_CheckForResend();
 
 /*
 =======================================================================
@@ -141,7 +141,7 @@ ways a client gets into a game
 Also called by Com_Error
 =================
 */
-void CL_FlushMemory(void)
+void CL_FlushMemory()
 {
 	// clear sounds (moved higher up within this func to avoid the odd sound stutter)
 	S_DisableSounds();
@@ -174,7 +174,7 @@ screen to let the user know about it, then dump all client
 memory on the hunk from cgame, ui, and renderer
 =====================
 */
-void CL_MapLoading(void)
+void CL_MapLoading()
 {
 	if (!com_cl_running->integer)
 	{
@@ -220,7 +220,7 @@ CL_ClearState
 Called before parsing a gamestate
 =====================
 */
-void CL_ClearState(void)
+void CL_ClearState()
 {
 	CL_ShutdownCGame();
 
@@ -236,7 +236,7 @@ CL_FreeReliableCommands
 Wipes all reliableCommands strings from clc
 =====================
 */
-void CL_FreeReliableCommands(void)
+void CL_FreeReliableCommands()
 {
 	// wipe the client connection
 	for (auto& reliableCommand : clc.reliableCommands)
@@ -259,7 +259,7 @@ Sends a disconnect message to the server
 This is also called on Com_Error and Com_Quit, so it shouldn't cause any errors
 =====================
 */
-void CL_Disconnect(void)
+void CL_Disconnect()
 {
 	if (!com_cl_running || !com_cl_running->integer)
 	{
@@ -286,7 +286,7 @@ void CL_Disconnect(void)
 
 	CL_FreeReliableCommands();
 
-	extern void CL_FreeServerCommands(void);
+	extern void CL_FreeServerCommands();
 	CL_FreeServerCommands();
 
 	memset(&clc, 0, sizeof(clc));
@@ -307,7 +307,7 @@ things like godmode, noclip, etc, are commands directed to the server,
 so when they are typed in at the console, they will need to be forwarded.
 ===================
 */
-void CL_ForwardCommandToServer(void)
+void CL_ForwardCommandToServer()
 {
 	char string[MAX_STRING_CHARS];
 
@@ -350,7 +350,7 @@ CONSOLE COMMANDS
 CL_ForwardToServer_f
 ==================
 */
-void CL_ForwardToServer_f(void)
+void CL_ForwardToServer_f()
 {
 	if (cls.state != CA_ACTIVE)
 	{
@@ -370,7 +370,7 @@ void CL_ForwardToServer_f(void)
 CL_Disconnect_f
 ==================
 */
-void CL_Disconnect_f(void)
+void CL_Disconnect_f()
 {
 	SCR_StopCinematic();
 
@@ -392,7 +392,7 @@ CL_Vid_Restart_f
 Restart the video subsystem
 =================
 */
-void CL_Vid_Restart_f(void)
+void CL_Vid_Restart_f()
 {
 	S_StopAllSounds(); // don't let them loop during the restart
 	S_BeginRegistration(); // all sound handles are now invalid
@@ -423,7 +423,7 @@ The cgame and game must also be forced to restart because
 handles will be invalid
 =================
 */
-void CL_Snd_Restart_f(void)
+void CL_Snd_Restart_f()
 {
 	S_Shutdown();
 
@@ -436,10 +436,10 @@ void CL_Snd_Restart_f(void)
 
 	S_RestartMusic();
 
-	extern void S_ReloadAllUsedSounds(void);
+	extern void S_ReloadAllUsedSounds();
 	S_ReloadAllUsedSounds();
 
-	extern void AS_ParseSets(void);
+	extern void AS_ParseSets();
 	AS_ParseSets();
 }
 
@@ -448,7 +448,7 @@ void CL_Snd_Restart_f(void)
 CL_Configstrings_f
 ==================
 */
-void CL_Configstrings_f(void)
+void CL_Configstrings_f()
 {
 	if (cls.state != CA_ACTIVE)
 	{
@@ -472,7 +472,7 @@ void CL_Configstrings_f(void)
 CL_Clientinfo_f
 ==============
 */
-void CL_Clientinfo_f(void)
+void CL_Clientinfo_f()
 {
 	Com_Printf("--------- Client Information ---------\n");
 	Com_Printf("state: %i\n", cls.state);
@@ -493,7 +493,7 @@ CL_CheckForResend
 Resend a connect message if the last one has timed out
 =================
 */
-void CL_CheckForResend(void)
+void CL_CheckForResend()
 {
 	int port;
 	char info[MAX_INFO_STRING];
@@ -732,7 +732,7 @@ CL_CheckTimeout
 
 ==================
 */
-void CL_CheckTimeout(void)
+void CL_CheckTimeout()
 {
 	//
 	// check timeout
@@ -761,7 +761,7 @@ CL_CheckPaused
 Check whether client has been paused.
 ==================
 */
-qboolean CL_CheckPaused(void)
+qboolean CL_CheckPaused()
 {
 	// if cl_paused->modified is set, the cvar has only been changed in
 	// this frame. Keep paused in this frame to ensure the server doesn't
@@ -780,7 +780,7 @@ CL_CheckUserinfo
 
 ==================
 */
-void CL_CheckUserinfo(void)
+void CL_CheckUserinfo()
 {
 	if (cls.state < CA_CHALLENGING)
 	{
@@ -980,7 +980,7 @@ Convenience function for the sound system to be started
 REALLY early on Xbox, helps with memory fragmentation.
 ============================
 */
-void CL_StartSound(void)
+void CL_StartSound()
 {
 	if (!cls.soundStarted)
 	{
@@ -1000,7 +1000,7 @@ void CL_StartSound(void)
 CL_InitRenderer
 ============
 */
-void CL_InitRenderer(void)
+void CL_InitRenderer()
 {
 	// this sets up the renderer and calls R_Init
 	re.BeginRegistration(&cls.glconfig);
@@ -1021,7 +1021,7 @@ After the server has cleared the hunk, these will need to be restarted
 This is the only place that any of these functions are called from
 ============================
 */
-void CL_StartHunkUsers(void)
+void CL_StartHunkUsers()
 {
 	if (!com_cl_running->integer)
 	{
@@ -1113,27 +1113,27 @@ extern void* gpvCachedMapDiskImage;
 extern char gsCachedMapDiskImage[MAX_QPATH];
 extern qboolean gbUsingCachedMapDataRightNow;
 
-char* get_gsCachedMapDiskImage(void)
+char* get_gsCachedMapDiskImage()
 {
 	return gsCachedMapDiskImage;
 }
 
-void* get_gpvCachedMapDiskImage(void)
+void* get_gpvCachedMapDiskImage()
 {
 	return gpvCachedMapDiskImage;
 }
 
-qboolean* get_gbUsingCachedMapDataRightNow(void)
+qboolean* get_gbUsingCachedMapDataRightNow()
 {
 	return &gbUsingCachedMapDataRightNow;
 }
 
-qboolean* get_gbAlreadyDoingLoad(void)
+qboolean* get_gbAlreadyDoingLoad()
 {
 	return &gbAlreadyDoingLoad;
 }
 
-int get_com_frameTime(void)
+int get_com_frameTime()
 {
 	return com_frameTime;
 }
@@ -1154,7 +1154,7 @@ extern qboolean SND_RegisterAudio_LevelLoadEnd(qboolean bDeleteEverythingNotUsed
 extern cvar_t* Cvar_Set2(const char* var_name, const char* value, qboolean force);
 extern CMiniHeap* G2VertSpaceServer;
 
-static CMiniHeap* GetG2VertSpaceServer(void)
+static CMiniHeap* GetG2VertSpaceServer()
 {
 	return G2VertSpaceServer;
 }
@@ -1166,7 +1166,7 @@ static CMiniHeap* GetG2VertSpaceServer(void)
 #define DEFAULT_RENDER_LIBRARY	"MovieDuels-rdsp"
 #endif
 
-void CL_InitRef(void)
+void CL_InitRef()
 {
 	static refimport_t rit;
 	char dllName[MAX_OSPATH];
@@ -1298,7 +1298,7 @@ void CL_CompleteCinematic(char* args, int arg_num);
 CL_Init
 ====================
 */
-void CL_Init(void)
+void CL_Init()
 {
 	Com_Printf("----- Client Initialization -----\n");
 
@@ -1422,7 +1422,7 @@ CL_Shutdown
 
 ===============
 */
-void CL_Shutdown(void)
+void CL_Shutdown()
 {
 	static qboolean recursive = qfalse;
 

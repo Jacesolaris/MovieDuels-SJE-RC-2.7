@@ -22,7 +22,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 // special file included only by cg_players.cpp & ui_players.cpp
 
-stringID_table_t animTable[MAX_ANIMATIONS + 1] =
+stringID_table_t anim_table[MAX_ANIMATIONS + 1] =
 {
 	//=================================================
 	//HEAD ANIMS

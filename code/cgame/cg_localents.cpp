@@ -41,7 +41,7 @@ This is called at startup and for tournement restarts
 ===================
 */
 
-void CG_InitLocalEntities(void)
+void CG_InitLocalEntities()
 {
 	memset(cg_localEntities, 0, sizeof cg_localEntities);
 	cg_activeLocalEntities.next = &cg_activeLocalEntities;
@@ -81,7 +81,7 @@ CG_AllocLocalEntity
 Will allways succeed, even if it requires freeing an old active entity
 ===================
 */
-localEntity_t* CG_AllocLocalEntity(void)
+localEntity_t* CG_AllocLocalEntity()
 {
 	if (!cg_freeLocalEntities)
 	{
@@ -540,7 +540,7 @@ CG_AddLocalEntities
 
 ===================
 */
-void CG_AddLocalEntities(void)
+void CG_AddLocalEntities()
 {
 	localEntity_t* next;
 

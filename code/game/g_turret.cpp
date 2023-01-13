@@ -2325,50 +2325,43 @@ void panel_turret_shoot(gentity_t* self, vec3_t org, vec3_t dir)
 {
 	gentity_t* missile = create_missile(org, dir, self->speed, 10000, self);
 
-	missile->classname = "b_proj";
-	missile->s.weapon = WP_TIE_FIGHTER;
+	if (com_outcast->integer == 1) //playing outcast
+	{
+		missile->classname = "b_proj";
+		missile->s.weapon = WP_EMPLACED_GUN;
+		VectorSet(missile->maxs, 7, 7, 7);
+	}
+	else
+	{
+		missile->classname = "b_proj";
+		missile->s.weapon = WP_TIE_FIGHTER;
+		VectorSet(missile->maxs, 9, 9, 9);
+	}
 
-	VectorSet(missile->maxs, 9, 9, 9);
 	VectorScale(missile->maxs, -1, missile->mins);
 
 	missile->bounceCount = 0;
 
 	missile->damage = self->damage;
-	missile->dflags = DAMAGE_DEATH_KNOCKBACK;
+	missile->dflags = DAMAGE_DEATH_KNOCKBACK | DAMAGE_EXTRA_KNOCKBACK;
 	missile->methodOfDeath = MOD_ENERGY;
 	missile->clipmask = MASK_SHOT | CONTENTS_LIGHTSABER;
 
 	G_SoundOnEnt(self, CHAN_AUTO, "sound/movers/objects/ladygun_fire");
 
 	VectorMA(org, 32, dir, org);
-	org[2] -= 4;
-	G_PlayEffect("ships/imp_blastermuzzleflash", org, dir);
+
+	if (com_outcast->integer == 1) //playing outcast
+	{
+		org[2] -= 5;
+		G_PlayEffect("ships/imp_blastermuzzleflash", org, dir);
+	}
+	else
+	{
+		org[2] -= 4;
+		G_PlayEffect("ships/imp_blastermuzzleflash", org, dir);
+	}
 }
-
-void panel_turret_shoot_jko(gentity_t* self, vec3_t org, vec3_t dir)
-{
-	gentity_t* missile = create_missile(org, dir, self->speed, 10000, self);
-
-	missile->classname = "b_proj";
-	missile->s.weapon = WP_EMPLACED_GUN;
-
-	VectorSet(missile->maxs, 7, 7, 7);
-	VectorScale(missile->maxs, -1, missile->mins);
-
-	missile->bounceCount = 0;
-
-	missile->damage = self->damage;
-	missile->dflags = DAMAGE_DEATH_KNOCKBACK;
-	missile->methodOfDeath = MOD_ENERGY;
-	missile->clipmask = MASK_SHOT | CONTENTS_LIGHTSABER;
-
-	G_SoundOnEnt(self, CHAN_AUTO, "sound/movers/objects/ladygun_fire");
-
-	VectorMA(org, 32, dir, org);
-	org[2] -= 5;
-	G_PlayEffect("ships/imp_blastermuzzleflash", org, dir);
-}
-
 
 //-----------------------------------------
 void misc_panel_turret_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod, int d_flags,
@@ -2456,16 +2449,9 @@ void panel_turret_think(gentity_t* self)
 				//stop player from doing anything for a half second after
 				player->aimDebounceTime = level.time + 500;
 			}
-
-			// can be drawn
-			//			self->s.eFlags &= ~EF_NODRAW;
 		}
 		else
 		{
-			// don't draw me when being looked through
-			//			self->s.eFlags |= EF_NODRAW;
-			//			self->s.modelindex = 0;
-
 			// we only need to think when we are being used
 			self->nextthink = level.time + 50;
 
@@ -2483,15 +2469,7 @@ void panel_turret_think(gentity_t* self)
 
 				VectorCopy(self->currentOrigin, pt);
 				pt[2] -= 4;
-
-				if (com_outcast->integer == 1) //playing outcast
-				{
-					panel_turret_shoot_jko(self, pt, dir);
-				}
-				else
-				{
-					panel_turret_shoot(self, pt, dir);
-				}
+				panel_turret_shoot(self, pt, dir);
 
 				self->attackDebounceTime = level.time + self->delay;
 			}
@@ -2568,7 +2546,7 @@ void SP_misc_panel_turret(gentity_t* self)
 
 	if (com_outcast->integer == 1) //playing outcast
 	{
-		G_EffectIndex("ships/imp_blastermuzzleflash");		//
+		//G_EffectIndex("ships/imp_blastermuzzleflash");
 	}
 	else
 	{
@@ -2584,7 +2562,15 @@ void SP_misc_panel_turret(gentity_t* self)
 
 	self->s.weapon = WP_TURRET;
 
-	RegisterItem(FindItemForWeapon(WP_EMPLACED_GUN));
+	if (com_outcast->integer == 1) //playing outcast
+	{
+		RegisterItem(FindItemForWeapon(WP_EMPLACED_GUN));
+	}
+	else
+	{
+		RegisterItem(FindItemForWeapon(WP_EMPLACED_GUN));
+	}
+
 	gi.linkentity(self);
 
 	self->e_UseFunc = useF_panel_turret_use;

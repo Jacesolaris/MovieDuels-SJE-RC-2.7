@@ -38,10 +38,10 @@ extern void PM_SetTorsoAnimTimer(gentity_t* ent, int* torso_anim_timer, int time
 extern void PM_SetLegsAnimTimer(gentity_t* ent, int* legs_anim_timer, int time);
 extern void NPC_BSNoClip();
 extern void G_AddVoiceEvent(const gentity_t* self, int event, int speak_debounce_time);
-extern void NPC_ApplyRoff(void);
+extern void NPC_ApplyRoff();
 extern void NPC_TempLookTarget(const gentity_t* self, int lookEntNum, int minLookTime, int maxLookTime);
-extern void NPC_CheckPlayerAim(void);
-extern void NPC_CheckAllClear(void);
+extern void NPC_CheckPlayerAim();
+extern void NPC_CheckAllClear();
 extern void G_AddVoiceEvent(const gentity_t* self, int event, int speak_debounce_time);
 extern qboolean NPC_CheckLookTarget(const gentity_t* self);
 extern void NPC_SetLookTarget(const gentity_t* self, int ent_num, int clearTime);

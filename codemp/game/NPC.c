@@ -1675,7 +1675,7 @@ void NPC_ExecuteBState(gentity_t* self)//, int msec )
 
 		if(la != -1 && ta != -1)
 		{//FIXME: should never play same frame twice or restart an anim before finishing it
-			Com_Printf("LegsAnim: %s(%d) TorsoAnim: %s(%d)\n", animTable[la].name, NPC->renderInfo.legsFrame, animTable[ta].name, NPC->client->renderInfo.torsoFrame);
+			Com_Printf("LegsAnim: %s(%d) TorsoAnim: %s(%d)\n", anim_table[la].name, NPC->renderInfo.legsFrame, anim_table[ta].name, NPC->client->renderInfo.torsoFrame);
 		}
 	}*/
 }

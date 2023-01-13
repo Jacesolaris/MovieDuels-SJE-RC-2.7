@@ -94,7 +94,7 @@ qboolean com_fullyInitialized = qfalse;
 
 char com_errorMessage[MAXPRINTMSG] = {0};
 
-void Com_WriteConfig_f(void);
+void Com_WriteConfig_f();
 //JLF
 
 //============================================================================
@@ -114,7 +114,7 @@ void Com_BeginRedirect(char* buffer, const int buffersize, void (*flush)(char*))
 	*rd_buffer = 0;
 }
 
-void Com_EndRedirect(void)
+void Com_EndRedirect()
 {
 	if (rd_flush)
 	{
@@ -333,7 +333,7 @@ Both client and server can use this, and it will
 do the apropriate things.
 =============
 */
-void NORETURN Com_Quit_f(void)
+void NORETURN Com_Quit_f()
 {
 	// don't try to shutdown if we are in a recursive error
 	if (!com_errorEntered)
@@ -410,7 +410,7 @@ Check for "safe" on the command line, which will
 skip loading of openjk_sp.cfg
 ===================
 */
-qboolean Com_SafeMode(void)
+qboolean Com_SafeMode()
 {
 	for (int i = 0; i < com_numConsoleLines; i++)
 	{
@@ -469,7 +469,7 @@ Returns qtrue if any late commands were added, which
 will keep the demoloop from immediately starting
 =================
 */
-qboolean Com_AddStartupCommands(void)
+qboolean Com_AddStartupCommands()
 {
 	qboolean added = qfalse;
 	// quote every token, so args with semicolons can work
@@ -713,7 +713,7 @@ int Com_FilterPath(const char* filter, const char* name, const int casesensitive
 Com_InitHunkMemory
 =================
 */
-void Com_InitHunkMemory(void)
+void Com_InitHunkMemory()
 {
 	Hunk_Clear();
 
@@ -722,7 +722,7 @@ void Com_InitHunkMemory(void)
 
 // I'm leaving this in just in case we ever need to remember where's a good place to hook something like this in.
 //
-void Com_ShutdownHunkMemory(void)
+void Com_ShutdownHunkMemory()
 {
 }
 
@@ -733,7 +733,7 @@ Hunk_SetMark
 The server calls this after the level and game VM have been loaded
 ===================
 */
-void Hunk_SetMark(void)
+void Hunk_SetMark()
 {
 }
 
@@ -744,7 +744,7 @@ Hunk_ClearToMark
 The client calls this before starting a vid_restart or snd_restart
 =================
 */
-void Hunk_ClearToMark(void)
+void Hunk_ClearToMark()
 {
 	Z_TagFree(TAG_HUNKALLOC);
 	Z_TagFree(TAG_HUNKMISCMODELS);
@@ -757,7 +757,7 @@ Hunk_Clear
 The server calls this before shutting down or loading a new map
 =================
 */
-void Hunk_Clear(void)
+void Hunk_Clear()
 {
 	Z_TagFree(TAG_HUNKALLOC);
 	Z_TagFree(TAG_HUNKMISCMODELS);
@@ -788,7 +788,7 @@ sysEvent_t com_pushedEvents[MAX_PUSHED_EVENTS];
 Com_GetRealEvent
 =================
 */
-sysEvent_t Com_GetRealEvent(void)
+sysEvent_t Com_GetRealEvent()
 {
 	// get an event from the system
 	const sysEvent_t ev = Sys_GetEvent();
@@ -836,7 +836,7 @@ void Com_PushEvent(const sysEvent_t* event)
 Com_GetEvent
 =================
 */
-sysEvent_t Com_GetEvent(void)
+sysEvent_t Com_GetEvent()
 {
 	if (com_pushedEventsHead > com_pushedEventsTail)
 	{
@@ -851,7 +851,7 @@ sysEvent_t Com_GetEvent(void)
 Com_RunAndTimeServerPacket
 =================
 */
-void Com_RunAndTimeServerPacket(netadr_t* evFrom, msg_t* buf)
+void Com_RunAndTimeServerPacket(const netadr_t* evFrom, msg_t* buf)
 {
 	int t1 = 0;
 
@@ -880,7 +880,7 @@ Com_EventLoop
 Returns last event time
 =================
 */
-int Com_EventLoop(void)
+int Com_EventLoop()
 {
 	netadr_t evFrom;
 	byte bufData[MAX_MSGLEN];
@@ -952,7 +952,7 @@ Com_Milliseconds
 Can be used for profiling, but will be journaled accurately
 ================
 */
-int Com_Milliseconds(void)
+int Com_Milliseconds()
 {
 	sysEvent_t ev;
 
@@ -980,7 +980,7 @@ Just throw a fatal error to
 test error shutdown procedures
 =============
 */
-static void NORETURN Com_Error_f(void)
+static void NORETURN Com_Error_f()
 {
 	if (Cmd_Argc() > 1)
 	{
@@ -997,7 +997,7 @@ Just freeze in place for a given number of seconds to test
 error recovery
 =============
 */
-static void Com_Freeze_f(void)
+static void Com_Freeze_f()
 {
 	if (Cmd_Argc() != 2)
 	{
@@ -1025,7 +1025,7 @@ Com_Crash_f
 A way to force a bus error for development reasons
 =================
 */
-static void NORETURN Com_Crash_f(void)
+static void NORETURN Com_Crash_f()
 {
 	*static_cast<volatile int*>(nullptr) = 0x12345678;
 	/* that should crash already, but to reassure the compiler: */
@@ -1038,7 +1038,7 @@ Com_ExecuteCfg
 ==================
 */
 
-void Com_ExecuteCfg(void)
+void Com_ExecuteCfg()
 {
 	Cbuf_ExecuteText(EXEC_NOW, "exec MD-default.cfg\n");
 	Cbuf_Execute(); // Always execute after exec to prevent text buffer overflowing
@@ -1285,7 +1285,7 @@ Com_WriteConfiguration
 Writes key bindings and archived cvars to config file if modified
 ===============
 */
-void Com_WriteConfiguration(void)
+void Com_WriteConfiguration()
 {
 	// if we are quiting without fully initializing, make sure
 	// we don't write out anything
@@ -1310,7 +1310,7 @@ Com_WriteConfig_f
 Write the config file to a specific name
 ===============
 */
-void Com_WriteConfig_f(void)
+void Com_WriteConfig_f()
 {
 	char filename[MAX_QPATH];
 
@@ -1647,7 +1647,7 @@ void Com_Frame()
 Com_Shutdown
 =================
 */
-void Com_Shutdown(void)
+void Com_Shutdown()
 {
 	CM_ClearMap();
 
@@ -1845,7 +1845,7 @@ static char* Field_FindFirstSeparator(char* s)
 Field_Complete
 ===============
 */
-static qboolean Field_Complete(void)
+static qboolean Field_Complete()
 {
 	if (matchCount == 0)
 		return qtrue;
@@ -1874,7 +1874,7 @@ static qboolean Field_Complete(void)
 Field_CompleteKeyname
 ===============
 */
-void Field_CompleteKeyname(void)
+void Field_CompleteKeyname()
 {
 	matchCount = 0;
 	shortestMatch[0] = 0;

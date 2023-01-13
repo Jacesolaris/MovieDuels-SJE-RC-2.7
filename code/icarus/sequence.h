@@ -33,11 +33,11 @@ class CSequence
 
 public:
 	//Constructors / Destructors
-	CSequence(void);
-	~CSequence(void);
+	CSequence();
+	~CSequence();
 
 	//Creation and deletion
-	static CSequence* Create(void);
+	static CSequence* Create();
 	void Delete(const CIcarus* icarus);
 
 	//Organization functions
@@ -45,7 +45,7 @@ public:
 	void RemoveChild(CSequence*);
 
 	void SetParent(CSequence*);
-	CSequence* GetParent(void) const { return m_parent; }
+	CSequence* GetParent() const { return m_parent; }
 
 	//Block manipulation
 	CBlock* PopCommand(int);
@@ -55,22 +55,22 @@ public:
 	void SetFlag(int);
 	void RemoveFlag(int, bool = false);
 	int HasFlag(int) const;
-	int GetFlags(void) const { return m_flags; }
+	int GetFlags() const { return m_flags; }
 	void SetFlags(const int flags) { m_flags = flags; }
 
 	//Various encapsulation utilities
-	int GetIterations(void) const { return m_iterations; }
+	int GetIterations() const { return m_iterations; }
 	void SetIterations(const int it) { m_iterations = it; }
 
-	int GetID(void) const { return m_id; }
+	int GetID() const { return m_id; }
 	void SetID(const int id) { m_id = id; }
 
-	CSequence* GetReturn(void) const { return m_return; }
+	CSequence* GetReturn() const { return m_return; }
 
 	void SetReturn(CSequence* sequence);
 
-	int GetNumCommands(void) const { return m_numCommands; }
-	int GetNumChildren(void) const { return m_children.size(); }
+	int GetNumCommands() const { return m_numCommands; }
+	int GetNumChildren() const { return m_children.size(); }
 
 	CSequence* GetChildByID(int id);
 	CSequence* GetChildByIndex(int i_index);

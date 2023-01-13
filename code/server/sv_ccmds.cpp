@@ -385,7 +385,7 @@ player weapons/ammo/etc from the previous level that you haven't really exited (
 #ifdef JK2_MODE
 extern void SCR_UnprecacheScreenshot();
 #endif
-static void SV_Map_f(void)
+static void SV_Map_f()
 {
 	Cvar_Set(sCVARNAME_PLAYERSAVE, "");
 	Cvar_Set("playerweaps", "");
@@ -430,7 +430,7 @@ static void SV_Map_f(void)
 SV_LoadTransition_f
 ==================
 */
-void SV_LoadTransition_f(void)
+void SV_LoadTransition_f()
 {
 	const char* spawntarget;
 
@@ -490,7 +490,7 @@ char* ivtos(const vec3_t v)
 SV_Status_f
 ================
 */
-static void SV_Status_f(void)
+static void SV_Status_f()
 {
 	// make sure server is running
 	if (!com_sv_running->integer)
@@ -535,7 +535,7 @@ SV_Serverinfo_f
 Examine the serverinfo string
 ===========
 */
-static void SV_Serverinfo_f(void)
+static void SV_Serverinfo_f()
 {
 	Com_Printf("Server info settings:\n");
 	Info_Print(Cvar_InfoString(CVAR_SERVERINFO));
@@ -548,7 +548,7 @@ SV_Systeminfo_f
 Examine or change the serverinfo string
 ===========
 */
-static void SV_Systeminfo_f(void)
+static void SV_Systeminfo_f()
 {
 	Com_Printf("System info settings:\n");
 	Info_Print(Cvar_InfoString(CVAR_SYSTEMINFO));
@@ -561,7 +561,7 @@ SV_DumpUser_f
 Examine all a users info strings FIXME: move to game
 ===========
 */
-static void SV_DumpUser_f(void)
+static void SV_DumpUser_f()
 {
 	// make sure server is running
 	if (!com_sv_running->integer)
@@ -619,7 +619,7 @@ static void SV_CompleteSaveName(char* args, const int argNum)
 SV_AddOperatorCommands
 ==================
 */
-void SV_AddOperatorCommands(void)
+void SV_AddOperatorCommands()
 {
 	static qboolean initialized;
 
@@ -664,7 +664,7 @@ void SV_AddOperatorCommands(void)
 SV_RemoveOperatorCommands
 ==================
 */
-void SV_RemoveOperatorCommands(void)
+void SV_RemoveOperatorCommands()
 {
 #if 0
 	// removing these won't let the server start again

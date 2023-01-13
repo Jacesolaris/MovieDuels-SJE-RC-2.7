@@ -177,7 +177,7 @@ static qboolean IN_IsConsoleKey(fakeAscii_t key, const int character)
 #include <windows.h>
 #endif
 
-static bool IN_NumLockEnabled(void)
+static bool IN_NumLockEnabled()
 {
 #if defined(_WIN32)
 	return (GetKeyState(VK_NUMLOCK) & 1) != 0;
@@ -483,7 +483,7 @@ static fakeAscii_t IN_TranslateSDLToJKKey(SDL_Keysym* keysym, const qboolean dow
 IN_GobbleMotionEvents
 ===============
 */
-static void IN_GobbleMotionEvents(void)
+static void IN_GobbleMotionEvents()
 {
 	SDL_Event dummy[1];
 	int val = 0;
@@ -504,7 +504,7 @@ static void IN_GobbleMotionEvents(void)
 IN_ActivateMouse
 ===============
 */
-static void IN_ActivateMouse(void)
+static void IN_ActivateMouse()
 {
 	if (!mouseAvailable || !SDL_WasInit(SDL_INIT_VIDEO))
 		return;
@@ -539,7 +539,7 @@ static void IN_ActivateMouse(void)
 IN_DeactivateMouse
 ===============
 */
-static void IN_DeactivateMouse(void)
+static void IN_DeactivateMouse()
 {
 	if (!SDL_WasInit(SDL_INIT_VIDEO))
 		return;
@@ -605,7 +605,7 @@ struct stick_state_s
 IN_InitJoystick
 ===============
 */
-static void IN_InitJoystick(void)
+static void IN_InitJoystick()
 {
 	char buf[16384] = "";
 
@@ -881,7 +881,7 @@ IN_ProcessEvents
 */
 void SNDDMA_Activate(qboolean activate);
 
-static void IN_ProcessEvents(void)
+static void IN_ProcessEvents()
 {
 	SDL_Event e;
 	fakeAscii_t key = A_NULL;
@@ -1012,6 +1012,7 @@ static void IN_ProcessEvents(void)
 					SNDDMA_Activate(qtrue);
 					break;
 				}
+			default: ;
 			}
 			break;
 
@@ -1026,7 +1027,7 @@ static void IN_ProcessEvents(void)
 IN_JoyMove
 ===============
 */
-static void IN_JoyMove(void)
+static void IN_JoyMove()
 {
 	unsigned int axes = 0;
 	unsigned int hats = 0;
@@ -1234,7 +1235,7 @@ static void IN_JoyMove(void)
 	stick_state.oldaxes = axes;
 }
 
-void IN_Frame(void)
+void IN_Frame()
 {
 	IN_JoyMove();
 
@@ -1267,7 +1268,7 @@ void IN_Frame(void)
 IN_ShutdownJoystick
 ===============
 */
-static void IN_ShutdownJoystick(void)
+static void IN_ShutdownJoystick()
 {
 	if (!SDL_WasInit(SDL_INIT_JOYSTICK))
 		return;
@@ -1281,7 +1282,7 @@ static void IN_ShutdownJoystick(void)
 	SDL_QuitSubSystem(SDL_INIT_JOYSTICK);
 }
 
-void IN_Shutdown(void)
+void IN_Shutdown()
 {
 	SDL_StopTextInput();
 
@@ -1298,7 +1299,7 @@ void IN_Shutdown(void)
 IN_Restart
 ===============
 */
-void IN_Restart(void)
+void IN_Restart()
 {
 	IN_ShutdownJoystick();
 	IN_Init(SDL_window);

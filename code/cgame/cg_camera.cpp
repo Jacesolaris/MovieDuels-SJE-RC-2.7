@@ -34,10 +34,10 @@ extern qboolean player_locked;
 
 extern gentity_t* G_Find(gentity_t* from, int fieldofs, const char* match);
 extern void G_UseTargets(gentity_t* ent, gentity_t* activator);
-void CGCam_FollowDisable(void);
-void CGCam_TrackDisable(void);
+void CGCam_FollowDisable();
+void CGCam_TrackDisable();
 void CGCam_Distance(float distance, float init_lerp);
-void CGCam_DistanceDisable(void);
+void CGCam_DistanceDisable();
 extern qboolean CG_CalcFOVFromX(float fov_x);
 extern void WP_SaberCatch(gentity_t* self, gentity_t* saber, qboolean switch_to_saber);
 extern vmCvar_t cg_drawwidescreenmode;
@@ -63,7 +63,7 @@ void CGCam_Init()
 CGCam_Enable
 -------------------------
 */
-extern void CG_CalcVrect(void);
+extern void CG_CalcVrect();
 extern vmCvar_t cg_SerenityJediEngineMode;
 
 void CGCam_Enable()
@@ -457,7 +457,7 @@ void CGCam_Fade(vec4_t source, vec4_t dest, const float duration)
 	client_camera.info_state |= CAMERA_FADING;
 }
 
-void CGCam_FollowDisable(void)
+void CGCam_FollowDisable()
 {
 	client_camera.info_state &= ~CAMERA_FOLLOWING;
 	client_camera.cameraGroup[0] = 0;
@@ -465,13 +465,13 @@ void CGCam_FollowDisable(void)
 	client_camera.cameraGroupTag[0] = 0;
 }
 
-void CGCam_TrackDisable(void)
+void CGCam_TrackDisable()
 {
 	client_camera.info_state &= ~CAMERA_TRACKING;
 	client_camera.trackEntNum = ENTITYNUM_WORLD;
 }
 
-void CGCam_DistanceDisable(void)
+void CGCam_DistanceDisable()
 {
 	client_camera.distance = 0;
 }

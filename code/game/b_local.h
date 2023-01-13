@@ -96,15 +96,15 @@ extern visibility_t enemyVisibility;
 //AI_Default
 extern qboolean NPC_CheckInvestigate(int alert_event_num);
 extern qboolean NPC_StandTrackAndShoot(gentity_t* NPC);
-extern void NPC_BSIdle(void);
+extern void NPC_BSIdle();
 extern void NPC_BSPointShoot(qboolean shoot);
-extern void NPC_BSStandGuard(void);
-extern void NPC_BSPatrol(void);
-extern void NPC_BSHuntAndKill(void);
-extern void NPC_BSStandAndShoot(void);
-extern void NPC_BSRunAndShoot(void);
+extern void NPC_BSStandGuard();
+extern void NPC_BSPatrol();
+extern void NPC_BSHuntAndKill();
+extern void NPC_BSStandAndShoot();
+extern void NPC_BSRunAndShoot();
 extern void NPC_BSWait();
-extern void NPC_BSDefault(void);
+extern void NPC_BSDefault();
 
 //NPC_behavior
 extern void NPC_BSAdvanceFight();
@@ -122,7 +122,7 @@ extern void G_StartFlee(gentity_t* self, gentity_t* enemy, vec3_t danger_point, 
                         int flee_time_max);
 
 //NPC_combat
-extern int ChooseBestWeapon(void);
+extern int ChooseBestWeapon();
 extern void NPC_ChangeWeapon(int new_weapon);
 extern void WeaponThink();
 extern qboolean HaveWeapon(int weapon);
@@ -140,18 +140,18 @@ extern qboolean ShotThroughGlass(trace_t* tr, const gentity_t* target, vec3_t sp
 extern void G_ClearEnemy(gentity_t* self);
 extern void G_SetEnemy(gentity_t* self, gentity_t* enemy);
 extern gentity_t* NPC_PickAlly(qboolean facing_each_other, float range, qboolean ignore_group, qboolean moving_only);
-extern void NPC_LostEnemyDecideChase(void);
+extern void NPC_LostEnemyDecideChase();
 extern float NPC_MaxDistSquaredForWeapon();
 extern qboolean NPC_EvaluateShot(int hit);
 extern int NPC_ShotEntity(const gentity_t* ent, vec3_t impact_pos = nullptr);
 extern void npc_check_speak(gentity_t* speaker_npc);
 
 //NPC_formation
-extern qboolean NPC_SlideMoveToGoal(void);
+extern qboolean NPC_SlideMoveToGoal();
 extern float NPC_FindClosestTeammate(gentity_t* self);
 extern void NPC_CalcClosestFormationSpot(gentity_t* self);
 //extern void G_MaintainFormations (gentity_t *self);
-extern void NPC_BSFormation(void);
+extern void NPC_BSFormation();
 extern void NPC_CreateFormation(gentity_t* self);
 extern void NPC_DropFormation(gentity_t* self);
 extern void NPC_ReorderFormation(gentity_t* self);
@@ -174,15 +174,15 @@ extern void NPC_DeleteFromFormation(gentity_t* self);
 //NPC_goal
 extern void SetGoal(gentity_t* goal, float rating);
 extern void NPC_SetGoal(gentity_t* goal, float rating);
-extern void NPC_ClearGoal(void);
-extern void NPC_ReachedGoal(void);
+extern void NPC_ClearGoal();
+extern void NPC_ReachedGoal();
 extern qboolean ReachedGoal(gentity_t* goal);
-extern gentity_t* UpdateGoal(void);
+extern gentity_t* UpdateGoal();
 extern qboolean NPC_MoveToGoal(qboolean tryStraight);
 
 //NPC_move
-qboolean NPC_Jumping(void);
-qboolean NPC_JumpBackingUp(void);
+qboolean NPC_Jumping();
+qboolean NPC_JumpBackingUp();
 
 qboolean NPC_TryJump(gentity_t* goal, float max_xy_dist = 0.0f, float max_z_diff = 0.0f);
 qboolean NPC_TryJump(const vec3_t& pos, float max_xy_dist = 0.0f, float max_z_diff = 0.0f);

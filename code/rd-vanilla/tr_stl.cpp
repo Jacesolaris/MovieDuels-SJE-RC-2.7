@@ -38,12 +38,12 @@ using ShaderEntryPtrs_t = std::map<sstring_t, const char*>;
 using ShaderEntryPtr_size = ShaderEntryPtrs_t::size_type;
 ShaderEntryPtrs_t ShaderEntryPtrs;
 
-void ShaderEntryPtrs_Clear(void)
+void ShaderEntryPtrs_Clear()
 {
 	ShaderEntryPtrs.clear();
 }
 
-int ShaderEntryPtrs_Size(void)
+int ShaderEntryPtrs_Size()
 {
 	return ShaderEntryPtrs.size();
 }

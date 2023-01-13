@@ -48,7 +48,7 @@ using uiimport_t = struct
 	void (*Cvar_InfoStringBuffer)(int bit, char* buffer, int bufsize);
 
 	// console command interaction
-	int (*Argc)(void);
+	int (*Argc)();
 	void (*Argv)(int n, char* buffer, int bufferLength);
 	void (*Cmd_ExecuteText)(int exec_when, const char* text);
 	void (*Cmd_TokenizeString)(const char* text);
@@ -75,14 +75,14 @@ using uiimport_t = struct
 	void (*R_Font_DrawString)(int ox, int oy, const char* text, const float* rgba, int setIndex, int iMaxPixelWidth,
 	                          float scale);
 	int (*R_Font_StrLenChars)(const char* text);
-	qboolean (*Language_IsAsian)(void);
-	qboolean (*Language_UsesSpaces)(void);
+	qboolean (*Language_IsAsian)();
+	qboolean (*Language_UsesSpaces)();
 	unsigned int (*AnyLanguage_ReadCharFromString)(char* psText, int* piAdvanceCount,
 	                                               qboolean* pbIsTrailingPunctuation /* = NULL */);
 
 	// a scene is built up by calls to R_ClearScene and the various R_Add functions.
 	// Nothing is drawn until R_RenderScene is called.
-	void (*R_ClearScene)(void);
+	void (*R_ClearScene)();
 	void (*R_AddRefEntityToScene)(const refEntity_t* re);
 	void (*R_AddPolyToScene)(qhandle_t h_shader, int num_verts, const polyVert_t* verts);
 	void (*R_AddLightToScene)(const vec3_t org, float intensity, float r, float g, float b);
@@ -97,7 +97,7 @@ using uiimport_t = struct
 	                     qhandle_t h_shader); // 0 = white
 
 	// force a screen update, only used during gamestate load
-	void (*UpdateScreen)(void);
+	void (*UpdateScreen)();
 
 #ifdef JK2_MODE
 	// stuff for savegame screenshots...
@@ -115,7 +115,7 @@ using uiimport_t = struct
 	void (*S_StartLocalSound)(sfxHandle_t sfxHandle, int channelNum);
 	sfxHandle_t (*S_RegisterSound)(const char* name);
 	void (*S_StartLocalLoopingSound)(sfxHandle_t sfxHandle);
-	void (*S_StopSounds)(void);
+	void (*S_StopSounds)();
 
 	// =========== getting save game picture ===============
 	void (*DrawStretchRaw)(int x, int y, int w, int h, int cols, int rows, const byte* data, int client,
@@ -135,10 +135,10 @@ using uiimport_t = struct
 	void (*Key_GetBindingBuf)(int keynum, char* buf, int buflen);
 	void (*Key_SetBinding)(int keynum, const char* binding);
 	qboolean (*Key_IsDown)(int keynum);
-	qboolean (*Key_GetOverstrikeMode)(void);
+	qboolean (*Key_GetOverstrikeMode)();
 	void (*Key_SetOverstrikeMode)(qboolean state);
-	void (*Key_ClearStates)(void);
-	int (*Key_GetCatcher)(void);
+	void (*Key_ClearStates)();
+	int (*Key_GetCatcher)();
 	void (*Key_SetCatcher)(int catcher);
 
 #ifdef JK2_MODE
@@ -150,11 +150,11 @@ using uiimport_t = struct
 
 	void (*GetGlconfig)(glconfig_t* config);
 
-	connstate_t (*GetClientState)(void);
+	connstate_t (*GetClientState)();
 
 	void (*GetConfigString)(int index, char* buff, int buffsize);
 
-	int (*Milliseconds)(void);
+	int (*Milliseconds)();
 	void (*Draw_DataPad)(int HUDType);
 };
 

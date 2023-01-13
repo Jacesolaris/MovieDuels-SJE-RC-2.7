@@ -55,12 +55,12 @@ public:
 
 	static CTask* Create(int guid, CBlock* block);
 
-	void Free(void) const;
+	void Free() const;
 
-	unsigned int GetTimeStamp(void) const { return m_timeStamp; }
-	CBlock* GetBlock(void) const { return m_block; }
-	int GetGUID(void) const { return m_id; }
-	int GetID(void) const { return m_block->GetBlockID(); }
+	unsigned int GetTimeStamp() const { return m_timeStamp; }
+	CBlock* GetBlock() const { return m_block; }
+	int GetGUID() const { return m_id; }
+	int GetID() const { return m_block->GetBlockID(); }
 
 	void SetTimeStamp(const unsigned int timeStamp) { m_timeStamp = timeStamp; }
 	void SetBlock(CBlock* block) { m_block = block; }
@@ -93,22 +93,22 @@ class CTaskGroup
 public:
 	using taskCallback_m = std::map<int, bool>;
 
-	CTaskGroup(void);
-	~CTaskGroup(void);
+	CTaskGroup();
+	~CTaskGroup();
 
-	void Init(void);
+	void Init();
 
 	int Add(const CTask* task);
 
 	void SetGUID(int guid);
 	void SetParent(CTaskGroup* group) { m_parent = group; }
 
-	bool Complete(void) const { return m_numCompleted == m_completedTasks.size(); }
+	bool Complete() const { return m_numCompleted == m_completedTasks.size(); }
 
 	bool MarkTaskComplete(int id);
 
-	CTaskGroup* GetParent(void) const { return m_parent; }
-	int GetGUID(void) const { return m_GUID; }
+	CTaskGroup* GetParent() const { return m_parent; }
+	int GetGUID() const { return m_GUID; }
 
 	// Overloaded new operator.
 	void* operator new(const size_t size)
@@ -151,28 +151,28 @@ public:
 
 	int GetID() const;
 
-	static CTaskManager* Create(void);
+	static CTaskManager* Create();
 
-	CBlock* GetCurrentTask(void);
+	CBlock* GetCurrentTask();
 
 	int Init(CSequencer* owner);
-	int Free(void);
+	int Free();
 
-	static int Flush(void);
+	static int Flush();
 
 	int SetCommand(CBlock* command, int type, const CIcarus* icarus);
 	int Completed(int id);
 
 	int Update(CIcarus* icarus);
-	int IsRunning(void) const { return !m_tasks.empty(); };
-	bool IsResident(void) const { return m_resident; };
+	int IsRunning() const { return !m_tasks.empty(); };
+	bool IsResident() const { return m_resident; };
 
 	CTaskGroup* AddTaskGroup(const char* name, const CIcarus* icarus);
 	CTaskGroup* GetTaskGroup(const char* name, const CIcarus* icarus);
 	CTaskGroup* GetTaskGroup(int id, const CIcarus* icarus);
 
 	int MarkTask(int id, int operation, const CIcarus* icarus);
-	CBlock* RecallTask(void);
+	CBlock* RecallTask();
 
 	void Save();
 	void Load(CIcarus* icarus);

@@ -1,6 +1,6 @@
 //
 // Saved game specialized archivers
-//
+// 
 
 #ifndef OJK_SAVED_GAME_CLASS_ARCHIVERS_INCLUDED
 #define OJK_SAVED_GAME_CLASS_ARCHIVERS_INCLUDED

@@ -40,7 +40,7 @@ extern qboolean WP_SaberBladeUseSecondBladeStyle(saberInfo_t* saber, int blade_n
 #define TURN_ON				0x00000000
 #define TURN_OFF			0x00000100
 
-extern stringID_table_t animTable[MAX_ANIMATIONS + 1];
+extern stringID_table_t anim_table[MAX_ANIMATIONS + 1];
 
 char* cg_customSoundNames[MAX_CUSTOM_SOUNDS] = {
 	"*death1",
@@ -2858,11 +2858,11 @@ static void CG_SetLerpFrameAnimation(centity_t* cent, clientInfo_t* ci, lerpFram
 	if (cg_debugAnim.integer && (cg_debugAnim.integer < 0 || cg_debugAnim.integer == cent->currentState.client_num)) {
 		if (lf == &cent->pe.legs)
 		{
-			trap->Print("%d: %d TORSO Anim: %i, '%s'\n", cg.time, cent->currentState.client_num, newAnimation, GetStringForID(animTable, newAnimation));
+			trap->Print("%d: %d TORSO Anim: %i, '%s'\n", cg.time, cent->currentState.client_num, newAnimation, GetStringForID(anim_table, newAnimation));
 		}
 		else
 		{
-			trap->Print("%d: %d LEGS Anim: %i, '%s'\n", cg.time, cent->currentState.client_num, newAnimation, GetStringForID(animTable, newAnimation));
+			trap->Print("%d: %d LEGS Anim: %i, '%s'\n", cg.time, cent->currentState.client_num, newAnimation, GetStringForID(anim_table, newAnimation));
 		}
 	}
 

@@ -42,7 +42,7 @@ USER INTERFACE MAIN
 
 #include "../game/bg_public.h"
 #include "../game/anims.h"
-extern stringID_table_t animTable[MAX_ANIMATIONS + 1];
+extern stringID_table_t anim_table[MAX_ANIMATIONS + 1];
 
 #include "../qcommon/stringed_ingame.h"
 #include "../qcommon/stv_version.h"
@@ -92,7 +92,7 @@ using savedata_t = struct
 
 static savedata_t s_savedata[MAX_SAVELOADFILES];
 void UI_SetActiveMenu(const char* menuname, const char* menuID);
-void ReadSaveDirectory(void);
+void ReadSaveDirectory();
 void Item_RunScript(itemDef_t* item, const char* s);
 qboolean Item_SetFocus(itemDef_t* item, float x, float y);
 
@@ -104,19 +104,19 @@ int Text_Width(const char* text, float scale, int iFontIndex);
 void _UI_DrawTopBottom(float x, float y, float w, float h, float size);
 void _UI_DrawSides(float x, float y, float w, float h, float size);
 void UI_CheckVid1Data(const char* menuTo, const char* warningMenuName);
-void UI_GetVideoSetup(void);
-void UI_UpdateVideoSetup(void);
-static void UI_UpdateCharacterCvars(void);
-static void UI_GetCharacterCvars(void);
-static void UI_UpdateSaberCvars(void);
-static void UI_GetSaberCvars(void);
-static void UI_ResetSaberCvars(void);
+void UI_GetVideoSetup();
+void UI_UpdateVideoSetup();
+static void UI_UpdateCharacterCvars();
+static void UI_GetCharacterCvars();
+static void UI_UpdateSaberCvars();
+static void UI_GetSaberCvars();
+static void UI_ResetSaberCvars();
 static void UI_InitAllocForcePowers(const char* forceName);
 static void UI_AffectForcePowerLevel(const char* forceName);
 static void UI_ShowForceLevelDesc(const char* forceName);
-static void UI_ResetForceLevels(void);
-static void UI_ClearWeapons(void);
-static void UI_clearsabers(void);
+static void UI_ResetForceLevels();
+static void UI_ClearWeapons();
+static void UI_clearsabers();
 static void UI_GiveAmmo(int ammoIndex, int ammoAmount, const char* soundfile);
 static void UI_GiveWeapon(int weaponIndex);
 static void UI_EquipWeapon(int weaponIndex);
@@ -128,43 +128,43 @@ static void UI_AddPistolSelection(int weaponIndex, int ammoIndex, int ammoAmount
 static void UI_AddThrowWeaponSelection(int weaponIndex, int ammoIndex, int ammoAmount, const char* iconItemName,
                                        const char* litIconItemName, const char* hexBackground, const char* soundfile);
 static void UI_RemoveWeaponSelection(int weaponIndex);
-static void UI_Removepistolselection(void);
-static void UI_RemoveThrowWeaponSelection(void);
+static void UI_Removepistolselection();
+static void UI_RemoveThrowWeaponSelection();
 static void UI_HighLightWeaponSelection(int selectionslot);
-static void UI_Highlightpistolselection(void);
+static void UI_Highlightpistolselection();
 static void UI_NormalWeaponSelection(int selectionslot);
-static void UI_Normalpistolselection(void);
-static void UI_NormalThrowSelection(void);
-static void UI_HighLightThrowSelection(void);
-static void UI_ClearInventory(void);
+static void UI_Normalpistolselection();
+static void UI_NormalThrowSelection();
+static void UI_HighLightThrowSelection();
+static void UI_ClearInventory();
 static void UI_GiveInventory(int itemIndex, int amount);
 static void UI_ForcePowerWeaponsButton(qboolean activeFlag);
-static void UI_UpdateCharacterSkin(void);
+static void UI_UpdateCharacterSkin();
 static void UI_UpdateCharacter(qboolean changedModel);
-static void UI_UpdateSaberType(void);
+static void UI_UpdateSaberType();
 static void UI_UpdateSaberHilt(qboolean secondSaber);
 //static void		UI_UpdateSaberColor( qboolean secondSaber );
-static void UI_InitWeaponSelect(void);
-static void UI_WeaponHelpActive(void);
+static void UI_InitWeaponSelect();
+static void UI_WeaponHelpActive();
 
 #ifndef JK2_MODE
-static void UI_UpdateFightingStyle(void);
-static void UI_UpdateFightingStyleChoices(void);
-static void UI_CalcForceStatus(void);
+static void UI_UpdateFightingStyle();
+static void UI_UpdateFightingStyleChoices();
+static void UI_CalcForceStatus();
 #endif // !JK2_MODE
 
-static void UI_DecrementForcePowerLevel(void);
-static void UI_DecrementCurrentForcePower(void);
-static void UI_ShutdownForceHelp(void);
-static void UI_ForceHelpActive(void);
+static void UI_DecrementForcePowerLevel();
+static void UI_DecrementCurrentForcePower();
+static void UI_ShutdownForceHelp();
+static void UI_ForceHelpActive();
 
 #ifndef JK2_MODE
-static void UI_DemoSetForceLevels(void);
+static void UI_DemoSetForceLevels();
 #endif // !JK2_MODE
 
-static void UI_RecordForceLevels(void);
-static void UI_RecordWeapons(void);
-static void UI_ResetCharacterListBoxes(void);
+static void UI_RecordForceLevels();
+static void UI_RecordWeapons();
+static void UI_ResetCharacterListBoxes();
 
 void UI_LoadMenus(const char* menuFile, qboolean reset);
 static void UI_OwnerDraw(float x, float y, float w, float h, float text_x, float text_y, int ownerDraw,
@@ -173,8 +173,8 @@ static void UI_OwnerDraw(float x, float y, float w, float h, float text_x, float
 static qboolean UI_OwnerDrawVisible(int flags);
 int UI_OwnerDrawWidth(int ownerDraw, float scale);
 static void UI_Update(const char* name);
-void UI_UpdateCvars(void);
-void UI_ResetDefaults(void);
+void UI_UpdateCvars();
+void UI_ResetDefaults();
 void UI_AdjustSaveGameListBox(int currentLine);
 
 void Menus_CloseByName(const char* p);
@@ -362,8 +362,8 @@ static int gamecodetoui[] = {4, 2, 3, 0, 5, 1, 6};
 
 uiInfo_t uiInfo;
 
-static void UI_RegisterCvars(void);
-void UI_Load(void);
+static void UI_RegisterCvars();
+void UI_Load();
 
 static int UI_GetScreenshotFormatForString(const char* str)
 {
@@ -395,7 +395,7 @@ using cvarTable_t = struct cvarTable_s
 	vmCvar_t* vmCvar;
 	const char* cvarName;
 	const char* defaultString;
-	void (*update)(void);
+	void (*update)();
 	uint32_t cvarFlags;
 };
 
@@ -470,7 +470,7 @@ cvar_t* g_NPCsabercolor;
 cvar_t* g_NPCsabertwo;
 cvar_t* g_NPCsabertwocolor;
 
-static void UI_UpdateScreenshot(void)
+static void UI_UpdateScreenshot()
 {
 	qboolean changed = qfalse;
 	// check some things
@@ -507,7 +507,7 @@ static void UI_UpdateScreenshot(void)
 
 vmCvar_t r_ratiofix;
 
-static void UI_Set2DRatio(void)
+static void UI_Set2DRatio()
 {
 	if (r_ratiofix.integer)
 	{
@@ -613,7 +613,7 @@ extern void SE_CheckForLanguageUpdates();
 
 void Text_Paint(float x, float y, float scale, vec4_t color, const char* text, int iMaxPixelWidth, int style,
                 int iFontIndex);
-int Key_GetCatcher(void);
+int Key_GetCatcher();
 
 constexpr auto UI_FPS_FRAMES = 4;
 
@@ -1972,7 +1972,7 @@ const char* kyleForceStatusSounds[] =
 };
 
 #ifndef JK2_MODE
-static void UI_CalcForceStatus(void)
+static void UI_CalcForceStatus()
 {
 	short index;
 	qboolean lukeFlag = qtrue;
@@ -2499,7 +2499,7 @@ qboolean UI_ParseAnimationFile(const char* af_filename)
 			break;
 		}
 
-		const int animNum = GetIDForString(animTable, token);
+		const int animNum = GetIDForString(anim_table, token);
 		if (animNum == -1)
 		{
 			//#ifndef FINAL_BUILD
@@ -2771,7 +2771,7 @@ static void UI_FreeSpecies(playerSpeciesInfo_t* species)
 	memset(species, 0, sizeof(playerSpeciesInfo_t));
 }
 
-void UI_FreeAllSpecies(void)
+void UI_FreeAllSpecies()
 {
 	for (int i = 0; i < uiInfo.playerSpeciesCount; i++)
 	{
@@ -2964,7 +2964,7 @@ static void UI_BuildPlayerModel_List(const qboolean inGameLoad)
 UI_Shutdown
 =================
 */
-void UI_Shutdown(void)
+void UI_Shutdown()
 {
 	UI_FreeAllSpecies();
 }
@@ -3129,7 +3129,7 @@ void _UI_Init(const qboolean inGameLoad)
 UI_RegisterCvars
 =================
 */
-static void UI_RegisterCvars(void)
+static void UI_RegisterCvars()
 {
 	size_t i;
 	const cvarTable_t* cv;
@@ -3319,7 +3319,7 @@ void UI_LoadMenus(const char* menuFile, const qboolean reset)
 	Com_Printf("---------------- MovieDuels-SJE-RC-2.7---------------------------\n");
 	Com_Printf("-----------------------------------------------------------------\n");
 	Com_Printf("------------------------Update 7---------------------------------\n");
-	Com_Printf("------------------Build Date 12/01/2023--------------------------\n");
+	Com_Printf("------------------Build Date 13/01/2023--------------------------\n");
 	Com_Printf("-----------------------------------------------------------------\n");
 	Com_Printf("------------------------LightSaber-------------------------------\n");
 	Com_Printf("-----------An elegant weapon for a more civilized age------------\n");
@@ -3347,7 +3347,7 @@ void UI_LoadMenus(const char* menuFile, const qboolean reset)
 UI_Load
 =================
 */
-void UI_Load(void)
+void UI_Load()
 {
 	const char* menuSet;
 	char lastName[1024];
@@ -4075,7 +4075,7 @@ constexpr auto ASSET_WINDU = "gfx/menus/cursor_windu.tga";
 AssetCache
 =================
 */
-void AssetCache(void)
+void AssetCache()
 {
 	//	int n;
 	uiInfo.uiDC.Assets.scrollBar = ui.R_RegisterShaderNoMip(ASSET_SCROLLBAR);
@@ -4147,7 +4147,7 @@ void _UI_DrawRect(const float x, const float y, const float width, const float h
 UI_UpdateCvars
 =================
 */
-void UI_UpdateCvars(void)
+void UI_UpdateCvars()
 {
 	size_t i;
 	const cvarTable_t* cv;
@@ -4574,7 +4574,7 @@ void _UI_KeyEvent(const int key, const qboolean down)
 UI_Report
 =================
 */
-void UI_Report(void)
+void UI_Report()
 {
 	String_Report();
 }
@@ -4584,7 +4584,7 @@ void UI_Report(void)
 UI_DataPadMenu
 =================
 */
-void UI_DataPadMenu(void)
+void UI_DataPadMenu()
 {
 	Menus_CloseByName("mainhud");
 
@@ -4629,7 +4629,7 @@ void UI_InGameMenu(const char* menuID)
 	ui.Key_SetCatcher(KEYCATCH_UI);
 }
 
-qboolean _UI_IsFullscreen(void)
+qboolean _UI_IsFullscreen()
 {
 	return Menus_AnyFullScreenVisible();
 }
@@ -4675,7 +4675,7 @@ int SCREENSHOT_TOTAL = -1;
 int SCREENSHOT_CHOICE = 0;
 int SCREENSHOT_NEXT_UPDATE_TIME = 0;
 
-char* UI_GetCurrentLevelshot(void)
+char* UI_GetCurrentLevelshot()
 {
 	const int time = Sys_Milliseconds();
 
@@ -4717,7 +4717,7 @@ char* UI_GetCurrentLevelshot(void)
 Menu_Cache
 =================
 */
-void Menu_Cache(void)
+void Menu_Cache()
 {
 	uis.cursor = ui.R_RegisterShaderNoMip("menu/new/crosshairb");
 	// Common menu graphics
@@ -4736,7 +4736,7 @@ their real counterparts.  This is to create a interface which allows
 you to discard your changes if you did something you didnt want
 =================
 */
-void UI_UpdateVideoSetup(void)
+void UI_UpdateVideoSetup()
 {
 	Cvar_Set("r_mode", Cvar_VariableString("ui_r_mode"));
 	Cvar_Set("r_fullscreen", Cvar_VariableString("ui_r_fullscreen"));
@@ -4766,7 +4766,7 @@ Retrieves the current actual video settings into the temporary user
 interface versions of the cvars.
 =================
 */
-void UI_GetVideoSetup(void)
+void UI_GetVideoSetup()
 {
 	Cvar_Register(nullptr, "ui_r_glCustom", "4", CVAR_ARCHIVE);
 
@@ -4858,7 +4858,7 @@ static void UI_SetSexandSoundForModel(const char* char_model)
 	}
 }
 
-static void UI_UpdateCharacterCvars(void)
+static void UI_UpdateCharacterCvars()
 {
 	const char* char_model = Cvar_VariableString("ui_char_model");
 	UI_SetSexandSoundForModel(char_model);
@@ -4871,7 +4871,7 @@ static void UI_UpdateCharacterCvars(void)
 	Cvar_Set("g_char_color_blue", Cvar_VariableString("ui_char_color_blue"));
 }
 
-static void UI_GetCharacterCvars(void)
+static void UI_GetCharacterCvars()
 {
 	Cvar_Set("ui_char_skin_head", Cvar_VariableString("g_char_skin_head"));
 	Cvar_Set("ui_char_skin_torso", Cvar_VariableString("g_char_skin_torso"));
@@ -4894,7 +4894,7 @@ static void UI_GetCharacterCvars(void)
 
 extern saber_colors_t TranslateSaberColor(const char* name);
 
-static void UI_UpdateSaberCvars(void)
+static void UI_UpdateSaberCvars()
 {
 	if (!Cvar_VariableIntegerValue("g_NPCsaber") && !Cvar_VariableIntegerValue("g_NPCsabertwo"))
 	{
@@ -4947,7 +4947,7 @@ static void UI_UpdateSaberCvars(void)
 }
 
 #ifndef JK2_MODE
-static void UI_UpdateFightingStyleChoices(void)
+static void UI_UpdateFightingStyleChoices()
 {
 	//
 	if (!Q_stricmp("staff", Cvar_VariableString("ui_saber_type")))
@@ -5303,7 +5303,7 @@ static void UI_SetHexPicLevel(const menuDef_t* menu, const int forcePowerI, cons
 void UI_SetItemVisible(const menuDef_t* menu, const char* itemname, qboolean visible);
 
 // if this is the first time into the force power allocation screen, show the INSTRUCTION screen
-static void UI_ForceHelpActive(void)
+static void UI_ForceHelpActive()
 {
 	const int tier_storyinfo = Cvar_VariableIntegerValue("tier_storyinfo");
 
@@ -5317,7 +5317,7 @@ static void UI_ForceHelpActive(void)
 
 #ifndef JK2_MODE
 // Set the force levels depending on the level chosen
-static void UI_DemoSetForceLevels(void)
+static void UI_DemoSetForceLevels()
 {
 	const menuDef_t* menu = Menu_GetFocused(); // Get current menu
 
@@ -5447,7 +5447,7 @@ static void UI_DemoSetForceLevels(void)
 
 // record the force levels into a cvar so when restoring player from map transition
 // the force levels are set up correctly
-static void UI_RecordForceLevels(void)
+static void UI_RecordForceLevels()
 {
 	const menuDef_t* menu = Menu_GetFocused(); // Get current menu
 
@@ -5466,7 +5466,7 @@ static void UI_RecordForceLevels(void)
 
 // record the weapons into a cvar so when restoring player from map transition
 // the force levels are set up correctly
-static void UI_RecordWeapons(void)
+static void UI_RecordWeapons()
 {
 	const menuDef_t* menu = Menu_GetFocused(); // Get current menu
 
@@ -5489,7 +5489,7 @@ static void UI_RecordWeapons(void)
 }
 
 // Shut down the help screen in the force power allocation screen
-static void UI_ShutdownForceHelp(void)
+static void UI_ShutdownForceHelp()
 {
 	char itemName[128];
 	itemDef_t* item;
@@ -5593,7 +5593,7 @@ static void UI_ShutdownForceHelp(void)
 }
 
 // Decrement force power level (Used by Force Power Allocation screen)
-static void UI_DecrementCurrentForcePower(void)
+static void UI_DecrementCurrentForcePower()
 {
 	itemDef_t* item;
 	vec4_t color = {0.65f, 0.65f, 0.65f, 1.0f};
@@ -5794,7 +5794,7 @@ static void UI_AffectForcePowerLevel(const char* forceName)
 	}
 }
 
-static void UI_DecrementForcePowerLevel(void)
+static void UI_DecrementForcePowerLevel()
 {
 	const int forcePowerI = Cvar_VariableIntegerValue("ui_forcepower_inc");
 	// Get player state
@@ -5854,7 +5854,7 @@ static void UI_ShowForceLevelDesc(const char* forceName)
 }
 
 // Reset force level powers screen to what it was before player upgraded them (Used by Force Power Allocation screen)
-static void UI_ResetForceLevels(void)
+static void UI_ResetForceLevels()
 {
 	// What force ppower had the point added to it?
 	if (uiInfo.forcePowerUpdated != FP_UPDATED_NONE)
@@ -5911,7 +5911,7 @@ static void UI_ResetForceLevels(void)
 
 #ifndef JK2_MODE
 // Set the Players known saber style
-static void UI_UpdateFightingStyle(void)
+static void UI_UpdateFightingStyle()
 {
 	int saberStyle;
 
@@ -5954,7 +5954,7 @@ static void UI_UpdateFightingStyle(void)
 }
 #endif // !JK2_MODE
 
-static void UI_ResetCharacterListBoxes(void)
+static void UI_ResetCharacterListBoxes()
 {
 	const menuDef_t* menu = Menus_FindByName("characterMenu");
 
@@ -6007,7 +6007,7 @@ static void UI_ResetCharacterListBoxes(void)
 	}
 }
 
-static void UI_ClearInventory(void)
+static void UI_ClearInventory()
 {
 	// Get player state
 	const client_t* cl = &svs.clients[0]; // 0 because only ever us as a player
@@ -6079,7 +6079,7 @@ static void UI_WeaponAllocBeginButton(const qboolean activeFlag)
 
 // If we have both weapons and the throwable weapon, turn on the begin mission button,
 // otherwise, turn it off
-static void UI_WeaponsSelectionsComplete(void)
+static void UI_WeaponsSelectionsComplete()
 {
 	// We need two weapons and one throwable
 	if (uiInfo.selectedWeapon1 != NOWEAPON &&
@@ -6096,7 +6096,7 @@ static void UI_WeaponsSelectionsComplete(void)
 }
 
 // if this is the first time into the weapon allocation screen, show the INSTRUCTION screen
-static void UI_WeaponHelpActive(void)
+static void UI_WeaponHelpActive()
 {
 	const int tier_storyinfo = Cvar_VariableIntegerValue("tier_storyinfo");
 
@@ -6123,7 +6123,7 @@ static void UI_WeaponHelpActive(void)
 	}
 }
 
-static void UI_InitWeaponSelect(void)
+static void UI_InitWeaponSelect()
 {
 	UI_WeaponAllocBeginButton(qfalse);
 	uiInfo.selectedWeapon1 = NOWEAPON;
@@ -6132,7 +6132,7 @@ static void UI_InitWeaponSelect(void)
 	uiInfo.selectedPistolWeapon = NOWEAPON;
 }
 
-static void UI_clearsabers(void)
+static void UI_clearsabers()
 {
 	// Get player state
 	const client_t* cl = &svs.clients[0]; // 0 because only ever us as a player
@@ -6156,7 +6156,7 @@ static void UI_clearsabers(void)
 	}
 }
 
-static void UI_ClearWeapons(void)
+static void UI_ClearWeapons()
 {
 	// Get player state
 	const client_t* cl = &svs.clients[0]; // 0 because only ever us as a player
@@ -6619,7 +6619,7 @@ static void UI_RemoveWeaponSelection(const int weaponSelectionIndex)
 	UI_WeaponsSelectionsComplete(); // Test to see if the mission begin button should turn on or off
 }
 
-static void UI_Removepistolselection(void)
+static void UI_Removepistolselection()
 {
 	const menuDef_t* menu = Menu_GetFocused(); // Get current menu
 
@@ -6731,7 +6731,7 @@ static void UI_NormalWeaponSelection(const int selectionslot)
 	}
 }
 
-static void UI_Normalpistolselection(void)
+static void UI_Normalpistolselection()
 {
 	const menuDef_t* menu = Menu_GetFocused(); // Get current menu
 	if (!menu)
@@ -6772,7 +6772,7 @@ static void UI_HighLightWeaponSelection(const int selectionslot)
 	}
 }
 
-static void UI_Highlightpistolselection(void)
+static void UI_Highlightpistolselection()
 {
 	const menuDef_t* menu = Menu_GetFocused(); // Get current menu
 	if (!menu)
@@ -6888,7 +6888,7 @@ static void UI_AddThrowWeaponSelection(const int weaponIndex, const int ammoInde
 }
 
 // Update the player weapons with the chosen throw weapon
-static void UI_RemoveThrowWeaponSelection(void)
+static void UI_RemoveThrowWeaponSelection()
 {
 	const menuDef_t* menu = Menu_GetFocused(); // Get current menu
 
@@ -6971,7 +6971,7 @@ static void UI_RemoveThrowWeaponSelection(void)
 	UI_WeaponsSelectionsComplete(); // Test to see if the mission begin button should turn on or off
 }
 
-static void UI_NormalThrowSelection(void)
+static void UI_NormalThrowSelection()
 {
 	const menuDef_t* menu = Menu_GetFocused(); // Get current menu
 	if (!menu)
@@ -6983,7 +6983,7 @@ static void UI_NormalThrowSelection(void)
 	item->window.background = uiInfo.unlitThrowableIcon;
 }
 
-static void UI_HighLightThrowSelection(void)
+static void UI_HighLightThrowSelection()
 {
 	const menuDef_t* menu = Menu_GetFocused(); // Get current menu
 	if (!menu)
@@ -6995,7 +6995,7 @@ static void UI_HighLightThrowSelection(void)
 	item->window.background = uiInfo.litThrowableIcon;
 }
 
-static void UI_GetSaberCvars(void)
+static void UI_GetSaberCvars()
 {
 	Cvar_Set("ui_saber_type", Cvar_VariableString("g_saber_type"));
 	if (!Cvar_VariableIntegerValue("ui_npc_saber") && !Cvar_VariableIntegerValue("ui_npc_sabertwo"))
@@ -7034,7 +7034,7 @@ static void UI_GetSaberCvars(void)
 	Cvar_Set("ui_newfightingstyle", "0");
 }
 
-static void UI_ResetSaberCvars(void)
+static void UI_ResetSaberCvars()
 {
 	Cvar_Set("g_saber_type", "single");
 	Cvar_Set("g_saber", "single_1");
@@ -7048,7 +7048,7 @@ static void UI_ResetSaberCvars(void)
 extern qboolean ItemParse_asset_model_go(itemDef_t* item, const char* name);
 extern qboolean ItemParse_model_g2skin_go(itemDef_t* item, const char* skinName);
 
-static void UI_UpdateCharacterSkin(void)
+static void UI_UpdateCharacterSkin()
 {
 	char skin[MAX_QPATH];
 
@@ -7111,7 +7111,7 @@ static void UI_UpdateCharacter(const qboolean changedModel)
 	UI_UpdateCharacterSkin();
 }
 
-void UI_UpdateSaberType(void)
+void UI_UpdateSaberType()
 {
 	char sType[MAX_QPATH];
 	DC->getCVarString("ui_saber_type", sType, sizeof sType);
@@ -7239,7 +7239,7 @@ void UI_CheckVid1Data(const char* menuTo, const char* warningMenuName)
 UI_ResetDefaults
 =================
 */
-void UI_ResetDefaults(void)
+void UI_ResetDefaults()
 {
 	ui.Cmd_ExecuteText(EXEC_APPEND, "cvar_restart\n");
 	Controls_SetDefaults();
@@ -7302,7 +7302,7 @@ ReadSaveDirectory
 =================
 */
 //JLFSAVEGAME MPNOTUSED
-void ReadSaveDirectory(void)
+void ReadSaveDirectory()
 {
 	char* holdChar;
 	int len;

@@ -828,6 +828,7 @@ static int R_GCullModel(trRefEntity_t* ent) {
 	case CULL_CLIP:
 		tr.pc.c_sphere_cull_md3_clip++;
 		return CULL_IN;
+	default: ;
 	}
 	return CULL_IN;
 }

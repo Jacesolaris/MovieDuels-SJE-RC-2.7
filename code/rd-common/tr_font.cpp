@@ -105,7 +105,7 @@ struct ThaiCodes_t
 	std::vector<int>		m_viGlyphWidths;
 	std::string			m_strInitFailureReason;	// so we don't have to keep retrying to work this out
 
-	void Clear(void)
+	void Clear()
 	{
 		m_mapValidCodes.clear();
 		m_viGlyphWidths.clear();
@@ -142,7 +142,7 @@ struct ThaiCodes_t
 	}
 
 	// return is error message to display, or NULL for success
-	const char* Init(void)
+	const char* Init()
 	{
 		if (m_mapValidCodes.empty() && m_viGlyphWidths.empty())
 		{
@@ -233,22 +233,22 @@ public:
 
 	CFontInfo(const char* fontName);
 	//	CFontInfo(int fill) { memset(this, fill, sizeof(*this)); }	// wtf?
-	~CFontInfo(void) {}
+	~CFontInfo() {}
 
-	int GetPointSize(void) const { return(mPointSize); }
-	int GetHeight(void) const { return(mHeight); }
-	int GetAscender(void) const { return(mAscender); }
-	int GetDescender(void) const { return(mDescender); }
+	int GetPointSize() const { return(mPointSize); }
+	int GetHeight() const { return(mHeight); }
+	int GetAscender() const { return(mAscender); }
+	int GetDescender() const { return(mDescender); }
 
 	const glyphInfo_t* GetLetter(unsigned int uiLetter, int* piShader = nullptr);
 	int GetCollapsedAsianCode(ulong uiLetter) const;
 
 	int GetLetterWidth(unsigned int uiLetter);
 	int GetLetterHorizAdvance(unsigned int uiLetter);
-	int GetShader(void) const { return(mShader); }
+	int GetShader() const { return(mShader); }
 
-	void FlagNoAsianGlyphs(void) { m_hAsianShaders[0] = 0; m_iLanguageModificationCount = -1; }	// used during constructor
-	bool AsianGlyphsAvailable(void) const { return !!(m_hAsianShaders[0]); }
+	void FlagNoAsianGlyphs() { m_hAsianShaders[0] = 0; m_iLanguageModificationCount = -1; }	// used during constructor
+	bool AsianGlyphsAvailable() const { return !!(m_hAsianShaders[0]); }
 
 	void UpdateAsianIfNeeded(bool bForceReEval = false);
 };
@@ -278,7 +278,7 @@ int g_iNonScaledCharRange;	// this is used with auto-scaling of asian fonts, any
 #define KSC5601_HANGUL_LOBYTE_HIBOUND	0xFF	// ...bounding (ie only valid in between these points, but NULLs in charsets for these codes)
 #define KSC5601_HANGUL_CODES_PER_ROW	96		// 2 more than the number of glyphs
 
-extern qboolean Language_IsKorean(void);
+extern qboolean Language_IsKorean();
 
 static inline qboolean Korean_ValidKSC5601Hangul(const byte _iHi, const byte _iLo)
 {
@@ -331,7 +331,7 @@ static int Korean_InitFields(int& iGlyphTPs, const char*& psLang)
 #define BIG5_LOBYTE_HIBOUND1	0xFE	//
 #define BIG5_CODES_PER_ROW		160		// 3 more than the number of glyphs
 
-extern qboolean Language_IsTaiwanese(void);
+extern qboolean Language_IsTaiwanese();
 
 static qboolean Taiwanese_ValidBig5Code(const unsigned int uiCode)
 {
@@ -412,7 +412,7 @@ static int Taiwanese_InitFields(int& iGlyphTPs, const char*& psLang)
 #define SHIFTJIS_LOBYTE_STOP1	0xFC
 #define SHIFTJIS_CODES_PER_ROW	(((SHIFTJIS_LOBYTE_STOP0-SHIFTJIS_LOBYTE_START0)+1)+((SHIFTJIS_LOBYTE_STOP1-SHIFTJIS_LOBYTE_START1)+1))
 
-extern qboolean Language_IsJapanese(void);
+extern qboolean Language_IsJapanese();
 
 static qboolean Japanese_ValidShiftJISCode(const byte _iHi, const byte _iLo)
 {
@@ -495,7 +495,7 @@ static int Japanese_InitFields(int& iGlyphTPs, const char*& psLang)
 #define GB_LOBYTE_HIBOUND	0xFF	// ...bounding (ie only valid in between these points, but NULLs in charsets for these codes)
 #define GB_CODES_PER_ROW	95		// 1 more than the number of glyphs
 
-extern qboolean Language_IsChinese(void);
+extern qboolean Language_IsChinese();
 
 static inline qboolean Chinese_ValidGBCode(const byte _iHi, const byte _iLo)
 {
@@ -561,7 +561,7 @@ static int Chinese_InitFields(int& iGlyphTPs, const char*& psLang)
 #define TIS_SARA_AM			0xD3		// special case letter, both a new letter and a trailing accent for the prev one
 ThaiCodes_t g_ThaiCodes;	// the one and only instance of this object
 
-extern qboolean Language_IsThai(void);
+extern qboolean Language_IsThai();
 
 /*
 static int Thai_IsAccentChar( unsigned int uiCode )
@@ -889,7 +889,7 @@ unsigned int AnyLanguage_ReadCharFromString(char** psText, qboolean* pbIsTrailin
 // needed for subtitle printing since original code no longer worked once camera bar height was changed to 480/10
 //	rather than refdef height / 10. I now need to bodge the coords to come out right.
 //
-qboolean Language_IsAsian(void)
+qboolean Language_IsAsian()
 {
 	switch (GetLanguageEnum())
 	{
@@ -906,7 +906,7 @@ qboolean Language_IsAsian(void)
 	return qfalse;
 }
 
-qboolean Language_UsesSpaces(void)
+qboolean Language_UsesSpaces()
 {
 	// ( korean uses spaces )
 	switch (GetLanguageEnum())
@@ -1953,7 +1953,7 @@ int RE_RegisterFont(const char* psName)
 	return 0;
 }
 
-void R_InitFonts(void)
+void R_InitFonts()
 {
 	g_iCurrentFontIndex = 1;			// entry 0 is reserved for "missing/invalid"
 	g_iNonScaledCharRange = INT_MAX;	// default all chars to have no special scaling (other than user supplied)
@@ -1965,7 +1965,7 @@ R_FontList_f
 ===============
 */
 
-void R_FontList_f(void)
+void R_FontList_f()
 {
 	Com_Printf("------------------------------------\n");
 
@@ -1981,7 +1981,7 @@ void R_FontList_f(void)
 	Com_Printf("------------------------------------\n");
 }
 
-void R_ShutdownFonts(void)
+void R_ShutdownFonts()
 {
 	for (int i = 1; i < g_iCurrentFontIndex; i++)	// entry 0 is reserved for "missing/invalid"
 	{

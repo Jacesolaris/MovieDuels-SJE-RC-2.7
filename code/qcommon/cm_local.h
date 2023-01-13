@@ -83,11 +83,11 @@ public:
 	int surfaceFlags;
 	int contentFlags;
 
-	const char* GetName(void) const { return (shader); }
-	CCMShader* GetNext(void) const { return (mNext); }
+	const char* GetName() const { return (shader); }
+	CCMShader* GetNext() const { return (mNext); }
 	void SetNext(CCMShader* next) { mNext = next; }
 
-	static void Destroy(void)
+	static void Destroy()
 	{
 	}
 };
@@ -232,14 +232,14 @@ cmodel_t* CM_ClipHandleToModel(clipHandle_t handle, clipMap_t** clip_map = nullp
 void CM_CleanLeafCache();
 
 // cm_load.c
-void CM_ModelBounds(const clipHandle_t model, vec3_t mins, vec3_t maxs);
+void CM_ModelBounds(clipHandle_t model, vec3_t mins, vec3_t maxs);
 
 // cm_patch.c
 
 patchCollide_s* CM_GeneratePatchCollide(int width, int height, vec3_t* points);
 void CM_TraceThroughPatchCollide(traceWork_t* tw, const patchCollide_s* pc);
 qboolean CM_PositionTestInPatchCollide(const traceWork_t* tw, const patchCollide_s* pc);
-void CM_ClearLevelPatches(void);
+void CM_ClearLevelPatches();
 
 //cm_trace.cpp
 void CM_CalcExtents(const vec3_t start, const vec3_t end, const traceWork_t* tw, vec3pair_t bounds);

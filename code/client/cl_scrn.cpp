@@ -344,7 +344,7 @@ void SCR_DebugGraph(const float value, const int color)
 SCR_DrawDebugGraph
 ==============
 */
-void SCR_DrawDebugGraph(void)
+void SCR_DrawDebugGraph()
 {
 	//
 	// draw the graph
@@ -377,7 +377,7 @@ void SCR_DrawDebugGraph(void)
 SCR_Init
 ==================
 */
-void SCR_Init(void)
+void SCR_Init()
 {
 	cl_timegraph = Cvar_Get("timegraph", "0", CVAR_CHEAT);
 	cl_debuggraph = Cvar_Get("debuggraph", "0", CVAR_CHEAT);
@@ -471,7 +471,7 @@ This is called every frame, and can also be called explicitly to flush
 text to the screen.
 ==================
 */
-void SCR_UpdateScreen(void)
+void SCR_UpdateScreen()
 {
 	static int recursive;
 

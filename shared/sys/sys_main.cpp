@@ -153,7 +153,7 @@ Called after the common systems (cvars, files, etc)
 are initialized
 ================
 */
-void Sys_Init(void)
+void Sys_Init()
 {
 	Cmd_AddCommand("in_restart", IN_Restart);
 	Cvar_Get("arch", OS_STRING " " ARCH_STRING, CVAR_ROM);
@@ -254,7 +254,7 @@ void NORETURN QDECL Sys_Error(const char* error, ...)
 	Sys_Exit(3);
 }
 
-void NORETURN Sys_Quit(void)
+void NORETURN Sys_Quit()
 {
 	Sys_Exit(0);
 }

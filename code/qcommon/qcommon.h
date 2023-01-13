@@ -126,11 +126,11 @@ using netsrc_t = enum
 };
 
 // For compatibility with shared code
-static inline void NET_Init(void)
+static inline void NET_Init()
 {
 }
 
-static inline void NET_Shutdown(void)
+static inline void NET_Shutdown()
 {
 }
 
@@ -148,7 +148,7 @@ void Sys_SendPacket(int length, const void* data, netadr_t to);
 //Does NOT parse port numbers, only base addresses.
 qboolean Sys_StringToAdr(const char* s, netadr_t* a);
 qboolean Sys_IsLANAddress(netadr_t adr);
-void Sys_ShowIP(void);
+void Sys_ShowIP();
 
 #define	MAX_MSGLEN				(1*17408)		// max length of a message, which may
 //#define	MAX_MSGLEN				(3*16384)		// max length of a message, which may
@@ -274,7 +274,7 @@ files can be execed.
 
 */
 
-void Cbuf_Init(void);
+void Cbuf_Init();
 // allocates an initial text buffer that will grow as needed
 
 void Cbuf_AddText(const char* text);
@@ -283,7 +283,7 @@ void Cbuf_AddText(const char* text);
 void Cbuf_ExecuteText(int exec_when, const char* text);
 // this can be used in place of either Cbuf_AddText or Cbuf_InsertText
 
-void Cbuf_Execute(void);
+void Cbuf_Execute();
 // Pulls off \n terminated lines of text from the command buffer and sends
 // them through Cmd_ExecuteString.  Stops when the buffer is empty.
 // Normally called once per frame, but may be explicitly invoked.
@@ -298,10 +298,10 @@ then searches for a command or variable that matches the first token.
 
 */
 
-using xcommand_t = void (*)(void);
+using xcommand_t = void (*)();
 using callbackFunc_t = void (*)(const char* s);
 
-void Cmd_Init(void);
+void Cmd_Init();
 
 void Cmd_AddCommand(const char* cmd_name, xcommand_t function);
 // called by the init functions of other parts of the program to
@@ -319,10 +319,10 @@ void Cmd_SetCommandCompletionFunc(const char* command, completionFunc_t complete
 void Cmd_CompleteArgument(const char* command, char* args, int arg_num);
 void Cmd_CompleteCfgName(char* args, int arg_num);
 
-int Cmd_Argc(void);
+int Cmd_Argc();
 char* Cmd_Argv(int arg);
 void Cmd_ArgvBuffer(int arg, char* buffer, int buffer_length);
-char* Cmd_Args(void);
+char* Cmd_Args();
 char* Cmd_ArgsFrom(int arg);
 void Cmd_ArgsBuffer(char* buffer, int buffer_length);
 // The functions that execute commands get their parameters with these
@@ -403,10 +403,10 @@ void Cvar_CommandCompletion(callbackFunc_t callback);
 void Cvar_Reset(const char* var_name);
 void Cvar_ForceReset(const char* var_name);
 
-void Cvar_SetCheatState(void);
+void Cvar_SetCheatState();
 // reset all testing vars to a safe value
 
-qboolean Cvar_Command(void);
+qboolean Cvar_Command();
 // called by Cmd_ExecuteString when Cmd_Argv(0) doesn't match a known
 // command.  Returns true if the command was a variable reference that
 // was handled. (print or change)
@@ -415,7 +415,7 @@ void Cvar_WriteVariables(fileHandle_t f);
 // writes lines containing "set variable value" for all variables
 // with the archive flag set to true.
 
-void Cvar_Init(void);
+void Cvar_Init();
 
 char* Cvar_InfoString(int bit);
 // returns an info string containing all the cvars that have the given bit set
@@ -424,7 +424,7 @@ void Cvar_InfoStringBuffer(int bit, char* buff, int buffsize);
 void Cvar_CheckRange(cvar_t* cv, float minVal, float maxVal, qboolean shouldBeIntegral);
 
 void Cvar_Restart(qboolean unsetVM);
-void Cvar_Restart_f(void);
+void Cvar_Restart_f();
 
 void Cvar_CompleteCvarName(char* args, int argNum);
 
@@ -449,10 +449,10 @@ constexpr auto MAX_FILE_HANDLES = 64;
 
 qboolean FS_Initialized();
 
-void FS_InitFilesystem(void);
-void FS_Shutdown(void);
+void FS_InitFilesystem();
+void FS_Shutdown();
 
-qboolean FS_ConditionalRestart(void);
+qboolean FS_ConditionalRestart();
 
 char** FS_ListFiles(const char* directory, const char* extension, int* numfiles);
 // directory should not have either a leading or trailing /
@@ -580,7 +580,7 @@ using field_t = struct
 
 void Field_Clear(field_t* edit);
 void Field_AutoComplete(field_t* edit);
-void Field_CompleteKeyname(void);
+void Field_CompleteKeyname();
 void Field_CompleteFilename(const char* dir, const char* ext, qboolean stripExt, qboolean allowNonPureFilesOnDisk);
 void Field_CompleteCommand(char* cmd, qboolean doCommands, qboolean doCvars);
 
@@ -599,18 +599,18 @@ char* CopyString(const char* in);
 void Info_Print(const char* s);
 
 void Com_BeginRedirect(char* buffer, int buffersize, void (*flush)(char*));
-void Com_EndRedirect(void);
+void Com_EndRedirect();
 void QDECL Com_Printf(const char* fmt, ...);
 void QDECL Com_DPrintf(const char* fmt, ...);
 void NORETURN QDECL Com_Error(int code, const char* fmt, ...);
-void NORETURN Com_Quit_f(void);
-int Com_EventLoop(void);
-int Com_Milliseconds(void); // will be journaled properly
+void NORETURN Com_Quit_f();
+int Com_EventLoop();
+int Com_Milliseconds(); // will be journaled properly
 uint32_t Com_BlockChecksum(const void* buffer, int length);
 int Com_Filter(const char* filter, const char* name, int casesensitive);
 int Com_FilterPath(const char* filter, const char* name, int casesensitive);
-qboolean Com_SafeMode(void);
-void Com_RunAndTimeServerPacket(netadr_t* evFrom, msg_t* buf);
+qboolean Com_SafeMode();
+void Com_RunAndTimeServerPacket(const netadr_t* evFrom, msg_t* buf);
 
 void Com_StartupVariable(const char* match);
 // checks for and removes command line "+set var arg" constructs
@@ -673,7 +673,7 @@ temp file loading
 --- high memory ---
 
 */
-int Z_Validate(void); // also used to insure all of these are paged in
+int Z_Validate(); // also used to insure all of these are paged in
 int Z_MemSize(memtag_t eTag);
 void Z_TagFree(memtag_t eTag);
 int Z_Free(void* ptr); //returns bytes freed
@@ -699,25 +699,25 @@ void* S_Malloc(int iSize); // NOT 0 filled memory only for small allocations
 
 #endif
 
-void Com_InitZoneMemory(void);
-void Com_InitZoneMemoryVars(void);
+void Com_InitZoneMemory();
+void Com_InitZoneMemoryVars();
 
-void Hunk_Clear(void);
-void Hunk_ClearToMark(void);
-void Hunk_SetMark(void);
+void Hunk_Clear();
+void Hunk_ClearToMark();
+void Hunk_SetMark();
 // note the opposite default for 'bZeroIt' in Hunk_Alloc to Z_Malloc, since Hunk_Alloc always used to memset(0)...
 //
 inline void* Hunk_Alloc(int size, qboolean bZeroIt = qtrue);
 
-void Com_TouchMemory(void);
+void Com_TouchMemory();
 
 // commandLine should not include the executable name (argv[0])
 void Com_SetOrgAngles(vec3_t org, vec3_t angles);
 void Com_Init(char* commandLine);
 void Com_Frame();
-void Com_Shutdown(void);
-void Com_ShutdownZoneMemory(void);
-void Com_ShutdownHunkMemory(void);
+void Com_Shutdown();
+void Com_ShutdownZoneMemory();
+void Com_ShutdownHunkMemory();
 
 /*
 ==============================================================
@@ -730,15 +730,15 @@ CLIENT / SERVER SYSTEMS
 //
 // client interface
 //
-void CL_InitKeyCommands(void);
+void CL_InitKeyCommands();
 // the keyboard binding interface must be setup before execing
 // config files, but the rest of client startup will happen later
 
-void CL_Init(void);
-void CL_Disconnect(void);
-void CL_Shutdown(void);
+void CL_Init();
+void CL_Disconnect();
+void CL_Shutdown();
 void CL_Frame(int msec, float fractionMsec);
-qboolean CL_GameCommand(void);
+qboolean CL_GameCommand();
 void CL_KeyEvent(int key, qboolean down, unsigned time);
 
 void CL_CharEvent(int key);
@@ -752,21 +752,21 @@ void CL_PacketEvent(netadr_t from, msg_t* msg);
 
 void CL_ConsolePrint(char* text);
 
-void CL_MapLoading(void);
+void CL_MapLoading();
 // do a screen update before starting to load a map
 // when the server is going to load a new map, the entire hunk
 // will be cleared, so the client must shutdown cgame, ui, and
 // the renderer
 
-void CL_ForwardCommandToServer(void);
+void CL_ForwardCommandToServer();
 // adds the current command line as a clc_clientCommand to the client message.
 // things like god mode, noclip, etc, are commands directed to the server,
 // so when they are typed in at the console, they will need to be forwarded.
 
-void CL_FlushMemory(void);
+void CL_FlushMemory();
 // dump all memory on an error
 
-void CL_StartHunkUsers(void);
+void CL_StartHunkUsers();
 
 void Key_KeynameCompletion(callbackFunc_t callback);
 // for keyname autocompletion
@@ -774,7 +774,7 @@ void Key_KeynameCompletion(callbackFunc_t callback);
 void Key_WriteBindings(fileHandle_t f);
 // for writing the config files
 
-void S_ClearSoundBuffer(void);
+void S_ClearSoundBuffer();
 // call before filesystem access
 
 void SCR_DebugGraph(float value, int color); // FIXME: move logging to common?
@@ -782,7 +782,7 @@ void SCR_DebugGraph(float value, int color); // FIXME: move logging to common?
 //
 // server interface
 //
-void SV_Init(void);
+void SV_Init();
 void SV_Shutdown(const char* finalmsg);
 void SV_Frame(int msec, float fraction_msec);
 void SV_PacketEvent(netadr_t from, msg_t* msg);
@@ -791,7 +791,7 @@ qboolean SV_GameCommand();
 //
 // UI interface
 //
-qboolean UI_GameCommand(void);
+qboolean UI_GameCommand();
 
 byte* SCR_GetScreenshot(qboolean* qValid);
 #ifdef JK2_MODE

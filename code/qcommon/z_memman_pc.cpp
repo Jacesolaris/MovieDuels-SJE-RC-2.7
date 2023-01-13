@@ -32,7 +32,7 @@ int giZoneSnaphotNum = 0;
 typedef sstring<DEBUG_ZONE_ALLOC_OPTIONAL_LABEL_SIZE> sDebugString_t;
 #endif
 
-static void Z_Details_f(void);
+static void Z_Details_f();
 
 // define a string table of all mem tags...
 //
@@ -107,7 +107,7 @@ zone_t TheZone = {};
 
 // Scans through the linked list of mallocs and makes sure no data has been overwritten
 
-int Z_Validate(void)
+int Z_Validate()
 {
 	int ret = 0;
 	if (!com_validateZone || !com_validateZone->integer)
@@ -321,7 +321,7 @@ void* Z_Malloc(const int iSize, const memtag_t eTag, const qboolean bZeroit, int
 			//	eventually or not free up enough and drop through to the final ERR_DROP. No worries...
 			//
 			extern qboolean gbInsideLoadSound;
-			extern int SND_FreeOldestSound(void);
+			extern int SND_FreeOldestSound();
 			// I had to add a void-arg version of this because of link issues, sigh
 			if (!gbInsideLoadSound)
 			{
@@ -646,7 +646,7 @@ void* S_Malloc(const int iSize)
 #endif
 
 #ifdef _DEBUG
-static void Z_MemRecoverTest_f(void)
+static void Z_MemRecoverTest_f()
 {
 	// needs to be in _DEBUG only, not good for final game!
 	//
@@ -674,7 +674,7 @@ static void Z_MemRecoverTest_f(void)
 
 // Gives a summary of the zone memory usage
 
-static void Z_Stats_f(void)
+static void Z_Stats_f()
 {
 	Com_Printf("\nThe zone is using %d bytes (%.2fMB) in %d memory blocks\n",
 	           TheZone.Stats.iCurrent,
@@ -690,7 +690,7 @@ static void Z_Stats_f(void)
 
 // Gives a detailed breakdown of the memory blocks in the zone
 //
-static void Z_Details_f(void)
+static void Z_Details_f()
 {
 	Com_Printf("---------------------------------------------------------------------------\n");
 	Com_Printf("%20s %9s\n", "Zone Tag", "Bytes");
@@ -869,7 +869,7 @@ static void Z_TagDebug_f(void)
 #endif
 
 // Shuts down the zone memory system and frees up all memory
-void Com_ShutdownZoneMemory(void)
+void Com_ShutdownZoneMemory()
 {
 	Cmd_RemoveCommand("zone_stats");
 	Cmd_RemoveCommand("zone_details");
@@ -903,7 +903,7 @@ void Com_ShutdownZoneMemory(void)
 
 // Initialises the zone memory system
 
-void Com_InitZoneMemory(void)
+void Com_InitZoneMemory()
 {
 	Com_Printf("Initialising zone memory .....\n");
 
@@ -911,7 +911,7 @@ void Com_InitZoneMemory(void)
 	TheZone.Header.iMagic = ZONE_MAGIC;
 }
 
-void Com_InitZoneMemoryVars(void)
+void Com_InitZoneMemoryVars()
 {
 	com_validateZone = Cvar_Get("com_validateZone", "0", 0);
 
@@ -965,7 +965,7 @@ Com_TouchMemory
 Touch all known used data to make sure it is paged in
 ===============
 */
-void Com_TouchMemory(void)
+void Com_TouchMemory()
 {
 	Z_Validate();
 

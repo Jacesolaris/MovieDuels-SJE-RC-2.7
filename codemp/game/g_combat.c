@@ -2048,7 +2048,7 @@ void G_AddPowerDuelLoserScore(int team, int score)
 player_die
 ==================
 */
-extern stringID_table_t animTable[MAX_ANIMATIONS + 1];
+extern stringID_table_t anim_table[MAX_ANIMATIONS + 1];
 
 extern void AI_DeleteSelfFromGroup(gentity_t* self);
 extern void AI_GroupMemberKilled(const gentity_t* self);
@@ -2469,7 +2469,7 @@ extern void RunEmplacedWeapon( gentity_t *ent, usercmd_t **ucmd );
 			//also - if MOD_SABER, list the animation and saber style
 			if (meansOfDeath == MOD_SABER)
 			{
-				G_LogPrintf("killer saber style: %d, killer saber anim %s\n", attacker->client->ps.fd.saber_anim_level, animTable[(attacker->client->ps.torsoAnim)].name);
+				G_LogPrintf("killer saber style: %d, killer saber anim %s\n", attacker->client->ps.fd.saber_anim_level, anim_table[(attacker->client->ps.torsoAnim)].name);
 			}
 		}
 	}

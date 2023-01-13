@@ -49,10 +49,10 @@ constexpr auto MAX_MAP_BOUNDS = 65535;
 #endif
 
 winding_t* AllocWinding(int points);
-winding_t* CopyWinding(winding_t* w);
+winding_t* CopyWinding(const winding_t* w);
 winding_t* BaseWindingForPlane(vec3_t normal, vec_t dist);
 void FreeWinding(winding_t* w);
-void WindingBounds(winding_t* w, vec3_t mins, vec3_t maxs);
+void WindingBounds(const winding_t* w, vec3_t mins, vec3_t maxs);
 
 void ChopWindingInPlace(winding_t** inout, vec3_t normal, vec_t dist, vec_t epsilon);
 // frees the original if clipped

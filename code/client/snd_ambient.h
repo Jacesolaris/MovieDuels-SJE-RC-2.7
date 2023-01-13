@@ -92,12 +92,12 @@ public:
 	CSetGroup();
 	~CSetGroup();
 
-	void Init(void)
+	void Init()
 	{
 		Free();
 	}
 
-	void Free(void);
+	void Free();
 
 	ambientSet_t* AddSet(const char* name);
 
@@ -112,9 +112,9 @@ protected:
 
 // Prototypes
 
-extern void AS_Init(void);
-extern void AS_Free(void);
-extern void AS_ParseSets(void);
+extern void AS_Init();
+extern void AS_Free();
+extern void AS_ParseSets();
 extern void AS_AddPrecacheEntry(const char* name);
 
 extern void S_UpdateAmbientSet(const char* name, vec3_t origin);

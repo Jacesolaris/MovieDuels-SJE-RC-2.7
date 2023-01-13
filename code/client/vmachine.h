@@ -79,6 +79,6 @@ extern vm_t cgvm;
 
 intptr_t VM_Call(int callnum, ...);
 intptr_t VM_DllSyscall(intptr_t arg, ...);
-void CL_ShutdownCGame(void);
+void CL_ShutdownCGame();
 
 #endif //__VMACHINE_H__

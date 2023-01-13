@@ -672,7 +672,7 @@ Called by SV_SendClientSnapshot and SV_SendClientGameState
 */
 #define	HEADER_RATE_BYTES	48		// include our header, IP header, and some overhead
 
-void SV_SendMessageToClient(msg_t* msg, client_t* client)
+void SV_SendMessageToClient(const msg_t* msg, client_t* client)
 {
 	// record information about the message
 	client->frames[client->netchan.outgoingSequence & PACKET_MASK].messageSize = msg->cursize;
@@ -744,7 +744,7 @@ void SV_SendClientSnapshot(client_t* client)
 SV_SendClientMessages
 =======================
 */
-void SV_SendClientMessages(void)
+void SV_SendClientMessages()
 {
 	int i;
 	client_t* c;

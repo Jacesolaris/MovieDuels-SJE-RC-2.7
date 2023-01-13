@@ -63,7 +63,7 @@ constexpr auto ZA_SOUND_STEREO = 0x1021;
 constexpr auto MAX_VIDEO_HANDLES = 32;
 
 extern void S_CIN_StopSound(sfxHandle_t sfxHandle);
-static void RoQ_init(void);
+static void RoQ_init();
 
 /******************************************************************************
 *

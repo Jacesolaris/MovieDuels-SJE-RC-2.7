@@ -34,7 +34,7 @@ Noise Generation
 ================================================================================
 */
 // Initialize the noise generator.
-void R_NoiseInit(void);
+void R_NoiseInit();
 
 // Get random 4-component vector.
 float R_NoiseGet4f(float x, float y, float z, float t);

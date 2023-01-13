@@ -5053,7 +5053,7 @@ int PM_ValidateAnimRange(const int start_frame, const int end_frame, const float
 			{
 				if (animations[anim].num_frames + animations[anim].firstFrame == start_frame)
 				{
-					//Com_Printf( "valid reverse anim: %s\n", animTable[anim].name );
+					//Com_Printf( "valid reverse anim: %s\n", anim_table[anim].name );
 					return anim;
 				}
 			}
@@ -5067,7 +5067,7 @@ int PM_ValidateAnimRange(const int start_frame, const int end_frame, const float
 				if (animations[anim].firstFrame + animations[anim].num_frames == end_frame)
 				{
 					//This anim ends on this frame
-					//Com_Printf( "valid forward anim: %s\n", animTable[anim].name );
+					//Com_Printf( "valid forward anim: %s\n", anim_table[anim].name );
 					return anim;
 				}
 			}
@@ -5667,7 +5667,7 @@ void PM_SetAnimFinal(int* torso_anim, int* legs_anim,
 				(cg_debugAnim.integer == 2 && gent->s.number != 0) ||							// 2 = only everyone else
 				(cg_debugAnim.integer == 4 && gent->s.number != cg_debugAnimTarget.integer))	// 4 = specific entnum
 			{
-				gi.Printf(S_COLOR_RED"PM_SetAnimFinal: Anim %s does not exist in this model (%s)!\n", animTable[anim].name, gent->NPC_type);
+				gi.Printf(S_COLOR_RED"PM_SetAnimFinal: Anim %s does not exist in this model (%s)!\n", anim_table[anim].name, gent->NPC_type);
 			}
 		}
 		LastAnimWarningNum = anim;
@@ -5732,7 +5732,7 @@ void PM_SetAnimFinal(int* torso_anim, int* legs_anim,
 		{
 			if (animFlags & BONE_ANIM_OVERRIDE_LOOP)
 			{
-				gi.Printf(S_COLOR_YELLOW"PM_SetAnimFinal: WARNING: Anim (%s) looping backwards!\n", animTable[anim].name);
+				gi.Printf(S_COLOR_YELLOW"PM_SetAnimFinal: WARNING: Anim (%s) looping backwards!\n", anim_table[anim].name);
 			}
 		}
 #endif
@@ -5934,7 +5934,7 @@ void PM_SetAnimFinal(int* torso_anim, int* legs_anim,
 				entName,
 				location,
 				anim,
-				animTable[anim].name);
+				anim_table[anim].name);
 		}
 	}
 #endif

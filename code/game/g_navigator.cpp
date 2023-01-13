@@ -2076,22 +2076,22 @@ bool NAV::LoadFromEntitiesAndSaveToFile(const char* filename, int checksum)
 ////////////////////////////////////////////////////////////////////////////////////////
 void NAV::DecayDangerSenses()
 {
-	const float PerFrameDecay = 50.0f / static_cast<float>(MAX_ALERT_TIME);
-	for (int entIndex = 0; entIndex < TEntityAlertList::CAPACITY; entIndex++)
+	constexpr float per_frame_decay = 50.0f / static_cast<float>(MAX_ALERT_TIME);
+	for (int ent_index = 0; ent_index < TEntityAlertList::CAPACITY; ent_index++)
 	{
-		TAlertList& ae = mEntityAlertList[entIndex];
-		for (int alertIndex = 0; alertIndex < TAlertList::CAPACITY; alertIndex++)
+		TAlertList& ae = mEntityAlertList[ent_index];
+		for (int alert_index = 0; alert_index < TAlertList::CAPACITY; alert_index++)
 		{
-			if (ae[alertIndex].mHandle != 0)
+			if (ae[alert_index].mHandle != 0)
 			{
-				ae[alertIndex].mDanger -= PerFrameDecay;
+				ae[alert_index].mDanger -= per_frame_decay;
 
 				// If It Just Decayed To Nothing, Clear It
 				//-----------------------------------------
-				if (ae[alertIndex].mDanger <= 0.0f)
+				if (ae[alert_index].mDanger <= 0.0f)
 				{
-					ae[alertIndex].mHandle = 0;
-					ae[alertIndex].mDanger = 0;
+					ae[alert_index].mHandle = 0;
+					ae[alert_index].mDanger = 0;
 				}
 			}
 		}
@@ -5320,7 +5320,7 @@ bool STEER::Reached(gentity_t* actor, const vec3_t& target, const float targetRa
 
 // Clean up all of the krufty structures that only grow, never shrink, eventually
 // causing asserts and subsequent memory trashing.
-void ClearAllNavStructures(void)
+void ClearAllNavStructures()
 {
 	TEntEdgeMap::iterator i = mEntEdgeMap.begin();
 	for (; i != mEntEdgeMap.end(); ++i)

@@ -31,7 +31,7 @@ portable_samplepair_t paintbuffer[PAINTBUFFER_SIZE];
 int *snd_p, snd_linear_count, snd_vol;
 short* snd_out;
 
-void S_WriteLinearBlastStereo16(void)
+void S_WriteLinearBlastStereo16()
 {
 	for (int i = 0; i < snd_linear_count; i += 2)
 	{

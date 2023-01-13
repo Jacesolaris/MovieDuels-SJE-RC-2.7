@@ -64,7 +64,7 @@ enum
 
 #include "icarus/interpreter.h"
 
-extern stringID_table_t animTable[MAX_ANIMATIONS + 1];
+extern stringID_table_t anim_table[MAX_ANIMATIONS + 1];
 
 stringID_table_t setTable[] =
 {
@@ -352,7 +352,7 @@ static char* Q3_GetAnimLower(gentity_t* ent)
 
 	const int anim = ent->client->ps.legsAnim;
 
-	return (char*)animTable[anim].name;
+	return (char*)anim_table[anim].name;
 }
 
 /*
@@ -370,7 +370,7 @@ static char* Q3_GetAnimUpper(gentity_t* ent)
 
 	const int anim = ent->client->ps.torsoAnim;
 
-	return (char*)animTable[anim].name;
+	return (char*)anim_table[anim].name;
 }
 
 /*
@@ -2257,7 +2257,7 @@ Sets the upper animation of an entity
 */
 static qboolean Q3_SetAnimUpper(int entID, const char* anim_name)
 {
-	const int animID = GetIDForString(animTable, anim_name);
+	const int animID = GetIDForString(anim_table, anim_name);
 
 	if (animID == -1)
 	{
@@ -2287,7 +2287,7 @@ static qboolean Q3_SetAnimLower(int entID, const char* anim_name)
 {
 	//FIXME: Setting duck anim does not actually duck!
 
-	const int animID = GetIDForString(animTable, anim_name);
+	const int animID = GetIDForString(anim_table, anim_name);
 
 	if (animID == -1)
 	{

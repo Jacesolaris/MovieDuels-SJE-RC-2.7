@@ -176,7 +176,7 @@ CAPTION TEXT
 
 ===============================================================================
 */
-void CG_CaptionTextStop(void)
+void CG_CaptionTextStop()
 {
 	cg.captionTextTime = 0;
 }
@@ -383,7 +383,7 @@ void CG_CaptionText(const char* str, const int sound)
 	}
 }
 
-void CG_DrawCaptionText(void)
+void CG_DrawCaptionText()
 {
 	if (!cg.captionTextTime)
 	{
@@ -692,7 +692,7 @@ void CG_CenterPrint(const char* str, const int y)
 CG_DrawCenterString
 ===================
 */
-void CG_DrawCenterString(void)
+void CG_DrawCenterString()
 {
 	if (!cg.centerPrintTime)
 	{

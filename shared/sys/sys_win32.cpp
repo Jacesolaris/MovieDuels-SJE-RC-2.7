@@ -99,7 +99,7 @@ int Sys_Milliseconds(const bool baseTime)
 	return sys_curtime;
 }
 
-int Sys_Milliseconds2(void)
+int Sys_Milliseconds2()
 {
 	return Sys_Milliseconds(false);
 }
@@ -133,7 +133,7 @@ bool Sys_RandomBytes(byte* string, const int len)
 Sys_GetCurrentUser
 ==================
 */
-char* Sys_GetCurrentUser(void)
+char* Sys_GetCurrentUser()
 {
 	static char s_userName[1024];
 	DWORD size = sizeof(s_userName);
@@ -152,7 +152,7 @@ char* Sys_GetCurrentUser(void)
 /*
 * Builds the path for the user's game directory
 */
-char* Sys_DefaultHomePath(void)
+char* Sys_DefaultHomePath()
 {
 #if defined(_PORTABLE_VERSION)
 	Com_Printf("Portable install requested, skipping homepath support\n");
@@ -207,7 +207,7 @@ static const char* GetErrorString(const DWORD error)
 	return buf;
 }
 
-void Sys_SetProcessorAffinity(void)
+void Sys_SetProcessorAffinity()
 {
 	DWORD_PTR processMask, processAffinityMask, systemAffinityMask;
 	const HANDLE handle = GetCurrentProcess();
@@ -274,7 +274,7 @@ qboolean Sys_Mkdir(const char* path)
 Sys_Cwd
 ==============
 */
-char* Sys_Cwd(void)
+char* Sys_Cwd()
 {
 	static char cwd[MAX_OSPATH];
 
@@ -586,7 +586,7 @@ Sys_PlatformInit
 Platform-specific initialization
 ================
 */
-void Sys_PlatformInit(void)
+void Sys_PlatformInit()
 {
 	TIMECAPS ptc;
 	if (timeGetDevCaps(&ptc, sizeof(ptc)) == MMSYSERR_NOERROR)
@@ -612,7 +612,7 @@ Sys_PlatformExit
 Platform-specific exit code
 ================
 */
-void Sys_PlatformExit(void)
+void Sys_PlatformExit()
 {
 	if (timerResolution)
 		timeEndPeriod(timerResolution);

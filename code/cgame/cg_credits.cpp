@@ -62,12 +62,12 @@ struct StringAndSize_t
 		return *this;
 	}
 
-	const char* c_str(void) const
+	const char* c_str() const
 	{
 		return str.c_str();
 	}
 
-	int GetPixelLength(void)
+	int GetPixelLength()
 	{
 		if (iStrLenPixels == -1)
 		{
@@ -77,7 +77,7 @@ struct StringAndSize_t
 		return iStrLenPixels;
 	}
 
-	bool IsEmpty(void) const
+	bool IsEmpty() const
 	{
 		return str.empty();
 	}
@@ -113,7 +113,7 @@ struct CreditData_t
 	CreditCards_t CreditCards;
 	CreditLines_t CreditLines;
 
-	qboolean Running(void) const
+	qboolean Running() const
 	{
 		return static_cast<qboolean>(CreditCards.size() || CreditLines.size());
 	}
@@ -488,14 +488,14 @@ void CG_Credits_Init(const char* psStripReference, vec4_t* pv4Color)
 	CreditData.iStartTime = cg.time;
 }
 
-qboolean CG_Credits_Running(void)
+qboolean CG_Credits_Running()
 {
 	return CreditData.Running();
 }
 
 // returns qtrue if still drawing...
 //
-qboolean CG_Credits_Draw(void)
+qboolean CG_Credits_Draw()
 {
 	if (CG_Credits_Running())
 	{

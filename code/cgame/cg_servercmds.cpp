@@ -187,34 +187,34 @@ static void CG_ConfigStringModified()
 	}
 }
 
-static void CG_CenterPrint_f(void)
+static void CG_CenterPrint_f()
 {
 	CG_CenterPrint(CG_Argv(1), SCREEN_HEIGHT * 0.25);
 }
 
-static void CG_Print_f(void)
+static void CG_Print_f()
 {
 	CG_Printf("%s", CG_Argv(1));
 }
 
-static void CG_CaptionText_f(void)
+static void CG_CaptionText_f()
 {
 	const sfxHandle_t sound = atoi(CG_Argv(2));
 
 	CG_CaptionText(CG_Argv(1), sound >= 0 && sound < MAX_SOUNDS ? cgs.sound_precache[sound] : NULL_SOUND);
 }
 
-static void CG_ScrollText_f(void)
+static void CG_ScrollText_f()
 {
 	CG_ScrollText(CG_Argv(1), SCREEN_WIDTH - 16);
 }
 
-static void CG_LCARSText_f(void)
+static void CG_LCARSText_f()
 {
 	CG_Printf("CG_LCARSText() being called. Tell Ste\n" "String: \"%s\"\n", CG_Argv(1));
 }
 
-static void CG_ClientLevelShot_f(void)
+static void CG_ClientLevelShot_f()
 {
 	// clientLevelShot is sent before taking a special screenshot for
 	// the menu system during development
@@ -224,7 +224,7 @@ static void CG_ClientLevelShot_f(void)
 using serverCommand_t = struct serverCommand_s
 {
 	const char* cmd;
-	void (*func)(void);
+	void (*func)();
 };
 
 static int svcmdcmp(const void* a, const void* b)
@@ -255,7 +255,7 @@ The string has been tokenized and can be retrieved with
 Cmd_Argc() / Cmd_Argv()
 =================
 */
-static void CG_ServerCommand(void)
+static void CG_ServerCommand()
 {
 	const char* cmd = CG_Argv(0);
 

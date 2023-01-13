@@ -1037,10 +1037,10 @@ using trGlobals_t = struct {
 	float					distanceCull;
 };
 
-int		 R_Images_StartIteration(void);
-image_t* R_Images_GetNextIteration(void);
-void	 R_Images_Clear(void);
-void	 R_Images_DeleteLightMaps(void);
+int		 R_Images_StartIteration();
+image_t* R_Images_GetNextIteration();
+void	 R_Images_Clear();
+void	 R_Images_DeleteLightMaps();
 void	 R_Images_DeleteImage(image_t* pImage);
 
 extern backEndState_t	backEnd;
@@ -1293,8 +1293,8 @@ qboolean	RE_RegisterModels_LevelLoadEnd(qboolean b_delete_everything_not_used_th
 void* RE_RegisterModels_Malloc(int i_size, void* pv_disk_buffer_if_just_loaded, const char* ps_model_file_name, qboolean* pqb_already_found, memtag_t e_tag);
 void		RE_RegisterModels_StoreShaderRequest(const char* ps_model_file_name, const char* ps_shader_name, const int* pi_shader_index_poke);
 void		RE_RegisterModels_Info_f();
-qboolean	RE_RegisterImages_LevelLoadEnd(void);
-void		RE_RegisterImages_Info_f(void);
+qboolean	RE_RegisterImages_LevelLoadEnd();
+void		RE_RegisterImages_Info_f();
 
 model_t* R_AllocModel();
 
@@ -1305,19 +1305,19 @@ image_t* R_CreateImage(const char* name, const byte* pic, int width, int height,
 
 qboolean	R_GetModeInfo(int* width, int* height, int mode);
 
-void		R_SetColorMappings(void);
+void		R_SetColorMappings();
 void		R_GammaCorrect(byte* buffer, int bufSize);
 
-void	R_ImageList_f(void);
+void	R_ImageList_f();
 void	R_SkinList_f();
-void	R_FontList_f(void);
+void	R_FontList_f();
 void	R_ScreenShot_f();
 void	R_ScreenShotTGA_f();
 
-void	R_InitFogTable(void);
+void	R_InitFogTable();
 float	R_FogFactor(float s, float t);
-void	R_InitImages(void);
-void	R_DeleteTextures(void);
+void	R_InitImages();
+void	R_DeleteTextures();
 float	R_SumOfUsedImages(qboolean bUseFormat);
 void	R_InitSkins();
 skin_t* R_GetSkinByHandle(qhandle_t h_skin);
@@ -1392,7 +1392,7 @@ struct shaderCommands_s
 
 	// info extracted from current shader
 	int			numPasses;
-	void		(*currentStageIteratorFunc)(void);
+	void		(*currentStageIteratorFunc)();
 	shaderStage_t* xstages;
 
 	int			registration;
@@ -1763,7 +1763,7 @@ extern	backEndData_t* backEndData;
 void* R_GetCommandBuffer(int bytes);
 void RB_ExecuteRenderCommands(const void* data);
 
-void R_IssuePendingRenderCommands(void);
+void R_IssuePendingRenderCommands();
 
 void R_AddDrawSurfCmd(drawSurf_t* draw_surfs, int num_draw_surfs);
 
@@ -1774,12 +1774,12 @@ void RE_RotatePic(float x, float y, float w, float h,
 	float s1, float t1, float s2, float t2, float a, qhandle_t h_shader);
 void RE_RotatePic2(float x, float y, float w, float h,
 	float s1, float t1, float s2, float t2, float a, qhandle_t h_shader);
-void RE_RenderWorldEffects(void);
-void RE_LAGoggles(void);
+void RE_RenderWorldEffects();
+void RE_LAGoggles();
 void RE_Scissor(float x, float y, float w, float h);
 void RE_BeginFrame(stereoFrame_t stereo_frame);
 void RE_EndFrame(int* front_end_msec, int* back_end_msec);
-qboolean	RE_ProcessDissolve(void);
+qboolean	RE_ProcessDissolve();
 qboolean	RE_InitDissolve(qboolean bForceCircularExtroWipe);
 
 long generateHashValue(const char* fname);

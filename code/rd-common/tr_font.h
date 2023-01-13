@@ -28,8 +28,8 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-void R_ShutdownFonts(void);
-void R_InitFonts(void);
+void R_ShutdownFonts();
+void R_InitFonts();
 int RE_RegisterFont(const char* psName);
 int RE_Font_StrLenPixels(const char* psText, int iFontHandle, float fScale = 1.0f);
 int RE_Font_StrLenChars(const char* psText);
@@ -45,5 +45,5 @@ void RE_Font_DrawString(int ox, int oy, const char* psText, const float* rgba, i
 unsigned int AnyLanguage_ReadCharFromString(char* psText, int* piAdvanceCount, qboolean* pbIsTrailingPunctuation = nullptr);
 unsigned int AnyLanguage_ReadCharFromString(char** psText, qboolean* pbIsTrailingPunctuation = nullptr);
 
-qboolean Language_IsAsian(void);
-qboolean Language_UsesSpaces(void);
+qboolean Language_IsAsian();
+qboolean Language_UsesSpaces();

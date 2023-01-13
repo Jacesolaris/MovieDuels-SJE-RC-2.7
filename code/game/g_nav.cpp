@@ -291,7 +291,7 @@ Svcmd_Nav_f
 -------------------------
 */
 
-void Svcmd_Nav_f(void)
+void Svcmd_Nav_f()
 {
 	const char* cmd = gi.argv(1);
 

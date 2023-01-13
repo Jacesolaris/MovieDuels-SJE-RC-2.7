@@ -378,8 +378,8 @@ qboolean COM_CompareExtension(const char* in, const char* ext);
 void COM_DefaultExtension(char* path, int maxSize, const char* extension);
 
 //JLFCALLOUT include MPNOTUSED
-void COM_BeginParseSession(void);
-void COM_EndParseSession(void);
+void COM_BeginParseSession();
+void COM_EndParseSession();
 
 // For compatibility with shared code
 QINLINE void COM_BeginParseSession(const char* sessionName)
@@ -394,7 +394,7 @@ public:
 	~COM_ParseSession() { COM_EndParseSession(); };
 };
 
-int COM_GetCurrentParseLine(void);
+int COM_GetCurrentParseLine();
 char* COM_Parse(const char** data_p);
 char* COM_ParseExt(const char** data_p, qboolean allowLineBreak);
 int COM_Compress(char* data_p);
@@ -1244,7 +1244,7 @@ using saberInfo_t = struct
 	//=========================================================================================================================================
 	int BPregenRate;
 
-	void Activate(void)
+	void Activate()
 	{
 		for (int i = 0; i < numBlades; i++)
 		{
@@ -1252,7 +1252,7 @@ using saberInfo_t = struct
 		}
 	};
 
-	void Deactivate(void)
+	void Deactivate()
 	{
 		for (int i = 0; i < numBlades; i++)
 		{
@@ -1584,7 +1584,7 @@ public:
 	char* brokenSaber2;
 	//if saber is actually hit by another saber, it can be cut in half/broken and will be replaced with this saber in your left hand
 	qboolean returnDamage; //when returning from a saber throw, it keeps spinning and doing damage
-	void Activate(void)
+	void Activate()
 	{
 		for (int i = 0; i < numBlades; i++)
 		{
@@ -1592,7 +1592,7 @@ public:
 		}
 	};
 
-	void Deactivate(void)
+	void Deactivate()
 	{
 		for (int i = 0; i < numBlades; i++)
 		{
@@ -1870,7 +1870,7 @@ public:
 	TSaberInfo saber[MAX_SABERS];
 	qboolean dualSabers;
 
-	qboolean SaberStaff(void)
+	qboolean SaberStaff()
 	{
 		return static_cast<qboolean>(saber[0].type == SABER_STAFF || saber[0].type == SABER_STAFF_UNSTABLE || saber[0].
 			type ==
@@ -1927,7 +1927,7 @@ public:
 		saber[iSaber].BladeActivate(iBlade, bActive);
 	}
 
-	void SaberActivate(void)
+	void SaberActivate()
 	{
 		saber[0].Activate();
 		if (dualSabers)
@@ -1936,7 +1936,7 @@ public:
 		}
 	}
 
-	void SaberDeactivate(void)
+	void SaberDeactivate()
 	{
 		saber[0].Deactivate();
 		saber[1].Deactivate();
@@ -1991,7 +1991,7 @@ public:
 		return disarmBonus;
 	};
 
-	int SaberParryBonus(void)
+	int SaberParryBonus()
 	{
 		int parryBonus = 0;
 		if (saber[0].Active())

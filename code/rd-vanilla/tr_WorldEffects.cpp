@@ -90,7 +90,7 @@ inline void VectorCeil(vec3_t in)
 	in[2] = ceilf(in[2]);
 }
 
-inline float	FloatRand(void)
+inline float	FloatRand()
 {
 	return static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
 }
@@ -620,7 +620,7 @@ public:
 		}
 	};
 
-	static fileHandle_t WriteCachedWeatherFile(void)
+	static fileHandle_t WriteCachedWeatherFile()
 	{
 		const fileHandle_t f = ri.FS_FOpenFileWrite(GenCachedWeatherFilename(), qtrue);
 		if (f)
@@ -637,7 +637,7 @@ public:
 
 	// returns 0 for not-found or invalid file, else open handle to continue read from (which you then close yourself)...
 	//
-	static fileHandle_t ReadCachedWeatherFile(void)
+	static fileHandle_t ReadCachedWeatherFile()
 	{
 		fileHandle_t f = 0;
 		ri.FS_FOpenFileRead(GenCachedWeatherFilename(), &f, qfalse);
@@ -1491,7 +1491,7 @@ ratl::vector_vs<CParticleCloud, MAX_PARTICLE_CLOUDS>	mParticleClouds;
 ////////////////////////////////////////////////////////////////////////////////////////
 // Init World Effects - Will Iterate Over All Particle Clouds, Clear Them Out, And Erase
 ////////////////////////////////////////////////////////////////////////////////////////
-void R_InitWorldEffects(void)
+void R_InitWorldEffects()
 {
 	for (int i = 0; i < mParticleClouds.size(); i++)
 	{
@@ -1582,21 +1582,21 @@ void RB_RenderWorldEffects()
 	}
 }
 
-void R_WorldEffect_f(void)
+void R_WorldEffect_f()
 {
 	char	temp[2048];
 	ri.Cmd_ArgsBuffer(temp, sizeof temp);
 	R_WorldEffectCommand(temp);
 }
 
-void R_WeatherEffect_f(void)
+void R_WeatherEffect_f()
 {
 	char	temp[2048];
 	ri.Cmd_ArgsBuffer(temp, sizeof temp);
 	R_WeatherEffectCommand(temp);
 }
 
-void R_SetWeatherEffect_f(void)
+void R_SetWeatherEffect_f()
 {
 	char	temp[2048];
 	ri.Cmd_ArgsBuffer(temp, sizeof temp);

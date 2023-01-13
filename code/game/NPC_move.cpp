@@ -638,7 +638,7 @@ NPC_CheckCombatMove
 -------------------------
 */
 
-inline qboolean NPC_CheckCombatMove(void)
+inline qboolean NPC_CheckCombatMove()
 {
 	//return NPCInfo->combatMove;
 	if (NPCInfo->goalEntity && NPC->enemy && NPCInfo->goalEntity == NPC->enemy || NPCInfo->combatMove)
@@ -836,7 +836,7 @@ void NPC_SlideMoveToGoal( void )
   Now assumes goal is goalEntity, if want to use tempGoal, you set that before calling the func
 -------------------------
 */
-qboolean NPC_SlideMoveToGoal(void)
+qboolean NPC_SlideMoveToGoal()
 {
 	const float saveYaw = NPC->client->ps.viewangles[YAW];
 
@@ -855,7 +855,7 @@ NPC_ApplyRoff
 -------------------------
 */
 
-void NPC_ApplyRoff(void)
+void NPC_ApplyRoff()
 {
 	PlayerStateToEntityState(&NPC->client->ps, &NPC->s);
 	VectorCopy(NPC->currentOrigin, NPC->lastOrigin);

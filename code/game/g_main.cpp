@@ -37,21 +37,21 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #include "qcommon/ojk_saved_game_helper.h"
 
-extern void WP_SaberLoadParms(void);
+extern void WP_SaberLoadParms();
 extern qboolean G_PlayerSpawned();
 
-extern void Rail_Initialize(void);
-extern void Rail_Update(void);
-extern void Rail_Reset(void);
+extern void Rail_Initialize();
+extern void Rail_Update();
+extern void Rail_Reset();
 
-extern void Troop_Initialize(void);
-extern void Troop_Update(void);
-extern void Troop_Reset(void);
+extern void Troop_Initialize();
+extern void Troop_Update();
+extern void Troop_Reset();
 
 extern void Pilot_Reset();
 extern void Pilot_Update();
 
-extern void G_ASPreCacheFree(void);
+extern void G_ASPreCacheFree();
 extern qboolean PM_RestAnim(int anim);
 extern qboolean PM_CrouchAnim(int anim);
 extern qboolean G_ControlledByPlayer(const gentity_t* self);
@@ -73,7 +73,7 @@ game_export_t globals;
 gentity_t g_entities[MAX_GENTITIES];
 unsigned int g_entityInUseBits[MAX_GENTITIES / 32];
 
-static void ClearAllInUse(void)
+static void ClearAllInUse()
 {
 	memset(g_entityInUseBits, 0, sizeof g_entityInUseBits);
 }
@@ -138,7 +138,7 @@ void ReadInUseBits()
 }
 
 #ifdef _DEBUG
-static void ValidateInUseBits(void)
+static void ValidateInUseBits()
 {
 	for (int i = 0; i < MAX_GENTITIES; i++)
 	{
@@ -334,7 +334,7 @@ static void G_DynamicMusicUpdate( usercmd_t *ucmd )
 
   FIXME: can we merge any of this with the G_ChooseLookEnemy stuff?
 */
-static void G_DynamicMusicUpdate(void)
+static void G_DynamicMusicUpdate()
 {
 	gentity_t* entity_list[MAX_GENTITIES];
 	vec3_t mins, maxs;
@@ -670,7 +670,7 @@ All but the first will have the FL_TEAMSLAVE flag set and teammaster field set
 All but the last will have the teamchain field set to the next one
 ================
 */
-void G_FindTeams(void)
+void G_FindTeams()
 {
 	int c = 0;
 	int c2 = 0;
@@ -730,7 +730,7 @@ G_InitCvars
 
 ============
 */
-void G_InitCvars(void)
+void G_InitCvars()
 {
 	// don't override the cheat state set by the system
 	g_cheats = gi.cvar("helpUsObi", "", 0);
@@ -961,7 +961,7 @@ InitGame
 int giMapChecksum;
 SavedGameJustLoaded_e g_eSavedGameJustLoaded;
 qboolean g_qbLoadTransition = qfalse;
-extern void R_LoadWeatherParms(void);
+extern void R_LoadWeatherParms();
 
 void InitGame(const char* mapname, const char* spawntarget, const int checkSum, const char* entities,
               const int levelTime,
@@ -1064,7 +1064,7 @@ void InitGame(const char* mapname, const char* spawntarget, const int checkSum, 
 ShutdownGame
 =================
 */
-void ShutdownGame(void)
+void ShutdownGame()
 {
 	// write all the client session data so we can get it back
 	G_WriteSessionData();
@@ -1505,7 +1505,7 @@ void UpdateTeamCounters( gentity_t *ent )
 	teamEnemyCount[ent->client->playerTeam]++;
 }
 */
-void G_PlayerGuiltDeath(void)
+void G_PlayerGuiltDeath()
 {
 	if (player && player->client)
 	{

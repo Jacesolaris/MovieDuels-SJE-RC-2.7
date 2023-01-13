@@ -823,7 +823,7 @@ void Console_Key(const int key)
 
 //============================================================================
 
-qboolean Key_GetOverstrikeMode(void)
+qboolean Key_GetOverstrikeMode()
 {
 	return kg.key_overstrikeMode;
 }
@@ -1041,7 +1041,7 @@ int Key_GetKey(const char* binding)
 Key_Unbind_f
 ===================
 */
-void Key_Unbind_f(void)
+void Key_Unbind_f()
 {
 	if (Cmd_Argc() != 2)
 	{
@@ -1064,7 +1064,7 @@ void Key_Unbind_f(void)
 Key_Unbindall_f
 ===================
 */
-void Key_Unbindall_f(void)
+void Key_Unbindall_f()
 {
 	for (int i = 0; i < MAX_KEYS; i++)
 	{
@@ -1078,7 +1078,7 @@ void Key_Unbindall_f(void)
 Key_Bind_f
 ===================
 */
-void Key_Bind_f(void)
+void Key_Bind_f()
 {
 	const int c = Cmd_Argc();
 
@@ -1140,7 +1140,7 @@ Key_Bindlist_f
 
 ============
 */
-void Key_Bindlist_f(void)
+void Key_Bindlist_f()
 {
 	for (size_t i = 0; i < MAX_KEYS; i++)
 	{
@@ -1213,7 +1213,7 @@ static void Key_CompleteBind(char* args, const int argNum)
 CL_InitKeyCommands
 ===================
 */
-void CL_InitKeyCommands(void)
+void CL_InitKeyCommands()
 {
 	// register our functions
 	Cmd_AddCommand("bind", Key_Bind_f);
@@ -1459,7 +1459,7 @@ void CL_CharEvent(const int key)
 Key_ClearStates
 ===================
 */
-void Key_ClearStates(void)
+void Key_ClearStates()
 {
 	kg.anykeydown = qfalse;
 	kg.keyDownCount = 0;
@@ -1480,7 +1480,7 @@ static int keyCatchers = 0;
 Key_GetCatcher
 ====================
 */
-int Key_GetCatcher(void)
+int Key_GetCatcher()
 {
 	return keyCatchers;
 }

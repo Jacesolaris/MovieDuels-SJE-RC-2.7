@@ -1673,7 +1673,7 @@ G_ParsePrecaches
 -------------------------
 */
 
-void G_ParsePrecaches(void)
+void G_ParsePrecaches()
 {
 	//Clear any old lists
 	if (!as_preCacheMap)
@@ -1694,7 +1694,7 @@ void G_ParsePrecaches(void)
 	}
 }
 
-void G_ASPreCacheFree(void)
+void G_ASPreCacheFree()
 {
 	if (as_preCacheMap)
 	{
@@ -1711,7 +1711,7 @@ Parses textual entity definitions out of an entstring and spawns gentities.
 ==============
 */
 extern int num_waypoints;
-extern void RG_RouteGen(void);
+extern void RG_RouteGen();
 extern qboolean NPCsPrecached;
 
 qboolean SP_bsp_worldspawn()

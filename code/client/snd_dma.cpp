@@ -40,17 +40,17 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #include <windows.h>
 #endif
 
-static void S_Play_f(void);
-static void S_SoundList_f(void);
-static void S_Music_f(void);
-static void S_StopMusic_f(void);
-static void S_SetDynamicMusic_f(void);
-static void S_MenuMusic_f(void);
-static void S_totgmapmusic_f(void);
+static void S_Play_f();
+static void S_SoundList_f();
+static void S_Music_f();
+static void S_StopMusic_f();
+static void S_SetDynamicMusic_f();
+static void S_MenuMusic_f();
+static void S_totgmapmusic_f();
 
 void S_Update_();
-void S_StopAllSounds(void);
-static void S_UpdateBackgroundTrack(void);
+void S_StopAllSounds();
+static void S_UpdateBackgroundTrack();
 sfx_t* s_find_name(const char* name);
 static int SND_FreeSFXMem(sfx_t* sfx);
 
@@ -60,8 +60,8 @@ extern qboolean Sys_LowPhysicalMemory();
 //
 // vars for bgrnd music track...
 //
-const int iMP3MusicStream_DiskBytesToRead = 10000; //4096;
-const int iMP3MusicStream_DiskBufferSize = iMP3MusicStream_DiskBytesToRead * 2; //*10;
+constexpr int iMP3MusicStream_DiskBytesToRead = 10000; //4096;
+constexpr int iMP3MusicStream_DiskBufferSize = iMP3MusicStream_DiskBytesToRead * 2; //*10;
 
 using MusicInfo_t = struct
 {
@@ -149,8 +149,8 @@ constexpr auto SOUND_FULLVOLUME = 256;
 constexpr auto SOUND_ATTENUATE = 0.0008f;
 constexpr auto VOICE_ATTENUATE = 0.004f;
 
-const float SOUND_FMAXVOL = 0.75; //1.0;
-const int SOUND_MAXVOL = 255;
+constexpr float SOUND_FMAXVOL = 0.75; //1.0;
+constexpr int SOUND_MAXVOL = 255;
 
 channel_t s_channels[MAX_CHANNELS];
 
@@ -360,7 +360,7 @@ static inline void Channel_Clear(channel_t* ch)
 // ====================================================================
 // User-setable variables
 // ====================================================================
-static void DynamicMusicInfoPrint(void)
+static void DynamicMusicInfoPrint()
 {
 	if (bMusic_IsDynamic)
 	{
@@ -386,7 +386,7 @@ static void DynamicMusicInfoPrint(void)
 	}
 }
 
-void S_SoundInfo_f(void)
+void S_SoundInfo_f()
 {
 	Com_Printf("----- Sound Info -----\n");
 
@@ -447,7 +447,7 @@ void S_SoundInfo_f(void)
 S_Init
 ================
 */
-void S_Init(void)
+void S_Init()
 {
 	Com_Printf("\n------- sound initialization -------\n");
 
@@ -650,7 +650,7 @@ void S_Init(void)
 
 // only called from snd_restart. QA request...
 //
-void S_ReloadAllUsedSounds(void)
+void S_ReloadAllUsedSounds()
 {
 	if (s_soundStarted && !s_soundMuted)
 	{
@@ -672,7 +672,7 @@ void S_ReloadAllUsedSounds(void)
 // Shutdown sound engine
 // =======================================================================
 
-void S_Shutdown(void)
+void S_Shutdown()
 {
 	if (!s_soundStarted)
 	{
@@ -913,7 +913,7 @@ This is called when the hunk is cleared and the sounds
 are no longer valid.
 ===================
 */
-void S_DisableSounds(void)
+void S_DisableSounds()
 {
 	S_StopAllSounds();
 	s_soundMuted = qtrue;
@@ -925,7 +925,7 @@ S_BeginRegistration
 
 =====================
 */
-void S_BeginRegistration(void)
+void S_BeginRegistration()
 {
 	s_soundMuted = qfalse; // we can play again
 
@@ -1740,7 +1740,7 @@ If we are about to perform file access, clear the buffer
 so sound doesn't stutter.
 ==================
 */
-void S_ClearSoundBuffer(void)
+void S_ClearSoundBuffer()
 {
 	if (!s_soundStarted || s_soundMuted)
 	{
@@ -1822,7 +1822,7 @@ void S_CIN_StopSound(const sfxHandle_t sfxHandle)
 S_StopAllSounds
 ==================
 */
-void S_StopSounds(void)
+void S_StopSounds()
 {
 	if (!s_soundStarted)
 	{
@@ -1869,7 +1869,7 @@ S_StopAllSounds
  and music
 ==================
 */
-void S_StopAllSounds(void)
+void S_StopAllSounds()
 {
 	if (!s_soundStarted)
 	{
@@ -1895,7 +1895,7 @@ S_ClearLoopingSounds
 
 ==================
 */
-void S_ClearLoopingSounds(void)
+void S_ClearLoopingSounds()
 {
 #ifdef USE_OPENAL
 	if (s_UseOpenAL)
@@ -2018,7 +2018,7 @@ All sounds are on the same cycle, so any duplicates can just
 sum up the channel multipliers.
 ==================
 */
-void S_AddLoopSounds(void)
+void S_AddLoopSounds()
 {
 	int left, right, right_total;
 	static int loopFrame;
@@ -2674,7 +2674,7 @@ S_ScanChannelStarts
 Returns qtrue if any new sounds were started since the last mix
 ========================
 */
-qboolean S_ScanChannelStarts(void)
+qboolean S_ScanChannelStarts()
 {
 	qboolean newSamples = qfalse;
 	channel_t* ch = s_channels;
@@ -2755,7 +2755,7 @@ S_Update
 Called once each time through the main loop
 ============
 */
-void S_Update(void)
+void S_Update()
 {
 	if (!s_soundStarted || s_soundMuted)
 	{
@@ -2801,7 +2801,7 @@ void S_Update(void)
 	S_Update_();
 }
 
-void S_GetSoundtime(void)
+void S_GetSoundtime()
 {
 	static int buffers;
 	static int oldsamplepos;
@@ -2846,7 +2846,7 @@ void S_GetSoundtime(void)
 	}
 }
 
-void S_Update_(void)
+void S_Update_()
 {
 	if (!s_soundStarted || s_soundMuted)
 	{
@@ -3150,14 +3150,10 @@ void UpdateSingleShotSounds()
 	int j;
 	ALint state;
 	ALint processed;
-	channel_t* ch;
-#ifdef _DEBUG
-	char szString[256];
-#endif
 
 	// Firstly, check if any single-shot sounds have completed, or if they need more data (for streaming Sources),
 	// and/or if any of the currently playing (non-Ambient) looping sounds need to be stopped
-	ch = s_channels + 1;
+	channel_t* ch = s_channels + 1;
 	for (int i = 1; i < s_numChannels; i++, ch++)
 	{
 		ch->bProcessed = false;
@@ -3249,9 +3245,10 @@ void UpdateSingleShotSounds()
 										else
 										{
 #ifdef _DEBUG
-											sprintf(szString, "Missing lip-sync info. for %s\n",
+											char sz_string[256];
+											sprintf(sz_string, "Missing lip-sync info. for %s\n",
 											        ch->thesfx->sSoundName);
-											OutputDebugString(szString);
+											OutputDebugString(sz_string);
 #endif
 										}
 									}
@@ -3344,12 +3341,12 @@ void UpdateLoopingSounds()
 						if (!loop->bRelative)
 						{
 							// Set position to 0,0,0 and turn on Head Relative Mode
-							float pos[3];
-							pos[0] = 0.f;
-							pos[1] = 0.f;
-							pos[2] = 0.f;
+							float values[3];
+							values[0] = 0.f;
+							values[1] = 0.f;
+							values[2] = 0.f;
 
-							alSourcefv(s_channels[i].alSource, AL_POSITION, pos);
+							alSourcefv(s_channels[i].alSource, AL_POSITION, values);
 							alSourcei(s_channels[i].alSource, AL_SOURCE_RELATIVE, AL_TRUE);
 							loop->bRelative = qtrue;
 						}
@@ -3662,11 +3659,6 @@ void S_SetLipSyncs()
 	unsigned int samples;
 	int current_time, timePlayed;
 	channel_t* ch;
-#ifdef _DEBUG
-#ifdef _MSC_VER
-	char szString[256];
-#endif
-#endif
 
 #ifdef _WIN32
 	current_time = timeGetTime();
@@ -3698,8 +3690,9 @@ void S_SetLipSyncs()
 				{
 #ifdef _DEBUG
 #ifdef _MSC_VER
-					sprintf(szString, "Missing lip-sync info. for %s\n", ch->thesfx->sSoundName);
-					OutputDebugString(szString);
+					char sz_string[256];
+					sprintf(sz_string, "Missing lip-sync info. for %s\n", ch->thesfx->sSoundName);
+					OutputDebugString(sz_string);
 #endif
 #endif
 				}
@@ -3728,8 +3721,9 @@ void S_SetLipSyncs()
 				{
 #ifdef _DEBUG
 #ifdef _MSC_VER
-					sprintf(szString, "Missing lip-sync info. for %s\n", ch->thesfx->sSoundName);
-					OutputDebugString(szString);
+					char sz_string[256];
+					sprintf(sz_string, "Missing lip-sync info. for %s\n", ch->thesfx->sSoundName);
+					OutputDebugString(sz_string);
 #endif
 #endif
 				}
@@ -3757,7 +3751,7 @@ console functions
 ===============================================================================
 */
 
-static void S_Play_f(void)
+static void S_Play_f()
 {
 	int i = 1;
 	while (i < Cmd_Argc())
@@ -3780,7 +3774,7 @@ static void S_Play_f(void)
 	}
 }
 
-static void S_Music_f(void)
+static void S_Music_f()
 {
 	const int c = Cmd_Argc();
 
@@ -3798,7 +3792,7 @@ static void S_Music_f(void)
 	}
 }
 
-static void S_MenuMusic_f(void)
+static void S_MenuMusic_f()
 {
 	const int music_pick = rand() % 9;
 
@@ -3843,7 +3837,7 @@ static void S_MenuMusic_f(void)
 	}
 }
 
-static void S_totgmapmusic_f(void)
+static void S_totgmapmusic_f()
 {
 	const int music_pick = rand() % 2;
 
@@ -3861,14 +3855,14 @@ static void S_totgmapmusic_f(void)
 	}
 }
 
-static void S_StopMusic_f(void)
+static void S_StopMusic_f()
 {
 	S_StopBackgroundTrack();
 }
 
 // a debug function, but no harm to leave in...
 //
-static void S_SetDynamicMusic_f(void)
+static void S_SetDynamicMusic_f()
 {
 	const int c = Cmd_Argc();
 
@@ -3940,7 +3934,7 @@ static const char* sSoundCompressionMethodStrings[ct_NUMBEROF] =
 	"mp3" // ct_MP3
 };
 
-void S_SoundList_f(void)
+void S_SoundList_f()
 {
 	int i;
 	sfx_t* sfx;
@@ -4112,7 +4106,6 @@ int S_FindWavChunk(const fileHandle_t f, const char* chunk)
 	int len = FGetLittleLong(f);
 	if (len < 0 || len > 0xfffffff)
 	{
-		len = 0;
 		return 0;
 	}
 	len = (len + 1) & ~1; // pad to word boundary
@@ -4219,7 +4212,7 @@ static void FreeMusic(MusicInfo_t* pMusicInfo)
 
 // called only by snd_shutdown (from snd_restart or app exit)
 //
-void S_UnCacheDynamicMusic(void)
+void S_UnCacheDynamicMusic()
 {
 	for (int i = eBGRNDTRACK_DATABEGIN; i != eBGRNDTRACK_DATAEND; i++)
 	{
@@ -4496,7 +4489,7 @@ static void S_SetDynamicMusicState(const MusicState_e eNewState)
 	}
 }
 
-static void S_HandleDynamicMusicStateChange(void)
+static void S_HandleDynamicMusicStateChange()
 {
 	if (eMusic_StateRequest != eMusic_StateActual)
 	{
@@ -4666,7 +4659,7 @@ static void S_HandleDynamicMusicStateChange(void)
 static char gsIntroMusic[MAX_QPATH] = {0};
 static char gsLoopMusic[MAX_QPATH] = {0};
 
-void S_RestartMusic(void)
+void S_RestartMusic()
 {
 	if (s_soundStarted && !s_soundMuted)
 	{
@@ -4750,7 +4743,7 @@ void S_StartBackgroundTrack(const char* intro, const char* loop, const qboolean 
 	{
 		if (Music_DynamicDataAvailable(intro)) // "intro", NOT "sName" (i.e. don't use version with ".mp3" extension)
 		{
-			extern const char* Music_GetLevelSetName(void);
+			extern const char* Music_GetLevelSetName();
 			Q_strncpyz(sInfoOnly_CurrentDynamicMusicSet, Music_GetLevelSetName(),
 			           sizeof(sInfoOnly_CurrentDynamicMusicSet));
 			for (int i = eBGRNDTRACK_DATABEGIN; i != eBGRNDTRACK_DATAEND; i++)
@@ -4828,7 +4821,7 @@ void S_StartBackgroundTrack(const char* intro, const char* loop, const qboolean 
 	}
 }
 
-void S_StopBackgroundTrack(void)
+void S_StopBackgroundTrack()
 {
 	for (auto& i : tMusic_Info)
 	{
@@ -5033,7 +5026,7 @@ static qboolean S_UpdateBackgroundTrack_Actual(MusicInfo_t* pMusicInfo, const qb
 
 // used to be just for dynamic, but now even non-dynamic music has to know whether it should be silent or not...
 //
-static const char* S_Music_GetRequestedState(void)
+static const char* S_Music_GetRequestedState()
 {
 	const int iStringOffset = cl.gameState.stringOffsets[CS_DYNAMIC_MUSIC_STATE];
 	if (iStringOffset)
@@ -5051,7 +5044,7 @@ static const char* S_Music_GetRequestedState(void)
 //
 // then go on to do transition handling etc...
 //
-static void S_CheckDynamicMusicState(void)
+static void S_CheckDynamicMusicState()
 {
 	const char* psCommand = S_Music_GetRequestedState();
 
@@ -5110,7 +5103,7 @@ static void S_CheckDynamicMusicState(void)
 	S_HandleDynamicMusicStateChange();
 }
 
-static void S_UpdateBackgroundTrack(void)
+static void S_UpdateBackgroundTrack()
 {
 	if (bMusic_IsDynamic)
 	{
@@ -5307,11 +5300,11 @@ static int SND_FreeSFXMem(sfx_t* sfx)
 			alDeleteBuffers(1, &(sfx->Buffer));
 #ifdef _DEBUG
 #ifdef _MSC_VER
-			char szString[256];
 			if (alGetError() != AL_NO_ERROR)
 			{
-				sprintf(szString, "Failed to delete AL Buffer (%s) ... !\n", sfx->sSoundName);
-				OutputDebugString(szString);
+				char sz_string[256];
+				sprintf(sz_string, "Failed to delete AL Buffer (%s) ... !\n", sfx->sSoundName);
+				OutputDebugString(sz_string);
 			}
 #endif
 #endif
@@ -5382,7 +5375,7 @@ void SND_TouchSFX(sfx_t* sfx)
 
 // currently this is only called during snd_shutdown or snd_restart
 //
-void S_FreeAllSFXMem(void)
+void S_FreeAllSFXMem()
 {
 	for (int i = 1; i < s_numSfx; i++) // start @ 1 to skip freeing default sound
 	{
@@ -5445,7 +5438,7 @@ int SND_FreeOldestSound(sfx_t* pButNotThisOne /* = NULL */)
 	return iBytesFreed;
 }
 
-int SND_FreeOldestSound(void)
+int SND_FreeOldestSound()
 {
 	return SND_FreeOldestSound(nullptr); // I had to add a void-arg version of this because of link issues, sigh
 }
@@ -5525,7 +5518,6 @@ void InitEAXManager()
 	EAXFXSLOTPROPERTIES FXSlotProp;
 	GUID Effect;
 	GUID FXSlotGuids[4];
-	int i;
 
 	s_bEALFileLoaded = false;
 
@@ -5567,6 +5559,7 @@ void InitEAXManager()
 			{
 				if (lpEAXManagerCreateFn(&s_lpEAXManager) == EM_OK)
 				{
+					int i;
 					// Configure our EAX 4.0 Effect Slots
 
 					s_NumFXSlots = 0;
@@ -5665,14 +5658,10 @@ void ReleaseEAXManager()
 static bool LoadEALFile(char* szEALFilename)
 {
 	char* ealData = nullptr;
-	long i, j, lID, lEnvID;
+	long lID, lEnvID;
 	EMPOINT EMPoint;
-	char szAperture[128];
-	char szFullEALFilename[MAX_QPATH];
 	long lNumInst, lNumInstA, lNumInstB;
 	bool bLoaded = false;
-	bool bValid = true;
-	char szString[256];
 
 	if ((!s_lpEAXManager) || (!s_bEAX))
 		return false;
@@ -5703,6 +5692,7 @@ static bool LoadEALFile(char* szEALFilename)
 	}
 	else
 	{
+		char szFullEALFilename[MAX_QPATH];
 		// Failed to load via Quake loader, try manually
 		Com_sprintf(szFullEALFilename, MAX_QPATH, "base/%s", szEALFilename);
 		if (SUCCEEDED(s_lpEAXManager->LoadDataSet(szFullEALFilename, 0)))
@@ -5714,6 +5704,9 @@ static bool LoadEALFile(char* szEALFilename)
 
 	if (bLoaded)
 	{
+		bool bValid = true;
+		char szAperture[128];
+		long i;
 		// For a valid eal file ... need to find 'Center' tag, record num of instances,  and then find
 		// the right number of instances of 'Aperture0a' and 'Aperture0b'.
 
@@ -5803,9 +5796,11 @@ static bool LoadEALFile(char* szEALFilename)
 
 		if (s_lpEnvTable)
 		{
+			long j;
 			i = 0;
 			while (true)
 			{
+				char sz_string[256];
 				sprintf(szAperture, "Aperture%da", i);
 				if (s_lpEAXManager->GetSourceID(szAperture, &lID) == EM_OK)
 				{
@@ -5837,11 +5832,11 @@ static bool LoadEALFile(char* szEALFilename)
 										}
 										else
 										{
-											s_lpEAXManager->GetEnvironmentName(lEnvID, szString, 256);
+											s_lpEAXManager->GetEnvironmentName(lEnvID, sz_string, 256);
 											Com_DPrintf(
 												S_COLOR_YELLOW
 												"Found more than one occurance of Aperture%da in %s sub-space\n", i,
-												szString);
+												sz_string);
 											Com_DPrintf(
 												S_COLOR_YELLOW "One tag at %.3f,%.3f,%.3f, other at %.3f,%.3f,%.3f\n",
 												EMPoint.fX, EMPoint.fY, EMPoint.fZ,
@@ -5908,11 +5903,11 @@ static bool LoadEALFile(char* szEALFilename)
 											}
 											else
 											{
-												s_lpEAXManager->GetEnvironmentName(lEnvID, szString, 256);
+												s_lpEAXManager->GetEnvironmentName(lEnvID, sz_string, 256);
 												Com_DPrintf(
 													S_COLOR_YELLOW
 													"Found more than one occurance of Aperture%db in %s sub-space\n", i,
-													szString);
+													sz_string);
 												bValid = false;
 											}
 
@@ -6014,19 +6009,13 @@ static void UnloadEALFile()
 */
 static void UpdateEAXListener()
 {
-	EMPOINT ListPos, ListOri;
-	EMPOINT EMAperture;
+	EMPOINT ListPos;
 	EMPOINT EMSourcePoint;
-	long lID, lSourceID, lApertureNum;
-	int i, j, k;
-	float flDistance, flNearest;
+	long lID, lSourceID;
 	EAXREVERBPROPERTIES Reverb;
-	bool bFound;
 	long lVolume;
 	long lCurTime;
-	channel_t* ch;
-	EAXVECTOR LR, LP1, LP2, Pan;
-	REVERBDATA ReverbData[3]; // Hardcoded to three (maximum no of reverbs)
+	EAXVECTOR LP1, LP2, Pan;
 #ifdef DISPLAY_CLOSEST_ENVS
 	char szEnvName[256];
 #endif
@@ -6038,6 +6027,17 @@ static void UpdateEAXListener()
 
 	if ((s_lLastEnvUpdate + ENV_UPDATE_RATE) < lCurTime)
 	{
+		REVERBDATA ReverbData[3];
+		channel_t* ch;
+		bool bFound;
+		float flNearest;
+		float flDistance;
+		int k;
+		int j;
+		int i;
+		long lApertureNum;
+		EMPOINT EMAperture;
+		EMPOINT ListOri;
 		// Update closest reverbs
 		s_lLastEnvUpdate = lCurTime;
 
@@ -6334,6 +6334,7 @@ static void UpdateEAXListener()
 
 		for (i = 0; i < Q_min(s_NumFXSlots, s_lNumEnvironments); i++)
 		{
+			EAXVECTOR LR;
 			if (s_FXSlotInfo[i].lEnvID == s_EnvironmentID)
 			{
 				// Listener's environment

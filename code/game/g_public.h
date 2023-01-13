@@ -163,7 +163,7 @@ using game_import_t = struct
 	// get current time for profiling reasons
 	// this should NOT be used for any game related tasks,
 	// because it is not journaled
-	int (*Milliseconds)(void);
+	int (*Milliseconds)();
 
 	// console variable interaction
 	cvar_t* (*cvar)(const char* var_name, const char* value, int flags);
@@ -172,7 +172,7 @@ using game_import_t = struct
 	void (*Cvar_VariableStringBuffer)(const char* var_name, char* buffer, int bufsize);
 
 	// ClientCommand and ServerCommand parameter access
-	int (*argc)(void);
+	int (*argc)();
 	char* (*argv)(int n);
 
 	int (*FS_FOpenFile)(const char* qpath, fileHandle_t* file, fsMode_t mode);
@@ -382,7 +382,7 @@ using game_import_t = struct
 	bool (*WE_GetWindGusting)(vec3_t atpoint);
 	bool (*WE_IsOutside)(vec3_t pos);
 	float (*WE_IsOutsideCausingPain)(vec3_t pos);
-	float (*WE_GetChanceOfSaberFizz)(void);
+	float (*WE_GetChanceOfSaberFizz)();
 	bool (*WE_IsShaking)(vec3_t pos);
 	void (*WE_AddWeatherZone)(vec3_t mins, vec3_t maxs);
 	bool (*WE_SetTempGlobalFogColor)(vec3_t color);
@@ -405,7 +405,7 @@ using game_export_t = struct
 	void (*Init)(const char* mapname, const char* spawntarget, int checkSum, const char* entstring,
 	             int levelTime, int randomSeed, int globalTime, SavedGameJustLoaded_e e_saved_game_just_loaded,
 	             qboolean qbLoadTransition);
-	void (*Shutdown)(void);
+	void (*Shutdown)();
 
 	// ReadLevel is called after the default map information has been
 	// loaded with SpawnEntities
@@ -430,7 +430,7 @@ using game_export_t = struct
 	// that is not recognized as a builtin function.
 	// The game can issue gi.argc() / gi.argv() commands to get the command
 	// and parameters.  Return qfalse if the game doesn't recognize it as a command.
-	qboolean (*ConsoleCommand)(void);
+	qboolean (*ConsoleCommand)();
 
 	void (*GameSpawnRMGEntity)(const char* s);
 	//

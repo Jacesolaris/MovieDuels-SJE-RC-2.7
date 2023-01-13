@@ -36,7 +36,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #include "ui/ui_local.h"
 #endif
 
-extern stringID_table_t animTable[MAX_ANIMATIONS + 1];
+extern stringID_table_t anim_table[MAX_ANIMATIONS + 1];
 
 int BG_SoundIndex(const char* sound) {
 #ifdef _GAME
@@ -1099,7 +1099,7 @@ static void Saber_ParseReadyAnim(saberInfo_t* saber, const char** p) {
 	const char* value;
 	if (COM_ParseString(p, &value))
 		return;
-	const int anim = GetIDForString(animTable, value);
+	const int anim = GetIDForString(anim_table, value);
 	if (anim >= 0 && anim < MAX_ANIMATIONS)
 		saber->readyAnim = anim;
 }
@@ -1107,7 +1107,7 @@ static void Saber_ParseDrawAnim(saberInfo_t* saber, const char** p) {
 	const char* value;
 	if (COM_ParseString(p, &value))
 		return;
-	const int anim = GetIDForString(animTable, value);
+	const int anim = GetIDForString(anim_table, value);
 	if (anim >= 0 && anim < MAX_ANIMATIONS)
 		saber->drawAnim = anim;
 }
@@ -1115,7 +1115,7 @@ static void Saber_ParsePutawayAnim(saberInfo_t* saber, const char** p) {
 	const char* value;
 	if (COM_ParseString(p, &value))
 		return;
-	const int anim = GetIDForString(animTable, value);
+	const int anim = GetIDForString(anim_table, value);
 	if (anim >= 0 && anim < MAX_ANIMATIONS)
 		saber->putawayAnim = anim;
 }
@@ -1123,7 +1123,7 @@ static void Saber_ParseTauntAnim(saberInfo_t* saber, const char** p) {
 	const char* value;
 	if (COM_ParseString(p, &value))
 		return;
-	const int anim = GetIDForString(animTable, value);
+	const int anim = GetIDForString(anim_table, value);
 	if (anim >= 0 && anim < MAX_ANIMATIONS)
 		saber->tauntAnim = anim;
 }
@@ -1132,7 +1132,7 @@ static void Saber_ParseBowAnim(saberInfo_t* saber, const char** p) {
 	if (COM_ParseString(p, &value))
 		return;
 
-	const int anim = GetIDForString(animTable, value);
+	const int anim = GetIDForString(anim_table, value);
 	if (anim >= 0 && anim < MAX_ANIMATIONS)
 		saber->bowAnim = anim;
 }
@@ -1140,7 +1140,7 @@ static void Saber_ParseMeditateAnim(saberInfo_t* saber, const char** p) {
 	const char* value;
 	if (COM_ParseString(p, &value))
 		return;
-	const int anim = GetIDForString(animTable, value);
+	const int anim = GetIDForString(anim_table, value);
 	if (anim >= 0 && anim < MAX_ANIMATIONS)
 		saber->meditateAnim = anim;
 }
@@ -1148,7 +1148,7 @@ static void Saber_ParseFlourishAnim(saberInfo_t* saber, const char** p) {
 	const char* value;
 	if (COM_ParseString(p, &value))
 		return;
-	const int anim = GetIDForString(animTable, value);
+	const int anim = GetIDForString(anim_table, value);
 	if (anim >= 0 && anim < MAX_ANIMATIONS)
 		saber->flourishAnim = anim;
 }
@@ -1156,7 +1156,7 @@ static void Saber_ParseGloatAnim(saberInfo_t* saber, const char** p) {
 	const char* value;
 	if (COM_ParseString(p, &value))
 		return;
-	const int anim = GetIDForString(animTable, value);
+	const int anim = GetIDForString(anim_table, value);
 	if (anim >= 0 && anim < MAX_ANIMATIONS)
 		saber->gloatAnim = anim;
 }

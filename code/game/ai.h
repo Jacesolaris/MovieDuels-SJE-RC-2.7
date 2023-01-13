@@ -92,13 +92,13 @@ void npc_bs_jedi_default();
 void npc_bs_jedi_follow_leader();
 
 // AI_DROID
-void NPC_BSDroid_Default(void);
+void NPC_BSDroid_Default();
 
 // AI_ImperialProbe
-void NPC_BSImperialProbe_Default(void);
+void NPC_BSImperialProbe_Default();
 
 // AI_atst
-void NPC_BSATST_Default(void);
+void NPC_BSATST_Default();
 
 void NPC_BSInterrogator_Default();
 

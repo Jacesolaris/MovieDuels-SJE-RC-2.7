@@ -1461,7 +1461,7 @@ void G2API_AnimateG2Models(CGhoul2Info_v& ghoul2, const int acurrent_time, CRagD
 }
 //rww - RAGDOLL_END
 
-int G2_Find_Bone_Rag(CGhoul2Info* ghl_info, const boneInfo_v& blist, const char* bone_name);
+int G2_Find_Bone_Rag(const CGhoul2Info* ghl_info, const boneInfo_v& blist, const char* bone_name);
 #define RAG_PCJ						(0x00001)
 #define RAG_EFFECTOR				(0x00100)
 
@@ -1997,6 +1997,7 @@ void G2API_GiveMeVectorFromMatrix(mdxaBone_t& bolt_matrix, const Eorientations f
 		vec[1] = -bolt_matrix.matrix[1][2];
 		vec[2] = -bolt_matrix.matrix[2][2];
 		break;
+	default: ;
 	}
 }
 

@@ -51,7 +51,7 @@ Helper functions for User Interface
 GetClientState
 ====================
 */
-static connstate_t GetClientState(void)
+static connstate_t GetClientState()
 {
 	return cls.state;
 }
@@ -164,9 +164,9 @@ static int GetConfigString(const int index, char* buf, const int size)
 CL_ShutdownUI
 ====================
 */
-void UI_Shutdown(void);
+void UI_Shutdown();
 
-void CL_ShutdownUI(void)
+void CL_ShutdownUI()
 {
 	UI_Shutdown();
 	Key_SetCatcher(Key_GetCatcher() & ~KEYCATCH_UI);
@@ -204,7 +204,7 @@ void UI_Init(int apiVersion, const uiimport_t* uiimport, qboolean inGameLoad);
 CL_InitUI
 ====================
 */
-void CL_InitUI(void)
+void CL_InitUI()
 {
 #ifdef JK2_MODE
 	JK2SP_Register("keynames", 0	/*SP_REGISTER_REQUIRED*/);		// reference is KEYNAMES
@@ -316,7 +316,7 @@ void CL_InitUI(void)
 	//	uie->UI_Init( UI_API_VERSION, &uii );
 }
 
-qboolean UI_GameCommand(void)
+qboolean UI_GameCommand()
 {
 	if (!cls.uiStarted)
 	{
@@ -325,7 +325,7 @@ qboolean UI_GameCommand(void)
 	return UI_ConsoleCommand();
 }
 
-void CL_GenericMenu_f(void)
+void CL_GenericMenu_f()
 {
 	const char* arg = Cmd_Argv(1);
 
@@ -335,12 +335,12 @@ void CL_GenericMenu_f(void)
 	}
 }
 
-void CL_EndScreenDissolve_f(void)
+void CL_EndScreenDissolve_f()
 {
 	re.InitDissolve(qtrue); // dissolve from cinematic to underlying ingame
 }
 
-void CL_DataPad_f(void)
+void CL_DataPad_f()
 {
 	if (cls.uiStarted && cls.cgameStarted && (cls.state == CA_ACTIVE))
 	{

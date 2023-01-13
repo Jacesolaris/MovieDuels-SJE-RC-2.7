@@ -57,9 +57,9 @@ public:
 	void SetData(vec3_t, CIcarus* icarus);
 	void SetData(const void* data, int size, const CIcarus* icarus);
 
-	int GetID(void) const { return m_id; } //Get ID member variables
-	void* GetData(void) const { return m_data; } //Get data member variable
-	int GetSize(void) const { return m_size; } //Get size member variable
+	int GetID() const { return m_id; } //Get ID member variables
+	void* GetData() const { return m_data; } //Get data member variable
+	int GetSize() const { return m_size; } //Get size member variable
 
 	// Overloaded new operator.
 	void* operator new(const size_t size)
@@ -129,7 +129,7 @@ public:
 		assert(!GetNumMembers());
 	}
 
-	int Init(void);
+	int Init();
 
 	int Create(int);
 	int Free(const CIcarus* icarus);
@@ -151,15 +151,15 @@ public:
 
 	CBlock* Duplicate(const CIcarus* icarus);
 
-	int GetBlockID(void) const { return m_id; } //Get the ID for the block
-	int GetNumMembers(void) const { return static_cast<int>(m_members.size()); }
+	int GetBlockID() const { return m_id; } //Get the ID for the block
+	int GetNumMembers() const { return static_cast<int>(m_members.size()); }
 	//Get the number of member in the block's list
 
 	void SetFlags(const unsigned char flags) { m_flags = flags; }
 	void SetFlag(const unsigned char flag) { m_flags |= flag; }
 
 	int HasFlag(const unsigned char flag) const { return m_flags & flag; }
-	unsigned char GetFlags(void) const { return m_flags; }
+	unsigned char GetFlags() const { return m_flags; }
 
 	// Overloaded new operator.
 	void* operator new(const size_t size)
@@ -200,14 +200,14 @@ public:
 	{
 	};
 
-	int Init(void);
+	int Init();
 
 	int Create(const char*);
-	int Free(void);
+	int Free();
 
 	// Stream I/O functions
 
-	int BlockAvailable(void) const;
+	int BlockAvailable() const;
 
 	int WriteBlock(CBlock*, const CIcarus* icarus) const; //Write the block out
 	int ReadBlock(CBlock*, const CIcarus* icarus); //Read the block in

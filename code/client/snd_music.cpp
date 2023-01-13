@@ -102,7 +102,7 @@ sstring_t gsLevelNameForCompare;
 sstring_t gsLevelNameForBossLoad;
 // eg "kejim_base', special case for enabling boss music to come from a different dir - sigh....
 
-void Music_Free(void)
+void Music_Free()
 {
 	if (MusicData)
 	{
@@ -1032,7 +1032,7 @@ float Music_GetRandomEntryTime(const MusicState_e eMusicState)
 
 // info only, used in "soundinfo" command...
 //
-const char* Music_GetLevelSetName(void)
+const char* Music_GetLevelSetName()
 {
 	if (Q_stricmp(gsLevelNameForCompare.c_str(), gsLevelNameForLoad.c_str()))
 	{

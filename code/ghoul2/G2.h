@@ -57,31 +57,31 @@ int G2_GetSurfaceIndex(const CGhoul2Info* ghl_info, const char* surface_name);
 int G2_IsSurfaceRendered(const CGhoul2Info* ghl_info, const char* surface_name, const surfaceInfo_v& slist);
 
 // internal bone calls - G2_Bones.cpp
-qboolean G2_Set_Bone_Angles(CGhoul2Info* ghl_info, boneInfo_v& blist, const char* bone_name, const float* angles,
+qboolean G2_Set_Bone_Angles(const CGhoul2Info* ghl_info, boneInfo_v& blist, const char* bone_name, const float* angles,
                             int flags,
                             Eorientations up, Eorientations left, Eorientations forward,
                             int blend_time, int current_time, const vec3_t offset);
-qboolean G2_Remove_Bone(CGhoul2Info* ghl_info, boneInfo_v& blist, const char* bone_name);
+qboolean G2_Remove_Bone(const CGhoul2Info* ghl_info, boneInfo_v& blist, const char* bone_name);
 qboolean G2_Remove_Bone_Index(boneInfo_v& blist, int index);
-qboolean G2_Set_Bone_Anim(CGhoul2Info* ghl_info, boneInfo_v& blist, const char* bone_name, int start_frame,
+qboolean G2_Set_Bone_Anim(const CGhoul2Info* ghl_info, boneInfo_v& blist, const char* bone_name, int start_frame,
                           int end_frame, int flags, float anim_speed, int current_time, float set_frame, int blend_time);
-qboolean G2_Get_Bone_Anim(CGhoul2Info* ghl_info, boneInfo_v& blist, const char* bone_name, int current_time,
+qboolean G2_Get_Bone_Anim(const CGhoul2Info* ghl_info, boneInfo_v& blist, const char* bone_name, int current_time,
                           float* current_frame, int* start_frame, int* end_frame, int* flags, float* ret_anim_speed);
-qboolean G2_Get_Bone_Anim_Range(CGhoul2Info* ghl_info, boneInfo_v& blist, const char* bone_name, int* start_frame,
+qboolean G2_Get_Bone_Anim_Range(const CGhoul2Info* ghl_info, const boneInfo_v& blist, const char* bone_name, int* start_frame,
                                 int* end_frame);
 qboolean G2_Get_Bone_Anim_Range_Index(const boneInfo_v& blist, int bone_index, int* start_frame, int* end_frame);
-qboolean G2_Pause_Bone_Anim(CGhoul2Info* ghl_info, boneInfo_v& blist, const char* bone_name, int current_time);
+qboolean G2_Pause_Bone_Anim(const CGhoul2Info* ghl_info, boneInfo_v& blist, const char* bone_name, int current_time);
 qboolean G2_Pause_Bone_Anim_Index(boneInfo_v& blist, int bone_index, int current_time, int num_frames);
-qboolean G2_IsPaused(CGhoul2Info* ghl_info, const boneInfo_v& blist, const char* bone_name);
-qboolean G2_Stop_Bone_Anim(CGhoul2Info* ghl_info, boneInfo_v& blist, const char* bone_name);
-qboolean G2_Stop_Bone_Angles(CGhoul2Info* ghl_info, boneInfo_v& blist, const char* bone_name);
+qboolean G2_IsPaused(const CGhoul2Info* ghl_info, const boneInfo_v& blist, const char* bone_name);
+qboolean G2_Stop_Bone_Anim(const CGhoul2Info* ghl_info, boneInfo_v& blist, const char* bone_name);
+qboolean G2_Stop_Bone_Angles(const CGhoul2Info* ghl_info, boneInfo_v& blist, const char* bone_name);
 //rww - RAGDOLL_BEGIN
 void G2_Animate_Bone_List(CGhoul2Info_v& ghoul2, int current_time, int index, CRagDollUpdateParams* params);
 //rww - RAGDOLL_END
 
 void G2_Init_Bone_List(boneInfo_v& blist, int numBones);
 int G2_Find_Bone_In_List(const boneInfo_v& blist, int bone_num);
-qboolean G2_Set_Bone_Angles_Matrix(CGhoul2Info* ghl_info, boneInfo_v& blist, const char* bone_name,
+qboolean G2_Set_Bone_Angles_Matrix(const CGhoul2Info* ghl_info, boneInfo_v& blist, const char* bone_name,
                                    const mdxaBone_t& matrix,
                                    int flags);
 int G2_Get_Bone_Index(CGhoul2Info* ghoul2, const char* bone_name, qboolean bAddIfNotFound);

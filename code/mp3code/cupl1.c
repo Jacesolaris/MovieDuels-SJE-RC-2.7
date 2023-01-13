@@ -176,6 +176,7 @@ static void unpack_sampL1() /* unpack samples */
 			skip(pMP3Stream->bit_skip);
 		case 30:
 			s += 64;
+		default: ;
 		} /* end switch */
 	} /* end j loop */
 

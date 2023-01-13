@@ -123,13 +123,13 @@ int parseDataCount = -1;
 constexpr int MAX_PARSE_DATA = 5;
 parseData_t parseData[MAX_PARSE_DATA];
 
-void COM_ParseInit(void)
+void COM_ParseInit()
 {
 	memset(parseData, 0, sizeof parseData);
 	parseDataCount = -1;
 }
 
-void COM_BeginParseSession(void)
+void COM_BeginParseSession()
 {
 	parseDataCount++;
 #ifdef _DEBUG
@@ -143,7 +143,7 @@ void COM_BeginParseSession(void)
 	parseData[parseDataCount].com_tokenline = 0;
 }
 
-void COM_EndParseSession(void)
+void COM_EndParseSession()
 {
 	parseDataCount--;
 #ifdef _DEBUG

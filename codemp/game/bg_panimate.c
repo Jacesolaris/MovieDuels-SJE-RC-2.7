@@ -1546,8 +1546,8 @@ void PM_DebugLegsAnim(int anim)
 	if (oldAnim < MAX_TOTALANIMATIONS && oldAnim >= BOTH_DEATH1 &&
 		newAnim < MAX_TOTALANIMATIONS && newAnim >= BOTH_DEATH1)
 	{
-		Com_Printf("OLD: %s\n", animTable[oldAnim]);
-		Com_Printf("NEW: %s\n", animTable[newAnim]);
+		Com_Printf("OLD: %s\n", anim_table[oldAnim]);
+		Com_Printf("NEW: %s\n", anim_table[newAnim]);
 	}
 }
 
@@ -1752,7 +1752,7 @@ void ParseAnimationEvtBlock(const char* aeb_filename, animevent_t* animEvents, a
 		//	just need offsets.
 		//This way when animation numbers change, this table won't have to be updated,
 		//	at least not much.
-		const int animNum = GetIDForString(animTable, token);
+		const int animNum = GetIDForString(anim_table, token);
 		if (animNum == -1)
 		{//Unrecognized ANIM ENUM name, or we're skipping this line, keep going till you get a good one
 			Com_Printf(S_COLOR_YELLOW"WARNING: Unknown token %s in animEvent file %s\n", token, aeb_filename);
@@ -2344,7 +2344,7 @@ int BG_ParseAnimationFile(const char* filename, animation_t* animset, qboolean i
 			break;
 		}
 
-		const int animNum = GetIDForString(animTable, token);
+		const int animNum = GetIDForString(anim_table, token);
 		if (animNum == -1)
 		{
 			//#ifndef FINAL_BUILD
@@ -2406,11 +2406,11 @@ int BG_ParseAnimationFile(const char* filename, animation_t* animset, qboolean i
 		//Check the array, and print the ones that have nothing in them.
 		for(i = 0; i < MAX_ANIMATIONS; i++)
 		{
-			if (animTable[i].name != NULL)		// This animation reference exists.
+			if (anim_table[i].name != NULL)		// This animation reference exists.
 			{
 				if (animset[i].firstFrame <= 0 && animset[i].num_frames <=0)
 				{	// This is an empty animation reference.
-					Com_Printf("***ANIMTABLE reference #%d (%s) is empty!\n", i, animTable[i].name);
+					Com_Printf("***ANIMTABLE reference #%d (%s) is empty!\n", i, anim_table[i].name);
 				}
 			}
 		}

@@ -126,7 +126,7 @@ qboolean R_GetModeInfo(int* width, int* height, const int mode)
 /*
 ** R_ModeList_f
 */
-static void R_ModeList_f(void)
+static void R_ModeList_f()
 {
 	Com_Printf("\n");
 	Com_Printf("Mode -2: Use desktop resolution\n");
@@ -145,7 +145,7 @@ GLimp_Minimize
 Minimize the game so that user is back at the desktop
 ===============
 */
-void GLimp_Minimize(void)
+void GLimp_Minimize()
 {
 	SDL_MinimizeWindow(screen);
 }
@@ -203,7 +203,7 @@ GLimp_CompareModes
 */
 static int GLimp_CompareModes(const void* a, const void* b)
 {
-	const float ASPECT_EPSILON = 0.001f;
+	constexpr float ASPECT_EPSILON = 0.001f;
 	const SDL_Rect* modeA = (SDL_Rect*)a;
 	const SDL_Rect* modeB = (SDL_Rect*)b;
 	const float aspectA = static_cast<float>(modeA->w) / static_cast<float>(modeA->h);
@@ -226,7 +226,7 @@ static int GLimp_CompareModes(const void* a, const void* b)
 GLimp_DetectAvailableModes
 ===============
 */
-static bool GLimp_DetectAvailableModes(void)
+static bool GLimp_DetectAvailableModes()
 {
 	int i, j;
 	char buf[MAX_STRING_CHARS] = {0};
@@ -323,7 +323,6 @@ GLimp_SetMode
 static rserr_t GLimp_SetMode(glconfig_t* glConfig, const windowDesc_t* windowDesc, const char* windowTitle, const int mode,
                              const qboolean fullscreen, const qboolean noborder)
 {
-	int perChannelColorBits;
 	int depthBits;
 	Uint32 flags = SDL_WINDOW_SHOWN;
 	SDL_DisplayMode desktopMode;
@@ -449,6 +448,7 @@ static rserr_t GLimp_SetMode(glconfig_t* glConfig, const windowDesc_t* windowDes
 
 	if (windowDesc->api == GRAPHICS_API_OPENGL)
 	{
+		int perChannelColorBits;
 		for (int i = 0; i < 16; i++)
 		{
 			// 0 - default
@@ -474,6 +474,7 @@ static rserr_t GLimp_SetMode(glconfig_t* glConfig, const windowDesc_t* windowDes
 						stencilBits = 16;
 					else if (stencilBits == 16)
 						stencilBits = 8;
+				default: ;
 				}
 			}
 
@@ -809,7 +810,7 @@ window_t WIN_Init(const windowDesc_t* windowDesc, glconfig_t* glConfig)
 GLimp_Shutdown
 ===============
 */
-void WIN_Shutdown(void)
+void WIN_Shutdown()
 {
 	Cmd_RemoveCommand("modelist");
 	Cmd_RemoveCommand("minimize");

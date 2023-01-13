@@ -82,7 +82,7 @@ void NPC_SetGoal(gentity_t* goal, const float rating)
 NPC_ClearGoal
 */
 
-void NPC_ClearGoal(void)
+void NPC_ClearGoal()
 {
 	if (!NPCInfo->lastGoalEntity)
 	{
@@ -132,7 +132,7 @@ qboolean G_BoundsOverlap(const vec3_t mins1, const vec3_t maxs1, const vec3_t mi
 	return qtrue;
 }
 
-void NPC_ReachedGoal(void)
+void NPC_ReachedGoal()
 {
 	//	Debug_NPCPrintf( NPC, debugNPCAI, DEBUG_LEVEL_INFO, "UpdateGoal: reached goal entity\n" );
 	NPC_ClearGoal();
@@ -171,7 +171,7 @@ In fact, doesn't seem to be any waypoint info on entities at all any more?
 MCG - Since goal is ALWAYS goalEntity, took out a lot of sending goal entity pointers around for no reason
 */
 
-gentity_t* UpdateGoal(void)
+gentity_t* UpdateGoal()
 {
 	//FIXME: CREED should look at this
 	//		this func doesn't seem to be working correctly for the sand creature

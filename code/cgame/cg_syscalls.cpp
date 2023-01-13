@@ -55,7 +55,7 @@ NORETURN void cgi_Error(const char* fmt)
 	exit(1);
 }
 
-int cgi_Milliseconds(void)
+int cgi_Milliseconds()
 {
 	return Q_syscall(CG_MILLISECONDS);
 }
@@ -75,7 +75,7 @@ void cgi_Cvar_Set(const char* var_name, const char* value)
 	Q_syscall(CG_CVAR_SET, var_name, value);
 }
 
-int cgi_Argc(void)
+int cgi_Argc()
 {
 	return Q_syscall(CG_ARGC);
 }
@@ -125,7 +125,7 @@ void cgi_SendClientCommand(const char* s)
 	Q_syscall(CG_SENDCLIENTCOMMAND, s);
 }
 
-void cgi_UpdateScreen(void)
+void cgi_UpdateScreen()
 {
 	Q_syscall(CG_UPDATESCREEN);
 }
@@ -153,7 +153,7 @@ void cgi_CM_LoadMap(const char* mapname, const qboolean subBSP)
 	Q_syscall(CG_CM_LOADMAP, mapname, subBSP);
 }
 
-int cgi_CM_NumInlineModels(void)
+int cgi_CM_NumInlineModels()
 {
 	return Q_syscall(CG_CM_NUMINLINEMODELS);
 }
@@ -208,7 +208,7 @@ void cgi_CM_SnapPVS(vec3_t origin, byte* buffer)
 	Q_syscall(CG_CM_SNAPPVS, origin, buffer);
 }
 
-void cgi_S_StopSounds(void)
+void cgi_S_StopSounds()
 {
 	Q_syscall(CG_S_STOPSOUNDS);
 }
@@ -218,7 +218,7 @@ void cgi_S_StartSound(const vec3_t origin, const int entity_num, const int entch
 	Q_syscall(CG_S_STARTSOUND, origin, entity_num, entchannel, sfx);
 }
 
-void cgi_AS_ParseSets(void)
+void cgi_AS_ParseSets()
 {
 	Q_syscall(CG_AS_PARSESETS);
 }
@@ -248,7 +248,7 @@ void cgi_S_StartLocalSound(const sfxHandle_t sfx, const int channelNum)
 	Q_syscall(CG_S_STARTLOCALSOUND, sfx, channelNum);
 }
 
-void cgi_S_ClearLoopingSounds(void)
+void cgi_S_ClearLoopingSounds()
 {
 	Q_syscall(CG_S_CLEARLOOPINGSOUNDS);
 }
@@ -329,12 +329,12 @@ int cgi_R_Font_HeightPixels(const int iFontIndex, const float scale /*= 1.0f*/)
 	return Q_syscall(CG_R_FONTHEIGHTPIXELS, iFontIndex, PASSFLOAT(scale));
 }
 
-qboolean cgi_Language_IsAsian(void)
+qboolean cgi_Language_IsAsian()
 {
 	return static_cast<qboolean>(Q_syscall(CG_LANGUAGE_ISASIAN) != 0);
 }
 
-qboolean cgi_Language_UsesSpaces(void)
+qboolean cgi_Language_UsesSpaces()
 {
 	return static_cast<qboolean>(Q_syscall(CG_LANGUAGE_USESSPACES) != 0);
 }
@@ -358,7 +358,7 @@ void cgi_R_SetRefractProp(const float alpha, const float stretch, const qboolean
 	Q_syscall(CG_R_SETREFRACTIONPROP, PASSFLOAT(alpha), PASSFLOAT(stretch), prepost, negate);
 }
 
-void cgi_R_ClearScene(void)
+void cgi_R_ClearScene()
 {
 	Q_syscall(CG_R_CLEARSCENE);
 }
@@ -438,7 +438,7 @@ void cgi_R_SetRangeFog(const float range)
 	Q_syscall(CG_R_SETRANGEFOG, PASSFLOAT(range));
 }
 
-void cgi_R_LAGoggles(void)
+void cgi_R_LAGoggles()
 {
 	Q_syscall(CG_R_LA_GOGGLES);
 }
@@ -478,7 +478,7 @@ qboolean cgi_GetServerCommand(const int serverCommandNumber)
 	return static_cast<qboolean>(Q_syscall(CG_GETSERVERCOMMAND, serverCommandNumber) != 0);
 }
 
-int cgi_GetCurrentCmdNumber(void)
+int cgi_GetCurrentCmdNumber()
 {
 	return Q_syscall(CG_GETCURRENTCMDNUMBER);
 }
@@ -591,7 +591,7 @@ void cgi_UI_Menu_OpenByName(char* buf)
 	Q_syscall(CG_UI_MENU_OPENBYNAME, buf);
 }
 
-void cgi_UI_Menu_Reset(void)
+void cgi_UI_Menu_Reset()
 {
 	Q_syscall(CG_UI_MENU_RESET);
 }
@@ -631,17 +631,17 @@ void cgi_UI_ParseExt(char** token)
 	Q_syscall(CG_UI_PARSEEXT, token);
 }
 
-void cgi_UI_MenuCloseAll(void)
+void cgi_UI_MenuCloseAll()
 {
 	Q_syscall(CG_UI_MENUCLOSE_ALL);
 }
 
-void cgi_UI_MenuPaintAll(void)
+void cgi_UI_MenuPaintAll()
 {
 	Q_syscall(CG_UI_MENUPAINT_ALL);
 }
 
-void cgi_UI_String_Init(void)
+void cgi_UI_String_Init()
 {
 	Q_syscall(CG_UI_STRING_INIT);
 }

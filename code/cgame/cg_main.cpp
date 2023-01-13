@@ -38,11 +38,11 @@ extern void CG_RegisterNPCCustomSounds(clientInfo_t* ci);
 
 extern Vehicle_t* G_IsRidingVehicle(const gentity_t* p_ent);
 extern int G_ParseAnimFileSet(const char* skeleton_name, const char* model_name = nullptr);
-extern void CG_DrawDataPadInventorySelect(void);
+extern void CG_DrawDataPadInventorySelect();
 
 void CG_Init(int serverCommandSequence);
 qboolean CG_ConsoleCommand();
-void CG_Shutdown(void);
+void CG_Shutdown();
 int CG_GetCameraPos(vec3_t camerapos);
 int CG_GetCameraAng(vec3_t cameraang);
 void UseItem(int item_num);
@@ -66,7 +66,7 @@ void CG_ResizeG2TempBone(mdxaBone_v* tempBone, int newCount);
 Ghoul2 Insert End
 */
 
-void CG_LoadHudMenu(void);
+void CG_LoadHudMenu();
 int inv_icons[INV_MAX];
 const char* inv_names[] =
 {
@@ -98,7 +98,7 @@ void CG_DrawIconBackground();
 void CG_DrawSJEIconBackground();
 void CG_DrawDataPadIconBackground(int background_type);
 void CG_DrawDataPadWeaponSelect();
-void CG_DrawDataPadForceSelect(void);
+void CG_DrawDataPadForceSelect();
 
 /*
 ================
@@ -199,7 +199,7 @@ extern "C" Q_EXPORT intptr_t QDECL vmMain(const intptr_t command, const intptr_t
 
 vmCvar_t r_ratiofix;
 
-static void CG_Set2DRatio(void)
+static void CG_Set2DRatio()
 {
 	if (r_ratiofix.integer)
 	{
@@ -679,7 +679,7 @@ static constexpr size_t cvarTableSize = std::size(cvarTable);
 CG_RegisterCvars
 =================
 */
-void CG_RegisterCvars(void)
+void CG_RegisterCvars()
 {
 	size_t i;
 	cvarTable_t* cv;
@@ -699,7 +699,7 @@ void CG_RegisterCvars(void)
 CG_UpdateCvars
 =================
 */
-void CG_UpdateCvars(void)
+void CG_UpdateCvars()
 {
 	size_t i;
 	cvarTable_t* cv;
@@ -899,7 +899,7 @@ void CG_LoadingString(const char* s)
 	cgi_UpdateScreen();
 }
 
-static inline void CG_AS_Register(void)
+static void CG_AS_Register()
 {
 	CG_LoadingString("ambient sound sets");
 
@@ -1345,7 +1345,7 @@ extern void cgi_R_WorldEffectCommand(const char* command);
 
 extern cvar_t* g_delayedShutdown;
 
-static void CG_RegisterEffects(void)
+static void CG_RegisterEffects()
 {
 	char* effectName;
 	int i, numFailed = 0;
@@ -2033,9 +2033,9 @@ Call before entering a new level, or after changing renderers
 This function may execute for a couple of minutes with a slow disk.
 =================
 */
-void CG_CreateMiscEnts(void);
+void CG_CreateMiscEnts();
 
-static void CG_RegisterGraphics(void)
+static void CG_RegisterGraphics()
 {
 	int i;
 	char items[MAX_ITEMS + 1];
@@ -2838,7 +2838,7 @@ const char* CG_ConfigString(const int index)
 
 //==================================================================
 
-void CG_LinkCentsToGents(void)
+void CG_LinkCentsToGents()
 {
 	for (int i = 0; i < MAX_GENTITIES; i++)
 	{
@@ -2884,7 +2884,7 @@ int gi_cg_forcepowerSelect;
 int gi_cg_inventorySelect;
 //===================
 
-static void CG_GameStateReceived(void)
+static void CG_GameStateReceived()
 {
 	// clear everything
 
@@ -3000,7 +3000,7 @@ Ghoul2 Insert Start
 */
 
 // initialise the cg_entities structure
-void CG_Init_CG(void)
+void CG_Init_CG()
 {
 	memset(&cg, 0, sizeof cg);
 }
@@ -3050,7 +3050,7 @@ void CG_CreateMiscEntFromGent(const gentity_t* ent, const vec3_t scale, const fl
 
 #define VectorScaleVector(a,b,c)		(((c)[0]=(a)[0]*(b)[0]),((c)[1]=(a)[1]*(b)[1]),((c)[2]=(a)[2]*(b)[2]))
 //call on standard model load to spawn the queued stuff
-void CG_CreateMiscEnts(void)
+void CG_CreateMiscEnts()
 {
 	for (int i = 0; i < NumMiscEnts; i++)
 	{
@@ -3072,7 +3072,7 @@ void CG_CreateMiscEnts(void)
 	}
 }
 
-void CG_DrawMiscEnts(void)
+void CG_DrawMiscEnts()
 {
 	cgMiscEntData_t* MiscEnt = MiscEnts;
 	refEntity_t refEnt;
@@ -3107,7 +3107,7 @@ void CG_DrawMiscEnts(void)
 	}
 }
 
-void CG_TransitionPermanent(void)
+void CG_TransitionPermanent()
 {
 	centity_t* cent = cg_entities;
 
@@ -3152,7 +3152,7 @@ void CG_PreInit()
 	CG_InitMarkPolys();
 }
 
-extern void R_LoadWeatherParms(void);
+extern void R_LoadWeatherParms();
 /*
 =================
 CG_Init
@@ -3253,7 +3253,7 @@ CG_Shutdown
 Called before every level change or subsystem restart
 =================
 */
-void CG_Shutdown(void)
+void CG_Shutdown()
 {
 	in_camera = false;
 	FX_Free();
@@ -4098,7 +4098,7 @@ CG_LoadHudMenu();
 
 =================
 */
-void CG_LoadHudMenu(void)
+void CG_LoadHudMenu()
 {
 	/*
 		cgDC.registerShaderNoMip = &trap_R_RegisterShaderNoMip;
@@ -4209,7 +4209,7 @@ static void SetInventoryTime()
 CG_DPPrevInventory_f
 ===============
 */
-void CG_DPPrevInventory_f(void)
+void CG_DPPrevInventory_f()
 {
 	if (!cg.snap)
 	{
@@ -4241,7 +4241,7 @@ void CG_DPPrevInventory_f(void)
 CG_DPNextInventory_f
 ===============
 */
-void CG_DPNextInventory_f(void)
+void CG_DPNextInventory_f()
 {
 	if (!cg.snap)
 	{
@@ -4761,7 +4761,7 @@ const char* inventoryDesc[15] =
 CG_DrawDataPadInventorySelect
 ===================
 */
-void CG_DrawDataPadInventorySelect(void)
+void CG_DrawDataPadInventorySelect()
 {
 	int i;
 	int iconCnt;
@@ -4929,7 +4929,7 @@ void CG_DrawDataPadInventorySelect(void)
 SetForcePowerTime
 ===============
 */
-void SetForcePowerTime(void)
+void SetForcePowerTime()
 {
 	if (cg.weaponSelectTime + WEAPON_SELECT_TIME > cg.time ||
 		// The Weapon HUD was currently active to just swap it out with Force HUD
@@ -5486,7 +5486,7 @@ qboolean ForcePowerDataPad_Valid(const int index)
 CG_DPNextForcePower_f
 ===============
 */
-void CG_DPNextForcePower_f(void)
+void CG_DPNextForcePower_f()
 {
 	if (!cg.snap)
 	{
@@ -5518,7 +5518,7 @@ void CG_DPNextForcePower_f(void)
 CG_DPPrevForcePower_f
 ===============
 */
-void CG_DPPrevForcePower_f(void)
+void CG_DPPrevForcePower_f()
 {
 	if (!cg.snap)
 	{
@@ -5674,7 +5674,7 @@ const char* forcepowerLvl3Desc[NUM_FORCE_POWERS] =
 CG_DrawDataPadForceSelect
 ===================
 */
-void CG_DrawDataPadForceSelect(void)
+void CG_DrawDataPadForceSelect()
 {
 	int i;
 	int sideLeftIconCnt, sideRightIconCnt;

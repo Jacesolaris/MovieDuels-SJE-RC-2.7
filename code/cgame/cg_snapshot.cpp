@@ -123,7 +123,7 @@ CG_TransitionSnapshot
 The transition point from snap to nextSnap has passed
 ===================
 */
-void CG_TransitionSnapshot(void)
+void CG_TransitionSnapshot()
 {
 	centity_t* cent;
 	int i;
@@ -247,7 +247,7 @@ times if the client system fails to return a
 valid snapshot.
 ========================
 */
-snapshot_t* CG_ReadNextSnapshot(void)
+snapshot_t* CG_ReadNextSnapshot()
 {
 	snapshot_t* dest;
 
@@ -297,9 +297,9 @@ A tournement restart will clear everything, but doesn't
 require a reload of all the media
 =================
 */
-extern void CG_LinkCentsToGents(void);
+extern void CG_LinkCentsToGents();
 
-static void CG_RestartLevel(void)
+static void CG_RestartLevel()
 {
 	const int snapshotNum = cg.processedSnapshotNum;
 
@@ -342,7 +342,7 @@ of an interpolating one)
 
 ============
 */
-void CG_ProcessSnapshots(void)
+void CG_ProcessSnapshots()
 {
 	snapshot_t* snap;
 	int n;

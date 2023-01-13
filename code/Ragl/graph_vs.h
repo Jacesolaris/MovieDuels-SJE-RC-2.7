@@ -1362,7 +1362,7 @@ namespace ragl
 			////////////////////////////////////////////////////////////////////////////////
 			void			visit(search_node& t)
 			{
-				assert(mNodesPtr != 0);
+				assert(mNodesPtr != nullptr);
 				mPrevIndex = t.mNode;
 
 				// Add It To The Visited List, And Mark The Location In The Node Index Array
@@ -1565,7 +1565,7 @@ namespace ragl
 
 				// Search Through The Non Closed Nodes Edges
 				//-------------------------------------------
-				for (sdata.mNextIndex = 0; sdata.mNextIndex < MAXNODES; sdata.mNextIndex++)
+				for (sdata.mNextIndex = 0; sdata.mNextIndex < MAXNODES; ++sdata.mNextIndex)
 				{
 					if (!sdata.next_index_closed())
 					{
@@ -1615,7 +1615,7 @@ namespace ragl
 
 				// Search Through The Non Closed Nodes Edges
 				//-------------------------------------------
-				for (sdata.mNextIndex = 0; sdata.mNextIndex < MAXNODES; sdata.mNextIndex++)
+				for (sdata.mNextIndex = 0; sdata.mNextIndex < MAXNODES; ++sdata.mNextIndex)
 				{
 					if (!sdata.next_index_closed())
 					{

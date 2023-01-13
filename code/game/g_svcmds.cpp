@@ -41,7 +41,7 @@ extern void WP_RemoveSaber(gentity_t* ent, int saber_num);
 extern saber_colors_t TranslateSaberColor(const char* name);
 extern qboolean WP_SaberBladeUseSecondBladeStyle(const saberInfo_t* saber, int blade_num);
 extern qboolean WP_UseFirstValidSaberStyle(const gentity_t* ent, int* saber_anim_level);
-extern void G_RemoveWeather(void);
+extern void G_RemoveWeather();
 extern void RemoveBarrier(gentity_t* ent);
 
 extern void G_SetWeapon(gentity_t* self, int wp);
@@ -82,7 +82,7 @@ extern cvar_t* g_NPCdeathscript;
 Svcmd_EntityList_f
 ===================
 */
-void Svcmd_EntityList_f(void)
+void Svcmd_EntityList_f()
 {
 	gentity_t* check = g_entities;
 	for (int e = 0; e < globals.num_entities; e++, check++)
@@ -154,7 +154,7 @@ extern void G_StopCinematicSkip();
 extern void G_StartCinematicSkip();
 extern void ExitEmplacedWeapon(gentity_t* ent);
 
-static void Svcmd_ExitView_f(void)
+static void Svcmd_ExitView_f()
 {
 	static int exitViewDebounce = 0;
 	if (exitViewDebounce > level.time)
@@ -194,7 +194,7 @@ static void Svcmd_ExitView_f(void)
 	}
 }
 
-gentity_t* G_GetSelfForPlayerCmd(void)
+gentity_t* G_GetSelfForPlayerCmd()
 {
 	if (g_entities[0].client->ps.viewEntity > 0
 		&& g_entities[0].client->ps.viewEntity < ENTITYNUM_WORLD
@@ -423,7 +423,7 @@ extern qboolean WP_SaberCanTurnOffSomeBlades(const saberInfo_t* saber);
 extern void NPC_SetAnim(gentity_t* ent, int set_anim_parts, int anim, int set_anim_flags,
                         int i_blend = SETANIM_BLEND_DEFAULT);
 
-void Svcmd_SaberAttackCycle_f(void)
+void Svcmd_SaberAttackCycle_f()
 {
 	if (!g_entities[0].client)
 	{
@@ -714,18 +714,18 @@ void G_GrabEntity(gentity_t* grabber, const char* target)
 	}
 }
 
-static void Svcmd_ICARUS_f(void)
+static void Svcmd_ICARUS_f()
 {
 	Quake3Game()->Svcmd();
 }
 
 template <int32_t power>
-static void Svcmd_ForceSetLevel_f(void)
+static void Svcmd_ForceSetLevel_f()
 {
 	Svcmd_ForceSetLevel_f(power);
 }
 
-static void Svcmd_SetForceAll_f(void)
+static void Svcmd_SetForceAll_f()
 {
 	for (int i = FP_HEAL; i < NUM_FORCE_POWERS; i++)
 	{
@@ -741,7 +741,7 @@ static void Svcmd_SetForceAll_f(void)
 	}
 }
 
-static void Svcmd_SetSaberAll_f(void)
+static void Svcmd_SetSaberAll_f()
 {
 	Svcmd_ForceSetLevel_f(FP_SABERTHROW);
 	Svcmd_ForceSetLevel_f(FP_SABER_DEFENSE);
@@ -752,7 +752,7 @@ static void Svcmd_SetSaberAll_f(void)
 	}
 }
 
-static void Svcmd_RunScript_f(void)
+static void Svcmd_RunScript_f()
 {
 	const char* cmd2 = gi.argv(1);
 
@@ -783,7 +783,7 @@ static void Svcmd_RunScript_f(void)
 	}
 }
 
-void Svcmd_Weather_f(void)
+void Svcmd_Weather_f()
 {
 	char arg1[MAX_STRING_CHARS];
 	int num;
@@ -864,7 +864,7 @@ void Svcmd_Weather_f(void)
 	}
 }
 
-static void Svcmd_PlayerTeam_f(void)
+static void Svcmd_PlayerTeam_f()
 {
 	const char* cmd2 = gi.argv(1);
 
@@ -898,7 +898,7 @@ static void Svcmd_PlayerTeam_f(void)
 	}
 }
 
-static void Svcmd_PlayerFaction_f(void)
+static void Svcmd_PlayerFaction_f()
 {
 	const char* cmd2 = gi.argv(1);
 
@@ -934,7 +934,7 @@ static void Svcmd_PlayerFaction_f(void)
 	}
 }
 
-static void Svcmd_Control_f(void)
+static void Svcmd_Control_f()
 {
 	const char* cmd2 = gi.argv(1);
 	if (!*cmd2 || !cmd2[0])
@@ -950,7 +950,7 @@ static void Svcmd_Control_f(void)
 	}
 }
 
-static void Svcmd_Grab_f(void)
+static void Svcmd_Grab_f()
 {
 	const char* cmd2 = gi.argv(1);
 	if (!*cmd2 || !cmd2[0])
@@ -966,7 +966,7 @@ static void Svcmd_Grab_f(void)
 	}
 }
 
-static void Svcmd_Knockdown_f(void)
+static void Svcmd_Knockdown_f()
 {
 	if (g_entities[0].s.groundEntityNum == ENTITYNUM_NONE)
 	{
@@ -981,7 +981,7 @@ extern void BG_LetGoofLedge(playerState_t* ps);
 extern qboolean JET_Flying(const gentity_t* self);
 extern void WP_RemoveSecondSaber(gentity_t* ent, int saber_num);
 
-static void Svcmd_PlayerModel_f(void)
+static void Svcmd_PlayerModel_f()
 {
 	if (g_entities[0].s.groundEntityNum == ENTITYNUM_NONE && PM_InLedgeMove(g_entities[0].client->ps.legsAnim))
 	{
@@ -1069,7 +1069,7 @@ static void Svcmd_PlayerModel_f(void)
 	}
 }
 
-static void Svcmd_PlayerTint_f(void)
+static void Svcmd_PlayerTint_f()
 {
 	if (gi.argc() == 4)
 	{
@@ -1088,7 +1088,7 @@ static void Svcmd_PlayerTint_f(void)
 	}
 }
 
-static void Svcmd_IKnowKungfu_f(void)
+static void Svcmd_IKnowKungfu_f()
 {
 	G_SetWeapon(&g_entities[0], WP_MELEE);
 	for (int i = FP_FIRST; i < NUM_FORCE_POWERS; i++)
@@ -1105,7 +1105,7 @@ static void Svcmd_IKnowKungfu_f(void)
 	}
 }
 
-static void Svcmd_Secrets_f(void)
+static void Svcmd_Secrets_f()
 {
 	const gentity_t* pl = &g_entities[0];
 	if (pl->client->sess.missionStats.totalSecrets < 1)
@@ -1125,7 +1125,7 @@ static void Svcmd_Secrets_f(void)
 	}
 }
 
-static void Svcmd_Scale_f(void)
+static void Svcmd_Scale_f()
 {
 	if (gi.argc() == 1)
 	{
@@ -1160,7 +1160,7 @@ static void Svcmd_Scale_f(void)
 
 extern cvar_t* g_spskill;
 
-static void Svcmd_Difficulty_f(void)
+static void Svcmd_Difficulty_f()
 {
 	if (gi.argc() == 1)
 	{
@@ -1207,7 +1207,7 @@ constexpr auto CMD_ALIVE = 0x00000002u;
 using svcmd_t = struct svcmd_s
 {
 	const char* name;
-	void (*func)(void);
+	void (*func)();
 	uint32_t flags;
 };
 
@@ -1291,7 +1291,7 @@ static constexpr size_t numsvcmds = std::size(svcmds);
 ConsoleCommand
 =================
 */
-qboolean ConsoleCommand(void)
+qboolean ConsoleCommand()
 {
 	const char* cmd = gi.argv(0);
 	const auto command = static_cast<const svcmd_t*>(

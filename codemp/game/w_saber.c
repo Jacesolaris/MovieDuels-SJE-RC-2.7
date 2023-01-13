@@ -1895,7 +1895,7 @@ static QINLINE int G_GetParryForBlock(int block)
 int PM_SaberBounceForAttack(int move);
 int PM_SaberDeflectionForQuad(int quad);
 
-extern stringID_table_t animTable[MAX_ANIMATIONS + 1];
+extern stringID_table_t anim_table[MAX_ANIMATIONS + 1];
 static QINLINE qboolean WP_GetSaberDeflectionAngle(gentity_t* attacker, gentity_t* defender, float saberHitFraction)
 {
 	const qboolean animBasedDeflection = qtrue;
@@ -1981,9 +1981,9 @@ static QINLINE qboolean WP_GetSaberDeflectionAngle(gentity_t* attacker, gentity_
 			if (g_saberDebugPrint.integer)
 			{
 				Com_Printf("attack %s vs. parry %s bounced to %s\n",
-					animTable[saberMoveData[attMove].animToUse].name,
-					animTable[saberMoveData[defender->client->ps.saber_move].animToUse].name,
-					animTable[saberMoveData[attacker->client->ps.saber_move].animToUse].name);
+					anim_table[saberMoveData[attMove].animToUse].name,
+					anim_table[saberMoveData[defender->client->ps.saber_move].animToUse].name,
+					anim_table[saberMoveData[attacker->client->ps.saber_move].animToUse].name);
 			}
 #endif
 			attacker->client->ps.saberBlocked = BLOCKED_ATK_BOUNCE;
@@ -2033,9 +2033,9 @@ static QINLINE qboolean WP_GetSaberDeflectionAngle(gentity_t* attacker, gentity_
 			if (g_saberDebugPrint.integer)
 			{
 				Com_Printf("attack %s vs. parry %s bounced to %s\n",
-					animTable[saberMoveData[attMove].animToUse].name,
-					animTable[saberMoveData[defender->client->ps.saber_move].animToUse].name,
-					animTable[saberMoveData[attacker->client->ps.saber_move].animToUse].name);
+					anim_table[saberMoveData[attMove].animToUse].name,
+					anim_table[saberMoveData[defender->client->ps.saber_move].animToUse].name,
+					anim_table[saberMoveData[attacker->client->ps.saber_move].animToUse].name);
 			}
 #endif
 			attacker->client->ps.saberBlocked = BLOCKED_ATK_BOUNCE;
@@ -2050,9 +2050,9 @@ static QINLINE qboolean WP_GetSaberDeflectionAngle(gentity_t* attacker, gentity_
 		if (g_saberDebugPrint.integer)
 		{
 			Com_Printf("attack %s vs. parry %s deflected to %s\n",
-				animTable[saberMoveData[attMove].animToUse].name,
-				animTable[saberMoveData[defender->client->ps.saber_move].animToUse].name,
-				animTable[saberMoveData[attacker->client->ps.saber_move].animToUse].name);
+				anim_table[saberMoveData[attMove].animToUse].name,
+				anim_table[saberMoveData[defender->client->ps.saber_move].animToUse].name,
+				anim_table[saberMoveData[attacker->client->ps.saber_move].animToUse].name);
 		}
 #endif
 		attacker->client->ps.saberBlocked = BLOCKED_BOUNCE_MOVE;
@@ -4066,7 +4066,7 @@ static QINLINE qboolean CheckSaberDamage(gentity_t* self, int rsaber_num, int rb
 			/*
 			if ( dmg )
 			{
-				Com_Printf("CL %i SABER DMG: %i, anim %s, torsoTimer %i\n", self->s.number, dmg, animTable[self->client->ps.torsoAnim].name, self->client->ps.torsoTimer );
+				Com_Printf("CL %i SABER DMG: %i, anim %s, torsoTimer %i\n", self->s.number, dmg, anim_table[self->client->ps.torsoAnim].name, self->client->ps.torsoTimer );
 			}
 			*/
 			if (self->client->ps.torsoAnim == BOTH_A1_SPECIAL

@@ -904,7 +904,7 @@ private:
 	static void VariableSaveStrings(varString_m& smap);
 	void VariableLoadFloats(varFloat_m& fmap);
 	void VariableLoadStrings(int type, varString_m& fmap);
-	void InitVariables(void);
+	void InitVariables();
 	int GetStringVariable(const char* name, const char** value);
 	int GetFloatVariable(const char* name, float* value);
 	int GetVectorVariable(const char* name, vec3_t value);
@@ -957,16 +957,16 @@ public:
 	void RunScript(const gentity_t* pEntity, const char* strScriptName);
 
 	// Log Icarus Entity's?
-	void Svcmd(void);
+	void Svcmd();
 
 	// Clear the list of entitys.
 	void ClearEntityList() { m_EntityList.clear(); }
 
 	// Save all Variables.
-	int VariableSave(void);
+	int VariableSave();
 
 	// Load all Variables.
-	int VariableLoad(void);
+	int VariableLoad();
 
 	// Overiddables.
 
@@ -977,7 +977,7 @@ public:
 	int LoadFile(const char* name, void** buf) OVERRIDE;
 	void CenterPrint(const char* format, ...) OVERRIDE;
 	void DebugPrint(e_DebugPrintLevel, const char*, ...) OVERRIDE;
-	unsigned int GetTime(void) OVERRIDE; //Gets the current time
+	unsigned int GetTime() OVERRIDE; //Gets the current time
 	//DWORD	GetTimeScale(void );
 	int PlayIcarusSound(int taskID, int entID, const char* name, const char* channel) OVERRIDE;
 	void Lerp2Pos(int taskID, int entID, vec3_t origin, vec3_t angles, float duration) OVERRIDE;
@@ -1003,8 +1003,8 @@ public:
 	void CameraFade(float sr, float sg, float sb, float sa, float dr, float dg, float db, float da,
 	                float duration) OVERRIDE;
 	void CameraPath(const char* name) OVERRIDE;
-	void CameraEnable(void) OVERRIDE;
-	void CameraDisable(void) OVERRIDE;
+	void CameraEnable() OVERRIDE;
+	void CameraDisable() OVERRIDE;
 	void CameraShake(float intensity, int duration) OVERRIDE;
 
 	int GetFloat(int entID, const char* name, float* value) OVERRIDE;
@@ -1029,7 +1029,7 @@ public:
 	int IsFrozen(int entID) OVERRIDE;
 	void Free(void* data) OVERRIDE;
 	void* Malloc(int size) OVERRIDE;
-	float MaxFloat(void) OVERRIDE;
+	float MaxFloat() OVERRIDE;
 
 	// Script precache functions.
 	void PrecacheRoff(const char* name) OVERRIDE;

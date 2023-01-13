@@ -53,8 +53,8 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 void S_AL_MuteAllSounds(qboolean bMute);
 
 //from SND_AMBIENT
-extern void AS_Init(void);
-extern void AS_Free(void);
+extern void AS_Init();
+extern void AS_Free();
 
 constexpr auto PAINTBUFFER_SIZE = 1024;
 
@@ -225,7 +225,7 @@ void SND_setup();
 int SND_FreeOldestSound(sfx_t* pButNotThisOne = nullptr);
 void SND_TouchSFX(sfx_t* sfx);
 
-void S_DisplayFreeMemory(void);
+void S_DisplayFreeMemory();
 void S_memoryLoad(sfx_t* sfx);
 //
 //////////////////////////////////

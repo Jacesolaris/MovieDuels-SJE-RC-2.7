@@ -288,15 +288,15 @@ extern cvar_t* cl_consoleUseScanCode;
 // cl_main
 //
 
-void CL_Init(void);
+void CL_Init();
 
 void CL_AddReliableCommand(const char* cmd);
 
-void CL_Disconnect_f(void);
-void CL_Vid_Restart_f(void);
-void CL_Snd_Restart_f(void);
+void CL_Disconnect_f();
+void CL_Vid_Restart_f();
+void CL_Snd_Restart_f();
 
-qboolean CL_CheckPaused(void);
+qboolean CL_CheckPaused();
 
 //
 // cl_input
@@ -314,12 +314,12 @@ extern kbutton_t in_mlook, in_klook;
 extern kbutton_t in_strafe;
 extern kbutton_t in_speed;
 
-void CL_InitInput(void);
-void CL_SendCmd(void);
-void CL_ClearState(void);
+void CL_InitInput();
+void CL_SendCmd();
+void CL_ClearState();
 
-void CL_WritePacket(void);
-void IN_CenterView(void);
+void CL_WritePacket();
+void IN_CenterView();
 
 float CL_KeyState(kbutton_t* key);
 const char* Key_KeynumToString(int keynum/*, qboolean bTranslate*/);
@@ -330,7 +330,7 @@ const char* Key_KeynumToString(int keynum/*, qboolean bTranslate*/);
 //
 extern int cl_connectedToCheatServer;
 
-void CL_SystemInfoChanged(void);
+void CL_SystemInfoChanged();
 void CL_ParseServerMessage(msg_t* msg);
 
 //====================================================================
@@ -339,25 +339,25 @@ void CL_ParseServerMessage(msg_t* msg);
 // console
 //
 
-void Con_CheckResize(void);
-void Con_Init(void);
-void Con_Clear_f(void);
-void Con_ToggleConsole_f(void);
-void Con_DrawNotify(void);
-void Con_ClearNotify(void);
-void Con_RunConsole(void);
-void Con_DrawConsole(void);
-void Con_PageUp(void);
-void Con_PageDown(void);
-void Con_Top(void);
-void Con_Bottom(void);
-void Con_Close(void);
+void Con_CheckResize();
+void Con_Init();
+void Con_Clear_f();
+void Con_ToggleConsole_f();
+void Con_DrawNotify();
+void Con_ClearNotify();
+void Con_RunConsole();
+void Con_DrawConsole();
+void Con_PageUp();
+void Con_PageDown();
+void Con_Top();
+void Con_Bottom();
+void Con_Close();
 
 //
 // cl_scrn.c
 //
-void SCR_Init(void);
-void SCR_UpdateScreen(void);
+void SCR_Init();
+void SCR_UpdateScreen();
 
 void SCR_DebugGraph(float value, int color);
 
@@ -407,20 +407,20 @@ void CIN_CloseAllVideos();
 // cl_cgame.c
 //
 qboolean CL_InitCGameVM(void* gameLibrary);
-void CL_InitCGame(void);
-void CL_ShutdownCGame(void);
-qboolean CL_GameCommand(void);
+void CL_InitCGame();
+void CL_ShutdownCGame();
+qboolean CL_GameCommand();
 void CL_CGameRendering(stereoFrame_t stereo);
-void CL_SetCGameTime(void);
-void CL_FirstSnapshot(void);
+void CL_SetCGameTime();
+void CL_FirstSnapshot();
 
 //
 // cl_ui.c
 //
-void CL_InitUI(void);
-void CL_ShutdownUI(void);
-void CL_GenericMenu_f(void);
-void CL_DataPad_f(void);
-void CL_EndScreenDissolve_f(void);
-int Key_GetCatcher(void);
+void CL_InitUI();
+void CL_ShutdownUI();
+void CL_GenericMenu_f();
+void CL_DataPad_f();
+void CL_EndScreenDissolve_f();
+int Key_GetCatcher();
 void Key_SetCatcher(int catcher);

@@ -87,7 +87,7 @@ CG_MissionFailed
 */
 int statusTextIndex = -1;
 
-void CG_MissionFailed(void)
+void CG_MissionFailed()
 {
 	if (!cg.missionFailedScreen)
 	{
@@ -363,7 +363,7 @@ Draw the normal in-game scoreboard
 return value is bool to NOT draw centerstring
 =================
 */
-qboolean CG_DrawScoreboard(void)
+qboolean CG_DrawScoreboard()
 {
 	// don't draw anything if the menu is up
 	if (cg_paused.integer)

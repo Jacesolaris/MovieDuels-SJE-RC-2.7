@@ -49,7 +49,7 @@ vec4_t console_color = {0.509f, 0.609f, 0.847f, 1.0f};
 Con_ToggleConsole_f
 ================
 */
-void Con_ToggleConsole_f(void)
+void Con_ToggleConsole_f()
 {
 	// closing a full screen console restarts the demo loop
 	if (cls.state == CA_DISCONNECTED && Key_GetCatcher() == KEYCATCH_CONSOLE)
@@ -71,7 +71,7 @@ void Con_ToggleConsole_f(void)
 Con_ToggleMenu_f
 ===================
 */
-void Con_ToggleMenu_f(void)
+void Con_ToggleMenu_f()
 {
 	CL_KeyEvent(A_ESCAPE, qtrue, Sys_Milliseconds());
 	CL_KeyEvent(A_ESCAPE, qfalse, Sys_Milliseconds());
@@ -82,7 +82,7 @@ void Con_ToggleMenu_f(void)
 Con_Clear_f
 ================
 */
-void Con_Clear_f(void)
+void Con_Clear_f()
 {
 	for (int i = 0; i < CON_TEXTSIZE; i++)
 	{
@@ -99,7 +99,7 @@ Con_Dump_f
 Save the console contents out to a file
 ================
 */
-void Con_Dump_f(void)
+void Con_Dump_f()
 {
 	int l, x;
 	short* line;
@@ -181,7 +181,7 @@ void Con_Dump_f(void)
 Con_ClearNotify
 ================
 */
-void Con_ClearNotify(void)
+void Con_ClearNotify()
 {
 	for (int i = 0; i < NUM_CON_TIMES; i++)
 	{
@@ -196,7 +196,7 @@ Con_CheckResize
 If the line width has changed, reformat the buffer.
 ================
 */
-void Con_CheckResize(void)
+void Con_CheckResize()
 {
 	int i;
 
@@ -277,7 +277,7 @@ void Cmd_CompleteTxtName(char* args, const int argNum)
 Con_Init
 ================
 */
-void Con_Init(void)
+void Con_Init()
 {
 	con_notifytime = Cvar_Get("con_notifytime", "3", 0);
 	con_conspeed = Cvar_Get("scr_conspeed", "3", 0);
@@ -307,7 +307,7 @@ void Con_Init(void)
 Con_Linefeed
 ===============
 */
-void Con_Linefeed(void)
+void Con_Linefeed()
 {
 	// mark time for transparent overlay
 	if (con.current >= 0)
@@ -428,7 +428,7 @@ Con_DrawInput
 Draw the editline after a ] prompt
 ================
 */
-void Con_DrawInput(void)
+void Con_DrawInput()
 {
 	if (cls.state != CA_DISCONNECTED && !(Key_GetCatcher() & KEYCATCH_CONSOLE))
 	{
@@ -452,7 +452,7 @@ Con_DrawNotify
 Draws the last few lines of output transparently over the game top
 ================
 */
-void Con_DrawNotify(void)
+void Con_DrawNotify()
 {
 	int x;
 
@@ -685,7 +685,7 @@ void Con_DrawSolidConsole(const float frac)
 Con_DrawConsole
 ==================
 */
-void Con_DrawConsole(void)
+void Con_DrawConsole()
 {
 	// check for console width changes from a vid mode change
 	Con_CheckResize();
@@ -723,7 +723,7 @@ Con_RunConsole
 Scroll it up or down
 ==================
 */
-void Con_RunConsole(void)
+void Con_RunConsole()
 {
 	// decide on the destination height of the console
 	if (Key_GetCatcher() & KEYCATCH_CONSOLE)
@@ -746,7 +746,7 @@ void Con_RunConsole(void)
 	}
 }
 
-void Con_PageUp(void)
+void Con_PageUp()
 {
 	con.display -= 2;
 	if (con.current - con.display >= con.totallines)
@@ -755,7 +755,7 @@ void Con_PageUp(void)
 	}
 }
 
-void Con_PageDown(void)
+void Con_PageDown()
 {
 	con.display += 2;
 	if (con.display > con.current)
@@ -764,7 +764,7 @@ void Con_PageDown(void)
 	}
 }
 
-void Con_Top(void)
+void Con_Top()
 {
 	con.display = con.totallines;
 	if (con.current - con.display >= con.totallines)
@@ -773,12 +773,12 @@ void Con_Top(void)
 	}
 }
 
-void Con_Bottom(void)
+void Con_Bottom()
 {
 	con.display = con.current;
 }
 
-void Con_Close(void)
+void Con_Close()
 {
 	Field_Clear(&g_consoleField);
 	Con_ClearNotify();

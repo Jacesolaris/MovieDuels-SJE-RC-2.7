@@ -49,7 +49,7 @@ Ghoul2 Insert End
 //FIXME: Temp
 extern void S_UpdateAmbientSet(const char* name, vec3_t origin);
 extern int S_AddLocalSet(const char* name, vec3_t listener_origin, vec3_t origin, int entID, int time);
-extern void AS_ParseSets(void);
+extern void AS_ParseSets();
 extern sfxHandle_t AS_GetBModelSound(const char* name, int stage);
 extern void AS_AddPrecacheEntry(const char* name);
 extern menuDef_t* Menus_FindByName(const char* p);
@@ -131,7 +131,7 @@ qboolean CL_GetUserCmd(const int cmdNumber, usercmd_t* ucmd)
 	return qtrue;
 }
 
-int CL_GetCurrentCmdNumber(void)
+int CL_GetCurrentCmdNumber()
 {
 	return cl.cmdNumber;
 }
@@ -288,7 +288,7 @@ void CL_AddCgameCommand(const char* cmdName)
 CL_ConfigstringModified
 =====================
 */
-void CL_ConfigstringModified(void)
+void CL_ConfigstringModified()
 {
 	const char* dup;
 
@@ -435,7 +435,7 @@ CL_ShutdonwCGame
 
 ====================
 */
-void CL_ShutdownCGame(void)
+void CL_ShutdownCGame()
 {
 	cls.cgameStarted = qfalse;
 
@@ -1425,7 +1425,7 @@ default:
 	*/
 	extern qboolean Sys_LowPhysicalMemory();
 
-	void CL_InitCGame(void)
+	void CL_InitCGame()
 	{
 		//int		t1, t2;
 
@@ -1476,7 +1476,7 @@ default:
 	See if the current console command is claimed by the cgame
 	====================
 	*/
-	qboolean CL_GameCommand(void)
+	qboolean CL_GameCommand()
 	{
 		if (cls.state != CA_ACTIVE)
 		{
@@ -1533,7 +1533,7 @@ default:
 
 	constexpr auto RESET_TIME = 300;
 
-	void CL_AdjustTimeDelta(void)
+	void CL_AdjustTimeDelta()
 	{
 		cl.newSnapshots = qfalse;
 
@@ -1592,7 +1592,7 @@ default:
 	CL_FirstSnapshot
 	==================
 	*/
-	void CL_FirstSnapshot(void)
+	void CL_FirstSnapshot()
 	{
 		re.RegisterMedia_LevelLoadEnd();
 
@@ -1618,7 +1618,7 @@ default:
 	CL_SetCGameTime
 	==================
 	*/
-	void CL_SetCGameTime(void)
+	void CL_SetCGameTime()
 	{
 		// getting a valid frame message ends the connection process
 		if (cls.state != CA_ACTIVE)

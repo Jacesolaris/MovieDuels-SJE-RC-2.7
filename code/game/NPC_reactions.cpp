@@ -1691,7 +1691,7 @@ void NPC_Use(gentity_t* self, gentity_t* other, gentity_t* activator)
 }
 
 //extern bool	in_camera;
-void NPC_CheckPlayerAim(void)
+void NPC_CheckPlayerAim()
 {
 	//gentity_t *player = &g_entities[0];
 
@@ -1706,7 +1706,7 @@ void NPC_CheckPlayerAim(void)
 	//}
 }
 
-void NPC_CheckAllClear(void)
+void NPC_CheckAllClear()
 {
 	//FIXME: need to make this happen only once after losing enemies, not over and over again
 	/*

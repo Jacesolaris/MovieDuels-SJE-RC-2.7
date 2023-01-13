@@ -135,7 +135,7 @@ public:
 	}
 }; // animFileSet_t
 
-extern stringID_table_t animTable[MAX_ANIMATIONS + 1];
+extern stringID_table_t anim_table[MAX_ANIMATIONS + 1];
 
 //Interest points
 
@@ -543,9 +543,9 @@ void SnapVectorTowards(vec3_t v, vec3_t to);
 //
 void WP_LoadWeaponParms();
 
-void IT_LoadItemParms(void);
+void IT_LoadItemParms();
 
-void R_LoadWeatherParms(void);
+void R_LoadWeatherParms();
 
 //
 // g_client.c
@@ -565,7 +565,7 @@ void G_RemoveHolsterModels(gentity_t* ent);
 //
 // g_svcmds.c
 //
-qboolean ConsoleCommand(void);
+qboolean ConsoleCommand();
 
 //
 // g_weapon.c
@@ -597,20 +597,20 @@ void SetInUse(const gentity_t* ent);
 void ClearInUse(const gentity_t* ent);
 qboolean PInUse(unsigned int ent_num);
 qboolean PInUse2(gentity_t* ent);
-void WriteInUseBits(void);
-void ReadInUseBits(void);
+void WriteInUseBits();
+void ReadInUseBits();
 
 //
 // g_nav.cpp
 //
-void Svcmd_Nav_f(void);
+void Svcmd_Nav_f();
 
 //
 // g_squad.cpp
 //
-void Svcmd_Comm_f(void);
-void Svcmd_Hail_f(void);
-void Svcmd_Form_f(void);
+void Svcmd_Comm_f();
+void Svcmd_Hail_f();
+void Svcmd_Form_f();
 
 //
 // g_utils.cpp
@@ -666,8 +666,8 @@ void Svcmd_GameMem_f();
 void G_ReadSessionData(gclient_t* client);
 void G_InitSessionData(gclient_t* client, char* userinfo);
 
-void G_InitWorldSession(void);
-void G_WriteSessionData(void);
+void G_InitWorldSession();
+void G_WriteSessionData();
 
 //
 // jke_aiworkshop.cpp
@@ -716,7 +716,7 @@ using reference_tag_t = struct reference_tag_s
 	int radius; //For nav goals
 };
 
-extern void TAG_Init(void);
+extern void TAG_Init();
 extern reference_tag_t* TAG_Add(const char* name, const char* owner, vec3_t origin, vec3_t angles, int radius,
                                 int flags);
 
@@ -740,10 +740,10 @@ qboolean GameAllowedToSaveHere();
 extern qboolean G_ActivateBehavior(gentity_t* self, int bset);
 
 //Timing information
-void TIMER_Clear(void);
+void TIMER_Clear();
 void TIMER_Clear(int idx);
-void TIMER_Save(void);
-void TIMER_Load(void);
+void TIMER_Save();
+void TIMER_Load();
 void TIMER_Set(const gentity_t* ent, const char* identifier, int duration);
 int TIMER_Get(const gentity_t* ent, const char* identifier);
 qboolean TIMER_Done(const gentity_t* ent, const char* identifier);

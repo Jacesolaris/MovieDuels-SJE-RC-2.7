@@ -54,7 +54,7 @@ qboolean fxInitialized = qfalse;
 //
 // Frees all FX
 //-------------------------
-bool FX_Free(void)
+bool FX_Free()
 {
 	for (auto& i : effectList)
 	{
@@ -77,7 +77,7 @@ bool FX_Free(void)
 //
 // Frees all active FX but leaves the templates
 //-------------------------
-void FX_Stop(void)
+void FX_Stop()
 {
 	for (auto& i : effectList)
 	{
@@ -99,7 +99,7 @@ void FX_Stop(void)
 //
 // Preps system for use
 //-------------------------
-int FX_Init(void)
+int FX_Init()
 {
 	if (fxInitialized == qfalse)
 	{

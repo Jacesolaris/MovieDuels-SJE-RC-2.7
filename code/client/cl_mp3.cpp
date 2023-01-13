@@ -239,7 +239,7 @@ constexpr auto FUZZY_AMOUNT = (5 * 1024); // so it has to be significantly over,
 
 cvar_t* cv_MP3overhead = nullptr;
 
-void MP3_InitCvars(void)
+void MP3_InitCvars()
 {
 	cv_MP3overhead = Cvar_Get("s_mp3overhead", va("%d", sizeof(MP3STREAM) + FUZZY_AMOUNT), CVAR_ARCHIVE);
 }

@@ -5172,7 +5172,7 @@ static void NPC_Spawn_f()
 NPC_Kill_f
 */
 
-void NPC_Kill_f(void)
+void NPC_Kill_f()
 {
 	int n;
 	team_t killTeam = TEAM_FREE;

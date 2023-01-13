@@ -112,7 +112,7 @@ public:
 	const char* ParseLine(const char* psLine);
 	int GetFlagMask(const char* psFlagName);
 	const char* ExtractLanguageFromPath(const char* psFileName) const;
-	SE_BOOL EndMarkerFoundDuringParse(void) const
+	SE_BOOL EndMarkerFoundDuringParse() const
 	{
 		return m_bEndMarkerFound_ParseOnly;
 	}
@@ -686,12 +686,12 @@ const char* CStringEdPackage::ParseLine(const char* psLine)
 				{
 					// if loading a foreign language...
 					//
-					SE_BOOL bSentenceIsEnglish = (!Q_stricmp(sThisLanguage, "english")) ? SE_TRUE : SE_FALSE;
+					SE_BOOL b_sentence_is_english = (!Q_stricmp(sThisLanguage, "english")) ? SE_TRUE : SE_FALSE;
 					// see whether this is the english master or not
 
 					// this check can be omitted, I'm just being extra careful here...
 					//
-					if (!bSentenceIsEnglish)
+					if (!b_sentence_is_english)
 					{
 						// basically this is just checking that an .STE file override is the same language as the .STR...
 						//
@@ -704,7 +704,7 @@ const char* CStringEdPackage::ParseLine(const char* psLine)
 
 					if (!psErrorMessage)
 					{
-						SetString(psReference, psSentence, bSentenceIsEnglish);
+						SetString(psReference, psSentence, b_sentence_is_english);
 					}
 				}
 
@@ -726,7 +726,7 @@ const char* CStringEdPackage::ParseLine(const char* psLine)
 
 // returns reference of string being parsed, else "" for none.
 //
-const char* CStringEdPackage::GetCurrentReference_ParseOnly(void) const
+const char* CStringEdPackage::GetCurrentReference_ParseOnly() const
 {
 	return m_strCurrentEntryRef_ParseOnly.c_str();
 }
@@ -1028,7 +1028,7 @@ int SE_GetFlags(const char* psPackageAndStringReference)
 	return 0;
 }
 
-int SE_GetNumFlags(void)
+int SE_GetNumFlags()
 {
 	return TheStringPackage.m_vstrFlagNames.size();
 }
@@ -1062,7 +1062,7 @@ int SE_GetFlagMask(const char* psFlagName)
 //
 std::vector<std::string> gvLanguagesAvailable;
 
-int SE_GetNumLanguages(void)
+int SE_GetNumLanguages()
 {
 	if (gvLanguagesAvailable.empty())
 	{
@@ -1135,7 +1135,7 @@ const char* SE_GetLanguageDir(const int iLangIndex)
 	return "";
 }
 
-void SE_NewLanguage(void)
+void SE_NewLanguage()
 {
 	TheStringPackage.Clear(SE_TRUE);
 }
@@ -1145,7 +1145,7 @@ void SE_NewLanguage(void)
 //
 // but here they are for completeness's sake I guess...
 //
-void SE_Init(void)
+void SE_Init()
 {
 	TheStringPackage.Clear(SE_FALSE);
 
@@ -1179,7 +1179,7 @@ void SE_Init(void)
 	}
 }
 
-void SE_ShutDown(void)
+void SE_ShutDown()
 {
 	TheStringPackage.Clear(SE_FALSE);
 }

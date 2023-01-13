@@ -725,7 +725,7 @@ NORETURN void QDECL CG_Error(const char* msg, ...);
 
 void CG_StartMusic(qboolean bForceStart);
 
-void CG_UpdateCvars(void);
+void CG_UpdateCvars();
 
 int CG_CrosshairPlayer();
 void CG_LoadMenus(const char* menuFile);
@@ -800,14 +800,14 @@ void CG_CenterPrint(const char* str, int y);
 void CG_DrawActive(stereoFrame_t stereoView);
 void CG_ScrollText(const char* str, int iPixelWidth);
 void CG_CaptionText(const char* str, int sound);
-void CG_CaptionTextStop(void);
+void CG_CaptionTextStop();
 
 //
 // cg_text.c
 //
 void CG_DrawScrollText();
-void CG_DrawCaptionText(void);
-void CG_DrawCenterString(void);
+void CG_DrawCaptionText();
+void CG_DrawCenterString();
 
 //
 // cg_player.c
@@ -868,10 +868,10 @@ void CG_PrevWeapon_f();
 void CG_Weapon_f();
 void CG_DPNextWeapon_f();
 void CG_DPPrevWeapon_f();
-void CG_DPNextInventory_f(void);
-void CG_DPPrevInventory_f(void);
-void CG_DPNextForcePower_f(void);
-void CG_DPPrevForcePower_f(void);
+void CG_DPNextInventory_f();
+void CG_DPPrevInventory_f();
+void CG_DPNextForcePower_f();
+void CG_DPPrevForcePower_f();
 
 void CG_RegisterWeapon(int weapon_num);
 void CG_RegisterItemVisuals(int item_num);
@@ -902,9 +902,9 @@ void CG_ImpactMark(qhandle_t mark_shader,
 //
 // cg_localents.c
 //
-void CG_InitLocalEntities(void);
-localEntity_t* CG_AllocLocalEntity(void);
-void CG_AddLocalEntities(void);
+void CG_InitLocalEntities();
+localEntity_t* CG_AllocLocalEntity();
+void CG_AddLocalEntities();
 
 //
 // cg_effects.c
@@ -931,7 +931,7 @@ void CG_GrappleLine(vec3_t start, vec3_t end, int time, unsigned int color, int 
 //
 // cg_snapshot.c
 //
-void CG_ProcessSnapshots(void);
+void CG_ProcessSnapshots();
 
 //
 // cg_info.c
@@ -941,8 +941,8 @@ void CG_DrawInformation();
 //
 // cg_scoreboard.c
 //
-qboolean CG_DrawScoreboard(void);
-extern void CG_MissionCompletion(void);
+qboolean CG_DrawScoreboard();
+extern void CG_MissionCompletion();
 
 //
 // cg_consolecmds.c
@@ -965,8 +965,8 @@ void CG_TransitionPlayerState(playerState_t* ps, playerState_t* ops);
 // cg_credits.cpp
 //
 void CG_Credits_Init(const char* psStripReference, vec4_t* pv4Color);
-qboolean CG_Credits_Running(void);
-qboolean CG_Credits_Draw(void);
+qboolean CG_Credits_Running();
+qboolean CG_Credits_Draw();
 
 //===============================================
 
@@ -983,7 +983,7 @@ NORETURN void cgi_Error(const char* fmt);
 
 // milliseconds should only be used for performance tuning, never
 // for anything game related.  Get time from the CG_DrawActiveFrame parameter
-int cgi_Milliseconds(void);
+int cgi_Milliseconds();
 
 // console variable interaction
 void cgi_Cvar_Register(vmCvar_t* vmCvar, const char* varName, const char* defaultValue, int flags);
@@ -991,7 +991,7 @@ void cgi_Cvar_Update(vmCvar_t* vmCvar);
 void cgi_Cvar_Set(const char* var_name, const char* value);
 
 // ServerCommand and ConsoleCommand parameter access
-int cgi_Argc(void);
+int cgi_Argc();
 void cgi_Argv(int n, char* buffer, int bufferLength);
 void cgi_Args(char* buffer, int bufferLength);
 
@@ -1016,7 +1016,7 @@ void cgi_AddCommand(const char* cmdName);
 void cgi_SendClientCommand(const char* s);
 
 // force a screen update, only used during gamestate load
-void cgi_UpdateScreen(void);
+void cgi_UpdateScreen();
 
 //RMG
 void cgi_RMG_Init(int terrainID, const char* terrainInfo);
@@ -1047,11 +1047,11 @@ int cgi_CM_MarkFragments(int numPoints, const vec3_t* points,
 // normal sounds will have their volume dynamically changed as their entity
 // moves and the listener moves
 void cgi_S_StartSound(const vec3_t origin, int entity_num, int entchannel, sfxHandle_t sfx);
-void cgi_S_StopSounds(void);
+void cgi_S_StopSounds();
 
 // a local sound is always played full volume
 void cgi_S_StartLocalSound(sfxHandle_t sfx, int channelNum);
-void cgi_S_ClearLoopingSounds(void);
+void cgi_S_ClearLoopingSounds();
 void cgi_S_AddLoopingSound(int entity_num, const vec3_t origin, const vec3_t velocity, sfxHandle_t sfx,
                            soundChannel_t chan = CHAN_AUTO);
 void cgi_S_UpdateEntityPosition(int entity_num, const vec3_t origin);
@@ -1077,8 +1077,8 @@ int cgi_R_Font_StrLenChars(const char* text);
 int cgi_R_Font_HeightPixels(int iFontIndex, float scale = 1.0f);
 void cgi_R_Font_DrawString(int ox, int oy, const char* text, const float* rgba, int setIndex, int iMaxPixelWidth,
                            float scale = 1.0f);
-qboolean cgi_Language_IsAsian(void);
-qboolean cgi_Language_UsesSpaces(void);
+qboolean cgi_Language_IsAsian();
+qboolean cgi_Language_UsesSpaces();
 unsigned cgi_AnyLanguage_ReadCharFromString(const char* psText, int* iAdvanceCount,
                                             qboolean* pbIsTrailingPunctuation = nullptr);
 
@@ -1086,7 +1086,7 @@ void cgi_R_SetRefractProp(float alpha, float stretch, qboolean prepost, qboolean
 
 // a scene is built up by calls to R_ClearScene and the various R_Add functions.
 // Nothing is drawn until R_RenderScene is called.
-void cgi_R_ClearScene(void);
+void cgi_R_ClearScene();
 void cgi_R_AddRefEntityToScene(const refEntity_t* re);
 void cgi_R_GetLighting(const vec3_t origin, vec3_t ambientLight, vec3_t directedLight, vec3_t ligthDir);
 
@@ -1112,7 +1112,7 @@ void cgi_R_DrawRotatePic(float x, float y, float w, float h,
 void cgi_R_DrawRotatePic2(float x, float y, float w, float h,
                           float s1, float t1, float s2, float t2, float a, qhandle_t h_shader, float aspectCorrection);
 void cgi_R_SetRangeFog(float range);
-void cgi_R_LAGoggles(void);
+void cgi_R_LAGoggles();
 void cgi_R_Scissor(float x, float y, float w, float h);
 
 // The glconfig_t will not change during the life of a cgame.
@@ -1145,7 +1145,7 @@ qboolean cgi_GetServerCommand(int serverCommandNumber);
 // this will always be at least one higher than the number in the current
 // snapshot, and it may be quite a few higher if it is a fast computer on
 // a lagged connection
-int cgi_GetCurrentCmdNumber(void);
+int cgi_GetCurrentCmdNumber();
 qboolean cgi_GetUserCmd(int cmdNumber, usercmd_t* ucmd);
 
 // used for the weapon select and zoom
@@ -1153,12 +1153,12 @@ void cgi_SetUserCmdValue(int stateValue, float sensitivityScale, float mPitchOve
 void cgi_SetUserCmdAngles(float pitchOverride, float yawOverride, float rollOverride);
 
 void cgi_S_UpdateAmbientSet(const char* name, vec3_t origin);
-void cgi_AS_ParseSets(void);
+void cgi_AS_ParseSets();
 void cgi_AS_AddPrecacheEntry(const char* name);
 int cgi_S_AddLocalSet(const char* name, vec3_t listener_origin, vec3_t origin, int entID, int time);
 sfxHandle_t cgi_AS_GetBModelSound(const char* name, int stage);
 
-void CG_DrawMiscEnts(void);
+void CG_DrawMiscEnts();
 
 //-----------------------------
 // Effects related prototypes
@@ -1263,7 +1263,7 @@ Ghoul2 Insert Start
 */
 // CG specific API access
 void trap_G2_SetGhoul2ModelIndexes(CGhoul2Info_v& ghoul2, qhandle_t* model_list, qhandle_t* skin_list);
-void CG_Init_CG(void);
+void CG_Init_CG();
 
 void CG_SetGhoul2Info(refEntity_t* ent, const centity_t* cent);
 
@@ -1285,7 +1285,7 @@ void cgi_Z_Free(void* ptr);
 
 int cgi_SP_GetStringTextString(const char* text, char* buf, int bufferlength);
 
-void cgi_UI_Menu_Reset(void);
+void cgi_UI_Menu_Reset();
 void cgi_UI_Menu_New(char* buf);
 void cgi_UI_Menu_OpenByName(char* buf);
 void cgi_UI_SetActive_Menu(char* name);
@@ -1294,9 +1294,9 @@ void cgi_UI_Parse_String(char* buf);
 void cgi_UI_Parse_Float(float* value);
 int cgi_UI_StartParseSession(char* menuFile, char** buf);
 void cgi_UI_ParseExt(char** token);
-void cgi_UI_MenuPaintAll(void);
-void cgi_UI_MenuCloseAll(void);
-void cgi_UI_String_Init(void);
+void cgi_UI_MenuPaintAll();
+void cgi_UI_MenuCloseAll();
+void cgi_UI_String_Init();
 int cgi_UI_GetMenuItemInfo(const char* menuFile, const char* itemName, int* x, int* y, int* w, int* h, vec4_t color,
                            qhandle_t* background);
 int cgi_UI_GetMenuInfo(char* menuFile, int* x, int* y, int* w, int* h);

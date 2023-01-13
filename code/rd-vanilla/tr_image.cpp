@@ -236,7 +236,7 @@ float R_SumOfUsedImages(const qboolean bUseFormat)
 R_ImageList_f
 ===============
 */
-void R_ImageList_f(void) {
+void R_ImageList_f() {
 	int		i = 0;
 	image_t* image;
 	int		texels = 0;
@@ -723,13 +723,13 @@ AllocatedImages_t::iterator itAllocatedImages;
 
 int giTextureBindNum = 1024;	// will be set to this anyway at runtime, but wtf?
 
-int R_Images_StartIteration(void)
+int R_Images_StartIteration()
 {
 	itAllocatedImages = AllocatedImages.begin();
 	return AllocatedImages.size();
 }
 
-image_t* R_Images_GetNextIteration(void)
+image_t* R_Images_GetNextIteration()
 {
 	if (itAllocatedImages == AllocatedImages.end())
 		return nullptr;
@@ -751,7 +751,7 @@ static void R_Images_DeleteImageContents(image_t* pImage)
 	}
 }
 
-static void GL_ResetBinds(void)
+static void GL_ResetBinds()
 {
 	memset(glState.currenttextures, 0, sizeof(glState.currenttextures));
 	if (qglActiveTextureARB) {
@@ -767,7 +767,7 @@ static void GL_ResetBinds(void)
 
 // special function used in conjunction with "devmapbsp"...
 //
-void R_Images_DeleteLightMaps(void)
+void R_Images_DeleteLightMaps()
 {
 	for (AllocatedImages_t::iterator itImage = AllocatedImages.begin(); itImage != AllocatedImages.end(); /* empty */)
 	{
@@ -808,7 +808,7 @@ void R_Images_DeleteImage(image_t* pImage)
 
 // called only at app startup, vid_restart, app-exit
 //
-void R_Images_Clear(void)
+void R_Images_Clear()
 {
 	image_t* pImage;
 	//	int iNumImages =
@@ -822,7 +822,7 @@ void R_Images_Clear(void)
 	giTextureBindNum = 1024;
 }
 
-void RE_RegisterImages_Info_f(void)
+void RE_RegisterImages_Info_f()
 {
 	image_t* pImage;
 	int iImage = 0;
@@ -844,7 +844,7 @@ void RE_RegisterImages_Info_f(void)
 
 // currently, this just goes through all the images and dumps any not referenced on this level...
 //
-qboolean RE_RegisterImages_LevelLoadEnd(void)
+qboolean RE_RegisterImages_LevelLoadEnd()
 {
 	//ri.Printf( PRINT_DEVELOPER, "RE_RegisterImages_LevelLoadEnd():\n");
 
@@ -1056,7 +1056,7 @@ R_CreateDlightImage
 ================
 */
 #define	DLIGHT_SIZE	64
-static void R_CreateDlightImage(void)
+static void R_CreateDlightImage()
 {
 #ifdef JK2_MODE
 	int		x, y;
@@ -1133,7 +1133,7 @@ static void R_CreateDlightImage(void)
 R_InitFogTable
 =================
 */
-void R_InitFogTable(void) {
+void R_InitFogTable() {
 	for (int i = 0; i < FOG_TABLE_SIZE; i++) {
 		constexpr float exp = 0.5;
 		const float d = pow(static_cast<float>(i) / (FOG_TABLE_SIZE - 1), exp);
@@ -1182,7 +1182,7 @@ R_CreateFogImage
 */
 #define	FOG_S	256
 #define	FOG_T	32
-static void R_CreateFogImage(void) {
+static void R_CreateFogImage() {
 	float	borderColor[4];
 
 	byte* data = static_cast<byte*>(R_Malloc(FOG_S * FOG_T * 4, TAG_TEMP_WORKSPACE, qfalse));
@@ -1218,7 +1218,7 @@ R_CreateDefaultImage
 ==================
 */
 #define	DEFAULT_SIZE	16
-static void R_CreateDefaultImage(void) {
+static void R_CreateDefaultImage() {
 	byte	data[DEFAULT_SIZE][DEFAULT_SIZE][4];
 
 	// the default image will be a box, to allow you to see the mapping coordinates
@@ -1254,7 +1254,7 @@ R_CreateBuiltinImages
 */
 void R_UpdateSaveGameImage(const char* filename);
 
-void R_CreateBuiltinImages(void) {
+void R_CreateBuiltinImages() {
 	int		x;
 	byte	data[DEFAULT_SIZE][DEFAULT_SIZE][4];
 
@@ -1334,7 +1334,7 @@ void R_CreateBuiltinImages(void) {
 R_SetColorMappings
 ===============
 */
-void R_SetColorMappings(void) {
+void R_SetColorMappings() {
 	int		i;
 	int		inf;
 
@@ -1411,7 +1411,7 @@ void R_SetColorMappings(void) {
 R_InitImages
 ===============
 */
-void	R_InitImages(void) {
+void	R_InitImages() {
 	//memset(hashTable, 0, sizeof(hashTable));	// DO NOT DO THIS NOW (because of image cacheing)	-ste.
 
 	// build brightness translation tables
@@ -1428,7 +1428,7 @@ R_DeleteTextures
 */
 // (only gets called during vid_restart now (and app exit), not during map load)
 //
-void R_DeleteTextures(void) {
+void R_DeleteTextures() {
 	R_Images_Clear();
 	GL_ResetBinds();
 }

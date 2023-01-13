@@ -507,7 +507,7 @@ int G_LoadRoff(const char* fileName)
 	return roff_id;
 }
 
-void G_FreeRoffs(void)
+void G_FreeRoffs()
 {
 	while (num_roffs)
 	{

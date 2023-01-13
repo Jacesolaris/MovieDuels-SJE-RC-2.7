@@ -271,7 +271,7 @@ using displayContextDef_t = struct
 	float widthRatioCoef;
 };
 
-void UI_InitMemory(void);
+void UI_InitMemory();
 
 constexpr auto MAX_COLOR_RANGES = 10;
 constexpr auto MAX_MENUITEMS = 4096;
@@ -486,21 +486,21 @@ using commandDef_t = struct
 	qboolean (*handler)(itemDef_t* item, const char** args);
 };
 
-menuDef_t* Menu_GetFocused(void);
+menuDef_t* Menu_GetFocused();
 
-void Controls_GetConfig(void);
-void Controls_SetConfig(void);
-void Controls_SetDefaults(void);
-qboolean Display_KeyBindPending(void);
+void Controls_GetConfig();
+void Controls_SetConfig();
+void Controls_SetDefaults();
+qboolean Display_KeyBindPending();
 qboolean Display_MouseMove(void* p, int x, int y);
-int Display_VisibleMenuCount(void);
+int Display_VisibleMenuCount();
 qboolean Int_Parse(const char** p, int* i);
 void Init_Display(displayContextDef_t* dc);
 void Menus_Activate(menuDef_t* menu);
 menuDef_t* Menus_ActivateByName(const char* p);
-qboolean Menus_AnyFullScreenVisible(void);
+qboolean Menus_AnyFullScreenVisible();
 void Menus_CloseAll();
-int Menu_Count(void);
+int Menu_Count();
 itemDef_t* Menu_FindItemByName(const menuDef_t* menu, const char* p);
 void Menu_ShowGroup(menuDef_t* menu, const char* itemName, qboolean showFlag);
 void Menu_ItemDisable(const menuDef_t* menu, const char* name, qboolean disableFlag);
@@ -510,8 +510,8 @@ itemDef_t* Menu_GetMatchingItemByNumber(const menuDef_t* menu, int index, const 
 void Menu_HandleKey(menuDef_t* menu, int key, qboolean down);
 void Menu_New(char* buffer);
 void Menus_OpenByName(const char* p);
-void Menu_PaintAll(void);
-void Menu_Reset(void);
+void Menu_PaintAll();
+void Menu_Reset();
 void PC_EndParseSession(char* buffer);
 qboolean PC_Float_Parse(int handle, float* f);
 qboolean PC_ParseString(const char** tempStr);
@@ -519,14 +519,14 @@ qboolean PC_ParseStringMem(const char** out);
 void PC_ParseWarning(const char* message);
 qboolean PC_String_Parse(int handle, const char** out);
 int PC_StartParseSession(const char* fileName, char** buffer);
-char* PC_ParseExt(void);
+char* PC_ParseExt();
 qboolean PC_ParseInt(int* number);
 qboolean PC_ParseFloat(float* number);
 qboolean PC_ParseColor(vec4_t* c);
 const char* String_Alloc(const char* p);
-void String_Init(void);
+void String_Init();
 qboolean String_Parse(const char** p, const char** out);
-void String_Report(void);
+void String_Report();
 void UI_Cursor_Show(qboolean flag);
 itemDef_t* Menu_GetMatchingItemByNumber(const menuDef_t* menu, int index, const char* name);
 

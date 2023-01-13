@@ -289,11 +289,11 @@ FS_Initialized
 ==============
 */
 
-qboolean FS_Initialized(void) {
+qboolean FS_Initialized() {
 	return static_cast<qboolean>(fs_searchpaths != nullptr);
 }
 
-static void FS_AssertInitialised(void) {
+static void FS_AssertInitialised() {
 	if (!fs_searchpaths) {
 		Com_Error(ERR_FATAL, "Filesystem call made without initialization\n");
 	}
@@ -320,7 +320,7 @@ static long FS_HashFileName(const char* fname, const int hashSize) {
 	return hash;
 }
 
-static fileHandle_t FS_HandleForFile(void) {
+static fileHandle_t FS_HandleForFile() {
 	int		i;
 
 	for (i = 1; i < MAX_FILE_HANDLES; i++) {
@@ -2319,7 +2319,7 @@ int	FS_GetModList(char* listbuf, const int bufsize) {
 FS_Dir_f
 ================
 */
-void FS_Dir_f(void) {
+void FS_Dir_f() {
 	char* path;
 	char* extension;
 	int		ndirs;
@@ -2434,7 +2434,7 @@ void FS_SortFileList(char** filelist, const int numfiles) {
 FS_NewDir_f
 ================
 */
-void FS_NewDir_f(void) {
+void FS_NewDir_f() {
 	int		ndirs;
 
 	if (Cmd_Argc() < 2) {
@@ -2465,7 +2465,7 @@ FS_Path_f
 
 ============
 */
-void FS_Path_f(void) {
+void FS_Path_f() {
 	Com_Printf("Current search path:\n");
 	for (const searchpath_t* s = fs_searchpaths; s; s = s->next) {
 		if (s->pack) {
@@ -2492,7 +2492,7 @@ The only purpose of this function is to allow game script files to copy
 arbitrary files furing an "fs_copyfiles 1" run.
 ============
 */
-void FS_TouchFile_f(void) {
+void FS_TouchFile_f() {
 	fileHandle_t	f;
 
 	if (Cmd_Argc() != 2) {
@@ -2511,7 +2511,7 @@ void FS_TouchFile_f(void) {
 FS_Which_f
 ============
 */
-void FS_Which_f(void) {
+void FS_Which_f() {
 	char* filename = Cmd_Argv(1);
 
 	if (!filename[0]) {
@@ -2703,7 +2703,7 @@ FS_Shutdown
 Frees all resources and closes all files
 ================
 */
-void FS_Shutdown(void) {
+void FS_Shutdown() {
 	searchpath_t* next;
 
 	for (int i = 0; i < MAX_FILE_HANDLES; i++) {
@@ -2838,7 +2838,7 @@ Called only at inital startup, not when the filesystem
 is resetting due to a game change
 ================
 */
-void FS_InitFilesystem(void) {
+void FS_InitFilesystem() {
 	// allow command line parms to override our defaults
 	// we have to specially handle this, because normal command
 	// line variable sets don't happen until after the filesystem
@@ -2925,7 +2925,7 @@ FS_ConditionalRestart
 Restart if necessary
 =================
 */
-qboolean FS_ConditionalRestart(void) {
+qboolean FS_ConditionalRestart() {
 	if (fs_gamedirvar->modified) {
 		FS_Restart();
 		return qtrue;

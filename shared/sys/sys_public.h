@@ -95,7 +95,7 @@ extern cvar_t* com_maxfps;
 extern cvar_t* com_maxfpsMinimized;
 extern cvar_t* com_maxfpsUnfocused;
 
-sysEvent_t Sys_GetEvent(void);
+sysEvent_t Sys_GetEvent();
 
 void Sys_Init();
 
@@ -112,18 +112,18 @@ void* QDECL Sys_LoadLegacyGameDll(const char* name, VMMainProc** vmMain, SystemC
 void* QDECL Sys_LoadGameDll(const char* name, GetModuleAPIProc** moduleAPI);
 void Sys_UnloadDll(void* dllHandle);
 
-char* Sys_GetCurrentUser(void);
+char* Sys_GetCurrentUser();
 
 void NORETURN QDECL Sys_Error(const char* error, ...);
-void NORETURN Sys_Quit(void);
-char* Sys_GetClipboardData(void); // note that this isn't journaled...
+void NORETURN Sys_Quit();
+char* Sys_GetClipboardData(); // note that this isn't journaled...
 
 void Sys_Print(const char* msg);
 
 // Sys_Milliseconds should only be used for profiling purposes,
 // any game related timing information should come from event timestamps
 int Sys_Milliseconds(bool baseTime = false);
-int Sys_Milliseconds2(void);
+int Sys_Milliseconds2();
 void Sys_Sleep(int msec);
 
 extern "C" void Sys_SnapVector(float* v);
@@ -136,18 +136,18 @@ qboolean Sys_StringToAdr(const char* s, netadr_t* a);
 //Does NOT parse port numbers, only base addresses.
 
 qboolean Sys_IsLANAddress(netadr_t adr);
-void Sys_ShowIP(void);
+void Sys_ShowIP();
 
 qboolean Sys_Mkdir(const char* path);
-char* Sys_Cwd(void);
+char* Sys_Cwd();
 void Sys_SetDefaultInstallPath(const char* path);
-char* Sys_DefaultInstallPath(void);
+char* Sys_DefaultInstallPath();
 
 #ifdef MACOS_X
 char* Sys_DefaultAppPath(void);
 #endif
 
-char* Sys_DefaultHomePath(void);
+char* Sys_DefaultHomePath();
 const char* Sys_Dirname(const char* path);
 const char* Sys_Basename(const char* path);
 
@@ -161,7 +161,7 @@ time_t Sys_FileTime(const char* path);
 
 qboolean Sys_LowPhysicalMemory();
 
-void Sys_SetProcessorAffinity(void);
+void Sys_SetProcessorAffinity();
 
 using graphicsApi_t = enum graphicsApi_e
 {
@@ -208,7 +208,7 @@ using glconfig_t = struct glconfig_s;
 window_t WIN_Init(const windowDesc_t* desc, glconfig_t* glConfig);
 void WIN_Present(window_t* window);
 void WIN_SetGamma(glconfig_t* glConfig, byte red[256], byte green[256], byte blue[256]);
-void WIN_Shutdown(void);
+void WIN_Shutdown();
 void* WIN_GL_GetProcAddress(const char* proc);
 qboolean WIN_GL_ExtensionSupported(const char* extension);
 

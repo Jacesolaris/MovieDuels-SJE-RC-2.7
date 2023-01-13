@@ -203,7 +203,7 @@ G_InitWorldSession
 
 ==================
 */
-void G_InitWorldSession(void)
+void G_InitWorldSession()
 {
 }
 
@@ -213,7 +213,7 @@ G_WriteSessionData
 
 ==================
 */
-void G_WriteSessionData(void)
+void G_WriteSessionData()
 {
 	gi.cvar_set("session", nullptr);
 

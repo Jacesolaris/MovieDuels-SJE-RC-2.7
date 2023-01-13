@@ -148,7 +148,7 @@ to the clients -- only the fields that differ from the
 baseline will be transmitted
 ================
 */
-void SV_CreateBaseline(void)
+void SV_CreateBaseline()
 {
 	for (int entnum = 0; entnum < ge->num_entities; entnum++)
 	{
@@ -177,7 +177,7 @@ SV_Startup
 Called when a game is about to begin
 ===============
 */
-void SV_Startup(void)
+void SV_Startup()
 {
 	if (svs.initialized)
 	{
@@ -192,7 +192,7 @@ void SV_Startup(void)
 }
 
 qboolean CM_SameMap(const char* server);
-void Cvar_Defrag(void);
+void Cvar_Defrag();
 
 /*
 ================
@@ -397,7 +397,7 @@ SV_Init
 Only called at main exe startup, not for each game
 ===============
 */
-void SV_Init(void)
+void SV_Init()
 {
 	SV_AddOperatorCommands();
 

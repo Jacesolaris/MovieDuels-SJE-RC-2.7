@@ -56,13 +56,13 @@ bool AlsoLoad = true;
 
 void* UI_Alloc(int size);
 
-void Controls_GetConfig(void);
+void Controls_GetConfig();
 void Fade(int* flags, float* f, float clamp, int* nextTime, int offsetTime, qboolean bFlags, float fadeAmount);
 void Item_Init(itemDef_t* item);
 void Item_InitControls(itemDef_t* item);
 qboolean Item_Parse(itemDef_t* item);
 void Item_RunScript(itemDef_t* item, const char* s);
-void Item_SetupKeywordHash(void);
+void Item_SetupKeywordHash();
 void Item_Text_AutoWrapped_Paint(itemDef_t* item);
 void Item_UpdatePosition(itemDef_t* item);
 void Item_ValidateTypeData(itemDef_t* item);
@@ -70,7 +70,7 @@ void LerpColor(vec4_t a, vec4_t b, vec4_t c, float t);
 itemDef_t* Menu_FindItemByName(const menuDef_t* menu, const char* p);
 itemDef_t* Menu_GetMatchingItemByNumber(const menuDef_t* menu, int index, const char* name);
 void Menu_Paint(menuDef_t* menu, qboolean forcePaint);
-void Menu_SetupKeywordHash(void);
+void Menu_SetupKeywordHash();
 void Menus_ShowItems(const char* menuName);
 qboolean ParseRect(const char** p, rectDef_t* r);
 const char* String_Alloc(const char* p);
@@ -1334,7 +1334,7 @@ const char* String_Alloc(const char* p)
 String_Report
 =================
 */
-void String_Report(void)
+void String_Report()
 {
 	Com_Printf("Memory/String Pool Info\n");
 	Com_Printf("----------------\n");
@@ -1353,7 +1353,7 @@ void String_Report(void)
 String_Init
 =================
 */
-void String_Init(void)
+void String_Init()
 {
 	for (int i = 0; i < HASH_TABLE_SIZE; i++)
 	{
@@ -1405,7 +1405,7 @@ void* UI_Alloc(const int size)
 UI_InitMemory
 ===============
 */
-void UI_InitMemory(void)
+void UI_InitMemory()
 {
 	allocPoint = 0;
 	outOfMemory = qfalse;
@@ -1544,7 +1544,7 @@ void Menu_ShowItemByName(const menuDef_t* menu, const char* p, const qboolean bS
 Menu_GetFocused
 ===============
 */
-menuDef_t* Menu_GetFocused(void)
+menuDef_t* Menu_GetFocused()
 {
 	for (int i = 0; i < menuCount; i++)
 	{
@@ -3415,10 +3415,10 @@ qboolean ItemParse_model_g2anim_go(itemDef_t* item, const char* animName)
 
 	while (i < MAX_ANIMATIONS)
 	{
-		if (!Q_stricmp(animName, animTable[i].name))
+		if (!Q_stricmp(animName, anim_table[i].name))
 		{
 			//found it
-			modelPtr->g2anim = animTable[i].id;
+			modelPtr->g2anim = anim_table[i].id;
 			return qtrue;
 		}
 		i++;
@@ -4989,7 +4989,7 @@ keywordHash_t* itemParseKeywordHash[KEYWORDHASH_SIZE];
 Item_SetupKeywordHash
 ===============
 */
-void Item_SetupKeywordHash(void)
+void Item_SetupKeywordHash()
 {
 	memset(itemParseKeywordHash, 0, sizeof itemParseKeywordHash);
 	for (int i = 0; itemParseKeywords[i].keyword; i++)
@@ -5311,7 +5311,7 @@ void Item_RunScript(itemDef_t* item, const char* s)
 Menu_SetupKeywordHash
 ===============
 */
-void Menu_SetupKeywordHash(void)
+void Menu_SetupKeywordHash()
 {
 	memset(menuParseKeywordHash, 0, sizeof menuParseKeywordHash);
 	for (int i = 0; menuParseKeywords[i].keyword; i++)
@@ -5630,7 +5630,7 @@ static void Controls_GetKeyAssignment(const char* command, int* twokeys)
 Controls_GetConfig
 =================
 */
-void Controls_GetConfig(void)
+void Controls_GetConfig()
 {
 	// iterate each command, get its numeric binding
 	for (size_t i = 0; i < g_bindCount; i++)
@@ -5703,7 +5703,7 @@ static void Menu_FreeGhoulItems(const menuDef_t* menu)
 Menu_Reset
 ===============
 */
-void Menu_Reset(void)
+void Menu_Reset()
 {
 	for (int i = 0; i < menuCount; i++)
 	{
@@ -5925,7 +5925,7 @@ void PC_ParseWarning(const char* message)
 	          parseData[parseDataCount].fileName);
 }
 
-char* PC_ParseExt(void)
+char* PC_ParseExt()
 {
 	if (parseDataCount < 0)
 		Com_Error(ERR_FATAL, "PC_ParseExt: parseDataCount < 0 (be sure to call PC_StartParseSession!)");
@@ -5976,7 +5976,7 @@ qboolean PC_ParseColor(vec4_t* color)
 Menu_Count
 =================
 */
-int Menu_Count(void)
+int Menu_Count()
 {
 	return menuCount;
 }
@@ -5986,7 +5986,7 @@ int Menu_Count(void)
 Menu_PaintAll
 =================
 */
-void Menu_PaintAll(void)
+void Menu_PaintAll()
 {
 	if (captureFunc)
 	{
@@ -7211,7 +7211,7 @@ void Item_Model_Paint(itemDef_t* item)
 			{
 			case BOTH_FORCEWALLREBOUND_FORWARD:
 			case BOTH_FORCEJUMP1:
-				ItemParse_model_g2anim_go(item, animTable[BOTH_FORCEINAIR1].name);
+				ItemParse_model_g2anim_go(item, anim_table[BOTH_FORCEINAIR1].name);
 				uiInfo.moveAnimTime = DC->g2hilev_SetAnim(&item->ghoul2[0], "model_root", model_ptr->g2anim, qtrue);
 				if (!uiInfo.moveAnimTime)
 				{
@@ -7220,35 +7220,35 @@ void Item_Model_Paint(itemDef_t* item)
 				uiInfo.moveAnimTime += uiInfo.uiDC.realTime;
 				break;
 			case BOTH_FORCEINAIR1:
-				ItemParse_model_g2anim_go(item, animTable[BOTH_FORCELAND1].name);
+				ItemParse_model_g2anim_go(item, anim_table[BOTH_FORCELAND1].name);
 				uiInfo.moveAnimTime = DC->g2hilev_SetAnim(&item->ghoul2[0], "model_root", model_ptr->g2anim, qtrue);
 				uiInfo.moveAnimTime += uiInfo.uiDC.realTime;
 				break;
 			case BOTH_FORCEWALLRUNFLIP_START:
-				ItemParse_model_g2anim_go(item, animTable[BOTH_FORCEWALLRUNFLIP_END].name);
+				ItemParse_model_g2anim_go(item, anim_table[BOTH_FORCEWALLRUNFLIP_END].name);
 				uiInfo.moveAnimTime = DC->g2hilev_SetAnim(&item->ghoul2[0], "model_root", model_ptr->g2anim, qtrue);
 				uiInfo.moveAnimTime += uiInfo.uiDC.realTime;
 				break;
 			case BOTH_FORCELONGLEAP_START:
-				ItemParse_model_g2anim_go(item, animTable[BOTH_FORCELONGLEAP_LAND].name);
+				ItemParse_model_g2anim_go(item, anim_table[BOTH_FORCELONGLEAP_LAND].name);
 				uiInfo.moveAnimTime = DC->g2hilev_SetAnim(&item->ghoul2[0], "model_root", model_ptr->g2anim, qtrue);
 				uiInfo.moveAnimTime += uiInfo.uiDC.realTime;
 				break;
 			case BOTH_KNOCKDOWN3: //on front - into force getup
 				DC->startLocalSound(uiInfo.uiDC.Assets.datapadmoveJumpSound, CHAN_LOCAL);
-				ItemParse_model_g2anim_go(item, animTable[BOTH_FORCE_GETUP_F1].name);
+				ItemParse_model_g2anim_go(item, anim_table[BOTH_FORCE_GETUP_F1].name);
 				uiInfo.moveAnimTime = DC->g2hilev_SetAnim(&item->ghoul2[0], "model_root", model_ptr->g2anim, qtrue);
 				uiInfo.moveAnimTime += uiInfo.uiDC.realTime;
 				break;
 			case BOTH_KNOCKDOWN2: //on back - kick forward getup
 				DC->startLocalSound(uiInfo.uiDC.Assets.datapadmoveJumpSound, CHAN_LOCAL);
-				ItemParse_model_g2anim_go(item, animTable[BOTH_GETUP_BROLL_F].name);
+				ItemParse_model_g2anim_go(item, anim_table[BOTH_GETUP_BROLL_F].name);
 				uiInfo.moveAnimTime = DC->g2hilev_SetAnim(&item->ghoul2[0], "model_root", model_ptr->g2anim, qtrue);
 				uiInfo.moveAnimTime += uiInfo.uiDC.realTime;
 				break;
 			case BOTH_KNOCKDOWN1: //on back - roll-away
 				DC->startLocalSound(uiInfo.uiDC.Assets.datapadmoveRollSound, CHAN_LOCAL);
-				ItemParse_model_g2anim_go(item, animTable[BOTH_GETUP_BROLL_R].name);
+				ItemParse_model_g2anim_go(item, anim_table[BOTH_GETUP_BROLL_R].name);
 				uiInfo.moveAnimTime = DC->g2hilev_SetAnim(&item->ghoul2[0], "model_root", model_ptr->g2anim, qtrue);
 				uiInfo.moveAnimTime += uiInfo.uiDC.realTime;
 				break;
@@ -8558,7 +8558,7 @@ void Window_Paint(Window* w, const float fadeAmount, const float fadeClamp, cons
 Display_KeyBindPending
 =================
 */
-qboolean Display_KeyBindPending(void)
+qboolean Display_KeyBindPending()
 {
 	return g_waitingForKey;
 }
@@ -9435,7 +9435,7 @@ qboolean Display_MouseMove(void* p, const int x, const int y)
 Menus_AnyFullScreenVisible
 =================
 */
-qboolean Menus_AnyFullScreenVisible(void)
+qboolean Menus_AnyFullScreenVisible()
 {
 	for (int i = 0; i < menuCount; i++)
 	{
@@ -9452,7 +9452,7 @@ qboolean Menus_AnyFullScreenVisible(void)
 Controls_SetConfig
 =================
 */
-void Controls_SetConfig(void)
+void Controls_SetConfig()
 {
 	// iterate each command, get its numeric binding
 	for (size_t i = 0; i < g_bindCount; i++)
@@ -9467,7 +9467,7 @@ void Controls_SetConfig(void)
 	}
 }
 
-void Controls_SetDefaults(void)
+void Controls_SetDefaults()
 {
 	for (size_t i = 0; i < g_bindCount; i++)
 	{
@@ -10010,7 +10010,7 @@ static qboolean Menu_OverActiveItem(menuDef_t* menu, const float x, const float 
 Display_VisibleMenuCount
 =================
 */
-int Display_VisibleMenuCount(void)
+int Display_VisibleMenuCount()
 {
 	int count = 0;
 	for (int i = 0; i < menuCount; i++)

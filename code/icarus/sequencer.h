@@ -77,7 +77,7 @@ public:
 	int GetID() const { return m_id; };
 
 	int Init(int owner_id, CTaskManager* task_manager);
-	static CSequencer* Create(void);
+	static CSequencer* Create();
 	void Free(CIcarus* icarus);
 
 	int Run(char* buffer, long size, CIcarus* icarus);
@@ -85,9 +85,9 @@ public:
 
 	void SetOwnerID(const int owner) { m_ownerID = owner; }
 
-	int GetOwnerID(void) const { return m_ownerID; }
+	int GetOwnerID() const { return m_ownerID; }
 
-	CTaskManager* GetTaskManager(void) const { return m_taskManager; }
+	CTaskManager* GetTaskManager() const { return m_taskManager; }
 
 	void SetTaskManager(CTaskManager* tm) { if (tm) m_taskManager = tm; }
 
@@ -116,9 +116,9 @@ protected:
 
 	int Route(CSequence* sequence, bstream_t* bstream, CIcarus* icarus);
 	int Flush(CSequence* owner, CIcarus* icarus);
-	void Interrupt(void);
+	void Interrupt();
 
-	bstream_t* AddStream(void);
+	bstream_t* AddStream();
 	void DeleteStream(const bstream_t* bstream);
 
 	int AddAffect(const bstream_t* bstream, int retain, int* id, CIcarus* icarus);

@@ -87,14 +87,14 @@ static const char* keywordNames[NUM_AS_KEYWORDS] =
 	"basedir",
 };
 
-CSetGroup::CSetGroup(void)
+CSetGroup::CSetGroup()
 {
 	m_ambientSets = new std::vector<ambientSet_t*>;
 	m_setMap = new std::map<sstring_t, ambientSet_t*>;
 	m_numSets = 0;
 }
 
-CSetGroup::~CSetGroup(void)
+CSetGroup::~CSetGroup()
 {
 	delete m_ambientSets;
 	delete m_setMap;
@@ -106,7 +106,7 @@ Free
 -------------------------
 */
 
-void CSetGroup::Free(void)
+void CSetGroup::Free()
 {
 	for (const auto& ambientSet : *m_ambientSets)
 	{
@@ -245,7 +245,7 @@ Skips a line in the character buffer
 -------------------------
 */
 
-static void AS_SkipLine(void)
+static void AS_SkipLine()
 {
 	if (parsePos > parseSize) // needed to avoid a crash because of some OOR access that shouldn't be done
 		return;
@@ -654,7 +654,7 @@ Parses the directory information out of the beginning of the file
 -------------------------
 */
 
-static void AS_ParseHeader(void)
+static void AS_ParseHeader()
 {
 	while (parsePos <= parseSize)
 	{
@@ -746,7 +746,7 @@ static namePrecache_m* TheNamePrecache()
 	return &singleton;
 }
 
-void AS_Init(void)
+void AS_Init()
 {
 	if (!aSets)
 	{
@@ -792,7 +792,7 @@ Called on the client side to load and precache all the ambient sound sets
 -------------------------
 */
 
-void AS_ParseSets(void)
+void AS_ParseSets()
 {
 	const cvar_t* cv = Cvar_Get("s_initsound", "1", 0);
 	if (!cv->integer)
@@ -839,7 +839,7 @@ Frees up the ambient sound system
 -------------------------
 */
 
-void AS_Free(void)
+void AS_Free()
 {
 	if (aSets)
 	{
@@ -857,7 +857,7 @@ void AS_Free(void)
 	}
 }
 
-void AS_FreePartial(void)
+void AS_FreePartial()
 {
 	if (aSets)
 	{
@@ -891,7 +891,7 @@ Fades volumes up or down depending on the action being taken on them.
 -------------------------
 */
 
-static void AS_UpdateSetVolumes(void)
+static void AS_UpdateSetVolumes()
 {
 	float scale;
 	int deltaTime;

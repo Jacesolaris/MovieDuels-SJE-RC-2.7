@@ -363,7 +363,7 @@ int UI_ParseAnimationFile(const char* filename, animation_t* animset, qboolean i
 			break;
 		}
 
-		const int animNum = GetIDForString(animTable, token);
+		const int animNum = GetIDForString(anim_table, token);
 		if (animNum == -1)
 		{
 			//#ifndef FINAL_BUILD
@@ -421,11 +421,11 @@ int UI_ParseAnimationFile(const char* filename, animation_t* animset, qboolean i
 	/*
 	for(i = 0; i < MAX_ANIMATIONS; i++)
 	{
-		if (animTable[i].name != NULL)		// This animation reference exists.
+		if (anim_table[i].name != NULL)		// This animation reference exists.
 		{
 			if (animset[i].firstFrame <= 0 && animset[i].num_frames <=0)
 			{	// This is an empty animation reference.
-				Com_Printf("***ANIMTABLE reference #%d (%s) is empty!\n", i, animTable[i].name);
+				Com_Printf("***ANIMTABLE reference #%d (%s) is empty!\n", i, anim_table[i].name);
 			}
 		}
 	}

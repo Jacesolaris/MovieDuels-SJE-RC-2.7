@@ -93,7 +93,7 @@ TIMER_Clear
 -------------------------
 */
 
-void TIMER_Clear(void)
+void TIMER_Clear()
 {
 	int i;
 	for (i = 0; i < MAX_GENTITIES; i++)
@@ -147,7 +147,7 @@ TIMER_Save
 -------------------------
 */
 
-void TIMER_Save(void)
+void TIMER_Save()
 {
 	int j;
 	gentity_t* ent;
@@ -205,7 +205,7 @@ TIMER_Load
 -------------------------
 */
 
-void TIMER_Load(void)
+void TIMER_Load()
 {
 	int j;
 	gentity_t* ent;

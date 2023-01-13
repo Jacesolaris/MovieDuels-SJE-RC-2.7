@@ -106,7 +106,7 @@ public:
 	virtual int LoadFile(const char* name, void** buf) = 0;
 	virtual void CenterPrint(const char* format, ...) = 0;
 	virtual void DebugPrint(e_DebugPrintLevel, const char*, ...) = 0;
-	virtual unsigned int GetTime(void) = 0; //Gets the current time
+	virtual unsigned int GetTime() = 0; //Gets the current time
 	virtual int PlayIcarusSound(int taskID, int gameID, const char* name, const char* channel) = 0;
 	virtual void Lerp2Pos(int taskID, int gameID, float origin[3], float angles[3], float duration) = 0;
 	virtual void Lerp2Angles(int taskID, int gameID, float angles[3], float duration) = 0;
@@ -131,8 +131,8 @@ public:
 	virtual void CameraFade(float sr, float sg, float sb, float sa, float dr, float dg, float db, float da,
 	                        float duration) = 0;
 	virtual void CameraPath(const char* name) = 0;
-	virtual void CameraEnable(void) = 0;
-	virtual void CameraDisable(void) = 0;
+	virtual void CameraEnable() = 0;
+	virtual void CameraDisable() = 0;
 	virtual void CameraShake(float intensity, int duration) = 0;
 
 	virtual int GetFloat(int gameID, const char* name, float* value) = 0;
@@ -159,7 +159,7 @@ public:
 	// (g_entities[m_ownerID].svFlags&SVF_ICARUS_FREEZE)																	// return -1 indicates invalid
 	virtual void Free(void* data) = 0;
 	virtual void* Malloc(int size) = 0;
-	virtual float MaxFloat(void) = 0;
+	virtual float MaxFloat() = 0;
 
 	// Script precache functions.
 	virtual void PrecacheRoff(const char* name) = 0; // G_LoadRoff

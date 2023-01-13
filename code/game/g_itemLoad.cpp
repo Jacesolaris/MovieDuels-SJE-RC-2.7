@@ -767,7 +767,7 @@ static void IT_ParseParms(const char* buffer)
 	//	--bg_numItems;
 }
 
-void IT_LoadItemParms(void)
+void IT_LoadItemParms()
 {
 	char* buffer;
 
@@ -782,7 +782,7 @@ void IT_LoadItemParms(void)
 //
 extern cvar_t* g_Weather;
 
-void R_LoadWeatherParms(void)
+void R_LoadWeatherParms()
 {
 	if (g_Weather->integer == 0) //clear
 	{

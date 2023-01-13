@@ -85,6 +85,7 @@ static void HSVtoRGB(float h, float s, float v, float rgb[3])
 		rgb[1] = p;
 		rgb[2] = q;
 		break;
+	default: ;
 	}
 }
 
