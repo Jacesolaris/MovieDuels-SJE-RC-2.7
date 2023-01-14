@@ -726,21 +726,21 @@ void CG_DrawCenterString()
 		int iOutIndex = 0;
 		for (unsigned int l = 0; l < sizeof linebuffer - 1; l++)
 		{
-			int iAdvanceCount;
-			const unsigned int uiLetter = cgi_AnyLanguage_ReadCharFromString(psString, &iAdvanceCount);
-			psString += iAdvanceCount;
-			if (!uiLetter || uiLetter == '\n')
+			int i_advance_count;
+			const unsigned int ui_letter = cgi_AnyLanguage_ReadCharFromString(psString, &i_advance_count);
+			psString += i_advance_count;
+			if (!ui_letter || ui_letter == '\n')
 			{
 				break;
 			}
-			if (uiLetter > 255)
+			if (ui_letter > 255)
 			{
-				linebuffer[iOutIndex++] = uiLetter >> 8;
-				linebuffer[iOutIndex++] = uiLetter & 0xFF;
+				linebuffer[iOutIndex++] = ui_letter >> 8;
+				linebuffer[iOutIndex++] = ui_letter & 0xFF;
 			}
 			else
 			{
-				linebuffer[iOutIndex++] = uiLetter & 0xFF;
+				linebuffer[iOutIndex++] = ui_letter & 0xFF;
 			}
 		}
 		linebuffer[iOutIndex++] = '\0';

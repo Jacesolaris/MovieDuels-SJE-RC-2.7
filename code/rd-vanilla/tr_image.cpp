@@ -935,7 +935,7 @@ This is the only way any image_t are created
 ================
 */
 image_t* R_CreateImage(const char* name, const byte* pic, const int width, const int height,
-                       const GLenum format, const qboolean mipmap, const qboolean allowPicmip, const qboolean allowTC, int glWrapClampMode)
+                       const GLenum format, const qboolean mipmap, const qboolean allow_picmip, const qboolean allow_tc, int gl_wrap_clamp_mode)
 {
 	qboolean	isLightmap = qfalse;
 
@@ -943,8 +943,8 @@ image_t* R_CreateImage(const char* name, const byte* pic, const int width, const
 		Com_Error(ERR_DROP, "R_CreateImage: \"%s\" is too long\n", name);
 	}
 
-	if (glConfig.clampToEdgeAvailable && glWrapClampMode == GL_CLAMP) {
-		glWrapClampMode = GL_CLAMP_TO_EDGE;
+	if (glConfig.clampToEdgeAvailable && gl_wrap_clamp_mode == GL_CLAMP) {
+		gl_wrap_clamp_mode = GL_CLAMP_TO_EDGE;
 	}
 
 	if (name[0] == '$')
@@ -957,7 +957,7 @@ image_t* R_CreateImage(const char* name, const byte* pic, const int width, const
 		Com_Error(ERR_FATAL, "R_CreateImage: %s dimensions (%i x %i) not power of 2!\n", name, width, height);
 	}
 
-	image_t* image = R_FindImageFile_NoLoad(name, mipmap, allowPicmip, allowTC, glWrapClampMode);
+	image_t* image = R_FindImageFile_NoLoad(name, mipmap, allow_picmip, allow_tc, gl_wrap_clamp_mode);
 	if (image) {
 		return image;
 	}
@@ -973,13 +973,13 @@ image_t* R_CreateImage(const char* name, const byte* pic, const int width, const
 	image->iLastLevelUsedOn = RE_RegisterMedia_GetLevel();
 
 	image->mipmap = !!mipmap;
-	image->allowPicmip = !!allowPicmip;
+	image->allowPicmip = !!allow_picmip;
 
 	Q_strncpyz(image->imgName, name, sizeof(image->imgName));
 
 	image->width = width;
 	image->height = height;
-	image->wrapClampMode = glWrapClampMode;
+	image->wrapClampMode = gl_wrap_clamp_mode;
 
 	if (qglActiveTextureARB) {
 		GL_SelectTexture(0);
@@ -989,15 +989,15 @@ image_t* R_CreateImage(const char* name, const byte* pic, const int width, const
 
 	Upload32((unsigned*)pic, format,
 		static_cast<qboolean>(image->mipmap),
-		allowPicmip,
+		allow_picmip,
 		isLightmap,
-		allowTC,
+		allow_tc,
 		&image->internalFormat,
 		&image->width,
 		&image->height);
 
-	qglTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, glWrapClampMode);
-	qglTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, glWrapClampMode);
+	qglTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, gl_wrap_clamp_mode);
+	qglTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, gl_wrap_clamp_mode);
 
 	qglBindTexture(GL_TEXTURE_2D, 0);	//jfm: i don't know why this is here, but it breaks lightmaps when there's only 1
 	glState.currenttextures[glState.currenttmu] = 0;	//mark it not bound

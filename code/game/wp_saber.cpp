@@ -14300,6 +14300,8 @@ int BotCanAbsorbKick(const gentity_t* defender, const vec3_t push_dir) //Can the
 {
 	vec3_t p_l_angles, p_l_fwd;
 
+	const qboolean npc_blocking = defender->client->ps.ManualBlockingFlags & 1 << MBF_NPCKICKBLOCK ? qtrue : qfalse;	//NPC Blocking
+
 	if (!defender || !defender->client)
 	{
 		//non-humanoids can't absorb kicks.
@@ -14344,7 +14346,8 @@ int BotCanAbsorbKick(const gentity_t* defender, const vec3_t push_dir) //Can the
 		|| defender->client->ps.groundEntityNum == ENTITYNUM_NONE // Your in the air (jumping).
 		|| defender->client->ps.blockPoints < FATIGUE_DODGEING // Less than 35 Block points
 		|| defender->client->ps.forcePower < FATIGUE_DODGEING // Less than 35 Force points
-		|| defender->client->ps.saberFatigueChainCount >= MISHAPLEVEL_TEN) // Your saber fatigued
+		|| defender->client->ps.saberFatigueChainCount >= MISHAPLEVEL_TEN
+		&& !npc_blocking) // Your saber fatigued
 	{
 		return qfalse;
 	}

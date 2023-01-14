@@ -2384,9 +2384,6 @@ qboolean G_CanBeEnemy(const gentity_t* self, const gentity_t* enemy)
 
 qboolean WP_AbsorbKick(gentity_t* hit_ent, const gentity_t* pusher, const vec3_t push_dir)
 {
-	const qboolean npc_blocking = hit_ent->client->ps.ManualBlockingFlags & 1 << MBF_NPCKICKBLOCK ? qtrue : qfalse;
-	//NPC Blocking
-
 	if (in_camera)
 	{
 		return qfalse;
@@ -2454,7 +2451,7 @@ qboolean WP_AbsorbKick(gentity_t* hit_ent, const gentity_t* pusher, const vec3_t
 		}
 		G_Sound(hit_ent, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
 	}
-	else if (BotCanAbsorbKick(hit_ent, push_dir) && npc_blocking
+	else if (BotCanAbsorbKick(hit_ent, push_dir) 
 		&& hit_ent->s.client_num >= MAX_CLIENTS && !G_ControlledByPlayer(hit_ent)) //NPC only any mode
 	{
 		if (g_SerenityJediEngineMode->integer)

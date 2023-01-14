@@ -744,7 +744,7 @@ void		Com_EndRedirect(void);
 void 		QDECL Com_Printf(const char* fmt, ...);
 void 		QDECL Com_DPrintf(const char* fmt, ...);
 void		QDECL Com_OPrintf(const char* fmt, ...); // Outputs to the VC / Windows Debug window (only in debug compile)
-void 		NORETURN QDECL Com_Error(int code, const char* fmt, ...);
+void 		NORETURN QDECL Com_Error(int level, const char* fmt, ...);
 void 		NORETURN Com_Quit_f(void);
 int			Com_EventLoop(void);
 int			Com_Milliseconds(void);	// will be journaled properly

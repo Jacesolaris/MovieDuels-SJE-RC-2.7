@@ -231,7 +231,7 @@ public:
 	float			m_fAltSBCSFontScaleFactor;	// -1, else amount to adjust returned values by to make them fit the master western font they're substituting for
 	bool			m_bIsFakeAlienLanguage;	// ... if true, don't process as MBCS or override as SBCS etc
 
-	CFontInfo(const char* fontName);
+	CFontInfo(const char* _fontName);
 	//	CFontInfo(int fill) { memset(this, fill, sizeof(*this)); }	// wtf?
 	~CFontInfo() {}
 
@@ -280,7 +280,7 @@ int g_iNonScaledCharRange;	// this is used with auto-scaling of asian fonts, any
 
 extern qboolean Language_IsKorean();
 
-static inline qboolean Korean_ValidKSC5601Hangul(const byte _iHi, const byte _iLo)
+static qboolean Korean_ValidKSC5601Hangul(const byte _iHi, const byte _iLo)
 {
 	return static_cast<qboolean>(_iHi >= KSC5601_HANGUL_HIBYTE_START &&
 		_iHi <= KSC5601_HANGUL_HIBYTE_STOP &&
@@ -288,7 +288,7 @@ static inline qboolean Korean_ValidKSC5601Hangul(const byte _iHi, const byte _iL
 		_iLo < KSC5601_HANGUL_LOBYTE_HIBOUND);
 }
 
-static inline qboolean Korean_ValidKSC5601Hangul(const unsigned int uiCode)
+static qboolean Korean_ValidKSC5601Hangul(const unsigned int uiCode)
 {
 	return Korean_ValidKSC5601Hangul(uiCode >> 8, uiCode & 0xFF);
 }
@@ -431,7 +431,7 @@ static qboolean Japanese_ValidShiftJISCode(const byte _iHi, const byte _iLo)
 	return qfalse;
 }
 
-static inline qboolean Japanese_ValidShiftJISCode(const unsigned int uiCode)
+static qboolean Japanese_ValidShiftJISCode(const unsigned int uiCode)
 {
 	return Japanese_ValidShiftJISCode(uiCode >> 8, uiCode & 0xFF);
 }
@@ -497,7 +497,7 @@ static int Japanese_InitFields(int& iGlyphTPs, const char*& psLang)
 
 extern qboolean Language_IsChinese();
 
-static inline qboolean Chinese_ValidGBCode(const byte _iHi, const byte _iLo)
+static qboolean Chinese_ValidGBCode(const byte _iHi, const byte _iLo)
 {
 	return static_cast<qboolean>(_iHi >= GB_HIBYTE_START &&
 		_iHi <= GB_HIBYTE_STOP &&
@@ -505,7 +505,7 @@ static inline qboolean Chinese_ValidGBCode(const byte _iHi, const byte _iLo)
 		_iLo < GB_LOBYTE_HIBOUND);
 }
 
-static inline qboolean Chinese_ValidGBCode(const unsigned int uiCode)
+static qboolean Chinese_ValidGBCode(const unsigned int uiCode)
 {
 	return Chinese_ValidGBCode(uiCode >> 8, uiCode & 0xFF);
 }
@@ -627,7 +627,7 @@ static int Thai_ValidTISCode(const byte* psString, int& iThaiBytes)
 //	we tell the translators to put an underscore ('_') between each word even though in Thai they're
 //	all jammed together at final output onscreen...
 //
-static inline qboolean Thai_IsTrailingPunctuation(const unsigned int uiCode)
+static qboolean Thai_IsTrailingPunctuation(const unsigned int uiCode)
 {
 	return static_cast<qboolean>(uiCode == '_');
 }

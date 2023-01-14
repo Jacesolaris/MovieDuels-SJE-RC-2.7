@@ -1610,7 +1610,7 @@ public:
 };
 
 void R_AddGhoulSurfaces(trRefEntity_t* ent);
-void RB_SurfaceGhoul(CRenderableSurface* surface);
+void RB_SurfaceGhoul(CRenderableSurface* surf);
 /*
 Ghoul2 Insert End
 */
@@ -1789,8 +1789,8 @@ Ghoul2 Insert Start
 */
 // tr_ghoul2.cpp
 void		Multiply_3x4Matrix(mdxaBone_t* out, mdxaBone_t* in2, mdxaBone_t* in);
-extern qboolean R_LoadMDXM(model_t* mod, void* buffer, const char* name, qboolean& bAlreadyCached);
-extern qboolean R_LoadMDXA(model_t* mod, void* buffer, const char* name, qboolean& bAlreadyCached);
+extern qboolean R_LoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboolean& b_already_cached);
+extern qboolean R_LoadMDXA(model_t* mod, void* buffer, const char* mod_name, qboolean& b_already_cached);
 void		RE_InsertModelIntoHash(const char* name, const model_t* mod);
 /*
 Ghoul2 Insert End

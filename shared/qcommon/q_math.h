@@ -210,7 +210,7 @@ extern "C" {
 	memset((dst), 0, sizeof((dst)[0]) * 2)
 
 	void VectorAdd2(const vec2_t vec1, const vec2_t vec2, vec2_t vecOut);
-	void VectorSubtract2(const vec2_t vec1, const vec2_t vec2, vec2_t vec2_t);
+	void VectorSubtract2(const vec2_t vec1, const vec2_t vec2, vec2_t vecOut);
 	void VectorScale2(const vec2_t vecIn, float scale, vec2_t vecOut);
 	void VectorMA2(const vec2_t vec1, float scale, const vec2_t vec2, vec2_t vecOut);
 	void VectorSet2(vec2_t vec, float x, float y);

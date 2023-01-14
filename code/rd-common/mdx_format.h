@@ -311,14 +311,14 @@ using mdxmVertex_t = struct
 // these are convenience functions that I can invoked in code. Do NOT change them (because this is a shared file),
 //	but if you want to copy the logic out and use your own versions then fine...
 //
-static inline int G2_GetVertWeights(const mdxmVertex_t* pVert)
+static int G2_GetVertWeights(const mdxmVertex_t* pVert)
 {
 	const int iNumWeights = (pVert->uiNmWeightsAndBoneIndexes >> 30) + 1; // 1..4 count
 
 	return iNumWeights;
 }
 
-static inline int G2_GetVertBoneIndex(const mdxmVertex_t* pVert, const int iWeightNum)
+static int G2_GetVertBoneIndex(const mdxmVertex_t* pVert, const int iWeightNum)
 {
 	const int i_bone_index = pVert->uiNmWeightsAndBoneIndexes >> iG2_BITS_PER_BONEREF * iWeightNum & (1 <<
 		iG2_BITS_PER_BONEREF) - 1;
@@ -326,8 +326,8 @@ static inline int G2_GetVertBoneIndex(const mdxmVertex_t* pVert, const int iWeig
 	return i_bone_index;
 }
 
-static inline float G2_GetVertBoneWeight(const mdxmVertex_t* pVert, const int iWeightNum, float& fTotalWeight,
-                                         const int iNumWeights)
+static float G2_GetVertBoneWeight(const mdxmVertex_t* pVert, const int iWeightNum, float& fTotalWeight,
+                                  const int iNumWeights)
 {
 	float fBoneWeight;
 

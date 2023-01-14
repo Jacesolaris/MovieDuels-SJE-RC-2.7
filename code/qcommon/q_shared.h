@@ -396,7 +396,7 @@ public:
 
 int COM_GetCurrentParseLine();
 char* COM_Parse(const char** data_p);
-char* COM_ParseExt(const char** data_p, qboolean allowLineBreak);
+char* COM_ParseExt(const char** data_p, qboolean allow_line_breaks);
 int COM_Compress(char* data_p);
 qboolean COM_ParseString(const char** data, const char** s);
 qboolean COM_ParseInt(const char** data, int* i);
@@ -452,7 +452,7 @@ const char* Info_ValueForKey(const char* s, const char* key);
 void Info_RemoveKey(char* s, const char* key);
 void Info_SetValueForKey(char* s, const char* key, const char* value);
 qboolean Info_Validate(const char* s);
-void Info_NextPair(const char** s, char key[MAX_INFO_KEY], char value[MAX_INFO_VALUE]);
+void Info_NextPair(const char** head, char key[MAX_INFO_KEY], char value[MAX_INFO_VALUE]);
 
 // this is only here so the functions in q_shared.c and bg_*.c can link
 void NORETURN QDECL Com_Error(int level, const char* error, ...);

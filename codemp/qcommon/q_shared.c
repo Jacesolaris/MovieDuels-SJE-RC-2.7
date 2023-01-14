@@ -315,7 +315,7 @@ int COM_Compress(char* data_p) {
 	return out - data_p;
 }
 
-char* COM_ParseExt(const char** data_p, qboolean allowLineBreaks)
+char* COM_ParseExt(const char** data_p, qboolean allow_line_breaks)
 {
 	int c = 0;
 	qboolean hasNewLines = qfalse;
@@ -341,7 +341,7 @@ char* COM_ParseExt(const char** data_p, qboolean allowLineBreaks)
 			*data_p = NULL;
 			return com_token;
 		}
-		if (hasNewLines && !allowLineBreaks)
+		if (hasNewLines && !allow_line_breaks)
 		{
 			*data_p = data;
 			return com_token;

@@ -223,7 +223,7 @@ public:
 	float			m_fAltSBCSFontScaleFactor;	// -1, else amount to adjust returned values by to make them fit the master western font they're substituting for
 	bool			m_bIsFakeAlienLanguage;	// ... if true, don't process as MBCS or override as SBCS etc
 
-	CFontInfo(const char* fontName);
+	CFontInfo(const char* _fontName);
 	//	CFontInfo(int fill) { memset(this, fill, sizeof(*this)); }	// wtf?
 	~CFontInfo(void) {}
 

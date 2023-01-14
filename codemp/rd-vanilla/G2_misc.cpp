@@ -761,7 +761,7 @@ static int GoreTouch = 1;
 static int GoreIndecies[MAX_GORE_INDECIES];
 
 #define GORE_MARGIN (0.0f)
-int	G2API_GetTime(int argTime);
+int	G2API_GetTime(int arg_time);
 
 // now we at poly level, check each model space transformed poly against the model world transfomed ray
 void G2_GorePolys(const mdxmSurface_t* surface, CTraceSurface& TS, const mdxmSurfHierarchy_t* surfInfo)

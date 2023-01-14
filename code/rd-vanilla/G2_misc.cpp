@@ -67,7 +67,7 @@ int goreModelIndex;
 static cvar_t* cg_g2MarksAllModels = nullptr;
 
 GoreTextureCoordinates* FindGoreRecord(int tag);
-static inline void DestroyGoreTexCoordinates(const int tag)
+static void DestroyGoreTexCoordinates(const int tag)
 {
 	GoreTextureCoordinates* gTC = FindGoreRecord(tag);
 	if (!gTC)
@@ -86,7 +86,7 @@ int AllocGoreRecord()
 {
 	while (GoreRecords.size() > MAX_GORE_RECORDS)
 	{
-		const int tagHigh = (*GoreRecords.begin()).first & GORE_TAG_MASK;
+		const int tag_high = (*GoreRecords.begin()).first & GORE_TAG_MASK;
 		std::map<int, GoreTextureCoordinates>::iterator it;
 
 		it = GoreRecords.begin();
@@ -99,7 +99,7 @@ int AllocGoreRecord()
 		GoreRecords.erase(GoreRecords.begin());
 		while (GoreRecords.size())
 		{
-			if (((*GoreRecords.begin()).first & GORE_TAG_MASK) != tagHigh)
+			if (((*GoreRecords.begin()).first & GORE_TAG_MASK) != tag_high)
 			{
 				break;
 			}
@@ -162,7 +162,7 @@ CGoreSet* FindGoreSet(const int goreSetTag)
 
 CGoreSet* NewGoreSet()
 {
-	CGoreSet* ret = new CGoreSet(CurrentGoreSet++);
+	const auto ret = new CGoreSet(CurrentGoreSet++);
 	GoreSets[ret->mMyGoreSetTag] = ret;
 	ret->mRefCount = 1;
 	return ret;
@@ -170,7 +170,7 @@ CGoreSet* NewGoreSet()
 
 void DeleteGoreSet(const int goreSetTag)
 {
-	const std::map<int, CGoreSet*>::iterator f = GoreSets.find(goreSetTag);
+	const auto f = GoreSets.find(goreSetTag);
 	if (f != GoreSets.end())
 	{
 		if ((*f).second->mRefCount == 0 || (*f).second->mRefCount - 1 == 0)
@@ -187,9 +187,9 @@ void DeleteGoreSet(const int goreSetTag)
 
 CGoreSet::~CGoreSet()
 {
-	for (const auto& mGoreRecord : mGoreRecords)
+	for (const auto& m_gore_record : mGoreRecords)
 	{
-		DeleteGoreRecord(mGoreRecord.second.mGoreTag);
+		DeleteGoreRecord(m_gore_record.second.mGoreTag);
 	}
 };
 #endif
@@ -704,9 +704,9 @@ static void G2_BuildHitPointST(const vec3_t A, const float SA, const float TA,
 }
 
 // routine that works out given a ray whether or not it hits a poly
-static inline qboolean G2_SegmentTriangleTest(const vec3_t start, const vec3_t end,
-	const vec3_t A, const vec3_t B, const vec3_t C,
-	const qboolean backFaces, const qboolean frontFaces, vec3_t returnedPoint, vec3_t returnedNormal, float* denom)
+static qboolean G2_SegmentTriangleTest(const vec3_t start, const vec3_t end,
+                                       const vec3_t A, const vec3_t B, const vec3_t C,
+                                       const qboolean backFaces, const qboolean frontFaces, vec3_t returnedPoint, vec3_t returnedNormal, float* denom)
 {
 	static constexpr float tiny = 1E-10f;
 	vec3_t returnedNormalT;
@@ -796,7 +796,7 @@ static int GoreTouch = 1;
 static int GoreIndecies[MAX_GORE_INDECIES];
 
 #define GORE_MARGIN (0.0f)
-int	G2API_GetTime(int argTime);
+int	G2API_GetTime(int arg_time);
 
 // now we at poly level, check each model space transformed poly against the model world transfomed ray
 static void G2_GorePolys(const mdxmSurface_t* surface, CTraceSurface& TS, const mdxmSurfHierarchy_t* surfInfo)

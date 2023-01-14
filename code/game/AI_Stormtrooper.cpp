@@ -3681,7 +3681,7 @@ void NPC_BSST_Attack()
 		&& NPC->client->playerTeam == TEAM_ENEMY
 		&& !PM_InKnockDown(&NPC->client->ps))
 	{
-		if (NPC->client->ps.torsoAnim == BOTH_A7_SLAP_R || NPC->client->ps.torsoAnim == BOTH_A7_SLAP_L)
+		if (NPC->client->ps.torsoAnim == BOTH_SLAP_R || NPC->client->ps.torsoAnim == BOTH_SLAP_L)
 		{
 			shoot = qfalse;
 			if (TIMER_Done(NPC, "smackTime") && !NPCInfo->blockedDebounceTime)
@@ -3723,11 +3723,11 @@ void NPC_BSST_Attack()
 					int swing_anim;
 					if (NPC->health > BLOCKPOINTS_THIRTY)
 					{
-						swing_anim = BOTH_A7_SLAP_R;
+						swing_anim = BOTH_SLAP_R;
 					}
 					else
 					{
-						swing_anim = BOTH_A7_SLAP_L;
+						swing_anim = BOTH_SLAP_L;
 					}
 					G_AddVoiceEvent(NPC, Q_irand(EV_OUTFLANK1, EV_OUTFLANK2), 2000);
 					NPC_SetAnim(NPC, SETANIM_BOTH, swing_anim, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
@@ -3753,7 +3753,7 @@ void NPC_BSST_Attack()
 		&& NPC->client->playerTeam == TEAM_PLAYER
 		&& !PM_InKnockDown(&NPC->client->ps))
 	{
-		if (NPC->client->ps.torsoAnim == BOTH_A7_SLAP_R || NPC->client->ps.torsoAnim == BOTH_A7_SLAP_L)
+		if (NPC->client->ps.torsoAnim == BOTH_SLAP_R || NPC->client->ps.torsoAnim == BOTH_SLAP_L)
 		{
 			shoot = qfalse;
 			if (TIMER_Done(NPC, "smackTime") && !NPCInfo->blockedDebounceTime)
@@ -3795,11 +3795,11 @@ void NPC_BSST_Attack()
 					int swing_anim;
 					if (NPC->health > BLOCKPOINTS_THIRTY)
 					{
-						swing_anim = BOTH_A7_SLAP_R;
+						swing_anim = BOTH_SLAP_R;
 					}
 					else
 					{
-						swing_anim = BOTH_A7_SLAP_L;
+						swing_anim = BOTH_SLAP_L;
 					}
 					G_AddVoiceEvent(NPC, Q_irand(EV_OUTFLANK1, EV_OUTFLANK2), 2000);
 					NPC_SetAnim(NPC, SETANIM_BOTH, swing_anim, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);

@@ -240,7 +240,7 @@ Both client and server can use this, and it will
 do the appropriate things.
 =============
 */
-void NORETURN QDECL Com_Error(int code, const char* fmt, ...) {
+void NORETURN QDECL Com_Error(int level, const char* fmt, ...) {
 	va_list		argptr;
 	static int	lastErrorTime;
 	static int	errorCount;
@@ -253,21 +253,21 @@ void NORETURN QDECL Com_Error(int code, const char* fmt, ...) {
 	// when we are running automated scripts, make sure we
 	// know if anything failed
 	if (com_buildScript && com_buildScript->integer) {
-		code = ERR_FATAL;
+		level = ERR_FATAL;
 	}
 
 	// ERR_DROPs on dedicated drop to an interactive console
 	// which doesn't make sense for dedicated as it's generally
 	// run unattended
 	if (com_dedicated && com_dedicated->integer) {
-		code = ERR_FATAL;
+		level = ERR_FATAL;
 	}
 
 	// if we are getting a solid stream of ERR_DROP, do an ERR_FATAL
 	const int current_time = Sys_Milliseconds();
 	if (current_time - lastErrorTime < 100) {
 		if (++errorCount > 3) {
-			code = ERR_FATAL;
+			level = ERR_FATAL;
 		}
 	}
 	else {
@@ -279,13 +279,13 @@ void NORETURN QDECL Com_Error(int code, const char* fmt, ...) {
 	Q_vsnprintf(com_errorMessage, sizeof(com_errorMessage), fmt, argptr);
 	va_end(argptr);
 
-	if (code != ERR_DISCONNECT && code != ERR_NEED_CD) {
+	if (level != ERR_DISCONNECT && level != ERR_NEED_CD) {
 		Cvar_Get("com_errorMessage", "", CVAR_ROM);	//give com_errorMessage a default so it won't come back to life after a resetDefaults
 		Cvar_Set("com_errorMessage", com_errorMessage);
 	}
 
-	if (code == ERR_DISCONNECT || code == ERR_SERVERDISCONNECT || code == ERR_DROP || code == ERR_NEED_CD) {
-		throw code;
+	if (level == ERR_DISCONNECT || level == ERR_SERVERDISCONNECT || level == ERR_DROP || level == ERR_NEED_CD) {
+		throw level;
 	}
 	CL_Shutdown();
 	SV_Shutdown(va("Server fatal crashed: %s\n", com_errorMessage));

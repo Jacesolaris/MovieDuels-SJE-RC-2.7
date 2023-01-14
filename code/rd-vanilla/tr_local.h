@@ -1301,7 +1301,7 @@ model_t* R_AllocModel();
 void    	R_Init();
 image_t* R_FindImageFile(const char* name, qboolean mipmap, qboolean allowPicmip, qboolean allowTC, int glWrapClampMode);
 
-image_t* R_CreateImage(const char* name, const byte* pic, int width, int height, GLenum format, qboolean mipmap, qboolean allowPicmip, qboolean allowTC, int wrapClampMode);
+image_t* R_CreateImage(const char* name, const byte* pic, int width, int height, GLenum format, qboolean mipmap, qboolean allow_picmip, qboolean allow_tc, int gl_wrap_clamp_mode);
 
 qboolean	R_GetModeInfo(int* width, int* height, int mode);
 
@@ -1351,7 +1351,7 @@ IMPLEMENTATION SPECIFIC FUNCTIONS
 
 ====================================================================
 */
-static inline void GLimp_LogComment(char* comment) {}
+static void GLimp_LogComment(char* comment) {}
 
 /*
 ====================================================================
@@ -1597,7 +1597,7 @@ public:
 };
 
 void R_AddGhoulSurfaces(trRefEntity_t* ent);
-void RB_SurfaceGhoul(CRenderableSurface* surface);
+void RB_SurfaceGhoul(CRenderableSurface* surf);
 /*
 Ghoul2 Insert End
 */
@@ -1783,7 +1783,7 @@ qboolean	RE_ProcessDissolve();
 qboolean	RE_InitDissolve(qboolean bForceCircularExtroWipe);
 
 long generateHashValue(const char* fname);
-void R_LoadImage(const char* name, byte** pic, int* width, int* height);
+void R_LoadImage(const char* shortname, byte** pic, int* width, int* height);
 void		RE_InsertModelIntoHash(const char* name, const model_t* mod);
 qboolean R_FogParmsMatch(int fog1, int fog2);
 
@@ -1794,8 +1794,8 @@ Ghoul2 Insert Start
 // tr_ghoul2.cpp
 void		Create_Matrix(const float* angle, mdxaBone_t* matrix);
 void		Multiply_3x4Matrix(mdxaBone_t* out, const mdxaBone_t* in2, const mdxaBone_t* in);
-extern qboolean R_LoadMDXM(model_t* mod, void* buffer, const char* name, qboolean& bAlreadyCached);
-extern qboolean R_LoadMDXA(model_t* mod, void* buffer, const char* name, qboolean& bAlreadyCached);
+extern qboolean R_LoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboolean& b_already_cached);
+extern qboolean R_LoadMDXA(model_t* mod, void* buffer, const char* mod_name, qboolean& b_already_cached);
 /*
 Ghoul2 Insert End
 */

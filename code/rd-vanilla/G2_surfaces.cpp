@@ -259,15 +259,15 @@ void G2_FindRecursiveSurface(const model_t* current_model, int surface_num, surf
 		offsets[surface->thisSurfaceIndex]);
 
 	// see if we have an override surface in the surface list
-	const surfaceInfo_t* surfOverride = G2_FindOverrideSurface(surface_num, root_list);
+	const surfaceInfo_t* surf_override = G2_FindOverrideSurface(surface_num, root_list);
 
 	// really, we should use the default flags for this surface unless it's been overriden
 	int off_flags = surfInfo->flags;
 
 	// set the off flags if we have some
-	if (surfOverride)
+	if (surf_override)
 	{
-		off_flags = surfOverride->off_flags;
+		off_flags = surf_override->off_flags;
 	}
 
 	// if this surface is not off, indicate as such in the active surface list

@@ -602,7 +602,7 @@ void Com_BeginRedirect(char* buffer, int buffersize, void (*flush)(char*));
 void Com_EndRedirect();
 void QDECL Com_Printf(const char* fmt, ...);
 void QDECL Com_DPrintf(const char* fmt, ...);
-void NORETURN QDECL Com_Error(int code, const char* fmt, ...);
+void NORETURN QDECL Com_Error(int level, const char* fmt, ...);
 void NORETURN Com_Quit_f();
 int Com_EventLoop();
 int Com_Milliseconds(); // will be journaled properly

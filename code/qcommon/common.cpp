@@ -263,7 +263,7 @@ void SG_Shutdown();
 #ifdef JK2_MODE
 extern void SCR_UnprecacheScreenshot();
 #endif
-void NORETURN QDECL Com_Error(int code, const char* fmt, ...)
+void NORETURN QDECL Com_Error(int level, const char* fmt, ...)
 {
 	va_list argptr;
 	static int lastErrorTime;
@@ -279,7 +279,7 @@ void NORETURN QDECL Com_Error(int code, const char* fmt, ...)
 	// know if anything failed
 	if (com_buildScript && com_buildScript->integer)
 	{
-		code = ERR_FATAL;
+		level = ERR_FATAL;
 	}
 
 	// if we are getting a solid stream of ERR_DROP, do an ERR_FATAL
@@ -288,7 +288,7 @@ void NORETURN QDECL Com_Error(int code, const char* fmt, ...)
 	{
 		if (++errorCount > 3)
 		{
-			code = ERR_FATAL;
+			level = ERR_FATAL;
 		}
 	}
 	else
@@ -305,7 +305,7 @@ void NORETURN QDECL Com_Error(int code, const char* fmt, ...)
 	Q_vsnprintf(com_errorMessage, sizeof(com_errorMessage), fmt, argptr);
 	va_end(argptr);
 
-	if (code != ERR_DISCONNECT)
+	if (level != ERR_DISCONNECT)
 	{
 		Cvar_Get("com_errorMessage", "", CVAR_ROM);
 		//give com_errorMessage a default so it won't come back to life after a resetDefaults
@@ -313,9 +313,9 @@ void NORETURN QDECL Com_Error(int code, const char* fmt, ...)
 	}
 
 	SG_Shutdown(); // close any file pointers
-	if (code == ERR_DISCONNECT || code == ERR_DROP)
+	if (level == ERR_DISCONNECT || level == ERR_DROP)
 	{
-		throw code;
+		throw level;
 	}
 	SV_Shutdown(va("Server fatal crashed: %s\n", com_errorMessage));
 	CL_Shutdown();

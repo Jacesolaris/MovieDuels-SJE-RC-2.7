@@ -190,6 +190,10 @@ cvar_t* r_screenshotJpegQuality;
 
 cvar_t* g_Weather;
 
+#if !defined(__APPLE__)
+PFNGLSTENCILOPSEPARATEPROC qglStencilOpSeparate;
+#endif
+
 PFNGLACTIVETEXTUREARBPROC qglActiveTextureARB;
 PFNGLCLIENTACTIVETEXTUREARBPROC qglClientActiveTextureARB;
 PFNGLMULTITEXCOORD2FARBPROC qglMultiTexCoord2fARB;
@@ -690,14 +694,22 @@ static void GLimp_InitExtensions()
 		(b_nv_register_combiners && i_num_general_combiners >= 2 || b_arb_fragment_program))
 	{
 		g_bDynamicGlowSupported = true;
-		// this would overwrite any achived setting gwg
-		// ri.Cvar_Set( "r_DynamicGlow", "1" );
 	}
 	else
 	{
 		g_bDynamicGlowSupported = false;
 		ri.Cvar_Set("r_DynamicGlow", "0");
 	}
+
+#if !defined(__APPLE__)
+	qglStencilOpSeparate = static_cast<PFNGLSTENCILOPSEPARATEPROC>(ri.GL_GetProcAddress("glStencilOpSeparate"));
+	if (qglStencilOpSeparate)
+	{
+		glConfig.doStencilShadowsInOneDrawcall = qtrue;
+	}
+#else
+	glConfig.doStencilShadowsInOneDrawcall = qtrue;
+#endif
 }
 
 /*
@@ -1968,10 +1980,10 @@ extern void R_WeatherEffectCommand(const char* command);
 extern qboolean R_inPVS(vec3_t p1, vec3_t p2);
 extern void RE_GetModelBounds(refEntity_t* ref_ent, vec3_t bounds1, vec3_t bounds2);
 extern void G2API_AnimateG2Models(CGhoul2Info_v& ghoul2, int acurrent_time, CRagDollUpdateParams* params);
-extern qboolean G2API_GetRagBonePos(CGhoul2Info_v& ghoul2, const char* bone_name, vec3_t pos, vec3_t entAngles, vec3_t entPos, vec3_t entScale);
+extern qboolean G2API_GetRagBonePos(CGhoul2Info_v& ghoul2, const char* bone_name, vec3_t pos, vec3_t ent_angles, vec3_t ent_pos, vec3_t ent_scale);
 extern qboolean G2API_RagEffectorKick(CGhoul2Info_v& ghoul2, const char* bone_name, vec3_t velocity);
 extern qboolean G2API_RagForceSolve(CGhoul2Info_v& ghoul2, qboolean force);
-extern qboolean G2API_SetBoneIKState(CGhoul2Info_v& ghoul2, int time, const char* bone_name, int ikState, sharedSetBoneIKStateParams_t* params);
+extern qboolean G2API_SetBoneIKState(CGhoul2Info_v& ghoul2, int time, const char* bone_name, int ik_state, sharedSetBoneIKStateParams_t* params);
 extern qboolean G2API_IKMove(CGhoul2Info_v& ghoul2, int time, sharedIKMoveParams_t* params);
 extern qboolean G2API_RagEffectorGoal(CGhoul2Info_v& ghoul2, const char* bone_name, vec3_t pos);
 extern qboolean G2API_RagPCJGradientSpeed(CGhoul2Info_v& ghoul2, const char* bone_name, float speed);
