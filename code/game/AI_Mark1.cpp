@@ -537,8 +537,6 @@ void Mark1_FireRocket()
 
 	gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, muzzle1);
 
-	//	G_PlayEffect( "blaster/muzzle_flash", muzzle1 );
-
 	CalcEntitySpot(NPC->enemy, SPOT_HEAD, enemy_org1);
 	VectorSubtract(enemy_org1, muzzle1, delta1);
 	vectoangles(delta1, angle_to_enemy1);

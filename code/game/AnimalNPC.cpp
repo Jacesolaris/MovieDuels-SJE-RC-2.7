@@ -198,7 +198,7 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 	//Client sets ucmds and such for speed alterations
 	float speedInc, speedIdleDec, speedIdle, /*speedIdleAccel, */speedMin, speedMax;
 	float fWalkSpeedMax;
-	int curTime;
+	int cur_time;
 	bgEntity_t* parent = p_veh->m_pParentEntity;
 #ifdef _JK2MP
 	playerState_t* parent_ps = parent->playerState;
@@ -207,12 +207,12 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 #endif
 
 #ifndef _JK2MP//SP
-	curTime = level.time;
+	cur_time = level.time;
 #elif defined QAGAME//MP GAME
-	curTime = level.time;
+	cur_time = level.time;
 #elif defined CGAME//MP CGAME
 	//FIXME: pass in ucmd?  Not sure if this is reliable...
-	curTime = pm->cmd.serverTime;
+	cur_time = pm->cmd.serverTime;
 #endif
 
 #ifndef _JK2MP //bad for prediction - fixme
@@ -236,9 +236,9 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 	if (p_veh->m_pPilot &&
 		p_veh->m_ucmd.buttons & BUTTON_ALT_ATTACK && p_veh->m_pVehicleInfo->turboSpeed)
 	{
-		if (curTime - p_veh->m_iTurboTime > p_veh->m_pVehicleInfo->turboRecharge)
+		if (cur_time - p_veh->m_iTurboTime > p_veh->m_pVehicleInfo->turboRecharge)
 		{
-			p_veh->m_iTurboTime = curTime + p_veh->m_pVehicleInfo->turboDuration;
+			p_veh->m_iTurboTime = cur_time + p_veh->m_pVehicleInfo->turboDuration;
 #ifndef _JK2MP //kill me now
 			if (p_veh->m_pVehicleInfo->soundTurbo)
 			{
@@ -249,7 +249,7 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 		}
 	}
 
-	if (curTime < p_veh->m_iTurboTime)
+	if (cur_time < p_veh->m_iTurboTime)
 	{
 		speedMax = p_veh->m_pVehicleInfo->turboSpeed;
 	}
@@ -332,7 +332,7 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 	}
 
 	fWalkSpeedMax = speedMax * 0.275f;
-	if (curTime > p_veh->m_iTurboTime && p_veh->m_ucmd.buttons & BUTTON_WALKING && parent_ps->speed > fWalkSpeedMax)
+	if (cur_time > p_veh->m_iTurboTime && p_veh->m_ucmd.buttons & BUTTON_WALKING && parent_ps->speed > fWalkSpeedMax)
 	{
 		parent_ps->speed = fWalkSpeedMax;
 	}

@@ -1049,9 +1049,9 @@ typedef struct gameImport_s {
 	void		(*G2API_ListModelSurfaces)				(void* ghl_info);
 	qboolean(*G2API_HaveWeGhoul2Models)				(void* ghoul2);
 	void		(*G2API_SetGhoul2ModelIndexes)			(void* ghoul2, qhandle_t* model_list, qhandle_t* skin_list);
-	qboolean(*G2API_GetBoltMatrix)					(void* ghoul2, int model_index, int bolt_index, mdxaBone_t* matrix, const vec3_t angles, const vec3_t position, int frameNum, qhandle_t* model_list, vec3_t scale);
-	qboolean(*G2API_GetBoltMatrix_NoReconstruct)	(void* ghoul2, int model_index, int bolt_index, mdxaBone_t* matrix, const vec3_t angles, const vec3_t position, int frameNum, qhandle_t* model_list, vec3_t scale);
-	qboolean(*G2API_GetBoltMatrix_NoRecNoRot)		(void* ghoul2, int model_index, int bolt_index, mdxaBone_t* matrix, const vec3_t angles, const vec3_t position, int frameNum, qhandle_t* model_list, vec3_t scale);
+	qboolean(*G2API_GetBoltMatrix)					(void* ghoul2, int model_index, int bolt_index, mdxaBone_t* matrix, const vec3_t angles, const vec3_t position, int frame_num, qhandle_t* model_list, vec3_t scale);
+	qboolean(*G2API_GetBoltMatrix_NoReconstruct)	(void* ghoul2, int model_index, int bolt_index, mdxaBone_t* matrix, const vec3_t angles, const vec3_t position, int frame_num, qhandle_t* model_list, vec3_t scale);
+	qboolean(*G2API_GetBoltMatrix_NoRecNoRot)		(void* ghoul2, int model_index, int bolt_index, mdxaBone_t* matrix, const vec3_t angles, const vec3_t position, int frame_num, qhandle_t* model_list, vec3_t scale);
 	int			(*G2API_InitGhoul2Model)				(void** ghoul2Ptr, const char* fileName, int model_index, qhandle_t customSkin, qhandle_t customShader, int modelFlags, int lodBias);
 	qboolean(*G2API_SetSkin)						(void* ghoul2, int model_index, qhandle_t customSkin, qhandle_t renderSkin);
 	int			(*G2API_Ghoul2Size)						(void* ghl_info);

@@ -87,7 +87,7 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 	//Client sets ucmds and such for speed alterations
 	float speedInc, speedIdle, speedMin, speedMax;
 	//	playerState_t *pilotPS = NULL;
-	int	curTime;
+	int	cur_time;
 
 	playerState_t* parent_ps = p_veh->m_pParentEntity->playerState;
 	if (p_veh->m_pPilot)
@@ -113,26 +113,26 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 	const float speedIdleDec = p_veh->m_pVehicleInfo->decelIdle * p_veh->m_fTimeModifier;
 
 #ifdef _GAME
-	curTime = level.time;
+	cur_time = level.time;
 #elif _CGAME
 	//FIXME: pass in ucmd?  Not sure if this is reliable...
-	curTime = pm->cmd.serverTime;
+	cur_time = pm->cmd.serverTime;
 #endif
 
 	if ((p_veh->m_pPilot /*&& (pilotPS->weapon == WP_NONE || pilotPS->weapon == WP_MELEE )*/ &&
 		(p_veh->m_ucmd.buttons & BUTTON_ALT_ATTACK) && p_veh->m_pVehicleInfo->turboSpeed)
 		/*||
-		(parent_ps && parent_ps->electrifyTime > curTime && p_veh->m_pVehicleInfo->turboSpeed)*/ //make them go!
+		(parent_ps && parent_ps->electrifyTime > cur_time && p_veh->m_pVehicleInfo->turboSpeed)*/ //make them go!
 		)
 	{
-		if ((parent_ps && parent_ps->electrifyTime > curTime) ||
+		if ((parent_ps && parent_ps->electrifyTime > cur_time) ||
 			(p_veh->m_pPilot->playerState &&
 				(p_veh->m_pPilot->playerState->weapon == WP_MELEE ||
 					(p_veh->m_pPilot->playerState->weapon == WP_SABER && BG_SabersOff(p_veh->m_pPilot->playerState)))))
 		{
-			if ((curTime - p_veh->m_iTurboTime) > p_veh->m_pVehicleInfo->turboRecharge)
+			if ((cur_time - p_veh->m_iTurboTime) > p_veh->m_pVehicleInfo->turboRecharge)
 			{
-				p_veh->m_iTurboTime = (curTime + p_veh->m_pVehicleInfo->turboDuration);
+				p_veh->m_iTurboTime = (cur_time + p_veh->m_pVehicleInfo->turboDuration);
 				if (p_veh->m_pVehicleInfo->iTurboStartFX)
 				{
 					for (int i = 0; (i < MAX_VEHICLE_EXHAUSTS && p_veh->m_iExhaustTag[i] != -1); i++)
@@ -170,7 +170,7 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 		parent_ps->speed = 0;
 	}
 	else if (
-		(curTime > p_veh->m_iTurboTime) &&
+		(cur_time > p_veh->m_iTurboTime) &&
 		!(p_veh->m_ulFlags & VEH_FLYING) &&
 		p_veh->m_ucmd.forwardmove < 0 &&
 		fabs(p_veh->m_vOrientation[ROLL])>25.0f)
@@ -178,7 +178,7 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 		p_veh->m_ulFlags |= VEH_SLIDEBREAKING;
 	}
 
-	if (curTime < p_veh->m_iTurboTime)
+	if (cur_time < p_veh->m_iTurboTime)
 	{
 		speedMax = p_veh->m_pVehicleInfo->turboSpeed;
 		if (parent_ps)
@@ -251,7 +251,7 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 		parent_ps->speed = speedMin;
 	}
 
-	if (parent_ps && parent_ps->electrifyTime > curTime)
+	if (parent_ps && parent_ps->electrifyTime > cur_time)
 	{
 		parent_ps->speed *= (p_veh->m_fTimeModifier / 60.0f);
 	}

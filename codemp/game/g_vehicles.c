@@ -1155,17 +1155,17 @@ static qboolean Update(Vehicle_t* p_veh, const usercmd_t* pUmcd)
 	int i;
 	int	prevSpeed;
 	int	nextSpeed;
-	int	curTime;
+	int	cur_time;
 	int halfMaxSpeed;
 	qboolean linkHeld = qfalse;
 
 	playerState_t* parent_ps = p_veh->m_pParentEntity->playerState;
 
 #ifdef _GAME
-	curTime = level.time;
+	cur_time = level.time;
 #elif _CGAME
 	//FIXME: pass in ucmd?  Not sure if this is reliable...
-	curTime = pm->cmd.serverTime;
+	cur_time = pm->cmd.serverTime;
 #endif
 
 	//increment the ammo for all rechargeable weapons
@@ -1515,8 +1515,8 @@ maintainSelfDuringBoarding:
 
 	// Shifting Sounds
 	//=====================================================================
-	if (p_veh->m_iTurboTime < curTime &&
-		p_veh->m_iSoundDebounceTimer < curTime &&
+	if (p_veh->m_iTurboTime < cur_time &&
+		p_veh->m_iSoundDebounceTimer < cur_time &&
 		((nextSpeed > prevSpeed && nextSpeed > halfMaxSpeed && prevSpeed < halfMaxSpeed) || (nextSpeed > halfMaxSpeed && !Q_irand(0, 1000)))
 		)
 	{
@@ -1530,7 +1530,7 @@ maintainSelfDuringBoarding:
 		}
 		if (shiftSound)
 		{
-			p_veh->m_iSoundDebounceTimer = curTime + Q_irand(1000, 4000);
+			p_veh->m_iSoundDebounceTimer = cur_time + Q_irand(1000, 4000);
 			// TODO: MP Shift Sound Playback
 		}
 	}

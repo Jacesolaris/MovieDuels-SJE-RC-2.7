@@ -255,14 +255,14 @@ void G2_FindRecursiveSurface(const model_t* current_model, int surface_num, surf
 	const mdxmSurface_t* surface = static_cast<mdxmSurface_t*>(G2_FindSurface(current_model, surface_num, 0));
 	const mdxmHierarchyOffsets_t* surf_indexes = reinterpret_cast<mdxmHierarchyOffsets_t*>(reinterpret_cast<byte*>(
 		current_model->mdxm) + sizeof(mdxmHeader_t));
-	const mdxmSurfHierarchy_t* surfInfo = reinterpret_cast<mdxmSurfHierarchy_t*>((byte*)surf_indexes + surf_indexes->
+	const mdxmSurfHierarchy_t* surf_info = reinterpret_cast<mdxmSurfHierarchy_t*>((byte*)surf_indexes + surf_indexes->
 		offsets[surface->thisSurfaceIndex]);
 
 	// see if we have an override surface in the surface list
 	const surfaceInfo_t* surf_override = G2_FindOverrideSurface(surface_num, root_list);
 
 	// really, we should use the default flags for this surface unless it's been overriden
-	int off_flags = surfInfo->flags;
+	int off_flags = surf_info->flags;
 
 	// set the off flags if we have some
 	if (surf_override)
@@ -283,9 +283,9 @@ void G2_FindRecursiveSurface(const model_t* current_model, int surface_num, surf
 		}
 
 	// now recursively call for the children
-	for (int i = 0; i < surfInfo->numChildren; i++)
+	for (int i = 0; i < surf_info->numChildren; i++)
 	{
-		surface_num = surfInfo->childIndexes[i];
+		surface_num = surf_info->childIndexes[i];
 		G2_FindRecursiveSurface(current_model, surface_num, root_list, active_surfaces);
 	}
 }
@@ -403,7 +403,7 @@ int G2_IsSurfaceRendered(const CGhoul2Info* ghl_info, const char* surface_name, 
 					surf_num]);
 
 			// find the original surface in the surface list
-			//G2 was bug, above comment was accurate, but we don't want the original flags, we want the parent flags
+			//G2 was error, above comment was accurate, but we don't want the original flags, we want the parent flags
 			G2_IsSurfaceLegal(ghl_info->currentModel, parentSurfInfo->name, &parent_flags);
 
 			// now see if we already have overriden this surface in the slist

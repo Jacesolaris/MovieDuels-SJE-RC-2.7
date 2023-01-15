@@ -115,15 +115,15 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 	//Client sets ucmds and such for speed alterations
 	float speedInc, speedIdleDec, speedIdle, speedMin, speedMax;
 	float fWalkSpeedMax;
-	int		curTime;
+	int		cur_time;
 	const bgEntity_t* parent = p_veh->m_pParentEntity;
 	playerState_t* parent_ps = parent->playerState;
 
 #ifdef _GAME
-	curTime = level.time;
+	cur_time = level.time;
 #elif defined(_CGAME)
 	//FIXME: pass in ucmd?  Not sure if this is reliable...
-	curTime = pm->cmd.serverTime;
+	cur_time = pm->cmd.serverTime;
 #endif
 
 	speedIdleDec = p_veh->m_pVehicleInfo->decelIdle * p_veh->m_fTimeModifier;
@@ -136,14 +136,14 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 	if (p_veh->m_pPilot /*&& (pilotPS->weapon == WP_NONE || pilotPS->weapon == WP_MELEE )*/ &&
 		(p_veh->m_ucmd.buttons & BUTTON_ALT_ATTACK) && p_veh->m_pVehicleInfo->turboSpeed)
 	{
-		if ((curTime - p_veh->m_iTurboTime) > p_veh->m_pVehicleInfo->turboRecharge)
+		if ((cur_time - p_veh->m_iTurboTime) > p_veh->m_pVehicleInfo->turboRecharge)
 		{
-			p_veh->m_iTurboTime = (curTime + p_veh->m_pVehicleInfo->turboDuration);
+			p_veh->m_iTurboTime = (cur_time + p_veh->m_pVehicleInfo->turboDuration);
 			parent_ps->speed = p_veh->m_pVehicleInfo->turboSpeed;	// Instantly Jump To Turbo Speed
 		}
 	}
 
-	if (curTime < p_veh->m_iTurboTime)
+	if (cur_time < p_veh->m_iTurboTime)
 	{
 		speedMax = p_veh->m_pVehicleInfo->turboSpeed;
 	}
@@ -221,7 +221,7 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 	}
 
 	fWalkSpeedMax = speedMax * 0.275f;
-	if (curTime > p_veh->m_iTurboTime && (p_veh->m_ucmd.buttons & BUTTON_WALKING) && parent_ps->speed > fWalkSpeedMax)
+	if (cur_time > p_veh->m_iTurboTime && (p_veh->m_ucmd.buttons & BUTTON_WALKING) && parent_ps->speed > fWalkSpeedMax)
 	{
 		parent_ps->speed = fWalkSpeedMax;
 	}

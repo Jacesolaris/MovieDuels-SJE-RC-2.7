@@ -394,7 +394,7 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 	float speedInc, speedIdleDec, speedIdle, /*speedIdleAccel, */speedMin, speedMax;
 	playerState_t* parent_ps;
 	//playerState_t *pilotPS = NULL;
-	int curTime;
+	int cur_time;
 
 #ifdef _JK2MP
 	parent_ps = p_veh->m_pParentEntity->playerState;
@@ -433,32 +433,32 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 	speedIdleDec = p_veh->m_pVehicleInfo->decelIdle * p_veh->m_fTimeModifier;
 
 #ifndef _JK2MP//SP
-	curTime = level.time;
+	cur_time = level.time;
 #elif defined QAGAME//MP GAME
-	curTime = level.time;
+	cur_time = level.time;
 #elif defined CGAME//MP CGAME
 	//FIXME: pass in ucmd?  Not sure if this is reliable...
-	curTime = pm->cmd.serverTime;
+	cur_time = pm->cmd.serverTime;
 #endif
 
 	if (p_veh->m_pPilot &&
 		p_veh->m_ucmd.buttons & BUTTON_ALT_ATTACK && p_veh->m_pVehicleInfo->turboSpeed
 #ifdef _JK2MP
 		||
-		(parent_ps && parent_ps->electrifyTime > curTime && p_veh->m_pVehicleInfo->turboSpeed) //make them go!
+		(parent_ps && parent_ps->electrifyTime > cur_time && p_veh->m_pVehicleInfo->turboSpeed) //make them go!
 #endif
 	)
 	{
 #ifdef _JK2MP
-		if ((parent_ps && parent_ps->electrifyTime > curTime) ||
+		if ((parent_ps && parent_ps->electrifyTime > cur_time) ||
 			(p_veh->m_pPilot->playerState &&
 				(p_veh->m_pPilot->playerState->weapon == WP_MELEE ||
 					(p_veh->m_pPilot->playerState->weapon == WP_SABER && p_veh->m_pPilot->playerState->saberHolstered))))
 		{
 #endif
-		if (curTime - p_veh->m_iTurboTime > p_veh->m_pVehicleInfo->turboRecharge)
+		if (cur_time - p_veh->m_iTurboTime > p_veh->m_pVehicleInfo->turboRecharge)
 		{
-			p_veh->m_iTurboTime = curTime + p_veh->m_pVehicleInfo->turboDuration;
+			p_veh->m_iTurboTime = cur_time + p_veh->m_pVehicleInfo->turboDuration;
 			if (p_veh->m_pVehicleInfo->iTurboStartFX)
 			{
 				for (int i = 0; i < MAX_VEHICLE_EXHAUSTS && p_veh->m_iExhaustTag[i] != -1; i++)
@@ -546,7 +546,7 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 		parent_ps->speed = 0;
 	}
 	else if (
-		curTime > p_veh->m_iTurboTime &&
+		cur_time > p_veh->m_iTurboTime &&
 		!(p_veh->m_ulFlags & VEH_FLYING) &&
 		p_veh->m_ucmd.forwardmove < 0 &&
 		fabs(p_veh->m_vOrientation[ROLL]) > 25.0f)
@@ -554,7 +554,7 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 		p_veh->m_ulFlags |= VEH_SLIDEBREAKING;
 	}
 
-	if (curTime < p_veh->m_iTurboTime)
+	if (cur_time < p_veh->m_iTurboTime)
 	{
 		speedMax = p_veh->m_pVehicleInfo->turboSpeed;
 		if (parent_ps)
@@ -795,7 +795,7 @@ void AnimateRiders(Vehicle_t* p_veh)
 	animNumber_t Anim = BOTH_VS_IDLE;
 	int iFlags, iBlend = 300;
 	playerState_t* pilotPS;
-	int curTime;
+	int cur_time;
 
 	// Boarding animation.
 	if (p_veh->m_iBoarding != 0)
@@ -925,12 +925,12 @@ void AnimateRiders(Vehicle_t* p_veh)
 #endif
 
 #ifndef _JK2MP//SP
-	curTime = level.time;
+	cur_time = level.time;
 #elif defined QAGAME//MP GAME
-	curTime = level.time;
+	cur_time = level.time;
 #elif defined CGAME//MP CGAME
 	//FIXME: pass in ucmd?  Not sure if this is reliable...
-	curTime = pm->cmd.serverTime;
+	cur_time = pm->cmd.serverTime;
 #endif
 
 	{
@@ -945,7 +945,7 @@ void AnimateRiders(Vehicle_t* p_veh)
 #endif
 		bool Right = p_veh->m_ucmd.rightmove > 0;
 		bool Left = p_veh->m_ucmd.rightmove < 0;
-		const bool Turbo = curTime < p_veh->m_iTurboTime;
+		const bool Turbo = cur_time < p_veh->m_iTurboTime;
 		EWeaponPose WeaponPose = WPOSE_NONE;
 
 		// Remove Crashing Flag

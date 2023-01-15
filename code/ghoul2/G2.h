@@ -103,8 +103,8 @@ qboolean G2_Get_Bone_Anim_Index(boneInfo_v& blist, int index, int current_time,
 
 // misc functions G2_misc.cpp
 void G2_List_Model_Surfaces(const char* fileName);
-void G2_List_Model_Bones(const char* fileName, int frame);
-qboolean G2_GetAnimFileName(const char* fileName, char** filename);
+void G2_List_Model_Bones(const char* file_name);
+qboolean G2_GetAnimFileName(const char* file_name, char** filename);
 #ifdef _G2_GORE
 void G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, CCollisionRecord* collRecMap, int ent_num,
                     EG2_Collision e_g2_trace_type, int use_lod, float fRadius, float ssize, float tsize, float theta,
@@ -114,10 +114,10 @@ void		G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, CCol
 #endif
 void TransformAndTranslatePoint(const vec3_t in, vec3_t out, const mdxaBone_t* mat);
 #ifdef _G2_GORE
-void G2_TransformModel(CGhoul2Info_v& ghoul2, int frameNum, vec3_t scale, CMiniHeap* G2VertSpace, int use_lod,
-                       bool ApplyGore, const SSkinGoreData* gore = nullptr);
+void G2_TransformModel(CGhoul2Info_v& ghoul2, int frame_num, vec3_t scale, CMiniHeap* g2_vert_space, int use_lod,
+                       bool apply_gore, const SSkinGoreData* gore = nullptr);
 #else
-void		G2_TransformModel(CGhoul2Info_v& ghoul2, const int frameNum, vec3_t scale, CMiniHeap* G2VertSpace, int use_lod);
+void		G2_TransformModel(CGhoul2Info_v& ghoul2, const int frame_num, vec3_t scale, CMiniHeap* g2_vert_space, int use_lod);
 #endif
 void G2_GenerateWorldMatrix(const vec3_t angles, const vec3_t origin);
 void TransformPoint(const vec3_t in, vec3_t out, const mdxaBone_t* mat);
@@ -138,7 +138,7 @@ int G2_Add_Bolt_Surf_Num(const CGhoul2Info* ghl_info, boltInfo_v& bltlist, const
 void RestoreGhoul2InfoArray();
 void SaveGhoul2InfoArray();
 
-qhandle_t G2API_PrecacheGhoul2Model(const char* fileName);
+qhandle_t G2API_PrecacheGhoul2Model(const char* file_name);
 
 int G2API_InitGhoul2Model(CGhoul2Info_v& ghoul2, const char* file_name, int model_index,
                           qhandle_t custom_skin = NULL_HANDLE,
@@ -195,7 +195,7 @@ qboolean G2API_GetAnimFileName(CGhoul2Info* ghl_info, char** filename);
 void G2API_CollisionDetect(CCollisionRecord* coll_rec_map, CGhoul2Info_v& ghoul2, const vec3_t angles,
                            const vec3_t position,
                            int aframe_number, int ent_num, vec3_t ray_start, vec3_t ray_end, vec3_t scale,
-                           CMiniHeap* G2VertSpace,
+                           CMiniHeap* g2_vert_space,
                            EG2_Collision e_g2_trace_type, int use_lod, float f_radius);
 void G2API_GiveMeVectorFromMatrix(mdxaBone_t& bolt_matrix, Eorientations flags, vec3_t& vec);
 void G2API_CopyGhoul2Instance(CGhoul2Info_v& ghoul2From, CGhoul2Info_v& ghoul2_to, int model_index = -1);
@@ -227,7 +227,7 @@ char* G2API_GetAnimFileInternalNameIndex(qhandle_t model_index);
 int G2API_GetSurfaceRenderStatus(CGhoul2Info* ghl_info, const char* surface_name);
 
 // From tr_ghoul2.cpp
-void G2_ConstructGhoulSkeleton(CGhoul2Info_v& ghoul2, int frameNum, bool checkForNewOrigin, const vec3_t scale);
+void G2_ConstructGhoulSkeleton(CGhoul2Info_v& ghoul2, int frame_num, bool checkForNewOrigin, const vec3_t scale);
 void G2_GetBoltMatrixLow(CGhoul2Info& ghoul2, int boltNum, const vec3_t scale, mdxaBone_t& retMatrix);
 void G2_TimingModel(boneInfo_t& bone, int current_time, int num_frames_in_file, int& current_frame, int& new_frame, float& lerp);
 

@@ -749,9 +749,9 @@ void G2API_CleanGhoul2Models(CGhoul2Info_v& ghoul2)
 	ghoul2.~CGhoul2Info_v();
 }
 
-qhandle_t G2API_PrecacheGhoul2Model(const char* fileName)
+qhandle_t G2API_PrecacheGhoul2Model(const char* file_name)
 {
-	return RE_RegisterModel(fileName);
+	return RE_RegisterModel(file_name);
 }
 
 // initialise all that needs to be on a new Ghoul II model
@@ -823,7 +823,7 @@ qboolean G2API_SetLodBias(CGhoul2Info* ghl_info, const int lod_bias)
 	}
 	return qfalse;
 }
-extern void G2API_SetSurfaceOnOffFromSkin(CGhoul2Info* ghl_info, qhandle_t renderSkin);	//tr_ghoul2.cpp
+extern void G2API_SetSurfaceOnOffFromSkin(CGhoul2Info* ghl_info, qhandle_t render_skin);	//tr_ghoul2.cpp
 
 qboolean G2API_SetSkin(CGhoul2Info* ghl_info, qhandle_t custom_skin, const qhandle_t render_skin)
 {
@@ -1719,7 +1719,7 @@ void G2API_DetachEnt(int* bolt_info)
 	}
 }
 
-bool G2_NeedsRecalc(CGhoul2Info* ghl_info, int frameNum);
+bool G2_NeedsRecalc(CGhoul2Info* ghl_info, int frame_num);
 
 qboolean G2API_GetBoltMatrix(CGhoul2Info_v& ghoul2, const int model_index, const int bolt_index, mdxaBone_t* matrix, const vec3_t angles,
 	const vec3_t position, const int aframe_num, qhandle_t* model_list, const vec3_t scale)
@@ -1740,7 +1740,7 @@ qboolean G2API_GetBoltMatrix(CGhoul2Info_v& ghoul2, const int model_index, const
 	{
 		if (matrix && model_index >= 0 && model_index < ghoul2.size())
 		{
-			const int frameNum = G2API_GetTime(aframe_num);
+			const int frame_num = G2API_GetTime(aframe_num);
 			CGhoul2Info* ghl_info = &ghoul2[model_index];
 			G2ERROR(bolt_index >= 0 && (bolt_index < (int)ghl_info->mBltlist.size()), va("Invalid Bolt Index (%d:%s)", bolt_index, ghl_info->mFileName));
 
@@ -1748,9 +1748,9 @@ qboolean G2API_GetBoltMatrix(CGhoul2Info_v& ghoul2, const int model_index, const
 			{
 				mdxaBone_t bolt;
 
-				if (G2_NeedsRecalc(ghl_info, frameNum))
+				if (G2_NeedsRecalc(ghl_info, frame_num))
 				{
-					G2_ConstructGhoulSkeleton(ghoul2, frameNum, true, scale);
+					G2_ConstructGhoulSkeleton(ghoul2, frame_num, true, scale);
 				}
 
 				G2_GetBoltMatrixLow(*ghl_info, bolt_index, scale, bolt);
@@ -1806,7 +1806,7 @@ void G2API_ListBones(CGhoul2Info* ghl_info, const int frame)
 {
 	if (G2_SetupModelPointers(ghl_info))
 	{
-		G2_List_Model_Bones(ghl_info->mFileName, frame);
+		G2_List_Model_Bones(ghl_info->mFileName);
 	}
 }
 
@@ -2049,10 +2049,10 @@ char* G2API_GetSurfaceName(CGhoul2Info* ghl_info, const int surf_number)
 		if (surf)
 		{
 			assert(G2_MODEL_OK(ghl_info));
-			mdxmHierarchyOffsets_t* surf_indexes = reinterpret_cast<mdxmHierarchyOffsets_t*>(reinterpret_cast<byte*>(ghl_info->currentModel->mdxm) + sizeof(mdxmHeader_t));
-			mdxmSurfHierarchy_t* surfInfo = reinterpret_cast<mdxmSurfHierarchy_t*>(reinterpret_cast<byte*>(surf_indexes) + surf_indexes->offsets[surf->
+			const auto surf_indexes = reinterpret_cast<mdxmHierarchyOffsets_t*>(reinterpret_cast<byte*>(ghl_info->currentModel->mdxm) + sizeof(mdxmHeader_t));
+			const auto surf_info = reinterpret_cast<mdxmSurfHierarchy_t*>(reinterpret_cast<byte*>(surf_indexes) + surf_indexes->offsets[surf->
 				thisSurfaceIndex]);
-			return surfInfo->name;
+			return surf_info->name;
 		}
 	}
 	G2WARNING(0, "Surface Not Found");

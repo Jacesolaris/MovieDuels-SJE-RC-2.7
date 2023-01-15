@@ -312,7 +312,7 @@ using game_import_t = struct
 	void (*G2API_DetachEnt)(int* bolt_info);
 
 	qboolean (*G2API_GetBoltMatrix)(CGhoul2Info_v& ghoul2, int model_index, int bolt_index, mdxaBone_t* matrix,
-	                                const vec3_t angles, const vec3_t position, int frameNum, qhandle_t* model_list,
+	                                const vec3_t angles, const vec3_t position, int frame_num, qhandle_t* model_list,
 	                                const vec3_t scale);
 
 	void (*G2API_ListSurfaces)(CGhoul2Info* ghl_info);
@@ -325,7 +325,7 @@ using game_import_t = struct
 	void (*G2API_CollisionDetect)(CCollisionRecord* collRecMap, CGhoul2Info_v& ghoul2, const vec3_t angles,
 	                              const vec3_t position,
 	                              int frameNumber, int ent_num, vec3_t rayStart, vec3_t rayEnd, vec3_t scale,
-	                              CMiniHeap* G2VertSpace,
+	                              CMiniHeap* g2_vert_space,
 	                              EG2_Collision e_g2_trace_type, int use_lod, float fRadius);
 	void (*G2API_GiveMeVectorFromMatrix)(mdxaBone_t& bolt_matrix, Eorientations flags, vec3_t& vec);
 	void (*G2API_CleanGhoul2Models)(CGhoul2Info_v& ghoul2);

@@ -286,9 +286,9 @@ void G2_List_Model_Surfaces(const char* fileName)
 }
 
 // list all bones associated with a model
-void G2_List_Model_Bones(const char* fileName, int frame)
+void G2_List_Model_Bones(const char* file_name)
 {
-	const model_t* mod_m = R_GetModelByHandle(RE_RegisterModel(fileName));
+	const model_t* mod_m = R_GetModelByHandle(RE_RegisterModel(file_name));
 	const model_t* mod_a = R_GetModelByHandle(mod_m->mdxm->animIndex);
 	// 	mdxaFrame_t		*aframe=0;
 	//	int				frameSize;
@@ -331,10 +331,10 @@ void G2_List_Model_Bones(const char* fileName, int frame)
  *    true if we successfully obtained a filename, false otherwise
  *
  ************************************************************************************************/
-qboolean G2_GetAnimFileName(const char* fileName, char** filename)
+qboolean G2_GetAnimFileName(const char* file_name, char** filename)
 {
 	// find the model we want
-	const model_t* mod = R_GetModelByHandle(RE_RegisterModel(fileName));
+	const model_t* mod = R_GetModelByHandle(RE_RegisterModel(file_name));
 
 	if (mod && mod->mdxm && (mod->mdxm->animName[0] != 0))
 	{
@@ -374,7 +374,7 @@ int G2_DecideTraceLod(const CGhoul2Info& ghoul2, int use_lod)
 	return returnLod;
 }
 
-void R_TransformEachSurface(const mdxmSurface_t* surface, vec3_t scale, IHeapAllocator* G2VertSpace, size_t* TransformedVertsArray, CBoneCache* boneCache)
+void R_TransformEachSurface(const mdxmSurface_t* surface, vec3_t scale, IHeapAllocator* g2_vert_space, size_t* TransformedVertsArray, CBoneCache* boneCache)
 {
 	int				 j, k;
 
@@ -384,7 +384,7 @@ void R_TransformEachSurface(const mdxmSurface_t* surface, vec3_t scale, IHeapAll
 	const int* piBoneReferences = (int*)((byte*)surface + surface->ofsBoneReferences);
 
 	// alloc some space for the transformed verts to get put in
-	float* TransformedVerts = (float*)G2VertSpace->MiniHeapAlloc(surface->num_verts * 5 * 4);
+	float* TransformedVerts = (float*)g2_vert_space->MiniHeapAlloc(surface->num_verts * 5 * 4);
 	TransformedVertsArray[surface->thisSurfaceIndex] = (size_t)TransformedVerts;
 	if (!TransformedVerts)
 	{
@@ -484,7 +484,7 @@ void R_TransformEachSurface(const mdxmSurface_t* surface, vec3_t scale, IHeapAll
 }
 
 void G2_TransformSurfaces(int surface_num, surfaceInfo_v& rootSList,
-	CBoneCache* boneCache, const model_t* currentModel, int lod, vec3_t scale, IHeapAllocator* G2VertSpace, size_t* TransformedVertArray, bool secondTimeAround)
+	CBoneCache* boneCache, const model_t* currentModel, int lod, vec3_t scale, IHeapAllocator* g2_vert_space, size_t* TransformedVertArray, bool secondTimeAround)
 {
 	assert(currentModel);
 	assert(currentModel->mdxm);
@@ -506,7 +506,7 @@ void G2_TransformSurfaces(int surface_num, surfaceInfo_v& rootSList,
 	// if this surface is not off, add it to the shader render list
 	if (!off_flags)
 	{
-		R_TransformEachSurface(surface, scale, G2VertSpace, TransformedVertArray, boneCache);
+		R_TransformEachSurface(surface, scale, g2_vert_space, TransformedVertArray, boneCache);
 	}
 
 	// if we are turning off all descendants, then stop this recursion now
@@ -518,15 +518,15 @@ void G2_TransformSurfaces(int surface_num, surfaceInfo_v& rootSList,
 	// now recursively call for the children
 	for (int i = 0; i < surfInfo->numChildren; i++)
 	{
-		G2_TransformSurfaces(surfInfo->childIndexes[i], rootSList, boneCache, currentModel, lod, scale, G2VertSpace, TransformedVertArray, secondTimeAround);
+		G2_TransformSurfaces(surfInfo->childIndexes[i], rootSList, boneCache, currentModel, lod, scale, g2_vert_space, TransformedVertArray, secondTimeAround);
 	}
 }
 
 // main calling point for the model transform for collision detection. At this point all of the skeleton has been transformed.
 #ifdef _G2_GORE
-void G2_TransformModel(CGhoul2Info_v& ghoul2, const int frameNum, vec3_t scale, IHeapAllocator* G2VertSpace, int use_lod, bool ApplyGore)
+void G2_TransformModel(CGhoul2Info_v& ghoul2, const int frame_num, vec3_t scale, IHeapAllocator* g2_vert_space, int use_lod, bool ApplyGore)
 #else
-void G2_TransformModel(CGhoul2Info_v& ghoul2, const int frameNum, vec3_t scale, IHeapAllocator* G2VertSpace, int use_lod)
+void G2_TransformModel(CGhoul2Info_v& ghoul2, const int frame_num, vec3_t scale, IHeapAllocator* g2_vert_space, int use_lod)
 #endif
 {
 	int lod;
@@ -571,7 +571,7 @@ void G2_TransformModel(CGhoul2Info_v& ghoul2, const int frameNum, vec3_t scale, 
 		assert(g.mBoneCache);
 		//		assert(G2_MODEL_OK(&g));
 				// stop us building this model more than once per frame
-		g.mMeshFrameNum = frameNum;
+		g.mMeshFrameNum = frame_num;
 
 		// decide the LOD
 #ifdef _G2_GORE
@@ -602,7 +602,7 @@ void G2_TransformModel(CGhoul2Info_v& ghoul2, const int frameNum, vec3_t scale, 
 		// give us space for the transformed vertex array to be put in
 		if (!(g.mFlags & GHOUL2_ZONETRANSALLOC))
 		{ //do not stomp if we're using zone space
-			g.mTransformedVertsArray = (size_t*)G2VertSpace->MiniHeapAlloc(g.currentModel->mdxm->numSurfaces * sizeof(size_t));
+			g.mTransformedVertsArray = (size_t*)g2_vert_space->MiniHeapAlloc(g.currentModel->mdxm->numSurfaces * sizeof(size_t));
 			if (!g.mTransformedVertsArray)
 			{
 				Com_Error(ERR_DROP, "Ran out of transform space for Ghoul2 Models. Adjust MiniHeapSize in SV_SpawnServer.\n");
@@ -614,7 +614,7 @@ void G2_TransformModel(CGhoul2Info_v& ghoul2, const int frameNum, vec3_t scale, 
 		G2_FindOverrideSurface(-1, g.mSlist); //reset the quick surface override lookup;
 		// recursively call the model surface transform
 
-		G2_TransformSurfaces(g.mSurfaceRoot, g.mSlist, g.mBoneCache, g.currentModel, lod, correctScale, G2VertSpace, g.mTransformedVertsArray, false);
+		G2_TransformSurfaces(g.mSurfaceRoot, g.mSlist, g.mBoneCache, g.currentModel, lod, correctScale, g2_vert_space, g.mTransformedVertsArray, false);
 
 #ifdef _G2_GORE
 		if (ApplyGore && firstModelOnly)
@@ -671,7 +671,7 @@ static void G2_BuildHitPointST(const vec3_t A, const float SA, const float TA,
 // routine that works out given a ray whether or not it hits a poly
 qboolean G2_SegmentTriangleTest(const vec3_t start, const vec3_t end,
 	const vec3_t A, const vec3_t B, const vec3_t C,
-	qboolean backFaces, qboolean frontFaces, vec3_t returnedPoint, vec3_t returnedNormal, float* denom)
+	qboolean back_faces, qboolean front_faces, vec3_t returned_point, vec3_t returned_normal, float* denom)
 {
 	static const float tiny = 1E-10f;
 	vec3_t returnedNormalT;
@@ -680,16 +680,16 @@ qboolean G2_SegmentTriangleTest(const vec3_t start, const vec3_t end,
 	VectorSubtract(C, A, edgeAC);
 	VectorSubtract(B, A, returnedNormalT);
 
-	CrossProduct(returnedNormalT, edgeAC, returnedNormal);
+	CrossProduct(returnedNormalT, edgeAC, returned_normal);
 
 	vec3_t ray;
 	VectorSubtract(end, start, ray);
 
-	*denom = DotProduct(ray, returnedNormal);
+	*denom = DotProduct(ray, returned_normal);
 
 	if (fabs(*denom) < tiny ||        // triangle parallel to ray
-		(!backFaces && *denom > 0) ||		// not accepting back faces
-		(!frontFaces && *denom < 0))		//not accepting front faces
+		(!back_faces && *denom > 0) ||		// not accepting back faces
+		(!front_faces && *denom < 0))		//not accepting front faces
 	{
 		return qfalse;
 	}
@@ -697,7 +697,7 @@ qboolean G2_SegmentTriangleTest(const vec3_t start, const vec3_t end,
 	vec3_t toPlane;
 	VectorSubtract(A, start, toPlane);
 
-	const float t = DotProduct(toPlane, returnedNormal) / *denom;
+	const float t = DotProduct(toPlane, returned_normal) / *denom;
 
 	if (t < 0.0f || t>1.0f)
 	{
@@ -706,33 +706,33 @@ qboolean G2_SegmentTriangleTest(const vec3_t start, const vec3_t end,
 
 	VectorScale(ray, t, ray);
 
-	VectorAdd(ray, start, returnedPoint);
+	VectorAdd(ray, start, returned_point);
 
 	vec3_t edgePA;
-	VectorSubtract(A, returnedPoint, edgePA);
+	VectorSubtract(A, returned_point, edgePA);
 
 	vec3_t edgePB;
-	VectorSubtract(B, returnedPoint, edgePB);
+	VectorSubtract(B, returned_point, edgePB);
 
 	vec3_t edgePC;
-	VectorSubtract(C, returnedPoint, edgePC);
+	VectorSubtract(C, returned_point, edgePC);
 
 	vec3_t temp;
 
 	CrossProduct(edgePA, edgePB, temp);
-	if (DotProduct(temp, returnedNormal) < 0.0f)
+	if (DotProduct(temp, returned_normal) < 0.0f)
 	{
 		return qfalse; // off triangle
 	}
 
 	CrossProduct(edgePC, edgePA, temp);
-	if (DotProduct(temp, returnedNormal) < 0.0f)
+	if (DotProduct(temp, returned_normal) < 0.0f)
 	{
 		return qfalse; // off triangle
 	}
 
 	CrossProduct(edgePB, edgePC, temp);
-	if (DotProduct(temp, returnedNormal) < 0.0f)
+	if (DotProduct(temp, returned_normal) < 0.0f)
 	{
 		return qfalse; // off triangle
 	}
