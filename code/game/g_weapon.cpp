@@ -1491,7 +1491,7 @@ extern qboolean PM_RunningAnim(int anim);
 extern qboolean PM_WalkingAnim(int anim);
 
 //---------------------------------------------------------
-void FireWeapon(gentity_t* ent, const qboolean altFire)
+void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 //---------------------------------------------------------
 {
 	float alert = 256;
@@ -1500,20 +1500,43 @@ void FireWeapon(gentity_t* ent, const qboolean altFire)
 	// track shots taken for accuracy tracking.
 	ent->client->ps.persistant[PERS_ACCURACY_SHOTS]++;
 
-	if (PM_ReloadAnim(ent->client->ps.torsoAnim) || PM_WeponRestAnim(ent->client->ps.torsoAnim))
+	if (PM_ReloadAnim(ent->client->ps.torsoAnim) ||
+		PM_WeponRestAnim(ent->client->ps.torsoAnim))
 	{
+		return;
+	}
+
+	if (ent->client->ps.BlasterAttackChainCount == BLASTERMISHAPLEVEL_MAX)
+	{
+		if (ent->s.weapon == WP_BRYAR_PISTOL ||
+			ent->s.weapon == WP_BLASTER_PISTOL ||
+			ent->s.weapon == WP_DUAL_PISTOL ||
+			ent->s.weapon == WP_REY ||
+			ent->s.weapon == WP_JANGO ||
+			ent->s.weapon == WP_CLONEPISTOL ||
+			ent->s.weapon == WP_REBELBLASTER)
+		{
+			NPC_SetAnim(ent, SETANIM_TORSO, BOTH_PISTOLFAIL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+		}
+		else
+		{
+			NPC_SetAnim(ent, SETANIM_TORSO, BOTH_RIFLEFAIL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+		}
+		G_SoundOnEnt(ent, CHAN_WEAPON, "sound/weapons/reloadfail.mp3");
+		G_SoundOnEnt(ent, CHAN_VOICE_ATTEN, "*pain25.wav");
+		G_Damage(ent, nullptr, nullptr, nullptr, ent->currentOrigin, 2, DAMAGE_NO_ARMOR, MOD_LAVA);
 		return;
 	}
 
 	// If this is a vehicle, fire it's weapon and we're done.
 	if (ent && ent->client && ent->client->NPC_class == CLASS_VEHICLE)
 	{
-		FireVehicleWeapon(ent, altFire);
+		FireVehicleWeapon(ent, alt_fire);
 		return;
 	}
 
 	// set aiming directions
-	if (ent && ent->client && ent->s.weapon == WP_DISRUPTOR && altFire)
+	if (ent && ent->client && ent->s.weapon == WP_DISRUPTOR && alt_fire)
 	{
 		if (ent->NPC)
 		{
@@ -1687,7 +1710,7 @@ void FireWeapon(gentity_t* ent, const qboolean altFire)
 		}
 	}
 
-	ent->altFire = altFire;
+	ent->altFire = alt_fire;
 	if (!p_veh)
 	{
 		if (ent->NPC && ent->NPC->scriptFlags & SCF_FIRE_WEAPON_NO_ANIM)
@@ -1754,30 +1777,30 @@ void FireWeapon(gentity_t* ent, const qboolean altFire)
 		return;
 
 	case WP_BRYAR_PISTOL:
-		WP_FireBryarPistol(ent, altFire);
+		WP_FireBryarPistol(ent, alt_fire);
 		break;
 	case WP_BLASTER_PISTOL:
 		if (!cg_trueguns.integer && !cg.renderingThirdPerson)
 		{
-			WP_FireBryarPistolDuals(ent, altFire, qfalse);
+			WP_FireBryarPistolDuals(ent, alt_fire, qfalse);
 
 			if (ent->client->ps.eFlags & EF2_DUAL_PISTOLS)
 			{
-				WP_FireBryarPistolDuals(ent, altFire, qtrue);
+				WP_FireBryarPistolDuals(ent, alt_fire, qtrue);
 			}
 		}
 		else
 		{
-			WP_FireBryarPistol(ent, altFire);
+			WP_FireBryarPistol(ent, alt_fire);
 		}
 		break;
 
 	case WP_BLASTER:
-		WP_FireBlaster(ent, altFire);
+		WP_FireBlaster(ent, alt_fire);
 		break;
 
 	case WP_TUSKEN_RIFLE:
-		if (altFire)
+		if (alt_fire)
 		{
 			WP_FireTuskenRifle(ent);
 		}
@@ -1789,45 +1812,45 @@ void FireWeapon(gentity_t* ent, const qboolean altFire)
 
 	case WP_DISRUPTOR:
 		alert = 50; // if you want it to alert enemies, remove this
-		WP_FireDisruptor(ent, altFire);
+		WP_FireDisruptor(ent, alt_fire);
 		break;
 
 	case WP_BOWCASTER:
-		WP_FireBowcaster(ent, altFire);
+		WP_FireBowcaster(ent, alt_fire);
 		break;
 
 	case WP_REPEATER:
-		WP_FireRepeater(ent, altFire);
+		WP_FireRepeater(ent, alt_fire);
 		break;
 
 	case WP_DEMP2:
-		WP_FireDEMP2(ent, altFire);
+		WP_FireDEMP2(ent, alt_fire);
 		break;
 
 	case WP_FLECHETTE:
-		WP_FireFlechette(ent, altFire);
+		WP_FireFlechette(ent, alt_fire);
 		break;
 
 	case WP_ROCKET_LAUNCHER:
-		WP_FireRocket(ent, altFire);
+		WP_FireRocket(ent, alt_fire);
 		break;
 
 	case WP_CONCUSSION:
-		WP_Concussion(ent, altFire);
+		WP_Concussion(ent, alt_fire);
 		break;
 
 	case WP_THERMAL:
-		WP_FireThermalDetonator(ent, altFire);
+		WP_FireThermalDetonator(ent, alt_fire);
 		break;
 
 	case WP_TRIP_MINE:
 		alert = 0; // if you want it to alert enemies, remove this
-		WP_PlaceLaserTrap(ent, altFire);
+		WP_PlaceLaserTrap(ent, alt_fire);
 		break;
 
 	case WP_DET_PACK:
 		alert = 0; // if you want it to alert enemies, remove this
-		WP_FireDetPack(ent, altFire);
+		WP_FireDetPack(ent, alt_fire);
 		break;
 
 	case WP_BOT_LASER:
@@ -1841,7 +1864,7 @@ void FireWeapon(gentity_t* ent, const qboolean altFire)
 
 	case WP_MELEE:
 		alert = 0; // if you want it to alert enemies, remove this
-		if (!altFire)
+		if (!alt_fire)
 		{
 			WP_Melee(ent);
 		}
@@ -1854,7 +1877,7 @@ void FireWeapon(gentity_t* ent, const qboolean altFire)
 	case WP_ATST_SIDE:
 
 		// TEMP
-		if (altFire)
+		if (alt_fire)
 		{
 			WP_ATSTSideAltFire(ent);
 		}
@@ -1871,9 +1894,9 @@ void FireWeapon(gentity_t* ent, const qboolean altFire)
 
 	case WP_RAPID_FIRE_CONC:
 		// TEMP
-		if (altFire)
+		if (alt_fire)
 		{
-			WP_FireRepeater(ent, altFire);
+			WP_FireRepeater(ent, alt_fire);
 		}
 		else
 		{
@@ -1882,7 +1905,7 @@ void FireWeapon(gentity_t* ent, const qboolean altFire)
 		break;
 
 	case WP_STUN_BATON:
-		WP_FireStunBaton(ent, altFire);
+		WP_FireStunBaton(ent, alt_fire);
 		break;
 
 	case WP_JAWA:
@@ -1894,7 +1917,7 @@ void FireWeapon(gentity_t* ent, const qboolean altFire)
 		break;
 
 	case WP_NOGHRI_STICK:
-		if (!altFire)
+		if (!alt_fire)
 		{
 			WP_FireNoghriStick(ent);
 		}
@@ -1905,126 +1928,126 @@ void FireWeapon(gentity_t* ent, const qboolean altFire)
 		break;
 
 	case WP_BATTLEDROID:
-		WP_FireBattleDroid(ent, altFire);
+		WP_FireBattleDroid(ent, alt_fire);
 		break;
 
 	case WP_THEFIRSTORDER:
-		WP_FireFirstOrder(ent, altFire);
+		WP_FireFirstOrder(ent, alt_fire);
 		break;
 
 	case WP_CLONECARBINE:
-		WP_FireClone(ent, altFire);
+		WP_FireClone(ent, alt_fire);
 		break;
 
 	case WP_REBELBLASTER:
 		if (!cg_trueguns.integer && !cg.renderingThirdPerson)
 		{
-			WP_FireRebelBlasterDuals(ent, altFire, qfalse);
+			WP_FireRebelBlasterDuals(ent, alt_fire, qfalse);
 
 			if (ent->client->ps.eFlags & EF2_DUAL_PISTOLS)
 			{
-				WP_FireRebelBlasterDuals(ent, altFire, qtrue);
+				WP_FireRebelBlasterDuals(ent, alt_fire, qtrue);
 			}
 		}
 		else
 		{
-			WP_FireRebelBlaster(ent, altFire);
+			WP_FireRebelBlaster(ent, alt_fire);
 		}
 		break;
 
 	case WP_CLONERIFLE:
-		WP_FireCloneRifle(ent, altFire);
+		WP_FireCloneRifle(ent, alt_fire);
 		break;
 
 	case WP_CLONECOMMANDO:
-		WP_FireCloneCommando(ent, altFire);
+		WP_FireCloneCommando(ent, alt_fire);
 		break;
 
 	case WP_REBELRIFLE:
-		WP_FireRebelRifle(ent, altFire);
+		WP_FireRebelRifle(ent, alt_fire);
 		break;
 
 	case WP_REY:
 		if (!cg_trueguns.integer && !cg.renderingThirdPerson)
 		{
-			WP_FireReyPistolDuals(ent, altFire, qfalse);
+			WP_FireReyPistolDuals(ent, alt_fire, qfalse);
 
 			if (ent->client->ps.eFlags & EF2_DUAL_PISTOLS)
 			{
-				WP_FireReyPistolDuals(ent, altFire, qtrue);
+				WP_FireReyPistolDuals(ent, alt_fire, qtrue);
 			}
 		}
 		else
 		{
-			WP_FireReyPistol(ent, altFire);
+			WP_FireReyPistol(ent, alt_fire);
 		}
 		break;
 
 	case WP_JANGO:
 		if (!cg_trueguns.integer && !cg.renderingThirdPerson)
 		{
-			WP_FireJangoPistol(ent, altFire, qfalse);
+			WP_FireJangoPistol(ent, alt_fire, qfalse);
 
 			if (ent->client->ps.eFlags & EF2_DUAL_PISTOLS)
 			{
-				WP_FireJangoPistol(ent, altFire, qtrue);
+				WP_FireJangoPistol(ent, alt_fire, qtrue);
 			}
 		}
 		else
 		{
-			WP_FireJangoPistol(ent, altFire, qfalse);
+			WP_FireJangoPistol(ent, alt_fire, qfalse);
 		}
 		break;
 	case WP_DUAL_PISTOL:
 		if (!cg_trueguns.integer && !cg.renderingThirdPerson)
 		{
-			WP_FireJangoFPPistolDuals(ent, altFire, qfalse);
+			WP_FireJangoFPPistolDuals(ent, alt_fire, qfalse);
 
 			if (ent->client->ps.eFlags & EF2_JANGO_DUALS)
 			{
-				WP_FireJangoFPPistolDuals(ent, altFire, qtrue);
+				WP_FireJangoFPPistolDuals(ent, alt_fire, qtrue);
 			}
 		}
 		else
 		{
-			WP_FireJangoDualPistol(ent, altFire);
+			WP_FireJangoDualPistol(ent, alt_fire);
 		}
 		break;
 
 	case WP_BOBA:
 	{
-		if (altFire)
+		if (alt_fire)
 		{
 			for (int i = 0; i < 3; i++)
 			{
-				WP_FireBobaRifle(ent, altFire);
+				WP_FireBobaRifle(ent, alt_fire);
 			}
 			break;
 		}
-		WP_FireBobaRifle(ent, altFire);
+		WP_FireBobaRifle(ent, alt_fire);
 		break;
 	}
 
 	case WP_CLONEPISTOL:
 		if (!cg_trueguns.integer && !cg.renderingThirdPerson)
 		{
-			WP_FireClonePistolDuals(ent, altFire, qfalse);
+			WP_FireClonePistolDuals(ent, alt_fire, qfalse);
 
 			if (ent->client->ps.eFlags & EF2_DUAL_PISTOLS)
 			{
-				WP_FireClonePistolDuals(ent, altFire, qtrue);
+				WP_FireClonePistolDuals(ent, alt_fire, qtrue);
 			}
 		}
 		else
 		{
-			WP_FireClonePistol(ent, altFire);
+			WP_FireClonePistol(ent, alt_fire);
 		}
 		break;
 	case WP_SBD_BLASTER:
-		WP_FireSBDPistol(ent, altFire);
+		WP_FireSBDPistol(ent, alt_fire);
 		break;
 	case WP_WRIST_BLASTER:
-		WP_FireWristPistol(ent, altFire);
+		WP_FireWristPistol(ent, alt_fire);
 		break;
 
 	case WP_TUSKEN_STAFF:
@@ -2034,11 +2057,11 @@ void FireWeapon(gentity_t* ent, const qboolean altFire)
 
 	if (!ent->s.number)
 	{
-		if (ent->s.weapon == WP_FLECHETTE || ent->s.weapon == WP_BOWCASTER && !altFire)
+		if (ent->s.weapon == WP_FLECHETTE || ent->s.weapon == WP_BOWCASTER && !alt_fire)
 		{
 			//these can fire multiple shots, count them individually within the firing functions
 		}
-		else if (W_AccuracyLoggableWeapon(ent->s.weapon, altFire, MOD_UNKNOWN))
+		else if (W_AccuracyLoggableWeapon(ent->s.weapon, alt_fire, MOD_UNKNOWN))
 		{
 			ent->client->sess.missionStats.shotsFired++;
 		}

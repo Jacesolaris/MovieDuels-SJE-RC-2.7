@@ -785,7 +785,8 @@ void ChangeWeapon(const gentity_t* ent, const int new_weapon)
 		return;
 	}
 
-	if (PM_ReloadAnim(ent->client->ps.torsoAnim) || PM_WeponRestAnim(ent->client->ps.torsoAnim))
+	if (PM_ReloadAnim(ent->client->ps.torsoAnim)||
+		PM_WeponRestAnim(ent->client->ps.torsoAnim))
 	{
 		return;
 	}

@@ -2001,7 +2001,14 @@ void ClientTimerActions(gentity_t* ent, const int msec)
 		{
 			if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_MIN && ent->client->ps.weaponTime < 1)
 			{
-				WP_BlasterFatigueRegenerate(1);
+				if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_FULL && ent->client->ps.weaponTime < 1)
+				{
+					WP_BlasterFatigueRegenerate(4);
+				}
+				else
+				{
+					WP_BlasterFatigueRegenerate(1);					
+				}
 			}
 		}
 

@@ -4385,8 +4385,31 @@ void CG_FireWeapon(centity_t* cent, const qboolean altFire)
 		return;
 	}
 
-	if (PM_ReloadAnim(cent->currentState.torsoAnim) || PM_WeponRestAnim(cent->currentState.torsoAnim))
+	if (PM_ReloadAnim(cent->currentState.torsoAnim) ||
+		PM_WeponRestAnim(cent->currentState.torsoAnim))
 	{
+		return;
+	}
+
+	if (g_entities[0].client->ps.BlasterAttackChainCount == BLASTERMISHAPLEVEL_MAX)
+	{
+		if (cg_entities[0].gent->s.weapon == WP_BRYAR_PISTOL ||
+			cg_entities[0].gent->s.weapon == WP_BLASTER_PISTOL ||
+			cg_entities[0].gent->s.weapon == WP_DUAL_PISTOL ||
+			cg_entities[0].gent->s.weapon == WP_REY ||
+			cg_entities[0].gent->s.weapon == WP_JANGO ||
+			cg_entities[0].gent->s.weapon == WP_CLONEPISTOL ||
+			cg_entities[0].gent->s.weapon == WP_REBELBLASTER)
+		{
+			NPC_SetAnim(cg_entities[0].gent, SETANIM_TORSO, BOTH_PISTOLFAIL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+		}
+		else
+		{
+			NPC_SetAnim(cg_entities[0].gent, SETANIM_TORSO, BOTH_RIFLEFAIL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+		}
+		G_SoundOnEnt(cg_entities[0].gent, CHAN_WEAPON, "sound/weapons/reloadfail.mp3");
+		G_SoundOnEnt(cg_entities[0].gent, CHAN_VOICE_ATTEN, "*pain25.wav");
+		G_Damage(cg_entities[0].gent, nullptr, nullptr, nullptr, cg_entities[0].gent->currentOrigin, 2, DAMAGE_NO_ARMOR, MOD_LAVA);
 		return;
 	}
 
