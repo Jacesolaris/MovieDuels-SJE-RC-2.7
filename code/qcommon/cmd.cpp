@@ -287,7 +287,7 @@ void Cmd_Exec_f()
 	if (Cmd_Argc() != 2)
 	{
 		Com_Printf("exec%s <filename> : execute a script file%s\n",
-		           quiet ? "q" : "", quiet ? " without notification" : "");
+			quiet ? "q" : "", quiet ? " without notification" : "");
 		return;
 	}
 
@@ -817,8 +817,8 @@ void Cmd_List_f()
 	}
 
 	for (cmd = cmd_functions, i = 0, j = 0;
-	     cmd;
-	     cmd = cmd->next, i++)
+		cmd;
+		cmd = cmd->next, i++)
 	{
 		if (!cmd->name || (match && !Com_Filter(match, cmd->name, qfalse)))
 			continue;

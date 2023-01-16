@@ -59,7 +59,7 @@ Create
 CSequence* CSequence::Create()
 {
 	const auto seq = new CSequence;
-	
+
 	assert(seq);
 	if (seq == nullptr)
 		return nullptr;
@@ -97,7 +97,7 @@ void CSequence::Delete(const CIcarus* icarus)
 	for (auto bi = m_commands.begin(); bi != m_commands.end(); ++bi)
 	{
 		(*bi)->Free(icarus);
-		delete*bi; //Free() handled internally -- not any more!!
+		delete* bi; //Free() handled internally -- not any more!!
 	}
 
 	m_commands.clear();
@@ -207,7 +207,7 @@ CBlock* CSequence::PopCommand(const int type)
 		m_numCommands--;
 
 		return command;
-	default: ;
+	default:;
 	}
 
 	//Invalid flag
@@ -241,7 +241,7 @@ int CSequence::PushCommand(CBlock* block, const int type)
 		m_numCommands++;
 
 		return true;
-	default: ;
+	default:;
 	}
 
 	//Invalid flag
@@ -432,12 +432,12 @@ int CSequence::LoadCommand(CBlock* block, CIcarus* icarus)
 		switch (b_id)
 		{
 		case CIcarus::TK_INT:
-			{
-				assert(0);
-				const int data = *static_cast<int*>(b_data);
-				block->Write(CIcarus::TK_FLOAT, static_cast<float>(data), icarus);
-			}
-			break;
+		{
+			assert(0);
+			const int data = *static_cast<int*>(b_data);
+			block->Write(CIcarus::TK_FLOAT, static_cast<float>(data), icarus);
+		}
+		break;
 
 		case CIcarus::TK_FLOAT:
 			block->Write(CIcarus::TK_FLOAT, *static_cast<float*>(b_data), icarus);

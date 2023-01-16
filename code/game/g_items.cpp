@@ -1198,10 +1198,10 @@ void FinishSpawningItem(gentity_t* ent)
 {
 	trace_t tr;
 	gitem_t* item;
-	int itemNum;
+	int item_num;
 
-	itemNum = 1;
-	for (item = bg_itemlist + 1; item->classname; item++, itemNum++)
+	item_num = 1;
+	for (item = bg_itemlist + 1; item->classname; item++, item_num++)
 	{
 		if (strcmp(item->classname, ent->classname) == 0)
 		{
@@ -1238,7 +1238,7 @@ void FinishSpawningItem(gentity_t* ent)
 		&& ent->NPC_type
 		&& ent->NPC_type[0])
 	{
-		saberInfo_t itemSaber;
+		saberInfo_t item_saber;
 		if (Q_stricmp("player", ent->NPC_type) == 0
 			&& g_saber->string
 			&& g_saber->string[0]
@@ -1246,18 +1246,18 @@ void FinishSpawningItem(gentity_t* ent)
 			&& Q_stricmp("NULL", g_saber->string))
 		{
 			//player's saber
-			WP_SaberParseParms(g_saber->string, &itemSaber);
+			WP_SaberParseParms(g_saber->string, &item_saber);
 		}
 		else
 		{
 			//specific saber
-			WP_SaberParseParms(ent->NPC_type, &itemSaber);
+			WP_SaberParseParms(ent->NPC_type, &item_saber);
 		}
 		//NOTE:  should I keep this string around for any reason?  Will I ever need it later?
 		//ent->??? = G_NewString( itemSaber.model );
-		gi.G2API_InitGhoul2Model(ent->ghoul2, itemSaber.model, G_ModelIndex(itemSaber.model), NULL_HANDLE, NULL_HANDLE,
+		gi.G2API_InitGhoul2Model(ent->ghoul2, item_saber.model, G_ModelIndex(item_saber.model), NULL_HANDLE, NULL_HANDLE,
 			0, 0);
-		WP_SaberFreeStrings(itemSaber);
+		WP_SaberFreeStrings(item_saber);
 	}
 	else
 	{

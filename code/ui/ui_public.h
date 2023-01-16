@@ -64,21 +64,21 @@ using uiimport_t = struct
 
 	// =========== renderer function calls ================
 
-	qhandle_t (*R_RegisterModel)(const char* name); // returns rgb axis if not found
-	qhandle_t (*R_RegisterSkin)(const char* name); // returns all white if not found
-	qhandle_t (*R_RegisterShader)(const char* name); // returns white if not found
-	qhandle_t (*R_RegisterShaderNoMip)(const char* name); // returns white if not found
-	qhandle_t (*R_RegisterFont)(const char* name); // returns 0 for bad font
+	qhandle_t(*R_RegisterModel)(const char* name); // returns rgb axis if not found
+	qhandle_t(*R_RegisterSkin)(const char* name); // returns all white if not found
+	qhandle_t(*R_RegisterShader)(const char* name); // returns white if not found
+	qhandle_t(*R_RegisterShaderNoMip)(const char* name); // returns white if not found
+	qhandle_t(*R_RegisterFont)(const char* name); // returns 0 for bad font
 
 	int (*R_Font_StrLenPixels)(const char* text, int setIndex, float scale);
 	int (*R_Font_HeightPixels)(int setIndex, float scale);
 	void (*R_Font_DrawString)(int ox, int oy, const char* text, const float* rgba, int setIndex, int iMaxPixelWidth,
-	                          float scale);
+		float scale);
 	int (*R_Font_StrLenChars)(const char* text);
-	qboolean (*Language_IsAsian)();
-	qboolean (*Language_UsesSpaces)();
+	qboolean(*Language_IsAsian)();
+	qboolean(*Language_UsesSpaces)();
 	unsigned int (*AnyLanguage_ReadCharFromString)(char* psText, int* piAdvanceCount,
-	                                               qboolean* pbIsTrailingPunctuation /* = NULL */);
+		qboolean* pbIsTrailingPunctuation /* = NULL */);
 
 	// a scene is built up by calls to R_ClearScene and the various R_Add functions.
 	// Nothing is drawn until R_RenderScene is called.
@@ -92,9 +92,9 @@ using uiimport_t = struct
 
 	void (*R_SetColor)(const float* rgba); // NULL = 1,1,1,1
 	void (*R_DrawStretchPic)(float x, float y, float w, float h, float s1, float t1, float s2, float t2,
-	                         qhandle_t h_shader); // 0 = white
+		qhandle_t h_shader); // 0 = white
 	void (*R_ScissorPic)(float x, float y, float w, float h, float s1, float t1, float s2, float t2,
-	                     qhandle_t h_shader); // 0 = white
+		qhandle_t h_shader); // 0 = white
 
 	// force a screen update, only used during gamestate load
 	void (*UpdateScreen)();
@@ -108,23 +108,23 @@ using uiimport_t = struct
 
 	// R_LerpTag is only valid for md3 models
 	void (*R_LerpTag)(orientation_t* tag, clipHandle_t mod, int start_frame, int end_frame,
-	                  float frac, const char* tagName);
+		float frac, const char* tagName);
 
 	// =========== sound function calls ===============
 
 	void (*S_StartLocalSound)(sfxHandle_t sfxHandle, int channelNum);
-	sfxHandle_t (*S_RegisterSound)(const char* name);
+	sfxHandle_t(*S_RegisterSound)(const char* name);
 	void (*S_StartLocalLoopingSound)(sfxHandle_t sfxHandle);
 	void (*S_StopSounds)();
 
 	// =========== getting save game picture ===============
 	void (*DrawStretchRaw)(int x, int y, int w, int h, int cols, int rows, const byte* data, int client,
-	                       qboolean dirty);
+		qboolean dirty);
 #ifdef JK2_MODE
 	qboolean(*SG_GetSaveImage)(const char* psPathlessBaseName, void* pvAddress);
 #endif
 	int (*SG_GetSaveGameComment)(const char* psPathlessBaseName, char* sComment, char* sMapName);
-	qboolean (*SG_GameAllowedToSaveHere)(qboolean inCamera);
+	qboolean(*SG_GameAllowedToSaveHere)(qboolean inCamera);
 	void (*SG_StoreSaveGameComment)(const char* sComment);
 	//byte *(*SCR_GetScreenshot)(qboolean *);
 
@@ -134,8 +134,8 @@ using uiimport_t = struct
 	void (*Key_KeynumToStringBuf)(int keynum, char* buf, int buflen);
 	void (*Key_GetBindingBuf)(int keynum, char* buf, int buflen);
 	void (*Key_SetBinding)(int keynum, const char* binding);
-	qboolean (*Key_IsDown)(int keynum);
-	qboolean (*Key_GetOverstrikeMode)();
+	qboolean(*Key_IsDown)(int keynum);
+	qboolean(*Key_GetOverstrikeMode)();
 	void (*Key_SetOverstrikeMode)(qboolean state);
 	void (*Key_ClearStates)();
 	int (*Key_GetCatcher)();
@@ -150,7 +150,7 @@ using uiimport_t = struct
 
 	void (*GetGlconfig)(glconfig_t* config);
 
-	connstate_t (*GetClientState)();
+	connstate_t(*GetClientState)();
 
 	void (*GetConfigString)(int index, char* buff, int buffsize);
 

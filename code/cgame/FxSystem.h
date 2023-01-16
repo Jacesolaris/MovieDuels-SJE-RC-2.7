@@ -80,7 +80,7 @@ struct SFxHelper
 
 	//G2
 	static int GetOriginAxisFromBolt(const centity_t& cent, int modelNum, int boltNum, vec3_t /*out*/origin,
-	                                 vec3_t /*out*/* axis);
+		vec3_t /*out*/* axis);
 
 	// Physics/collision
 	static void Trace(trace_t* tr, vec3_t start, vec3_t min, vec3_t max, vec3_t end, int skipEntNum, int flags);

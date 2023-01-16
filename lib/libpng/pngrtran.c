@@ -122,8 +122,8 @@ png_rtran_ok(const png_structrp png_ptr, const int need_IHDR)
 /* Handle alpha and tRNS via a background color */
 void PNGFAPI
 png_set_background_fixed(const png_structrp png_ptr,
-                         const png_const_color_16p background_color, const int background_gamma_code,
-                         const int need_expand, const png_fixed_point background_gamma)
+	const png_const_color_16p background_color, const int background_gamma_code,
+	const int need_expand, const png_fixed_point background_gamma)
 {
 	png_debug(1, "in png_set_background_fixed");
 
@@ -152,8 +152,8 @@ png_set_background_fixed(const png_structrp png_ptr,
 #  ifdef PNG_FLOATING_POINT_SUPPORTED
 void PNGAPI
 png_set_background(const png_structrp png_ptr,
-                   const png_const_color_16p background_color, const int background_gamma_code,
-                   const int need_expand, const double background_gamma)
+	const png_const_color_16p background_color, const int background_gamma_code,
+	const int need_expand, const double background_gamma)
 {
 	png_set_background_fixed(png_ptr, background_color, background_gamma_code,
 		need_expand, png_fixed(png_ptr, background_gamma, "png_set_background"));
@@ -208,7 +208,7 @@ png_set_strip_alpha(const png_structrp png_ptr)
 #if defined(PNG_READ_ALPHA_MODE_SUPPORTED) || defined(PNG_READ_GAMMA_SUPPORTED)
 static png_fixed_point
 translate_gamma_flags(png_structrp png_ptr, png_fixed_point output_gamma,
-                      const int is_screen)
+	const int is_screen)
 {
 	/* Check for flag values.  The main reason for having the old Mac value as a
 	 * flag is that it is pretty near impossible to work out what the correct
@@ -272,7 +272,7 @@ convert_gamma_value(const png_structrp png_ptr, double output_gamma)
 #ifdef PNG_READ_ALPHA_MODE_SUPPORTED
 void PNGFAPI
 png_set_alpha_mode_fixed(const png_structrp png_ptr, const int mode,
-                         png_fixed_point output_gamma)
+	png_fixed_point output_gamma)
 {
 	int compose = 0;
 
@@ -796,7 +796,7 @@ png_set_quantize(png_structrp png_ptr, png_colorp palette,
 #ifdef PNG_READ_GAMMA_SUPPORTED
 void PNGFAPI
 png_set_gamma_fixed(const png_structrp png_ptr, png_fixed_point scrn_gamma,
-                    png_fixed_point file_gamma)
+	png_fixed_point file_gamma)
 {
 	png_debug(1, "in png_set_gamma_fixed");
 
@@ -948,7 +948,7 @@ png_set_gray_to_rgb(const png_structrp png_ptr)
 #ifdef PNG_READ_RGB_TO_GRAY_SUPPORTED
 void PNGFAPI
 png_set_rgb_to_gray_fixed(png_structrp png_ptr, const int error_action,
-                          const png_fixed_point red, const png_fixed_point green)
+	const png_fixed_point red, const png_fixed_point green)
 {
 	png_debug(1, "in png_set_rgb_to_gray");
 
@@ -1035,7 +1035,7 @@ png_set_rgb_to_gray_fixed(png_structrp png_ptr, const int error_action,
 
 void PNGAPI
 png_set_rgb_to_gray(const png_structrp png_ptr, const int error_action, const double red,
-                    const double green)
+	const double green)
 {
 	png_set_rgb_to_gray_fixed(png_ptr, error_action,
 		png_fixed(png_ptr, red, "rgb to gray red coefficient"),
@@ -1049,7 +1049,7 @@ png_set_rgb_to_gray(const png_structrp png_ptr, const int error_action, const do
     defined(PNG_WRITE_USER_TRANSFORM_SUPPORTED)
 void PNGAPI
 png_set_read_user_transform_fn(const png_structrp png_ptr, const png_user_transform_ptr
-                               read_user_transform_fn)
+	read_user_transform_fn)
 {
 	png_debug(1, "in png_set_read_user_transform_fn");
 
@@ -2222,7 +2222,7 @@ png_do_unpack(const png_row_infop row_info, const png_bytep row)
  */
 static void
 png_do_unshift(const png_row_infop row_info, const png_bytep row,
-               const png_const_color_8p sig_bits)
+	const png_const_color_8p sig_bits)
 {
 	png_debug(1, "in png_do_unshift");
 
@@ -4163,7 +4163,7 @@ png_do_encode_alpha(const png_row_infop row_info, png_bytep row, const png_struc
  */
 static void
 png_do_expand_palette(const png_row_infop row_info, const png_bytep row,
-                      const png_const_colorp palette, const png_const_bytep trans_alpha, const int num_trans)
+	const png_const_colorp palette, const png_const_bytep trans_alpha, const int num_trans)
 {
 	int shift, value;
 	png_bytep sp, dp;
@@ -4575,7 +4575,7 @@ png_do_expand_16(const png_row_infop row_info, const png_bytep row)
 #ifdef PNG_READ_QUANTIZE_SUPPORTED
 static void
 png_do_quantize(const png_row_infop row_info, const png_bytep row,
-                const png_const_bytep palette_lookup, const png_const_bytep quantize_lookup)
+	const png_const_bytep palette_lookup, const png_const_bytep quantize_lookup)
 {
 	png_bytep sp, dp;
 	png_uint_32 i;

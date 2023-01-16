@@ -217,7 +217,7 @@ typedef my_cquantizer* my_cquantize_ptr;
 
 METHODDEF(void)
 prescan_quantize(const j_decompress_ptr cinfo, const JSAMPARRAY input_buf,
-                 JSAMPARRAY output_buf, const int num_rows)
+	JSAMPARRAY output_buf, const int num_rows)
 {
 	const my_cquantize_ptr cquantize = (my_cquantize_ptr)cinfo->cquantize;
 	const register hist3d histogram = cquantize->histogram;
@@ -405,7 +405,7 @@ have_c2max:
 
 LOCAL(int)
 median_cut(const j_decompress_ptr cinfo, const boxptr boxlist, int numboxes,
-           const int desired_colors)
+	const int desired_colors)
 	/* Repeatedly select and split the largest box until we have enough boxes */
 {
 	int n, lb;
@@ -619,7 +619,7 @@ select_colors(const j_decompress_ptr cinfo, const int desired_colors)
 
 LOCAL(int)
 find_nearby_colors(const j_decompress_ptr cinfo, const int minc0, const int minc1, const int minc2,
-                   JSAMPLE colorlist[])
+	JSAMPLE colorlist[])
 	/* Locate the colormap entries close enough to an update box to be candidates
 	 * for the nearest entry to some cell(s) in the update box.  The update box
 	 * is specified by the center coordinates of its first cell.  The number of
@@ -754,7 +754,7 @@ find_nearby_colors(const j_decompress_ptr cinfo, const int minc0, const int minc
 
 LOCAL(void)
 find_best_colors(const j_decompress_ptr cinfo, const int minc0, const int minc1, const int minc2,
-                 const int numcolors, JSAMPLE colorlist[], JSAMPLE bestcolor[])
+	const int numcolors, JSAMPLE colorlist[], JSAMPLE bestcolor[])
 	/* Find the closest colormap entry for each cell in the update box,
 	 * given the list of candidate colors prepared by find_nearby_colors.
 	 * Return the indexes of the closest entries in the bestcolor[] array.
@@ -879,7 +879,7 @@ fill_inverse_cmap(const j_decompress_ptr cinfo, int c0, int c1, int c2)
 
 METHODDEF(void)
 pass2_no_dither(const j_decompress_ptr cinfo,
-                const JSAMPARRAY input_buf, const JSAMPARRAY output_buf, const int num_rows)
+	const JSAMPARRAY input_buf, const JSAMPARRAY output_buf, const int num_rows)
 	/* This version performs no dithering */
 {
 	const my_cquantize_ptr cquantize = (my_cquantize_ptr)cinfo->cquantize;
@@ -907,7 +907,7 @@ pass2_no_dither(const j_decompress_ptr cinfo,
 
 METHODDEF(void)
 pass2_fs_dither(const j_decompress_ptr cinfo,
-                const JSAMPARRAY input_buf, const JSAMPARRAY output_buf, const int num_rows)
+	const JSAMPARRAY input_buf, const JSAMPARRAY output_buf, const int num_rows)
 	/* This version performs Floyd-Steinberg dithering */
 {
 	const my_cquantize_ptr cquantize = (my_cquantize_ptr)cinfo->cquantize;

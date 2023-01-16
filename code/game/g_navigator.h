@@ -81,7 +81,7 @@ namespace NAV
 	////////////////////////////////////////////////////////////////////////////////////
 	TNodeHandle GetNearestNode(gentity_t* ent, bool forceRecalcNow = false, TNodeHandle goal = 0);
 	TNodeHandle GetNearestNode(const vec3_t& position, TNodeHandle previous = 0, TNodeHandle goal = 0,
-	                           int ignoreEnt = ENTITYNUM_NONE, bool allowZOffset = false);
+		int ignoreEnt = ENTITYNUM_NONE, bool allowZOffset = false);
 
 	TNodeHandle ChooseRandomNeighbor(TNodeHandle NodeHandle);
 	TNodeHandle ChooseRandomNeighbor(TNodeHandle NodeHandle, const vec3_t& position, float maxDistance);
@@ -202,7 +202,7 @@ namespace STEER
 	// vector operations and add to the thrust vector.
 	////////////////////////////////////////////////////////////////////////////////////
 	float Seek(const gentity_t* actor, const CVec3& pos, float slowingDistance = 0.0f, float weight = 1.0f,
-	           float desiredSpeed = 0.0f);
+		float desiredSpeed = 0.0f);
 	float Flee(const gentity_t* actor, const CVec3& pos, float weight = 1.0f);
 
 	////////////////////////////////////////////////////////////////////////////////////
@@ -213,7 +213,7 @@ namespace STEER
 	////////////////////////////////////////////////////////////////////////////////////
 	float Persue(const gentity_t* actor, gentity_t* target, float slowingDistance);
 	float Persue(const gentity_t* actor, gentity_t* target, float slowingDistance, float offsetForward,
-	             float offsetRight = 0.0f, float offsetUp = 0.0f, bool relativeToTargetFacing = false);
+		float offsetRight = 0.0f, float offsetUp = 0.0f, bool relativeToTargetFacing = false);
 	float Evade(const gentity_t* actor, gentity_t* target);
 
 	////////////////////////////////////////////////////////////////////////////////////

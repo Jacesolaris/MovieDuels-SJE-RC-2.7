@@ -139,10 +139,10 @@ start_pass_merged_upsample(const j_decompress_ptr cinfo)
 
 METHODDEF(void)
 merged_2v_upsample(const j_decompress_ptr cinfo,
-                   const JSAMPIMAGE input_buf, JDIMENSION* in_row_group_ctr,
-                   JDIMENSION in_row_groups_avail,
-                   const JSAMPARRAY output_buf, JDIMENSION* out_row_ctr,
-                   JDIMENSION out_rows_avail)
+	const JSAMPIMAGE input_buf, JDIMENSION* in_row_group_ctr,
+	JDIMENSION in_row_groups_avail,
+	const JSAMPARRAY output_buf, JDIMENSION* out_row_ctr,
+	JDIMENSION out_rows_avail)
 	/* 2:1 vertical sampling case: may need a spare row. */
 {
 	const my_upsample_ptr upsample = (my_upsample_ptr)cinfo->upsample;
@@ -189,10 +189,10 @@ merged_2v_upsample(const j_decompress_ptr cinfo,
 
 METHODDEF(void)
 merged_1v_upsample(const j_decompress_ptr cinfo,
-                   const JSAMPIMAGE input_buf, JDIMENSION* in_row_group_ctr,
-                   JDIMENSION in_row_groups_avail,
-                   const JSAMPARRAY output_buf, JDIMENSION* out_row_ctr,
-                   JDIMENSION out_rows_avail)
+	const JSAMPIMAGE input_buf, JDIMENSION* in_row_group_ctr,
+	JDIMENSION in_row_groups_avail,
+	const JSAMPARRAY output_buf, JDIMENSION* out_row_ctr,
+	JDIMENSION out_rows_avail)
 	/* 1:1 vertical sampling case: much easier, never need a spare row. */
 {
 	const my_upsample_ptr upsample = (my_upsample_ptr)cinfo->upsample;
@@ -220,8 +220,8 @@ merged_1v_upsample(const j_decompress_ptr cinfo,
 
 METHODDEF(void)
 h2v1_merged_upsample(const j_decompress_ptr cinfo,
-                     const JSAMPIMAGE input_buf, const JDIMENSION in_row_group_ctr,
-                     const JSAMPARRAY output_buf)
+	const JSAMPIMAGE input_buf, const JDIMENSION in_row_group_ctr,
+	const JSAMPARRAY output_buf)
 {
 	const my_upsample_ptr upsample = (my_upsample_ptr)cinfo->upsample;
 	register int y, cred, cgreen, cblue;
@@ -278,8 +278,8 @@ h2v1_merged_upsample(const j_decompress_ptr cinfo,
 
 METHODDEF(void)
 h2v2_merged_upsample(const j_decompress_ptr cinfo,
-                     const JSAMPIMAGE input_buf, const JDIMENSION in_row_group_ctr,
-                     const JSAMPARRAY output_buf)
+	const JSAMPIMAGE input_buf, const JDIMENSION in_row_group_ctr,
+	const JSAMPARRAY output_buf)
 {
 	const my_upsample_ptr upsample = (my_upsample_ptr)cinfo->upsample;
 	register int y, cred, cgreen, cblue;

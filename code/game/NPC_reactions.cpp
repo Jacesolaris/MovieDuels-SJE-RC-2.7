@@ -132,17 +132,17 @@ static void NPC_CheckAttacker(gentity_t* other, const int mod)
 
 		switch (g_spskill->integer)
 		{
-		//Easiest difficulty, mild chance of picking up the player
+			//Easiest difficulty, mild chance of picking up the player
 		case 0:
 			luckThreshold = 0.9f;
 			break;
 
-		//Medium difficulty, half-half chance of picking up the player
+			//Medium difficulty, half-half chance of picking up the player
 		case 1:
 			luckThreshold = 0.5f;
 			break;
 
-		//Hardest difficulty, always turn on attacking player
+			//Hardest difficulty, always turn on attacking player
 		case 2:
 		default:
 			luckThreshold = 0.0f;
@@ -198,13 +198,13 @@ float NPC_GetPainChance(const gentity_t* self, const int damage)
 
 	case 1: //med
 		pain_chance *= 0.5f;
-	//return 0.35f;
+		//return 0.35f;
 		break;
 
 	case 2: //hard
 	default:
 		pain_chance *= 0.1f;
-	//return 0.05f;
+		//return 0.05f;
 		break;
 	}
 	//Com_Printf( "%s: %4.2f\n", self->NPC_type, pain_chance );
@@ -222,8 +222,8 @@ constexpr auto MIN_PAIN_TIME = 200;
 extern int G_PickPainAnim(const gentity_t* self, const vec3_t point, int hit_loc);
 
 void NPC_ChoosePainAnimation(gentity_t* self, const gentity_t* other, const vec3_t point, const int damage,
-                             const int mod, const int hit_loc,
-                             const int voiceEvent = -1)
+	const int mod, const int hit_loc,
+	const int voiceEvent = -1)
 {
 	//If we've already taken pain, then don't take it again
 	if (level.time < self->painDebounceTime && mod != MOD_ELECTROCUTE && mod != MOD_MELEE)
@@ -416,7 +416,7 @@ void NPC_ChoosePainAnimation(gentity_t* self, const gentity_t* other, const vec3
 			self->painDebounceTime = level.time + 4000;
 		}
 		self->painDebounceTime = level.time + PM_AnimLength(self->client->clientInfo.animFileIndex,
-		                                                    static_cast<animNumber_t>(pain_anim));
+			static_cast<animNumber_t>(pain_anim));
 		self->client->fireDelay = 0;
 	}
 }
@@ -449,8 +449,8 @@ NPC_Pain
 ===============
 */
 void NPC_Pain(gentity_t* self, gentity_t* inflictor, gentity_t* other, const vec3_t point, const int damage,
-              const int mod,
-              const int hit_loc)
+	const int mod,
+	const int hit_loc)
 {
 	team_t otherTeam = TEAM_FREE;
 	int voiceEvent = -1;

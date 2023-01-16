@@ -85,10 +85,10 @@ start_pass_upsample(const j_decompress_ptr cinfo)
 
 METHODDEF(void)
 sep_upsample(const j_decompress_ptr cinfo,
-             const JSAMPIMAGE input_buf, JDIMENSION* in_row_group_ctr,
-             JDIMENSION in_row_groups_avail,
-             const JSAMPARRAY output_buf, JDIMENSION* out_row_ctr,
-             JDIMENSION out_rows_avail)
+	const JSAMPIMAGE input_buf, JDIMENSION* in_row_group_ctr,
+	JDIMENSION in_row_groups_avail,
+	const JSAMPARRAY output_buf, JDIMENSION* out_row_ctr,
+	JDIMENSION out_rows_avail)
 {
 	const my_upsample_ptr upsample = (my_upsample_ptr)cinfo->upsample;
 	int ci;
@@ -150,7 +150,7 @@ sep_upsample(const j_decompress_ptr cinfo,
 
 METHODDEF(void)
 fullsize_upsample(j_decompress_ptr cinfo, jpeg_component_info* compptr,
-                  const JSAMPARRAY input_data, JSAMPARRAY* output_data_ptr)
+	const JSAMPARRAY input_data, JSAMPARRAY* output_data_ptr)
 {
 	*output_data_ptr = input_data;
 }
@@ -180,7 +180,7 @@ noop_upsample(j_decompress_ptr cinfo, jpeg_component_info* compptr,
 
 METHODDEF(void)
 int_upsample(const j_decompress_ptr cinfo, jpeg_component_info* compptr,
-             const JSAMPARRAY input_data, JSAMPARRAY* output_data_ptr)
+	const JSAMPARRAY input_data, JSAMPARRAY* output_data_ptr)
 {
 	const my_upsample_ptr upsample = (my_upsample_ptr)cinfo->upsample;
 	const JSAMPARRAY output_data = *output_data_ptr;
@@ -218,7 +218,7 @@ int_upsample(const j_decompress_ptr cinfo, jpeg_component_info* compptr,
 
 METHODDEF(void)
 h2v1_upsample(const j_decompress_ptr cinfo, jpeg_component_info* compptr,
-              const JSAMPARRAY input_data, JSAMPARRAY* output_data_ptr)
+	const JSAMPARRAY input_data, JSAMPARRAY* output_data_ptr)
 {
 	const JSAMPARRAY output_data = *output_data_ptr;
 
@@ -241,7 +241,7 @@ h2v1_upsample(const j_decompress_ptr cinfo, jpeg_component_info* compptr,
 
 METHODDEF(void)
 h2v2_upsample(const j_decompress_ptr cinfo, jpeg_component_info* compptr,
-              const JSAMPARRAY input_data, JSAMPARRAY* output_data_ptr)
+	const JSAMPARRAY input_data, JSAMPARRAY* output_data_ptr)
 {
 	const JSAMPARRAY output_data = *output_data_ptr;
 	int outrow;

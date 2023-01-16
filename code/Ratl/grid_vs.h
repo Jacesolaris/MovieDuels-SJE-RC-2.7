@@ -200,7 +200,7 @@ namespace ratl
 		////////////////////////////////////////////////////////////////////////////////////
 		void expand_bounds(const float xReal, const float yReal)
 		{
-			const float point[2] = {xReal, yReal};
+			const float point[2] = { xReal, yReal };
 			for (int i = 0; i < 2; i++)
 			{
 				if (point[i] < mMins[i] || mMins[i] == RANGE_NULL)
@@ -282,7 +282,7 @@ namespace ratl
 		// Data
 		////////////////////////////////////////////////////////////////////////////////////
 	private:
-		array_vs<T, XSIZE_MAX * YSIZE_MAX> mData;
+		array_vs<T, XSIZE_MAX* YSIZE_MAX> mData;
 
 		int mSize[2];
 		float mMins[2];
@@ -408,8 +408,8 @@ namespace ratl
 			riterator(grid2_vs* p, const int Range, const int SX, const int SY) :
 				mOwner(p)
 			{
-				const int Start[2] = {SX, SY};
-				const int Bounds[2] = {XSIZE_MAX - 1, YSIZE_MAX - 1};
+				const int Start[2] = { SX, SY };
+				const int Bounds[2] = { XSIZE_MAX - 1, YSIZE_MAX - 1 };
 
 				for (int i = 0; i < 2; i++)
 				{
@@ -517,7 +517,7 @@ namespace ratl
 		////////////////////////////////////////////////////////////////////////////////////
 		riterator rangeBegin(int range, float xReal, float yReal)
 		{
-			const float position[2] = {xReal, yReal};
+			const float position[2] = { xReal, yReal };
 			assert(mScale[0] != 0.0f && mScale[1] != 0.0f);
 			truncate_position_to_bounds(xReal, yReal);
 			int x = (position[0] - mMins[0]) / mScale[0];

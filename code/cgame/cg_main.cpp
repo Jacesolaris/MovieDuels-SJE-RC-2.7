@@ -47,12 +47,12 @@ int CG_GetCameraPos(vec3_t camerapos);
 int CG_GetCameraAng(vec3_t cameraang);
 void UseItem(int item_num);
 const char* CG_DisplayBoxedText(int iBoxX, int iBoxY, int iBoxWidth, int iBoxHeight,
-                                const char* psText, int iFontHandle, float fScale,
-                                const vec4_t v4Color);
+	const char* psText, int iFontHandle, float fScale,
+	const vec4_t v4Color);
 
 constexpr auto NUM_CHUNKS = 6;
 extern void G_StartNextItemEffect(gentity_t* ent, int me_flags = 0, int length = 1000, float time_scale = 0.0f,
-                                  int spin_time = 0);
+	int spin_time = 0);
 /*
 Ghoul2 Insert Start
 */
@@ -109,8 +109,8 @@ This must be the very first function compiled into the .q3vm file
 ================
 */
 extern "C" Q_EXPORT intptr_t QDECL vmMain(const intptr_t command, const intptr_t arg0, intptr_t arg1, intptr_t arg2,
-                                          intptr_t arg3,
-                                          intptr_t arg4, intptr_t arg5, intptr_t arg6, intptr_t arg7)
+	intptr_t arg3,
+	intptr_t arg4, intptr_t arg5, intptr_t arg6, intptr_t arg7)
 {
 	centity_t* cent;
 
@@ -133,9 +133,9 @@ extern "C" Q_EXPORT intptr_t QDECL vmMain(const intptr_t command, const intptr_t
 		return CG_GetCameraPos(reinterpret_cast<float*>(arg0));
 	case CG_CAMERA_ANG:
 		return CG_GetCameraAng(reinterpret_cast<float*>(arg0));
-	/*
-	Ghoul2 Insert Start
-	*/
+		/*
+		Ghoul2 Insert Start
+		*/
 	case CG_RESIZE_G2:
 		CG_ResizeG2(reinterpret_cast<CGhoul2Info_v*>(arg0), arg1);
 		return 0;
@@ -152,9 +152,9 @@ extern "C" Q_EXPORT intptr_t QDECL vmMain(const intptr_t command, const intptr_t
 		CG_ResizeG2TempBone(reinterpret_cast<mdxaBone_v*>(arg0), arg1);
 		return 0;
 
-	/*
-	Ghoul2 Insert End
-	*/
+		/*
+		Ghoul2 Insert End
+		*/
 	case CG_DRAW_DATAPAD_HUD:
 		if (cg.snap)
 		{
@@ -192,7 +192,7 @@ extern "C" Q_EXPORT intptr_t QDECL vmMain(const intptr_t command, const intptr_t
 			CG_DrawDataPadForceSelect();
 		}
 		return 0;
-	default: ;
+	default:;
 	}
 	return -1;
 }
@@ -736,13 +736,13 @@ int CG_GetCameraPos(vec3_t camerapos)
 	}
 	if (cg_entities[0].gent && cg_entities[0].gent->client && cg_entities[0].gent->client->ps.viewEntity > 0 &&
 		cg_entities[0].gent->client->ps.viewEntity < ENTITYNUM_WORLD)
-	//else if ( cg.snap && cg.snap->ps.viewEntity > 0 && cg.snap->ps.viewEntity < ENTITYNUM_WORLD )
+		//else if ( cg.snap && cg.snap->ps.viewEntity > 0 && cg.snap->ps.viewEntity < ENTITYNUM_WORLD )
 	{
 		//in an entity camera view
 		if (g_entities[cg_entities[0].gent->client->ps.viewEntity].client && cg.renderingThirdPerson)
 		{
 			VectorCopy(g_entities[cg_entities[0].gent->client->ps.viewEntity].client->renderInfo.eyePoint,
-			           camerapos);
+				camerapos);
 		}
 		else
 		{
@@ -769,7 +769,7 @@ int CG_GetCameraPos(vec3_t camerapos)
 		return 1;
 	}
 	if (cg.snap && (cg.snap->ps.weapon == WP_SABER || cg.snap->ps.weapon == WP_MELEE))
-	//implied: !cg.renderingThirdPerson
+		//implied: !cg.renderingThirdPerson
 	{
 		//first person saber hack
 		VectorCopy(cg.refdef.vieworg, camerapos);
@@ -871,7 +871,7 @@ void CG_RegisterItemSounds(const int itemNum)
 		if (len >= MAX_QPATH || len < 5)
 		{
 			CG_Error("PrecacheItem: %s has bad precache string",
-			         item->classname);
+				item->classname);
 		}
 		memcpy(data, start, len);
 		data[len] = 0;
@@ -1108,9 +1108,9 @@ CG_RegisterClientSkin
 ==========================
 */
 qboolean CG_RegisterClientSkin(clientInfo_t* ci,
-                               const char* headModelName, const char* headSkinName,
-                               const char* torsoModelName, const char* torsoSkinName,
-                               const char* legsModelName, const char* legsSkinName)
+	const char* headModelName, const char* headSkinName,
+	const char* torsoModelName, const char* torsoSkinName,
+	const char* legsModelName, const char* legsSkinName)
 {
 	char lfilename[MAX_QPATH];
 
@@ -1158,9 +1158,9 @@ CG_RegisterClientModelname
 ==========================
 */
 qboolean CG_RegisterClientModelname(clientInfo_t* ci,
-                                    const char* headModelName, const char* headSkinName,
-                                    const char* torsoModelName, const char* torsoSkinName,
-                                    const char* legsModelName, const char* legsSkinName)
+	const char* headModelName, const char* headSkinName,
+	const char* torsoModelName, const char* torsoSkinName,
+	const char* legsModelName, const char* legsSkinName)
 {
 	/*
 	Ghoul2 Insert Start
@@ -1226,7 +1226,7 @@ qboolean CG_RegisterClientModelname(clientInfo_t* ci,
 
 	// if any skins failed to load, return failure
 	if (!CG_RegisterClientSkin(ci, headModelName, headSkinName, torsoModelName, torsoSkinName, legsModelName,
-	                           legsSkinName))
+		legsSkinName))
 	{
 		//Com_Printf( "Failed to load skin file: %s : %s/%s : %s/%s : %s\n", headModelName, headSkinName, torsoModelName, torsoSkinName, legsModelName, legsSkinName );
 		return qfalse;
@@ -1323,10 +1323,10 @@ void CG_RegisterClientRenderInfo(clientInfo_t* ci, const renderInfo_t* ri)
 	}
 
 	if (!CG_RegisterClientModelname(ci, headModelName, headSkinName, torsoModelName, torsoSkinName, legsModelName,
-	                                legsSkinName))
+		legsSkinName))
 	{
 		if (!CG_RegisterClientModelname(ci, DEFAULT_HEADMODEL, "default", DEFAULT_TORSOMODEL, "default",
-		                                DEFAULT_LEGSMODEL, "default"))
+			DEFAULT_LEGSMODEL, "default"))
 		{
 			CG_Error("DEFAULT_MODELS failed to register");
 		}
@@ -3039,7 +3039,7 @@ void CG_CreateMiscEntFromGent(const gentity_t* ent, const vec3_t scale, const fl
 		Com_Error(ERR_DROP, "misc_model_static model(%s) is not an md3.", ent->model);
 	}
 	cgMiscEntData_t* MiscEnt = &MiscEnts[NumMiscEnts++];
-	memset(MiscEnt, 0, sizeof *MiscEnt);
+	memset(MiscEnt, 0, sizeof * MiscEnt);
 
 	strcpy(MiscEnt->model, ent->model);
 	VectorCopy(ent->s.angles, MiscEnt->angles);
@@ -3305,7 +3305,7 @@ void CG_DrawNode(vec3_t origin, const int type)
 		ex->color[1] = 255;
 		ex->color[2] = 0;
 		break;
-	default: ;
+	default:;
 	}
 
 	ex->radius = scale;
@@ -3354,7 +3354,7 @@ void CG_DrawRadius(vec3_t origin, const unsigned int radius, const int type)
 		ex->color[1] = 255;
 		ex->color[2] = 0;
 		break;
-	default: ;
+	default:;
 	}
 }
 
@@ -3368,175 +3368,175 @@ void CG_DrawEdge(vec3_t start, vec3_t end, const int type)
 {
 	switch (type)
 	{
-	// NAVIGATION EDGES BETWEEN POINTS
-	//=====================================
+		// NAVIGATION EDGES BETWEEN POINTS
+		//=====================================
 	case EDGE_NORMAL:
-		{
-			FX_AddLine(start, end, 4.0f, 0.5f, 0.5f, 51, cgi_R_RegisterShader("gfx/misc/nav_line"));
-		}
-		break;
+	{
+		FX_AddLine(start, end, 4.0f, 0.5f, 0.5f, 51, cgi_R_RegisterShader("gfx/misc/nav_line"));
+	}
+	break;
 	case EDGE_LARGE:
-		{
-			FX_AddLine(start, end, 15.0f, 0.5f, 0.5f, 51, cgi_R_RegisterShader("gfx/misc/nav_line"));
-		}
-		break;
+	{
+		FX_AddLine(start, end, 15.0f, 0.5f, 0.5f, 51, cgi_R_RegisterShader("gfx/misc/nav_line"));
+	}
+	break;
 	case EDGE_BLOCKED:
-		{
-			vec3_t color = {255, 0, 0}; // RED
-			FX_AddLine(start, end, 4.0f, 0.5f, 0.5f, color, color, 51, cgi_R_RegisterShader("gfx/misc/nav_line"), 0);
-		}
-		break;
+	{
+		vec3_t color = { 255, 0, 0 }; // RED
+		FX_AddLine(start, end, 4.0f, 0.5f, 0.5f, color, color, 51, cgi_R_RegisterShader("gfx/misc/nav_line"), 0);
+	}
+	break;
 	case EDGE_FLY:
-		{
-			vec3_t color = {0, 255, 255}; // GREEN
-			FX_AddLine(start, end, 4.0f, 0.5f, 0.5f, color, color, 51, cgi_R_RegisterShader("gfx/misc/nav_line"), 0);
-		}
-		break;
+	{
+		vec3_t color = { 0, 255, 255 }; // GREEN
+		FX_AddLine(start, end, 4.0f, 0.5f, 0.5f, color, color, 51, cgi_R_RegisterShader("gfx/misc/nav_line"), 0);
+	}
+	break;
 	case EDGE_JUMP:
-		{
-			vec3_t color = {0, 0, 255}; // BLUE
-			FX_AddLine(start, end, 4.0f, 0.5f, 0.5f, color, color, 51, cgi_R_RegisterShader("gfx/misc/nav_line"), 0);
-		}
-		break;
+	{
+		vec3_t color = { 0, 0, 255 }; // BLUE
+		FX_AddLine(start, end, 4.0f, 0.5f, 0.5f, color, color, 51, cgi_R_RegisterShader("gfx/misc/nav_line"), 0);
+	}
+	break;
 
 	// EDGE NODES
 	//=====================================
 	case EDGE_NODE_NORMAL:
-		{
-			vec3_t color = {155, 155, 155};
-			FX_AddLine(start, end, 1.0f, 1.0f, 1.0f, color, color, 151, cgi_R_RegisterShader("gfx/misc/whiteline2"), 0);
-		}
-		break;
+	{
+		vec3_t color = { 155, 155, 155 };
+		FX_AddLine(start, end, 1.0f, 1.0f, 1.0f, color, color, 151, cgi_R_RegisterShader("gfx/misc/whiteline2"), 0);
+	}
+	break;
 	case EDGE_NODE_FLOATING:
-		{
-			vec3_t color = {155, 155, 0};
-			FX_AddLine(start, end, 1.0f, 1.0f, 1.0f, color, color, 151, cgi_R_RegisterShader("gfx/misc/whiteline2"), 0);
-		}
-		break;
+	{
+		vec3_t color = { 155, 155, 0 };
+		FX_AddLine(start, end, 1.0f, 1.0f, 1.0f, color, color, 151, cgi_R_RegisterShader("gfx/misc/whiteline2"), 0);
+	}
+	break;
 	case EDGE_NODE_GOAL:
-		{
-			vec3_t color = {0, 0, 155};
-			FX_AddLine(start, end, 1.0f, 1.0f, 1.0f, color, color, 151, cgi_R_RegisterShader("gfx/misc/whiteline2"), 0);
-		}
-		break;
+	{
+		vec3_t color = { 0, 0, 155 };
+		FX_AddLine(start, end, 1.0f, 1.0f, 1.0f, color, color, 151, cgi_R_RegisterShader("gfx/misc/whiteline2"), 0);
+	}
+	break;
 	case EDGE_NODE_COMBAT:
-		{
-			vec3_t color = {155, 0, 0};
-			FX_AddLine(start, end, 1.0f, 1.0f, 1.0f, color, color, 151, cgi_R_RegisterShader("gfx/misc/whiteline2"), 0);
-		}
-		break;
+	{
+		vec3_t color = { 155, 0, 0 };
+		FX_AddLine(start, end, 1.0f, 1.0f, 1.0f, color, color, 151, cgi_R_RegisterShader("gfx/misc/whiteline2"), 0);
+	}
+	break;
 
 	// NEAREST NAV
 	//=====================================
 	case EDGE_NEARESTVALID:
-		{
-			vec3_t color = {155, 155, 155}; // WHITE
-			FX_AddLine(-1, start, end, 1.0f, 1.0f, 0, 1.0f, 1.0f, FX_ALPHA_LINEAR, color, color, 0, 51,
-			           cgi_R_RegisterShader("gfx/misc/whiteline2"), 0, 0);
-		}
-		break;
+	{
+		vec3_t color = { 155, 155, 155 }; // WHITE
+		FX_AddLine(-1, start, end, 1.0f, 1.0f, 0, 1.0f, 1.0f, FX_ALPHA_LINEAR, color, color, 0, 51,
+			cgi_R_RegisterShader("gfx/misc/whiteline2"), 0, 0);
+	}
+	break;
 
 	case EDGE_NEARESTINVALID:
-		{
-			vec3_t color = {155, 0, 0}; // WHITE
-			FX_AddLine(-1, start, end, 1.0f, 1.0f, 0, 1.0f, 1.0f, FX_ALPHA_LINEAR, color, color, 0, 51,
-			           cgi_R_RegisterShader("gfx/misc/whiteline2"), 0, 0);
-		}
-		break;
+	{
+		vec3_t color = { 155, 0, 0 }; // WHITE
+		FX_AddLine(-1, start, end, 1.0f, 1.0f, 0, 1.0f, 1.0f, FX_ALPHA_LINEAR, color, color, 0, 51,
+			cgi_R_RegisterShader("gfx/misc/whiteline2"), 0, 0);
+	}
+	break;
 
 	// NEAREST NAV CELLS
 	//=====================================
 	case EDGE_CELL:
-		{
-			vec3_t color = {155, 155, 155}; // WHITE
-			FX_AddLine(-1, start, end, 1.0f, 1.0f, 0, 1.0f, 1.0f, FX_ALPHA_LINEAR, color, color, 0, 51,
-			           cgi_R_RegisterShader("gfx/misc/whiteline2"), 0, 0);
-		}
-		break;
+	{
+		vec3_t color = { 155, 155, 155 }; // WHITE
+		FX_AddLine(-1, start, end, 1.0f, 1.0f, 0, 1.0f, 1.0f, FX_ALPHA_LINEAR, color, color, 0, 51,
+			cgi_R_RegisterShader("gfx/misc/whiteline2"), 0, 0);
+	}
+	break;
 	case EDGE_CELL_EMPTY:
-		{
-			vec3_t color = {255, 0, 0}; // RED
-			FX_AddLine(-1, start, end, 1.0f, 1.0f, 0, 1.0f, 1.0f, FX_ALPHA_LINEAR, color, color, 0, 51,
-			           cgi_R_RegisterShader("gfx/misc/whiteline2"), 0, 0);
-		}
-		break;
+	{
+		vec3_t color = { 255, 0, 0 }; // RED
+		FX_AddLine(-1, start, end, 1.0f, 1.0f, 0, 1.0f, 1.0f, FX_ALPHA_LINEAR, color, color, 0, 51,
+			cgi_R_RegisterShader("gfx/misc/whiteline2"), 0, 0);
+	}
+	break;
 
 	// ACTOR PATHS
 	//=============
 	case EDGE_PATH:
-		{
-			vec3_t color = {0, 0, 155}; // WHITE
-			FX_AddLine(start, end, 5.0f, 0.5f, 0.5f, color, color, 151, cgi_R_RegisterShader("gfx/misc/nav_arrow_new"), 0);
-		}
-		break;
+	{
+		vec3_t color = { 0, 0, 155 }; // WHITE
+		FX_AddLine(start, end, 5.0f, 0.5f, 0.5f, color, color, 151, cgi_R_RegisterShader("gfx/misc/nav_arrow_new"), 0);
+	}
+	break;
 
 	case EDGE_PATHBLOCKED:
-		{
-			vec3_t color = {255, 0, 0}; // RED
-			FX_AddLine(start, end, 5.0f, 0.5f, 0.5f, color, color, 151, cgi_R_RegisterShader("gfx/misc/nav_arrow_new"), 0);
-			break;
-		}
+	{
+		vec3_t color = { 255, 0, 0 }; // RED
+		FX_AddLine(start, end, 5.0f, 0.5f, 0.5f, color, color, 151, cgi_R_RegisterShader("gfx/misc/nav_arrow_new"), 0);
+		break;
+	}
 
 	case EDGE_FOLLOWPOS:
-		{
-			vec3_t color = {0, 255, 0}; // GREEN
-			FX_AddLine(start, end, 5.0f, 0.5f, 0.5f, color, color, 151, cgi_R_RegisterShader("gfx/misc/nav_arrow_new"), 0);
-			break;
-		}
+	{
+		vec3_t color = { 0, 255, 0 }; // GREEN
+		FX_AddLine(start, end, 5.0f, 0.5f, 0.5f, color, color, 151, cgi_R_RegisterShader("gfx/misc/nav_arrow_new"), 0);
+		break;
+	}
 
 	// STEERING
 	//=====================================
 	case EDGE_IMPACT_SAFE:
-		{
-			vec3_t color = {155, 155, 155}; // WHITE
-			FX_AddLine(start, end, 1.0f, 1.0f, 1.0f, color, color, 151, cgi_R_RegisterShader("gfx/misc/whiteline2"), 0);
-		}
-		break;
+	{
+		vec3_t color = { 155, 155, 155 }; // WHITE
+		FX_AddLine(start, end, 1.0f, 1.0f, 1.0f, color, color, 151, cgi_R_RegisterShader("gfx/misc/whiteline2"), 0);
+	}
+	break;
 	case EDGE_IMPACT_POSSIBLE:
-		{
-			vec3_t color = {255, 0, 0}; // RED
-			FX_AddLine(start, end, 1.0f, 1.0f, 1.0f, color, color, 151, cgi_R_RegisterShader("gfx/misc/whiteline2"), 0);
-		}
-		break;
+	{
+		vec3_t color = { 255, 0, 0 }; // RED
+		FX_AddLine(start, end, 1.0f, 1.0f, 1.0f, color, color, 151, cgi_R_RegisterShader("gfx/misc/whiteline2"), 0);
+	}
+	break;
 	case EDGE_VELOCITY:
-		{
-			vec3_t color = {0, 255, 0}; // GREEN
-			FX_AddLine(start, end, 1.0f, 1.0f, 1.0f, color, color, 151, cgi_R_RegisterShader("gfx/misc/whiteline2"), 0);
-		}
-		break;
+	{
+		vec3_t color = { 0, 255, 0 }; // GREEN
+		FX_AddLine(start, end, 1.0f, 1.0f, 1.0f, color, color, 151, cgi_R_RegisterShader("gfx/misc/whiteline2"), 0);
+	}
+	break;
 	case EDGE_THRUST:
-		{
-			vec3_t color = {0, 0, 255}; // BLUE
-			FX_AddLine(start, end, 1.0f, 1.0f, 1.0f, color, color, 151, cgi_R_RegisterShader("gfx/misc/whiteline2"), 0);
-		}
-		break;
+	{
+		vec3_t color = { 0, 0, 255 }; // BLUE
+		FX_AddLine(start, end, 1.0f, 1.0f, 1.0f, color, color, 151, cgi_R_RegisterShader("gfx/misc/whiteline2"), 0);
+	}
+	break;
 
 	// MISC Colored Lines
 	//=====================================
 	case EDGE_WHITE_ONESECOND:
-		{
-			vec3_t color = {155, 155, 155}; // WHITE
-			FX_AddLine(start, end, 1.0f, 1.0f, 1.0f, color, color, 1051, cgi_R_RegisterShader("gfx/misc/whiteline2"), 0);
-		}
-		break;
+	{
+		vec3_t color = { 155, 155, 155 }; // WHITE
+		FX_AddLine(start, end, 1.0f, 1.0f, 1.0f, color, color, 1051, cgi_R_RegisterShader("gfx/misc/whiteline2"), 0);
+	}
+	break;
 	case EDGE_WHITE_TWOSECOND:
-		{
-			vec3_t color = {155, 155, 155}; // WHITE
-			FX_AddLine(start, end, 1.0f, 1.0f, 1.0f, color, color, 1051, cgi_R_RegisterShader("gfx/misc/whiteline2"), 0);
-		}
-		break;
+	{
+		vec3_t color = { 155, 155, 155 }; // WHITE
+		FX_AddLine(start, end, 1.0f, 1.0f, 1.0f, color, color, 1051, cgi_R_RegisterShader("gfx/misc/whiteline2"), 0);
+	}
+	break;
 	case EDGE_RED_ONESECOND:
-		{
-			vec3_t color = {255, 0, 0}; // RED
-			FX_AddLine(start, end, 1.0f, 1.0f, 1.0f, color, color, 2051, cgi_R_RegisterShader("gfx/misc/whiteline2"), 0);
-		}
-		break;
+	{
+		vec3_t color = { 255, 0, 0 }; // RED
+		FX_AddLine(start, end, 1.0f, 1.0f, 1.0f, color, color, 2051, cgi_R_RegisterShader("gfx/misc/whiteline2"), 0);
+	}
+	break;
 	case EDGE_RED_TWOSECOND:
-		{
-			vec3_t color = {255, 0, 0}; // RED
-			FX_AddLine(start, end, 1.0f, 1.0f, 1.0f, color, color, 2051, cgi_R_RegisterShader("gfx/misc/whiteline2"), 0);
-		}
-		break;
+	{
+		vec3_t color = { 255, 0, 0 }; // RED
+		FX_AddLine(start, end, 1.0f, 1.0f, 1.0f, color, color, 2051, cgi_R_RegisterShader("gfx/misc/whiteline2"), 0);
+	}
+	break;
 
 	default:
 		break;
@@ -4192,7 +4192,7 @@ static void SetInventoryTime()
 	if (cg.weaponSelectTime + WEAPON_SELECT_TIME > cg.time ||
 		// The Weapon HUD was currently active to just swap it out with Force HUD
 		cg.forcepowerSelectTime + WEAPON_SELECT_TIME > cg.time)
-	// The Force HUD was currently active to just swap it out with Force HUD
+		// The Force HUD was currently active to just swap it out with Force HUD
 	{
 		cg.weaponSelectTime = 0;
 		cg.forcepowerSelectTime = 0;
@@ -4373,7 +4373,7 @@ gitem_t* FindInventoryItemTag(const int tag)
 	for (int i = 1; i < bg_numItems; i++)
 	{
 		if (bg_itemlist[i].giTag == tag && bg_itemlist[i].giType == IT_HOLDABLE)
-		// I guess giTag's aren't unique amongst items..must also make sure it's a holdable
+			// I guess giTag's aren't unique amongst items..must also make sure it's a holdable
 		{
 			return &bg_itemlist[i];
 		}
@@ -4392,8 +4392,8 @@ void CG_DrawInventorySelect()
 	int i;
 	int iconCnt;
 	int sideLeftIconCnt, sideRightIconCnt;
-	constexpr vec4_t textColor = {.312f, .75f, .621f, 1.0f};
-	char text[1024] = {0};
+	constexpr vec4_t textColor = { .312f, .75f, .621f, 1.0f };
+	char text[1024] = { 0 };
 
 	// don't display if dead
 	if (cg.predicted_player_state.stats[STAT_HEALTH] <= 0 || cg.snap->ps.viewEntity > 0 && cg.snap->ps.viewEntity <
@@ -4510,7 +4510,7 @@ void CG_DrawInventorySelect()
 
 			cgi_R_SetColor(colorTable[CT_ICON_BLUE]);
 			CG_DrawNumField(holdX + addX, y + smallIconSize, 2, cg.snap->ps.inventory[i], 6, 12,
-			                NUM_FONT_SMALL, qfalse);
+				NUM_FONT_SMALL, qfalse);
 
 			holdX -= smallIconSize + pad;
 		}
@@ -4522,11 +4522,11 @@ void CG_DrawInventorySelect()
 	{
 		cgi_R_SetColor(nullptr);
 		CG_DrawPic(x - bigIconSize / 2, y - (bigIconSize - smallIconSize) / 2 + 10, bigIconSize, bigIconSize,
-		           inv_icons[cg.inventorySelect]);
+			inv_icons[cg.inventorySelect]);
 		addX = static_cast<float>(bigIconSize) * .75;
 		cgi_R_SetColor(colorTable[CT_ICON_BLUE]);
 		CG_DrawNumField(x - bigIconSize / 2 + addX, y, 2, cg.snap->ps.inventory[cg.inventorySelect], 6, 12,
-		                NUM_FONT_SMALL, qfalse);
+			NUM_FONT_SMALL, qfalse);
 
 		if (inv_names[cg.inventorySelect])
 		{
@@ -4545,7 +4545,7 @@ void CG_DrawInventorySelect()
 					const int ox = (SCREEN_WIDTH - w) / 2;
 
 					cgi_R_Font_DrawString(ox, SCREEN_HEIGHT - 24, data, textColor, cgs.media.qhFontSmall, -1,
-					                      1.0f);
+						1.0f);
 				}
 			}
 		}
@@ -4583,7 +4583,7 @@ void CG_DrawInventorySelect()
 
 			cgi_R_SetColor(colorTable[CT_ICON_BLUE]);
 			CG_DrawNumField(holdX + addX, y + smallIconSize, 2, cg.snap->ps.inventory[i], 6, 12,
-			                NUM_FONT_SMALL, qfalse);
+				NUM_FONT_SMALL, qfalse);
 
 			holdX += smallIconSize + pad;
 		}
@@ -4592,7 +4592,7 @@ void CG_DrawInventorySelect()
 
 void cg_draw_inventory_select_side()
 {
-	char text[1024] = {0};
+	char text[1024] = { 0 };
 
 	// don't display if dead
 	if (cg.predicted_player_state.stats[STAT_HEALTH] <= 0
@@ -4646,8 +4646,8 @@ void cg_draw_inventory_select_side()
 
 void CG_DrawInventorySelect_text()
 {
-	constexpr vec4_t text_color = {.312f, .75f, .621f, 1.0f};
-	char text[1024] = {0};
+	constexpr vec4_t text_color = { .312f, .75f, .621f, 1.0f };
+	char text[1024] = { 0 };
 
 	// don't display if dead
 	if (cg.predicted_player_state.stats[STAT_HEALTH] <= 0
@@ -4727,12 +4727,12 @@ void CG_DrawInventorySelect_text()
 					if (cg_SerenityJediEngineHudMode.integer == 4) // vertial
 					{
 						cgi_R_Font_DrawString(9, SCREEN_HEIGHT - 21, data, text_color, cgs.media.qhFontSmall, -1,
-						                      0.5f);
+							0.5f);
 					}
 					else // horizontal
 					{
 						cgi_R_Font_DrawString(59, SCREEN_HEIGHT - 21, data, text_color, cgs.media.qhFontSmall, -1,
-						                      0.5f);
+							0.5f);
 					}
 				}
 			}
@@ -4766,8 +4766,8 @@ void CG_DrawDataPadInventorySelect()
 	int i;
 	int iconCnt;
 	int sideLeftIconCnt, sideRightIconCnt;
-	char text[1024] = {0};
-	constexpr vec4_t textColor = {.312f, .75f, .621f, 1.0f};
+	char text[1024] = { 0 };
+	constexpr vec4_t textColor = { .312f, .75f, .621f, 1.0f };
 
 	// count the number of items owned
 	int count = 0;
@@ -4848,7 +4848,7 @@ void CG_DrawDataPadInventorySelect()
 
 			cgi_R_SetColor(colorTable[CT_ICON_BLUE]);
 			CG_DrawNumField(holdX + addX, graphicYPos + smallIconSize, 2, cg.snap->ps.inventory[i], 6, 12,
-			                NUM_FONT_SMALL, qfalse);
+				NUM_FONT_SMALL, qfalse);
 
 			holdX -= smallIconSize + pad;
 		}
@@ -4859,12 +4859,12 @@ void CG_DrawDataPadInventorySelect()
 	{
 		cgi_R_SetColor(colorTable[CT_WHITE]);
 		CG_DrawPic(centerXPos - bigIconSize / 2, graphicYPos - (bigIconSize - smallIconSize) / 2 + 10,
-		           bigIconSize, bigIconSize, inv_icons[cg.DataPadInventorySelect]);
+			bigIconSize, bigIconSize, inv_icons[cg.DataPadInventorySelect]);
 		addX = static_cast<float>(bigIconSize) * .75;
 		cgi_R_SetColor(colorTable[CT_ICON_BLUE]);
 		CG_DrawNumField(centerXPos - bigIconSize / 2 + addX, graphicYPos, 2,
-		                cg.snap->ps.inventory[cg.DataPadInventorySelect], 6, 12,
-		                NUM_FONT_SMALL, qfalse);
+			cg.snap->ps.inventory[cg.DataPadInventorySelect], 6, 12,
+			NUM_FONT_SMALL, qfalse);
 	}
 
 	i = cg.DataPadInventorySelect + 1;
@@ -4898,7 +4898,7 @@ void CG_DrawDataPadInventorySelect()
 
 			cgi_R_SetColor(colorTable[CT_ICON_BLUE]);
 			CG_DrawNumField(holdX + addX, graphicYPos + smallIconSize, 2, cg.snap->ps.inventory[i], 6, 12,
-			                NUM_FONT_SMALL, qfalse);
+				NUM_FONT_SMALL, qfalse);
 
 			holdX += smallIconSize + pad;
 		}
@@ -4908,7 +4908,7 @@ void CG_DrawDataPadInventorySelect()
 	if (cg.DataPadInventorySelect >= 0 && cg.DataPadInventorySelect < 13)
 	{
 		if (!cgi_SP_GetStringTextString(va("SP_INGAME_%s", inventoryDesc[cg.DataPadInventorySelect]), text,
-		                                sizeof text))
+			sizeof text))
 		{
 			cgi_SP_GetStringTextString(va("MD_%s", inventoryDesc[cg.DataPadInventorySelect]), text, sizeof text);
 		}
@@ -4916,9 +4916,9 @@ void CG_DrawDataPadInventorySelect()
 		if (text[0])
 		{
 			CG_DisplayBoxedText(70, 50, 500, 300, text,
-			                    cgs.media.qhFontSmall,
-			                    0.7f,
-			                    textColor
+				cgs.media.qhFontSmall,
+				0.7f,
+				textColor
 			);
 		}
 	}
@@ -4934,7 +4934,7 @@ void SetForcePowerTime()
 	if (cg.weaponSelectTime + WEAPON_SELECT_TIME > cg.time ||
 		// The Weapon HUD was currently active to just swap it out with Force HUD
 		cg.inventorySelectTime + WEAPON_SELECT_TIME > cg.time)
-	// The Inventory HUD was currently active to just swap it out with Force HUD
+		// The Inventory HUD was currently active to just swap it out with Force HUD
 	{
 		cg.weaponSelectTime = 0;
 		cg.inventorySelectTime = 0;
@@ -5163,7 +5163,7 @@ void CG_DrawForceSelect()
 	int i;
 	int sideLeftIconCnt, sideRightIconCnt;
 	int iconCnt;
-	char text[1024] = {0};
+	char text[1024] = { 0 };
 	constexpr int yOffset = 0;
 	int sideMax;
 	int smallIconSize, bigIconSize;
@@ -5289,12 +5289,12 @@ void CG_DrawForceSelect()
 		if (isOnVeh) //PM_WeaponOkOnVehicle
 		{
 			CG_DrawPic(x - bigIconSize / 2, y - (bigIconSize - smallIconSize) / 2 - 10 + yOffset, bigIconSize,
-			           bigIconSize, force_icons[showPowers[cg.forcepowerSelect]]);
+				bigIconSize, force_icons[showPowers[cg.forcepowerSelect]]);
 		}
 		else
 		{
 			CG_DrawPic(x - bigIconSize / 2, y - (bigIconSize - smallIconSize) / 2 + yOffset, bigIconSize,
-			           bigIconSize, force_icons[showPowers[cg.forcepowerSelect]]);
+				bigIconSize, force_icons[showPowers[cg.forcepowerSelect]]);
 		}
 	}
 
@@ -5347,14 +5347,14 @@ void CG_DrawForceSelect()
 			const int w = cgi_R_Font_StrLenPixels(text, cgs.media.qhFontSmall, 1.0f);
 			const int ox = (SCREEN_WIDTH - w) / 2;
 			cgi_R_Font_DrawString(ox, SCREEN_HEIGHT - 24 + yOffset, text, colorTable[CT_ICON_BLUE],
-			                      cgs.media.qhFontSmall, -1, 1.0f);
+				cgs.media.qhFontSmall, -1, 1.0f);
 		}
 	}
 }
 
 void CG_DrawForceSelect_text()
 {
-	char text[1024] = {0};
+	char text[1024] = { 0 };
 
 	// don't display if dead
 	if (cg.predicted_player_state.stats[STAT_HEALTH] <= 0
@@ -5398,12 +5398,12 @@ void CG_DrawForceSelect_text()
 		if (cg_SerenityJediEngineHudMode.integer == 4) // vertial
 		{
 			cgi_R_Font_DrawString(9, SCREEN_HEIGHT - 21 + yOffset, text, colorTable[CT_ICON_BLUE],
-			                      cgs.media.qhFontSmall, -1, 0.5f);
+				cgs.media.qhFontSmall, -1, 0.5f);
 		}
 		else // horizontal
 		{
 			cgi_R_Font_DrawString(59, SCREEN_HEIGHT - 21 + yOffset, text, colorTable[CT_ICON_BLUE],
-			                      cgs.media.qhFontSmall, -1, 0.5f);
+				cgs.media.qhFontSmall, -1, 0.5f);
 		}
 	}
 }
@@ -5450,14 +5450,14 @@ void CG_DrawForceSelect_side()
 		if (cg_SerenityJediEngineHudMode.integer == 4) // vertical
 		{
 			CG_DrawPic(32 - big_icon_size / 2, 420 - (big_icon_size - small_icon_size) / 2 + y_offset,
-			           big_icon_size,
-			           big_icon_size, force_icons[showPowers[cg.forcepowerSelect]]);
+				big_icon_size,
+				big_icon_size, force_icons[showPowers[cg.forcepowerSelect]]);
 		}
 		else // horizonal
 		{
 			CG_DrawPic(45 - big_icon_size / 2, 438 - (big_icon_size - small_icon_size) / 2 + y_offset,
-			           big_icon_size,
-			           big_icon_size, force_icons[showPowers[cg.forcepowerSelect]]);
+				big_icon_size,
+				big_icon_size, force_icons[showPowers[cg.forcepowerSelect]]);
 		}
 	}
 }
@@ -5679,8 +5679,8 @@ void CG_DrawDataPadForceSelect()
 	int i;
 	int sideLeftIconCnt, sideRightIconCnt;
 	int iconCnt;
-	char text[1024] = {0};
-	char text2[1024] = {0};
+	char text[1024] = { 0 };
+	char text2[1024] = { 0 };
 
 	// count the number of powers known
 	int count = 0;
@@ -5777,7 +5777,7 @@ void CG_DrawDataPadForceSelect()
 	{
 		cgi_R_SetColor(colorTable[CT_WHITE]);
 		CG_DrawPic(centerXPos - bigIconSize / 2, graphicYPos - (bigIconSize - smallIconSize) / 2, bigIconSize,
-		           bigIconSize, force_icons[showDataPadPowers[cg.DataPadforcepowerSelect]]);
+			bigIconSize, force_icons[showDataPadPowers[cg.DataPadforcepowerSelect]]);
 
 		// New force power
 		if (cg_updatedDataPadForcePower1.integer - 1 == showDataPadPowers[cg.DataPadforcepowerSelect] ||
@@ -5785,8 +5785,8 @@ void CG_DrawDataPadForceSelect()
 			cg_updatedDataPadForcePower3.integer - 1 == showDataPadPowers[cg.DataPadforcepowerSelect])
 		{
 			CG_DrawPic(centerXPos - bigIconSize / 2, graphicYPos - (bigIconSize - smallIconSize) / 2,
-			           bigIconSize,
-			           bigIconSize, cgs.media.DPForcePowerOverlay);
+				bigIconSize,
+				bigIconSize, cgs.media.DPForcePowerOverlay);
 		}
 	}
 
@@ -5834,37 +5834,37 @@ void CG_DrawDataPadForceSelect()
 	}
 
 	if (!cgi_SP_GetStringTextString(va("SP_INGAME_%s", forcepowerDesc[cg.DataPadforcepowerSelect]), text,
-	                                sizeof text))
+		sizeof text))
 	{
 		cgi_SP_GetStringTextString(va("SPMOD_INGAME_%s", forcepowerDesc[cg.DataPadforcepowerSelect]), text,
-		                           sizeof text);
+			sizeof text);
 	}
 
 	if (player->client->ps.forcePowerLevel[showDataPadPowers[cg.DataPadforcepowerSelect]] == 1)
 	{
 		if (!cgi_SP_GetStringTextString(va("SP_INGAME_%s", forcepowerLvl1Desc[cg.DataPadforcepowerSelect]), text2,
-		                                sizeof text2))
+			sizeof text2))
 		{
 			cgi_SP_GetStringTextString(va("SPMOD_INGAME_%s", forcepowerLvl1Desc[cg.DataPadforcepowerSelect]), text2,
-			                           sizeof text2);
+				sizeof text2);
 		}
 	}
 	else if (player->client->ps.forcePowerLevel[showDataPadPowers[cg.DataPadforcepowerSelect]] == 2)
 	{
 		if (!cgi_SP_GetStringTextString(va("SP_INGAME_%s", forcepowerLvl2Desc[cg.DataPadforcepowerSelect]), text2,
-		                                sizeof text2))
+			sizeof text2))
 		{
 			cgi_SP_GetStringTextString(va("SPMOD_INGAME_%s", forcepowerLvl2Desc[cg.DataPadforcepowerSelect]), text2,
-			                           sizeof text2);
+				sizeof text2);
 		}
 	}
 	else
 	{
 		if (!cgi_SP_GetStringTextString(va("SP_INGAME_%s", forcepowerLvl3Desc[cg.DataPadforcepowerSelect]), text2,
-		                                sizeof text2))
+			sizeof text2))
 		{
 			cgi_SP_GetStringTextString(va("SPMOD_INGAME_%s", forcepowerLvl3Desc[cg.DataPadforcepowerSelect]), text2,
-			                           sizeof text2);
+				sizeof text2);
 		}
 	}
 
@@ -5877,9 +5877,9 @@ void CG_DrawDataPadForceSelect()
 		constexpr float textScale = 1.0f;
 
 		CG_DisplayBoxedText(textboxXPos, textboxYPos, textboxWidth, textboxHeight, va("%s%s", text, text2),
-		                    4,
-		                    textScale,
-		                    colorTable[CT_ICON_BLUE]
+			4,
+			textScale,
+			colorTable[CT_ICON_BLUE]
 		);
 	}
 }

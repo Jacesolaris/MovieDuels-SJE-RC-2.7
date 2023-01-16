@@ -50,7 +50,7 @@ COM_GetExtension
 */
 const char* COM_GetExtension(const char* name)
 {
-	const char *dot = strrchr(name, '.'), *slash;
+	const char* dot = strrchr(name, '.'), * slash;
 	if (dot && (!((slash = strrchr(name, '/'))) || slash < dot))
 		return dot + 1;
 	return "";
@@ -63,7 +63,7 @@ COM_StripExtension
 */
 void COM_StripExtension(const char* in, char* out, int destsize)
 {
-	const char *dot = strrchr(in, '.'), *slash;
+	const char* dot = strrchr(in, '.'), * slash;
 	if (dot && (!((slash = strrchr(in, '/'))) || slash < dot))
 		destsize = destsize < dot - in + 1 ? destsize : dot - in + 1;
 
@@ -103,7 +103,7 @@ COM_DefaultExtension
 */
 void COM_DefaultExtension(char* path, const int maxSize, const char* extension)
 {
-	const char *dot = strrchr(path, '.'), *slash;
+	const char* dot = strrchr(path, '.'), * slash;
 	if (dot && (!((slash = strrchr(path, '/'))) || slash < dot))
 		return;
 	Q_strcat(path, maxSize, extension);
@@ -404,8 +404,7 @@ char* COM_ParseExt(const char** data_p, const qboolean allow_line_breaks)
 		}
 		data++;
 		c = *data;
-	}
-	while (c > 32);
+	} while (c > 32);
 
 	com_token[len] = 0;
 
@@ -531,8 +530,7 @@ void SkipBracedSection(const char** program)
 				depth--;
 			}
 		}
-	}
-	while (depth && *program);
+	} while (depth && *program);
 }
 
 /*
@@ -760,7 +758,7 @@ char* QDECL va(const char* format, ...)
 
 	va_start(argptr, format);
 	const auto buf = reinterpret_cast<char*>(&string[index++ & 3]);
-	Q_vsnprintf(buf, sizeof *string, format, argptr);
+	Q_vsnprintf(buf, sizeof * string, format, argptr);
 	va_end(argptr);
 	return buf;
 }
@@ -1150,7 +1148,7 @@ void Q_RemoveFromBitflags(uint32_t* bits, const int index, const uint32_t bitsPe
 }
 
 void* Q_LinearSearch(const void* key, const void* ptr, const size_t count,
-                     const size_t size, const cmpFunc_t cmp)
+	const size_t size, const cmpFunc_t cmp)
 {
 	for (size_t i = 0; i < count; i++)
 	{

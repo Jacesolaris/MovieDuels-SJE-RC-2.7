@@ -56,8 +56,8 @@ void G_BounceObject(gentity_t* ent, const trace_t* trace)
 		// check for stop
 		if ((trace->plane.normal[2] > 0.7 && g_gravity->value > 0 || trace->plane.normal[2] < -0.7 && g_gravity->
 			value < 0) && (ent->s.pos.trDelta[2] < 40 && g_gravity->value > 0 || ent->s.pos.trDelta[2] > -40 &&
-			g_gravity->value < 0))
-		//this can happen even on very slightly sloped walls, so changed it from > 0 to > 0.7
+				g_gravity->value < 0))
+			//this can happen even on very slightly sloped walls, so changed it from > 0 to > 0.7
 		{
 			ent->s.apos.trType = TR_STATIONARY;
 			VectorCopy(ent->currentAngles, ent->s.apos.trBase);
@@ -118,7 +118,7 @@ void G_RunObject(gentity_t* ent)
 	// trace a line from the previous position to the current position,
 	// ignoring interactions with the missile owner
 	gi.trace(&tr, ent->currentOrigin, ent->mins, ent->maxs, origin,
-	         ent->owner ? ent->owner->s.number : ent->s.number, ent->clipmask, static_cast<EG2_Collision>(0), 0);
+		ent->owner ? ent->owner->s.number : ent->s.number, ent->clipmask, static_cast<EG2_Collision>(0), 0);
 
 	if (!tr.startsolid && !tr.allsolid && tr.fraction)
 	{
@@ -288,8 +288,8 @@ void G_StartObjectMoving(gentity_t* object, vec3_t dir, const float speed, const
 }
 
 gentity_t* G_CreateObject(gentity_t* owner, vec3_t origin, vec3_t angles, const int model_index, const int frame,
-                          const trType_t tr_type,
-                          const int effect_id = 0)
+	const trType_t tr_type,
+	const int effect_id = 0)
 {
 	gentity_t* object = G_Spawn();
 

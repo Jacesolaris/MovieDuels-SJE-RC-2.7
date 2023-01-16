@@ -105,7 +105,7 @@ CG_ClipMoveToEntities
 ====================
 */
 void CG_ClipMoveToEntities(const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end,
-                           const int skip_number, const int mask, trace_t* tr)
+	const int skip_number, const int mask, trace_t* tr)
 {
 	trace_t trace;
 	clipHandle_t cmodel;
@@ -161,7 +161,7 @@ void CG_ClipMoveToEntities(const vec3_t start, const vec3_t mins, const vec3_t m
 		}
 
 		cgi_CM_TransformedBoxTrace(&trace, start, end,
-		                           mins, maxs, cmodel, mask, origin, angles);
+			mins, maxs, cmodel, mask, origin, angles);
 
 		if (trace.allsolid || trace.fraction < tr->fraction)
 		{
@@ -185,7 +185,7 @@ CG_Trace
 ================
 */
 void CG_Trace(trace_t* result, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end,
-              const int skip_number, const int mask)
+	const int skip_number, const int mask)
 {
 	trace_t t;
 
@@ -436,7 +436,7 @@ void CG_InterpolatePlayerState(const qboolean grab_angles)
 		cg_smoothPlayerPos.value > 0.0f &&
 		cg_smoothPlayerPos.value < 1.0f &&
 		!on_plat
-	)
+		)
 	{
 		// 0 = no smoothing, 1 = no movement
 		for (i = 0; i < 3; i++)
@@ -481,7 +481,7 @@ void CG_InterpolatePlayerState(const qboolean grab_angles)
 		if (cg.validPPS &&
 			cg_smoothPlayerPlat.value > 0.0f &&
 			cg_smoothPlayerPlat.value < 1.0f
-		)
+			)
 		{
 			// 0 = no smoothing, 1 = no movement
 			for (i = 0; i < 3; i++)
@@ -592,7 +592,7 @@ void CG_TouchTriggerPrediction()
 		}
 
 		cgi_CM_BoxTrace(&trace, cg.predicted_player_state.origin, cg.predicted_player_state.origin,
-		                cg_pmove.mins, cg_pmove.maxs, cmodel, -1);
+			cg_pmove.mins, cg_pmove.maxs, cmodel, -1);
 
 		if (!trace.startsolid)
 		{

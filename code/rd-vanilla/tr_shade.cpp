@@ -1312,7 +1312,7 @@ static void RB_FogPass() {
 
 	const fog_t* fog = tr.world->fogs + tess.fogNum;
 
-	for (int i = 0; i < tess.numVertexes; i++) 
+	for (int i = 0; i < tess.numVertexes; i++)
 	{
 		auto* ba = reinterpret_cast<byteAlias_t*>(&tess.svars.colors[i]);
 		ba->i = fog->colorInt;

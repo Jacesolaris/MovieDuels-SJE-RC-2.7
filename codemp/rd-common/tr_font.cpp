@@ -953,7 +953,7 @@ CFontInfo::CFontInfo(const char* _fontName)
 					}
 				}
 				break;
-			default: ;
+				default:;
 				}
 
 				for (int i = 0; i < iGlyphTPs; i++)

@@ -78,9 +78,9 @@ void NPC_Mark2_Part_Explode(gentity_t* self, const int bolt)
 		vec3_t org, dir;
 
 		gi.G2API_GetBoltMatrix(self->ghoul2, self->playerModel,
-		                       bolt,
-		                       &bolt_matrix, self->currentAngles, self->currentOrigin, cg.time ? cg.time : level.time,
-		                       nullptr, self->s.modelScale);
+			bolt,
+			&bolt_matrix, self->currentAngles, self->currentOrigin, cg.time ? cg.time : level.time,
+			nullptr, self->s.modelScale);
 
 		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, org);
 		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, NEGATIVE_Y, dir);
@@ -99,8 +99,8 @@ NPC_Mark2_Pain
 -------------------------
 */
 void NPC_Mark2_Pain(gentity_t* self, gentity_t* inflictor, gentity_t* other, const vec3_t point, const int damage,
-                    const int mod,
-                    const int hit_loc)
+	const int mod,
+	const int hit_loc)
 {
 	NPC_Pain(self, inflictor, other, point, damage, mod);
 
@@ -161,9 +161,9 @@ void Mark2_FireBlaster()
 	mdxaBone_t bolt_matrix;
 
 	gi.G2API_GetBoltMatrix(NPC->ghoul2, NPC->playerModel,
-	                       NPC->genericBolt1,
-	                       &bolt_matrix, NPC->currentAngles, NPC->currentOrigin, cg.time ? cg.time : level.time,
-	                       nullptr, NPC->s.modelScale);
+		NPC->genericBolt1,
+		&bolt_matrix, NPC->currentAngles, NPC->currentOrigin, cg.time ? cg.time : level.time,
+		nullptr, NPC->s.modelScale);
 
 	gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, muzzle1);
 
@@ -256,7 +256,7 @@ void Mark2_AttackDecision()
 		if (NPCInfo->localState == LSTATE_DOWN || NPCInfo->localState == LSTATE_DROPPINGDOWN)
 		{
 			if (TIMER_Done(NPC, "downTime"))
-			// Down being down?? (The delay is so he doesn't pop up and down when the player goes in and out of range)
+				// Down being down?? (The delay is so he doesn't pop up and down when the player goes in and out of range)
 			{
 				NPCInfo->localState = LSTATE_RISINGUP;
 				NPC_SetAnim(NPC, SETANIM_BOTH, BOTH_RUN1STOP, SETANIM_FLAG_HOLD | SETANIM_FLAG_OVERRIDE);

@@ -9107,7 +9107,7 @@ void PM_FootSlopeTrace(float* p_diff, float* p_interval)
 	{
 		*p_interval = interval;
 	}
-			}
+}
 
 qboolean PM_InSlopeAnim(const int anim)
 {
@@ -23441,7 +23441,9 @@ void PM_CheckGrab()
 		return;
 	}
 
-	if (pm->ps->ManualBlockingFlags & 1 << MBF_BLOCKING || pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING)
+	if (pm->ps->ManualBlockingFlags & 1 << MBF_BLOCKING ||
+		pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING ||
+		pm->ps->BlasterAttackChainCount >= BLASTERMISHAPLEVEL_TWENTYSIX)
 	{
 		return;
 	}
@@ -23549,7 +23551,7 @@ void PM_CheckGrab()
 	}
 	else
 	{
-		if (PM_IsMerc())
+		if (PM_IsMerc() && pm->ps->BlasterAttackChainCount <= BLASTERMISHAPLEVEL_TWENTYSIX)
 		{
 			G_SetWeapon(pm->gent, WP_MELEE);
 			G_SoundOnEnt(pm->gent, CHAN_BODY, "sound/weapons/change.wav");

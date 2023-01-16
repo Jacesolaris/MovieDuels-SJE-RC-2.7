@@ -28,6 +28,8 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 extern cvar_t* g_SerenityJediEngineMode;
 extern qboolean WalkCheck(const gentity_t* self);
 extern qboolean PM_CrouchAnim(int anim);
+extern qboolean PM_RunningAnim(int anim);
+extern qboolean PM_WalkingAnim(int anim);
 extern qboolean G_ControlledByPlayer(const gentity_t* self);
 //---------------------------------------------------------
 void WP_FireTuskenRifle(gentity_t* ent)
@@ -44,58 +46,49 @@ void WP_FireTuskenRifle(gentity_t* ent)
 		NPC_SetAnim(ent, SETANIM_BOTH, BOTH_H1_S1_TR, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 	}
 
-	if (!(ent->client->ps.forcePowersActive & 1 << FP_SEE) || ent->client->ps.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2)
+	if (ent->client && ent->client->NPC_class == CLASS_VEHICLE)
 	{
-		//force sight 2+ gives perfect aim
-		if (ent->NPC && ent->NPC->currentAim < 5)
+		//no inherent aim screw up
+	}
+	else if (!(ent->client->ps.forcePowersActive & 1 << FP_SEE) || ent->client->ps.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2)
+	{//force sight 2+ gives perfect aim
+		vec3_t angs;
+
+		vectoangles(forwardVec, angs);
+
+		if (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent))
 		{
-			vec3_t angs;
-
-			vectoangles(forwardVec, angs);
-
-			if (ent->client->NPC_class == CLASS_IMPWORKER)
-			{
-				//*sigh*, hack to make impworkers less accurate without affecteing imperial officer accuracy
-				angs[PITCH] += Q_flrand(-1.0f, 1.0f) * (BLASTER_NPC_SPREAD + (6 - ent->NPC->currentAim) * 0.25f);
-				//was 0.5f
-				angs[YAW] += Q_flrand(-1.0f, 1.0f) * (BLASTER_NPC_SPREAD + (6 - ent->NPC->currentAim) * 0.25f);
-				//was 0.5f
-			}
-			else if (ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_FULL)
-			{
-				// add some slop to the fire direction
-				angs[PITCH] += Q_flrand(-5.0f, 5.0f) * BLASTER_MAIN_SPREAD;
-				angs[YAW] += Q_flrand(-5.0f, 5.0f) * BLASTER_MAIN_SPREAD;
-			}
-			else if (ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_HEAVY)
-			{
-				// add some slop to the fire direction
-				angs[PITCH] += Q_flrand(-3.0f, 3.0f) * BLASTER_MAIN_SPREAD;
-				angs[YAW] += Q_flrand(-3.0f, 3.0f) * BLASTER_MAIN_SPREAD;
-			}
-			else if (ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_LIGHT)
-			{
-				// add some slop to the fire direction
-				angs[PITCH] += Q_flrand(-2.0f, 2.0f) * BLASTER_MAIN_SPREAD;
-				angs[YAW] += Q_flrand(-2.0f, 2.0f) * BLASTER_MAIN_SPREAD;
-			}
-			else if (!WalkCheck(ent) && (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent)))
-			//if running aim is shit
-			{
-				angs[PITCH] += Q_flrand(-3.0f, 3.0f) * (RUNNING_SPREAD + 1.5f);
-				angs[YAW] += Q_flrand(-3.0f, 3.0f) * (RUNNING_SPREAD + 1.5f);
-			}
-			else if (PM_CrouchAnim(ent->client->ps.legsAnim))
-			{
-				//
+			if (PM_CrouchAnim(ent->client->ps.legsAnim))
+			{// firing position
+				angs[PITCH] += Q_flrand(-0.0f, 0.0f);
+				angs[YAW] += Q_flrand(-0.0f, 0.0f);
 			}
 			else
 			{
-				//
+				if (PM_RunningAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_FULL)
+				{ // running or very fatigued
+					angs[PITCH] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
+					angs[YAW] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
+				}
+				else if (PM_WalkingAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_HALF)
+				{//walking or fatigued a bit
+					angs[PITCH] += Q_flrand(-1.1f, 1.1f) * WALKING_SPREAD;
+					angs[YAW] += Q_flrand(-1.1f, 1.1f) * WALKING_SPREAD;
+				}
+				else
+				{// just standing
+					angs[PITCH] += Q_flrand(-1.0f, 1.0f) * BLASTER_MAIN_SPREAD;
+					angs[YAW] += Q_flrand(-1.0f, 1.0f) * BLASTER_MAIN_SPREAD;
+				}
 			}
-
-			AngleVectors(angs, forwardVec, nullptr, nullptr);
 		}
+		else
+		{// add some slop to the fire direction for NPC,s
+			angs[PITCH] += Q_flrand(-1.0f, 1.0f) * BLASTER_MAIN_SPREAD;
+			angs[YAW] += Q_flrand(-1.0f, 1.0f) * BLASTER_MAIN_SPREAD;
+		}
+
+		AngleVectors(angs, forwardVec, nullptr, nullptr);
 	}
 
 	WP_MissileTargetHint(ent, start, forwardVec);

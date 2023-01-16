@@ -512,7 +512,7 @@ void R_TransformEachSurface(const mdxmSurface_t* surface, vec3_t scale, CMiniHea
 }
 
 void G2_TransformSurfaces(const int surface_num, surfaceInfo_v& root_s_list,
-                          CBoneCache* bone_cache, const model_t* current_model, const int lod, vec3_t scale, CMiniHeap* g2_vert_space, intptr_t* transformed_vert_array, const bool second_time_around)
+	CBoneCache* bone_cache, const model_t* current_model, const int lod, vec3_t scale, CMiniHeap* g2_vert_space, intptr_t* transformed_vert_array, const bool second_time_around)
 {
 	assert(current_model);
 	assert(current_model->mdxm);
@@ -706,8 +706,8 @@ static void G2_BuildHitPointST(const vec3_t A, const float SA, const float TA,
 
 // routine that works out given a ray whether or not it hits a poly
 static qboolean G2_SegmentTriangleTest(const vec3_t start, const vec3_t end,
-                                       const vec3_t A, const vec3_t B, const vec3_t C,
-                                       const qboolean back_faces, const qboolean front_faces, vec3_t returned_point, vec3_t returned_normal, float* denom)
+	const vec3_t A, const vec3_t B, const vec3_t C,
+	const qboolean back_faces, const qboolean front_faces, vec3_t returned_point, vec3_t returned_normal, float* denom)
 {
 	static constexpr float tiny = 1E-10f;
 	vec3_t returned_normal_t;

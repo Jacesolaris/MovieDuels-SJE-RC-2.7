@@ -155,7 +155,7 @@ typedef struct {
 
 LOCAL(void)
 jpeg_make_c_derived_tbl(const j_compress_ptr cinfo, const boolean isDC, const int tblno,
-                        c_derived_tbl** pdtbl)
+	c_derived_tbl** pdtbl)
 {
 	int i;
 	char huffsize[257];
@@ -417,7 +417,7 @@ emit_ac_symbol(const huff_entropy_ptr entropy, const int tbl_no, const int symbo
 
 LOCAL(void)
 emit_buffered_bits(const huff_entropy_ptr entropy, char* bufstart,
-                   unsigned int nbits)
+	unsigned int nbits)
 {
 	if (entropy->gather_statistics)
 		return;			/* no real work */
@@ -1058,7 +1058,7 @@ finish_pass_huff(const j_compress_ptr cinfo)
 
 LOCAL(void)
 htest_one_block(const j_compress_ptr cinfo, const JCOEFPTR block, const int last_dc_val,
-                long dc_counts[], long ac_counts[])
+	long dc_counts[], long ac_counts[])
 {
 	const int Se = cinfo->lim_Se;
 	const int* natural_order = cinfo->natural_order;

@@ -192,7 +192,7 @@ void CorpsePhysics(gentity_t* self)
 	{
 		//don't turn "nonsolid" until about 1 second after actual death
 		if (self->client->NPC_class != CLASS_MARK1 && self->client->NPC_class != CLASS_INTERROGATOR)
-		// The Mark1 & Interrogator stays solid.
+			// The Mark1 & Interrogator stays solid.
 		{
 			self->contents = CONTENTS_CORPSE;
 		}
@@ -509,7 +509,7 @@ and returns.
 void pitch_roll_for_slope(gentity_t* forwhom, vec3_t pass_slope, vec3_t store_angles, const qboolean keep_pitch)
 {
 	vec3_t slope;
-	vec3_t nvf, ovf, ovr, new_angles = {0, 0, 0};
+	vec3_t nvf, ovf, ovr, new_angles = { 0, 0, 0 };
 
 	//if we don't have a slope, get one
 	if (!pass_slope || VectorCompare(vec3_origin, pass_slope))
@@ -523,7 +523,7 @@ void pitch_roll_for_slope(gentity_t* forwhom, vec3_t pass_slope, vec3_t store_an
 		VectorCopy(startspot, endspot);
 		endspot[2] -= 300;
 		gi.trace(&trace, forwhom->currentOrigin, vec3_origin, vec3_origin, endspot, forwhom->s.number, MASK_SOLID,
-		         static_cast<EG2_Collision>(0), 0);
+			static_cast<EG2_Collision>(0), 0);
 		//		if(trace_fraction>0.05&&forwhom.movetype==MOVETYPE_STEP)
 		//			forwhom.flags(-)FL_ONGROUND;
 
@@ -626,7 +626,7 @@ static void DeadThink()
 	{
 		//inflating maxs, make sure we're not inflating into solid
 		gi.trace(&trace, NPC->currentOrigin, NPC->mins, NPC->maxs, NPC->currentOrigin, NPC->s.number, NPC->clipmask,
-		         static_cast<EG2_Collision>(0), 0);
+			static_cast<EG2_Collision>(0), 0);
 		if (trace.allsolid)
 		{
 			//must be inflating
@@ -737,10 +737,10 @@ void ClearNPCGlobals()
 //===============
 
 extern qboolean showBBoxes;
-vec3_t NPCDEBUG_RED = {1.0, 0.0, 0.0};
-vec3_t NPCDEBUG_GREEN = {0.0, 1.0, 0.0};
-vec3_t NPCDEBUG_BLUE = {0.0, 0.0, 1.0};
-vec3_t NPCDEBUG_LIGHT_BLUE = {0.3f, 0.7f, 1.0};
+vec3_t NPCDEBUG_RED = { 1.0, 0.0, 0.0 };
+vec3_t NPCDEBUG_GREEN = { 0.0, 1.0, 0.0 };
+vec3_t NPCDEBUG_BLUE = { 0.0, 0.0, 1.0 };
+vec3_t NPCDEBUG_LIGHT_BLUE = { 0.3f, 0.7f, 1.0 };
 extern void CG_Cube(vec3_t mins, vec3_t maxs, vec3_t color, float alpha);
 
 void NPC_ShowDebugInfo()
@@ -869,7 +869,7 @@ void NPC_HandleAIFlags()
 				VectorCopy(NPC->currentOrigin, ground);
 				ground[2] -= 60.0f;
 				gi.trace(&trace, NPC->currentOrigin, nullptr, nullptr, ground, NPC->s.number, NPC->clipmask,
-				         static_cast<EG2_Collision>(0), 0);
+					static_cast<EG2_Collision>(0), 0);
 
 				is_in_the_air = !trace.allsolid && !trace.startsolid && trace.fraction > 0.9f;
 			}
@@ -1676,7 +1676,7 @@ void NPC_BehaviorSet_Animal(const int b_state)
 	case BS_PATROL:
 		NPC_BSAnimal_Default();
 
-	//NPC_BSDroid_Default();
+		//NPC_BSDroid_Default();
 		break;
 	default:
 		NPC_BehaviorSet_Default(b_state);
@@ -1850,7 +1850,7 @@ void NPC_RunBehavior(const int team, const int b_state)
 	{
 		switch (team)
 		{
-		// not sure if TEAM_ENEMY is appropriate here, I think I should be using NPC_class to check for behavior - dmv
+			// not sure if TEAM_ENEMY is appropriate here, I think I should be using NPC_class to check for behavior - dmv
 		case TEAM_PROJECTION:
 		case TEAM_ENEMY:
 			// special cases for enemy droids
@@ -2185,7 +2185,7 @@ void NPC_CheckInSolid()
 	point[2] -= 0.25;
 
 	gi.trace(&trace, NPC->currentOrigin, NPC->mins, NPC->maxs, point, NPC->s.number, NPC->clipmask,
-	         static_cast<EG2_Collision>(0), 0);
+		static_cast<EG2_Collision>(0), 0);
 	if (!trace.startsolid && !trace.allsolid)
 	{
 		VectorCopy(NPC->currentOrigin, NPCInfo->lastClearOrigin);
@@ -2543,7 +2543,7 @@ void NPC_SetAnim(gentity_t* ent, int set_anim_parts, const int anim, const int s
 		}
 
 		PM_SetAnimFinal(&ent->client->ps.torsoAnim, &ent->client->ps.legsAnim, set_anim_parts, anim, set_anim_flags,
-		                &ent->client->ps.torsoAnimTimer, &ent->client->ps.legsAnimTimer, ent, i_blend);
+			&ent->client->ps.torsoAnimTimer, &ent->client->ps.legsAnimTimer, ent, i_blend);
 	}
 	else
 	{
@@ -2567,7 +2567,7 @@ void NPC_SetAnim(gentity_t* ent, int set_anim_parts, const int anim, const int s
 		}
 
 		PM_SetAnimFinal(&ent->s.torsoAnim, &ent->s.legsAnim, set_anim_parts, anim, set_anim_flags,
-		                &ent->s.torsoAnimTimer, &ent->s.legsAnimTimer, ent);
+			&ent->s.torsoAnimTimer, &ent->s.legsAnimTimer, ent);
 	}
 }
 

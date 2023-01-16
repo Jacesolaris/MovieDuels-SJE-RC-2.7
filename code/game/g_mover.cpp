@@ -55,7 +55,7 @@ using pushed_t = struct
 	vec3_t angles;
 	float deltayaw;
 };
-pushed_t pushed[MAX_GENTITIES], *pushed_p;
+pushed_t pushed[MAX_GENTITIES], * pushed_p;
 
 /*
 -------------------------
@@ -128,20 +128,20 @@ gentity_t* G_TestEntityPosition(const gentity_t* ent)
 	if (ent->client)
 	{
 		gi.trace(&tr, ent->client->ps.origin, ent->mins, ent->maxs, ent->client->ps.origin, ent->s.number, mask,
-		         static_cast<EG2_Collision>(0), 0);
+			static_cast<EG2_Collision>(0), 0);
 	}
 	else
 	{
 		if (ent->s.eFlags & EF_MISSILE_STICK)
-		//Arggh, this is dumb...but when it used the bbox, it was pretty much always in solid when it is riding something..which is wrong..so I changed it to basically be a point contents check
+			//Arggh, this is dumb...but when it used the bbox, it was pretty much always in solid when it is riding something..which is wrong..so I changed it to basically be a point contents check
 		{
 			gi.trace(&tr, ent->s.pos.trBase, vec3_origin, vec3_origin, ent->s.pos.trBase, ent->s.number, mask,
-			         static_cast<EG2_Collision>(0), 0);
+				static_cast<EG2_Collision>(0), 0);
 		}
 		else
 		{
 			gi.trace(&tr, ent->s.pos.trBase, ent->mins, ent->maxs, ent->s.pos.trBase, ent->s.number, mask,
-			         static_cast<EG2_Collision>(0), 0);
+				static_cast<EG2_Collision>(0), 0);
 		}
 	}
 
@@ -346,21 +346,21 @@ qboolean G_MoverPush(gentity_t* pusher, vec3_t move, vec3_t amove, gentity_t** o
 	// unlink the pusher so we don't get it in the entity_list
 	gi.unlinkentity(pusher);
 
-	const int listedEntities = gi.EntitiesInBox(totalMins, totalMaxs, entity_list, MAX_GENTITIES);
+	const int listed_entities = gi.EntitiesInBox(totalMins, totalMaxs, entity_list, MAX_GENTITIES);
 
 	// move the pusher to it's final position
 	VectorAdd(pusher->currentOrigin, move, pusher->currentOrigin);
 	VectorAdd(pusher->currentAngles, amove, pusher->currentAngles);
 	gi.linkentity(pusher);
 
-	const auto notMoving = static_cast<qboolean>(VectorCompare(vec3_origin, move) && VectorCompare(vec3_origin, amove));
+	const auto not_moving = static_cast<qboolean>(VectorCompare(vec3_origin, move) && VectorCompare(vec3_origin, amove));
 
 	// see if any solid entities are inside the final position
-	for (int e = 0; e < listedEntities; e++)
+	for (int e = 0; e < listed_entities; e++)
 	{
 		gentity_t* check = entity_list[e];
 
-		if (check->s.eFlags & EF_MISSILE_STICK && (notMoving || check->s.groundEntityNum < 0 || check->s.
+		if (check->s.eFlags & EF_MISSILE_STICK && (not_moving || check->s.groundEntityNum < 0 || check->s.
 			groundEntityNum >= ENTITYNUM_NONE))
 		{
 			// special case hack for sticky things, destroy it if we aren't attached to the thing that is moving, but the moving thing is pushing us
@@ -443,7 +443,7 @@ qboolean G_MoverPush(gentity_t* pusher, vec3_t move, vec3_t amove, gentity_t** o
 				{
 					//do some damage to me, too
 					G_Damage(pusher, check, pusher->activator, move, pusher->s.pos.trBase, floor(pusher->damage / 4.0f),
-					         0, MOD_CRUSH);
+						0, MOD_CRUSH);
 				}
 			}
 		}
@@ -517,7 +517,7 @@ G_MoverTeam
 */
 void G_MoverTeam(gentity_t* ent)
 {
-	gentity_t *part, *obstacle;
+	gentity_t* part, * obstacle;
 
 	obstacle = nullptr;
 
@@ -969,8 +969,7 @@ void UnLockDoors(const gentity_t* ent)
 		slave->spawnflags &= ~MOVER_LOCKED;
 		slave->s.frame = 1; //second stage of anim
 		slave = slave->teamchain;
-	}
-	while (slave);
+	} while (slave);
 }
 
 void LockDoors(const gentity_t* ent)
@@ -983,8 +982,7 @@ void LockDoors(const gentity_t* ent)
 		slave->spawnflags |= MOVER_LOCKED;
 		slave->s.frame = 0; //first stage of anim
 		slave = slave->teamchain;
-	}
-	while (slave);
+	} while (slave);
 }
 
 /*
@@ -1104,7 +1102,7 @@ void InitMover(gentity_t* ent)
 		{
 			ent->s.modelindex2 = G_ModelIndex(ent->model2);
 			ent->playerModel = gi.G2API_InitGhoul2Model(ent->ghoul2, ent->model2, ent->s.modelindex2, NULL_HANDLE,
-			                                            NULL_HANDLE, 0, 0);
+				NULL_HANDLE, 0, 0);
 			if (ent->playerModel >= 0)
 			{
 				ent->rootBone = gi.G2API_GetBoneIndex(&ent->ghoul2[ent->playerModel], "model_root", qtrue);
@@ -1452,7 +1450,7 @@ qboolean G_EntIsUnlockedDoor(const int entity_num)
 			!(ent->spawnflags & MOVER_PLAYER_USE) &&
 			!(ent->spawnflags & MOVER_FORCE_ACTIVATE) &&
 			!(ent->spawnflags & MOVER_LOCKED))
-		//FIXME: what about MOVER_GOODIE?
+			//FIXME: what about MOVER_GOODIE?
 		{
 			return qtrue;
 		}
@@ -2041,7 +2039,7 @@ void Think_SetupTrainTargets(gentity_t* ent)
 		if (!iterations--)
 		{
 			G_Error("Think_SetupTrainTargets:  last path_corner doesn't link back to first on func_train(%s)",
-			        vtos(ent->absmin));
+				vtos(ent->absmin));
 		}
 		if (!start)
 		{
@@ -2067,8 +2065,7 @@ void Think_SetupTrainTargets(gentity_t* ent)
 				//end of path
 				break;
 			}
-		}
-		while (strcmp(next->classname, "path_corner") != 0);
+		} while (strcmp(next->classname, "path_corner") != 0);
 
 		if (next)
 		{
@@ -2115,7 +2112,7 @@ void SP_path_corner(gentity_t* self)
 }
 
 void func_train_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod, int d_flags,
-                    int hit_loc)
+	int hit_loc)
 {
 	if (self->target3)
 	{
@@ -2225,12 +2222,12 @@ void SP_func_train(gentity_t* self)
 	self->e_ThinkFunc = thinkF_Think_SetupTrainTargets;
 
 	if (self->playerModel >= 0 && self->spawnflags & 32)
-	// loop...dunno, could support it on other things, but for now I need it for the glider...so...kill the flag
+		// loop...dunno, could support it on other things, but for now I need it for the glider...so...kill the flag
 	{
 		self->spawnflags &= ~32; // once only
 
 		gi.G2API_SetBoneAnim(&self->ghoul2[self->playerModel], "model_root", self->start_frame, self->end_frame,
-		                     BONE_ANIM_OVERRIDE_LOOP, 1.0f + Q_flrand(-1.0f, 1.0f) * 0.1f, 0, -1, -1);
+			BONE_ANIM_OVERRIDE_LOOP, 1.0f + Q_flrand(-1.0f, 1.0f) * 0.1f, 0, -1, -1);
 		self->end_frame = 0; // don't allow it to do anything with the animation function in G_main
 	}
 }

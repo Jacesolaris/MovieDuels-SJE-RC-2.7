@@ -287,7 +287,7 @@ bool CParticle::UpdateOrigin()
 				if (mFlags & FX_GHOUL2_TRACE)
 				{
 					theFxHelper.G2Trace(&trace, mOrigin1, mMin, mMax, new_origin, ENTITYNUM_NONE,
-					                    MASK_SHOT | CONTENTS_WATER);
+						MASK_SHOT | CONTENTS_WATER);
 				}
 				else
 				{
@@ -299,7 +299,7 @@ bool CParticle::UpdateOrigin()
 				if (mFlags & FX_GHOUL2_TRACE)
 				{
 					theFxHelper.G2Trace(&trace, mOrigin1, nullptr, nullptr, new_origin, ENTITYNUM_NONE,
-					                    MASK_SHOT | CONTENTS_WATER);
+						MASK_SHOT | CONTENTS_WATER);
 				}
 				else
 				{
@@ -1970,7 +1970,7 @@ void CPoly::Rotate()
 //----------------------------
 bool CPoly::Update()
 {
-	vec3_t mOldOrigin = {0.0f};
+	vec3_t mOldOrigin = { 0.0f };
 
 	//FIXME: Handle Relative and Bolted Effects
 	/*
@@ -2035,7 +2035,7 @@ void CPoly::PolyInit()
 	}
 
 	int i;
-	vec3_t org = {0, 0, 0};
+	vec3_t org = { 0, 0, 0 };
 
 	// Find our midpoint
 	for (i = 0; i < mCount; i++)

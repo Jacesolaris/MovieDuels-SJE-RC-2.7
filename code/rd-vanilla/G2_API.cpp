@@ -1364,7 +1364,7 @@ qboolean G2API_SetBoneAnglesMatrix(CGhoul2Info* ghl_info, const char* bone_name,
 	qboolean ret = qfalse;
 	G2ERROR(bone_name, "NULL bone_name");
 	if (bone_name && G2_SetupModelPointers(ghl_info))
-	{		
+	{
 		// ensure we flush the cache
 		ghl_info->mSkelFrameNum = 0;
 		ret = G2_Set_Bone_Angles_Matrix(ghl_info, ghl_info->mBlist, bone_name, matrix, flags);

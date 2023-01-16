@@ -50,8 +50,8 @@ NPC_Remote_Pain
 -------------------------
 */
 void NPC_Remote_Pain(gentity_t* self, gentity_t* inflictor, gentity_t* other, const vec3_t point, const int damage,
-                     const int mod,
-                     int hit_loc)
+	const int mod,
+	int hit_loc)
 {
 	SaveNPCGlobals();
 	SetNPCGlobals(self);
@@ -174,7 +174,7 @@ void Remote_Strafe()
 	VectorMA(NPC->currentOrigin, REMOTE_STRAFE_DIS * dir, right, end);
 
 	gi.trace(&tr, NPC->currentOrigin, nullptr, nullptr, end, NPC->s.number, MASK_SOLID, static_cast<EG2_Collision>(0),
-	         0);
+		0);
 
 	// Close enough
 	if (tr.fraction > 0.9f)

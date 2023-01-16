@@ -278,7 +278,7 @@ void SV_SpawnServer(const char* server, const ForceReload_e e_force_reload, cons
 
 	// allocate the snapshot entities
 	svs.snapshotEntities = static_cast<entityState_t*>(Z_Malloc(sizeof(entityState_t) * svs.numSnapshotEntities,
-	                                                            TAG_CLIENTS, qtrue));
+		TAG_CLIENTS, qtrue));
 
 	Music_SetLevelName(server);
 

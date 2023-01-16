@@ -74,7 +74,7 @@ jpeg_start_compress(const j_compress_ptr cinfo, const boolean write_all_tables)
 
 GLOBAL(JDIMENSION)
 jpeg_write_scanlines(const j_compress_ptr cinfo, const JSAMPARRAY scanlines,
-                     JDIMENSION num_lines)
+	JDIMENSION num_lines)
 {
 	JDIMENSION row_ctr;
 
@@ -116,7 +116,7 @@ jpeg_write_scanlines(const j_compress_ptr cinfo, const JSAMPARRAY scanlines,
 
 GLOBAL(JDIMENSION)
 jpeg_write_raw_data(const j_compress_ptr cinfo, const JSAMPIMAGE data,
-                    const JDIMENSION num_lines)
+	const JDIMENSION num_lines)
 {
 	if (cinfo->global_state != CSTATE_RAW_OK)
 		ERREXIT1(cinfo, JERR_BAD_STATE, cinfo->global_state);

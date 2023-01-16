@@ -222,7 +222,7 @@ jpeg_stdio_dest(const j_compress_ptr cinfo, FILE* outfile)
 
 GLOBAL(void)
 jpeg_mem_dest(const j_compress_ptr cinfo,
-              unsigned char** outbuffer, unsigned long* outsize)
+	unsigned char** outbuffer, unsigned long* outsize)
 {
 	if (outbuffer == NULL || outsize == NULL)	/* sanity check */
 		ERREXIT(cinfo, JERR_BUFFER_SIZE);

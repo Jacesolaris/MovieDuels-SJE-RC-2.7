@@ -66,7 +66,7 @@ JPP((j_decompress_ptr cinfo, bmp_dest_ptr dest,
 
 METHODDEF(void)
 put_pixel_rows(const j_decompress_ptr cinfo, const djpeg_dest_ptr dinfo,
-               JDIMENSION rows_supplied)
+	JDIMENSION rows_supplied)
 	/* This version is for writing 24-bit pixels */
 {
 	const bmp_dest_ptr dest = (bmp_dest_ptr)dinfo;
@@ -97,7 +97,7 @@ put_pixel_rows(const j_decompress_ptr cinfo, const djpeg_dest_ptr dinfo,
 
 METHODDEF(void)
 put_gray_rows(const j_decompress_ptr cinfo, const djpeg_dest_ptr dinfo,
-              JDIMENSION rows_supplied)
+	JDIMENSION rows_supplied)
 	/* This version is for grayscale OR quantized color output */
 {
 	const bmp_dest_ptr dest = (bmp_dest_ptr)dinfo;
@@ -277,7 +277,7 @@ write_os2_header(const j_decompress_ptr cinfo, const bmp_dest_ptr dest)
 
 LOCAL(void)
 write_colormap(const j_decompress_ptr cinfo, const bmp_dest_ptr dest,
-               const int map_colors, const int map_entry_size)
+	const int map_colors, const int map_entry_size)
 {
 	const JSAMPARRAY colormap = cinfo->colormap;
 	const int num_colors = cinfo->actual_number_of_colors;

@@ -711,7 +711,7 @@ public:
 	//
 	////////////////////////////////////////////////////////////////////////////////////
 	void setup_edge(CWayEdge& Edge, const int A, const int B, const bool OnHull, const CWayNode& NodeA, const CWayNode& NodeB,
-	                const bool CanBeInvalid = false) override
+		const bool CanBeInvalid = false) override
 	{
 		Edge.mNodeA = A;
 		Edge.mNodeB = B;
@@ -852,11 +852,11 @@ bool ViewNavTrace(const CVec3& a, const CVec3& b)
 // Helper Function : Move Trace
 ////////////////////////////////////////////////////////////////////////////////////////
 bool MoveTrace(const CVec3& Start, const CVec3& Stop, const CVec3& Mins, const CVec3& Maxs,
-               const int IgnoreEnt = 0,
-               const bool CheckForDoNotEnter = false,
-               const bool RetryIfStartInDoNotEnter = true,
-               const bool IgnoreAllEnts = false,
-               const int OverrideContents = 0)
+	const int IgnoreEnt = 0,
+	const bool CheckForDoNotEnter = false,
+	const bool RetryIfStartInDoNotEnter = true,
+	const bool IgnoreAllEnts = false,
+	const int OverrideContents = 0)
 {
 	int contents = MASK_NPCSOLID;
 	if (OverrideContents)
@@ -1194,23 +1194,23 @@ bool NAV::TestEdge(const TNodeHandle NodeA, const TNodeHandle NodeB, const qbool
 	CWayEdge& at = mGraph.get_edge(atHandle);
 	const CWayNode& a = mGraph.get_node(at.mNodeA);
 	const CWayNode& b = mGraph.get_node(at.mNodeB);
-	CVec3 Mins(-15.0f, -15.0f, 0.0f); // These were the old "sizeless" defaults
-	CVec3 Maxs(15.0f, 15.0f, 40.0f);
+	CVec3 mins(-15.0f, -15.0f, 0.0f); // These were the old "sizeless" defaults
+	CVec3 maxs(15.0f, 15.0f, 40.0f);
 	bool CanGo;
 	const int i = at.Size();
 
 	a.mPoint.ToStr(mLocStringA);
 	b.mPoint.ToStr(mLocStringB);
 
-	const char* aName = a.mName.empty() ? mLocStringA : a.mName.c_str();
-	const char* bName = b.mName.empty() ? mLocStringB : b.mName.c_str();
+	const char* a_name = a.mName.empty() ? mLocStringA : a.mName.c_str();
+	const char* b_name = b.mName.empty() ? mLocStringB : b.mName.c_str();
 
 	const float radius = at.Size() == CWayEdge::WE_SIZE_LARGE ? SC_LARGE_RADIUS : SC_MEDIUM_RADIUS;
 	const float height = at.Size() == CWayEdge::WE_SIZE_LARGE ? SC_LARGE_HEIGHT : SC_MEDIUM_HEIGHT;
 
-	Mins[0] = Mins[1] = radius * -1.0f;
-	Maxs[0] = Maxs[1] = radius;
-	Maxs[2] = height;
+	mins[0] = mins[1] = radius * -1.0f;
+	maxs[0] = maxs[1] = radius;
+	maxs[2] = height;
 
 	// If Either Start Or End Points Are Too Small, Don' Bother At This Size
 	//-----------------------------------------------------------------------
@@ -1219,7 +1219,7 @@ bool NAV::TestEdge(const TNodeHandle NodeA, const TNodeHandle NodeB, const qbool
 	{
 		if (IsDebugEdge)
 		{
-			gi.Printf("Nav(%s)<->(%s): Size Too Big\n", aName, bName, i);
+			gi.Printf("Nav(%s)<->(%s): Size Too Big\n", a_name, b_name, i);
 		}
 		CanGo = false;
 		return CanGo;
@@ -1227,8 +1227,8 @@ bool NAV::TestEdge(const TNodeHandle NodeA, const TNodeHandle NodeB, const qbool
 
 	// Try It
 	//--------
-	CanGo = MoveTrace(a.mPoint, b.mPoint, Mins, Maxs, 0, true, false);
-	int EntHit = mMoveTrace.entity_num;
+	CanGo = MoveTrace(a.mPoint, b.mPoint, mins, maxs, 0, true, false);
+	int ent_hit = mMoveTrace.entity_num;
 
 	// Check For A Flying Edge
 	//-------------------------
@@ -1245,16 +1245,16 @@ bool NAV::TestEdge(const TNodeHandle NodeA, const TNodeHandle NodeB, const qbool
 	//-----------------------------------------------------------------------------------------
 	if (!CanGo &&
 		!mMoveTrace.startsolid &&
-		EntHit != ENTITYNUM_WORLD &&
-		EntHit != ENTITYNUM_NONE &&
-		&g_entities[EntHit] != nullptr)
+		ent_hit != ENTITYNUM_WORLD &&
+		ent_hit != ENTITYNUM_NONE &&
+		&g_entities[ent_hit] != nullptr)
 	{
-		bool HitCharacter = false;
-		gentity_t* ent = &g_entities[EntHit];
+		bool hit_character = false;
+		gentity_t* ent = &g_entities[ent_hit];
 
 		if (IsDebugEdge)
 		{
-			gi.Printf("Nav(%s)<->(%s): Hit Entity Type (%s), TargetName (%s)\n", aName, bName, ent->classname,
+			gi.Printf("Nav(%s)<->(%s): Hit Entity Type (%s), TargetName (%s)\n", a_name, b_name, ent->classname,
 				ent->targetname);
 		}
 
@@ -1280,7 +1280,7 @@ bool NAV::TestEdge(const TNodeHandle NodeA, const TNodeHandle NodeB, const qbool
 		}
 		else if (ent->NPC || ent->s.number == 0)
 		{
-			HitCharacter = true;
+			hit_character = true;
 		}
 
 		// Don't Care About Any Other Entity Types
@@ -1289,7 +1289,7 @@ bool NAV::TestEdge(const TNodeHandle NodeA, const TNodeHandle NodeB, const qbool
 		{
 			if (IsDebugEdge)
 			{
-				gi.Printf("Nav(%s)<->(%s): Unable To Ignore Ent, Going A Size Down\n", aName, bName);
+				gi.Printf("Nav(%s)<->(%s): Unable To Ignore Ent, Going A Size Down\n", a_name, b_name);
 			}
 			return CanGo; // Go To Next Size Down
 		}
@@ -1305,32 +1305,32 @@ bool NAV::TestEdge(const TNodeHandle NodeA, const TNodeHandle NodeB, const qbool
 			{
 				master = master->teammaster;
 			}
-			const bool DoorIsStartOpen = master->spawnflags & 1;
+			const bool door_is_start_open = master->spawnflags & 1;
 
 			// Open The Chain
 			//----------------
 			gentity_t* slave = master;
 			while (slave)
 			{
-				VectorCopy(DoorIsStartOpen ? slave->pos1 : slave->pos2, slave->currentOrigin);
+				VectorCopy(door_is_start_open ? slave->pos1 : slave->pos2, slave->currentOrigin);
 				gi.linkentity(slave);
 				slave = slave->teamchain;
 			}
 
 			// Try The Trace
 			//---------------
-			CanGo = MoveTrace(a.mPoint, b.mPoint, Mins, Maxs, 0, true, false);
+			CanGo = MoveTrace(a.mPoint, b.mPoint, mins, maxs, 0, true, false);
 			if (CanGo)
 			{
 				ent = master;
-				EntHit = master->s.number;
+				ent_hit = master->s.number;
 			}
 			else
 			{
 				if (IsDebugEdge)
 				{
-					gi.Printf("Nav(%s)<->(%s): Unable Pass Through Door Even When Open, Going A Size Down\n", aName,
-						bName);
+					gi.Printf("Nav(%s)<->(%s): Unable Pass Through Door Even When Open, Going A Size Down\n", a_name,
+						b_name);
 				}
 			}
 
@@ -1339,7 +1339,7 @@ bool NAV::TestEdge(const TNodeHandle NodeA, const TNodeHandle NodeB, const qbool
 			slave = master;
 			while (slave)
 			{
-				VectorCopy(DoorIsStartOpen ? slave->pos2 : slave->pos1, slave->currentOrigin);
+				VectorCopy(door_is_start_open ? slave->pos2 : slave->pos1, slave->currentOrigin);
 				gi.linkentity(slave);
 				slave = slave->teamchain;
 			}
@@ -1357,30 +1357,30 @@ bool NAV::TestEdge(const TNodeHandle NodeA, const TNodeHandle NodeB, const qbool
 		//----------------------------------------------------
 		else
 		{
-			CanGo = MoveTrace(a.mPoint, b.mPoint, Mins, Maxs, EntHit, true, false);
+			CanGo = MoveTrace(a.mPoint, b.mPoint, mins, maxs, ent_hit, true, false);
 			if (IsDebugEdge)
 			{
-				gi.Printf("Nav(%s)<->(%s): Unable Pass Through Even If Entity Was Gone, Going A Size Down\n", aName,
-					bName);
+				gi.Printf("Nav(%s)<->(%s): Unable Pass Through Even If Entity Was Gone, Going A Size Down\n", a_name,
+					b_name);
 			}
 		}
 
 		// If We Can Now Go, Ignoring The Entity, Remember That (But Don't Remember Characters - They Won't Stay Anyway)
 		//---------------------------------------------------------------------------------------------------------------
-		if (CanGo && !HitCharacter)
+		if (CanGo && !hit_character)
 		{
 			ent->wayedge = atHandle;
-			at.mEntityNum = EntHit;
+			at.mEntityNum = ent_hit;
 			at.mFlags.set_bit(CWayEdge::WE_CANBEINVAL);
 
 			// Add It To The Edge Map
 			//------------------------
-			const TEntEdgeMap::iterator eemiter = mEntEdgeMap.find(EntHit);
+			const TEntEdgeMap::iterator eemiter = mEntEdgeMap.find(ent_hit);
 			if (eemiter == mEntEdgeMap.end())
 			{
 				TEdgesPerEnt EdgesPerEnt;
 				EdgesPerEnt.push_back(atHandle);
-				mEntEdgeMap.insert(EntHit, EdgesPerEnt);
+				mEntEdgeMap.insert(ent_hit, EdgesPerEnt);
 			}
 			else
 			{
@@ -2336,7 +2336,7 @@ NAV::TNodeHandle NAV::GetNearestNode(gentity_t* ent, const bool forceRecalcNow, 
 //
 ////////////////////////////////////////////////////////////////////////////////////////
 NAV::TNodeHandle NAV::GetNearestNode(const vec3_t& position, const TNodeHandle previous, const TNodeHandle goal, int ignoreEnt,
-                                     const bool allowZOffset)
+	const bool allowZOffset)
 {
 	if (mGraph.size_edges() > 0)
 	{
@@ -4627,7 +4627,7 @@ float STEER::Persue(const gentity_t* actor, gentity_t* target, const float slowi
 //
 ////////////////////////////////////////////////////////////////////////////////////
 float STEER::Persue(const gentity_t* actor, gentity_t* target, const float slowingDistance, const float offsetForward, const float offsetRight,
-                    const float offsetUp, const bool relativeToTargetFacing)
+	const float offsetUp, const bool relativeToTargetFacing)
 {
 	assert(Active(actor) && target);
 	const SSteerUser& suser = mSteerUsers[mSteerUserIndex[actor->s.number]];
@@ -4962,7 +4962,7 @@ float STEER::FollowLeader(const gentity_t* actor, gentity_t* leader, const float
 //
 //////////////////////////////////////////////////////////////////////
 bool TestCollision(gentity_t* actor, SSteerUser& suser, const CVec3& ProjectVelocity, const float ProjectSpeed, const ESide Side,
-                   const float weight = 1.0f)
+	const float weight = 1.0f)
 {
 	// Test To See If The Projected Position Is Safe
 	//-----------------------------------------------

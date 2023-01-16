@@ -109,7 +109,7 @@ CON_HistAdd
 static void CON_HistAdd(void)
 {
 	Q_strncpyz(qconsole_history[qconsole_history_oldest], qconsole_line,
-	           sizeof(qconsole_history[qconsole_history_oldest]));
+		sizeof(qconsole_history[qconsole_history_oldest]));
 
 	if (qconsole_history_lines < QCONSOLE_HISTORY)
 		qconsole_history_lines++;
@@ -178,9 +178,9 @@ CON_Show
 static void CON_Show(void)
 {
 	CONSOLE_SCREEN_BUFFER_INFO binfo;
-	const COORD writeSize = {MAX_EDIT_LINE, 1};
-	const COORD writePos = {0, 0};
-	SMALL_RECT writeArea = {0, 0, 0, 0};
+	const COORD writeSize = { MAX_EDIT_LINE, 1 };
+	const COORD writePos = { 0, 0 };
+	SMALL_RECT writeArea = { 0, 0, 0, 0 };
 	COORD cursorPos;
 	CHAR_INFO line[MAX_EDIT_LINE];
 
@@ -217,22 +217,22 @@ static void CON_Show(void)
 	if (qconsole_linelen > binfo.srWindow.Right)
 	{
 		WriteConsoleOutput(qconsole_hout,
-		                   line + (qconsole_linelen - binfo.srWindow.Right),
-		                   writeSize, writePos, &writeArea);
+			line + (qconsole_linelen - binfo.srWindow.Right),
+			writeSize, writePos, &writeArea);
 	}
 	else
 	{
 		WriteConsoleOutput(qconsole_hout, line, writeSize,
-		                   writePos, &writeArea);
+			writePos, &writeArea);
 	}
 
 	// set curor position
 	cursorPos.Y = binfo.dwCursorPosition.Y;
 	cursorPos.X = qconsole_cursor < qconsole_linelen
-		              ? qconsole_cursor
-		              : qconsole_linelen > binfo.srWindow.Right
-		              ? binfo.srWindow.Right
-		              : qconsole_linelen;
+		? qconsole_cursor
+		: qconsole_linelen > binfo.srWindow.Right
+		? binfo.srWindow.Right
+		: qconsole_linelen;
 
 	SetConsoleCursorPosition(qconsole_hout, cursorPos);
 }
@@ -389,17 +389,17 @@ char* CON_Input(void)
 			break;
 
 		case VK_TAB:
-			{
-				field_t f;
+		{
+			field_t f;
 
-				Q_strncpyz(f.buffer, qconsole_line, sizeof(f.buffer));
-				Field_AutoComplete(&f);
-				Q_strncpyz(qconsole_line, f.buffer, sizeof(qconsole_line));
-				qconsole_linelen = strlen(qconsole_line);
-				qconsole_cursor = qconsole_linelen;
+			Q_strncpyz(f.buffer, qconsole_line, sizeof(f.buffer));
+			Field_AutoComplete(&f);
+			Q_strncpyz(qconsole_line, f.buffer, sizeof(qconsole_line));
+			qconsole_linelen = strlen(qconsole_line);
+			qconsole_cursor = qconsole_linelen;
 
-				break;
-			}
+			break;
+		}
 
 		default:
 			keyHandled = false;
@@ -423,8 +423,8 @@ char* CON_Input(void)
 					if (qconsole_cursor < qconsole_linelen)
 					{
 						memmove(qconsole_line + qconsole_cursor - 1,
-						        qconsole_line + qconsole_cursor,
-						        qconsole_linelen - qconsole_cursor);
+							qconsole_line + qconsole_cursor,
+							qconsole_linelen - qconsole_cursor);
 					}
 
 					qconsole_line[newlen] = '\0';
@@ -437,8 +437,8 @@ char* CON_Input(void)
 				if (qconsole_linelen > qconsole_cursor)
 				{
 					memmove(qconsole_line + qconsole_cursor + 1,
-					        qconsole_line + qconsole_cursor,
-					        qconsole_linelen - qconsole_cursor);
+						qconsole_line + qconsole_cursor,
+						qconsole_linelen - qconsole_cursor);
 				}
 
 				qconsole_line[qconsole_cursor++] = c;

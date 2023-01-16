@@ -166,7 +166,7 @@ int G2_IsSurfaceLegal(const model_s* mod_m, const char* surface_name, uint32_t* 
  *
  ************************************************************************************************/
 const mdxmSurface_t* G2_FindSurface(const CGhoul2Info* ghl_info, const surfaceInfo_v& slist, const char* surface_name,
-                                    int* surf_index)
+	int* surf_index)
 {
 	// find the model we want
 	assert(G2_MODEL_OK(ghl_info));
@@ -276,7 +276,7 @@ void G2_FindRecursiveSurface(const model_t* current_model, int surface_num, surf
 		active_surfaces[surface_num] = 1;
 	}
 	else
-	// if we are turning off all descendants, then stop this recursion now
+		// if we are turning off all descendants, then stop this recursion now
 		if (off_flags & G2SURFACEFLAG_NODESCENDANTS)
 		{
 			return;
@@ -310,7 +310,7 @@ qboolean G2_SetRootSurface(CGhoul2Info_v& ghoul2, const int model_index, const c
 extern int G2_DecideTraceLod(const CGhoul2Info& ghoul2, int use_lod);
 
 int G2_AddSurface(CGhoul2Info* ghoul2, const int surface_number, const int poly_number, const float barycentric_i, const float barycentric_j,
-                  int lod)
+	int lod)
 {
 	lod = G2_DecideTraceLod(*ghoul2, lod);
 

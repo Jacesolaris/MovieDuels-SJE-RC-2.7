@@ -126,7 +126,6 @@ static void R_SurfaceSpriteFrameUpdate()
 	// Adjust for an FOV.  If things look twice as wide on the screen, pretend the shaders have twice the range.
 	// ASSUMPTION HERE IS THAT "standard" fov is the first one rendered.
 
-
 	if (r_AdvancedsurfaceSprites->integer)
 	{
 		rangescalefactor = 5.0;

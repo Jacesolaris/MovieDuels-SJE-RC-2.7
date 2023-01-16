@@ -92,7 +92,7 @@ int com_frameNumber = 0;
 qboolean com_errorEntered = qfalse;
 qboolean com_fullyInitialized = qfalse;
 
-char com_errorMessage[MAXPRINTMSG] = {0};
+char com_errorMessage[MAXPRINTMSG] = { 0 };
 
 void Com_WriteConfig_f();
 //JLF
@@ -964,8 +964,7 @@ int Com_Milliseconds()
 		{
 			Com_PushEvent(&ev);
 		}
-	}
-	while (ev.evType != SE_NONE);
+	} while (ev.evType != SE_NONE);
 
 	return ev.evTime;
 }
@@ -1106,8 +1105,8 @@ static void Com_CatchError(const int code)
 		SG_WipeSavegame("current"); // delete file
 
 		Com_Printf("********************\n"
-		           "ERROR: %s\n"
-		           "********************\n", com_errorMessage);
+			"ERROR: %s\n"
+			"********************\n", com_errorMessage);
 		SV_Shutdown(va("Server crashed: %s\n", com_errorMessage));
 		CL_Disconnect();
 		CL_FlushMemory();
@@ -1332,7 +1331,7 @@ void Com_WriteConfig_f()
 	if (!FS_FilenameCompare(filename, "mpdefault.cfg") || !FS_FilenameCompare(filename, "MD-default.cfg"))
 	{
 		Com_Printf(S_COLOR_YELLOW "Com_WriteConfig_f: The filename \"%s\" is reserved! Please choose another name.\n",
-		           filename);
+			filename);
 		return;
 	}
 
@@ -1481,8 +1480,7 @@ void Com_Frame()
 				Sys_Sleep(0);
 			else
 				Sys_Sleep(time_val - 1);
-		}
-		while ((time_val = Com_TimeVal(min_msec)) != 0);
+		} while ((time_val = Com_TimeVal(min_msec)) != 0);
 		IN_Frame();
 
 		last_time = com_frameTime;
@@ -1552,8 +1550,8 @@ void Com_Frame()
 			cl -= time_frontend + time_backend;
 
 			Com_Printf("fr:%i all:%3i sv:%3i ev:%3i cl:%3i gm:%3i tr:%3i pvs:%3i rf:%3i bk:%3i\n",
-			           com_frameNumber, all, sv, ev, cl, time_game, timeInTrace, timeInPVSCheck, time_frontend,
-			           time_backend);
+				com_frameNumber, all, sv, ev, cl, time_game, timeInTrace, timeInPVSCheck, time_frontend,
+				time_backend);
 
 			// speedslog
 			if (com_speedslog && com_speedslog->integer)
@@ -1581,13 +1579,13 @@ void Com_Frame()
 					}
 					FS_Write("{", strlen("{"), speedslog);
 					Com_sprintf(msg, sizeof(msg),
-					            "%8.4f,%8.4f,%8.4f,%8.4f,%8.4f,%8.4f,", corg[0], corg[1], corg[2], cangles[0],
-					            cangles[1], cangles[2]);
+						"%8.4f,%8.4f,%8.4f,%8.4f,%8.4f,%8.4f,", corg[0], corg[1], corg[2], cangles[0],
+						cangles[1], cangles[2]);
 					FS_Write(msg, strlen(msg), speedslog);
 					Com_sprintf(msg, sizeof(msg),
-					            "%i,%3i,%3i,%3i,%3i,%3i,%3i,%3i,%3i,%3i}",
-					            com_frameNumber, all, sv, ev, cl, time_game, timeInTrace, timeInPVSCheck, time_frontend,
-					            time_backend);
+						"%i,%3i,%3i,%3i,%3i,%3i,%3i,%3i,%3i,%3i}",
+						com_frameNumber, all, sv, ev, cl, time_game, timeInTrace, timeInPVSCheck, time_frontend,
+						time_backend);
 					FS_Write(msg, strlen(msg), speedslog);
 					bComma = true;
 				}
@@ -1611,7 +1609,7 @@ void Com_Frame()
 			*/
 
 			Com_Printf("%4i traces  (%ib %ip) %4i points\n", c_traces,
-			           c_brush_traces, c_patch_traces, c_pointcontents);
+				c_brush_traces, c_patch_traces, c_pointcontents);
 			c_traces = 0;
 			c_brush_traces = 0;
 			c_patch_traces = 0;
@@ -1813,7 +1811,7 @@ PrintCvarMatches
 */
 static void PrintCvarMatches(const char* s)
 {
-	char value[TRUNCATE_LENGTH] = {0};
+	char value[TRUNCATE_LENGTH] = { 0 };
 
 	if (!Q_stricmpn(s, shortestMatch, static_cast<int>(strlen(shortestMatch))))
 	{
@@ -1853,7 +1851,7 @@ static qboolean Field_Complete()
 	const int completionOffset = strlen(completionField->buffer) - strlen(completionString);
 
 	Q_strncpyz(&completionField->buffer[completionOffset], shortestMatch,
-	           sizeof(completionField->buffer) - completionOffset);
+		sizeof(completionField->buffer) - completionOffset);
 
 	completionField->cursor = strlen(completionField->buffer);
 

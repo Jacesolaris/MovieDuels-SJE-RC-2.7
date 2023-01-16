@@ -139,7 +139,7 @@ static void copy64(uint32_t* M, const byte* in)
 {
 	for (int i = 0; i < 16; i++)
 		M[i] = (in[i * 4 + 3] << 24) | (in[i * 4 + 2] << 16) |
-			(in[i * 4 + 1] << 8) | (in[i * 4 + 0] << 0);
+		(in[i * 4 + 1] << 8) | (in[i * 4 + 0] << 0);
 }
 
 static void copy4(byte* out, const uint32_t x)

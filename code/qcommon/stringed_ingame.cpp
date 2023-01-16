@@ -204,7 +204,7 @@ char* CStringEdPackage::Filename_WithoutExt(const char* ps_filename) const
 	if (p &&
 		(p2 == nullptr || (p2 && p > p2)) &&
 		(p3 == nullptr || (p3 && p > p3))
-	)
+		)
 		*p = 0;
 
 	return sString;
@@ -418,7 +418,7 @@ const char* CStringEdPackage::InsideQuotes(const char* psLine)
 		//
 		while (str.c_str()[strlen(str.c_str()) - 1] == ' ' ||
 			str.c_str()[strlen(str.c_str()) - 1] == '\t'
-		)
+			)
 		{
 			str.erase(strlen(str.c_str()) - 1, 1);
 		}
@@ -596,7 +596,7 @@ const char* CStringEdPackage::ParseLine(const char* psLine)
 		else if (CheckLineForKeyword(sSE_KEYWORD_CONFIG, psLine)
 			|| CheckLineForKeyword(sSE_KEYWORD_FILENOTES, psLine)
 			|| CheckLineForKeyword(sSE_KEYWORD_NOTES, psLine)
-		)
+			)
 		{
 			// not used ingame, but need to absorb the token
 		}
@@ -615,7 +615,7 @@ const char* CStringEdPackage::ParseLine(const char* psLine)
 			if (psReference[0])
 			{
 				static constexpr char sSeperators[] = " \t";
-				char sFlags[1024] = {0}; // 1024 chars should be enough to store 8 flag names
+				char sFlags[1024] = { 0 }; // 1024 chars should be enough to store 8 flag names
 				strncpy(sFlags, psLine, sizeof(sFlags) - 1);
 				char* psToken = strtok(sFlags, sSeperators);
 				while (psToken != nullptr)
@@ -657,7 +657,7 @@ const char* CStringEdPackage::ParseLine(const char* psLine)
 				{
 					psWordEnd++;
 				}
-				char sThisLanguage[1024] = {0};
+				char sThisLanguage[1024] = { 0 };
 				size_t iCharsToCopy = psWordEnd - psLine;
 				if (iCharsToCopy > sizeof(sThisLanguage) - 1)
 				{
@@ -698,7 +698,7 @@ const char* CStringEdPackage::ParseLine(const char* psLine)
 						if (Q_stricmp(m_strLoadingLanguage_ParseOnly.c_str(), sThisLanguage))
 						{
 							psErrorMessage = va("Language \"%s\" found when expecting \"%s\"!\n", sThisLanguage,
-							                    m_strLoadingLanguage_ParseOnly.c_str());
+								m_strLoadingLanguage_ParseOnly.c_str());
 						}
 					}
 
@@ -758,7 +758,7 @@ const char* Leetify(const char* psString)
 				'o', '0', 'l', '1', 'e', '3', 'a', '4', 's', '5', 't', '7', 'i', '!', 'h', '#',
 				'O', '0', 'L', '1', 'E', '3', 'A', '4', 'S', '5', 'T', '7', 'I', '!', 'H',
 				'#' // laziness because of strchr()
-			};
+		};
 
 		char* p;
 		for (size_t i = 0; i < sizeof(cReplace); i += 2)
@@ -910,7 +910,7 @@ const char* SE_Load(const char* psFileName, SE_BOOL bLoadDebug = SE_TRUE, SE_BOO
 	//
 	// ingame here tends to pass in names without paths, but I expect them when doing a language load, so...
 	//
-	char sTemp[1000] = {0};
+	char sTemp[1000] = { 0 };
 	if (!strchr(psFileName, '/'))
 	{
 		strcpy(sTemp, sSE_STRINGS_DIR);
@@ -1175,7 +1175,7 @@ void SE_Init()
 	if (psErrorMessage)
 	{
 		Com_Error(ERR_DROP, "SE_Init() Unable to load language: \"%s\"!\nError: \"%s\"\n", se_language->string,
-		          psErrorMessage);
+			psErrorMessage);
 	}
 }
 

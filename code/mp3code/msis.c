@@ -140,9 +140,9 @@ void ms_process(float x[][1152], const int n) /* sum-difference stereo */
 
 /*===============================================================*/
 void is_process_MPEG1(float x[][1152], /* intensity stereo */
-                      const SCALEFACT* sf,
-                      CB_INFO cb_info[2], /* [ch] */
-                      const int nsamp, const int ms_mode)
+	const SCALEFACT* sf,
+	CB_INFO cb_info[2], /* [ch] */
+	const int nsamp, const int ms_mode)
 {
 	int j, n, cb;
 	int isf;
@@ -204,10 +204,10 @@ exit:
 
 /*===============================================================*/
 void is_process_MPEG2(float x[][1152], /* intensity stereo */
-                      const SCALEFACT* sf,
-                      CB_INFO cb_info[2], /* [ch] */
-                      const IS_SF_INFO* is_sf_info,
-                      const int nsamp, const int ms_mode)
+	const SCALEFACT* sf,
+	CB_INFO cb_info[2], /* [ch] */
+	const IS_SF_INFO* is_sf_info,
+	const int nsamp, const int ms_mode)
 {
 	int i, j, k, n, cb;
 	float fl, fr;

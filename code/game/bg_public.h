@@ -316,7 +316,7 @@ using pmove_t = struct
 	// callbacks to test the world
 	// these will be different functions during game and cgame
 	void (*trace)(trace_t* results, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end,
-	              int pass_entity_num, int content_mask, EG2_Collision e_g2_trace_type, int use_lod);
+		int pass_entity_num, int content_mask, EG2_Collision e_g2_trace_type, int use_lod);
 	int (*pointcontents)(const vec3_t point, int pass_entity_num);
 };
 
@@ -341,9 +341,9 @@ constexpr auto AFLAG_LEDGE = SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD | SETANIM
 constexpr auto SETANIM_BLEND_DEFAULT = 100;
 
 void PM_SetAnim(const pmove_t* pm, int set_anim_parts, int anim, int set_anim_flags,
-                int blend_time = SETANIM_BLEND_DEFAULT);
+	int blend_time = SETANIM_BLEND_DEFAULT);
 void PM_SetAnimFinal(int* torso_anim, int* legs_anim, int type, int anim, int priority, int* torso_anim_timer,
-                     int* legs_anim_timer, gentity_t* gent, int blend_time = SETANIM_BLEND_DEFAULT);
+	int* legs_anim_timer, gentity_t* gent, int blend_time = SETANIM_BLEND_DEFAULT);
 
 //===================================================================================
 

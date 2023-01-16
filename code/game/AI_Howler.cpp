@@ -43,7 +43,7 @@ extern void G_GetBoltPosition(gentity_t* self, int bolt_index, vec3_t pos, int m
 extern int PM_AnimLength(int index, animNumber_t anim);
 extern qboolean NAV_DirSafe(const gentity_t* self, vec3_t dir, float dist);
 extern void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, float strength,
-                        qboolean break_saber_lock);
+	qboolean break_saber_lock);
 extern float NPC_EntRangeFromBolt(const gentity_t* targEnt, int bolt_index);
 extern int NPC_GetEntsNearBolt(gentity_t** radius_ents, float radius, int bolt_index, vec3_t bolt_org);
 extern qboolean PM_InKnockDown(const playerState_t* ps);
@@ -315,7 +315,7 @@ static void Howler_Howl()
 				{
 					//does no damage on easy, does 1 point every other frame on medium, more often on hard
 					G_Damage(radius_ents[i], NPC, NPC, vec3_origin, NPC->currentOrigin, 1, DAMAGE_NO_KNOCKBACK,
-					         MOD_IMPACT);
+						MOD_IMPACT);
 				}
 			}
 			if (radius_ents[i]->health > 0
@@ -331,7 +331,7 @@ static void Howler_Howl()
 					{
 						NPC_SetAnim(radius_ents[i], SETANIM_LEGS, BOTH_SONICPAIN_START, SETANIM_FLAG_NORMAL);
 						NPC_SetAnim(radius_ents[i], SETANIM_TORSO, BOTH_SONICPAIN_START,
-						            SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+							SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						radius_ents[i]->client->ps.torsoAnimTimer += 100;
 						radius_ents[i]->client->ps.weaponTime = radius_ents[i]->client->ps.torsoAnimTimer;
 					}
@@ -340,7 +340,7 @@ static void Howler_Howl()
 						//at the end of the sonic pain start or hold anim
 						NPC_SetAnim(radius_ents[i], SETANIM_LEGS, BOTH_SONICPAIN_HOLD, SETANIM_FLAG_NORMAL);
 						NPC_SetAnim(radius_ents[i], SETANIM_TORSO, BOTH_SONICPAIN_HOLD,
-						            SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+							SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						radius_ents[i]->client->ps.torsoAnimTimer += 100;
 						radius_ents[i]->client->ps.weaponTime = radius_ents[i]->client->ps.torsoAnimTimer;
 					}
@@ -380,7 +380,7 @@ static void Howler_Attack(const float enemy_dist, const qboolean howl)
 			//lunge attack
 			//jump foward
 			vec3_t fwd;
-			const vec3_t yaw_ang = {0, NPC->client->ps.viewangles[YAW], 0};
+			const vec3_t yaw_ang = { 0, NPC->client->ps.viewangles[YAW], 0 };
 			AngleVectors(yaw_ang, fwd, nullptr, nullptr);
 			VectorScale(fwd, enemy_dist * 3.0f, NPC->client->ps.velocity);
 			NPC->client->ps.velocity[2] = 200;
@@ -433,23 +433,23 @@ static void Howler_Attack(const float enemy_dist, const qboolean howl)
 		}
 		break;
 	case BOTH_GESTURE1:
+	{
+		if (NPC->client->ps.legsAnimTimer > 1800 //more than 36 frames left
+			&& PM_AnimLength(NPC->client->clientInfo.animFileIndex,
+				static_cast<animNumber_t>(NPC->client->ps.legsAnim)) - NPC->client->ps.legsAnimTimer >=
+			950) //at least 19 frames into anim
 		{
-			if (NPC->client->ps.legsAnimTimer > 1800 //more than 36 frames left
-				&& PM_AnimLength(NPC->client->clientInfo.animFileIndex,
-				                 static_cast<animNumber_t>(NPC->client->ps.legsAnim)) - NPC->client->ps.legsAnimTimer >=
-				950) //at least 19 frames into anim
+			Howler_Howl();
+			if (!NPC->count)
 			{
-				Howler_Howl();
-				if (!NPC->count)
-				{
-					G_PlayEffect(G_EffectIndex("howler/sonic"), NPC->playerModel, NPC->genericBolt1, NPC->s.number,
-					             NPC->currentOrigin, 4750, qtrue);
-					G_SoundOnEnt(NPC, CHAN_VOICE, "sound/chars/howler/howl.mp3");
-					NPC->count = 1;
-				}
+				G_PlayEffect(G_EffectIndex("howler/sonic"), NPC->playerModel, NPC->genericBolt1, NPC->s.number,
+					NPC->currentOrigin, 4750, qtrue);
+				G_SoundOnEnt(NPC, CHAN_VOICE, "sound/chars/howler/howl.mp3");
+				NPC->count = 1;
 			}
 		}
-		break;
+	}
+	break;
 	default:
 		//anims seem to get reset after a load, so just stop attacking and it will restart as needed.
 		TIMER_Remove(NPC, "attacking");
@@ -509,7 +509,7 @@ static void Howler_Combat()
 		}
 
 		if ((advance || NPCInfo->localState == LSTATE_WAITING) && TIMER_Done(NPC, "attacking"))
-		// waiting monsters can't attack
+			// waiting monsters can't attack
 		{
 			if (TIMER_Done2(NPC, "takingPain", qtrue))
 			{
@@ -549,8 +549,8 @@ NPC_Howler_Pain
 -------------------------
 */
 void NPC_Howler_Pain(gentity_t* self, gentity_t* inflictor, gentity_t* other, const vec3_t point, const int damage,
-                     int mod,
-                     int hit_loc)
+	int mod,
+	int hit_loc)
 {
 	if (!self || !self->NPC)
 	{
@@ -794,7 +794,7 @@ void NPC_BSHowler_Default()
 			gentity_t* sav_enemy = NPC->enemy; //FIXME: what about NPC->lastEnemy?
 			NPC->enemy = nullptr;
 			gentity_t* new_enemy = NPC_CheckEnemy(static_cast<qboolean>(NPCInfo->confusionTime < level.time), qfalse,
-			                                      qfalse);
+				qfalse);
 			NPC->enemy = sav_enemy;
 			if (new_enemy && new_enemy != sav_enemy)
 			{

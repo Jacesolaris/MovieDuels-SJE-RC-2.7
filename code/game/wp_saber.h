@@ -263,7 +263,7 @@ extern void WP_InitForcePowers(const gentity_t* ent);
 extern int WP_GetVelocityForForceJump(const gentity_t* self, vec3_t jump_vel, const usercmd_t* ucmd);
 extern int WP_SaberInitBladeData(gentity_t* ent);
 extern void G_CreateG2HolsteredWeaponModel(gentity_t* ent, const char* ps_weapon_model, int bolt_num, int weapon_num,
-                                           vec3_t angles, vec3_t offset);
+	vec3_t angles, vec3_t offset);
 extern void G_CreateG2AttachedWeaponModel(gentity_t* ent, const char* ps_weapon_model, int bolt_num, int weapon_num);
 extern void WP_SaberAddG2SaberModels(gentity_t* ent, int specific_saber_num = -1);
 extern void WP_SaberAddHolsteredG2SaberModels(gentity_t* ent, int specific_saber_num = -1);
@@ -273,14 +273,14 @@ extern void ForceThrow_JKA(gentity_t* self, qboolean pull, qboolean fake = qfals
 extern void ForceThrow_MD(gentity_t* self, qboolean pull, qboolean fake = qfalse);
 extern void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake = qfalse);
 extern qboolean G_GetHitLocFromSurfName(gentity_t* ent, const char* surf_name, int* hit_loc, vec3_t point, vec3_t dir,
-                                        vec3_t blade_dir, int mod, saberType_t saber_type = SABER_NONE);
+	vec3_t blade_dir, int mod, saberType_t saber_type = SABER_NONE);
 extern qboolean G_CheckEnemyPresence(const gentity_t* ent, int dir, float radius, float tolerance = 0.75f);
 extern void WP_SaberFreeStrings(saberInfo_t& saber);
 extern qboolean G_EnoughPowerForSpecialMove(int force_power, int cost, qboolean kata_move = qfalse);
 extern void G_DrainPowerForSpecialMove(const gentity_t* self, forcePowers_t fp, int cost, qboolean kata_move = qfalse);
 extern int G_CostForSpecialMove(int cost, qboolean kata_move = qfalse);
 extern gentity_t* G_DropSaberItem(const char* saberType, saber_colors_t saberColor, vec3_t saberPos, vec3_t saberVel,
-                                  vec3_t saberAngles, const gentity_t* copySaber = nullptr);
+	vec3_t saberAngles, const gentity_t* copySaber = nullptr);
 
 using evasionType_t = enum
 {

@@ -219,7 +219,7 @@ RE_StretchPic
 =============
 */
 void RE_StretchPic(const float x, const float y, const float w, const float h,
-                   const float s1, const float t1, const float s2, const float t2, const qhandle_t h_shader) {
+	const float s1, const float t1, const float s2, const float t2, const qhandle_t h_shader) {
 	stretchPicCommand_t* cmd = static_cast<stretchPicCommand_t*>(R_GetCommandBuffer(sizeof * cmd));
 
 	if (!tr.registered) {
@@ -246,7 +246,7 @@ RE_RotatePic
 =============
 */
 void RE_RotatePic(const float x, const float y, const float w, const float h,
-                  const float s1, const float t1, const float s2, const float t2, const float a, const qhandle_t h_shader) {
+	const float s1, const float t1, const float s2, const float t2, const float a, const qhandle_t h_shader) {
 	rotatePicCommand_t* cmd = static_cast<rotatePicCommand_t*>(R_GetCommandBuffer(sizeof * cmd));
 
 	if (!tr.registered) {
@@ -274,7 +274,7 @@ RE_RotatePic2
 =============
 */
 void RE_RotatePic2(const float x, const float y, const float w, const float h,
-                   const float s1, const float t1, const float s2, const float t2, const float a, const qhandle_t h_shader) {
+	const float s1, const float t1, const float s2, const float t2, const float a, const qhandle_t h_shader) {
 	rotatePicCommand_t* cmd = static_cast<rotatePicCommand_t*>(R_GetCommandBuffer(sizeof * cmd));
 
 	if (!tr.registered) {

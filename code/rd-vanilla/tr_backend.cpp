@@ -1502,7 +1502,7 @@ const void* RB_SwapBuffers(const void* data) {
 		long sum = 0;
 
 		const auto stencil_readback = static_cast<unsigned char*>(R_Malloc(glConfig.vidWidth * glConfig.vidHeight,
-		                                                                  TAG_TEMP_WORKSPACE, qfalse));
+			TAG_TEMP_WORKSPACE, qfalse));
 		qglReadPixels(0, 0, glConfig.vidWidth, glConfig.vidHeight, GL_STENCIL_INDEX, GL_UNSIGNED_BYTE, stencil_readback);
 
 		for (int i = 0; i < glConfig.vidWidth * glConfig.vidHeight; i++) {

@@ -64,9 +64,9 @@ static void ATST_PlayEffect(gentity_t* self, const int bolt_id, const char* fx)
 		vec3_t org, dir;
 
 		gi.G2API_GetBoltMatrix(self->ghoul2, self->playerModel,
-		                       bolt_id,
-		                       &bolt_matrix, self->currentAngles, self->currentOrigin, cg.time ? cg.time : level.time,
-		                       nullptr, self->s.modelScale);
+			bolt_id,
+			&bolt_matrix, self->currentAngles, self->currentOrigin, cg.time ? cg.time : level.time,
+			nullptr, self->s.modelScale);
 
 		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, org);
 		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, NEGATIVE_Y, dir);
@@ -134,8 +134,8 @@ NPC_ATST_Pain
 -------------------------
 */
 void NPC_ATST_Pain(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, const vec3_t point, const int damage,
-                   const int mod,
-                   const int hit_loc)
+	const int mod,
+	const int hit_loc)
 {
 	G_ATSTCheckPain(self, attacker, point, damage, mod, hit_loc);
 	NPC_Pain(self, inflictor, attacker, point, damage, mod);
@@ -209,7 +209,6 @@ void ATST_Attack()
 	const distance_e dist_rate = distance > MIN_MELEE_RANGE_SQR ? DIST_LONG : DIST_MELEE;
 	const qboolean visible = NPC_ClearLOS(NPC->enemy);
 
-
 	// If we cannot see our target, move to see it
 	if (visible == qfalse)
 	{
@@ -231,11 +230,11 @@ void ATST_Attack()
 
 		NPC_ChangeWeapon(WP_ATST_SIDE);
 
-	// See if the side weapons are there
+		// See if the side weapons are there
 		blaster_test = gi.G2API_GetSurfaceRenderStatus(&NPC->ghoul2[NPC->playerModel], "head_light_blaster_cann");
 		charger_test = gi.G2API_GetSurfaceRenderStatus(&NPC->ghoul2[NPC->playerModel], "head_concussion_charger");
 
-	// It has both side weapons
+		// It has both side weapons
 		if (!(blaster_test & TURN_OFF) && !(charger_test & TURN_OFF))
 		{
 			const int weapon = Q_irand(0, 1); // 0 is blaster, 1 is charger (ALT SIDE)

@@ -21,7 +21,7 @@
  /* Write out all the unknown chunks for the current given location */
 static void
 write_unknown_chunks(const png_structrp png_ptr, const png_const_inforp info_ptr,
-                     const unsigned int where)
+	const unsigned int where)
 {
 	if (info_ptr->unknown_chunks_num != 0)
 	{
@@ -552,7 +552,7 @@ PNG_FUNCTION(png_structp, PNGAPI
  */
 void PNGAPI
 png_write_rows(const png_structrp png_ptr, const png_bytepp row,
-               const png_uint_32 num_rows)
+	const png_uint_32 num_rows)
 {
 	png_uint_32 i; /* row counter */
 	png_bytepp rp; /* row pointer */
@@ -1162,7 +1162,7 @@ png_reset_filter_heuristics(const png_structrp png_ptr)
 
 static int
 png_init_filter_heuristics(const png_structrp png_ptr, const int heuristic_method,
-                           const int num_weights)
+	const int num_weights)
 {
 	if (png_ptr == NULL)
 		return 0;
@@ -1242,8 +1242,8 @@ png_init_filter_heuristics(const png_structrp png_ptr, const int heuristic_metho
 #ifdef PNG_FLOATING_POINT_SUPPORTED
 void PNGAPI
 png_set_filter_heuristics(const png_structrp png_ptr, const int heuristic_method,
-                          const int num_weights, const png_const_doublep filter_weights,
-                          const png_const_doublep filter_costs)
+	const int num_weights, const png_const_doublep filter_weights,
+	const png_const_doublep filter_costs)
 {
 	png_debug(1, "in png_set_filter_heuristics");
 
@@ -1297,8 +1297,8 @@ png_set_filter_heuristics(const png_structrp png_ptr, const int heuristic_method
 #ifdef PNG_FIXED_POINT_SUPPORTED
 void PNGAPI
 png_set_filter_heuristics_fixed(const png_structrp png_ptr, const int heuristic_method,
-                                const int num_weights, const png_const_fixed_point_p filter_weights,
-                                const png_const_fixed_point_p filter_costs)
+	const int num_weights, const png_const_fixed_point_p filter_weights,
+	const png_const_fixed_point_p filter_costs)
 {
 	png_debug(1, "in png_set_filter_heuristics_fixed");
 
@@ -1529,7 +1529,7 @@ png_set_write_status_fn(const png_structrp png_ptr, const png_write_status_ptr w
 #ifdef PNG_WRITE_USER_TRANSFORM_SUPPORTED
 void PNGAPI
 png_set_write_user_transform_fn(const png_structrp png_ptr, const png_user_transform_ptr
-                                write_user_transform_fn)
+	write_user_transform_fn)
 {
 	png_debug(1, "in png_set_write_user_transform_fn");
 
@@ -1544,7 +1544,7 @@ png_set_write_user_transform_fn(const png_structrp png_ptr, const png_user_trans
 #ifdef PNG_INFO_IMAGE_SUPPORTED
 void PNGAPI
 png_write_png(png_structrp png_ptr, const png_inforp info_ptr,
-              const int transforms, const voidp params)
+	const int transforms, const voidp params)
 {
 	if (png_ptr == NULL || info_ptr == NULL)
 		return;
@@ -1834,7 +1834,7 @@ png_write_image_16bit(const png_voidp argument)
 
 static png_byte
 png_unpremultiply(png_uint_32 component, const png_uint_32 alpha,
-                  const png_uint_32 reciprocal/*from the above macro*/)
+	const png_uint_32 reciprocal/*from the above macro*/)
 {
 	/* The following gives 1.0 for an alpha of 0, which is fine, otherwise if 0/0
 	 * is represented as some other value there is more likely to be a
@@ -2316,7 +2316,7 @@ png_image_write_main(const png_voidp argument)
 
 int PNGAPI
 png_image_write_to_stdio(const png_imagep image, FILE* file, const int convert_to_8bit,
-                         const void* buffer, const png_int_32 row_stride, const void* colormap)
+	const void* buffer, const png_int_32 row_stride, const void* colormap)
 {
 	/* Write the image to the given (FILE*). */
 	if (image != NULL && image->version == PNG_IMAGE_VERSION)
@@ -2357,8 +2357,8 @@ png_image_write_to_stdio(const png_imagep image, FILE* file, const int convert_t
 
 int PNGAPI
 png_image_write_to_file(const png_imagep image, const char* file_name,
-                        const int convert_to_8bit, const void* buffer, const png_int_32 row_stride,
-                        const void* colormap)
+	const int convert_to_8bit, const void* buffer, const png_int_32 row_stride,
+	const void* colormap)
 {
 	/* Write the image to the named file. */
 	if (image != NULL && image->version == PNG_IMAGE_VERSION)

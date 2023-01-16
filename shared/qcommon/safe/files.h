@@ -51,7 +51,7 @@ namespace FS
 
 		gsl::cstring_view view() const NOEXCEPT
 		{
-			return {begin(), end()};
+			return { begin(), end() };
 		}
 
 	private:

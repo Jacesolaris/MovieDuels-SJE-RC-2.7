@@ -768,7 +768,7 @@ void CL_FinishMove(usercmd_t* cmd)
 CL_CreateCmd
 =================
 */
-vec3_t cl_overriddenAngles = {0, 0, 0};
+vec3_t cl_overriddenAngles = { 0, 0, 0 };
 qboolean cl_overrideAngles = qfalse;
 
 usercmd_t CL_CreateCmd()

@@ -129,7 +129,7 @@ public:
 	virtual void CameraTrack(const char* name, float speed, float initLerp) = 0;
 	virtual void CameraDistance(float dist, float initLerp) = 0;
 	virtual void CameraFade(float sr, float sg, float sb, float sa, float dr, float dg, float db, float da,
-	                        float duration) = 0;
+		float duration) = 0;
 	virtual void CameraPath(const char* name) = 0;
 	virtual void CameraEnable() = 0;
 	virtual void CameraDisable() = 0;

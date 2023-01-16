@@ -44,7 +44,7 @@ Layer 3 audio
 #define MAXBITS 9
 
 static const HUFF_ELEMENT huff_table_0[4] =
-	{{0}, {0}, {0}, {64}}; /* dummy must not use */
+{ {0}, {0}, {0}, {64} }; /* dummy must not use */
 
 #include "htable.h"
 
@@ -127,19 +127,19 @@ static unsigned int bitget(int n)
 
    if (bitdat.bits < n)
    {			*/ /* refill bit buf if necessary */
-/*      while (bitdat.bits <= 24)
-	  {
-	 bitdat.bitbuf = (bitdat.bitbuf << 8) | *bitdat.bs_ptr++;
-	 bitdat.bits += 8;
+   /*      while (bitdat.bits <= 24)
+		 {
+		bitdat.bitbuf = (bitdat.bitbuf << 8) | *bitdat.bs_ptr++;
+		bitdat.bits += 8;
+		 }
 	  }
+	  bitdat.bits -= n;
+	  x = bitdat.bitbuf >> bitdat.bits;
+	  bitdat.bitbuf -= x << bitdat.bits;
+	  return x;
    }
-   bitdat.bits -= n;
-   x = bitdat.bitbuf >> bitdat.bits;
-   bitdat.bitbuf -= x << bitdat.bits;
-   return x;
-}
-*/
-/*----- get n bits  - checks for n+2 avail bits (linbits+sign) -----*/
+   */
+   /*----- get n bits  - checks for n+2 avail bits (linbits+sign) -----*/
 static unsigned int bitget_lb(const int n)
 {
 	if (bitdat.bits < (n + 2))
@@ -244,7 +244,7 @@ void unpack_huff(int xy[][2], int n, const int ntable)
 			xy[i][1] = 0;
 		}
 		return;
-	/*------------------------------------------*/
+		/*------------------------------------------*/
 	case one_shot:
 		/*- single lookup, no escapes -*/
 		for (i = 0; i < n; i++)
@@ -267,7 +267,7 @@ void unpack_huff(int xy[][2], int n, const int ntable)
 				break; // bad data protect
 		}
 		return;
-	/*------------------------------------------*/
+		/*------------------------------------------*/
 	case no_linbits:
 		for (i = 0; i < n; i++)
 		{
@@ -297,7 +297,7 @@ void unpack_huff(int xy[][2], int n, const int ntable)
 				break; // bad data protect
 		}
 		return;
-	/*------------------------------------------*/
+		/*------------------------------------------*/
 	case have_linbits:
 		for (i = 0; i < n; i++)
 		{

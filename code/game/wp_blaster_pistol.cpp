@@ -32,6 +32,8 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 extern qboolean WalkCheck(const gentity_t* self);
 extern qboolean PM_CrouchAnim(int anim);
 extern qboolean G_ControlledByPlayer(const gentity_t* self);
+extern qboolean PM_RunningAnim(int anim);
+extern qboolean PM_WalkingAnim(int anim);
 //---------------------------------------------------------
 void WP_FireBryarPistol(gentity_t* ent, const qboolean altFire)
 //---------------------------------------------------------
@@ -47,90 +49,78 @@ void WP_FireBryarPistol(gentity_t* ent, const qboolean altFire)
 	{
 		//no inherent aim screw up
 	}
-	else if (ent->client && !(ent->client->ps.forcePowersActive & 1 << FP_SEE) || ent->client->ps.forcePowerLevel[
-		FP_SEE] < FORCE_LEVEL_2)
-	{
-		//force sight 2+ gives perfect aim
+	else if (!(ent->client->ps.forcePowersActive & 1 << FP_SEE) || ent->client->ps.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2)
+	{//force sight 2+ gives perfect aim
 		vec3_t angs;
 
 		vectoangles(forwardVec, angs);
 
 		if (altFire)
 		{
-			// add some slop to the alt-fire direction
-			if (!WalkCheck(ent) && (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent))) //if running aim is shit
+			if (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent))
 			{
-				angs[PITCH] += Q_flrand(-1.0f, 1.0f) * CLONERIFLE_ALT_SPREAD;
-				angs[YAW] += Q_flrand(-1.0f, 1.0f) * CLONERIFLE_ALT_SPREAD;
-			}
-			else if (ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_FULL)
-			{
-				// add some slop to the fire direction
-				angs[PITCH] += Q_flrand(-3.0f, 3.0f) * BLASTER_ALT_SPREAD;
-				angs[YAW] += Q_flrand(-3.0f, 3.0f) * BLASTER_ALT_SPREAD;
-			}
-			else if (ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_HEAVY)
-			{
-				// add some slop to the fire direction
-				angs[PITCH] += Q_flrand(-2.0f, 2.0f) * BLASTER_ALT_SPREAD;
-				angs[YAW] += Q_flrand(-2.0f, 2.0f) * BLASTER_ALT_SPREAD;
-			}
-			else if (PM_CrouchAnim(ent->client->ps.legsAnim))
-			{
-				//
+				if (PM_CrouchAnim(ent->client->ps.legsAnim))
+				{// firing position
+					angs[PITCH] += Q_flrand(-0.0f, 0.0f);
+					angs[YAW] += Q_flrand(-0.0f, 0.0f);
+				}
+				else
+				{
+					if (PM_RunningAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_FULL)
+					{ // running or very fatigued
+						angs[PITCH] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
+						angs[YAW] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
+					}
+					else if (PM_WalkingAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_HEAVY)
+					{//walking or fatigued a bit
+						angs[PITCH] += Q_flrand(-1.5f, 1.5f) * WALKING_SPREAD;
+						angs[YAW] += Q_flrand(-1.5f, 1.5f) * WALKING_SPREAD;
+					}
+					else
+					{// just standing
+						angs[PITCH] += Q_flrand(-1.0f, 1.0f) * BLASTER_ALT_SPREAD;
+						angs[YAW] += Q_flrand(-1.0f, 1.0f) * BLASTER_ALT_SPREAD;
+					}
+				}
 			}
 			else
-			{
-				//
+			{// add some slop to the alt-fire direction for NPC,s
+				angs[PITCH] += Q_flrand(-1.0f, 1.0f) * BLASTER_ALT_SPREAD;
+				angs[YAW] += Q_flrand(-1.0f, 1.0f) * BLASTER_ALT_SPREAD;
 			}
 		}
 		else
 		{
-			if (ent->NPC && ent->NPC->currentAim < 5)
+			if (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent))
 			{
-				if (ent->client && ent->NPC &&
-					(ent->client->NPC_class == CLASS_STORMTROOPER ||
-						ent->client->NPC_class == CLASS_CLONETROOPER ||
-						ent->client->NPC_class == CLASS_STORMCOMMANDO ||
-						ent->client->NPC_class == CLASS_SWAMPTROOPER ||
-						ent->client->NPC_class == CLASS_DROIDEKA ||
-						ent->client->NPC_class == CLASS_SBD ||
-						ent->client->NPC_class == CLASS_IMPWORKER ||
-						ent->client->NPC_class == CLASS_REBEL ||
-						ent->client->NPC_class == CLASS_WOOKIE ||
-						ent->client->NPC_class == CLASS_BATTLEDROID))
+				if (PM_CrouchAnim(ent->client->ps.legsAnim))
+				{// firing position
+					angs[PITCH] += Q_flrand(-0.0f, 0.0f);
+					angs[YAW] += Q_flrand(-0.0f, 0.0f);
+				}
+				else
 				{
-					angs[PITCH] += Q_flrand(-1.0f, 1.0f) * (BLASTER_NPC_SPREAD + (1 - ent->NPC->currentAim) * 0.25f);
-					//was 0.5f
-					angs[YAW] += Q_flrand(-1.0f, 1.0f) * (BLASTER_NPC_SPREAD + (1 - ent->NPC->currentAim) * 0.25f);
-					//was 0.5
+					if (PM_RunningAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_FULL)
+					{ // running or very fatigued
+						angs[PITCH] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
+						angs[YAW] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
+					}
+					else if (PM_WalkingAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_HALF)
+					{//walking or fatigued a bit
+						angs[PITCH] += Q_flrand(-1.1f, 1.1f) * WALKING_SPREAD;
+						angs[YAW] += Q_flrand(-1.1f, 1.1f) * WALKING_SPREAD;
+					}
+					else
+					{// just standing
+						angs[PITCH] += Q_flrand(-1.0f, 1.0f) * BLASTER_MAIN_SPREAD;
+						angs[YAW] += Q_flrand(-1.0f, 1.0f) * BLASTER_MAIN_SPREAD;
+					}
 				}
 			}
-			else if (!WalkCheck(ent) && (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent)))
-			//if running aim is shit
-			{
-				angs[PITCH] += Q_flrand(-1.0f, 1.0f) * CLONERIFLE_MAIN_SPREAD;
-				angs[YAW] += Q_flrand(-1.0f, 1.0f) * CLONERIFLE_MAIN_SPREAD;
-			}
-			else if (ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_FULL)
-			{
-				// add some slop to the fire direction
-				angs[PITCH] += Q_flrand(-3.0f, 3.0f) * BLASTER_MAIN_SPREAD;
-				angs[YAW] += Q_flrand(-3.0f, 3.0f) * BLASTER_MAIN_SPREAD;
-			}
-			else if (ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_HEAVY)
-			{
-				// add some slop to the fire direction
-				angs[PITCH] += Q_flrand(-2.0f, 2.0f) * BLASTER_MAIN_SPREAD;
-				angs[YAW] += Q_flrand(-2.0f, 2.0f) * BLASTER_MAIN_SPREAD;
-			}
-			else if (PM_CrouchAnim(ent->client->ps.legsAnim))
-			{
-				//
-			}
 			else
-			{
-				//
+			{// add some slop to the fire direction for NPC,s
+				angs[PITCH] += Q_flrand(-1.0f, 1.0f) * BLASTER_MAIN_SPREAD;
+				angs[YAW] += Q_flrand(-1.0f, 1.0f) * BLASTER_MAIN_SPREAD;
 			}
 		}
 
@@ -218,90 +208,78 @@ void WP_FireBryarPistolDuals(gentity_t* ent, const qboolean altFire, const qbool
 	{
 		//no inherent aim screw up
 	}
-	else if (ent->client && !(ent->client->ps.forcePowersActive & 1 << FP_SEE) || ent->client->ps.forcePowerLevel[
-		FP_SEE] < FORCE_LEVEL_2)
-	{
-		//force sight 2+ gives perfect aim
+	else if (!(ent->client->ps.forcePowersActive & 1 << FP_SEE) || ent->client->ps.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2)
+	{//force sight 2+ gives perfect aim
 		vec3_t angs;
 
 		vectoangles(forwardVec, angs);
 
 		if (altFire)
 		{
-			// add some slop to the alt-fire direction
-			if (!WalkCheck(ent) && (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent))) //if running aim is shit
+			if (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent))
 			{
-				angs[PITCH] += Q_flrand(-1.0f, 1.0f) * CLONERIFLE_ALT_SPREAD;
-				angs[YAW] += Q_flrand(-1.0f, 1.0f) * CLONERIFLE_ALT_SPREAD;
-			}
-			else if (ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_FULL)
-			{
-				// add some slop to the fire direction
-				angs[PITCH] += Q_flrand(-3.0f, 3.0f) * BLASTER_ALT_SPREAD;
-				angs[YAW] += Q_flrand(-3.0f, 3.0f) * BLASTER_ALT_SPREAD;
-			}
-			else if (ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_HEAVY)
-			{
-				// add some slop to the fire direction
-				angs[PITCH] += Q_flrand(-2.0f, 2.0f) * BLASTER_ALT_SPREAD;
-				angs[YAW] += Q_flrand(-2.0f, 2.0f) * BLASTER_ALT_SPREAD;
-			}
-			else if (PM_CrouchAnim(ent->client->ps.legsAnim))
-			{
-				//
+				if (PM_CrouchAnim(ent->client->ps.legsAnim))
+				{// firing position
+					angs[PITCH] += Q_flrand(-0.0f, 0.0f);
+					angs[YAW] += Q_flrand(-0.0f, 0.0f);
+				}
+				else
+				{
+					if (PM_RunningAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_FULL)
+					{ // running or very fatigued
+						angs[PITCH] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
+						angs[YAW] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
+					}
+					else if (PM_WalkingAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_HEAVY)
+					{//walking or fatigued a bit
+						angs[PITCH] += Q_flrand(-1.5f, 1.5f) * WALKING_SPREAD;
+						angs[YAW] += Q_flrand(-1.5f, 1.5f) * WALKING_SPREAD;
+					}
+					else
+					{// just standing
+						angs[PITCH] += Q_flrand(-1.0f, 1.0f) * BLASTER_ALT_SPREAD;
+						angs[YAW] += Q_flrand(-1.0f, 1.0f) * BLASTER_ALT_SPREAD;
+					}
+				}
 			}
 			else
-			{
-				//
+			{// add some slop to the alt-fire direction for NPC,s
+				angs[PITCH] += Q_flrand(-1.0f, 1.0f) * BLASTER_ALT_SPREAD;
+				angs[YAW] += Q_flrand(-1.0f, 1.0f) * BLASTER_ALT_SPREAD;
 			}
 		}
 		else
 		{
-			if (ent->NPC && ent->NPC->currentAim < 5)
+			if (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent))
 			{
-				if (ent->client && ent->NPC &&
-					(ent->client->NPC_class == CLASS_STORMTROOPER ||
-						ent->client->NPC_class == CLASS_CLONETROOPER ||
-						ent->client->NPC_class == CLASS_STORMCOMMANDO ||
-						ent->client->NPC_class == CLASS_SWAMPTROOPER ||
-						ent->client->NPC_class == CLASS_DROIDEKA ||
-						ent->client->NPC_class == CLASS_SBD ||
-						ent->client->NPC_class == CLASS_IMPWORKER ||
-						ent->client->NPC_class == CLASS_REBEL ||
-						ent->client->NPC_class == CLASS_WOOKIE ||
-						ent->client->NPC_class == CLASS_BATTLEDROID))
+				if (PM_CrouchAnim(ent->client->ps.legsAnim))
+				{// firing position
+					angs[PITCH] += Q_flrand(-0.0f, 0.0f);
+					angs[YAW] += Q_flrand(-0.0f, 0.0f);
+				}
+				else
 				{
-					angs[PITCH] += Q_flrand(-1.0f, 1.0f) * (BLASTER_NPC_SPREAD + (1 - ent->NPC->currentAim) * 0.25f);
-					//was 0.5f
-					angs[YAW] += Q_flrand(-1.0f, 1.0f) * (BLASTER_NPC_SPREAD + (1 - ent->NPC->currentAim) * 0.25f);
-					//was 0.5
+					if (PM_RunningAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_FULL)
+					{ // running or very fatigued
+						angs[PITCH] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
+						angs[YAW] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
+					}
+					else if (PM_WalkingAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_HALF)
+					{//walking or fatigued a bit
+						angs[PITCH] += Q_flrand(-1.1f, 1.1f) * WALKING_SPREAD;
+						angs[YAW] += Q_flrand(-1.1f, 1.1f) * WALKING_SPREAD;
+					}
+					else
+					{// just standing
+						angs[PITCH] += Q_flrand(-1.0f, 1.0f) * BLASTER_MAIN_SPREAD;
+						angs[YAW] += Q_flrand(-1.0f, 1.0f) * BLASTER_MAIN_SPREAD;
+					}
 				}
 			}
-			else if (!WalkCheck(ent) && (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent)))
-			//if running aim is shit
-			{
-				angs[PITCH] += Q_flrand(-1.0f, 1.0f) * CLONERIFLE_MAIN_SPREAD;
-				angs[YAW] += Q_flrand(-1.0f, 1.0f) * CLONERIFLE_MAIN_SPREAD;
-			}
-			else if (ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_FULL)
-			{
-				// add some slop to the fire direction
-				angs[PITCH] += Q_flrand(-3.0f, 3.0f) * BLASTER_MAIN_SPREAD;
-				angs[YAW] += Q_flrand(-3.0f, 3.0f) * BLASTER_MAIN_SPREAD;
-			}
-			else if (ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_HEAVY)
-			{
-				// add some slop to the fire direction
-				angs[PITCH] += Q_flrand(-2.0f, 2.0f) * BLASTER_MAIN_SPREAD;
-				angs[YAW] += Q_flrand(-2.0f, 2.0f) * BLASTER_MAIN_SPREAD;
-			}
-			else if (PM_CrouchAnim(ent->client->ps.legsAnim))
-			{
-				//
-			}
 			else
-			{
-				//
+			{// add some slop to the fire direction for NPC,s
+				angs[PITCH] += Q_flrand(-1.0f, 1.0f) * BLASTER_MAIN_SPREAD;
+				angs[YAW] += Q_flrand(-1.0f, 1.0f) * BLASTER_MAIN_SPREAD;
 			}
 		}
 
@@ -385,90 +363,78 @@ void WP_FireReyPistol(gentity_t* ent, const qboolean altFire)
 	{
 		//no inherent aim screw up
 	}
-	else if (ent->client && !(ent->client->ps.forcePowersActive & 1 << FP_SEE) || ent->client->ps.forcePowerLevel[
-		FP_SEE] < FORCE_LEVEL_2)
-	{
-		//force sight 2+ gives perfect aim
+	else if (!(ent->client->ps.forcePowersActive & 1 << FP_SEE) || ent->client->ps.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2)
+	{//force sight 2+ gives perfect aim
 		vec3_t angs;
 
 		vectoangles(forwardVec, angs);
 
 		if (altFire)
 		{
-			// add some slop to the alt-fire direction
-			if (!WalkCheck(ent) && (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent))) //if running aim is shit
+			if (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent))
 			{
-				angs[PITCH] += Q_flrand(-1.0f, 1.0f) * CLONERIFLE_ALT_SPREAD;
-				angs[YAW] += Q_flrand(-1.0f, 1.0f) * CLONERIFLE_ALT_SPREAD;
-			}
-			else if (ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_FULL)
-			{
-				// add some slop to the fire direction
-				angs[PITCH] += Q_flrand(-3.0f, 3.0f) * BLASTER_ALT_SPREAD;
-				angs[YAW] += Q_flrand(-3.0f, 3.0f) * BLASTER_ALT_SPREAD;
-			}
-			else if (ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_HEAVY)
-			{
-				// add some slop to the fire direction
-				angs[PITCH] += Q_flrand(-2.0f, 2.0f) * BLASTER_ALT_SPREAD;
-				angs[YAW] += Q_flrand(-2.0f, 2.0f) * BLASTER_ALT_SPREAD;
-			}
-			else if (PM_CrouchAnim(ent->client->ps.legsAnim))
-			{
-				//
+				if (PM_CrouchAnim(ent->client->ps.legsAnim))
+				{// firing position
+					angs[PITCH] += Q_flrand(-0.0f, 0.0f);
+					angs[YAW] += Q_flrand(-0.0f, 0.0f);
+				}
+				else
+				{
+					if (PM_RunningAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_FULL)
+					{ // running or very fatigued
+						angs[PITCH] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
+						angs[YAW] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
+					}
+					else if (PM_WalkingAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_HEAVY)
+					{//walking or fatigued a bit
+						angs[PITCH] += Q_flrand(-1.5f, 1.5f) * WALKING_SPREAD;
+						angs[YAW] += Q_flrand(-1.5f, 1.5f) * WALKING_SPREAD;
+					}
+					else
+					{// just standing
+						angs[PITCH] += Q_flrand(-1.0f, 1.0f) * BLASTER_ALT_SPREAD;
+						angs[YAW] += Q_flrand(-1.0f, 1.0f) * BLASTER_ALT_SPREAD;
+					}
+				}
 			}
 			else
-			{
-				//
+			{// add some slop to the alt-fire direction for NPC,s
+				angs[PITCH] += Q_flrand(-1.0f, 1.0f) * BLASTER_ALT_SPREAD;
+				angs[YAW] += Q_flrand(-1.0f, 1.0f) * BLASTER_ALT_SPREAD;
 			}
 		}
 		else
 		{
-			if (ent->NPC && ent->NPC->currentAim < 5)
+			if (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent))
 			{
-				if (ent->client && ent->NPC &&
-					(ent->client->NPC_class == CLASS_STORMTROOPER ||
-						ent->client->NPC_class == CLASS_CLONETROOPER ||
-						ent->client->NPC_class == CLASS_STORMCOMMANDO ||
-						ent->client->NPC_class == CLASS_SWAMPTROOPER ||
-						ent->client->NPC_class == CLASS_DROIDEKA ||
-						ent->client->NPC_class == CLASS_SBD ||
-						ent->client->NPC_class == CLASS_IMPWORKER ||
-						ent->client->NPC_class == CLASS_REBEL ||
-						ent->client->NPC_class == CLASS_WOOKIE ||
-						ent->client->NPC_class == CLASS_BATTLEDROID))
+				if (PM_CrouchAnim(ent->client->ps.legsAnim))
+				{// firing position
+					angs[PITCH] += Q_flrand(-0.0f, 0.0f);
+					angs[YAW] += Q_flrand(-0.0f, 0.0f);
+				}
+				else
 				{
-					angs[PITCH] += Q_flrand(-1.0f, 1.0f) * (BLASTER_NPC_SPREAD + (1 - ent->NPC->currentAim) * 0.25f);
-					//was 0.5f
-					angs[YAW] += Q_flrand(-1.0f, 1.0f) * (BLASTER_NPC_SPREAD + (1 - ent->NPC->currentAim) * 0.25f);
-					//was 0.5
+					if (PM_RunningAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_FULL)
+					{ // running or very fatigued
+						angs[PITCH] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
+						angs[YAW] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
+					}
+					else if (PM_WalkingAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_HALF)
+					{//walking or fatigued a bit
+						angs[PITCH] += Q_flrand(-1.1f, 1.1f) * WALKING_SPREAD;
+						angs[YAW] += Q_flrand(-1.1f, 1.1f) * WALKING_SPREAD;
+					}
+					else
+					{// just standing
+						angs[PITCH] += Q_flrand(-1.0f, 1.0f) * BLASTER_MAIN_SPREAD;
+						angs[YAW] += Q_flrand(-1.0f, 1.0f) * BLASTER_MAIN_SPREAD;
+					}
 				}
 			}
-			else if (!WalkCheck(ent) && (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent)))
-			//if running aim is shit
-			{
-				angs[PITCH] += Q_flrand(-1.0f, 1.0f) * CLONERIFLE_MAIN_SPREAD;
-				angs[YAW] += Q_flrand(-1.0f, 1.0f) * CLONERIFLE_MAIN_SPREAD;
-			}
-			else if (ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_FULL)
-			{
-				// add some slop to the fire direction
-				angs[PITCH] += Q_flrand(-3.0f, 3.0f) * BLASTER_MAIN_SPREAD;
-				angs[YAW] += Q_flrand(-3.0f, 3.0f) * BLASTER_MAIN_SPREAD;
-			}
-			else if (ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_HEAVY)
-			{
-				// add some slop to the fire direction
-				angs[PITCH] += Q_flrand(-2.0f, 2.0f) * BLASTER_MAIN_SPREAD;
-				angs[YAW] += Q_flrand(-2.0f, 2.0f) * BLASTER_MAIN_SPREAD;
-			}
-			else if (PM_CrouchAnim(ent->client->ps.legsAnim))
-			{
-				//
-			}
 			else
-			{
-				//
+			{// add some slop to the fire direction for NPC,s
+				angs[PITCH] += Q_flrand(-1.0f, 1.0f) * BLASTER_MAIN_SPREAD;
+				angs[YAW] += Q_flrand(-1.0f, 1.0f) * BLASTER_MAIN_SPREAD;
 			}
 		}
 
@@ -555,90 +521,78 @@ void WP_FireReyPistolDuals(gentity_t* ent, const qboolean altFire, const qboolea
 	{
 		//no inherent aim screw up
 	}
-	else if (ent->client && !(ent->client->ps.forcePowersActive & 1 << FP_SEE) || ent->client->ps.forcePowerLevel[
-		FP_SEE] < FORCE_LEVEL_2)
-	{
-		//force sight 2+ gives perfect aim
+	else if (!(ent->client->ps.forcePowersActive & 1 << FP_SEE) || ent->client->ps.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2)
+	{//force sight 2+ gives perfect aim
 		vec3_t angs;
 
 		vectoangles(forwardVec, angs);
 
 		if (altFire)
 		{
-			// add some slop to the alt-fire direction
-			if (!WalkCheck(ent) && (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent))) //if running aim is shit
+			if (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent))
 			{
-				angs[PITCH] += Q_flrand(-1.0f, 1.0f) * CLONERIFLE_ALT_SPREAD;
-				angs[YAW] += Q_flrand(-1.0f, 1.0f) * CLONERIFLE_ALT_SPREAD;
-			}
-			else if (ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_FULL)
-			{
-				// add some slop to the fire direction
-				angs[PITCH] += Q_flrand(-3.0f, 3.0f) * BLASTER_ALT_SPREAD;
-				angs[YAW] += Q_flrand(-3.0f, 3.0f) * BLASTER_ALT_SPREAD;
-			}
-			else if (ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_HEAVY)
-			{
-				// add some slop to the fire direction
-				angs[PITCH] += Q_flrand(-2.0f, 2.0f) * BLASTER_ALT_SPREAD;
-				angs[YAW] += Q_flrand(-2.0f, 2.0f) * BLASTER_ALT_SPREAD;
-			}
-			else if (PM_CrouchAnim(ent->client->ps.legsAnim))
-			{
-				//
+				if (PM_CrouchAnim(ent->client->ps.legsAnim))
+				{// firing position
+					angs[PITCH] += Q_flrand(-0.0f, 0.0f);
+					angs[YAW] += Q_flrand(-0.0f, 0.0f);
+				}
+				else
+				{
+					if (PM_RunningAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_FULL)
+					{ // running or very fatigued
+						angs[PITCH] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
+						angs[YAW] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
+					}
+					else if (PM_WalkingAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_HEAVY)
+					{//walking or fatigued a bit
+						angs[PITCH] += Q_flrand(-1.5f, 1.5f) * WALKING_SPREAD;
+						angs[YAW] += Q_flrand(-1.5f, 1.5f) * WALKING_SPREAD;
+					}
+					else
+					{// just standing
+						angs[PITCH] += Q_flrand(-1.0f, 1.0f) * BLASTER_ALT_SPREAD;
+						angs[YAW] += Q_flrand(-1.0f, 1.0f) * BLASTER_ALT_SPREAD;
+					}
+				}
 			}
 			else
-			{
-				//
+			{// add some slop to the alt-fire direction for NPC,s
+				angs[PITCH] += Q_flrand(-1.0f, 1.0f) * BLASTER_ALT_SPREAD;
+				angs[YAW] += Q_flrand(-1.0f, 1.0f) * BLASTER_ALT_SPREAD;
 			}
 		}
 		else
 		{
-			if (ent->NPC && ent->NPC->currentAim < 5)
+			if (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent))
 			{
-				if (ent->client && ent->NPC &&
-					(ent->client->NPC_class == CLASS_STORMTROOPER ||
-						ent->client->NPC_class == CLASS_CLONETROOPER ||
-						ent->client->NPC_class == CLASS_STORMCOMMANDO ||
-						ent->client->NPC_class == CLASS_SWAMPTROOPER ||
-						ent->client->NPC_class == CLASS_DROIDEKA ||
-						ent->client->NPC_class == CLASS_SBD ||
-						ent->client->NPC_class == CLASS_IMPWORKER ||
-						ent->client->NPC_class == CLASS_REBEL ||
-						ent->client->NPC_class == CLASS_WOOKIE ||
-						ent->client->NPC_class == CLASS_BATTLEDROID))
+				if (PM_CrouchAnim(ent->client->ps.legsAnim))
+				{// firing position
+					angs[PITCH] += Q_flrand(-0.0f, 0.0f);
+					angs[YAW] += Q_flrand(-0.0f, 0.0f);
+				}
+				else
 				{
-					angs[PITCH] += Q_flrand(-1.0f, 1.0f) * (BLASTER_NPC_SPREAD + (1 - ent->NPC->currentAim) * 0.25f);
-					//was 0.5f
-					angs[YAW] += Q_flrand(-1.0f, 1.0f) * (BLASTER_NPC_SPREAD + (1 - ent->NPC->currentAim) * 0.25f);
-					//was 0.5
+					if (PM_RunningAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_FULL)
+					{ // running or very fatigued
+						angs[PITCH] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
+						angs[YAW] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
+					}
+					else if (PM_WalkingAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_HALF)
+					{//walking or fatigued a bit
+						angs[PITCH] += Q_flrand(-1.1f, 1.1f) * WALKING_SPREAD;
+						angs[YAW] += Q_flrand(-1.1f, 1.1f) * WALKING_SPREAD;
+					}
+					else
+					{// just standing
+						angs[PITCH] += Q_flrand(-1.0f, 1.0f) * BLASTER_MAIN_SPREAD;
+						angs[YAW] += Q_flrand(-1.0f, 1.0f) * BLASTER_MAIN_SPREAD;
+					}
 				}
 			}
-			else if (!WalkCheck(ent) && (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent)))
-			//if running aim is shit
-			{
-				angs[PITCH] += Q_flrand(-1.0f, 1.0f) * CLONERIFLE_MAIN_SPREAD;
-				angs[YAW] += Q_flrand(-1.0f, 1.0f) * CLONERIFLE_MAIN_SPREAD;
-			}
-			else if (ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_FULL)
-			{
-				// add some slop to the fire direction
-				angs[PITCH] += Q_flrand(-3.0f, 3.0f) * BLASTER_MAIN_SPREAD;
-				angs[YAW] += Q_flrand(-3.0f, 3.0f) * BLASTER_MAIN_SPREAD;
-			}
-			else if (ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_HEAVY)
-			{
-				// add some slop to the fire direction
-				angs[PITCH] += Q_flrand(-2.0f, 2.0f) * BLASTER_MAIN_SPREAD;
-				angs[YAW] += Q_flrand(-2.0f, 2.0f) * BLASTER_MAIN_SPREAD;
-			}
-			else if (PM_CrouchAnim(ent->client->ps.legsAnim))
-			{
-				//
-			}
 			else
-			{
-				//
+			{// add some slop to the fire direction for NPC,s
+				angs[PITCH] += Q_flrand(-1.0f, 1.0f) * BLASTER_MAIN_SPREAD;
+				angs[YAW] += Q_flrand(-1.0f, 1.0f) * BLASTER_MAIN_SPREAD;
 			}
 		}
 
@@ -721,90 +675,78 @@ void WP_FireClonePistol(gentity_t* ent, const qboolean altFire)
 	{
 		//no inherent aim screw up
 	}
-	else if (ent->client && !(ent->client->ps.forcePowersActive & 1 << FP_SEE) || ent->client->ps.forcePowerLevel[
-		FP_SEE] < FORCE_LEVEL_2)
-	{
-		//force sight 2+ gives perfect aim
+	else if (!(ent->client->ps.forcePowersActive & 1 << FP_SEE) || ent->client->ps.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2)
+	{//force sight 2+ gives perfect aim
 		vec3_t angs;
 
 		vectoangles(forwardVec, angs);
 
 		if (altFire)
 		{
-			// add some slop to the alt-fire direction
-			if (!WalkCheck(ent) && (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent))) //if running aim is shit
+			if (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent))
 			{
-				angs[PITCH] += Q_flrand(-1.0f, 1.0f) * CLONERIFLE_ALT_SPREAD;
-				angs[YAW] += Q_flrand(-1.0f, 1.0f) * CLONERIFLE_ALT_SPREAD;
-			}
-			else if (ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_FULL)
-			{
-				// add some slop to the fire direction
-				angs[PITCH] += Q_flrand(-3.0f, 3.0f) * BLASTER_ALT_SPREAD;
-				angs[YAW] += Q_flrand(-3.0f, 3.0f) * BLASTER_ALT_SPREAD;
-			}
-			else if (ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_HEAVY)
-			{
-				// add some slop to the fire direction
-				angs[PITCH] += Q_flrand(-2.0f, 2.0f) * BLASTER_ALT_SPREAD;
-				angs[YAW] += Q_flrand(-2.0f, 2.0f) * BLASTER_ALT_SPREAD;
-			}
-			else if (PM_CrouchAnim(ent->client->ps.legsAnim))
-			{
-				//
+				if (PM_CrouchAnim(ent->client->ps.legsAnim))
+				{// firing position
+					angs[PITCH] += Q_flrand(-0.0f, 0.0f);
+					angs[YAW] += Q_flrand(-0.0f, 0.0f);
+				}
+				else
+				{
+					if (PM_RunningAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_FULL)
+					{ // running or very fatigued
+						angs[PITCH] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
+						angs[YAW] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
+					}
+					else if (PM_WalkingAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_HEAVY)
+					{//walking or fatigued a bit
+						angs[PITCH] += Q_flrand(-1.5f, 1.5f) * WALKING_SPREAD;
+						angs[YAW] += Q_flrand(-1.5f, 1.5f) * WALKING_SPREAD;
+					}
+					else
+					{// just standing
+						angs[PITCH] += Q_flrand(-1.0f, 1.0f) * BLASTER_ALT_SPREAD;
+						angs[YAW] += Q_flrand(-1.0f, 1.0f) * BLASTER_ALT_SPREAD;
+					}
+				}
 			}
 			else
-			{
-				//
+			{// add some slop to the alt-fire direction for NPC,s
+				angs[PITCH] += Q_flrand(-1.0f, 1.0f) * BLASTER_ALT_SPREAD;
+				angs[YAW] += Q_flrand(-1.0f, 1.0f) * BLASTER_ALT_SPREAD;
 			}
 		}
 		else
 		{
-			if (ent->NPC && ent->NPC->currentAim < 5)
+			if (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent))
 			{
-				if (ent->client && ent->NPC &&
-					(ent->client->NPC_class == CLASS_STORMTROOPER ||
-						ent->client->NPC_class == CLASS_CLONETROOPER ||
-						ent->client->NPC_class == CLASS_STORMCOMMANDO ||
-						ent->client->NPC_class == CLASS_SWAMPTROOPER ||
-						ent->client->NPC_class == CLASS_DROIDEKA ||
-						ent->client->NPC_class == CLASS_SBD ||
-						ent->client->NPC_class == CLASS_IMPWORKER ||
-						ent->client->NPC_class == CLASS_REBEL ||
-						ent->client->NPC_class == CLASS_WOOKIE ||
-						ent->client->NPC_class == CLASS_BATTLEDROID))
+				if (PM_CrouchAnim(ent->client->ps.legsAnim))
+				{// firing position
+					angs[PITCH] += Q_flrand(-0.0f, 0.0f);
+					angs[YAW] += Q_flrand(-0.0f, 0.0f);
+				}
+				else
 				{
-					angs[PITCH] += Q_flrand(-1.0f, 1.0f) * (BLASTER_NPC_SPREAD + (1 - ent->NPC->currentAim) * 0.25f);
-					//was 0.5f
-					angs[YAW] += Q_flrand(-1.0f, 1.0f) * (BLASTER_NPC_SPREAD + (1 - ent->NPC->currentAim) * 0.25f);
-					//was 0.5
+					if (PM_RunningAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_FULL)
+					{ // running or very fatigued
+						angs[PITCH] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
+						angs[YAW] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
+					}
+					else if (PM_WalkingAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_HALF)
+					{//walking or fatigued a bit
+						angs[PITCH] += Q_flrand(-1.1f, 1.1f) * WALKING_SPREAD;
+						angs[YAW] += Q_flrand(-1.1f, 1.1f) * WALKING_SPREAD;
+					}
+					else
+					{// just standing
+						angs[PITCH] += Q_flrand(-1.0f, 1.0f) * BLASTER_MAIN_SPREAD;
+						angs[YAW] += Q_flrand(-1.0f, 1.0f) * BLASTER_MAIN_SPREAD;
+					}
 				}
 			}
-			else if (!WalkCheck(ent) && (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent)))
-			//if running aim is shit
-			{
-				angs[PITCH] += Q_flrand(-1.0f, 1.0f) * CLONERIFLE_MAIN_SPREAD;
-				angs[YAW] += Q_flrand(-1.0f, 1.0f) * CLONERIFLE_MAIN_SPREAD;
-			}
-			else if (ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_FULL)
-			{
-				// add some slop to the fire direction
-				angs[PITCH] += Q_flrand(-3.0f, 3.0f) * BLASTER_MAIN_SPREAD;
-				angs[YAW] += Q_flrand(-3.0f, 3.0f) * BLASTER_MAIN_SPREAD;
-			}
-			else if (ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_HEAVY)
-			{
-				// add some slop to the fire direction
-				angs[PITCH] += Q_flrand(-2.0f, 2.0f) * BLASTER_MAIN_SPREAD;
-				angs[YAW] += Q_flrand(-2.0f, 2.0f) * BLASTER_MAIN_SPREAD;
-			}
-			else if (PM_CrouchAnim(ent->client->ps.legsAnim))
-			{
-				//
-			}
 			else
-			{
-				//
+			{// add some slop to the fire direction for NPC,s
+				angs[PITCH] += Q_flrand(-1.0f, 1.0f) * BLASTER_MAIN_SPREAD;
+				angs[YAW] += Q_flrand(-1.0f, 1.0f) * BLASTER_MAIN_SPREAD;
 			}
 		}
 
@@ -891,90 +833,78 @@ void WP_FireClonePistolDuals(gentity_t* ent, const qboolean altFire, const qbool
 	{
 		//no inherent aim screw up
 	}
-	else if (ent->client && !(ent->client->ps.forcePowersActive & 1 << FP_SEE) || ent->client->ps.forcePowerLevel[
-		FP_SEE] < FORCE_LEVEL_2)
-	{
-		//force sight 2+ gives perfect aim
+	else if (!(ent->client->ps.forcePowersActive & 1 << FP_SEE) || ent->client->ps.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2)
+	{//force sight 2+ gives perfect aim
 		vec3_t angs;
 
 		vectoangles(forwardVec, angs);
 
 		if (altFire)
 		{
-			// add some slop to the alt-fire direction
-			if (!WalkCheck(ent) && (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent))) //if running aim is shit
+			if (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent))
 			{
-				angs[PITCH] += Q_flrand(-1.0f, 1.0f) * CLONERIFLE_ALT_SPREAD;
-				angs[YAW] += Q_flrand(-1.0f, 1.0f) * CLONERIFLE_ALT_SPREAD;
-			}
-			else if (ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_FULL)
-			{
-				// add some slop to the fire direction
-				angs[PITCH] += Q_flrand(-3.0f, 3.0f) * BLASTER_ALT_SPREAD;
-				angs[YAW] += Q_flrand(-3.0f, 3.0f) * BLASTER_ALT_SPREAD;
-			}
-			else if (ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_HEAVY)
-			{
-				// add some slop to the fire direction
-				angs[PITCH] += Q_flrand(-2.0f, 2.0f) * BLASTER_ALT_SPREAD;
-				angs[YAW] += Q_flrand(-2.0f, 2.0f) * BLASTER_ALT_SPREAD;
-			}
-			else if (PM_CrouchAnim(ent->client->ps.legsAnim))
-			{
-				//
+				if (PM_CrouchAnim(ent->client->ps.legsAnim))
+				{// firing position
+					angs[PITCH] += Q_flrand(-0.0f, 0.0f);
+					angs[YAW] += Q_flrand(-0.0f, 0.0f);
+				}
+				else
+				{
+					if (PM_RunningAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_FULL)
+					{ // running or very fatigued
+						angs[PITCH] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
+						angs[YAW] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
+					}
+					else if (PM_WalkingAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_HEAVY)
+					{//walking or fatigued a bit
+						angs[PITCH] += Q_flrand(-1.5f, 1.5f) * WALKING_SPREAD;
+						angs[YAW] += Q_flrand(-1.5f, 1.5f) * WALKING_SPREAD;
+					}
+					else
+					{// just standing
+						angs[PITCH] += Q_flrand(-1.0f, 1.0f) * BLASTER_ALT_SPREAD;
+						angs[YAW] += Q_flrand(-1.0f, 1.0f) * BLASTER_ALT_SPREAD;
+					}
+				}
 			}
 			else
-			{
-				//
+			{// add some slop to the alt-fire direction for NPC,s
+				angs[PITCH] += Q_flrand(-1.0f, 1.0f) * BLASTER_ALT_SPREAD;
+				angs[YAW] += Q_flrand(-1.0f, 1.0f) * BLASTER_ALT_SPREAD;
 			}
 		}
 		else
 		{
-			if (ent->NPC && ent->NPC->currentAim < 5)
+			if (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent))
 			{
-				if (ent->client && ent->NPC &&
-					(ent->client->NPC_class == CLASS_STORMTROOPER ||
-						ent->client->NPC_class == CLASS_CLONETROOPER ||
-						ent->client->NPC_class == CLASS_STORMCOMMANDO ||
-						ent->client->NPC_class == CLASS_SWAMPTROOPER ||
-						ent->client->NPC_class == CLASS_DROIDEKA ||
-						ent->client->NPC_class == CLASS_SBD ||
-						ent->client->NPC_class == CLASS_IMPWORKER ||
-						ent->client->NPC_class == CLASS_REBEL ||
-						ent->client->NPC_class == CLASS_WOOKIE ||
-						ent->client->NPC_class == CLASS_BATTLEDROID))
+				if (PM_CrouchAnim(ent->client->ps.legsAnim))
+				{// firing position
+					angs[PITCH] += Q_flrand(-0.0f, 0.0f);
+					angs[YAW] += Q_flrand(-0.0f, 0.0f);
+				}
+				else
 				{
-					angs[PITCH] += Q_flrand(-1.0f, 1.0f) * (BLASTER_NPC_SPREAD + (1 - ent->NPC->currentAim) * 0.25f);
-					//was 0.5f
-					angs[YAW] += Q_flrand(-1.0f, 1.0f) * (BLASTER_NPC_SPREAD + (1 - ent->NPC->currentAim) * 0.25f);
-					//was 0.5
+					if (PM_RunningAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_FULL)
+					{ // running or very fatigued
+						angs[PITCH] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
+						angs[YAW] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
+					}
+					else if (PM_WalkingAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_HALF)
+					{//walking or fatigued a bit
+						angs[PITCH] += Q_flrand(-1.1f, 1.1f) * WALKING_SPREAD;
+						angs[YAW] += Q_flrand(-1.1f, 1.1f) * WALKING_SPREAD;
+					}
+					else
+					{// just standing
+						angs[PITCH] += Q_flrand(-1.0f, 1.0f) * BLASTER_MAIN_SPREAD;
+						angs[YAW] += Q_flrand(-1.0f, 1.0f) * BLASTER_MAIN_SPREAD;
+					}
 				}
 			}
-			else if (!WalkCheck(ent) && (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent)))
-			//if running aim is shit
-			{
-				angs[PITCH] += Q_flrand(-1.0f, 1.0f) * CLONERIFLE_MAIN_SPREAD;
-				angs[YAW] += Q_flrand(-1.0f, 1.0f) * CLONERIFLE_MAIN_SPREAD;
-			}
-			else if (ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_FULL)
-			{
-				// add some slop to the fire direction
-				angs[PITCH] += Q_flrand(-3.0f, 3.0f) * BLASTER_MAIN_SPREAD;
-				angs[YAW] += Q_flrand(-3.0f, 3.0f) * BLASTER_MAIN_SPREAD;
-			}
-			else if (ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_HEAVY)
-			{
-				// add some slop to the fire direction
-				angs[PITCH] += Q_flrand(-2.0f, 2.0f) * BLASTER_MAIN_SPREAD;
-				angs[YAW] += Q_flrand(-2.0f, 2.0f) * BLASTER_MAIN_SPREAD;
-			}
-			else if (PM_CrouchAnim(ent->client->ps.legsAnim))
-			{
-				//
-			}
 			else
-			{
-				//
+			{// add some slop to the fire direction for NPC,s
+				angs[PITCH] += Q_flrand(-1.0f, 1.0f) * BLASTER_MAIN_SPREAD;
+				angs[YAW] += Q_flrand(-1.0f, 1.0f) * BLASTER_MAIN_SPREAD;
 			}
 		}
 
@@ -1053,90 +983,78 @@ void WP_FireSBDPistol(gentity_t* ent, const qboolean altFire)
 	{
 		//no inherent aim screw up
 	}
-	else if (ent->client && !(ent->client->ps.forcePowersActive & 1 << FP_SEE) || ent->client->ps.forcePowerLevel[
-		FP_SEE] < FORCE_LEVEL_2)
-	{
-		//force sight 2+ gives perfect aim
+	else if (!(ent->client->ps.forcePowersActive & 1 << FP_SEE) || ent->client->ps.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2)
+	{//force sight 2+ gives perfect aim
 		vec3_t angs;
 
 		vectoangles(forwardVec, angs);
 
 		if (altFire)
 		{
-			// add some slop to the alt-fire direction
-			if (!WalkCheck(ent) && (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent))) //if running aim is shit
+			if (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent))
 			{
-				angs[PITCH] += Q_flrand(-1.0f, 1.0f) * CLONERIFLE_ALT_SPREAD;
-				angs[YAW] += Q_flrand(-1.0f, 1.0f) * CLONERIFLE_ALT_SPREAD;
-			}
-			else if (ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_FULL)
-			{
-				// add some slop to the fire direction
-				angs[PITCH] += Q_flrand(-3.0f, 3.0f) * BLASTER_ALT_SPREAD;
-				angs[YAW] += Q_flrand(-3.0f, 3.0f) * BLASTER_ALT_SPREAD;
-			}
-			else if (ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_HEAVY)
-			{
-				// add some slop to the fire direction
-				angs[PITCH] += Q_flrand(-2.0f, 2.0f) * BLASTER_ALT_SPREAD;
-				angs[YAW] += Q_flrand(-2.0f, 2.0f) * BLASTER_ALT_SPREAD;
-			}
-			else if (PM_CrouchAnim(ent->client->ps.legsAnim))
-			{
-				//
+				if (PM_CrouchAnim(ent->client->ps.legsAnim))
+				{// firing position
+					angs[PITCH] += Q_flrand(-0.0f, 0.0f);
+					angs[YAW] += Q_flrand(-0.0f, 0.0f);
+				}
+				else
+				{
+					if (PM_RunningAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_FULL)
+					{ // running or very fatigued
+						angs[PITCH] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
+						angs[YAW] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
+					}
+					else if (PM_WalkingAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_HEAVY)
+					{//walking or fatigued a bit
+						angs[PITCH] += Q_flrand(-1.5f, 1.5f) * WALKING_SPREAD;
+						angs[YAW] += Q_flrand(-1.5f, 1.5f) * WALKING_SPREAD;
+					}
+					else
+					{// just standing
+						angs[PITCH] += Q_flrand(-1.0f, 1.0f) * BLASTER_ALT_SPREAD;
+						angs[YAW] += Q_flrand(-1.0f, 1.0f) * BLASTER_ALT_SPREAD;
+					}
+				}
 			}
 			else
-			{
-				//
+			{// add some slop to the alt-fire direction for NPC,s
+				angs[PITCH] += Q_flrand(-1.0f, 1.0f) * BLASTER_ALT_SPREAD;
+				angs[YAW] += Q_flrand(-1.0f, 1.0f) * BLASTER_ALT_SPREAD;
 			}
 		}
 		else
 		{
-			if (ent->NPC && ent->NPC->currentAim < 5)
+			if (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent))
 			{
-				if (ent->client && ent->NPC &&
-					(ent->client->NPC_class == CLASS_STORMTROOPER ||
-						ent->client->NPC_class == CLASS_CLONETROOPER ||
-						ent->client->NPC_class == CLASS_STORMCOMMANDO ||
-						ent->client->NPC_class == CLASS_SWAMPTROOPER ||
-						ent->client->NPC_class == CLASS_DROIDEKA ||
-						ent->client->NPC_class == CLASS_SBD ||
-						ent->client->NPC_class == CLASS_IMPWORKER ||
-						ent->client->NPC_class == CLASS_REBEL ||
-						ent->client->NPC_class == CLASS_WOOKIE ||
-						ent->client->NPC_class == CLASS_BATTLEDROID))
+				if (PM_CrouchAnim(ent->client->ps.legsAnim))
+				{// firing position
+					angs[PITCH] += Q_flrand(-0.0f, 0.0f);
+					angs[YAW] += Q_flrand(-0.0f, 0.0f);
+				}
+				else
 				{
-					angs[PITCH] += Q_flrand(-1.0f, 1.0f) * (BLASTER_NPC_SPREAD + (1 - ent->NPC->currentAim) * 0.25f);
-					//was 0.5f
-					angs[YAW] += Q_flrand(-1.0f, 1.0f) * (BLASTER_NPC_SPREAD + (1 - ent->NPC->currentAim) * 0.25f);
-					//was 0.5
+					if (PM_RunningAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_FULL)
+					{ // running or very fatigued
+						angs[PITCH] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
+						angs[YAW] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
+					}
+					else if (PM_WalkingAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_HALF)
+					{//walking or fatigued a bit
+						angs[PITCH] += Q_flrand(-1.1f, 1.1f) * WALKING_SPREAD;
+						angs[YAW] += Q_flrand(-1.1f, 1.1f) * WALKING_SPREAD;
+					}
+					else
+					{// just standing
+						angs[PITCH] += Q_flrand(-1.0f, 1.0f) * BLASTER_MAIN_SPREAD;
+						angs[YAW] += Q_flrand(-1.0f, 1.0f) * BLASTER_MAIN_SPREAD;
+					}
 				}
 			}
-			else if (!WalkCheck(ent) && (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent)))
-			//if running aim is shit
-			{
-				angs[PITCH] += Q_flrand(-1.0f, 1.0f) * CLONERIFLE_MAIN_SPREAD;
-				angs[YAW] += Q_flrand(-1.0f, 1.0f) * CLONERIFLE_MAIN_SPREAD;
-			}
-			else if (ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_FULL)
-			{
-				// add some slop to the fire direction
-				angs[PITCH] += Q_flrand(-3.0f, 3.0f) * BLASTER_MAIN_SPREAD;
-				angs[YAW] += Q_flrand(-3.0f, 3.0f) * BLASTER_MAIN_SPREAD;
-			}
-			else if (ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_HEAVY)
-			{
-				// add some slop to the fire direction
-				angs[PITCH] += Q_flrand(-2.0f, 2.0f) * BLASTER_MAIN_SPREAD;
-				angs[YAW] += Q_flrand(-2.0f, 2.0f) * BLASTER_MAIN_SPREAD;
-			}
-			else if (PM_CrouchAnim(ent->client->ps.legsAnim))
-			{
-				//
-			}
 			else
-			{
-				//
+			{// add some slop to the fire direction for NPC,s
+				angs[PITCH] += Q_flrand(-1.0f, 1.0f) * BLASTER_MAIN_SPREAD;
+				angs[YAW] += Q_flrand(-1.0f, 1.0f) * BLASTER_MAIN_SPREAD;
 			}
 		}
 
@@ -1261,7 +1179,7 @@ void WP_FireJawaPistol(gentity_t* ent, const qboolean altFire)
 				}
 			}
 			else if (!WalkCheck(ent) && (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent)))
-			//if running aim is shit
+				//if running aim is shit
 			{
 				angs[PITCH] += Q_flrand(-1.0f, 1.0f) * CLONERIFLE_MAIN_SPREAD;
 				angs[YAW] += Q_flrand(-1.0f, 1.0f) * CLONERIFLE_MAIN_SPREAD;
@@ -1291,58 +1209,58 @@ void WP_FireJawaPistol(gentity_t* ent, const qboolean altFire)
 		AngleVectors(angs, forwardVec, nullptr, nullptr);
 	}
 
-	WP_MissileTargetHint(ent, start, forwardVec);
+		WP_MissileTargetHint(ent, start, forwardVec);
 
-	gentity_t* missile = create_missile(start, forwardVec, BRYAR_PISTOL_VEL, 10000, ent, altFire);
+		gentity_t* missile = create_missile(start, forwardVec, BRYAR_PISTOL_VEL, 10000, ent, altFire);
 
-	missile->classname = "bryar_proj";
-	if (ent->s.weapon == WP_BLASTER_PISTOL)
-	{
-		//*SIGH*... I hate our weapon system...
-		missile->s.weapon = ent->s.weapon;
-	}
-	else
-	{
-		missile->s.weapon = WP_JAWA;
-	}
-
-	if (altFire)
-	{
-		int count = (level.time - ent->client->ps.weaponChargeTime) / BRYAR_CHARGE_UNIT;
-
-		if (count < 1)
+		missile->classname = "bryar_proj";
+		if (ent->s.weapon == WP_BLASTER_PISTOL)
 		{
-			count = 1;
+			//*SIGH*... I hate our weapon system...
+			missile->s.weapon = ent->s.weapon;
 		}
-		else if (count > 5)
+		else
 		{
-			count = 5;
+			missile->s.weapon = WP_JAWA;
 		}
 
-		damage *= count;
-		missile->count = count; // this will get used in the projectile rendering code to make a beefier effect
-	}
+		if (altFire)
+		{
+			int count = (level.time - ent->client->ps.weaponChargeTime) / BRYAR_CHARGE_UNIT;
 
-	missile->damage = damage;
-	missile->dflags = DAMAGE_DEATH_KNOCKBACK;
+			if (count < 1)
+			{
+				count = 1;
+			}
+			else if (count > 5)
+			{
+				count = 5;
+			}
 
-	if (altFire)
-	{
-		missile->methodOfDeath = MOD_BRYAR_ALT;
-	}
-	else
-	{
-		missile->methodOfDeath = MOD_BRYAR;
-	}
+			damage *= count;
+			missile->count = count; // this will get used in the projectile rendering code to make a beefier effect
+		}
 
-	missile->clipmask = MASK_SHOT | CONTENTS_LIGHTSABER;
+		missile->damage = damage;
+		missile->dflags = DAMAGE_DEATH_KNOCKBACK;
 
-	// we don't want it to bounce forever
-	missile->bounceCount = 8;
+		if (altFire)
+		{
+			missile->methodOfDeath = MOD_BRYAR_ALT;
+		}
+		else
+		{
+			missile->methodOfDeath = MOD_BRYAR;
+		}
 
-	if (ent->weaponModel[1] > 0)
-	{
-		//dual pistols, toggle the muzzle point back and forth between the two pistols each time he fires
-		ent->count = ent->count ? 0 : 1;
-	}
+		missile->clipmask = MASK_SHOT | CONTENTS_LIGHTSABER;
+
+		// we don't want it to bounce forever
+		missile->bounceCount = 8;
+
+		if (ent->weaponModel[1] > 0)
+		{
+			//dual pistols, toggle the muzzle point back and forth between the two pistols each time he fires
+			ent->count = ent->count ? 0 : 1;
+		}
 }

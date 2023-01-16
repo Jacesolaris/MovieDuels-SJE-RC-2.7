@@ -183,11 +183,11 @@ void Netchan_Transmit(netchan_t* chan, const int length, const byte* data)
 			if (showpackets->integer)
 			{
 				Com_Printf("%s send %4i : s=%i ack=%i fragment=%i,%i\n"
-				           , netsrcString[chan->sock]
-				           , send.cursize
-				           , chan->outgoingSequence - 1
-				           , chan->incomingSequence
-				           , fragmentStart, fragment_length);
+					, netsrcString[chan->sock]
+					, send.cursize
+					, chan->outgoingSequence - 1
+					, chan->incomingSequence
+					, fragmentStart, fragment_length);
 			}
 
 			fragmentStart += fragment_length;
@@ -195,8 +195,7 @@ void Netchan_Transmit(netchan_t* chan, const int length, const byte* data)
 			// that is exactly the fragment length still needs to send
 			// a second packet of zero length so that the other side
 			// can tell there aren't more to follow
-		}
-		while (fragmentStart != length || fragment_length == FRAGMENT_SIZE);
+		} while (fragmentStart != length || fragment_length == FRAGMENT_SIZE);
 
 		chan->outgoingSequence++;
 		return;
@@ -223,10 +222,10 @@ void Netchan_Transmit(netchan_t* chan, const int length, const byte* data)
 	if (showpackets->integer)
 	{
 		Com_Printf("%s send %4i : s=%i ack=%i\n"
-		           , netsrcString[chan->sock]
-		           , send.cursize
-		           , chan->outgoingSequence - 1
-		           , chan->incomingSequence);
+			, netsrcString[chan->sock]
+			, send.cursize
+			, chan->outgoingSequence - 1
+			, chan->incomingSequence);
 	}
 }
 
@@ -288,19 +287,19 @@ qboolean Netchan_Process(netchan_t* chan, msg_t* msg)
 		if (fragmented)
 		{
 			Com_Printf("%s recv %4i : s=%i ack=%i fragment=%i,%i\n"
-			           , netsrcString[chan->sock]
-			           , msg->cursize
-			           , sequence
-			           , sequence_ack
-			           , fragmentStart, fragmentLength);
+				, netsrcString[chan->sock]
+				, msg->cursize
+				, sequence
+				, sequence_ack
+				, fragmentStart, fragmentLength);
 		}
 		else
 		{
 			Com_Printf("%s recv %4i : s=%i ack=%i\n"
-			           , netsrcString[chan->sock]
-			           , msg->cursize
-			           , sequence
-			           , sequence_ack);
+				, netsrcString[chan->sock]
+				, msg->cursize
+				, sequence
+				, sequence_ack);
 		}
 	}
 
@@ -312,9 +311,9 @@ qboolean Netchan_Process(netchan_t* chan, msg_t* msg)
 		if (showdrop->integer || showpackets->integer)
 		{
 			Com_Printf("%s:Out of order packet %i at %i\n"
-			           , NET_AdrToString(chan->remoteAddress)
-			           , sequence
-			           , chan->incomingSequence);
+				, NET_AdrToString(chan->remoteAddress)
+				, sequence
+				, chan->incomingSequence);
 		}
 		return qfalse;
 	}
@@ -328,9 +327,9 @@ qboolean Netchan_Process(netchan_t* chan, msg_t* msg)
 		if (showdrop->integer || showpackets->integer)
 		{
 			Com_Printf("%s:Dropped %i packets at %i\n"
-			           , NET_AdrToString(chan->remoteAddress)
-			           , chan->dropped
-			           , sequence);
+				, NET_AdrToString(chan->remoteAddress)
+				, chan->dropped
+				, sequence);
 		}
 	}
 
@@ -353,8 +352,8 @@ qboolean Netchan_Process(netchan_t* chan, msg_t* msg)
 			if (showdrop->integer || showpackets->integer)
 			{
 				Com_Printf("%s:Dropped a message fragment\n"
-				           , NET_AdrToString(chan->remoteAddress)
-				           , sequence);
+					, NET_AdrToString(chan->remoteAddress)
+					, sequence);
 			}
 			// we can still keep the part that we have so far,
 			// so we don't need to clear chan->fragmentLength
@@ -368,13 +367,13 @@ qboolean Netchan_Process(netchan_t* chan, msg_t* msg)
 			if (showdrop->integer || showpackets->integer)
 			{
 				Com_Printf("%s:illegal fragment length\n"
-				           , NET_AdrToString(chan->remoteAddress));
+					, NET_AdrToString(chan->remoteAddress));
 			}
 			return qfalse;
 		}
 
 		memcpy(chan->fragmentBuffer + chan->fragmentLength,
-		       msg->data + msg->readcount, fragmentLength);
+			msg->data + msg->readcount, fragmentLength);
 
 		chan->fragmentLength += fragmentLength;
 
@@ -387,8 +386,8 @@ qboolean Netchan_Process(netchan_t* chan, msg_t* msg)
 		if (chan->fragmentLength > msg->maxsize)
 		{
 			Com_Printf("%s:fragmentLength %i > msg->maxsize\n"
-			           , NET_AdrToString(chan->remoteAddress),
-			           chan->fragmentLength);
+				, NET_AdrToString(chan->remoteAddress),
+				chan->fragmentLength);
 			return qfalse;
 		}
 

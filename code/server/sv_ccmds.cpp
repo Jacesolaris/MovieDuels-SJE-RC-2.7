@@ -47,7 +47,7 @@ extern vmCvar_t r_ratiofix;
 //
 static bool SV_Map_(const ForceReload_e e_force_reload)
 {
-	char expanded[MAX_QPATH] = {0};
+	char expanded[MAX_QPATH] = { 0 };
 
 	char* jko_maps[] =
 	{
@@ -223,7 +223,7 @@ void SV_Player_EndOfLevelSave()
 		&&
 		cl->gentity && cl->gentity->client // crash fix for voy4->brig transition when you kill Foster.
 		//	Shouldn't happen, but does sometimes...
-	)
+		)
 	{
 		int i;
 		Cvar_Set(sCVARNAME_PLAYERSAVE, ""); // default to blank

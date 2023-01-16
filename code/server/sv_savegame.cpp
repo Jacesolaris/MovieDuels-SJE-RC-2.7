@@ -49,7 +49,7 @@ int giSaveGameVersion; // filled in when a savegame file is opened
 
 SavedGameJustLoaded_e e_saved_game_just_loaded = eNO;
 
-char sLastSaveFileLoaded[MAX_QPATH] = {0};
+char sLastSaveFileLoaded[MAX_QPATH] = { 0 };
 
 #ifdef JK2_MODE
 #define iSG_MAPCMD_SIZE (MAX_TOKEN_CHARS)
@@ -254,12 +254,12 @@ void SV_LoadGame_f()
 				}
 				else
 #endif
-				if (!(psMapName && psMapNameOfAutoSave && !Q_stricmp(psMapName, psMapNameOfAutoSave)))
-				{
-					// either there's no auto file, or it's from a different map to the one we've just died on...
-					//
-					ps_filename = sLastSaveFileLoaded;
-				}
+					if (!(psMapName && psMapNameOfAutoSave && !Q_stricmp(psMapName, psMapNameOfAutoSave)))
+					{
+						// either there's no auto file, or it's from a different map to the one we've just died on...
+						//
+						ps_filename = sLastSaveFileLoaded;
+					}
 			}
 		}
 		//default will continue to load auto
@@ -336,7 +336,7 @@ void SV_SaveGame_f()
 	}
 
 	const char* ps_filename = Cmd_Argv(1);
-	char filename[MAX_QPATH] = {0};
+	char filename[MAX_QPATH] = { 0 };
 
 	Q_strncpyz(filename, ps_filename, sizeof filename);
 
@@ -460,7 +460,7 @@ static qboolean ReadGame()
 
 	if (qbAutoSave)
 	{
-		char s[MAX_STRING_CHARS] = {0};
+		char s[MAX_STRING_CHARS] = { 0 };
 
 		// read health/armour etc...
 		//
@@ -857,7 +857,7 @@ int SG_GetSaveGameComment(
 //
 static char* SG_GetSaveGameMapName(const char* psPathlessBaseName)
 {
-	static char sMapName[iSG_MAPCMD_SIZE] = {0};
+	static char sMapName[iSG_MAPCMD_SIZE] = { 0 };
 	char* psReturn = nullptr;
 	if (SG_GetSaveGameComment(psPathlessBaseName, nullptr, sMapName))
 	{
@@ -1151,7 +1151,7 @@ qboolean SG_WriteSavegame(const char* psPathlessBaseName, qboolean qbAutosave)
 	ojk::SavedGameHelper sgh(
 		&saved_game);
 
-	char sMapCmd[iSG_MAPCMD_SIZE] = {0};
+	char sMapCmd[iSG_MAPCMD_SIZE] = { 0 };
 	Q_strncpyz(sMapCmd, psMapName, sizeof sMapCmd);
 	// need as array rather than ptr because const strlen needed for MPCM chunk
 
@@ -1230,13 +1230,13 @@ qboolean SG_ReadSavegame(
 			sv_testsave->integer = 0;
 		},
 
-		[&]
+			[&]
 		{
 			saved_game.close();
 
-			sv_testsave->integer = iPrevTestSave;
+		sv_testsave->integer = iPrevTestSave;
 		}
-	);
+		);
 
 	if (!saved_game.open(psPathlessBaseName))
 	{

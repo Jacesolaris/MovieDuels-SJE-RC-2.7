@@ -63,9 +63,9 @@ Debugging command to print the current position
 static void CG_Viewpos_f()
 {
 	CG_Printf("%s (%i %i %i) : %i %i %i\n", cgs.mapname, static_cast<int>(cg.refdef.vieworg[0]),
-	          static_cast<int>(cg.refdef.vieworg[1]), static_cast<int>(cg.refdef.vieworg[2]),
-	          static_cast<int>(cg.refdefViewAngles[PITCH]),
-	          static_cast<int>(cg.refdefViewAngles[YAW]), static_cast<int>(cg.refdefViewAngles[ROLL]));
+		static_cast<int>(cg.refdef.vieworg[1]), static_cast<int>(cg.refdef.vieworg[2]),
+		static_cast<int>(cg.refdefViewAngles[PITCH]),
+		static_cast<int>(cg.refdefViewAngles[YAW]), static_cast<int>(cg.refdefViewAngles[ROLL]));
 }
 
 void CG_WriteCam_f()
@@ -84,10 +84,10 @@ void CG_WriteCam_f()
 
 	CG_Printf("Camera #%d ('%s') written to: ", num_cams, targetname);
 	Com_sprintf(text, sizeof text,
-	            "//entity %d\n{\n\"classname\"	\"ref_tag\"\n\"targetname\"	\"%s\"\n\"origin\" \"%i %i %i\"\n\"angles\" \"%i %i %i\"\n\"fov\" \"%i\"\n}\n",
-	            num_cams, targetname, static_cast<int>(cg.refdef.vieworg[0]), static_cast<int>(cg.refdef.vieworg[1]),
-	            static_cast<int>(cg.refdef.vieworg[2]), static_cast<int>(cg.refdefViewAngles[0]),
-	            static_cast<int>(cg.refdefViewAngles[1]), static_cast<int>(cg.refdefViewAngles[2]), cg_fov.integer);
+		"//entity %d\n{\n\"classname\"	\"ref_tag\"\n\"targetname\"	\"%s\"\n\"origin\" \"%i %i %i\"\n\"angles\" \"%i %i %i\"\n\"fov\" \"%i\"\n}\n",
+		num_cams, targetname, static_cast<int>(cg.refdef.vieworg[0]), static_cast<int>(cg.refdef.vieworg[1]),
+		static_cast<int>(cg.refdef.vieworg[2]), static_cast<int>(cg.refdefViewAngles[0]),
+		static_cast<int>(cg.refdefViewAngles[1]), static_cast<int>(cg.refdefViewAngles[2]), cg_fov.integer);
 	gi.WriteCam(text);
 }
 

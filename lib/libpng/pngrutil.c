@@ -430,10 +430,10 @@ png_inflate_claim(png_structrp png_ptr, const png_uint_32 owner)
  */
 static int
 png_inflate(const png_structrp png_ptr, const png_uint_32 owner, const int finish,
-            /* INPUT: */
-            const png_const_bytep input, const png_uint_32p input_size_ptr,
-            /* OUTPUT: */
-            const png_bytep output, png_alloc_size_t* output_size_ptr)
+	/* INPUT: */
+	const png_const_bytep input, const png_uint_32p input_size_ptr,
+	/* OUTPUT: */
+	const png_bytep output, png_alloc_size_t* output_size_ptr)
 {
 	if (png_ptr->zowner == owner) /* Else not claimed */
 	{
@@ -552,9 +552,9 @@ png_inflate(const png_structrp png_ptr, const png_uint_32 owner, const int finis
  */
 static int
 png_decompress_chunk(const png_structrp png_ptr,
-                     const png_uint_32 chunklength, const png_uint_32 prefix_size,
-                     png_alloc_size_t* newlength /* must be initialized to the maximum! */,
-                     const int terminate /*add a '\0' to the end of the uncompressed data*/)
+	const png_uint_32 chunklength, const png_uint_32 prefix_size,
+	png_alloc_size_t* newlength /* must be initialized to the maximum! */,
+	const int terminate /*add a '\0' to the end of the uncompressed data*/)
 {
 	/* TODO: implement different limits for different types of chunk.
 	 *
@@ -710,8 +710,8 @@ png_decompress_chunk(const png_structrp png_ptr,
  */
 static int
 png_inflate_read(const png_structrp png_ptr, const png_bytep read_buffer, uInt read_size,
-                 const png_uint_32p chunk_bytes, const png_bytep next_out, png_alloc_size_t* out_size,
-                 const int finish)
+	const png_uint_32p chunk_bytes, const png_bytep next_out, png_alloc_size_t* out_size,
+	const int finish)
 {
 	if (png_ptr->zowner == png_ptr->chunk_name)
 	{
@@ -3648,7 +3648,7 @@ png_do_read_interlace(png_row_infop row_info, png_bytep row, int pass,
 
 static void
 png_read_filter_row_sub(const png_row_infop row_info, const png_bytep row,
-                        const png_const_bytep prev_row)
+	const png_const_bytep prev_row)
 {
 	const png_size_t istop = row_info->rowbytes;
 	const unsigned int bpp = (row_info->pixel_depth + 7) >> 3;
@@ -3665,7 +3665,7 @@ png_read_filter_row_sub(const png_row_infop row_info, const png_bytep row,
 
 static void
 png_read_filter_row_up(const png_row_infop row_info, const png_bytep row,
-                       const png_const_bytep prev_row)
+	const png_const_bytep prev_row)
 {
 	const png_size_t istop = row_info->rowbytes;
 	png_bytep rp = row;
@@ -3680,7 +3680,7 @@ png_read_filter_row_up(const png_row_infop row_info, const png_bytep row,
 
 static void
 png_read_filter_row_avg(const png_row_infop row_info, const png_bytep row,
-                        const png_const_bytep prev_row)
+	const png_const_bytep prev_row)
 {
 	png_size_t i;
 	png_bytep rp = row;
@@ -3707,7 +3707,7 @@ png_read_filter_row_avg(const png_row_infop row_info, const png_bytep row,
 
 static void
 png_read_filter_row_paeth_1byte_pixel(const png_row_infop row_info, png_bytep row,
-                                      png_const_bytep prev_row)
+	png_const_bytep prev_row)
 {
 	const png_bytep rp_end = row + row_info->rowbytes;
 
@@ -3754,7 +3754,7 @@ png_read_filter_row_paeth_1byte_pixel(const png_row_infop row_info, png_bytep ro
 
 static void
 png_read_filter_row_paeth_multibyte_pixel(const png_row_infop row_info, png_bytep row,
-                                          png_const_bytep prev_row)
+	png_const_bytep prev_row)
 {
 	const int bpp = (row_info->pixel_depth + 7) >> 3;
 	png_bytep rp_end = row + bpp;
@@ -3839,7 +3839,7 @@ png_init_filter_functions(png_structrp pp)
 
 void /* PRIVATE */
 png_read_filter_row(const png_structrp pp, const png_row_infop row_info, const png_bytep row,
-                    const png_const_bytep prev_row, const int filter)
+	const png_const_bytep prev_row, const int filter)
 {
 	/* OPTIMIZATION: DO NOT MODIFY THIS FUNCTION, instead #define
 	 * PNG_FILTER_OPTIMIZATIONS to a function that overrides the generic
@@ -3857,7 +3857,7 @@ png_read_filter_row(const png_structrp pp, const png_row_infop row_info, const p
 #ifdef PNG_SEQUENTIAL_READ_SUPPORTED
 void /* PRIVATE */
 png_read_IDAT_data(const png_structrp png_ptr, const png_bytep output,
-                   png_alloc_size_t avail_out)
+	png_alloc_size_t avail_out)
 {
 	/* Loop reading IDATs and decompressing the result into output[avail_out] */
 	png_ptr->zstream.next_out = output;

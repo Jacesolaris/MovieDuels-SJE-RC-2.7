@@ -73,7 +73,7 @@ GetClipboardData
 */
 static void GetClipboardData(char* buf, const int buflen)
 {
-	char *cbd, *c;
+	char* cbd, * c;
 
 	c = cbd = Sys_GetClipboardData();
 	if (!cbd)
@@ -378,7 +378,7 @@ intptr_t CL_UISystemCalls(const intptr_t* args)
 
 	case UI_CVAR_REGISTER:
 		Cvar_Register(static_cast<vmCvar_t*>(VMA(1)), static_cast<const char*>(VMA(2)),
-		              static_cast<const char*>(VMA(3)), args[4]);
+			static_cast<const char*>(VMA(3)), args[4]);
 		return 0;
 
 	case UI_CVAR_SET:
@@ -412,7 +412,7 @@ intptr_t CL_UISystemCalls(const intptr_t* args)
 
 	case UI_FS_GETFILELIST:
 		return FS_GetFileList(static_cast<const char*>(VMA(1)), static_cast<const char*>(VMA(2)),
-		                      static_cast<char*>(VMA(3)), args[4]);
+			static_cast<char*>(VMA(3)), args[4]);
 
 	case UI_KEY_SETCATCHER:
 		Key_SetCatcher(args[1]);
@@ -442,15 +442,15 @@ intptr_t CL_UISystemCalls(const intptr_t* args)
 		re.ClearScene();
 		return 0;
 
-	//	case UI_KEY_GETOVERSTRIKEMODE:
-	//		return Key_GetOverstrikeMode();
-	//		return 0;
+		//	case UI_KEY_GETOVERSTRIKEMODE:
+		//		return Key_GetOverstrikeMode();
+		//		return 0;
 
-	//	case UI_PC_READ_TOKEN:
-	//		return PC_ReadTokenHandle( args[1], VMA(2) );
+		//	case UI_PC_READ_TOKEN:
+		//		return PC_ReadTokenHandle( args[1], VMA(2) );
 
-	//	case UI_PC_SOURCE_FILE_AND_LINE:
-	//		return PC_SourceFileAndLine( args[1], VMA(2), VMA(3) );
+		//	case UI_PC_SOURCE_FILE_AND_LINE:
+		//		return PC_SourceFileAndLine( args[1], VMA(2), VMA(3) );
 
 	case UI_KEY_GETCATCHER:
 		return Key_GetCatcher();
@@ -465,14 +465,14 @@ intptr_t CL_UISystemCalls(const intptr_t* args)
 		S_StartLocalSound(args[1], args[2]);
 		return 0;
 
-	//	case UI_R_REGISTERFONT:
-	//		re.RegisterFont( VMA(1), args[2], VMA(3));
-	//		return 0;
+		//	case UI_R_REGISTERFONT:
+		//		re.RegisterFont( VMA(1), args[2], VMA(3));
+		//		return 0;
 
 	case UI_CIN_PLAYCINEMATIC:
 		Com_DPrintf("UI_CIN_PlayCinematic\n");
 		return CIN_PlayCinematic(static_cast<const char*>(VMA(1)), args[2], args[3], args[4], args[5], args[6],
-		                         static_cast<const char*>(VMA(7)));
+			static_cast<const char*>(VMA(7)));
 
 	case UI_CIN_STOPCINEMATIC:
 		return CIN_StopCinematic(args[1]);

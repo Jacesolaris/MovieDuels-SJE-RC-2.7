@@ -32,7 +32,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 extern qboolean WP_DoingForcedAnimationForForcePowers(const gentity_t* ent);
 extern int WP_SaberMustDisruptorBlock(gentity_t* self, const gentity_t* atk, qboolean check_b_box_block, vec3_t point,
-                                      int r_saber_num, int r_blade_num);
+	int r_saber_num, int r_blade_num);
 extern qboolean WP_SaberBlockBolt_MD(gentity_t* self, vec3_t hitloc, qboolean missileBlock);
 extern void G_MissileReflectEffect(const gentity_t* ent, vec3_t org, vec3_t dir);
 extern void WP_ForcePowerDrain(const gentity_t* self, forcePowers_t force_power, int override_amt);
@@ -168,7 +168,7 @@ static void WP_DisruptorMainFire(gentity_t* ent)
 			else
 			{
 				G_Damage(trace_ent, ent, ent, forwardVec, tr.endpos, damage, DAMAGE_DEATH_KNOCKBACK, MOD_DISRUPTOR,
-				         hit_loc);
+					hit_loc);
 			}
 		}
 		else
@@ -338,13 +338,13 @@ void WP_DisruptorAltFire(gentity_t* ent)
 					{
 						//hehe
 						G_Damage(trace_ent, ent, ent, forwardVec, tr.endpos, 10,
-						         DAMAGE_NO_KNOCKBACK | DAMAGE_NO_HIT_LOC,
-						         full_charge ? MOD_SNIPER : MOD_DISRUPTOR, hit_loc);
+							DAMAGE_NO_KNOCKBACK | DAMAGE_NO_HIT_LOC,
+							full_charge ? MOD_SNIPER : MOD_DISRUPTOR, hit_loc);
 						break;
 					}
 					G_Damage(trace_ent, ent, ent, forwardVec, tr.endpos, damage,
-					         DAMAGE_NO_KNOCKBACK | DAMAGE_NO_HIT_LOC,
-					         full_charge ? MOD_SNIPER : MOD_DISRUPTOR, hit_loc);
+						DAMAGE_NO_KNOCKBACK | DAMAGE_NO_HIT_LOC,
+						full_charge ? MOD_SNIPER : MOD_DISRUPTOR, hit_loc);
 					if (trace_ent->s.eType == ET_MOVER)
 					{
 						//stop the traces on any mover

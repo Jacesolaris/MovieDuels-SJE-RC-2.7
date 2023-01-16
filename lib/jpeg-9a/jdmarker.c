@@ -230,7 +230,7 @@ get_soi(const j_decompress_ptr cinfo)
 
 LOCAL(boolean)
 get_sof(const j_decompress_ptr cinfo, const boolean is_baseline, const boolean is_prog,
-        const boolean is_arith)
+	const boolean is_arith)
 	/* Process a SOFn marker */
 {
 	INT32 length;
@@ -706,7 +706,7 @@ get_lse(j_decompress_ptr cinfo)
 
 LOCAL(void)
 examine_app0(const j_decompress_ptr cinfo, JOCTET FAR* data,
-             const unsigned int datalen, const INT32 remaining)
+	const unsigned int datalen, const INT32 remaining)
 	/* Examine first few bytes from an APP0.
 	 * Take appropriate action if it is a JFIF marker.
 	 * datalen is # of bytes at data[], remaining is length of rest of marker data.
@@ -784,7 +784,7 @@ examine_app0(const j_decompress_ptr cinfo, JOCTET FAR* data,
 
 LOCAL(void)
 examine_app14(const j_decompress_ptr cinfo, JOCTET FAR* data,
-              const unsigned int datalen, const INT32 remaining)
+	const unsigned int datalen, const INT32 remaining)
 	/* Examine first few bytes from an APP14.
 	 * Take appropriate action if it is an Adobe marker.
 	 * datalen is # of bytes at data[], remaining is length of rest of marker data.
@@ -1428,7 +1428,7 @@ jinit_marker_reader(const j_decompress_ptr cinfo)
 
 GLOBAL(void)
 jpeg_save_markers(const j_decompress_ptr cinfo, const int marker_code,
-                  unsigned int length_limit)
+	unsigned int length_limit)
 {
 	const my_marker_ptr marker = (my_marker_ptr)cinfo->marker;
 	jpeg_marker_parser_method processor;
@@ -1478,7 +1478,7 @@ jpeg_save_markers(const j_decompress_ptr cinfo, const int marker_code,
 
 GLOBAL(void)
 jpeg_set_marker_processor(const j_decompress_ptr cinfo, const int marker_code,
-                          const jpeg_marker_parser_method routine)
+	const jpeg_marker_parser_method routine)
 {
 	const my_marker_ptr marker = (my_marker_ptr)cinfo->marker;
 

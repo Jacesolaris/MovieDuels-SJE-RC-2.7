@@ -24,7 +24,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #include "FxScheduler.h"
 #endif
 
-vec3_t WHITE = {1.0f, 1.0f, 1.0f};
+vec3_t WHITE = { 1.0f, 1.0f, 1.0f };
 
 struct SEffectList
 {
@@ -395,15 +395,15 @@ void FX_AddPrimitive(CEffect** p_effect, const int kill_time)
 //  FX_AddParticle
 //-------------------------
 CParticle* FX_AddParticle(const int client_id, const vec3_t org, const vec3_t vel, const vec3_t accel,
-                          const float gravity,
-                          const float size1, const float size2, const float size_parm,
-                          const float alpha1, const float alpha2, const float alpha_parm,
-                          const vec3_t s_rgb, const vec3_t e_rgb, const float rgb_parm,
-                          const float rotation, const float rotation_delta,
-                          const vec3_t min, const vec3_t max, const float elasticity,
-                          const int death_id, const int impact_id,
-                          const int kill_time, const qhandle_t shader, const int flags, const int model_num,
-                          const int bolt_num)
+	const float gravity,
+	const float size1, const float size2, const float size_parm,
+	const float alpha1, const float alpha2, const float alpha_parm,
+	const vec3_t s_rgb, const vec3_t e_rgb, const float rgb_parm,
+	const float rotation, const float rotation_delta,
+	const vec3_t min, const vec3_t max, const float elasticity,
+	const int death_id, const int impact_id,
+	const int kill_time, const qhandle_t shader, const int flags, const int model_num,
+	const int bolt_num)
 {
 	if (theFxHelper.mFrameTime < 1)
 	{
@@ -490,11 +490,11 @@ CParticle* FX_AddParticle(const int client_id, const vec3_t org, const vec3_t ve
 //  FX_AddLine
 //-------------------------
 CLine* FX_AddLine(const int client_id, vec3_t start, vec3_t end, const float size1, const float size2,
-                  const float size_parm,
-                  const float alpha1, const float alpha2, const float alpha_parm,
-                  vec3_t s_rgb, vec3_t e_rgb, const float rgb_parm,
-                  const int kill_time, const qhandle_t shader, const int impact_fx_id, const int flags,
-                  const int model_num, const int bolt_num)
+	const float size_parm,
+	const float alpha1, const float alpha2, const float alpha_parm,
+	vec3_t s_rgb, vec3_t e_rgb, const float rgb_parm,
+	const int kill_time, const qhandle_t shader, const int impact_fx_id, const int flags,
+	const int model_num, const int bolt_num)
 {
 	if (theFxHelper.mFrameTime < 1)
 	{
@@ -575,11 +575,11 @@ CLine* FX_AddLine(const int client_id, vec3_t start, vec3_t end, const float siz
 //  FX_AddElectricity
 //-------------------------
 CElectricity* FX_AddElectricity(const int client_id, vec3_t start, vec3_t end, const float size1, const float size2,
-                                const float size_parm,
-                                const float alpha1, const float alpha2, const float alpha_parm,
-                                vec3_t s_rgb, vec3_t e_rgb, const float rgb_parm,
-                                const float chaos, const int kill_time, const qhandle_t shader, const int flags,
-                                const int model_num, const int bolt_num)
+	const float size_parm,
+	const float alpha1, const float alpha2, const float alpha_parm,
+	vec3_t s_rgb, vec3_t e_rgb, const float rgb_parm,
+	const float chaos, const int kill_time, const qhandle_t shader, const int flags,
+	const int model_num, const int bolt_num)
 {
 	if (theFxHelper.mFrameTime < 1)
 	{
@@ -665,13 +665,13 @@ CElectricity* FX_AddElectricity(const int client_id, vec3_t start, vec3_t end, c
 //  FX_AddTail
 //-------------------------
 CTail* FX_AddTail(const int client_id, vec3_t org, vec3_t vel, vec3_t accel,
-                  const float size1, const float size2, const float size_parm,
-                  const float length1, const float length2, const float length_parm,
-                  const float alpha1, const float alpha2, const float alpha_parm,
-                  vec3_t s_rgb, vec3_t e_rgb, const float rgb_parm,
-                  vec3_t min, vec3_t max, const float elasticity,
-                  const int death_id, const int impact_id,
-                  const int kill_time, const qhandle_t shader, const int flags, const int model_num, const int bolt_num)
+	const float size1, const float size2, const float size_parm,
+	const float length1, const float length2, const float length_parm,
+	const float alpha1, const float alpha2, const float alpha_parm,
+	vec3_t s_rgb, vec3_t e_rgb, const float rgb_parm,
+	vec3_t min, vec3_t max, const float elasticity,
+	const int death_id, const int impact_id,
+	const int kill_time, const qhandle_t shader, const int flags, const int model_num, const int bolt_num)
 {
 	if (theFxHelper.mFrameTime < 1)
 	{
@@ -768,13 +768,13 @@ CTail* FX_AddTail(const int client_id, vec3_t org, vec3_t vel, vec3_t accel,
 //  FX_AddCylinder
 //-------------------------
 CCylinder* FX_AddCylinder(const int client_id, vec3_t start, vec3_t normal,
-                          const float size1_s, const float size1_e, const float size_parm,
-                          const float size2_s, const float size2_e, const float size2_parm,
-                          const float length1, const float length2, const float length_parm,
-                          const float alpha1, const float alpha2, const float alpha_parm,
-                          vec3_t rgb1, vec3_t rgb2, const float rgb_parm,
-                          const int kill_time, const qhandle_t shader, const int flags, const int model_num,
-                          const int bolt_num)
+	const float size1_s, const float size1_e, const float size_parm,
+	const float size2_s, const float size2_e, const float size2_parm,
+	const float length1, const float length2, const float length_parm,
+	const float alpha1, const float alpha2, const float alpha_parm,
+	vec3_t rgb1, vec3_t rgb2, const float rgb_parm,
+	const int kill_time, const qhandle_t shader, const int flags, const int model_num,
+	const int bolt_num)
 {
 	if (theFxHelper.mFrameTime < 1)
 	{
@@ -879,14 +879,14 @@ CCylinder* FX_AddCylinder(const int client_id, vec3_t start, vec3_t normal,
 //  FX_AddEmitter
 //-------------------------
 CEmitter* FX_AddEmitter(vec3_t org, vec3_t vel, vec3_t accel,
-                        const float size1, const float size2, const float size_parm,
-                        const float alpha1, const float alpha2, const float alpha_parm,
-                        vec3_t rgb1, vec3_t rgb2, const float rgb_parm,
-                        vec3_t angs, vec3_t delta_angs,
-                        vec3_t min, vec3_t max, const float elasticity,
-                        const int death_id, const int impact_id, const int emitter_id,
-                        const float density, const float variance,
-                        const int kill_time, const qhandle_t model, const int flags)
+	const float size1, const float size2, const float size_parm,
+	const float alpha1, const float alpha2, const float alpha_parm,
+	vec3_t rgb1, vec3_t rgb2, const float rgb_parm,
+	vec3_t angs, vec3_t delta_angs,
+	vec3_t min, vec3_t max, const float elasticity,
+	const int death_id, const int impact_id, const int emitter_id,
+	const float density, const float variance,
+	const int kill_time, const qhandle_t model, const int flags)
 {
 	if (theFxHelper.mFrameTime < 1)
 	{
@@ -970,8 +970,8 @@ CEmitter* FX_AddEmitter(vec3_t org, vec3_t vel, vec3_t accel,
 //  FX_AddLight
 //-------------------------
 CLight* FX_AddLight(vec3_t org, const float size1, const float size2, const float size_parm,
-                    vec3_t rgb1, vec3_t rgb2, const float rgb_parm,
-                    const int kill_time, const int flags)
+	vec3_t rgb1, vec3_t rgb2, const float rgb_parm,
+	const int kill_time, const int flags)
 {
 	if (theFxHelper.mFrameTime < 1)
 	{
@@ -1025,14 +1025,14 @@ CLight* FX_AddLight(vec3_t org, const float size1, const float size2, const floa
 //  FX_AddOrientedParticle
 //-------------------------
 COrientedParticle* FX_AddOrientedParticle(const int client_id, vec3_t org, vec3_t norm, vec3_t vel, vec3_t accel,
-                                          const float size1, const float size2, const float size_parm,
-                                          const float alpha1, const float alpha2, const float alpha_parm,
-                                          vec3_t rgb1, vec3_t rgb2, const float rgb_parm,
-                                          const float rotation, const float rotation_delta,
-                                          vec3_t min, vec3_t max, const float bounce,
-                                          const int death_id, const int impact_id,
-                                          const int kill_time, const qhandle_t shader, const int flags,
-                                          const int model_num, const int bolt_num)
+	const float size1, const float size2, const float size_parm,
+	const float alpha1, const float alpha2, const float alpha_parm,
+	vec3_t rgb1, vec3_t rgb2, const float rgb_parm,
+	const float rotation, const float rotation_delta,
+	vec3_t min, vec3_t max, const float bounce,
+	const int death_id, const int impact_id,
+	const int kill_time, const qhandle_t shader, const int flags,
+	const int model_num, const int bolt_num)
 {
 	if (theFxHelper.mFrameTime < 1)
 	{
@@ -1120,11 +1120,11 @@ COrientedParticle* FX_AddOrientedParticle(const int client_id, vec3_t org, vec3_
 //  FX_AddPoly
 //-------------------------
 CPoly* FX_AddPoly(const vec3_t* verts, const vec2_t* st, const int num_verts,
-                  vec3_t vel, vec3_t accel,
-                  const float alpha1, const float alpha2, const float alpha_parm,
-                  vec3_t rgb1, vec3_t rgb2, const float rgbParm,
-                  vec3_t rotation_delta, const float bounce, const int motion_delay,
-                  const int kill_time, const qhandle_t shader, const int flags)
+	vec3_t vel, vec3_t accel,
+	const float alpha1, const float alpha2, const float alpha_parm,
+	vec3_t rgb1, vec3_t rgb2, const float rgbParm,
+	vec3_t rotation_delta, const float bounce, const int motion_delay,
+	const int kill_time, const qhandle_t shader, const int flags)
 {
 	if (theFxHelper.mFrameTime < 1 || !verts)
 	{
@@ -1194,12 +1194,12 @@ CPoly* FX_AddPoly(const vec3_t* verts, const vec2_t* st, const int num_verts,
 //  FX_AddBezier
 //-------------------------
 CBezier* FX_AddBezier(const vec3_t start, const vec3_t end,
-                      const vec3_t control1, const vec3_t control1_vel,
-                      const vec3_t control2, const vec3_t control2_vel,
-                      const float size1, const float size2, const float size_parm,
-                      const float alpha1, const float alpha2, const float alpha_parm,
-                      const vec3_t s_rgb, const vec3_t e_rgb, const float rgb_parm,
-                      const int kill_time, const qhandle_t shader, const int flags)
+	const vec3_t control1, const vec3_t control1_vel,
+	const vec3_t control2, const vec3_t control2_vel,
+	const float size1, const float size2, const float size_parm,
+	const float alpha1, const float alpha2, const float alpha_parm,
+	const vec3_t s_rgb, const vec3_t e_rgb, const float rgb_parm,
+	const int kill_time, const qhandle_t shader, const int flags)
 {
 	if (theFxHelper.mFrameTime < 1)
 	{
@@ -1272,7 +1272,7 @@ CBezier* FX_AddBezier(const vec3_t start, const vec3_t end,
 //  FX_AddFlash
 //-------------------------
 CFlash* FX_AddFlash(vec3_t origin, vec3_t s_rgb, vec3_t e_rgb, const float rgb_parm,
-                    const int kill_time, const qhandle_t shader, const int flags = 0)
+	const int kill_time, const qhandle_t shader, const int flags = 0)
 {
 	if (theFxHelper.mFrameTime < 1)
 	{
@@ -1350,75 +1350,75 @@ CFlash* FX_AddFlash(vec3_t origin, vec3_t s_rgb, vec3_t e_rgb, const float rgb_p
 
 //---------------------------------------------------
 void FX_AddSprite(vec3_t origin, vec3_t vel, vec3_t accel,
-                  const float scale,
-                  const float s_alpha, const float e_alpha,
-                  const float rotation, const float bounce,
-                  const int life, const qhandle_t shader, const int flags)
+	const float scale,
+	const float s_alpha, const float e_alpha,
+	const float rotation, const float bounce,
+	const int life, const qhandle_t shader, const int flags)
 {
 	FX_AddParticle(-1, origin, vel, accel, 0, scale, scale, 0,
-	               s_alpha, e_alpha, FX_ALPHA_LINEAR,
-	               WHITE, WHITE, 0,
-	               rotation, 0,
-	               vec3_origin, vec3_origin, bounce,
-	               0, 0,
-	               life, shader, flags);
+		s_alpha, e_alpha, FX_ALPHA_LINEAR,
+		WHITE, WHITE, 0,
+		rotation, 0,
+		vec3_origin, vec3_origin, bounce,
+		0, 0,
+		life, shader, flags);
 }
 
 //---------------------------------------------------
 void FX_AddSprite(vec3_t origin, vec3_t vel, vec3_t accel,
-                  const float scale,
-                  const float s_alpha, const float e_alpha,
-                  vec3_t sRGB, vec3_t e_rgb,
-                  const float rotation, const float bounce,
-                  const int life, const qhandle_t shader, const int flags)
+	const float scale,
+	const float s_alpha, const float e_alpha,
+	vec3_t sRGB, vec3_t e_rgb,
+	const float rotation, const float bounce,
+	const int life, const qhandle_t shader, const int flags)
 {
 	FX_AddParticle(-1, origin, vel, accel, 0, scale, scale, 0,
-	               s_alpha, e_alpha, FX_ALPHA_LINEAR,
-	               sRGB, e_rgb, 0,
-	               rotation, 0,
-	               vec3_origin, vec3_origin, bounce,
-	               0, 0,
-	               life, shader, flags);
+		s_alpha, e_alpha, FX_ALPHA_LINEAR,
+		sRGB, e_rgb, 0,
+		rotation, 0,
+		vec3_origin, vec3_origin, bounce,
+		0, 0,
+		life, shader, flags);
 }
 
 //---------------------------------------------------
 void FX_AddLine(vec3_t start, vec3_t end,
-                const float width,
-                const float s_alpha, const float e_alpha,
-                const int life, const qhandle_t shader)
+	const float width,
+	const float s_alpha, const float e_alpha,
+	const int life, const qhandle_t shader)
 {
 	FX_AddLine(-1, start, end, width, width, 0,
-	           s_alpha, e_alpha, FX_ALPHA_LINEAR,
-	           WHITE, WHITE, 0,
-	           life, shader, 0, 0);
+		s_alpha, e_alpha, FX_ALPHA_LINEAR,
+		WHITE, WHITE, 0,
+		life, shader, 0, 0);
 }
 
 //---------------------------------------------------
 void FX_AddLine(vec3_t start, vec3_t end,
-                const float width,
-                const float s_alpha, const float e_alpha,
-                vec3_t s_rgb, vec3_t e_rgb,
-                const int life, const qhandle_t shader, const int flags)
+	const float width,
+	const float s_alpha, const float e_alpha,
+	vec3_t s_rgb, vec3_t e_rgb,
+	const int life, const qhandle_t shader, const int flags)
 {
 	FX_AddLine(-1, start, end, width, width, 0,
-	           s_alpha, e_alpha, FX_ALPHA_LINEAR,
-	           s_rgb, e_rgb, 0,
-	           life, shader, 0, flags);
+		s_alpha, e_alpha, FX_ALPHA_LINEAR,
+		s_rgb, e_rgb, 0,
+		life, shader, 0, flags);
 }
 
 //---------------------------------------------------
 void FX_AddQuad(vec3_t origin, vec3_t normal,
-                vec3_t vel, vec3_t accel,
-                const float sradius, const float eradius,
-                const float salpha, const float ealpha,
-                vec3_t s_rgb, vec3_t e_rgb,
-                const float rotation, const int life, const qhandle_t shader)
+	vec3_t vel, vec3_t accel,
+	const float sradius, const float eradius,
+	const float salpha, const float ealpha,
+	vec3_t s_rgb, vec3_t e_rgb,
+	const float rotation, const int life, const qhandle_t shader)
 {
 	FX_AddOrientedParticle(-1, origin, normal, vel, accel,
-	                       sradius, eradius, 0.0f,
-	                       salpha, ealpha, 0.0f,
-	                       s_rgb, e_rgb, 0.0f,
-	                       rotation, 0.0f,
-	                       nullptr, nullptr, 0.0f, 0, 0, life,
-	                       shader, 0);
+		sradius, eradius, 0.0f,
+		salpha, ealpha, 0.0f,
+		s_rgb, e_rgb, 0.0f,
+		rotation, 0.0f,
+		nullptr, nullptr, 0.0f, 0, 0, life,
+		shader, 0);
 }

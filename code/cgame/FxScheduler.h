@@ -438,9 +438,9 @@ class PoolAllocator
 public:
 	PoolAllocator()
 		: pool(new T[N])
-		  , freeAndAllocated(new int[N])
-		  , numFree(N)
-		  , highWatermark(0)
+		, freeAndAllocated(new int[N])
+		, numFree(N)
+		, highWatermark(0)
 	{
 		for (int i = 0; i < N; i++)
 		{
@@ -539,7 +539,7 @@ class PagedPoolAllocator
 public:
 	PagedPoolAllocator()
 		: numPages(1)
-		  , pages(new PoolAllocator<T, N>[1]())
+		, pages(new PoolAllocator<T, N>[1]())
 	{
 	}
 
@@ -703,7 +703,7 @@ private:
 	int ParseEffect(const char* file, const CGPGroup& base);
 
 	void CreateEffect(CPrimitiveTemplate* fx, const vec3_t origin, vec3_t axis[3], int late_time, int client_id = -1,
-	                  int model_num = -1, int bolt_num = -1);
+		int model_num = -1, int bolt_num = -1);
 	void CreateEffect(CPrimitiveTemplate* fx, int client_id) const;
 
 public:
@@ -720,12 +720,12 @@ public:
 	void PlayEffect(int id, vec3_t origin, vec3_t forward, bool is_portal = false);
 	// builds arbitrary perp. right vector, does a cross product to define up
 	void PlayEffect(int id, vec3_t origin, vec3_t axis[3], int bolt_info = -1, int ent_num = -1, bool is_portal = false,
-	                int i_loop_time = false, bool is_relative = false);
+		int i_loop_time = false, bool is_relative = false);
 	void PlayEffect(const char* file, vec3_t origin, bool is_portal = false); // uses a default up axis
 	void PlayEffect(const char* file, vec3_t origin, vec3_t forward, bool is_portal = false);
 	// builds arbitrary perp. right vector, does a cross product to define up
 	void PlayEffect(const char* file, vec3_t origin, vec3_t axis[3], int bolt_info, int ent_num, bool is_portal = false,
-	                int i_loop_time = false, bool is_relative = false);
+		int i_loop_time = false, bool is_relative = false);
 
 	//for muzzle
 	void PlayEffect(const char* file, int client_id, bool is_portal = false);

@@ -777,7 +777,7 @@ png_do_check_palette_indexes(const png_structrp png_ptr, const png_row_infop row
 #ifdef PNG_USER_TRANSFORM_PTR_SUPPORTED
 void PNGAPI
 png_set_user_transform_info(const png_structrp png_ptr, const png_voidp
-                            user_transform_ptr, const int user_transform_depth, const int user_transform_channels)
+	user_transform_ptr, const int user_transform_depth, const int user_transform_channels)
 {
 	png_debug(1, "in png_set_user_transform_info");
 

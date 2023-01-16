@@ -375,7 +375,7 @@ void ST_MarkToCover(const gentity_t* self)
 }
 
 void ST_StartFlee(gentity_t* self, gentity_t* enemy, vec3_t danger_point, const int danger_level, const int min_time,
-                  const int max_time)
+	const int max_time)
 {
 	if (!self || !self->NPC)
 	{
@@ -395,8 +395,8 @@ NPC_ST_Pain
 */
 
 void NPC_ST_Pain(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, const vec3_t point, const int damage,
-                 const int mod,
-                 const int hit_loc)
+	const int mod,
+	const int hit_loc)
 {
 	self->NPC->localState = LSTATE_UNDERFIRE;
 
@@ -649,8 +649,8 @@ qboolean NPC_CheckEnemyStealth(gentity_t* target)
 		return qfalse;
 
 	const qboolean clear_los = target->client->ps.leanofs
-		                           ? NPC_ClearLOS(target->client->renderInfo.eyePoint)
-		                           : NPC_ClearLOS(target);
+		? NPC_ClearLOS(target->client->renderInfo.eyePoint)
+		: NPC_ClearLOS(target);
 
 	//Now check for clear line of vision
 	if (clear_los)
@@ -666,9 +666,9 @@ qboolean NPC_CheckEnemyStealth(gentity_t* target)
 			target->currentOrigin[0], target->currentOrigin[1], target->currentOrigin[2] + target->maxs[2] - 4
 		};
 		float h_angle_perc = NPC_GetHFOVPercentage(targ_org, NPC->client->renderInfo.eyePoint,
-		                                           NPC->client->renderInfo.eyeAngles, NPCInfo->stats.hfov);
+			NPC->client->renderInfo.eyeAngles, NPCInfo->stats.hfov);
 		float vAngle_perc = NPC_GetVFOVPercentage(targ_org, NPC->client->renderInfo.eyePoint,
-		                                          NPC->client->renderInfo.eyeAngles, NPCInfo->stats.vfov);
+			NPC->client->renderInfo.eyeAngles, NPCInfo->stats.vfov);
 
 		//Scale them vertically some, and horizontally pretty harshly
 		vAngle_perc *= vAngle_perc; //( vAngle_perc * vAngle_perc );
@@ -891,7 +891,7 @@ qboolean NPC_CheckEnemiesInSpotlight()
 			//valid ent & client, valid enemy, on the target team
 			//check to see if they're in my FOV
 			if (InFOV(enemy->currentOrigin, NPC->client->renderInfo.eyePoint, NPC->client->renderInfo.eyeAngles,
-			          NPCInfo->stats.hfov, NPCInfo->stats.vfov))
+				NPCInfo->stats.hfov, NPCInfo->stats.vfov))
 			{
 				//in my cone
 				//check to see that they're close enough
@@ -917,7 +917,7 @@ qboolean NPC_CheckEnemiesInSpotlight()
 				}
 			}
 			if (InFOV(enemy->currentOrigin, NPC->client->renderInfo.eyePoint, NPC->client->renderInfo.eyeAngles, 90,
-			          NPCInfo->stats.vfov * 3))
+				NPCInfo->stats.vfov * 3))
 			{
 				//one to look at if we don't get an enemy
 				if (G_ClearLOS(NPC, enemy))
@@ -1054,7 +1054,7 @@ static qboolean NPC_ST_InvestigateEvent(const int event_id, const bool extra_sus
 	{
 		//make it so they can walk right to this point and look at it rather than having to use combatPoints
 		if (G_ExpandPointToBBox(NPCInfo->investigateGoal, NPC->mins, NPC->maxs, NPC->s.number,
-		                        NPC->clipmask & ~CONTENTS_BODY | CONTENTS_BOTCLIP))
+			NPC->clipmask & ~CONTENTS_BODY | CONTENTS_BOTCLIP))
 		{
 			//we were able to doMove the investigateGoal to a point in which our bbox would fit
 			//drop the goal to the ground so we can get at it
@@ -1063,7 +1063,7 @@ static qboolean NPC_ST_InvestigateEvent(const int event_id, const bool extra_sus
 			VectorCopy(NPCInfo->investigateGoal, end);
 			end[2] -= 512; //FIXME: not always right?  What if it's even higher, somehow?
 			gi.trace(&trace, NPCInfo->investigateGoal, NPC->mins, NPC->maxs, end, ENTITYNUM_NONE,
-			         NPC->clipmask & ~CONTENTS_BODY | CONTENTS_BOTCLIP, static_cast<EG2_Collision>(0), 0);
+				NPC->clipmask & ~CONTENTS_BODY | CONTENTS_BOTCLIP, static_cast<EG2_Collision>(0), 0);
 			if (trace.fraction >= 1.0f)
 			{
 				//too high to even bother
@@ -1079,7 +1079,7 @@ static qboolean NPC_ST_InvestigateEvent(const int event_id, const bool extra_sus
 		else
 		{
 			const int id = NPC_FindCombatPoint(NPCInfo->investigateGoal, NPCInfo->investigateGoal,
-			                                   NPCInfo->investigateGoal, CP_INVESTIGATE | CP_HAS_ROUTE, 0);
+				NPCInfo->investigateGoal, CP_INVESTIGATE | CP_HAS_ROUTE, 0);
 
 			if (id != -1)
 			{
@@ -1325,14 +1325,14 @@ void NPC_BSST_Patrol()
 	{
 		//using spotlight search mode
 		vec3_t eye_fwd, end;
-		constexpr vec3_t maxs = {2, 2, 2};
-		constexpr vec3_t mins = {-2, -2, -2};
+		constexpr vec3_t maxs = { 2, 2, 2 };
+		constexpr vec3_t mins = { -2, -2, -2 };
 		trace_t trace;
 		AngleVectors(NPC->client->renderInfo.eyeAngles, eye_fwd, nullptr, nullptr);
 		VectorMA(NPC->client->renderInfo.eyePoint, NPCInfo->stats.visrange, eye_fwd, end);
 		//get server-side trace impact point
 		gi.trace(&trace, NPC->client->renderInfo.eyePoint, mins, maxs, end, NPC->s.number,
-		         MASK_OPAQUE | CONTENTS_BODY | CONTENTS_CORPSE, static_cast<EG2_Collision>(0), 0);
+			MASK_OPAQUE | CONTENTS_BODY | CONTENTS_CORPSE, static_cast<EG2_Collision>(0), 0);
 		NPC->speed = trace.fraction * NPCInfo->stats.visrange;
 		if (NPCInfo->scriptFlags & SCF_LOOK_FOR_ENEMIES)
 		{
@@ -1555,7 +1555,7 @@ static void ST_CheckMoveState()
 		//Did we make it?
 		if (STEER::Reached(NPC, NPCInfo->goalEntity, 16, !!FlyingCreature(NPC)) ||
 			enemy_los && NPCInfo->aiFlags & NPCAI_STOP_AT_LOS && !Q3_TaskIDPending(NPC, TID_MOVE_NAV)
-		)
+			)
 		{
 			//either hit our navgoal or our navgoal was not a crucial (scripted) one (maybe a combat point) and we're scouting and found our enemy
 			int new_squad_state = SQUAD_STAND_AND_SHOOT;
@@ -1685,7 +1685,7 @@ static void ST_CheckFireState()
 	{
 		if (level.time - NPCInfo->enemyLastSeenTime < 10000 && //we have seem the enemy in the last 10 seconds
 			(!NPCInfo->group || level.time - NPCInfo->group->lastSeenEnemyTime < 10000))
-		//we are not in a group or the group has seen the enemy in the last 10 seconds
+			//we are not in a group or the group has seen the enemy in the last 10 seconds
 		{
 			if (!Q_irand(0, 10))
 			{
@@ -1704,7 +1704,7 @@ static void ST_CheckFireState()
 					AngleVectors(NPC->client->ps.viewangles, forward, nullptr, nullptr);
 					VectorMA(muzzle, 8192, forward, end);
 					gi.trace(&tr, muzzle, vec3_origin, vec3_origin, end, NPC->s.number, MASK_SHOT,
-					         static_cast<EG2_Collision>(0), 0);
+						static_cast<EG2_Collision>(0), 0);
 					VectorCopy(tr.endpos, impactPos);
 				}
 
@@ -1882,7 +1882,7 @@ void ST_TransferMoveGoal(const gentity_t* self, const gentity_t* other)
 		if (self->NPC->goalEntity == self->NPC->tempGoal)
 		{
 			NPC_SetMoveGoal(other, self->NPC->tempGoal->currentOrigin, self->NPC->goalRadius,
-			                static_cast<qboolean>((self->NPC->tempGoal->svFlags & SVF_NAVGOAL) != 0));
+				static_cast<qboolean>((self->NPC->tempGoal->svFlags & SVF_NAVGOAL) != 0));
 		}
 		else
 		{
@@ -1996,7 +1996,7 @@ int ST_GetCPFlags()
 		case 3: //take the one on the other side of the enemy
 			cpFlags = CP_CLEAR | CP_COVER | CP_FLANK | CP_APPROACH_ENEMY;
 			break;
-		default: ;
+		default:;
 		}
 	}
 	if (NPC && NPCInfo->scriptFlags & SCF_USE_CP_NEAREST)
@@ -2311,8 +2311,8 @@ void ST_Commander()
 				{
 					//it's not us
 					if (TIMER_Done(NPC, "verifyCP") && DistanceSquared(NPC->currentOrigin,
-					                                                   level.combatPoints[NPCInfo->combatPoint].origin)
-						> 64 * 64)
+						level.combatPoints[NPCInfo->combatPoint].origin)
+								> 64 * 64)
 					{
 						//1 - 3 seconds have passed since you chose a CP, see if you're there since, for some reason, you've stopped running...
 						//uh, WTF, we're not on our combat point?
@@ -2367,7 +2367,7 @@ void ST_Commander()
 						{
 							//1 - 3 seconds have passed since you chose a CP, see if you're there since, for some reason, you've stopped running...
 							if (DistanceSquared(NPC->currentOrigin,
-							                    level.combatPoints[NPCInfo->combatPoint].origin) > 64 * 64)
+								level.combatPoints[NPCInfo->combatPoint].origin) > 64 * 64)
 							{
 								//uh, WTF, we're not on our combat point?
 								//er, try again, I guess?
@@ -2664,7 +2664,7 @@ void ST_Commander()
 			{
 				//may have had sone set above
 				cp = NPC_FindCombatPointRetry(NPC->currentOrigin, NPC->currentOrigin, NPC->currentOrigin, &cp_flags,
-				                              avoid_dist, NPCInfo->lastFailedCombatPoint);
+					avoid_dist, NPCInfo->lastFailedCombatPoint);
 			}
 			while (cp == -1 && cp_flags != CP_ANY)
 			{
@@ -2751,7 +2751,7 @@ void ST_Commander()
 				}
 				//now try again
 				cp = NPC_FindCombatPoint(NPC->currentOrigin, NPC->currentOrigin, group->enemy->currentOrigin,
-				                         cp_flags | CP_HAS_ROUTE, avoid_dist);
+					cp_flags | CP_HAS_ROUTE, avoid_dist);
 			}
 
 			//see if we got a valid one
@@ -2820,7 +2820,7 @@ void ST_Commander()
 							VectorNormalize(e_dir2_me);
 
 							VectorSubtract(level.combatPoints[NPCInfo->combatPoint].origin, group->enemy->currentOrigin,
-							               e_dir2_cp);
+								e_dir2_cp);
 							VectorNormalize(e_dir2_cp);
 
 							dot = DotProduct(e_dir2_me, e_dir2_cp);
@@ -2873,7 +2873,7 @@ void ST_Commander()
 }
 
 extern void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, float strength,
-                        qboolean break_saber_lock);
+	qboolean break_saber_lock);
 
 void Noghri_StickTrace()
 {
@@ -2893,14 +2893,14 @@ void Noghri_StickTrace()
 		{
 			mdxaBone_t bolt_matrix;
 			vec3_t tip, dir, base;
-			const vec3_t angles = {0, NPC->currentAngles[YAW], 0};
-			constexpr vec3_t mins = {-2, -2, -2}, maxs = {2, 2, 2};
+			const vec3_t angles = { 0, NPC->currentAngles[YAW], 0 };
+			constexpr vec3_t mins = { -2, -2, -2 }, maxs = { 2, 2, 2 };
 			trace_t trace;
 
 			gi.G2API_GetBoltMatrix(NPC->ghoul2, NPC->weaponModel[0],
-			                       bolt_index,
-			                       &bolt_matrix, angles, NPC->currentOrigin, time,
-			                       nullptr, NPC->s.modelScale);
+				bolt_index,
+				&bolt_matrix, angles, NPC->currentOrigin, time,
+				nullptr, NPC->s.modelScale);
 			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, base);
 			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, POSITIVE_Y, dir);
 			VectorMA(base, 48, dir, tip);
@@ -2955,14 +2955,14 @@ void Noghri_StickTracennew(gentity_t* self)
 		{
 			mdxaBone_t bolt_matrix;
 			vec3_t tip, dir, base;
-			const vec3_t angles = {0, self->currentAngles[YAW], 0};
-			constexpr vec3_t mins = {-2, -2, -2}, maxs = {2, 2, 2};
+			const vec3_t angles = { 0, self->currentAngles[YAW], 0 };
+			constexpr vec3_t mins = { -2, -2, -2 }, maxs = { 2, 2, 2 };
 			trace_t trace;
 
 			gi.G2API_GetBoltMatrix(self->ghoul2, self->weaponModel[0],
-			                       bolt_index,
-			                       &bolt_matrix, angles, self->currentOrigin, time,
-			                       nullptr, self->s.modelScale);
+				bolt_index,
+				&bolt_matrix, angles, self->currentOrigin, time,
+				nullptr, self->s.modelScale);
 			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, base);
 			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, POSITIVE_Y, dir);
 			VectorMA(base, 48, dir, tip);
@@ -3406,7 +3406,7 @@ void NPC_BSST_Attack()
 		{
 			do_move = ST_Move();
 			if ((NPC->client->NPC_class != CLASS_ROCKETTROOPER || NPC->s.weapon != WP_ROCKET_LAUNCHER || enemyDist <
-					MIN_ROCKET_DIST_SQUARED)
+				MIN_ROCKET_DIST_SQUARED)
 				//rockettroopers who use rocket launchers turn around and run if you get too close (closer than 128)
 				&& ucmd.forwardmove <= -32)
 			{
@@ -3488,7 +3488,7 @@ void NPC_BSST_Attack()
 					//hurt them
 					G_Sound(NPC->enemy, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
 					G_Damage(NPC->enemy, NPC, NPC, smack_dir, NPC->currentOrigin,
-					         (g_spskill->integer + 1) * Q_irand(2, 5), DAMAGE_NO_KNOCKBACK, MOD_MELEE);
+						(g_spskill->integer + 1) * Q_irand(2, 5), DAMAGE_NO_KNOCKBACK, MOD_MELEE);
 					WP_AbsorbKick(NPC->enemy, NPC, smack_dir);
 					//done with the damage
 					NPCInfo->blockedDebounceTime = 1;
@@ -3501,7 +3501,7 @@ void NPC_BSST_Attack()
 				&& !NPC->client->ps.weaponTime //not firing
 				&& !PM_InKnockDown(&NPC->client->ps) //not knocked down
 				&& InFront(NPC->enemy->currentOrigin, NPC->currentOrigin, NPC->client->ps.viewangles, 0.3f))
-			//within 80 and in front
+				//within 80 and in front
 			{
 				//enemy within 80, if very close, use melee attack to slap away
 				if (TIMER_Done(NPC, "slapattackDelay"))
@@ -3558,7 +3558,7 @@ void NPC_BSST_Attack()
 					//hurt them
 					G_Sound(NPC->enemy, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
 					G_Damage(NPC->enemy, NPC, NPC, smack_dir, NPC->currentOrigin,
-					         (g_spskill->integer + 1) * Q_irand(2, 5), DAMAGE_NO_KNOCKBACK, MOD_MELEE);
+						(g_spskill->integer + 1) * Q_irand(2, 5), DAMAGE_NO_KNOCKBACK, MOD_MELEE);
 					WP_AbsorbKick(NPC->enemy, NPC, smack_dir);
 					//done with the damage
 					NPCInfo->blockedDebounceTime = 1;
@@ -3571,14 +3571,14 @@ void NPC_BSST_Attack()
 				&& !NPC->client->ps.weaponTime //not firing
 				&& !PM_InKnockDown(&NPC->client->ps) //not knocked down
 				&& InFront(NPC->enemy->currentOrigin, NPC->currentOrigin, NPC->client->ps.viewangles, 0.3f))
-			//within 80 and in front
+				//within 80 and in front
 			{
 				//enemy within 80, if very close, use melee attack to slap away
 				if (enemyDist < MELEE_DIST_SQUARED
 					&& !NPC->client->ps.weaponTime //not firing
 					&& !PM_InKnockDown(&NPC->client->ps) //not knocked down
 					&& InFront(NPC->enemy->currentOrigin, NPC->currentOrigin, NPC->client->ps.viewangles, 0.3f))
-				//within 80 and in front
+					//within 80 and in front
 				{
 					//enemy within 80, if very close, use melee attack to slap away
 					if (TIMER_Done(NPC, "slapattackDelay"))
@@ -3637,7 +3637,7 @@ void NPC_BSST_Attack()
 					//hurt them
 					G_Sound(NPC->enemy, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
 					G_Damage(NPC->enemy, NPC, NPC, smack_dir, NPC->currentOrigin,
-					         (g_spskill->integer + 1) * Q_irand(2, 5), DAMAGE_NO_KNOCKBACK, MOD_MELEE);
+						(g_spskill->integer + 1) * Q_irand(2, 5), DAMAGE_NO_KNOCKBACK, MOD_MELEE);
 					WP_AbsorbKick(NPC->enemy, NPC, smack_dir);
 					//done with the damage
 					NPCInfo->blockedDebounceTime = 1;
@@ -3650,7 +3650,7 @@ void NPC_BSST_Attack()
 				&& !NPC->client->ps.weaponTime //not firing
 				&& !PM_InKnockDown(&NPC->client->ps) //not knocked down
 				&& InFront(NPC->enemy->currentOrigin, NPC->currentOrigin, NPC->client->ps.viewangles, 0.3f))
-			//within 80 and in front
+				//within 80 and in front
 			{
 				//enemy within 80, if very close, use melee attack to slap away
 				if (TIMER_Done(NPC, "slapattackDelay"))
@@ -3968,7 +3968,7 @@ void NPC_BSST_Default()
 			&& NPC->enemy->enemy != NPC //enemy's enemy is not me
 			&& (!NPC->enemy->enemy || !NPC->enemy->enemy->client || NPC->enemy->enemy->client->NPC_class !=
 				CLASS_RANCOR && NPC->enemy->enemy->client->NPC_class != CLASS_WAMPA))
-		//enemy's enemy is not a client or is not a wampa or rancor (which is scarier than me)
+			//enemy's enemy is not a client or is not a wampa or rancor (which is scarier than me)
 		{
 			//they should be scared of ME and no-one else
 			G_SetEnemy(NPC->enemy, NPC);

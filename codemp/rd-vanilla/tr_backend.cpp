@@ -1983,7 +1983,7 @@ void BeginPixelShader(GLuint ui_type, GLuint ui_id)
 
 		g_uiCurrentPixelShaderType = GL_FRAGMENT_PROGRAM_ARB;
 	}
-default: ;
+	default:;
 	}
 }
 

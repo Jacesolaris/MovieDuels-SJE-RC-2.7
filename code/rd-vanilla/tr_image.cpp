@@ -518,11 +518,11 @@ Upload32
 ===============
 */
 static void Upload32(unsigned* data,
-                     const GLenum format,
-                     const qboolean mipmap,
+	const GLenum format,
+	const qboolean mipmap,
 	const qboolean picmip,
-                     const qboolean isLightmap,
-                     const qboolean allowTC,
+	const qboolean isLightmap,
+	const qboolean allowTC,
 	int* pformat,
 	word* pUploadWidth, word* pUploadHeight)
 {
@@ -935,7 +935,7 @@ This is the only way any image_t are created
 ================
 */
 image_t* R_CreateImage(const char* name, const byte* pic, const int width, const int height,
-                       const GLenum format, const qboolean mipmap, const qboolean allow_picmip, const qboolean allow_tc, int gl_wrap_clamp_mode)
+	const GLenum format, const qboolean mipmap, const qboolean allow_picmip, const qboolean allow_tc, int gl_wrap_clamp_mode)
 {
 	qboolean	isLightmap = qfalse;
 

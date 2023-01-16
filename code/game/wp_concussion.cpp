@@ -29,7 +29,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 extern qboolean WP_DoingForcedAnimationForForcePowers(const gentity_t* ent);
 extern int WP_SaberMustDisruptorBlock(gentity_t* self, const gentity_t* atk, qboolean check_b_box_block, vec3_t point,
-                                      int r_saber_num, int r_blade_num);
+	int r_saber_num, int r_blade_num);
 extern qboolean WP_SaberBlockBolt_MD(gentity_t* self, vec3_t hitloc, qboolean missileBlock);
 extern void G_MissileReflectEffect(const gentity_t* ent, vec3_t org, vec3_t dir);
 extern void WP_ForcePowerDrain(const gentity_t* self, forcePowers_t force_power, int override_amt);
@@ -67,7 +67,7 @@ static void WP_FireConcussionAlt(gentity_t* ent)
 	}
 	else
 	{
-		NPC_SetAnim(ent, SETANIM_LEGS, BOTH_H1_S1_TR, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+		NPC_SetAnim(ent, SETANIM_LEGS, BOTH_H1_S1_T_, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 	}
 
 	if (ent->client->ps.pm_flags & PMF_DUCKED)
@@ -196,13 +196,13 @@ static void WP_FireConcussionAlt(gentity_t* ent)
 					{
 						//hehe
 						G_Damage(trace_ent, ent, ent, forwardVec, tr.endpos, 10,
-						         DAMAGE_NO_KNOCKBACK | DAMAGE_NO_HIT_LOC,
-						         MOD_CONC_ALT, hit_loc);
+							DAMAGE_NO_KNOCKBACK | DAMAGE_NO_HIT_LOC,
+							MOD_CONC_ALT, hit_loc);
 						break;
 					}
 					G_Damage(trace_ent, ent, ent, forwardVec, tr.endpos, damage,
-					         DAMAGE_NO_KNOCKBACK | DAMAGE_NO_HIT_LOC,
-					         MOD_CONC_ALT, hit_loc);
+						DAMAGE_NO_KNOCKBACK | DAMAGE_NO_HIT_LOC,
+						MOD_CONC_ALT, hit_loc);
 
 					//do knockback and knockdown manually
 					if (trace_ent->client)

@@ -112,13 +112,13 @@ void SFxHelper::PlayLocalSound(const int sfxHandle, const int channelNum)
 
 //------------------------------------------------------
 void SFxHelper::Trace(trace_t* tr, vec3_t start, vec3_t min, vec3_t max,
-                      vec3_t end, const int skipEntNum, const int flags)
+	vec3_t end, const int skipEntNum, const int flags)
 {
 	CG_Trace(tr, start, min, max, end, skipEntNum, flags);
 }
 
 void SFxHelper::G2Trace(trace_t* tr, vec3_t start, vec3_t min, vec3_t max,
-                        vec3_t end, const int skipEntNum, const int flags)
+	vec3_t end, const int skipEntNum, const int flags)
 {
 	//CG_Trace( tr, start, min, max, end, skipEntNum, flags, G2_COLLIDE );
 	gi.trace(tr, start, nullptr, nullptr, end, skipEntNum, flags, G2_COLLIDE, 0);
@@ -170,7 +170,7 @@ void SFxHelper::CameraShake(vec3_t origin, const float intensity, const int radi
 
 //------------------------------------------------------
 int SFxHelper::GetOriginAxisFromBolt(const centity_t& cent, const int modelNum, const int boltNum, vec3_t /*out*/origin,
-                                     vec3_t /*out*/axis[3])
+	vec3_t /*out*/axis[3])
 {
 	if (cg.time - cent.snapShotTime > 200)
 	{
@@ -179,7 +179,7 @@ int SFxHelper::GetOriginAxisFromBolt(const centity_t& cent, const int modelNum, 
 	}
 
 	mdxaBone_t bolt_matrix;
-	vec3_t G2Angles = {cent.lerpAngles[0], cent.lerpAngles[1], cent.lerpAngles[2]};
+	vec3_t G2Angles = { cent.lerpAngles[0], cent.lerpAngles[1], cent.lerpAngles[2] };
 	if (cent.currentState.eType == ET_PLAYER)
 	{
 		//players use cent.renderAngles
@@ -190,7 +190,7 @@ int SFxHelper::GetOriginAxisFromBolt(const centity_t& cent, const int modelNum, 
 			&& cent.gent->m_pVehicle //have a valid vehicle pointer
 			&& cent.gent->m_pVehicle->m_pVehicleInfo->type != VH_FIGHTER //it's not a fighter
 			&& cent.gent->m_pVehicle->m_pVehicleInfo->type != VH_SPEEDER //not a speeder
-		)
+			)
 		{
 			G2Angles[PITCH] = 0;
 			G2Angles[ROLL] = 0;
@@ -199,9 +199,9 @@ int SFxHelper::GetOriginAxisFromBolt(const centity_t& cent, const int modelNum, 
 
 	// go away and get me the bolt position for this frame please
 	const int doesBoltExist = gi.G2API_GetBoltMatrix(cent.gent->ghoul2, modelNum,
-	                                                 boltNum, &bolt_matrix, G2Angles,
-	                                                 cent.lerpOrigin, cg.time, cgs.model_draw,
-	                                                 cent.currentState.modelScale);
+		boltNum, &bolt_matrix, G2Angles,
+		cent.lerpOrigin, cg.time, cgs.model_draw,
+		cent.currentState.modelScale);
 	// set up the axis and origin we need for the actual effect spawning
 	origin[0] = bolt_matrix.matrix[0][3];
 	origin[1] = bolt_matrix.matrix[1][3];

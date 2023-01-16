@@ -38422,8 +38422,8 @@ void WP_ForcePowerStop(gentity_t* self, const forcePowers_t force_power)
 								G_AngerAlert(grip_ent);
 							}
 						}
+					}
 				}
-			}
 				else
 				{
 					grip_ent->s.eFlags &= ~EF_FORCE_GRIPPED;
@@ -38451,10 +38451,10 @@ void WP_ForcePowerStop(gentity_t* self, const forcePowers_t force_power)
 						grip_ent->s.pos.trTime = level.time;
 					}
 				}
-		}
+			}
 			self->s.loopSound = 0;
 			self->client->ps.forceGripEntityNum = ENTITYNUM_NONE;
-	}
+		}
 		if (self->client->ps.torsoAnim == BOTH_FORCEGRIP_HOLD)
 		{
 			NPC_SetAnim(self, SETANIM_BOTH, BOTH_FORCEGRIP_RELEASE, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
@@ -38733,8 +38733,8 @@ void WP_ForcePowerStop(gentity_t* self, const forcePowers_t force_power)
 								G_AngerAlert(grip_ent);
 							}
 						}
+					}
 				}
-			}
 				else
 				{
 					grip_ent->s.eFlags &= ~EF_FORCE_GRASPED;
@@ -38762,10 +38762,10 @@ void WP_ForcePowerStop(gentity_t* self, const forcePowers_t force_power)
 						grip_ent->s.pos.trTime = level.time;
 					}
 				}
-		}
+			}
 			self->s.loopSound = 0;
 			self->client->ps.forceGripEntityNum = ENTITYNUM_NONE;
-}
+		}
 		if (self->client->ps.torsoAnim == BOTH_FORCEGRIP_HOLD)
 		{
 			NPC_SetAnim(self, SETANIM_BOTH, BOTH_FORCEGRIP_RELEASE, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
@@ -39551,8 +39551,8 @@ static void wp_force_power_run(gentity_t* self, forcePowers_t force_power, userc
 					}
 				}
 			}
-			}
 		}
+	}
 
 	if (self->client->ps.forcePowersActive & 1 << FP_GRIP)
 	{
@@ -40320,8 +40320,8 @@ static void wp_force_power_run(gentity_t* self, forcePowers_t force_power, userc
 				}
 				grip_ent->painDebounceTime = level.time + 2000;
 			}
-			}
 		}
+	}
 	break;
 	case FP_REPULSE:
 	{
@@ -40523,7 +40523,7 @@ static void wp_force_power_run(gentity_t* self, forcePowers_t force_power, userc
 	default:
 		break;
 	}
-	}
+}
 
 void WP_CheckForcedPowers(gentity_t* self, usercmd_t* ucmd)
 {
@@ -40987,7 +40987,7 @@ void WP_ForcePowersUpdate(gentity_t* self, usercmd_t* ucmd)
 						{
 							WP_ForcePowerRegenerate(self, 4);
 							BG_ReduceSaberMishapLevel(&self->client->ps);
-							BG_ReduceBlasterMishapLevel(&self->client->ps);
+							//BG_ReduceBlasterMishapLevel(&self->client->ps);
 							self->client->ps.powerups[PW_MEDITATE] = level.time + self->client->ps.torsoAnimTimer +
 								3000;
 							self->client->ps.eFlags |= EF_MEDITATING;
@@ -40996,7 +40996,7 @@ void WP_ForcePowersUpdate(gentity_t* self, usercmd_t* ucmd)
 						{
 							WP_ForcePowerRegenerate(self, 2);
 							BG_ReduceSaberMishapLevel(&self->client->ps);
-							BG_ReduceBlasterMishapLevel(&self->client->ps);
+							//BG_ReduceBlasterMishapLevel(&self->client->ps);
 						}
 						else if (self->client->ps.ManualBlockingFlags & 1 << MBF_BLOCKING)
 						{

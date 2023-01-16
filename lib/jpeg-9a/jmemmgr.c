@@ -379,7 +379,7 @@ alloc_large(const j_common_ptr cinfo, const int pool_id, size_t sizeofobject)
 
 METHODDEF(JSAMPARRAY)
 alloc_sarray(const j_common_ptr cinfo, const int pool_id,
-             const JDIMENSION samplesperrow, const JDIMENSION numrows)
+	const JDIMENSION samplesperrow, const JDIMENSION numrows)
 	/* Allocate a 2-D sample array */
 {
 	const my_mem_ptr mem = (my_mem_ptr)cinfo->mem;
@@ -423,7 +423,7 @@ alloc_sarray(const j_common_ptr cinfo, const int pool_id,
 
 METHODDEF(JBLOCKARRAY)
 alloc_barray(const j_common_ptr cinfo, const int pool_id,
-             const JDIMENSION blocksperrow, const JDIMENSION numrows)
+	const JDIMENSION blocksperrow, const JDIMENSION numrows)
 	/* Allocate a 2-D coefficient-block array */
 {
 	const my_mem_ptr mem = (my_mem_ptr)cinfo->mem;
@@ -498,8 +498,8 @@ alloc_barray(const j_common_ptr cinfo, const int pool_id,
 
 METHODDEF(jvirt_sarray_ptr)
 request_virt_sarray(const j_common_ptr cinfo, const int pool_id, const boolean pre_zero,
-                    const JDIMENSION samplesperrow, const JDIMENSION numrows,
-                    const JDIMENSION maxaccess)
+	const JDIMENSION samplesperrow, const JDIMENSION numrows,
+	const JDIMENSION maxaccess)
 	/* Request a virtual 2-D sample array */
 {
 	const my_mem_ptr mem = (my_mem_ptr)cinfo->mem;
@@ -526,8 +526,8 @@ request_virt_sarray(const j_common_ptr cinfo, const int pool_id, const boolean p
 
 METHODDEF(jvirt_barray_ptr)
 request_virt_barray(const j_common_ptr cinfo, const int pool_id, const boolean pre_zero,
-                    const JDIMENSION blocksperrow, const JDIMENSION numrows,
-                    const JDIMENSION maxaccess)
+	const JDIMENSION blocksperrow, const JDIMENSION numrows,
+	const JDIMENSION maxaccess)
 	/* Request a virtual 2-D coefficient-block array */
 {
 	const my_mem_ptr mem = (my_mem_ptr)cinfo->mem;
@@ -721,8 +721,8 @@ do_barray_io(const j_common_ptr cinfo, const jvirt_barray_ptr ptr, const boolean
 
 METHODDEF(JSAMPARRAY)
 access_virt_sarray(const j_common_ptr cinfo, const jvirt_sarray_ptr ptr,
-                   const JDIMENSION start_row, const JDIMENSION num_rows,
-                   const boolean writable)
+	const JDIMENSION start_row, const JDIMENSION num_rows,
+	const boolean writable)
 	/* Access the part of a virtual sample array starting at start_row */
 	/* and extending for num_rows rows.  writable is true if  */
 	/* caller intends to modify the accessed area. */
@@ -805,8 +805,8 @@ access_virt_sarray(const j_common_ptr cinfo, const jvirt_sarray_ptr ptr,
 
 METHODDEF(JBLOCKARRAY)
 access_virt_barray(const j_common_ptr cinfo, const jvirt_barray_ptr ptr,
-                   const JDIMENSION start_row, const JDIMENSION num_rows,
-                   const boolean writable)
+	const JDIMENSION start_row, const JDIMENSION num_rows,
+	const boolean writable)
 	/* Access the part of a virtual block array starting at start_row */
 	/* and extending for num_rows rows.  writable is true if  */
 	/* caller intends to modify the accessed area. */

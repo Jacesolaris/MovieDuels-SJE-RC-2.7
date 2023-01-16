@@ -34,7 +34,7 @@ extern void G_InitPlayerFromCvars(gentity_t* ent);
 extern void Q3_SetViewEntity(int entID, const char* name);
 extern qboolean G_ClearViewEntity(gentity_t* ent);
 extern void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, float strength,
-                        qboolean break_saber_lock);
+	qboolean break_saber_lock);
 
 extern void WP_SetSaber(gentity_t* ent, int saber_num, const char* saber_name);
 extern void WP_RemoveSaber(gentity_t* ent, int saber_num);
@@ -211,7 +211,7 @@ static void Svcmd_Saber_f()
 {
 	const char* saber = gi.argv(1);
 	const char* saber2 = gi.argv(2);
-	char name[MAX_CVAR_VALUE_STRING] = {0};
+	char name[MAX_CVAR_VALUE_STRING] = { 0 };
 
 	if (gi.Cvar_VariableIntegerValue("ui_npc_saber") || gi.Cvar_VariableIntegerValue("ui_npc_sabertwo"))
 	{
@@ -391,9 +391,9 @@ static void Svcmd_ForceSetLevel_f(const int forcePower)
 	if (!VALIDSTRING(newVal))
 	{
 		gi.Printf("Current %s level is %d\n", SetForceTable[forcePower].desc,
-		          g_entities[0].client->ps.forcePowerLevel[forcePower]);
+			g_entities[0].client->ps.forcePowerLevel[forcePower]);
 		gi.Printf("Usage:  %s <level> (0 - %i)\n", SetForceTable[forcePower].cmdname,
-		          SetForceTable[forcePower].maxlevel);
+			SetForceTable[forcePower].maxlevel);
 		return;
 	}
 	const int val = atoi(newVal);
@@ -421,7 +421,7 @@ extern qboolean PM_SaberInTransition(int move);
 extern qboolean PM_SaberInAttack(int move);
 extern qboolean WP_SaberCanTurnOffSomeBlades(const saberInfo_t* saber);
 extern void NPC_SetAnim(gentity_t* ent, int set_anim_parts, int anim, int set_anim_flags,
-                        int i_blend = SETANIM_BLEND_DEFAULT);
+	int i_blend = SETANIM_BLEND_DEFAULT);
 
 void Svcmd_SaberAttackCycle_f()
 {
@@ -906,7 +906,7 @@ static void Svcmd_PlayerFaction_f()
 	{
 		gi.Printf(S_COLOR_RED "'playerfaction' - change player faction, requires a faction name!\n");
 		gi.Printf(S_COLOR_RED "Current faction is: %s\n",
-		          GetStringForID(FactionTable, g_entities[0].client->friendlyfaction));
+			GetStringForID(FactionTable, g_entities[0].client->friendlyfaction));
 		gi.Printf(S_COLOR_RED "Valid faction names are:\n");
 		for (int n = FACTION_SOLO + 1; n < TEAM_NUM_FACTIONS; n++)
 		{
@@ -920,7 +920,7 @@ static void Svcmd_PlayerFaction_f()
 		{
 			gi.Printf(S_COLOR_RED "'playerfaction' unrecognized faction name %s!\n", cmd2);
 			gi.Printf(S_COLOR_RED "Current faction is: %s\n",
-			          GetStringForID(FactionTable, g_entities[0].client->friendlyfaction));
+				GetStringForID(FactionTable, g_entities[0].client->friendlyfaction));
 			gi.Printf(S_COLOR_RED "Valid faction names are:\n");
 			for (int n = FACTION_SOLO; n < TEAM_NUM_FACTIONS; n++)
 			{
@@ -996,7 +996,7 @@ static void Svcmd_PlayerModel_f()
 				"USAGE: playerModel <NPC Name>\n       playerModel <g2model> <skinhead> <skintorso> <skinlower>\n       playerModel player (builds player from customized menu settings)"
 				S_COLOR_WHITE "\n");
 			gi.Printf("playerModel = %s ", va("%s %s %s %s\n", g_char_model->string, g_char_skin_head->string,
-			                                  g_char_skin_torso->string, g_char_skin_legs->string));
+				g_char_skin_torso->string, g_char_skin_legs->string));
 		}
 		else if (gi.argc() == 2)
 		{
@@ -1024,7 +1024,7 @@ static void Svcmd_PlayerModel_f()
 				"USAGE: playerModel <NPC Name>\n       playerModel <g2model> <skinhead> <skintorso> <skinlower>\n       playerModel player (builds player from customized menu settings)"
 				S_COLOR_WHITE "\n");
 			gi.Printf("playerModel = %s ", va("%s %s %s %s\n", g_char_model->string, g_char_skin_head->string,
-			                                  g_char_skin_torso->string, g_char_skin_legs->string));
+				g_char_skin_torso->string, g_char_skin_legs->string));
 		}
 		else if (gi.argc() == 2)
 		{
@@ -1050,7 +1050,7 @@ static void Svcmd_PlayerModel_f()
 				"USAGE: playerModel <NPC Name>\n       playerModel <g2model> <skinhead> <skintorso> <skinlower>\n       playerModel player (builds player from customized menu settings)"
 				S_COLOR_WHITE "\n");
 			gi.Printf("playerModel = %s ", va("%s %s %s %s\n", g_char_model->string, g_char_skin_head->string,
-			                                  g_char_skin_torso->string, g_char_skin_legs->string));
+				g_char_skin_torso->string, g_char_skin_legs->string));
 		}
 		else if (gi.argc() == 2)
 		{
@@ -1084,7 +1084,7 @@ static void Svcmd_PlayerTint_f()
 	{
 		gi.Printf(S_COLOR_RED "USAGE: playerTint <red 0 - 255> <green 0 - 255> <blue 0 - 255>\n");
 		gi.Printf("playerTint = %s\n", va("%d %d %d", g_char_color_red->integer, g_char_color_green->integer,
-		                                  g_char_color_blue->integer));
+			g_char_color_blue->integer));
 	}
 }
 
@@ -1115,7 +1115,7 @@ static void Svcmd_Secrets_f()
 	else if (pl->client->sess.missionStats.secretsFound == pl->client->sess.missionStats.totalSecrets)
 	{
 		gi.Printf("You've found all " S_COLOR_GREEN "%i" S_COLOR_WHITE " secrets on this map!\n",
-		          pl->client->sess.missionStats.secretsFound);
+			pl->client->sess.missionStats.secretsFound);
 	}
 	else
 	{

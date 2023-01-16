@@ -71,10 +71,10 @@ extern pmove_t* pm;
 extern pml_t pml;
 
 void BG_IK_MoveLimb(CGhoul2Info_v& ghoul2, const int bolt_index, const char* anim_bone, const char* first_bone,
-                    const char* second_bone,
-                    const int time, const entityState_t* ent, const int anim_file_index, const int base_pose,
-                    vec3_t desired_pos, qboolean* ik_in_progress, vec3_t origin,
-                    vec3_t angles, vec3_t scale, const int blend_time, const qboolean force_halt)
+	const char* second_bone,
+	const int time, const entityState_t* ent, const int anim_file_index, const int base_pose,
+	vec3_t desired_pos, qboolean* ik_in_progress, vec3_t origin,
+	vec3_t angles, vec3_t scale, const int blend_time, const qboolean force_halt)
 {
 	mdxaBone_t hold_point_matrix;
 	const animation_t* anim = &level.knownAnimFileSets[anim_file_index].animations[base_pose];
@@ -236,19 +236,19 @@ void BG_IK_MoveLimb(CGhoul2Info_v& ghoul2, const int bolt_index, const char* ani
 
 		//then reset the angles/anims on these PCJs
 		gi.G2API_SetBoneAngles(&ghoul2[0], "lower_lumbar", vec3_origin, BONE_ANGLES_POSTMULT, POSITIVE_X, NEGATIVE_Y,
-		                       NEGATIVE_Z, nullptr, 0, time);
+			NEGATIVE_Z, nullptr, 0, time);
 		gi.G2API_SetBoneAngles(&ghoul2[0], "upper_lumbar", vec3_origin, BONE_ANGLES_POSTMULT, POSITIVE_X, NEGATIVE_Y,
-		                       NEGATIVE_Z, nullptr, 0, time);
+			NEGATIVE_Z, nullptr, 0, time);
 		gi.G2API_SetBoneAngles(&ghoul2[0], "thoracic", vec3_origin, BONE_ANGLES_POSTMULT, POSITIVE_X, NEGATIVE_Y,
-		                       NEGATIVE_Z, nullptr, 0, time);
+			NEGATIVE_Z, nullptr, 0, time);
 		gi.G2API_SetBoneAngles(&ghoul2[0], second_bone, vec3_origin, BONE_ANGLES_POSTMULT, POSITIVE_X, NEGATIVE_Y,
-		                       NEGATIVE_Z, nullptr, 0, time);
+			NEGATIVE_Z, nullptr, 0, time);
 		gi.G2API_SetBoneAngles(&ghoul2[0], first_bone, vec3_origin, BONE_ANGLES_POSTMULT, POSITIVE_X, NEGATIVE_Y,
-		                       NEGATIVE_Z, nullptr, 0, time);
+			NEGATIVE_Z, nullptr, 0, time);
 
 		//Get the anim/frames that the pelvis is on exactly, and match the left arm back up with them again.
 		gi.G2API_GetBoneAnim(&ghoul2[0], anim_bone, time, &c_frame, &s_frame, &e_frame, &flags,
-		                     &anim_speed, nullptr);
+			&anim_speed, nullptr);
 		gi.G2API_SetBoneAnim(&ghoul2[0], "lower_lumbar", s_frame, e_frame, flags, anim_speed, time, s_frame, 300);
 		gi.G2API_SetBoneAnim(&ghoul2[0], "upper_lumbar", s_frame, e_frame, flags, anim_speed, time, s_frame, 300);
 		gi.G2API_SetBoneAnim(&ghoul2[0], "thoracic", s_frame, e_frame, flags, anim_speed, time, s_frame, 300);
@@ -304,7 +304,7 @@ void PM_IKUpdate(gentity_t* ent)
 			t_angles[PITCH] = t_angles[ROLL] = 0;
 
 			gi.G2API_GetBoltMatrix(holder->ghoul2, 0, ent->client->ps.heldByBolt, &bolt_matrix, t_angles,
-			                       holder->client->ps.origin, level.time, nullptr, holder->s.modelScale);
+				holder->client->ps.origin, level.time, nullptr, holder->s.modelScale);
 			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, bolt_org);
 
 			const int grabbed_by_bolt = gi.G2API_AddBolt(&ent->ghoul2[0], first_bone);
@@ -312,10 +312,10 @@ void PM_IKUpdate(gentity_t* ent)
 			{
 				//point the limb
 				BG_IK_MoveLimb(ent->ghoul2, grabbed_by_bolt, anim_bone, first_bone, second_bone,
-				               level.time, &ent->s, ent->client->clientInfo.animFileIndex,
-				               ent->client->ps.torsoAnim/*BOTH_DEAD1*/, bolt_org, &ent->client->ps.ikStatus,
-				               ent->client->ps.origin, ent->client->ps.viewangles, ent->s.modelScale,
-				               500, qfalse);
+					level.time, &ent->s, ent->client->clientInfo.animFileIndex,
+					ent->client->ps.torsoAnim/*BOTH_DEAD1*/, bolt_org, &ent->client->ps.ikStatus,
+					ent->client->ps.origin, ent->client->ps.viewangles, ent->s.modelScale,
+					500, qfalse);
 
 				//now see if we need to be turned and/or pulled
 				vec3_t grab_diff, grabbed_by_org;
@@ -324,7 +324,7 @@ void PM_IKUpdate(gentity_t* ent)
 				t_angles[PITCH] = t_angles[ROLL] = 0;
 
 				gi.G2API_GetBoltMatrix(ent->ghoul2, 0, grabbed_by_bolt, &bolt_matrix, t_angles, ent->client->ps.origin,
-				                       level.time, nullptr, ent->s.modelScale);
+					level.time, nullptr, ent->s.modelScale);
 				gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, grabbed_by_org);
 
 				//check for turn
@@ -358,7 +358,7 @@ void PM_IKUpdate(gentity_t* ent)
 					vec3_t dest_org;
 					VectorAdd(ent->currentOrigin, grab_diff, dest_org);
 					gi.trace(&trace, ent->currentOrigin, ent->mins, ent->maxs, dest_org, ent->s.number,
-					         ent->clipmask & ~holder->contents, static_cast<EG2_Collision>(0), 0);
+						ent->clipmask & ~holder->contents, static_cast<EG2_Collision>(0), 0);
 					G_SetOrigin(ent, trace.endpos);
 				}
 				//FIXME: if I need to turn to keep my bone facing him, do so...
@@ -388,23 +388,23 @@ void PM_IKUpdate(gentity_t* ent)
 		if (ent->client->ps.heldByBolt)
 		{
 			BG_IK_MoveLimb(ent->ghoul2, ent->client->ps.heldByBolt, anim_bone, first_bone, second_bone,
-			               level.time, &ent->s, ent->client->clientInfo.animFileIndex,
-			               ent->client->ps.torsoAnim/*BOTH_DEAD1*/, vec3_origin,
-			               &ent->client->ps.ikStatus, ent->client->ps.origin,
-			               ent->client->ps.viewangles, ent->s.modelScale, 500, qtrue);
+				level.time, &ent->s, ent->client->clientInfo.animFileIndex,
+				ent->client->ps.torsoAnim/*BOTH_DEAD1*/, vec3_origin,
+				&ent->client->ps.ikStatus, ent->client->ps.origin,
+				ent->client->ps.viewangles, ent->s.modelScale, 500, qtrue);
 		}
 	}
 }
 
 void BG_G2SetBoneAngles(const centity_t* cent, const int bone_index, const vec3_t angles, const int flags,
-                        const Eorientations up, const Eorientations right, const Eorientations forward,
-                        qhandle_t* model_list)
+	const Eorientations up, const Eorientations right, const Eorientations forward,
+	qhandle_t* model_list)
 {
 	if (bone_index != -1)
 	{
 		gi.G2API_SetBoneAnglesIndex(&cent->gent->ghoul2[0], bone_index, angles, flags, up, right, forward, model_list,
-		                            0,
-		                            0);
+			0,
+			0);
 	}
 }
 
@@ -463,8 +463,8 @@ qboolean PM_LockAngles(gentity_t* ent, usercmd_t* ucmd)
 qboolean PM_AdjustAnglesToGripper(gentity_t* ent, usercmd_t* ucmd)
 {
 	if ((ent->client->ps.eFlags & EF_FORCE_GRIPPED
-			|| ent->client->ps.eFlags & EF_FORCE_DRAINED
-			|| ent->client->ps.eFlags & EF_FORCE_GRASPED)
+		|| ent->client->ps.eFlags & EF_FORCE_DRAINED
+		|| ent->client->ps.eFlags & EF_FORCE_GRASPED)
 		&& ent->enemy)
 	{
 		vec3_t dir, angles;
@@ -516,9 +516,9 @@ qboolean PM_AdjustAngleForWallRun(gentity_t* ent, usercmd_t* ucmd, const qboolea
 		//wall-running and not at end of anim
 		//stick to wall, if there is one
 		vec3_t fwd, rt, trace_to;
-		const vec3_t fwd_angles = {0, ent->client->ps.viewangles[YAW], 0};
-		const vec3_t maxs = {ent->maxs[0], ent->maxs[1], 24};
-		const vec3_t mins = {ent->mins[0], ent->mins[1], 0};
+		const vec3_t fwd_angles = { 0, ent->client->ps.viewangles[YAW], 0 };
+		const vec3_t maxs = { ent->maxs[0], ent->maxs[1], 24 };
+		const vec3_t mins = { ent->mins[0], ent->mins[1], 0 };
 		trace_t trace;
 		float dist, yaw_adjust;
 
@@ -536,20 +536,20 @@ qboolean PM_AdjustAngleForWallRun(gentity_t* ent, usercmd_t* ucmd, const qboolea
 		}
 		VectorMA(ent->currentOrigin, dist, rt, trace_to);
 		gi.trace(&trace, ent->currentOrigin, mins, maxs, trace_to, ent->s.number, ent->clipmask,
-		         static_cast<EG2_Collision>(0), 0);
+			static_cast<EG2_Collision>(0), 0);
 		if (trace.fraction < 1.0f
 			&& (trace.plane.normal[2] >= 0.0f && trace.plane.normal[2] <= 0.4f))
 		{
 			trace_t trace2;
 			vec3_t trace_to2;
-			vec3_t wall_run_fwd, wall_run_angles = {0};
+			vec3_t wall_run_fwd, wall_run_angles = { 0 };
 
 			wall_run_angles[YAW] = vectoyaw(trace.plane.normal) + yaw_adjust;
 			AngleVectors(wall_run_angles, wall_run_fwd, nullptr, nullptr);
 
 			VectorMA(ent->currentOrigin, 32, wall_run_fwd, trace_to2);
 			gi.trace(&trace2, ent->currentOrigin, mins, maxs, trace_to2, ent->s.number, ent->clipmask,
-			         static_cast<EG2_Collision>(0), 0);
+				static_cast<EG2_Collision>(0), 0);
 			if (trace2.fraction < 1.0f && DotProduct(trace2.plane.normal, wall_run_fwd) <= -0.999f)
 			{
 				//wall we can't run on in front of us
@@ -707,7 +707,7 @@ qboolean PM_AdjustAnglesForSpinningFlip(gentity_t* ent, usercmd_t* ucmd, const q
 			PlayerAffectedByStasis())
 		{
 			vec3_t push_dir;
-			const vec3_t push_angles = {0, ent->angle, 0};
+			const vec3_t push_angles = { 0, ent->angle, 0 };
 			AngleVectors(push_angles, push_dir, nullptr, nullptr);
 			if (DotProduct(ent->client->ps.velocity, push_dir) < 100)
 			{
@@ -743,7 +743,7 @@ qboolean PM_AdjustAnglesForBackAttack(gentity_t* ent, usercmd_t* ucmd)
 		return qfalse;
 	}
 	if ((ent->client->ps.saber_move == LS_A_BACK || ent->client->ps.saber_move == LS_A_BACK_CR || ent->client->ps.
-			saber_move == LS_A_BACKSTAB)
+		saber_move == LS_A_BACKSTAB)
 		&& PM_InAnimForSaberMove(ent->client->ps.torsoAnim, ent->client->ps.saber_move))
 	{
 		if (ent->client->ps.saber_move != LS_A_BACKSTAB || !ent->enemy || ent->s.number >= MAX_CLIENTS && !
@@ -943,16 +943,16 @@ qboolean PM_AdjustAngleForWallRunUp(gentity_t* ent, usercmd_t* ucmd, const qbool
 		//wall-running up
 		//stick to wall, if there is one
 		vec3_t fwd, trace_to;
-		const vec3_t fwd_angles = {0, ent->client->ps.viewangles[YAW], 0};
-		const vec3_t maxs = {ent->maxs[0], ent->maxs[1], 24};
-		const vec3_t mins = {ent->mins[0], ent->mins[1], 0};
+		const vec3_t fwd_angles = { 0, ent->client->ps.viewangles[YAW], 0 };
+		const vec3_t maxs = { ent->maxs[0], ent->maxs[1], 24 };
+		const vec3_t mins = { ent->mins[0], ent->mins[1], 0 };
 		trace_t trace;
 		constexpr float dist = 128;
 
 		AngleVectors(fwd_angles, fwd, nullptr, nullptr);
 		VectorMA(ent->currentOrigin, dist, fwd, trace_to);
 		gi.trace(&trace, ent->currentOrigin, mins, maxs, trace_to, ent->s.number, ent->clipmask,
-		         static_cast<EG2_Collision>(0), 0);
+			static_cast<EG2_Collision>(0), 0);
 		if (trace.fraction > 0.5f)
 		{
 			//hmm, some room, see if there's a floor right here
@@ -963,7 +963,7 @@ qboolean PM_AdjustAngleForWallRunUp(gentity_t* ent, usercmd_t* ucmd, const qbool
 			VectorCopy(top, bottom);
 			bottom[2] -= 64.0f; //was 32.0f
 			gi.trace(&trace2, top, ent->mins, ent->maxs, bottom, ent->s.number, ent->clipmask,
-			         static_cast<EG2_Collision>(0), 0);
+				static_cast<EG2_Collision>(0), 0);
 			if (!trace2.allsolid
 				&& !trace2.startsolid
 				&& trace2.fraction < 1.0f
@@ -992,7 +992,7 @@ qboolean PM_AdjustAngleForWallRunUp(gentity_t* ent, usercmd_t* ucmd, const qbool
 			VectorCopy(ent->currentOrigin, trace_to);
 			trace_to[2] += 64;
 			gi.trace(&trace2, ent->currentOrigin, mins, maxs, trace_to, ent->s.number, ent->clipmask,
-			         static_cast<EG2_Collision>(0), 0);
+				static_cast<EG2_Collision>(0), 0);
 			if (trace2.fraction < 1.0f)
 			{
 				//will hit a ceiling, so force jump-off right now
@@ -1083,9 +1083,9 @@ qboolean PM_AdjustAngleForWallJump(gentity_t* ent, usercmd_t* ucmd, const qboole
 		//hugging wall, getting ready to jump off
 		//stick to wall, if there is one
 		vec3_t check_dir, trace_to;
-		const vec3_t fwd_angles = {0, ent->client->ps.viewangles[YAW], 0};
-		const vec3_t maxs = {ent->maxs[0], ent->maxs[1], 24};
-		const vec3_t mins = {ent->mins[0], ent->mins[1], 0};
+		const vec3_t fwd_angles = { 0, ent->client->ps.viewangles[YAW], 0 };
+		const vec3_t maxs = { ent->maxs[0], ent->maxs[1], 24 };
+		const vec3_t mins = { ent->mins[0], ent->mins[1], 0 };
 		trace_t trace;
 		constexpr float dist = 128;
 		float yaw_adjust;
@@ -1138,8 +1138,8 @@ qboolean PM_AdjustAngleForWallJump(gentity_t* ent, usercmd_t* ucmd, const qboole
 					{
 						ent->client->ps.SaberDeactivate();
 						NPC_SetAnim(ent, SETANIM_BOTH,
-						            BOTH_FORCEWALLRELEASE_FORWARD + (ent->client->ps.legsAnim -
-							            BOTH_FORCEWALLHOLD_FORWARD), SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+							BOTH_FORCEWALLRELEASE_FORWARD + (ent->client->ps.legsAnim -
+								BOTH_FORCEWALLHOLD_FORWARD), SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						ent->client->ps.legsAnimTimer = ent->client->ps.torsoAnimTimer = 150;
 					}
 				}
@@ -1147,7 +1147,7 @@ qboolean PM_AdjustAngleForWallJump(gentity_t* ent, usercmd_t* ucmd, const qboole
 		}
 		VectorMA(ent->currentOrigin, dist, check_dir, trace_to);
 		gi.trace(&trace, ent->currentOrigin, mins, maxs, trace_to, ent->s.number, ent->clipmask,
-		         static_cast<EG2_Collision>(0), 0);
+			static_cast<EG2_Collision>(0), 0);
 		if ( //ucmd->upmove <= 0 &&
 			ent->client->ps.legsAnimTimer > 100 &&
 			trace.fraction < 1.0f && fabs(trace.plane.normal[2]) <= MAX_WALL_GRAB_SLOPE)
@@ -1209,8 +1209,8 @@ qboolean PM_AdjustAngleForWallJump(gentity_t* ent, usercmd_t* ucmd, const qboole
 			{
 				//if was in hold pose, release now
 				NPC_SetAnim(ent, SETANIM_BOTH,
-				            BOTH_FORCEWALLRELEASE_FORWARD + (ent->client->ps.legsAnim - BOTH_FORCEWALLHOLD_FORWARD),
-				            SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+					BOTH_FORCEWALLRELEASE_FORWARD + (ent->client->ps.legsAnim - BOTH_FORCEWALLHOLD_FORWARD),
+					SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 			}
 			//no control for half a second
 			ent->client->ps.pm_flags |= PMF_TIME_KNOCKBACK;
@@ -1349,7 +1349,7 @@ qboolean PM_AdjustAnglesForStabDown(gentity_t* ent, usercmd_t* ucmd)
 		//lock our angles
 		ucmd->forwardmove = ucmd->rightmove = ucmd->upmove = 0;
 		const float elapsed_time = PM_AnimLength(ent->client->clientInfo.animFileIndex,
-		                                         static_cast<animNumber_t>(ent->client->ps.torsoAnim)) - ent->client->ps
+			static_cast<animNumber_t>(ent->client->ps.torsoAnim)) - ent->client->ps
 			.
 			torsoAnimTimer;
 		//FIXME: scale forwardmove by dist from enemy - none if right next to him (so we don't slide off!)
@@ -1395,7 +1395,7 @@ qboolean PM_AdjustAnglesForStabDown(gentity_t* ent, usercmd_t* ucmd)
 				ucmd->forwardmove = 127;
 			}
 			break;
-		default: ;
+		default:;
 		}
 		VectorClear(ent->client->ps.moveDir);
 
@@ -1916,7 +1916,7 @@ void PM_UpdateViewAngles(int saber_anim_level, playerState_t* ps, usercmd_t* cmd
 			VectorSet(tmins, -8, -8, -4);
 			VectorSet(tmaxs, 8, 8, 4);
 			gi.trace(&trace, start, tmins, tmaxs, end, gent->s.number, MASK_PLAYERSOLID, static_cast<EG2_Collision>(0),
-			         0);
+				0);
 
 			ps->leanofs = floor(static_cast<float>(leanofs) * trace.fraction);
 
@@ -2176,7 +2176,7 @@ void PM_UpdateViewAngles(int saber_anim_level, playerState_t* ps, usercmd_t* cmd
 				VectorSet(tmins, -8, -8, -4);
 				VectorSet(tmaxs, 8, 8, 4);
 				gi.trace(&trace, start, tmins, tmaxs, end, gent->s.number, MASK_PLAYERSOLID,
-				         static_cast<EG2_Collision>(0), 0);
+					static_cast<EG2_Collision>(0), 0);
 
 				ps->leanofs = floor(static_cast<float>(leanofs) * trace.fraction);
 

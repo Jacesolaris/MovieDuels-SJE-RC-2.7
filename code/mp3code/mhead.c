@@ -48,7 +48,7 @@ static const int mp_br_table[2][16] =
 	{0, 32, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320, 384, 0}
 };
 static const int mp_sr20_table[2][4] =
-	{{441, 480, 320, -999}, {882, 960, 640, -999}};
+{ {441, 480, 320, -999}, {882, 960, 640, -999} };
 
 static const int mp_br_tableL1[2][16] =
 {
@@ -201,44 +201,44 @@ int head_info2(const unsigned char* buf, const unsigned int n, MPEG_HEAD* h, int
 	switch (h->option)
 	{
 	case 1: /* layer III */
+	{
+		if (h->br_index > 0)
+			*br = 1000 * mp_br_tableL3[h->id][h->br_index];
+		else
 		{
-			if (h->br_index > 0)
-				*br = 1000 * mp_br_tableL3[h->id][h->br_index];
+			if (h->id) // mpeg1
+
+				*br = 1000 * framebytes * mp_sr20_table[h->id][h->sr_index] / (144 * 20);
 			else
 			{
-				if (h->id) // mpeg1
+				// mpeg2
+				if ((h->sync & 1) == 0) //  flags mpeg25
 
-					*br = 1000 * framebytes * mp_sr20_table[h->id][h->sr_index] / (144 * 20);
+					*br = 500 * framebytes * mp_sr20_table[h->id][h->sr_index] / (72 * 20);
 				else
-				{
-					// mpeg2
-					if ((h->sync & 1) == 0) //  flags mpeg25
-
-						*br = 500 * framebytes * mp_sr20_table[h->id][h->sr_index] / (72 * 20);
-					else
-						*br = 1000 * framebytes * mp_sr20_table[h->id][h->sr_index] / (72 * 20);
-				}
+					*br = 1000 * framebytes * mp_sr20_table[h->id][h->sr_index] / (72 * 20);
 			}
 		}
-		break;
+	}
+	break;
 
 	case 2: /* layer II */
-		{
-			if (h->br_index > 0)
-				*br = 1000 * mp_br_table[h->id][h->br_index];
-			else
-				*br = 1000 * framebytes * mp_sr20_table[h->id][h->sr_index] / (144 * 20);
-		}
-		break;
+	{
+		if (h->br_index > 0)
+			*br = 1000 * mp_br_table[h->id][h->br_index];
+		else
+			*br = 1000 * framebytes * mp_sr20_table[h->id][h->sr_index] / (144 * 20);
+	}
+	break;
 
 	case 3: /* layer I */
-		{
-			if (h->br_index > 0)
-				*br = 1000 * mp_br_tableL1[h->id][h->br_index];
-			else
-				*br = 1000 * framebytes * mp_sr20_table[h->id][h->sr_index] / (48 * 20);
-		}
-		break;
+	{
+		if (h->br_index > 0)
+			*br = 1000 * mp_br_tableL1[h->id][h->br_index];
+		else
+			*br = 1000 * framebytes * mp_sr20_table[h->id][h->sr_index] / (48 * 20);
+	}
+	break;
 
 	default:
 

@@ -127,7 +127,7 @@ bool VEH_StartStrafeRam(Vehicle_t* p_veh, const bool Right)
 			vec3_t right;
 			AngleVectors(p_veh->m_vOrientation, nullptr, right, nullptr);
 			VectorMA(p_veh->m_pParentEntity->client->ps.velocity, Right ? speed : -speed, right,
-			         p_veh->m_pParentEntity->pos3);
+				p_veh->m_pParentEntity->pos3);
 
 			p_veh->m_ulFlags |= VEH_STRAFERAM;
 			p_veh->m_fStrafeTime = Right ? STRAFERAM_DURATION : -STRAFERAM_DURATION;
@@ -167,7 +167,7 @@ bool VEH_StartStrafeRam(Vehicle_t* p_veh, const bool Right)
 				case 10:
 					shift_sound = p_veh->m_pVehicleInfo->soundShift10;
 					break;
-				default: ;
+				default:;
 				}
 				if (shift_sound)
 				{
@@ -266,7 +266,7 @@ bool Update(Vehicle_t* p_veh, const usercmd_t* p_ucmd)
 			for (int i = 0; i < MAX_VEHICLE_EXHAUSTS && p_veh->m_iExhaustTag[i] != -1; i++)
 			{
 				G_PlayEffect(p_veh->m_pVehicleInfo->iExhaustFX, parent->playerModel, p_veh->m_iExhaustTag[i],
-				             parent->s.number, parent->currentOrigin, 1, qtrue);
+					parent->s.number, parent->currentOrigin, 1, qtrue);
 			}
 			// accelerate sound when going slow and advancing to speed
 			if (speed < 100.0f)
@@ -290,7 +290,7 @@ bool Update(Vehicle_t* p_veh, const usercmd_t* p_ucmd)
 			for (int i = 0; i < MAX_VEHICLE_EXHAUSTS && p_veh->m_iExhaustTag[i] != -1; i++)
 			{
 				G_StopEffect(p_veh->m_pVehicleInfo->iExhaustFX, parent->playerModel, p_veh->m_iExhaustTag[i],
-				             parent->s.number);
+					parent->s.number);
 
 				// breaking
 				if (speed > 100.0f)
@@ -343,7 +343,7 @@ bool Update(Vehicle_t* p_veh, const usercmd_t* p_ucmd)
 						case 10:
 							shift_sound = p_veh->m_pVehicleInfo->soundShift10;
 							break;
-						default: ;
+						default:;
 						}
 						if (shift_sound)
 						{
@@ -370,7 +370,7 @@ bool Update(Vehicle_t* p_veh, const usercmd_t* p_ucmd)
 		{
 			p_veh->m_ulFlags |= VEH_ARMORGONE;
 			G_PlayEffect(p_veh->m_pVehicleInfo->iArmorGoneFX, parent->playerModel, parent->crotchBolt, parent->s.number,
-			             parent->currentOrigin, 1, qtrue);
+				parent->currentOrigin, 1, qtrue);
 			parent->s.loopSound = G_SoundIndex("sound/vehicles/common/fire_lp.wav");
 		}
 	}
@@ -447,7 +447,7 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 		||
 		(parent_ps && parent_ps->electrifyTime > cur_time && p_veh->m_pVehicleInfo->turboSpeed) //make them go!
 #endif
-	)
+		)
 	{
 #ifdef _JK2MP
 		if ((parent_ps && parent_ps->electrifyTime > cur_time) ||
@@ -456,28 +456,28 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 					(p_veh->m_pPilot->playerState->weapon == WP_SABER && p_veh->m_pPilot->playerState->saberHolstered))))
 		{
 #endif
-		if (cur_time - p_veh->m_iTurboTime > p_veh->m_pVehicleInfo->turboRecharge)
-		{
-			p_veh->m_iTurboTime = cur_time + p_veh->m_pVehicleInfo->turboDuration;
-			if (p_veh->m_pVehicleInfo->iTurboStartFX)
+			if (cur_time - p_veh->m_iTurboTime > p_veh->m_pVehicleInfo->turboRecharge)
 			{
-				for (int i = 0; i < MAX_VEHICLE_EXHAUSTS && p_veh->m_iExhaustTag[i] != -1; i++)
+				p_veh->m_iTurboTime = cur_time + p_veh->m_pVehicleInfo->turboDuration;
+				if (p_veh->m_pVehicleInfo->iTurboStartFX)
 				{
-#ifndef _JK2MP//SP
-					// Start The Turbo Fx Start
-					//--------------------------
-					G_PlayEffect(p_veh->m_pVehicleInfo->iTurboStartFX, p_veh->m_pParentEntity->playerModel,
-					             p_veh->m_iExhaustTag[i], p_veh->m_pParentEntity->s.number,
-					             p_veh->m_pParentEntity->currentOrigin);
-
-					// Start The Looping Effect
-					//--------------------------
-					if (p_veh->m_pVehicleInfo->iTurboFX)
+					for (int i = 0; i < MAX_VEHICLE_EXHAUSTS && p_veh->m_iExhaustTag[i] != -1; i++)
 					{
-						G_PlayEffect(p_veh->m_pVehicleInfo->iTurboFX, p_veh->m_pParentEntity->playerModel,
-						             p_veh->m_iExhaustTag[i], p_veh->m_pParentEntity->s.number,
-						             p_veh->m_pParentEntity->currentOrigin, p_veh->m_pVehicleInfo->turboDuration, qtrue);
-					}
+#ifndef _JK2MP//SP
+						// Start The Turbo Fx Start
+						//--------------------------
+						G_PlayEffect(p_veh->m_pVehicleInfo->iTurboStartFX, p_veh->m_pParentEntity->playerModel,
+							p_veh->m_iExhaustTag[i], p_veh->m_pParentEntity->s.number,
+							p_veh->m_pParentEntity->currentOrigin);
+
+						// Start The Looping Effect
+						//--------------------------
+						if (p_veh->m_pVehicleInfo->iTurboFX)
+						{
+							G_PlayEffect(p_veh->m_pVehicleInfo->iTurboFX, p_veh->m_pParentEntity->playerModel,
+								p_veh->m_iExhaustTag[i], p_veh->m_pParentEntity->s.number,
+								p_veh->m_pParentEntity->currentOrigin, p_veh->m_pVehicleInfo->turboDuration, qtrue);
+						}
 
 #else
 #ifdef QAGAME
@@ -497,36 +497,36 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 						}
 #endif
 #endif
+					}
 				}
-			}
 #ifndef _JK2MP //kill me now
-			if (p_veh->m_pVehicleInfo->soundTurbo)
-			{
-				int turbo_sound = Q_irand2(1, 4);
-				switch (turbo_sound)
+				if (p_veh->m_pVehicleInfo->soundTurbo)
 				{
-				case 1:
-					turbo_sound = p_veh->m_pVehicleInfo->soundTurbo;
-					break;
-				case 2:
-					turbo_sound = p_veh->m_pVehicleInfo->soundTurbo2;
-					break;
-				case 3:
-					turbo_sound = p_veh->m_pVehicleInfo->soundTurbo3;
-					break;
-				case 4:
-					turbo_sound = p_veh->m_pVehicleInfo->soundTurbo4;
-					break;
-				default: ;
+					int turbo_sound = Q_irand2(1, 4);
+					switch (turbo_sound)
+					{
+					case 1:
+						turbo_sound = p_veh->m_pVehicleInfo->soundTurbo;
+						break;
+					case 2:
+						turbo_sound = p_veh->m_pVehicleInfo->soundTurbo2;
+						break;
+					case 3:
+						turbo_sound = p_veh->m_pVehicleInfo->soundTurbo3;
+						break;
+					case 4:
+						turbo_sound = p_veh->m_pVehicleInfo->soundTurbo4;
+						break;
+					default:;
+					}
+					if (turbo_sound)
+					{
+						G_SoundIndexOnEnt(p_veh->m_pParentEntity, CHAN_AUTO, turbo_sound);
+					}
 				}
-				if (turbo_sound)
-				{
-					G_SoundIndexOnEnt(p_veh->m_pParentEntity, CHAN_AUTO, turbo_sound);
-				}
-			}
 #endif
-			parent_ps->speed = p_veh->m_pVehicleInfo->turboSpeed; // Instantly Jump To Turbo Speed
-		}
+				parent_ps->speed = p_veh->m_pVehicleInfo->turboSpeed; // Instantly Jump To Turbo Speed
+			}
 #ifdef _JK2MP
 		}
 #endif
@@ -539,7 +539,7 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 #ifndef _JK2MP
 			|| level.time - p_veh->m_pParentEntity->lastMoveTime > 500
 #endif
-		)
+			)
 		{
 			p_veh->m_ulFlags &= ~VEH_SLIDEBREAKING;
 		}
@@ -729,27 +729,27 @@ void ProcessOrientCommands(Vehicle_t* p_veh)
 	else if (
 		p_veh->m_ulFlags & VEH_SLIDEBREAKING || // No Angles Control While Out Of Control
 		p_veh->m_ulFlags & VEH_OUTOFCONTROL // No Angles Control While Out Of Control
-	)
+		)
 	{
 		// Any ability to change orientation?
 	}
 	else if (
 		p_veh->m_ulFlags & VEH_STRAFERAM // No Angles Control While Strafe Ramming
-	)
+		)
 	{
 		if (p_veh->m_fStrafeTime > 0)
 		{
 			p_veh->m_fStrafeTime--;
 			p_veh->m_vOrientation[ROLL] += p_veh->m_fStrafeTime < STRAFERAM_DURATION / 2
-				                              ? -STRAFERAM_ANGLE
-				                              : STRAFERAM_ANGLE;
+				? -STRAFERAM_ANGLE
+				: STRAFERAM_ANGLE;
 		}
 		else if (p_veh->m_fStrafeTime < 0)
 		{
 			p_veh->m_fStrafeTime++;
 			p_veh->m_vOrientation[ROLL] += p_veh->m_fStrafeTime > -STRAFERAM_DURATION / 2
-				                              ? STRAFERAM_ANGLE
-				                              : -STRAFERAM_ANGLE;
+				? STRAFERAM_ANGLE
+				: -STRAFERAM_ANGLE;
 		}
 	}
 	else
@@ -783,7 +783,7 @@ extern void CG_ChangeWeapon(int num);
 
 #ifndef _JK2MP
 extern void G_StartMatrixEffect(const gentity_t* ent, int me_flags = 0, int length = 1000, float time_scale = 0.0f,
-                                int spin_time = 0);
+	int spin_time = 0);
 #endif
 
 //NOTE NOTE NOTE NOTE NOTE NOTE
@@ -893,7 +893,7 @@ void AnimateRiders(Vehicle_t* p_veh)
 			//----------
 			oldPilot->client->noRagTime = -1; // no ragdoll for you
 			G_Damage(oldPilot, p_veh->m_pPilot, p_veh->m_pPilot, p_veh->m_pPilot->currentAngles,
-			         p_veh->m_pPilot->currentOrigin, 1000, 0, MOD_CRUSH);
+				p_veh->m_pPilot->currentOrigin, 1000, 0, MOD_CRUSH);
 
 			// Compute THe Throw Direction As Backwards From The Vehicle's Velocity
 			//----------------------------------------------------------------------
@@ -983,8 +983,8 @@ void AnimateRiders(Vehicle_t* p_veh)
 			float bodyCurrent = 0.0f;
 			int bodyEnd = 0;
 			if (!!gi.G2API_GetBoneAnimIndex(&p_veh->m_pPilot->ghoul2[p_veh->m_pPilot->playerModel],
-			                                p_veh->m_pPilot->rootBone, level.time, &bodyCurrent, nullptr, &bodyEnd,
-			                                nullptr, nullptr, nullptr))
+				p_veh->m_pPilot->rootBone, level.time, &bodyCurrent, nullptr, &bodyEnd,
+				nullptr, nullptr, nullptr))
 			{
 				if (bodyCurrent <= static_cast<float>(bodyEnd) - 1.5f)
 				{
@@ -1331,7 +1331,7 @@ void G_CreateSpeederNPC(Vehicle_t** p_veh, const char* strType)
 	(*p_veh)->m_pVehicleInfo = &g_vehicleInfo[BG_VehicleGetIndex(strType)];
 #else
 	// Allocate the Vehicle.
-	*p_veh = static_cast<Vehicle_t*>(gi.Malloc(sizeof(Vehicle_t), TAG_G_ALLOC, qtrue));
+	* p_veh = static_cast<Vehicle_t*>(gi.Malloc(sizeof(Vehicle_t), TAG_G_ALLOC, qtrue));
 	(*p_veh)->m_pVehicleInfo = &g_vehicleInfo[BG_VehicleGetIndex(strType)];
 #endif
 }

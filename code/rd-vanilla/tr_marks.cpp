@@ -43,8 +43,8 @@ Out must have space for two more vertexes than in
 #define	SIDE_BACK	1
 #define	SIDE_ON		2
 static void R_ChopPolyBehindPlane(const int num_in_points, vec3_t in_points[MAX_VERTS_ON_POLY],
-                                  int* num_out_points, vec3_t out_points[MAX_VERTS_ON_POLY],
-                                  vec3_t normal, const vec_t dist, const vec_t epsilon) {
+	int* num_out_points, vec3_t out_points[MAX_VERTS_ON_POLY],
+	vec3_t normal, const vec_t dist, const vec_t epsilon) {
 	float		dists[MAX_VERTS_ON_POLY + 4] = { 0 };
 	int			sides[MAX_VERTS_ON_POLY + 4] = { 0 };
 	int			counts[3];
@@ -246,7 +246,7 @@ R_MarkFragments
 =================
 */
 int R_MarkFragments(int num_points, const vec3_t* points, const vec3_t projection,
-                    const int max_points, vec3_t point_buffer, const int max_fragments, markFragment_t* fragment_buffer) {
+	const int max_points, vec3_t point_buffer, const int max_fragments, markFragment_t* fragment_buffer) {
 	int				numsurfaces;
 	int				i, k;
 	surfaceType_t* surfaces[64];

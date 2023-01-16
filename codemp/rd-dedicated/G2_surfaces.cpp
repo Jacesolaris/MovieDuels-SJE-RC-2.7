@@ -100,7 +100,7 @@ int G2_IsSurfaceLegal(void* mod, const char* surface_name, int* flags)
  *
  ************************************************************************************************/
 mdxmSurface_t* G2_FindSurface(const CGhoul2Info* ghl_info, const surfaceInfo_v& slist, const char* surface_name,
-                              int* surf_index/*NULL*/)
+	int* surf_index/*NULL*/)
 {
 	// find the model we want
 	model_t* mod = (model_t*)ghl_info->currentModel;

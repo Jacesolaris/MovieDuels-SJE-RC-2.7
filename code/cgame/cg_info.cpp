@@ -103,8 +103,8 @@ static void ObjectivePrint_Line(const int color, const int objectIndex, int& mis
 		// this is execrable, and should NOT have had to've been done now, but...
 		//
 		extern const char* CG_DisplayBoxedText(int iBoxX, int iBoxY, int iBoxWidth, int iBoxHeight,
-		                                       const char* psText, int iFontHandle, float fScale,
-		                                       const vec4_t v4Color);
+			const char* psText, int iFontHandle, float fScale,
+			const vec4_t v4Color);
 		extern int giLinesOutput;
 		extern float gfAdvanceHack;
 
@@ -316,7 +316,7 @@ void CG_DrawDataPadObjectives(const centity_t* cent)
 	}
 
 	// Title Text at the top
-	char text[1024] = {0};
+	char text[1024] = { 0 };
 	cgi_SP_GetStringTextString("SP_INGAME_OBJECTIVES", text, sizeof text);
 	cgi_R_Font_DrawString(titleXPos, titleYPos, text, colorTable[CT_TITLE], cgs.media.qhFontMedium, -1, 1.0f);
 
@@ -334,11 +334,11 @@ void CG_DrawDataPadObjectives(const centity_t* cent)
 			//	Draw graphics that show if mission has been accomplished or not
 			cgi_R_SetColor(colorTable[CT_BLUE3]);
 			CG_DrawPic(graphicXpos, totalY - graphicYOffset, graphic_size, graphic_size,
-			           cgs.media.messageObjCircle); // Circle in front
+				cgs.media.messageObjCircle); // Circle in front
 			if (cent->gent->client->sess.mission_objectives[i].status == OBJECTIVE_STAT_SUCCEEDED)
 			{
 				CG_DrawPic(graphicXpos, totalY - graphicYOffset, graphic_size, graphic_size,
-				           cgs.media.messageLitOn); // Center Dot
+					cgs.media.messageLitOn); // Center Dot
 			}
 
 			// Print current objective text
@@ -399,7 +399,7 @@ constexpr int maxload_forceiconsize = 40; // Size of force power icons
 constexpr int MAXLOAD_FORCEICONPAD = 12; // Padding space between icons
 
 static int CG_DrawLoadWeaponsPrintRow(const char* itemName, const char* weapons, const int rowIconCnt,
-                                      const int startIndex)
+	const int startIndex)
 {
 	int endIndex = 0, printedIconCnt = 0;
 	int x, y;
@@ -505,7 +505,7 @@ static void CG_DrawLoadWeapons(const char* weapons)
 }
 
 static int CG_DrawLoadForcePrintRow(const char* itemName, const int forceBits, const int rowIconCnt,
-                                    const int startIndex)
+	const int startIndex)
 {
 	int endIndex = 0, printedIconCnt = 0;
 	int x, y;
@@ -630,18 +630,18 @@ static void CG_GetLoadScreenInfo(char* weapons, int* forceBits)
 	{
 		//				|general info				  |-force powers
 		sscanf(s, "%i %i %i %i %i %i %f %f %f %i %i",
-		       &iDummy, //	&client->ps.stats[STAT_HEALTH],
-		       &iDummy, //	&client->ps.stats[STAT_ARMOR],
-		       &iDummy, //	&client->ps.stats[STAT_ITEMS],
-		       &iDummy, //	&client->ps.weapon,
-		       &iDummy, //	&client->ps.weaponstate,
-		       &iDummy, //	&client->ps.batteryCharge,
-		       &fDummy, //	&client->ps.viewangles[0],
-		       &fDummy, //	&client->ps.viewangles[1],
-		       &fDummy, //	&client->ps.viewangles[2],
-		       //force power data
-		       &*forceBits, //	&client->ps.forcePowersKnown,
-		       &iDummy //	&client->ps.forcePower,
+			&iDummy, //	&client->ps.stats[STAT_HEALTH],
+			&iDummy, //	&client->ps.stats[STAT_ARMOR],
+			&iDummy, //	&client->ps.stats[STAT_ITEMS],
+			&iDummy, //	&client->ps.weapon,
+			&iDummy, //	&client->ps.weaponstate,
+			&iDummy, //	&client->ps.batteryCharge,
+			&fDummy, //	&client->ps.viewangles[0],
+			&fDummy, //	&client->ps.viewangles[1],
+			&fDummy, //	&client->ps.viewangles[2],
+			//force power data
+			&*forceBits, //	&client->ps.forcePowersKnown,
+			&iDummy //	&client->ps.forcePower,
 
 		);
 	}
@@ -776,7 +776,7 @@ static void LoadTips()
 int SCREENSHOT_TOTAL = -1;
 int SCREENSHOT_CHOICE = 0;
 int SCREENSHOT_NEXT_UPDATE_TIME = 0;
-char SCREENSHOT_CURRENT[64] = {0};
+char SCREENSHOT_CURRENT[64] = { 0 };
 
 char* cg_GetCurrentLevelshot1(const char* s)
 {
@@ -800,7 +800,7 @@ char* cg_GetCurrentLevelshot1(const char* s)
 
 			while (true)
 			{
-				char screen_shot[128] = {0};
+				char screen_shot[128] = { 0 };
 
 				strcpy(screen_shot, va("menu/art/unknownmap%i", SCREENSHOT_TOTAL));
 
@@ -853,7 +853,7 @@ void CG_DrawInformation()
 			|| strcmp(s, "level0") == 0
 			|| strcmp(s, "kejim_post") == 0)) //special case for first map!
 	{
-		constexpr char text[1024] = {0};
+		constexpr char text[1024] = { 0 };
 
 		CG_DrawPic(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, Loadshot);
 
@@ -878,7 +878,7 @@ void CG_DrawInformation()
 		constexpr int y = 20;
 		if (s[0] == '@')
 		{
-			char text[1024] = {0};
+			char text[1024] = { 0 };
 			cgi_SP_GetStringTextString(s + 1, text, sizeof text);
 			cgi_R_Font_DrawString(15, y, va("\"%s\"", text), colorTable[CT_WHITE], cgs.media.qhFontMedium, -1, 1.0f);
 		}

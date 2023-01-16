@@ -91,7 +91,7 @@ start_pass_downsample(j_compress_ptr cinfo)
 
 LOCAL(void)
 expand_right_edge(const JSAMPARRAY image_data, const int num_rows,
-                  const JDIMENSION input_cols, const JDIMENSION output_cols)
+	const JDIMENSION input_cols, const JDIMENSION output_cols)
 {
 	const int numcols = (int)(output_cols - input_cols);
 
@@ -113,8 +113,8 @@ expand_right_edge(const JSAMPARRAY image_data, const int num_rows,
 
 METHODDEF(void)
 sep_downsample(const j_compress_ptr cinfo,
-               const JSAMPIMAGE input_buf, const JDIMENSION in_row_index,
-               const JSAMPIMAGE output_buf, const JDIMENSION out_row_group_index)
+	const JSAMPIMAGE input_buf, const JDIMENSION in_row_index,
+	const JSAMPIMAGE output_buf, const JDIMENSION out_row_group_index)
 {
 	const my_downsample_ptr downsample = (my_downsample_ptr)cinfo->downsample;
 	int ci;
@@ -138,7 +138,7 @@ sep_downsample(const j_compress_ptr cinfo,
 
 METHODDEF(void)
 int_downsample(const j_compress_ptr cinfo, jpeg_component_info* compptr,
-               const JSAMPARRAY input_data, const JSAMPARRAY output_data)
+	const JSAMPARRAY input_data, const JSAMPARRAY output_data)
 {
 	const my_downsample_ptr downsample = (my_downsample_ptr)cinfo->downsample;
 	int outrow;
@@ -184,7 +184,7 @@ int_downsample(const j_compress_ptr cinfo, jpeg_component_info* compptr,
 
 METHODDEF(void)
 fullsize_downsample(const j_compress_ptr cinfo, jpeg_component_info* compptr,
-                    const JSAMPARRAY input_data, const JSAMPARRAY output_data)
+	const JSAMPARRAY input_data, const JSAMPARRAY output_data)
 {
 	/* Copy the data */
 	jcopy_sample_rows(input_data, 0, output_data, 0,
@@ -208,7 +208,7 @@ fullsize_downsample(const j_compress_ptr cinfo, jpeg_component_info* compptr,
 
 METHODDEF(void)
 h2v1_downsample(const j_compress_ptr cinfo, jpeg_component_info* compptr,
-                const JSAMPARRAY input_data, const JSAMPARRAY output_data)
+	const JSAMPARRAY input_data, const JSAMPARRAY output_data)
 {
 	const JDIMENSION output_cols = compptr->width_in_blocks * compptr->DCT_h_scaled_size;
 
@@ -240,7 +240,7 @@ h2v1_downsample(const j_compress_ptr cinfo, jpeg_component_info* compptr,
 
 METHODDEF(void)
 h2v2_downsample(const j_compress_ptr cinfo, jpeg_component_info* compptr,
-                const JSAMPARRAY input_data, const JSAMPARRAY output_data)
+	const JSAMPARRAY input_data, const JSAMPARRAY output_data)
 {
 	int outrow;
 	const JDIMENSION output_cols = compptr->width_in_blocks * compptr->DCT_h_scaled_size;
@@ -280,7 +280,7 @@ h2v2_downsample(const j_compress_ptr cinfo, jpeg_component_info* compptr,
 
 METHODDEF(void)
 h2v2_smooth_downsample(const j_compress_ptr cinfo, jpeg_component_info* compptr,
-                       const JSAMPARRAY input_data, const JSAMPARRAY output_data)
+	const JSAMPARRAY input_data, const JSAMPARRAY output_data)
 {
 	int outrow;
 	const JDIMENSION output_cols = compptr->width_in_blocks * compptr->DCT_h_scaled_size;
@@ -377,7 +377,7 @@ h2v2_smooth_downsample(const j_compress_ptr cinfo, jpeg_component_info* compptr,
 
 METHODDEF(void)
 fullsize_smooth_downsample(const j_compress_ptr cinfo, jpeg_component_info* compptr,
-                           const JSAMPARRAY input_data, const JSAMPARRAY output_data)
+	const JSAMPARRAY input_data, const JSAMPARRAY output_data)
 {
 	const JDIMENSION output_cols = compptr->width_in_blocks * compptr->DCT_h_scaled_size;
 

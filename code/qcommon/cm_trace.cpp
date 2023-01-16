@@ -304,7 +304,7 @@ void CM_TestInLeaf(traceWork_t* tw, const cLeaf_t* leaf, const clipMap_t* local)
 			}
 		}
 	}
-}
+	}
 
 /*
 ==================
@@ -313,7 +313,7 @@ CM_PositionTest
 */
 #define	MAX_POSITION_LEAFS	1024
 
-void CM_PositionTest(traceWork_t* tw)
+void CM_PositionTest(traceWork_t * tw)
 {
 	int leafs[MAX_POSITION_LEAFS];
 	int i;
@@ -367,7 +367,7 @@ CM_TraceThroughPatch
 ================
 */
 
-void CM_TraceThroughPatch(traceWork_t* tw, const cPatch_t* patch)
+void CM_TraceThroughPatch(traceWork_t * tw, const cPatch_t * patch)
 {
 	c_patch_traces++;
 
@@ -387,7 +387,7 @@ void CM_TraceThroughPatch(traceWork_t* tw, const cPatch_t* patch)
 CM_TraceThroughBrush
 ================
 */
-void CM_TraceThroughBrush(traceWork_t* tw, const cbrush_t* brush)
+void CM_TraceThroughBrush(traceWork_t * tw, const cbrush_t * brush)
 {
 	float f;
 
@@ -550,7 +550,7 @@ bool CM_GenericBoxCollide(const vec3pair_t abounds, const vec3pair_t bbounds)
 CM_TraceToLeaf
 ================
 */
-void CM_TraceToLeaf(traceWork_t* tw, const cLeaf_t* leaf, const clipMap_t* local)
+void CM_TraceToLeaf(traceWork_t * tw, const cLeaf_t * leaf, const clipMap_t * local)
 {
 	int k;
 
@@ -612,7 +612,7 @@ void CM_TraceToLeaf(traceWork_t* tw, const cLeaf_t* leaf, const clipMap_t* local
 			}
 		}
 	}
-}
+	}
 
 //=========================================================================================
 
@@ -626,7 +626,7 @@ trace volumes it is possible to hit something in a later leaf with
 a smaller intercept fraction.
 ==================
 */
-void CM_TraceThroughTree(traceWork_t* tw, clipMap_t* local, const int num, const float p1_f, const float p2_f, vec3_t p1, vec3_t p2)
+void CM_TraceThroughTree(traceWork_t * tw, clipMap_t * local, const int num, const float p1_f, const float p2_f, vec3_t p1, vec3_t p2)
 {
 	float t1, t2, offset;
 	float frac, frac2;
@@ -767,7 +767,7 @@ void CM_TraceThroughTree(traceWork_t* tw, clipMap_t* local, const int num, const
 	CM_TraceThroughTree(tw, local, node->children[side ^ 1], midf, p2_f, mid, p2);
 }
 
-void CM_CalcExtents(const vec3_t start, const vec3_t end, const traceWork_t* tw, vec3pair_t bounds)
+void CM_CalcExtents(const vec3_t start, const vec3_t end, const traceWork_t * tw, vec3pair_t bounds)
 {
 	for (int i = 0; i < 3; i++)
 	{
@@ -791,9 +791,9 @@ void CM_CalcExtents(const vec3_t start, const vec3_t end, const traceWork_t* tw,
 CM_BoxTrace
 ==================
 */
-void CM_BoxTrace(trace_t* results, const vec3_t start, const vec3_t end,
-                 const vec3_t mins, const vec3_t maxs,
-                 const clipHandle_t model, const int brushmask)
+void CM_BoxTrace(trace_t * results, const vec3_t start, const vec3_t end,
+	const vec3_t mins, const vec3_t maxs,
+	const clipHandle_t model, const int brushmask)
 {
 	int i;
 	traceWork_t tw;
@@ -962,10 +962,10 @@ Handles offseting and rotation of the end points for moving and
 rotating entities
 ==================
 */
-void CM_TransformedBoxTrace(trace_t* results, const vec3_t start, const vec3_t end,
-                            const vec3_t mins, const vec3_t maxs,
-                            const clipHandle_t model, const int brushmask,
-                            const vec3_t origin, const vec3_t angles)
+void CM_TransformedBoxTrace(trace_t * results, const vec3_t start, const vec3_t end,
+	const vec3_t mins, const vec3_t maxs,
+	const clipHandle_t model, const int brushmask,
+	const vec3_t origin, const vec3_t angles)
 {
 	trace_t trace;
 	vec3_t start_l, end_l;
@@ -1057,7 +1057,7 @@ Returns true if culled out
 =================
 */
 
-bool CM_CullBox(const cplane_t* frustum, const vec3_t transformed[8])
+bool CM_CullBox(const cplane_t * frustum, const vec3_t transformed[8])
 {
 	int i, j;
 	const cplane_t* frust;
@@ -1091,7 +1091,7 @@ Returns true if culled out
 =================
 */
 
-bool CM_CullWorldBox(const cplane_t* frustum, const vec3pair_t bounds)
+bool CM_CullWorldBox(const cplane_t * frustum, const vec3pair_t bounds)
 {
 	vec3_t transformed[8];
 

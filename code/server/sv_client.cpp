@@ -378,7 +378,7 @@ static void SV_ClientCommand(client_t* cl, msg_t* msg)
 	if (seq > cl->lastClientCommand + 1)
 	{
 		Com_Printf("Client %s lost %i clientCommands\n", cl->name,
-		           seq - cl->lastClientCommand + 1);
+			seq - cl->lastClientCommand + 1);
 	}
 
 	SV_ExecuteClientCommand(cl, s);
@@ -513,7 +513,7 @@ static void SV_UserMove(client_t* cl, msg_t* msg)
 		if (sv_showloss->integer)
 		{
 			Com_Printf("Lost %i usercmds from %s\n", firstNum - 1 - cl->cmdNum,
-			           cl->name);
+				cl->name);
 		}
 		if (cl->cmdNum < firstNum - 6)
 		{

@@ -106,7 +106,7 @@ void CG_TestG2Model_f()
 	cg.testModelEntity.hModel = cgi_R_RegisterModel(cg.testModelName);
 
 	cg.testModel = gi.G2API_InitGhoul2Model(*cg.testModelEntity.ghoul2, cg.testModelName, cg.testModelEntity.hModel,
-	                                        NULL_HANDLE, NULL_HANDLE, 0, 0);
+		NULL_HANDLE, NULL_HANDLE, 0, 0);
 	cg.testModelEntity.radius = 100.0f;
 
 	if (cgi_Argc() == 3)
@@ -175,7 +175,7 @@ void CG_TestModelSetAnglespre_f()
 	angles[1] = atof(CG_Argv(3));
 	angles[2] = atof(CG_Argv(4));
 	gi.G2API_SetBoneAngles(&ghoul2[cg.testModel], CG_Argv(1), angles, BONE_ANGLES_PREMULT, POSITIVE_X, POSITIVE_Z,
-	                       POSITIVE_Y, nullptr, 0, 0);
+		POSITIVE_Y, nullptr, 0, 0);
 }
 
 void CG_TestModelSetAnglespost_f()
@@ -192,7 +192,7 @@ void CG_TestModelSetAnglespost_f()
 	angles[1] = atof(CG_Argv(3));
 	angles[2] = atof(CG_Argv(4));
 	gi.G2API_SetBoneAngles(&ghoul2[cg.testModel], CG_Argv(1), angles, BONE_ANGLES_POSTMULT, POSITIVE_X, POSITIVE_Z,
-	                       POSITIVE_Y, nullptr, 0, 0);
+		POSITIVE_Y, nullptr, 0, 0);
 }
 
 void CG_TestModelAnimate_f()
@@ -202,7 +202,7 @@ void CG_TestModelAnimate_f()
 
 	strcpy(bone_name, CG_Argv(1));
 	gi.G2API_SetBoneAnim(&ghoul2[cg.testModel], bone_name, atoi(CG_Argv(2)), atoi(CG_Argv(3)), BONE_ANIM_OVERRIDE_LOOP,
-	                     atof(CG_Argv(4)), cg.time, -1, -1);
+		atof(CG_Argv(4)), cg.time, -1, -1);
 }
 
 /*
@@ -317,14 +317,14 @@ constexpr auto CAMERA_DAMP_INTERVAL = 50;
 
 constexpr auto CAMERA_CROUCH_NUDGE = 6;
 
-static vec3_t cameramins = {-CAMERA_SIZE, -CAMERA_SIZE, -CAMERA_SIZE};
-static vec3_t cameramaxs = {CAMERA_SIZE, CAMERA_SIZE, CAMERA_SIZE};
+static vec3_t cameramins = { -CAMERA_SIZE, -CAMERA_SIZE, -CAMERA_SIZE };
+static vec3_t cameramaxs = { CAMERA_SIZE, CAMERA_SIZE, CAMERA_SIZE };
 vec3_t camerafwd, cameraup, camerahorizdir;
 
 vec3_t cameraFocusAngles, cameraFocusLoc;
 vec3_t cameraIdealTarget, cameraIdealLoc;
-vec3_t cameraCurTarget = {0, 0, 0}, cameraCurLoc = {0, 0, 0};
-vec3_t cameraOldLoc = {0, 0, 0}, cameraNewLoc = {0, 0, 0};
+vec3_t cameraCurTarget = { 0, 0, 0 }, cameraCurLoc = { 0, 0, 0 };
+vec3_t cameraOldLoc = { 0, 0, 0 }, cameraNewLoc = { 0, 0, 0 };
 int cameraLastFrame = 0;
 
 float cameraLastYaw = 0;
@@ -425,7 +425,7 @@ static void CG_CalcIdealThirdPersonViewTarget()
 		VectorCopy(cameraFocusLoc, nudgepos);
 		nudgepos[2] += CAMERA_CROUCH_NUDGE;
 		CG_Trace(&trace, cameraFocusLoc, cameramins, cameramaxs, nudgepos,
-		         uses_view_entity ? cg.snap->ps.viewEntity : cg.predicted_player_state.client_num, MASK_CAMERACLIP);
+			uses_view_entity ? cg.snap->ps.viewEntity : cg.predicted_player_state.client_num, MASK_CAMERACLIP);
 		if (trace.fraction < 1.0)
 		{
 			VectorCopy(trace.endpos, cameraFocusLoc);
@@ -447,7 +447,7 @@ static void CG_CalcIdealThirdPersonViewTarget()
 		VectorCopy(cameraFocusLoc, nudgepos);
 		nudgepos[2] += CAMERA_CROUCH_NUDGE;
 		CG_Trace(&trace, cameraFocusLoc, cameramins, cameramaxs, nudgepos,
-		         uses_view_entity ? cg.snap->ps.viewEntity : cg.predicted_player_state.client_num, MASK_CAMERACLIP);
+			uses_view_entity ? cg.snap->ps.viewEntity : cg.predicted_player_state.client_num, MASK_CAMERACLIP);
 		if (trace.fraction < 1.0)
 		{
 			VectorCopy(trace.endpos, cameraFocusLoc);
@@ -479,7 +479,7 @@ static void CG_CalcIdealThirdPersonViewLocation()
 	{
 		//stay back
 		VectorMA(cameraIdealTarget, -180.0f * cg_entities[cg.snap->ps.client_num].gent->activator->s.modelScale[0],
-		         camerafwd, cameraIdealLoc);
+			camerafwd, cameraIdealLoc);
 	}
 	else if (cg.snap
 		&& cg.snap->ps.eFlags & EF_HELD_BY_WAMPA
@@ -488,7 +488,7 @@ static void CG_CalcIdealThirdPersonViewLocation()
 	{
 		//stay back
 		VectorMA(cameraIdealTarget, -120.0f * cg_entities[cg.snap->ps.client_num].gent->activator->s.modelScale[0],
-		         camerafwd, cameraIdealLoc);
+			camerafwd, cameraIdealLoc);
 	}
 	else if (cg.snap
 		&& cg.snap->ps.eFlags & EF_HELD_BY_SAND_CREATURE
@@ -496,7 +496,7 @@ static void CG_CalcIdealThirdPersonViewLocation()
 	{
 		//stay back
 		VectorMA(cg_entities[cg_entities[cg.snap->ps.client_num].gent->activator->s.number].lerpOrigin, -180.0f,
-		         camerafwd, cameraIdealLoc);
+			camerafwd, cameraIdealLoc);
 	}
 	else
 	{
@@ -554,7 +554,7 @@ static void CG_ResetThirdPersonViewDamp()
 
 	// First thing we do is trace from the first person viewpoint out to the new target location.
 	CG_Trace(&trace, cameraFocusLoc, cameramins, cameramaxs, cameraCurTarget, cg.predicted_player_state.client_num,
-	         MASK_CAMERACLIP);
+		MASK_CAMERACLIP);
 	if (trace.fraction <= 1.0)
 	{
 		VectorCopy(trace.endpos, cameraCurTarget);
@@ -562,7 +562,7 @@ static void CG_ResetThirdPersonViewDamp()
 
 	// Now we trace from the new target location to the new view location, to make sure there is nothing in the way.
 	CG_Trace(&trace, cameraCurTarget, cameramins, cameramaxs, cameraCurLoc, cg.predicted_player_state.client_num,
-	         MASK_CAMERACLIP);
+		MASK_CAMERACLIP);
 	if (trace.fraction <= 1.0)
 	{
 		VectorCopy(trace.endpos, cameraCurLoc);
@@ -633,12 +633,12 @@ static void CG_UpdateThirdPersonTargetDamp()
 	{
 		//if being held by a sand creature, trace from his actual origin, since we could be underground or otherwise in solid once he eats us
 		CG_Trace(&trace, cg_entities[cg_entities[cg.snap->ps.client_num].gent->activator->s.number].lerpOrigin,
-		         cameramins, cameramaxs, cameraCurTarget, cg.predicted_player_state.client_num, MASK_CAMERACLIP);
+			cameramins, cameramaxs, cameraCurTarget, cg.predicted_player_state.client_num, MASK_CAMERACLIP);
 	}
 	else
 	{
 		CG_Trace(&trace, cameraFocusLoc, cameramins, cameramaxs, cameraCurTarget, cg.predicted_player_state.client_num,
-		         MASK_CAMERACLIP);
+			MASK_CAMERACLIP);
 	}
 	if (trace.fraction < 1.0)
 	{
@@ -747,12 +747,12 @@ static void CG_UpdateThirdPersonCameraDamp()
 	{
 		//if being held by a sand creature, trace from his actual origin, since we could be underground or otherwise in solid once he eats us
 		CG_Trace(&trace, cg_entities[cg_entities[cg.snap->ps.client_num].gent->activator->s.number].lerpOrigin,
-		         cameramins, cameramaxs, cameraCurLoc, cg.predicted_player_state.client_num, MASK_CAMERACLIP);
+			cameramins, cameramaxs, cameraCurLoc, cg.predicted_player_state.client_num, MASK_CAMERACLIP);
 	}
 	else
 	{
 		CG_Trace(&trace, cameraCurTarget, cameramins, cameramaxs, cameraCurLoc, cg.predicted_player_state.client_num,
-		         MASK_CAMERACLIP);
+			MASK_CAMERACLIP);
 	}
 	if (trace.fraction < 1.0f)
 	{
@@ -996,8 +996,8 @@ static void CG_OffsetFirstPersonView(const qboolean first_person_saber)
 	{
 		float perc;
 		const auto anim_len = static_cast<float>(PM_AnimLength(g_entities[0].client->clientInfo.animFileIndex,
-		                                                       static_cast<animNumber_t>(g_entities[0].client->ps.
-			                                                       legsAnim)));
+			static_cast<animNumber_t>(g_entities[0].client->ps.
+				legsAnim)));
 		if (PM_InGetUp(&g_entities[0].client->ps) || PM_InForceGetUp(&g_entities[0].client->ps))
 		{
 			//start righting the view
@@ -1406,7 +1406,7 @@ static qboolean CG_CalcFov()
 
 		// Disable zooming when in third person
 		if (cg.zoomMode && cg.zoomMode < 3)
-		//&& !cg.renderingThirdPerson ) // light amp goggles do none of the zoom silliness
+			//&& !cg.renderingThirdPerson ) // light amp goggles do none of the zoom silliness
 		{
 			if (!cg.zoomLocked)
 			{
@@ -1569,8 +1569,8 @@ void CG_SaberClashFlare()
 	cgi_R_SetColor(color);
 
 	CG_DrawPic(x - v * 300 * cgs.widthRatioCoef, y - v * 300,
-	           v * 600 * cgs.widthRatioCoef, v * 600,
-	           cgi_R_RegisterShader("gfx/effects/saberFlare"));
+		v * 600 * cgs.widthRatioCoef, v * 600,
+		cgi_R_RegisterShader("gfx/effects/saberFlare"));
 }
 
 /*
@@ -1718,9 +1718,9 @@ static qboolean CG_CalcViewValues()
 				{
 					//looking through a client's eyes
 					VectorCopy(cg.refdef.vieworg,
-					           cg_entities[cg.snap->ps.viewEntity].gent->client->renderInfo.eyePoint);
+						cg_entities[cg.snap->ps.viewEntity].gent->client->renderInfo.eyePoint);
 					VectorCopy(cg.refdefViewAngles,
-					           cg_entities[cg.snap->ps.viewEntity].gent->client->renderInfo.eyeAngles);
+						cg_entities[cg.snap->ps.viewEntity].gent->client->renderInfo.eyeAngles);
 				}
 				else
 				{
@@ -1999,8 +1999,8 @@ static void CG_DrawSkyBoxPortal()
 //----------------------------
 void CG_RunEmplacedWeapon()
 {
-	const gentity_t *player = &g_entities[0],
-	                *gun = player->owner;
+	const gentity_t* player = &g_entities[0],
+		* gun = player->owner;
 
 	// Override the camera when we are locked onto the gun.
 	if (player

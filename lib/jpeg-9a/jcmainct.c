@@ -107,8 +107,8 @@ start_pass_main(j_compress_ptr cinfo, const J_BUF_MODE pass_mode)
 
 METHODDEF(void)
 process_data_simple_main(const j_compress_ptr cinfo,
-                         const JSAMPARRAY input_buf, JDIMENSION* in_row_ctr,
-                         const JDIMENSION in_rows_avail)
+	const JSAMPARRAY input_buf, JDIMENSION* in_row_ctr,
+	const JDIMENSION in_rows_avail)
 {
 	const my_main_ptr mainp = (my_main_ptr)cinfo->main;
 

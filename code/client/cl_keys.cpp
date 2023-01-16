@@ -395,7 +395,7 @@ x, y, amd width are in pixels
 ===================
 */
 void Field_VariableSizeDraw(field_t* edit, const int x, const int y, int width, const int size, const qboolean showCursor,
-                            const qboolean noColorEscape)
+	const qboolean noColorEscape)
 {
 	int prestep;
 	char str[MAX_STRING_CHARS];
@@ -500,7 +500,7 @@ void Field_CharEvent(field_t* edit, int ch);
 
 void Field_Paste(field_t* edit)
 {
-	char *cbd, *c;
+	char* cbd, * c;
 
 	c = cbd = Sys_GetClipboardData();
 
@@ -545,7 +545,7 @@ void Field_KeyDownEvent(field_t* edit, const int key)
 		if (edit->cursor < len)
 		{
 			memmove(edit->buffer + edit->cursor,
-			        edit->buffer + edit->cursor + 1, len - edit->cursor);
+				edit->buffer + edit->cursor + 1, len - edit->cursor);
 		}
 		return;
 	}
@@ -623,7 +623,7 @@ void Field_CharEvent(field_t* edit, const int ch)
 		if (edit->cursor > 0)
 		{
 			memmove(edit->buffer + edit->cursor - 1,
-			        edit->buffer + edit->cursor, len + 1 - edit->cursor);
+				edit->buffer + edit->cursor, len + 1 - edit->cursor);
 			edit->cursor--;
 			if (edit->cursor < edit->scroll)
 			{
@@ -674,7 +674,7 @@ void Field_CharEvent(field_t* edit, const int ch)
 			return; // all full
 		}
 		memmove(edit->buffer + edit->cursor + 1,
-		        edit->buffer + edit->cursor, len + 1 - edit->cursor);
+			edit->buffer + edit->cursor, len + 1 - edit->cursor);
 		edit->buffer[edit->cursor] = ch;
 		edit->cursor++;
 	}
@@ -1253,7 +1253,7 @@ Execute the commands in the bind string
 */
 void CL_ParseBinding(const int key, const qboolean down, const unsigned time)
 {
-	char buf[MAX_STRING_CHARS], *p = buf;
+	char buf[MAX_STRING_CHARS], * p = buf;
 
 	if (cls.state == CA_DISCONNECTED && Key_GetCatcher() == 0)
 		return;
@@ -1283,7 +1283,7 @@ void CL_ParseBinding(const int key, const qboolean down, const unsigned time)
 			{
 				char cmd[1024];
 				Com_sprintf(cmd, sizeof(cmd), "%c%s %d %d\n",
-				            (down) ? '+' : '-', p + 1, key, time);
+					(down) ? '+' : '-', p + 1, key, time);
 				Cbuf_AddText(cmd);
 			}
 		}

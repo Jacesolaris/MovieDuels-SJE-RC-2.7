@@ -273,8 +273,8 @@ void NPC_BSAnimal_Default()
 					else
 					{
 						STEER::Seek(NPC, leader->followPos, fabsf(follow_dist) / 2.0f/*slowing distance*/,
-						            1.0f/*wight*/,
-						            leader->resultspeed);
+							1.0f/*wight*/,
+							leader->resultspeed);
 					}
 				}
 

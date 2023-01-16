@@ -45,8 +45,8 @@ NPC_SetMoveGoal
 */
 
 void NPC_SetMoveGoal(const gentity_t* ent, vec3_t point, const int radius, const qboolean isNavGoal,
-                     const int combatPoint,
-                     gentity_t* targetEnt)
+	const int combatPoint,
+	gentity_t* targetEnt)
 {
 	//Must be an NPC
 	if (ent->NPC == nullptr)
@@ -116,14 +116,14 @@ static float waypoint_testDirection(vec3_t origin, const float yaw, const float 
 	VectorSet(mins, DEFAULT_MINS_0, DEFAULT_MINS_1, DEFAULT_MINS_2 + STEPSIZE);
 
 	//Get our test direction
-	const vec3_t angles = {0, yaw, 0};
+	const vec3_t angles = { 0, yaw, 0 };
 	AngleVectors(angles, trace_dir, nullptr, nullptr);
 
 	//Move ahead
 	VectorMA(origin, minDist, trace_dir, test_pos);
 
 	gi.trace(&tr, origin, mins, maxs, test_pos, ENTITYNUM_NONE,
-	         CONTENTS_SOLID | CONTENTS_MONSTERCLIP | CONTENTS_BOTCLIP, static_cast<EG2_Collision>(0), 0);
+		CONTENTS_SOLID | CONTENTS_MONSTERCLIP | CONTENTS_BOTCLIP, static_cast<EG2_Collision>(0), 0);
 
 	return minDist * tr.fraction; //return actual dist completed
 }
@@ -221,7 +221,7 @@ void SP_waypoint_small(gentity_t* ent)
 		if (G_CheckInSolid(ent, qtrue))
 		{
 			gi.Printf(S_COLOR_RED"ERROR: Waypoint_small %s at %s in solid!\n", ent->targetname,
-			          vtos(ent->currentOrigin));
+				vtos(ent->currentOrigin));
 			assert(0);
 #ifndef FINAL_BUILD
 			if (!g_entities[ENTITYNUM_WORLD].s.radius) {	//not a region

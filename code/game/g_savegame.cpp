@@ -405,15 +405,15 @@ static void EnumerateField(const save_field_t* pField, const byte* pbBase)
 		break;
 
 	case F_BEHAVIORSET:
+	{
+		const auto p = static_cast<const char**>(pv);
+		for (int i = 0; i < NUM_BSETS; i++)
 		{
-			const auto p = static_cast<const char**>(pv);
-			for (int i = 0; i < NUM_BSETS; i++)
-			{
-				pv = &p[i]; // since you can't ++ a void ptr
-				*static_cast<int*>(pv) = GetStringNum(*static_cast<char**>(pv));
-			}
+			pv = &p[i]; // since you can't ++ a void ptr
+			*static_cast<int*>(pv) = GetStringNum(*static_cast<char**>(pv));
 		}
-		break;
+	}
+	break;
 
 	/*MCG
 		case F_BODYQUEUE:
@@ -429,53 +429,53 @@ static void EnumerateField(const save_field_t* pField, const byte* pbBase)
 	*/
 
 	case F_ALERTEVENT: // convert all gentity_t ptrs in an alert_event array into indexes...
-		{
-			const auto p = static_cast<alertEvent_t*>(pv);
+	{
+		const auto p = static_cast<alertEvent_t*>(pv);
 
-			for (int i = 0; i < MAX_ALERT_EVENTS; i++)
-			{
-				p[i].owner = reinterpret_cast<gentity_t*>(GetGEntityNum(p[i].owner));
-			}
+		for (int i = 0; i < MAX_ALERT_EVENTS; i++)
+		{
+			p[i].owner = reinterpret_cast<gentity_t*>(GetGEntityNum(p[i].owner));
 		}
-		break;
+	}
+	break;
 
 	case F_AIGROUPS: // convert to ptrs within this into indexes...
-		{
-			const auto p = static_cast<AIGroupInfo_t*>(pv);
+	{
+		const auto p = static_cast<AIGroupInfo_t*>(pv);
 
-			for (int i = 0; i < MAX_FRAME_GROUPS; i++)
-			{
-				p[i].enemy = reinterpret_cast<gentity_t*>(GetGEntityNum(p[i].enemy));
-				p[i].commander = reinterpret_cast<gentity_t*>(GetGEntityNum(p[i].commander));
-			}
+		for (int i = 0; i < MAX_FRAME_GROUPS; i++)
+		{
+			p[i].enemy = reinterpret_cast<gentity_t*>(GetGEntityNum(p[i].enemy));
+			p[i].commander = reinterpret_cast<gentity_t*>(GetGEntityNum(p[i].commander));
 		}
-		break;
+	}
+	break;
 
 	case F_ANIMFILESETS:
-		{
-			const auto p = static_cast<animFileSet_t*>(pv);
+	{
+		const auto p = static_cast<animFileSet_t*>(pv);
 
-			for (int i = 0; i < MAX_ANIM_FILES; i++)
+		for (int i = 0; i < MAX_ANIM_FILES; i++)
+		{
+			for (int j = 0; j < MAX_ANIM_EVENTS; j++)
 			{
-				for (int j = 0; j < MAX_ANIM_EVENTS; j++)
-				{
-					const auto ba_torso = reinterpret_cast<byteAlias_t*>(&p[i].torsoAnimEvents[j].stringData);
-					const auto
-						ba_legs = reinterpret_cast<byteAlias_t*>(&p[i].legsAnimEvents[j].stringData);
-					const char* pt_anim_event_string_data = p[i].torsoAnimEvents[j].stringData;
-					ba_torso->i = GetStringNum(pt_anim_event_string_data);
-					const char* plAnimEventStringData = p[i].legsAnimEvents[j].stringData;
-					ba_legs->i = GetStringNum(plAnimEventStringData);
-				}
+				const auto ba_torso = reinterpret_cast<byteAlias_t*>(&p[i].torsoAnimEvents[j].stringData);
+				const auto
+					ba_legs = reinterpret_cast<byteAlias_t*>(&p[i].legsAnimEvents[j].stringData);
+				const char* pt_anim_event_string_data = p[i].torsoAnimEvents[j].stringData;
+				ba_torso->i = GetStringNum(pt_anim_event_string_data);
+				const char* plAnimEventStringData = p[i].legsAnimEvents[j].stringData;
+				ba_legs->i = GetStringNum(plAnimEventStringData);
 			}
 		}
-		break;
+	}
+	break;
 
 	case F_BOOLPTR:
 		*static_cast<qboolean*>(pv) = static_cast<qboolean>(*static_cast<int*>(pv) != 0);
 		break;
 
-	// These are pointers that are always recreated
+		// These are pointers that are always recreated
 	case F_NULL:
 		*static_cast<void**>(pv) = nullptr;
 		break;
@@ -543,7 +543,7 @@ static void EvaluateField(const save_field_t* pField, byte* pbBase, byte* pbOrig
 	{
 	case F_STRING:
 		*static_cast<char**>(pv) = GetStringPtr(*static_cast<int*>(pv),
-		                                        pbOriginalRefData ? *static_cast<char**>(pvOriginal) : nullptr);
+			pbOriginalRefData ? *static_cast<char**>(pvOriginal) : nullptr);
 		break;
 
 	case F_GENTITY:
@@ -567,15 +567,15 @@ static void EvaluateField(const save_field_t* pField, byte* pbBase, byte* pbOrig
 		break;
 
 	case F_BEHAVIORSET:
+	{
+		auto p = static_cast<char**>(pv);
+		auto pO = static_cast<char**>(pvOriginal);
+		for (int i = 0; i < NUM_BSETS; i++, p++, pO++)
 		{
-			auto p = static_cast<char**>(pv);
-			auto pO = static_cast<char**>(pvOriginal);
-			for (int i = 0; i < NUM_BSETS; i++, p++, pO++)
-			{
-				*p = GetStringPtr(*reinterpret_cast<int*>(p), pbOriginalRefData ? *pO : nullptr);
-			}
+			*p = GetStringPtr(*reinterpret_cast<int*>(p), pbOriginalRefData ? *pO : nullptr);
 		}
-		break;
+	}
+	break;
 
 	/*MCG
 		case F_BODYQUEUE:
@@ -590,45 +590,45 @@ static void EvaluateField(const save_field_t* pField, byte* pbBase, byte* pbOrig
 	*/
 
 	case F_ALERTEVENT:
-		{
-			const auto p = static_cast<alertEvent_t*>(pv);
+	{
+		const auto p = static_cast<alertEvent_t*>(pv);
 
-			for (int i = 0; i < MAX_ALERT_EVENTS; i++)
-			{
-				p[i].owner = GetGEntityPtr(reinterpret_cast<intptr_t>(p[i].owner));
-			}
+		for (int i = 0; i < MAX_ALERT_EVENTS; i++)
+		{
+			p[i].owner = GetGEntityPtr(reinterpret_cast<intptr_t>(p[i].owner));
 		}
-		break;
+	}
+	break;
 
 	case F_AIGROUPS: // convert to ptrs within this into indexes...
-		{
-			const auto p = static_cast<AIGroupInfo_t*>(pv);
+	{
+		const auto p = static_cast<AIGroupInfo_t*>(pv);
 
-			for (int i = 0; i < MAX_FRAME_GROUPS; i++)
-			{
-				p[i].enemy = GetGEntityPtr(reinterpret_cast<intptr_t>(p[i].enemy));
-				p[i].commander = GetGEntityPtr(reinterpret_cast<intptr_t>(p[i].commander));
-			}
+		for (int i = 0; i < MAX_FRAME_GROUPS; i++)
+		{
+			p[i].enemy = GetGEntityPtr(reinterpret_cast<intptr_t>(p[i].enemy));
+			p[i].commander = GetGEntityPtr(reinterpret_cast<intptr_t>(p[i].commander));
 		}
-		break;
+	}
+	break;
 
 	case F_ANIMFILESETS:
+	{
+		const auto p = static_cast<animFileSet_t*>(pv);
+		for (int i = 0; i < MAX_ANIM_FILES; i++)
 		{
-			const auto p = static_cast<animFileSet_t*>(pv);
-			for (int i = 0; i < MAX_ANIM_FILES; i++)
+			for (int j = 0; j < MAX_ANIM_EVENTS; j++)
 			{
-				for (int j = 0; j < MAX_ANIM_EVENTS; j++)
-				{
-					char* pO = pbOriginalRefData ? level.knownAnimFileSets[i].torsoAnimEvents[j].stringData : nullptr;
-					p[i].torsoAnimEvents[j].stringData = GetStringPtr(
-						reinterpret_cast<intptr_t>(p[i].torsoAnimEvents[j].stringData), pO);
-					pO = pbOriginalRefData ? level.knownAnimFileSets[i].legsAnimEvents[j].stringData : nullptr;
-					p[i].legsAnimEvents[j].stringData = GetStringPtr(
-						reinterpret_cast<intptr_t>(p[i].legsAnimEvents[j].stringData), pO);
-				}
+				char* pO = pbOriginalRefData ? level.knownAnimFileSets[i].torsoAnimEvents[j].stringData : nullptr;
+				p[i].torsoAnimEvents[j].stringData = GetStringPtr(
+					reinterpret_cast<intptr_t>(p[i].torsoAnimEvents[j].stringData), pO);
+				pO = pbOriginalRefData ? level.knownAnimFileSets[i].legsAnimEvents[j].stringData : nullptr;
+				p[i].legsAnimEvents[j].stringData = GetStringPtr(
+					reinterpret_cast<intptr_t>(p[i].legsAnimEvents[j].stringData), pO);
 			}
 		}
-		break;
+	}
+	break;
 	//	// These fields are patched in when their relevant owners are loaded
 	case F_BOOLPTR:
 	case F_NULL:
@@ -810,7 +810,7 @@ static void EvaluateFields(
 			{
 				G_Error(
 					va("EvaluateFields(): variable-sized chunk '%s' without handler!",
-					   SG_GetChidText(ulChid)));
+						SG_GetChidText(ulChid)));
 			}
 		}
 	}
@@ -1032,7 +1032,7 @@ static void ReadGEntities(const qboolean qbAutosave)
 			gNPC_t tempNPC;
 
 			EvaluateFields(savefields_gNPC, &tempNPC, reinterpret_cast<byte*>(pEntOriginal->NPC),
-			               INT_ID('G', 'N', 'P', 'C'));
+				INT_ID('G', 'N', 'P', 'C'));
 
 			// so can we pinch the original's one or do we have to alloc a new one?...
 			//
@@ -1047,7 +1047,7 @@ static void ReadGEntities(const qboolean qbAutosave)
 				// original didn't have one (hmmm...), so make a new one...
 				//
 				//assert(0);	// I want to know about this, though not in release
-				p_ent->NPC = static_cast<gNPC_t*>(G_Alloc(sizeof *p_ent->NPC));
+				p_ent->NPC = static_cast<gNPC_t*>(G_Alloc(sizeof * p_ent->NPC));
 			}
 
 			// copy over the one we've just loaded...
@@ -1060,7 +1060,7 @@ static void ReadGEntities(const qboolean qbAutosave)
 			gclient_t tempGClient;
 
 			EvaluateFields(savefields_gClient, &tempGClient, reinterpret_cast<byte*>(pEntOriginal->client),
-			               INT_ID('G', 'C', 'L', 'I'));
+				INT_ID('G', 'C', 'L', 'I'));
 
 			// can we pinch the original's client handle or do we have to alloc a new one?...
 			//
@@ -1074,7 +1074,7 @@ static void ReadGEntities(const qboolean qbAutosave)
 			{
 				// original didn't have one (hmmm...) so make a new one...
 				//
-				p_ent->client = static_cast<gclient_t*>(G_Alloc(sizeof *p_ent->client));
+				p_ent->client = static_cast<gclient_t*>(G_Alloc(sizeof * p_ent->client));
 			}
 
 			// copy over the one we've just loaded....
@@ -1110,7 +1110,7 @@ static void ReadGEntities(const qboolean qbAutosave)
 			{
 				// original didn't have one, so make a new one...
 				//
-				p_ent->parms = static_cast<parms_t*>(G_Alloc(sizeof *p_ent->parms));
+				p_ent->parms = static_cast<parms_t*>(G_Alloc(sizeof * p_ent->parms));
 			}
 
 			// copy over the one we've just loaded...
@@ -1123,7 +1123,7 @@ static void ReadGEntities(const qboolean qbAutosave)
 			Vehicle_t tempVehicle;
 
 			EvaluateFields(savefields_gVHIC, &tempVehicle, reinterpret_cast<byte*>(pEntOriginal->m_pVehicle),
-			               INT_ID('V', 'H', 'I', 'C'));
+				INT_ID('V', 'H', 'I', 'C'));
 
 			// so can we pinch the original's one or do we have to alloc a new one?...
 			//
@@ -1290,7 +1290,7 @@ void ReadLevel(const qboolean qbAutosave, const qboolean qb_load_transition)
 		//Read & throw away gclient info
 		gclient_t junkClient;
 		EvaluateFields(savefields_gClient, &junkClient, reinterpret_cast<byte*>(&level.clients[0]),
-		               INT_ID('G', 'C', 'L', 'I'));
+			INT_ID('G', 'C', 'L', 'I'));
 
 		ReadLevelLocals(); // level_locals_t level
 
@@ -1307,7 +1307,7 @@ void ReadLevel(const qboolean qbAutosave, const qboolean qb_load_transition)
 
 			gclient_t GClient;
 			EvaluateFields(savefields_gClient, &GClient, reinterpret_cast<byte*>(&level.clients[0]),
-			               INT_ID('G', 'C', 'L', 'I'));
+				INT_ID('G', 'C', 'L', 'I'));
 			level.clients[0] = GClient; // struct copy
 			ReadLevelLocals(); // level_locals_t level
 		}

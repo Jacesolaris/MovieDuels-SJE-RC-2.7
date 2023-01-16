@@ -67,7 +67,7 @@ extern gentity_t* NPC_Spawn_Do(gentity_t* p_ent, qboolean fullSpawnNow);
 extern qboolean G_ClearLineOfSight(const vec3_t point1, const vec3_t point2, int ignore, int clipmask);
 
 extern qboolean g_set_g2_player_model_info(gentity_t* p_ent, const char* model_name,
-                                           const char* surfOff, const char* surfOn);
+	const char* surfOff, const char* surfOn);
 extern void G_RemovePlayerModel(gentity_t* p_ent);
 extern void G_ChangePlayerModel(gentity_t* p_ent, const char* new_model);
 extern void G_RemoveWeaponModels(gentity_t* p_ent);
@@ -85,7 +85,7 @@ extern void PM_SetAnim(const pmove_t* pm, int set_anim_parts, int anim, int set_
 extern int PM_AnimLength(int index, animNumber_t anim);
 extern void NPC_SetAnim(gentity_t* ent, int set_anim_parts, int anim, int set_anim_flags, int i_blend);
 extern void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, float strength,
-                        qboolean break_saber_lock);
+	qboolean break_saber_lock);
 #endif
 
 #ifdef _JK2MP
@@ -117,7 +117,7 @@ void Vehicle_SetAnim(gentity_t* ent, int setAnimParts, int anim, int setAnimFlag
 }
 
 void G_VehicleTrace(trace_t* results, const vec3_t start, const vec3_t tMins, const vec3_t tMaxs, const vec3_t end,
-                    int pass_entity_num, int contentmask)
+	int pass_entity_num, int contentmask)
 {
 #ifdef _JK2MP
 	trap_Trace(results, start, tMins, tMaxs, end, pass_entity_num, contentmask);
@@ -306,8 +306,8 @@ void G_AttachToVehicle(gentity_t* p_ent, usercmd_t** ucmd)
 #else
 	// Get the driver tag.
 	gi.G2API_GetBoltMatrix(vehEnt->ghoul2, vehEnt->playerModel, vehEnt->crotchBolt, &bolt_matrix,
-	                       vehEnt->m_pVehicle->m_vOrientation, vehEnt->currentOrigin,
-	                       cg.time ? cg.time : level.time, nullptr, vehEnt->s.modelScale);
+		vehEnt->m_pVehicle->m_vOrientation, vehEnt->currentOrigin,
+		cg.time ? cg.time : level.time, nullptr, vehEnt->s.modelScale);
 	gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, ent->client->ps.origin);
 	gi.linkentity(ent);
 #endif
@@ -520,7 +520,7 @@ void G_DriveATST(gentity_t* p_ent, gentity_t* atst)
 			g_set_g2_player_model_info(p_ent, "atst", nullptr, nullptr);
 			//turn off hatch underside
 			gi.G2API_SetSurfaceOnOff(&p_ent->ghoul2[p_ent->playerModel], "head_hatchcover",
-			                         0x00000002/*G2SURFACEFLAG_OFF*/);
+				0x00000002/*G2SURFACEFLAG_OFF*/);
 			G_Sound(p_ent, G_SoundIndex("sound/chars/atst/atst_hatch_close"));
 		}
 		p_ent->s.radius = 320;
@@ -793,10 +793,10 @@ bool Board(Vehicle_t* p_veh, bgEntity_t* p_ent)
 }
 
 bool VEH_TryEject(const Vehicle_t* p_veh,
-                  gentity_t* parent,
-                  gentity_t* ent,
-                  const int ejectDir,
-                  vec3_t vExitPos)
+	gentity_t* parent,
+	gentity_t* ent,
+	const int ejectDir,
+	vec3_t vExitPos)
 {
 	float fEntDiag;
 	vec3_t vEntMins, vEntMaxs, vVehLeaveDir, vVehAngles;
@@ -807,36 +807,36 @@ bool VEH_TryEject(const Vehicle_t* p_veh,
 	VectorSet(vVehAngles, 0, parent->currentAngles[YAW], 0);
 	switch (ejectDir)
 	{
-	// Left.
+		// Left.
 	case VEH_EJECT_LEFT:
 		AngleVectors(vVehAngles, nullptr, vVehLeaveDir, nullptr);
 		vVehLeaveDir[0] = -vVehLeaveDir[0];
 		vVehLeaveDir[1] = -vVehLeaveDir[1];
 		vVehLeaveDir[2] = -vVehLeaveDir[2];
 		break;
-	// Right.
+		// Right.
 	case VEH_EJECT_RIGHT:
 		AngleVectors(vVehAngles, nullptr, vVehLeaveDir, nullptr);
 		break;
-	// Front.
+		// Front.
 	case VEH_EJECT_FRONT:
 		AngleVectors(vVehAngles, vVehLeaveDir, nullptr, nullptr);
 		break;
-	// Rear.
+		// Rear.
 	case VEH_EJECT_REAR:
 		AngleVectors(vVehAngles, vVehLeaveDir, nullptr, nullptr);
 		vVehLeaveDir[0] = -vVehLeaveDir[0];
 		vVehLeaveDir[1] = -vVehLeaveDir[1];
 		vVehLeaveDir[2] = -vVehLeaveDir[2];
 		break;
-	// Top.
+		// Top.
 	case VEH_EJECT_TOP:
 		AngleVectors(vVehAngles, nullptr, nullptr, vVehLeaveDir);
 		break;
-	// Bottom?.
+		// Bottom?.
 	case VEH_EJECT_BOTTOM:
 		break;
-	default: ;
+	default:;
 	}
 	VectorNormalize(vVehLeaveDir);
 
@@ -1126,10 +1126,10 @@ bool Eject(Vehicle_t* p_veh, bgEntity_t* p_ent, const qboolean force_eject)
 	if (!taintedRider)
 	{
 #endif
-	if (p_veh->m_pVehicleInfo->hideRider)
-	{
-		p_veh->m_pVehicleInfo->UnGhost(p_veh, ent);
-	}
+		if (p_veh->m_pVehicleInfo->hideRider)
+		{
+			p_veh->m_pVehicleInfo->UnGhost(p_veh, ent);
+		}
 #ifdef _JK2MP
 	}
 #endif
@@ -1189,7 +1189,7 @@ bool Eject(Vehicle_t* p_veh, bgEntity_t* p_ent, const qboolean force_eject)
 			ent->client->ps.velocity[2] += JUMP_VELOCITY;
 		}*/
 
-	// Make sure entity is facing the direction it got off at.
+		// Make sure entity is facing the direction it got off at.
 #ifndef _JK2MP
 	VectorCopy(p_veh->m_vOrientation, vPlayerDir);
 	vPlayerDir[ROLL] = 0;
@@ -1330,7 +1330,7 @@ static void StartDeathDelay(Vehicle_t* p_veh, const int iDelayTimeOverride)
 		{
 			p_veh->m_ulFlags |= VEH_ARMORGONE;
 			G_PlayEffect(p_veh->m_pVehicleInfo->iArmorGoneFX, parent->playerModel, parent->crotchBolt, parent->s.number,
-			             parent->currentOrigin, 1, qtrue);
+				parent->currentOrigin, 1, qtrue);
 			parent->s.loopSound = G_SoundIndex("sound/vehicles/common/fire_lp.wav");
 		}
 	}
@@ -1396,31 +1396,31 @@ static void DeathUpdate(Vehicle_t* p_veh)
 				for (int i = 0; i < MAX_VEHICLE_EXHAUSTS && p_veh->m_iExhaustTag[i] != -1; i++)
 				{
 					G_StopEffect(p_veh->m_pVehicleInfo->iExhaustFX, parent->playerModel, p_veh->m_iExhaustTag[i],
-					             parent->s.number);
+						parent->s.number);
 				}
 			}
 			if (p_veh->m_pVehicleInfo->iArmorLowFX)
 			{
 				G_StopEffect(p_veh->m_pVehicleInfo->iArmorLowFX, parent->playerModel, parent->crotchBolt,
-				             parent->s.number);
+					parent->s.number);
 			}
 			if (p_veh->m_pVehicleInfo->iArmorGoneFX)
 			{
 				G_StopEffect(p_veh->m_pVehicleInfo->iArmorGoneFX, parent->playerModel, parent->crotchBolt,
-				             parent->s.number);
+					parent->s.number);
 			}
 			//--------------------------------------
 #endif
 			if (p_veh->m_pVehicleInfo->iExplodeFX)
 			{
-				vec3_t fxAng = {0.0f, -1.0f, 0.0f};
+				vec3_t fxAng = { 0.0f, -1.0f, 0.0f };
 				G_PlayEffect(p_veh->m_pVehicleInfo->iExplodeFX, parent->currentOrigin, fxAng);
 
 				//trace down and place mark
 				VectorCopy(parent->currentOrigin, bottom);
 				bottom[2] -= 80;
 				G_VehicleTrace(&trace, parent->currentOrigin, vec3_origin, vec3_origin, bottom, parent->s.number,
-				               CONTENTS_SOLID);
+					CONTENTS_SOLID);
 				if (trace.fraction < 1.0f)
 				{
 					VectorCopy(trace.endpos, bottom);
@@ -1449,7 +1449,7 @@ static void DeathUpdate(Vehicle_t* p_veh)
 				G_RadiusDamage(trace.endpos, nullptr, p_veh->m_pVehicleInfo->explosionDamage, p_veh->m_pVehicleInfo->explosionRadius, nullptr, nullptr, MOD_EXPLOSIVE);//FIXME: extern damage and radius or base on fuel
 #else
 				G_RadiusDamage(trace.endpos, player, p_veh->m_pVehicleInfo->explosionDamage,
-				               p_veh->m_pVehicleInfo->explosionRadius, nullptr, MOD_EXPLOSIVE);
+					p_veh->m_pVehicleInfo->explosionRadius, nullptr, MOD_EXPLOSIVE);
 				//FIXME: extern damage and radius or base on fuel
 #endif
 			}
@@ -1628,7 +1628,7 @@ static bool Update(Vehicle_t* p_veh, const usercmd_t* pUmcd)
 			&& p_veh->m_pVehicleInfo->weapon[i].ammoRechargeMS //its ammo is rechargable
 			&& p_veh->weaponStatus[i].ammo < p_veh->m_pVehicleInfo->weapon[i].ammoMax //its ammo is below max
 			&& pUmcd->serverTime - p_veh->weaponStatus[i].lastAmmoInc >= p_veh->m_pVehicleInfo->weapon[i].ammoRechargeMS)
-		//enough time has passed
+			//enough time has passed
 		{
 			//add 1 to the ammo
 			p_veh->weaponStatus[i].lastAmmoInc = pUmcd->serverTime;
@@ -1646,7 +1646,7 @@ static bool Update(Vehicle_t* p_veh, const usercmd_t* pUmcd)
 			&& p_veh->m_pVehicleInfo->turret[i].iAmmoRechargeMS //its ammo is rechargable
 			&& p_veh->turretStatus[i].ammo < p_veh->m_pVehicleInfo->turret[i].iAmmoMax //its ammo is below max
 			&& pUmcd->serverTime - p_veh->turretStatus[i].lastAmmoInc >= p_veh->m_pVehicleInfo->turret[i].iAmmoRechargeMS)
-		//enough time has passed
+			//enough time has passed
 		{
 			//add 1 to the ammo
 			p_veh->turretStatus[i].lastAmmoInc = pUmcd->serverTime;
@@ -1698,7 +1698,7 @@ static bool Update(Vehicle_t* p_veh, const usercmd_t* pUmcd)
 #ifndef _JK2MP //sometimes this gets out of whack, probably init'ing
 		|| parent->health <= 0
 #endif
-	)
+		)
 	{
 		//NOTE!!!: This HAS to be consistent with cgame!!!
 		// Keep track of the old orientation.
@@ -1805,7 +1805,7 @@ static bool Update(Vehicle_t* p_veh, const usercmd_t* pUmcd)
 		{
 			//do another check?
 			if (!player || G_ClearLineOfSight(p_veh->m_pParentEntity->currentOrigin, player->currentOrigin,
-			                                  p_veh->m_pParentEntity->s.number, MASK_OPAQUE))
+				p_veh->m_pParentEntity->s.number, MASK_OPAQUE))
 			{
 				p_veh->m_iPilotTime = level.time + p_veh->m_pParentEntity->end_frame;
 			}
@@ -1815,7 +1815,7 @@ static bool Update(Vehicle_t* p_veh, const usercmd_t* pUmcd)
 			//die
 			//FIXME: does this give proper credit to the enemy who shot you down?
 			G_Damage(parent, player, player, nullptr, parent->client->ps.origin, 99999, DAMAGE_NO_PROTECTION,
-			         MOD_SUICIDE);
+				MOD_SUICIDE);
 		}
 	}
 #endif
@@ -1835,7 +1835,7 @@ static bool Update(Vehicle_t* p_veh, const usercmd_t* pUmcd)
 		{
 			trace_t tr;
 			G_VehicleTrace(&tr, parent->currentOrigin, parent->mins, parent->maxs, projectedPosition, parent->s.number,
-			               CONTENTS_BODY);
+				CONTENTS_BODY);
 			if (tr.fraction < 1.0f &&
 				!tr.allsolid &&
 				!tr.startsolid &&
@@ -1849,7 +1849,7 @@ static bool Update(Vehicle_t* p_veh, const usercmd_t* pUmcd)
 					G_Throw(other, dir, force / 10.0f);
 					G_Knockdown(other, parent, dir, force, qtrue);
 					G_Damage(other, player, player, parent->client->ps.velocity, parent->currentOrigin, force,
-					         DAMAGE_NO_ARMOR | DAMAGE_EXTRA_KNOCKBACK, MOD_IMPACT);
+						DAMAGE_NO_ARMOR | DAMAGE_EXTRA_KNOCKBACK, MOD_IMPACT);
 				}
 			}
 		}
@@ -2034,7 +2034,7 @@ static bool Update(Vehicle_t* p_veh, const usercmd_t* pUmcd)
 		p_veh->m_iSoundDebounceTimer < cur_time &&
 		(nextSpeed > prevSpeed && nextSpeed > halfMaxSpeed && prevSpeed < halfMaxSpeed || nextSpeed > halfMaxSpeed &&
 			!Q_irand(0, 1000))
-	)
+		)
 	{
 		int shift_sound = Q_irand2(1, 10);
 		switch (shift_sound)
@@ -2069,7 +2069,7 @@ static bool Update(Vehicle_t* p_veh, const usercmd_t* pUmcd)
 		case 10:
 			shift_sound = p_veh->m_pVehicleInfo->soundShift10;
 			break;
-		default: ;
+		default:;
 		}
 		if (shift_sound)
 		{
@@ -2191,7 +2191,7 @@ static bool UpdateRider(Vehicle_t* p_veh, bgEntity_t* pRider, usercmd_t* pUmcd)
 				if (p_veh->m_pVehicleInfo->Eject(p_veh, pRider, qfalse))
 				{
 					constexpr int i_flags = SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD | SETANIM_FLAG_HOLDLESS, i_blend =
-						              300;
+						300;
 					if (pUmcd->rightmove > 0)
 					{
 						anim = BOTH_ROLL_R;
@@ -2488,8 +2488,8 @@ static void AttachRiders(Vehicle_t* p_veh)
 
 		// Get the driver tag.
 		gi.G2API_GetBoltMatrix(parent->ghoul2, parent->playerModel, parent->crotchBolt, &bolt_matrix,
-		                       p_veh->m_vOrientation, parent->currentOrigin,
-		                       cg.time ? cg.time : level.time, nullptr, parent->s.modelScale);
+			p_veh->m_vOrientation, parent->currentOrigin,
+			cg.time ? cg.time : level.time, nullptr, parent->s.modelScale);
 		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, pilot->client->ps.origin);
 		G_SetOrigin(pilot, pilot->client->ps.origin);
 		gi.linkentity(pilot);
@@ -2505,8 +2505,8 @@ static void AttachRiders(Vehicle_t* p_veh)
 
 		// Get the driver tag.
 		gi.G2API_GetBoltMatrix(parent->ghoul2, parent->playerModel, parent->crotchBolt, &bolt_matrix,
-		                       p_veh->m_vOrientation, parent->currentOrigin,
-		                       cg.time ? cg.time : level.time, nullptr, parent->s.modelScale);
+			p_veh->m_vOrientation, parent->currentOrigin,
+			cg.time ? cg.time : level.time, nullptr, parent->s.modelScale);
 		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, pilot->client->ps.origin);
 		G_SetOrigin(pilot, pilot->client->ps.origin);
 		gi.linkentity(pilot);

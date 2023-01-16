@@ -28,7 +28,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #include "snd_local.h"
 
 portable_samplepair_t paintbuffer[PAINTBUFFER_SIZE];
-int *snd_p, snd_linear_count, snd_vol;
+int* snd_p, snd_linear_count, snd_vol;
 short* snd_out;
 
 void S_WriteLinearBlastStereo16()
@@ -328,8 +328,7 @@ void S_PaintChannels(const int endtime)
 					ChannelPaint(ch, sc, count, sampleOffset, ltime - s_paintedtime);
 					ltime += count;
 				}
-			}
-			while (ltime < end && ch->loopSound);
+			} while (ltime < end && ch->loopSound);
 		}
 		/* temprem
 				// paint in the looped channels.

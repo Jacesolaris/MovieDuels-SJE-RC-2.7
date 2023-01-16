@@ -60,9 +60,9 @@ typedef struct
 IMDCT_INIT_BLOCK;
 
 static const IMDCT_INIT_BLOCK imdct_info_18 =
-	{mdct18w, mdct18w2, coef};
+{ mdct18w, mdct18w2, coef };
 static const IMDCT_INIT_BLOCK imdct_info_6 =
-	{mdct6_3v, mdct6_3v2, &coef87};
+{ mdct6_3v, mdct6_3v2, &coef87 };
 
 /*====================================================================*/
 const IMDCT_INIT_BLOCK* imdct_init_addr_18()

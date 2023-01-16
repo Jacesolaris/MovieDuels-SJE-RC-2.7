@@ -146,7 +146,7 @@ output_pass_setup(j_decompress_ptr cinfo)
 
 GLOBAL(JDIMENSION)
 jpeg_read_scanlines(const j_decompress_ptr cinfo, const JSAMPARRAY scanlines,
-                    const JDIMENSION max_lines)
+	const JDIMENSION max_lines)
 {
 	JDIMENSION row_ctr;
 
@@ -178,7 +178,7 @@ jpeg_read_scanlines(const j_decompress_ptr cinfo, const JSAMPARRAY scanlines,
 
 GLOBAL(JDIMENSION)
 jpeg_read_raw_data(const j_decompress_ptr cinfo, const JSAMPIMAGE data,
-                   const JDIMENSION max_lines)
+	const JDIMENSION max_lines)
 {
 	if (cinfo->global_state != DSTATE_RAW_OK)
 		ERREXIT1(cinfo, JERR_BAD_STATE, cinfo->global_state);

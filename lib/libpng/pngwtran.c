@@ -154,7 +154,7 @@ png_do_pack(const png_row_infop row_info, const png_bytep row, const png_uint_32
  */
 static void
 png_do_shift(const png_row_infop row_info, const png_bytep row,
-             const png_const_color_8p bit_depth)
+	const png_const_color_8p bit_depth)
 {
 	png_debug(1, "in png_do_shift");
 

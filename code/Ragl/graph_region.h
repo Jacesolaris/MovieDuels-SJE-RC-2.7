@@ -52,7 +52,7 @@ namespace ragl
 	// The Graph Region Class
 	////////////////////////////////////////////////////////////////////////////////////////
 	template <class TNODE, int MAXNODES, class TEDGE, int MAXEDGES, int NUM_EDGES_PER_NODE, int MAXREGIONS, int
-	          MAXREGIONEDGES>
+		MAXREGIONEDGES>
 	class graph_region : public ratl::ratl_base
 	{
 	public:
@@ -339,10 +339,10 @@ namespace ragl
 						for (int j = 0; j < mEdges[CurRegionEdge].size(); j++)
 						{
 							if (user.is_valid(
-									mGraph.get_edge(mEdges[CurRegionEdge][j]),
-									NextRegion == TargetRegion ? -1 : 0
-								)
+								mGraph.get_edge(mEdges[CurRegionEdge][j]),
+								NextRegion == TargetRegion ? -1 : 0
 							)
+								)
 							{
 								// Great, So We Have Found A Valid Neighboring Region, Search There
 								//------------------------------------------------------------------

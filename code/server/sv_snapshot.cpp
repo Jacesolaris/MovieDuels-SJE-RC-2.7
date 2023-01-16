@@ -371,7 +371,7 @@ SV_AddEntitiesVisibleFromPoint
 ===============
 */
 static void SV_AddEntitiesVisibleFromPoint(vec3_t origin, clientSnapshot_t* frame,
-                                           snapshotEntityNumbers_t* eNums, const qboolean portal)
+	snapshotEntityNumbers_t* eNums, const qboolean portal)
 {
 	int i;
 	gentity_t* ent;
@@ -639,7 +639,7 @@ static clientSnapshot_t* SV_BuildClientSnapshot(client_t* client)
 	// to work correctly.  This also catches the error condition
 	// of an entity being included twice.
 	qsort(entityNumbers.snapshotEntities, entityNumbers.numSnapshotEntities,
-	      sizeof(entityNumbers.snapshotEntities[0]), SV_QsortEntityNumbers);
+		sizeof(entityNumbers.snapshotEntities[0]), SV_QsortEntityNumbers);
 
 	// now that all viewpoint's areabits have been OR'd together, invert
 	// all of them to make it a mask vector, which is what the renderer wants

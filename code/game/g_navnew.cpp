@@ -93,14 +93,14 @@ qboolean nav_check_ahead(const gentity_t* self, vec3_t end, trace_t& trace, int 
 	VectorSet(mins, self->mins[0], self->mins[1], self->mins[2] + STEPSIZE);
 
 	gi.trace(&trace, self->currentOrigin, mins, self->maxs, end, self->s.number, clipmask,
-	         static_cast<EG2_Collision>(0), 0);
+		static_cast<EG2_Collision>(0), 0);
 
 	if (trace.startsolid && trace.contents & CONTENTS_BOTCLIP)
 	{
 		//started inside do not enter, so ignore them
 		clipmask &= ~CONTENTS_BOTCLIP;
 		gi.trace(&trace, self->currentOrigin, mins, self->maxs, end, self->s.number, clipmask,
-		         static_cast<EG2_Collision>(0), 0);
+			static_cast<EG2_Collision>(0), 0);
 	}
 	//Do a simple check
 	if (trace.allsolid == qfalse && trace.startsolid == qfalse && trace.fraction == 1.0f)
@@ -176,7 +176,7 @@ qboolean NPC_ClearPathToGoal(vec3_t dir, gentity_t* goal)
 	{
 		//Okay, didn't get all the way there, let's see if we got close enough:
 		if (NAV_HitNavGoal(trace.endpos, NPC->mins, NPC->maxs, goal->currentOrigin, NPCInfo->goalRadius,
-		                   FlyingCreature(NPC)))
+			FlyingCreature(NPC)))
 		{
 			//VectorSubtract(goal->currentOrigin, NPC->currentOrigin, dir);
 			return qtrue;
@@ -197,7 +197,7 @@ qboolean NAV_DirSafe(const gentity_t* self, vec3_t dir, const float dist)
 	VectorSet(mins, self->mins[0], self->mins[1], self->mins[2] + STEPSIZE);
 
 	gi.trace(&trace, self->currentOrigin, mins, self->maxs, end, self->s.number, CONTENTS_BOTCLIP,
-	         static_cast<EG2_Collision>(0), 0);
+		static_cast<EG2_Collision>(0), 0);
 
 	//Do a simple check
 	if (trace.allsolid == qfalse && trace.startsolid == qfalse && trace.fraction == 1.0f)
@@ -233,7 +233,7 @@ qboolean NAV_MoveDirSafe(const gentity_t* self, const usercmd_t* cmd, const floa
 			return qtrue;
 		}
 		vec3_t fwd, right;
-		const vec3_t fwdAngs = {0, self->currentAngles[YAW], 0};
+		const vec3_t fwdAngs = { 0, self->currentAngles[YAW], 0 };
 		AngleVectors(fwdAngs, fwd, right, nullptr);
 		VectorScale(fwd, cmd->forwardmove, fwd);
 		VectorScale(right, cmd->rightmove, right);

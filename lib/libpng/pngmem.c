@@ -99,7 +99,7 @@ PNG_FUNCTION(png_voidp /* PRIVATE */,
  */
 static png_voidp
 png_malloc_array_checked(const png_const_structrp png_ptr, const int nelements,
-                         const size_t element_size)
+	const size_t element_size)
 {
 	const png_alloc_size_t req = nelements; /* known to be > 0 */
 
@@ -246,7 +246,7 @@ PNG_FUNCTION(void, PNGAPI
  */
 void PNGAPI
 png_set_mem_fn(const png_structrp png_ptr, const png_voidp mem_ptr, const png_malloc_ptr
-               malloc_fn, const png_free_ptr free_fn)
+	malloc_fn, const png_free_ptr free_fn)
 {
 	if (png_ptr != NULL)
 	{

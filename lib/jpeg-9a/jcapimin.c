@@ -191,7 +191,7 @@ jpeg_finish_compress(const j_compress_ptr cinfo)
 
 GLOBAL(void)
 jpeg_write_marker(const j_compress_ptr cinfo, const int marker,
-                  const JOCTET* dataptr, unsigned int datalen)
+	const JOCTET* dataptr, unsigned int datalen)
 {
 	JMETHOD(void, write_marker_byte, (j_compress_ptr info, int val));
 

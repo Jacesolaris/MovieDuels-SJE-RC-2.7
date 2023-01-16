@@ -3004,7 +3004,7 @@ void SP_point_combat(gentity_t* self)
 #endif
 		G_FreeEntity(self);
 		return;
-}
+	}
 
 	self->s.origin[2] += 0.125;
 	G_SetOrigin(self, self->s.origin);

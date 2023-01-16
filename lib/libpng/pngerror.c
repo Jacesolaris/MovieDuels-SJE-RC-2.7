@@ -109,7 +109,7 @@ PNG_FUNCTION(void, PNGAPI
  */
 size_t
 png_safecat(const png_charp buffer, const size_t bufsize, size_t pos,
-            png_const_charp string)
+	png_const_charp string)
 {
 	if (buffer != NULL && pos < bufsize)
 	{
@@ -130,7 +130,7 @@ png_safecat(const png_charp buffer, const size_t bufsize, size_t pos,
  */
 png_charp
 png_format_number(const png_const_charp start, png_charp end, const int format,
-                  png_alloc_size_t number)
+	png_alloc_size_t number)
 {
 	int count = 0;    /* number of digits output */
 	int mincount = 1; /* minimum number required */
@@ -243,7 +243,7 @@ png_warning(png_const_structrp png_ptr, const png_const_charp warning_message)
  */
 void
 png_warning_parameter(png_warning_parameters p, const int number,
-                      const png_const_charp string)
+	const png_const_charp string)
 {
 	if (number > 0 && number <= PNG_WARNING_PARAMETER_COUNT)
 		(void)png_safecat(p[number - 1], (sizeof p[number - 1]), 0, string);
@@ -251,7 +251,7 @@ png_warning_parameter(png_warning_parameters p, const int number,
 
 void
 png_warning_parameter_unsigned(png_warning_parameters p, const int number, const int format,
-                               const png_alloc_size_t value)
+	const png_alloc_size_t value)
 {
 	char buffer[PNG_NUMBER_BUFFER_SIZE];
 	png_warning_parameter(p, number, PNG_FORMAT_NUMBER(buffer, format, value));
@@ -259,7 +259,7 @@ png_warning_parameter_unsigned(png_warning_parameters p, const int number, const
 
 void
 png_warning_parameter_signed(png_warning_parameters p, const int number, const int format,
-                             const png_int_32 value)
+	const png_int_32 value)
 {
 	char buffer[PNG_NUMBER_BUFFER_SIZE];
 
@@ -278,7 +278,7 @@ png_warning_parameter_signed(png_warning_parameters p, const int number, const i
 
 void
 png_formatted_warning(const png_const_structrp png_ptr, png_warning_parameters p,
-                      png_const_charp message)
+	png_const_charp message)
 {
 	/* The internal buffer is just 192 bytes - enough for all our messages,
 	 * overflow doesn't happen because this code checks!  If someone figures
@@ -427,7 +427,7 @@ static PNG_CONST char png_digit[16] = {
 
 static void /* PRIVATE */
 png_format_buffer(const png_const_structrp png_ptr, const png_charp buffer, const png_const_charp
-                  error_message)
+	error_message)
 {
 	const png_uint_32 chunk_name = png_ptr->chunk_name;
 	int iout = 0, ishift = 24;
@@ -503,7 +503,7 @@ png_chunk_warning(const png_const_structrp png_ptr, const png_const_charp warnin
 #ifdef PNG_BENIGN_ERRORS_SUPPORTED
 void PNGAPI
 png_chunk_benign_error(const png_const_structrp png_ptr, png_const_charp
-                       error_message)
+	error_message)
 {
 	if ((png_ptr->flags & PNG_FLAG_BENIGN_ERRORS_WARN) != 0)
 		png_chunk_warning(png_ptr, error_message);
@@ -585,7 +585,7 @@ PNG_FUNCTION(void,
  */
 jmp_buf* PNGAPI
 png_set_longjmp_fn(const png_structrp png_ptr, const png_longjmp_ptr longjmp_fn,
-                   const size_t jmp_buf_size)
+	const size_t jmp_buf_size)
 {
 	/* From libpng 1.6.0 the app gets one chance to set a 'jmpbuf_size' value
 	 * and it must not change after that.  Libpng doesn't care how big the
@@ -822,7 +822,7 @@ png_default_warning(const png_const_structrp png_ptr, png_const_charp warning_me
  */
 void PNGAPI
 png_set_error_fn(const png_structrp png_ptr, const png_voidp error_ptr,
-                 const png_error_ptr error_fn, png_error_ptr warning_fn)
+	const png_error_ptr error_fn, png_error_ptr warning_fn)
 {
 	if (png_ptr == NULL)
 		return;

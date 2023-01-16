@@ -927,14 +927,14 @@ void WP_FireEmplacedMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean a
 }
 
 //---------------------------------------------------------
-static void WP_FireBlaster(gentity_t* ent, qboolean altFire)
+static void WP_FireBlaster(gentity_t* ent, qboolean alt_fire)
 //---------------------------------------------------------
 {
 	vec3_t  dir, angs;
 
 	vectoangles(forward, angs);
 
-	if (altFire)
+	if (alt_fire)
 	{
 		// add some slop to the alt-fire direction
 		angs[PITCH] += Q_flrand(-1.0f, 1.0f) * BLASTER_SPREAD;
@@ -944,7 +944,7 @@ static void WP_FireBlaster(gentity_t* ent, qboolean altFire)
 	AngleVectors(angs, dir, NULL, NULL);
 
 	// FIXME: if temp_org does not have clear trace to inside the bbox, don't shoot!
-	WP_FireBlasterMissile(ent, muzzle, dir, altFire);
+	WP_FireBlasterMissile(ent, muzzle, dir, alt_fire);
 }
 
 //---------------------------------------------------------
@@ -2720,8 +2720,8 @@ gentity_t* WP_DropThermal(gentity_t* ent)
 
 //---------------------------------------------------------
 qboolean WP_LobFire(const gentity_t* self, vec3_t start, vec3_t target, vec3_t mins, vec3_t maxs, const int clipmask,
-                    vec3_t velocity, const qboolean trace_path, const int ignore_ent_num, const int enemy_num,
-                    float ideal_speed, const qboolean must_hit)
+	vec3_t velocity, const qboolean trace_path, const int ignore_ent_num, const int enemy_num,
+	float ideal_speed, const qboolean must_hit)
 	//---------------------------------------------------------
 { //for the galak mech NPC
 	float speedInc = 100, bestImpactDist = Q3_INFINITE;//fireSpeed,

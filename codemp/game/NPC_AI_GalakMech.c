@@ -28,8 +28,8 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 extern void G_AddVoiceEvent(const gentity_t* self, int event, int speak_debounce_time);
 extern void NPC_AimAdjust(int change);
 extern qboolean WP_LobFire(const gentity_t* self, vec3_t start, vec3_t target, vec3_t mins, vec3_t maxs, int clipmask,
-                           vec3_t velocity, qboolean trace_path, int ignore_ent_num, int enemy_num,
-                           float ideal_speed, qboolean must_hit);
+	vec3_t velocity, qboolean trace_path, int ignore_ent_num, int enemy_num,
+	float ideal_speed, qboolean must_hit);
 extern void G_SoundOnEnt(gentity_t* ent, soundChannel_t channel, const char* soundPath);
 
 extern qboolean BG_CrouchAnim(int anim);
@@ -982,8 +982,8 @@ void NPC_BSGM_Attack(void)
 
 		//Find the desired angles
 		const qboolean clearshot = WP_LobFire(NPCS.NPC, muzzle, target, mins, maxs, MASK_SHOT | CONTENTS_LIGHTSABER,
-		                                      velocity, qtrue, NPCS.NPC->s.number, NPCS.NPC->enemy->s.number,
-		                                      1500, qtrue);
+			velocity, qtrue, NPCS.NPC->s.number, NPCS.NPC->enemy->s.number,
+			1500, qtrue);
 		if (VectorCompare(vec3_origin, velocity) || (!clearshot && enemyLOS4 && enemyCS4))
 		{//no clear lob shot and no lob shot that will hit something breakable
 			if (enemyLOS4 && enemyCS4 && TIMER_Done(NPCS.NPC, "noRapid"))

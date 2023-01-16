@@ -403,7 +403,7 @@ cvar_t* Cvar_Get(const char* var_name, const char* var_value, int flags)
 		else if (var_value[0] && strcmp(var->resetString, var_value) != 0)
 		{
 			Com_DPrintf(S_COLOR_YELLOW "Warning: cvar \"%s\" given initial values: \"%s\" and \"%s\"\n",
-			            var_name, var->resetString, var_value);
+				var_name, var->resetString, var_value);
 		}
 		// if we have a latched string, take that value now
 		if (var->latchedString)
@@ -502,8 +502,7 @@ static void Cvar_QSortByName(cvar_t** a, const int n)
 			i++;
 			j--;
 		}
-	}
-	while (i <= j);
+	} while (i <= j);
 
 	if (j > 0) Cvar_QSortByName(a, j);
 	if (n > i) Cvar_QSortByName(a + i, n - i);
@@ -511,7 +510,7 @@ static void Cvar_QSortByName(cvar_t** a, const int n)
 
 static void Cvar_Sort()
 {
-	cvar_t *list[MAX_CVARS], *var;
+	cvar_t* list[MAX_CVARS], * var;
 	int count;
 
 	for (count = 0, var = cvar_vars; var; var = var->next)
@@ -885,8 +884,8 @@ void Cvar_Toggle_f()
 	if (c == 2)
 	{
 		Cvar_Set2(Cmd_Argv(1), va("%d",
-		                          !Cvar_VariableValue(Cmd_Argv(1))),
-		          qfalse);
+			!Cvar_VariableValue(Cmd_Argv(1))),
+			qfalse);
 		return;
 	}
 
@@ -965,7 +964,7 @@ void Cvar_Set_f()
 			cvar_modifiedFlags |= CVAR_SERVERINFO;
 		}
 		break;
-	default: ;
+	default:;
 	}
 }
 
@@ -1015,7 +1014,7 @@ void Cvar_WriteVariables(const fileHandle_t f)
 				if (strlen(var->name) + strlen(var->latchedString) + 10 > sizeof(buffer))
 				{
 					Com_Printf(S_COLOR_YELLOW "WARNING: value of variable "
-					           "\"%s\" too long to write to file\n", var->name);
+						"\"%s\" too long to write to file\n", var->name);
 					continue;
 				}
 				if ((var->flags & CVAR_NODEFAULT) && strcmp(var->latchedString, var->resetString) == 0)
@@ -1029,7 +1028,7 @@ void Cvar_WriteVariables(const fileHandle_t f)
 				if (strlen(var->name) + strlen(var->string) + 10 > sizeof(buffer))
 				{
 					Com_Printf(S_COLOR_YELLOW "WARNING: value of variable "
-					           "\"%s\" too long to write to file\n", var->name);
+						"\"%s\" too long to write to file\n", var->name);
 					continue;
 				}
 				if ((var->flags & CVAR_NODEFAULT) && strcmp(var->string, var->resetString) == 0)
@@ -1058,8 +1057,8 @@ void Cvar_List_f()
 		match = Cmd_Argv(1);
 
 	for (var = cvar_vars, i = 0;
-	     var;
-	     var = var->next, i++)
+		var;
+		var = var->next, i++)
 	{
 		if (!var->name || (match && !Com_Filter(match, var->name, qfalse)))
 			continue;
@@ -1084,10 +1083,10 @@ void Cvar_List_f()
 		else Com_Printf(" ");
 
 		Com_Printf(S_COLOR_WHITE " %s = " S_COLOR_GREY "\"" S_COLOR_WHITE "%s" S_COLOR_GREY "\"" S_COLOR_WHITE,
-		           var->name, var->string);
+			var->name, var->string);
 		if (var->latchedString)
 			Com_Printf(", latched = " S_COLOR_GREY "\"" S_COLOR_WHITE "%s" S_COLOR_GREY "\"" S_COLOR_WHITE,
-			           var->latchedString);
+				var->latchedString);
 		Com_Printf("\n");
 	}
 
@@ -1123,17 +1122,17 @@ void Cvar_ListModified_f()
 {
 	// build a list of cvars that are modified
 	for (const cvar_t* var = cvar_vars;
-	     var;
-	     var = var->next)
+		var;
+		var = var->next)
 	{
 		char* value = var->latchedString ? var->latchedString : var->string;
 		if (!var->name || !var->modificationCount || strcmp(value, var->resetString) == 0)
 			continue;
 
 		Com_Printf(S_COLOR_GREY "Cvar "
-		           S_COLOR_WHITE "%s = " S_COLOR_GREY "\"" S_COLOR_WHITE "%s" S_COLOR_GREY "\"" S_COLOR_WHITE ", "
-		           S_COLOR_WHITE "default = " S_COLOR_GREY "\"" S_COLOR_WHITE "%s" S_COLOR_GREY "\"" S_COLOR_WHITE "\n",
-		           var->name, value, var->resetString);
+			S_COLOR_WHITE "%s = " S_COLOR_GREY "\"" S_COLOR_WHITE "%s" S_COLOR_GREY "\"" S_COLOR_WHITE ", "
+			S_COLOR_WHITE "default = " S_COLOR_GREY "\"" S_COLOR_WHITE "%s" S_COLOR_GREY "\"" S_COLOR_WHITE "\n",
+			var->name, value, var->resetString);
 	}
 }
 
@@ -1143,22 +1142,22 @@ void Cvar_ListUserCreated_f()
 
 	// build a list of cvars that are modified
 	for (const cvar_t* var = cvar_vars;
-	     var;
-	     var = var->next)
+		var;
+		var = var->next)
 	{
 		char* value = var->latchedString ? var->latchedString : var->string;
 		if (!(var->flags & CVAR_USER_CREATED))
 			continue;
 
 		Com_Printf(S_COLOR_GREY "Cvar "
-		           S_COLOR_WHITE "%s = " S_COLOR_GREY "\"" S_COLOR_WHITE "%s" S_COLOR_GREY "\"" S_COLOR_WHITE "\n",
-		           var->name, value);
+			S_COLOR_WHITE "%s = " S_COLOR_GREY "\"" S_COLOR_WHITE "%s" S_COLOR_GREY "\"" S_COLOR_WHITE "\n",
+			var->name, value);
 		count++;
 	}
 
 	if (count > 0)
 		Com_Printf(S_COLOR_GREY "Showing " S_COLOR_WHITE "%u" S_COLOR_GREY " user created cvars" S_COLOR_WHITE "\n",
-		           count);
+			count);
 	else
 		Com_Printf(S_COLOR_GREY "No user created cvars" S_COLOR_WHITE "\n");
 }
@@ -1252,7 +1251,7 @@ void Cvar_UnsetUserCreated_f()
 
 	if (count > 0)
 		Com_Printf(S_COLOR_GREY "Removed " S_COLOR_WHITE "%u" S_COLOR_GREY " user created cvars" S_COLOR_WHITE "\n",
-		           count);
+			count);
 	else
 		Com_Printf(S_COLOR_GREY "No user created cvars to remove" S_COLOR_WHITE "\n");
 }
@@ -1365,7 +1364,7 @@ void Cvar_Register(vmCvar_t* vmCvar, const char* varName, const char* defaultVal
 	if ((flags & (CVAR_ARCHIVE | CVAR_ROM)) == (CVAR_ARCHIVE | CVAR_ROM))
 	{
 		Com_DPrintf(S_COLOR_YELLOW "WARNING: Unsetting CVAR_ROM cvar '%s', "
-		            "since it is also CVAR_ARCHIVE\n", varName);
+			"since it is also CVAR_ARCHIVE\n", varName);
 		flags &= ~CVAR_ROM;
 	}
 
@@ -1408,8 +1407,8 @@ void Cvar_Update(vmCvar_t* vmCvar)
 	vmCvar->modificationCount = cv->modificationCount;
 	if (strlen(cv->string) + 1 > MAX_CVAR_VALUE_STRING)
 		Com_Error(ERR_DROP, "Cvar_Update: src %s length %u exceeds MAX_CVAR_VALUE_STRING",
-		          cv->string,
-		          strlen(cv->string));
+			cv->string,
+			strlen(cv->string));
 	Q_strncpyz(vmCvar->string, cv->string, MAX_CVAR_VALUE_STRING);
 	vmCvar->value = cv->value;
 	vmCvar->integer = cv->integer;

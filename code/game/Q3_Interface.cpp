@@ -74,7 +74,7 @@ extern void Rail_LockCenterOfTrack(const char* trackName);
 extern void Rail_UnLockCenterOfTrack(const char* trackName);
 extern void G_GetBoltPosition(gentity_t* self, int bolt_index, vec3_t pos, int model_index = 0);
 extern qboolean G_DoDismembermentcin(gentity_t* self, vec3_t point, int mod, int hit_loc,
-                                     qboolean force = qfalse);
+	qboolean force = qfalse);
 extern void G_ChangeScale(const char* data);
 extern void UnLockDoors(const gentity_t* ent);
 extern void LockDoors(const gentity_t* ent);
@@ -876,7 +876,7 @@ static char* Q3_GetAnimLower(const gentity_t* ent)
 	if (ent->client == nullptr)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_WARNING,
-		                         "Q3_GetAnimLower: attempted to read animation state off non-client!\n");
+			"Q3_GetAnimLower: attempted to read animation state off non-client!\n");
 		return nullptr;
 	}
 
@@ -895,7 +895,7 @@ static char* Q3_GetAnimUpper(const gentity_t* ent)
 	if (ent->client == nullptr)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_WARNING,
-		                         "Q3_GetAnimUpper: attempted to read animation state off non-client!\n");
+			"Q3_GetAnimUpper: attempted to read animation state off non-client!\n");
 		return nullptr;
 	}
 
@@ -930,7 +930,7 @@ static char* Q3_GetAnimBoth(const gentity_t* ent)
 	{
 #ifdef _DEBUG	// sigh, cut down on tester reports that aren't important
 		Quake3Game()->DebugPrint(IGameInterface::WL_WARNING,
-		                         "Q3_GetAnimBoth: legs and torso animations did not match : returning legs\n");
+			"Q3_GetAnimBoth: legs and torso animations did not match : returning legs\n");
 #endif
 	}
 
@@ -986,7 +986,7 @@ static void Q3_SetObjective(const char* ObjEnum, const int status)
 			missionInfo_Updated = qtrue; // Activate flashing text
 		}
 		break;
-	default: ;
+	default:;
 	}
 
 	if (objectiveID == LIGHTSIDE_OBJ
@@ -1434,8 +1434,8 @@ static void Q3_SetAdjustAreaPortals(const int entID, const qboolean adjust)
 	}
 
 	ent->svFlags = adjust
-		               ? ent->svFlags | SVF_MOVER_ADJ_AREA_PORTALS
-		               : ent->svFlags & ~SVF_MOVER_ADJ_AREA_PORTALS;
+		? ent->svFlags | SVF_MOVER_ADJ_AREA_PORTALS
+		: ent->svFlags & ~SVF_MOVER_ADJ_AREA_PORTALS;
 }
 
 /*
@@ -1504,13 +1504,13 @@ static void Q3_SetNoGroups(const int entID, const qboolean noGroups)
 	if (!ent->NPC)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_WARNING, "Q3_SetNoGroups: ent %s is not an NPC!\n",
-		                         ent->targetname);
+			ent->targetname);
 		return;
 	}
 
 	ent->NPC->scriptFlags = noGroups
-		                        ? ent->NPC->scriptFlags | SCF_NO_GROUPS
-		                        : ent->NPC->scriptFlags & ~SCF_NO_GROUPS;
+		? ent->NPC->scriptFlags | SCF_NO_GROUPS
+		: ent->NPC->scriptFlags & ~SCF_NO_GROUPS;
 }
 
 /*
@@ -1802,76 +1802,76 @@ Lerps the origin and angles of an entity to the destination values
 		moverState = MOVER_1TO2;
 	}
 	else / *if ( moverState == MOVER_POS2 || moverState == MOVER_1TO2 )*/
-/*	{
-		VectorCopy( ent->currentOrigin, ent->pos2 );
-		VectorCopy( origin, ent->pos1 );
+	/*	{
+			VectorCopy( ent->currentOrigin, ent->pos2 );
+			VectorCopy( origin, ent->pos1 );
 
-		moverState = MOVER_2TO1;
-	}
-
-	InitMoverTrData( ent );
-
-	ent->s.pos.trDuration = duration;
-
-	// start it going
-	MatchTeam( ent, moverState, level.time );
-	//SetMoverState( ent, moverState, level.time );
-
-	//Only do the angles if specified
-	if ( angles != NULL )
-	{
-		//
-		// Rotation
-
-		for ( i = 0; i < 3; i++ )
-		{
-			ang[i] = AngleDelta( angles[i], ent->currentAngles[i] );
-			ent->s.apos.trDelta[i] = ( ang[i] / ( duration * 0.001f ) );
+			moverState = MOVER_2TO1;
 		}
 
-		VectorCopy( ent->currentAngles, ent->s.apos.trBase );
+		InitMoverTrData( ent );
 
-		if ( ent->altFire )
+		ent->s.pos.trDuration = duration;
+
+		// start it going
+		MatchTeam( ent, moverState, level.time );
+		//SetMoverState( ent, moverState, level.time );
+
+		//Only do the angles if specified
+		if ( angles != NULL )
 		{
-			ent->s.apos.trType = TR_LINEAR_STOP;
+			//
+			// Rotation
+
+			for ( i = 0; i < 3; i++ )
+			{
+				ang[i] = AngleDelta( angles[i], ent->currentAngles[i] );
+				ent->s.apos.trDelta[i] = ( ang[i] / ( duration * 0.001f ) );
+			}
+
+			VectorCopy( ent->currentAngles, ent->s.apos.trBase );
+
+			if ( ent->altFire )
+			{
+				ent->s.apos.trType = TR_LINEAR_STOP;
+			}
+			else
+			{
+				ent->s.apos.trType = TR_NONLINEAR_STOP;
+			}
+			ent->s.apos.trDuration = duration;
+
+			ent->s.apos.trTime = level.time;
+
+			ent->e_ReachedFunc = reachedF_moveAndRotateCallback;
+			Q3_TaskIDSet( ent, TID_ANGLE_FACE, taskID );
 		}
 		else
 		{
-			ent->s.apos.trType = TR_NONLINEAR_STOP;
+			//Setup the last bits of information
+			ent->e_ReachedFunc  = reachedF_moverCallback;
 		}
-		ent->s.apos.trDuration = duration;
 
-		ent->s.apos.trTime = level.time;
+		if ( ent->damage )
+		{
+			ent->e_BlockedFunc = blockedF_Blocked_Mover;
+		}
 
-		ent->e_ReachedFunc = reachedF_moveAndRotateCallback;
-		Q3_TaskIDSet( ent, TID_ANGLE_FACE, taskID );
-	}
-	else
-	{
-		//Setup the last bits of information
-		ent->e_ReachedFunc  = reachedF_moverCallback;
-	}
+		Q3_TaskIDSet( ent, TID_MOVE_NAV, taskID );
+		// starting sound
+		G_PlayDoorLoopSound( ent );
+		G_PlayDoorSound( ent, BMS_START );	//??
 
-	if ( ent->damage )
-	{
-		ent->e_BlockedFunc = blockedF_Blocked_Mover;
-	}
+		gi.linkentity( ent );
+	}*/
 
-	Q3_TaskIDSet( ent, TID_MOVE_NAV, taskID );
-	// starting sound
-	G_PlayDoorLoopSound( ent );
-	G_PlayDoorSound( ent, BMS_START );	//??
+	/*
+	=============
+	Q3_Lerp2Origin
 
-	gi.linkentity( ent );
-}*/
-
-/*
-=============
-Q3_Lerp2Origin
-
-Lerps the origin to the destination value
-=============
-*/
+	Lerps the origin to the destination value
+	=============
+	*/
 void Q3_Lerp2Origin(const int taskID, const int entID, vec3_t origin, const float duration)
 {
 	gentity_t* ent = &g_entities[entID];
@@ -2070,28 +2070,28 @@ static qboolean Q3_SetNavGoal(const int entID, const char* name)
 	if (!ent->health)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR,
-		                         "Q3_SetNavGoal: tried to set a navgoal (\"%s\") on a corpse! \"%s\"\n", name,
-		                         ent->script_targetname);
+			"Q3_SetNavGoal: tried to set a navgoal (\"%s\") on a corpse! \"%s\"\n", name,
+			ent->script_targetname);
 		return qfalse;
 	}
 	if (!ent->NPC)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR,
-		                         "Q3_SetNavGoal: tried to set a navgoal (\"%s\") on a non-NPC: \"%s\"\n", name,
-		                         ent->script_targetname);
+			"Q3_SetNavGoal: tried to set a navgoal (\"%s\") on a non-NPC: \"%s\"\n", name,
+			ent->script_targetname);
 		return qfalse;
 	}
 	if (!ent->NPC->tempGoal)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR,
-		                         "Q3_SetNavGoal: tried to set a navgoal (\"%s\") on a dead NPC: \"%s\"\n", name,
-		                         ent->script_targetname);
+			"Q3_SetNavGoal: tried to set a navgoal (\"%s\") on a dead NPC: \"%s\"\n", name,
+			ent->script_targetname);
 		return qfalse;
 	}
 	if (!ent->NPC->tempGoal->inuse)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_SetNavGoal: NPC's (\"%s\") navgoal is freed: \"%s\"\n",
-		                         name, ent->script_targetname);
+			name, ent->script_targetname);
 		return qfalse;
 	}
 	if (Q_stricmp("null", name) == 0
@@ -2204,7 +2204,7 @@ qboolean Q3_SetAnimUpper(const int entID, const char* anim_name)
 	if (animID == -1)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_WARNING, "Q3_SetAnimUpper: unknown animation sequence '%s'\n",
-		                         anim_name);
+			anim_name);
 		return qfalse;
 	}
 
@@ -2233,7 +2233,7 @@ qboolean Q3_SetAnimLower(const int entID, const char* anim_name)
 	if (animID == -1)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_WARNING, "Q3_SetAnimLower: unknown animation sequence '%s'\n",
-		                         anim_name);
+			anim_name);
 		return qfalse;
 	}
 
@@ -2272,7 +2272,7 @@ void Q3_SetAnimHoldTime(const int entID, const int int_data, const qboolean lowe
 	if (!ent->client)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_SetAnimHoldTime: ent %d is NOT a player or NPC!\n",
-		                         entID);
+			entID);
 		return;
 	}
 
@@ -2477,7 +2477,7 @@ void Q3_SetHealth(const int entID, int data)
 	if (ent->health <= 0)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_WARNING, "Q3_SetHealth: trying to set health on a dead guy! %d\n",
-		                         entID);
+			entID);
 	}
 
 	if (data < 0)
@@ -2602,8 +2602,8 @@ static qboolean Q3_SetBState(const int entID, const char* bs_name)
 				else
 				{
 					Quake3Game()->DebugPrint(IGameInterface::WL_ERROR,
-					                         "Q3_SetBState: '%s' is not in a valid waypoint to search from!\n",
-					                         ent->targetname);
+						"Q3_SetBState: '%s' is not in a valid waypoint to search from!\n",
+						ent->targetname);
 					return qtrue;
 				}
 			}
@@ -2718,7 +2718,7 @@ static void Q3_SetDefaultBState(const int entID, const char* bs_name)
 	if (!ent->NPC)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_SetDefaultBState: '%s' is not an NPC\n",
-		                         ent->targetname);
+			ent->targetname);
 		return;
 	}
 
@@ -2812,7 +2812,7 @@ static void Q3_SetDYaw(const int entID, const float data)
 	else
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_WARNING, "Could not set DYAW: '%s' has an enemy (%s)!\n",
-		                         ent->targetname, ent->enemy->targetname);
+			ent->targetname, ent->enemy->targetname);
 	}
 }
 
@@ -3137,7 +3137,7 @@ static void Q3_SetGreetAllies(const int entID, const qboolean greet)
 	if (!self->NPC)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_WARNING, "Q3_SetGreetAllies: ent %s is not an NPC!\n",
-		                         self->targetname);
+			self->targetname);
 		return;
 	}
 
@@ -3175,7 +3175,7 @@ static void Q3_SetViewTarget(const int entID, const char* name)
 	if (!self->client)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_SetViewTarget: '%s' is not a player/NPC!\n",
-		                         self->targetname);
+			self->targetname);
 		return;
 	}
 
@@ -3233,7 +3233,7 @@ static void Q3_SetWatchTarget(const int entID, const char* name)
 	if (!self->NPC)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_SetWatchTarget: '%s' is not an NPC!\n",
-		                         self->targetname);
+			self->targetname);
 		return;
 	}
 
@@ -3342,7 +3342,7 @@ void Q3_SetViewEntity(const int entID, const char* name)
 	if (!self->client)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_SetViewEntity: '%s' is not a player!\n",
-		                         self->targetname);
+			self->targetname);
 		return;
 	}
 
@@ -3379,7 +3379,7 @@ void G_SetWeapon(gentity_t* self, int wp)
 	if (!self->client)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_SetWeapon: '%s' is not a player/NPC!\n",
-		                         self->targetname);
+			self->targetname);
 		return;
 	}
 
@@ -3466,7 +3466,7 @@ static void Q3_SetWeapon(const int entID, const char* wp_name)
 	if (!self->client)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_SetWeapon: '%s' is not a player/NPC!\n",
-		                         self->targetname);
+			self->targetname);
 		return;
 	}
 
@@ -3510,7 +3510,7 @@ static void Q3_SetItem(const int entID, const char* item_name)
 	if (!self->client)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_SetWeapon: '%s' is not a player/NPC!\n",
-		                         self->targetname);
+			self->targetname);
 		return;
 	}
 
@@ -3714,7 +3714,7 @@ static void Q3_SetFriction(const int entID, const int int_data)
 	if (!self->client)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_SetFriction: '%s' is not an NPC/player!\n",
-		                         self->targetname);
+			self->targetname);
 		return;
 	}
 
@@ -3743,7 +3743,7 @@ void Q3_SetGravity(const int entID, const float float_data)
 	if (!self->client)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_SetGravity: '%s' is not an NPC/player!\n",
-		                         self->targetname);
+			self->targetname);
 		return;
 	}
 
@@ -3787,7 +3787,7 @@ static void Q3_SetShotSpacing(const int entID, const int int_data)
 	if (!self->NPC)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_SetShotSpacing: '%s' is not an NPC!\n",
-		                         self->targetname);
+			self->targetname);
 		return;
 	}
 
@@ -4044,7 +4044,7 @@ static void Q3_SetRemoveTarget(const int entID, const char* target)
 	if (!self->NPC)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_SetRemoveTarget: '%s' is not an NPC!\n",
-		                         self->targetname);
+			self->targetname);
 		return;
 	}
 
@@ -4101,8 +4101,8 @@ static void Q3_SetForcePowerLevel(const int entID, const int forcePower, const i
 	if (forcePower < FP_FIRST || forceLevel >= NUM_FORCE_POWERS)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR,
-		                         "Q3_SetForcePowerLevel: Force Power index %d out of range (%d-%d)\n", forcePower,
-		                         FP_FIRST, NUM_FORCE_POWERS - 1);
+			"Q3_SetForcePowerLevel: Force Power index %d out of range (%d-%d)\n", forcePower,
+			FP_FIRST, NUM_FORCE_POWERS - 1);
 		return;
 	}
 
@@ -4111,7 +4111,7 @@ static void Q3_SetForcePowerLevel(const int entID, const int forcePower, const i
 		if (forcePower != FP_SABER_OFFENSE || forceLevel >= SS_NUM_SABER_STYLES)
 		{
 			Quake3Game()->DebugPrint(IGameInterface::WL_ERROR,
-			                         "Q3_SetForcePowerLevel: Force power setting %d out of range (0-3)\n", forceLevel);
+				"Q3_SetForcePowerLevel: Force power setting %d out of range (0-3)\n", forceLevel);
 			return;
 		}
 	}
@@ -4127,7 +4127,7 @@ static void Q3_SetForcePowerLevel(const int entID, const int forcePower, const i
 	if (!self->client)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_SetForcePowerLevel: ent %s is not a player or NPC\n",
-		                         self->targetname);
+			self->targetname);
 		return;
 	}
 
@@ -4161,7 +4161,7 @@ static void Q3_GiveSecurityKey(const int entID, const char* keyname)
 	if (!other->client)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_GiveSecurityKey: ent %s is not a player or NPC\n",
-		                         other->targetname);
+			other->targetname);
 		return;
 	}
 
@@ -4251,8 +4251,8 @@ void Q3_SetParm(const int entID, const int parmNum, const char* parmValue)
 			//Tried to set a string that is too long
 			ent->parms->parm[parmNum][sizeof ent->parms->parm[parmNum] - 1] = 0;
 			Quake3Game()->DebugPrint(IGameInterface::WL_WARNING,
-			                         "SET_PARM: parm%d string too long, truncated to '%s'!\n", parmNum,
-			                         ent->parms->parm[parmNum]);
+				"SET_PARM: parm%d string too long, truncated to '%s'!\n", parmNum,
+				ent->parms->parm[parmNum]);
 		}
 	}
 }
@@ -4285,7 +4285,7 @@ static void Q3_SetCaptureGoal(const int entID, const char* name)
 	if (goal == nullptr)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_SetCaptureGoal: can't find CaptureGoal target: '%s'\n",
-		                         name);
+			name);
 		return;
 	}
 
@@ -4318,24 +4318,24 @@ static void Q3_SetEvent(const int entID, const char* event_name)
 	const int event = GetIDForString(eventTable, event_name);
 	switch (event)
 	{
-	/*
-		case EV_DISINTEGRATE:
-			if( VectorCompare( ent->currentOrigin, vec3_origin ) )
-			{//Brush with no origin
-				VectorSubtract( ent->absmax, ent->absmin, spot );
-				VectorMA( ent->absmin, 0.5, spot, spot );
-			}
-			else
-			{
-				VectorCopy( ent->currentOrigin, spot );
-				spot[2] += ent->maxs[2]/2;
-			}
-			tent = G_TempEntity( spot, EV_DISINTEGRATION );
-			tent->s.eventParm = PW_REGEN;
-			tent->owner = ent;
-			break;
+		/*
+			case EV_DISINTEGRATE:
+				if( VectorCompare( ent->currentOrigin, vec3_origin ) )
+				{//Brush with no origin
+					VectorSubtract( ent->absmax, ent->absmin, spot );
+					VectorMA( ent->absmin, 0.5, spot, spot );
+				}
+				else
+				{
+					VectorCopy( ent->currentOrigin, spot );
+					spot[2] += ent->maxs[2]/2;
+				}
+				tent = G_TempEntity( spot, EV_DISINTEGRATION );
+				tent->s.eventParm = PW_REGEN;
+				tent->owner = ent;
+				break;
 
-	*/
+		*/
 	case EV_BAD:
 	default:
 		//Quake3Game()->DebugPrint( IGameInterface::WL_ERROR,"Q3_SetEvent: Invalid Event %d\n", event );
@@ -4434,7 +4434,7 @@ static qboolean Q3_SetBehaviorSet(const int entID, const int toSet, const char* 
 	case SET_MINDTRICKSCRIPT:
 		bSet = BSET_MINDTRICK;
 		break;
-	default: ;
+	default:;
 	}
 
 	if (bSet < BSET_SPAWN || bSet >= NUM_BSETS)
@@ -4510,7 +4510,7 @@ static void Q3_SetIgnorePain(const int entID, const qboolean data)
 	if (!ent->NPC)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_SetIgnorePain: '%s' is not an NPC!\n",
-		                         ent->targetname);
+			ent->targetname);
 		return;
 	}
 
@@ -4537,7 +4537,7 @@ static void Q3_SetIgnoreEnemies(const int entID, const qboolean data)
 	if (!ent->NPC)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_SetIgnoreEnemies: '%s' is not an NPC!\n",
-		                         ent->targetname);
+			ent->targetname);
 		return;
 	}
 
@@ -4571,7 +4571,7 @@ static void Q3_SetIgnoreAlerts(const int entID, const qboolean data)
 	if (!ent->NPC)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_SetIgnoreAlerts: '%s' is not an NPC!\n",
-		                         ent->targetname);
+			ent->targetname);
 		return;
 	}
 
@@ -4655,7 +4655,7 @@ static void Q3_SetDontFire(const int entID, const qboolean add)
 	if (!ent->NPC)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_SetDontFire: '%s' is not an NPC!\n",
-		                         ent->targetname);
+			ent->targetname);
 		return;
 	}
 
@@ -4689,7 +4689,7 @@ static void Q3_SetFireWeapon(const int entID, const qboolean add)
 	if (!ent->NPC)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_SetFireWeapon: '%s' is not an NPC!\n",
-		                         ent->targetname);
+			ent->targetname);
 		return;
 	}
 
@@ -4723,7 +4723,7 @@ static void Q3_SetFireWeaponNoAnim(const int entID, const qboolean add)
 	if (!ent->NPC)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_SetFireWeaponNoAnim: '%s' is not an NPC!\n",
-		                         ent->targetname);
+			ent->targetname);
 		return;
 	}
 
@@ -4757,7 +4757,7 @@ static void Q3_SetSafeRemove(const int entID, const qboolean add)
 	if (!ent->NPC)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_SetSafeRemove: '%s' is not an NPC!\n",
-		                         ent->targetname);
+			ent->targetname);
 		return;
 	}
 
@@ -4791,7 +4791,7 @@ static void Q3_SetBobaJetPack(const int entID, const qboolean add)
 	if (!ent->NPC)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_SetBobaJetPack: '%s' is not an NPC!\n",
-		                         ent->targetname);
+			ent->targetname);
 		return;
 	}
 
@@ -4800,7 +4800,7 @@ static void Q3_SetBobaJetPack(const int entID, const qboolean add)
 		ent->client->NPC_class != CLASS_JANGO && ent->client->NPC_class != CLASS_JANGODUAL))
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_WARNING, "Q3_SetBobaJetPack: '%s' is not Boba Fett!\n",
-		                         ent->targetname);
+			ent->targetname);
 		return;
 	}
 
@@ -4811,12 +4811,12 @@ static void Q3_SetBobaJetPack(const int entID, const qboolean add)
 			if (ent->client && ent->client->NPC_class == CLASS_MANDALORIAN)
 			{
 				G_PlayEffect(G_EffectIndex("rockettrooper/flameNEW"), ent->playerModel, ent->genericBolt1,
-				             ent->s.number, ent->currentOrigin, qtrue, qtrue);
+					ent->s.number, ent->currentOrigin, qtrue, qtrue);
 			}
 			else
 			{
 				G_PlayEffect(G_EffectIndex("boba/jetSP"), ent->playerModel, ent->genericBolt1, ent->s.number,
-				             ent->currentOrigin, qtrue, qtrue);
+					ent->currentOrigin, qtrue, qtrue);
 			}
 		}
 		if (ent->genericBolt2 != -1)
@@ -4824,12 +4824,12 @@ static void Q3_SetBobaJetPack(const int entID, const qboolean add)
 			if (ent->client && ent->client->NPC_class == CLASS_MANDALORIAN)
 			{
 				G_PlayEffect(G_EffectIndex("rockettrooper/flameNEW"), ent->playerModel, ent->genericBolt2,
-				             ent->s.number, ent->currentOrigin, qtrue, qtrue);
+					ent->s.number, ent->currentOrigin, qtrue, qtrue);
 			}
 			else
 			{
 				G_PlayEffect(G_EffectIndex("boba/jetSP"), ent->playerModel, ent->genericBolt2, ent->s.number,
-				             ent->currentOrigin, qtrue, qtrue);
+					ent->currentOrigin, qtrue, qtrue);
 			}
 		}
 		//take-off sound
@@ -4946,7 +4946,7 @@ static void Q3_SetLockedEnemy(const int entID, const qboolean locked)
 	if (!ent->NPC)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_SetLockedEnemy: '%s' is not an NPC!\n",
-		                         ent->targetname);
+			ent->targetname);
 		return;
 	}
 
@@ -5001,7 +5001,7 @@ static void Q3_SetNoMindTrick(const int entID, const qboolean add)
 	if (!ent->NPC)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_SetNoMindTrick: '%s' is not an NPC!\n",
-		                         ent->targetname);
+			ent->targetname);
 		return;
 	}
 
@@ -5040,7 +5040,7 @@ static void Q3_SetCrouched(const int entID, const qboolean add)
 	if (!ent->NPC)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_SetCrouched: '%s' is not an NPC!\n",
-		                         ent->targetname);
+			ent->targetname);
 		return;
 	}
 
@@ -5140,7 +5140,7 @@ static void Q3_SetForcedMarch(const int entID, const qboolean add)
 	if (!ent->NPC)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_SetForcedMarch: '%s' is not an NPC!\n",
-		                         ent->targetname);
+			ent->targetname);
 		return;
 	}
 
@@ -5174,7 +5174,7 @@ static void Q3_SetChaseEnemies(const int entID, const qboolean add)
 	if (!ent->NPC)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_SetChaseEnemies: '%s' is not an NPC!\n",
-		                         ent->targetname);
+			ent->targetname);
 		return;
 	}
 
@@ -5209,7 +5209,7 @@ static void Q3_SetLookForEnemies(const int entID, const qboolean add)
 	if (!ent->NPC)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_SetLookForEnemies: '%s' is not an NPC!\n",
-		                         ent->targetname);
+			ent->targetname);
 		return;
 	}
 
@@ -5242,7 +5242,7 @@ static void Q3_SetFaceMoveDir(const int entID, const qboolean add)
 	if (!ent->NPC)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_SetFaceMoveDir: '%s' is not an NPC!\n",
-		                         ent->targetname);
+			ent->targetname);
 		return;
 	}
 
@@ -5311,7 +5311,7 @@ static void Q3_SetDontFlee(const int entID, const qboolean add)
 	if (!ent->NPC)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_SetDontFlee: '%s' is not an NPC!\n",
-		                         ent->targetname);
+			ent->targetname);
 		return;
 	}
 
@@ -5345,7 +5345,7 @@ static void Q3_SetNoResponse(const int entID, const qboolean add)
 	if (!ent->NPC)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_SetNoResponse: '%s' is not an NPC!\n",
-		                         ent->targetname);
+			ent->targetname);
 		return;
 	}
 
@@ -5379,7 +5379,7 @@ static void Q3_SetCombatTalk(const int entID, const qboolean add)
 	if (!ent->NPC)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_SetCombatTalk: '%s' is not an NPC!\n",
-		                         ent->targetname);
+			ent->targetname);
 		return;
 	}
 
@@ -5413,7 +5413,7 @@ static void Q3_SetAlertTalk(const int entID, const qboolean add)
 	if (!ent->NPC)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_SetAlertTalk: '%s' is not an NPC!\n",
-		                         ent->targetname);
+			ent->targetname);
 		return;
 	}
 
@@ -5447,7 +5447,7 @@ static void Q3_SetUseCpNearest(const int entID, const qboolean add)
 	if (!ent->NPC)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_SetUseCpNearest: '%s' is not an NPC!\n",
-		                         ent->targetname);
+			ent->targetname);
 		return;
 	}
 
@@ -5514,7 +5514,7 @@ static void Q3_SetNoAcrobatics(const int entID, const qboolean add)
 	if (!ent->NPC)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_SetNoAcrobatics: '%s' is not an NPC!\n",
-		                         ent->targetname);
+			ent->targetname);
 		return;
 	}
 
@@ -5548,7 +5548,7 @@ static void Q3_SetUseSubtitles(const int entID, const qboolean add)
 	if (!ent->NPC)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_SetUseSubtitles: '%s' is not an NPC!\n",
-		                         ent->targetname);
+			ent->targetname);
 		return;
 	}
 
@@ -5582,7 +5582,7 @@ static void Q3_SetNoFallToDeath(const int entID, const qboolean add)
 	if (!ent->NPC)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_SetNoFallToDeath: '%s' is not an NPC!\n",
-		                         ent->targetname);
+			ent->targetname);
 		return;
 	}
 
@@ -5616,7 +5616,7 @@ static void Q3_SetDismemberable(const int entID, const qboolean dismemberable)
 	if (!ent->client)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_SetDismemberable: '%s' is not an client!\n",
-		                         ent->targetname);
+			ent->targetname);
 		return;
 	}
 
@@ -5643,7 +5643,7 @@ static void Q3_SetMoreLight(const int entID, const qboolean add)
 	if (!ent->NPC)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_SetMoreLight: '%s' is not an NPC!\n",
-		                         ent->targetname);
+			ent->targetname);
 		return;
 	}
 
@@ -5787,7 +5787,7 @@ static void Q3_SetForceInvincible(const int entID, const qboolean forceInv)
 	if (!self || !self->client)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_WARNING, "Q3_SetForceInvincible: entID %d not a client\n",
-		                         entID);
+			entID);
 		return;
 	}
 
@@ -5993,7 +5993,7 @@ static void Q3_SetForwardMove(const int entID, const int fmoveVal)
 	if (!ent->client)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_SetForwardMove: '%s' is not an NPC/player!\n",
-		                         ent->targetname);
+			ent->targetname);
 		return;
 	}
 
@@ -6020,7 +6020,7 @@ static void Q3_SetRightMove(const int entID, const int rmoveVal)
 	if (!ent->client)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_SetRightMove: '%s' is not an NPC/player!\n",
-		                         ent->targetname);
+			ent->targetname);
 		return;
 	}
 
@@ -6047,7 +6047,7 @@ static void Q3_SetLockAngle(const int entID, const char* lockAngle)
 	if (!ent->client)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_SetLockAngle: '%s' is not an NPC/player!\n",
-		                         ent->targetname);
+			ent->targetname);
 		return;
 	}
 
@@ -6163,7 +6163,7 @@ static void Q3_AddRHandModel(const int entID, const char* addModel)
 	{
 		// attach it to the hand
 		gi.G2API_AttachG2Model(&ent->ghoul2[ent->cinematicModel], &ent->ghoul2[ent->playerModel],
-		                       ent->handRBolt, ent->playerModel);
+			ent->handRBolt, ent->playerModel);
 	}
 }
 
@@ -6181,7 +6181,7 @@ static void Q3_AddLHandModel(const int entID, const char* addModel)
 	{
 		// attach it to the hand
 		gi.G2API_AttachG2Model(&ent->ghoul2[ent->cinematicModel], &ent->ghoul2[ent->playerModel],
-		                       ent->handLBolt, ent->playerModel);
+			ent->handLBolt, ent->playerModel);
 	}
 }
 
@@ -6220,7 +6220,7 @@ static void Q3_LookTarget(const int entID, char* targetName)
 	if (!ent->client)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_LookTarget: '%s' is not an NPC/player!\n",
-		                         ent->targetname);
+			ent->targetname);
 		return;
 	}
 
@@ -6241,7 +6241,7 @@ static void Q3_LookTarget(const int entID, char* targetName)
 			if (!targ)
 			{
 				Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_LookTarget: Can't find ent %s\n",
-				                         targetName);
+					targetName);
 				return;
 			}
 		}
@@ -6270,7 +6270,7 @@ static void Q3_Face(const int entID, const int expression, float holdtime)
 	if (!ent->client)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_Face: '%s' is not an NPC/player!\n",
-		                         ent->targetname);
+			ent->targetname);
 		return;
 	}
 
@@ -6294,13 +6294,13 @@ static void Q3_Face(const int entID, const int expression, float holdtime)
 		break;
 	case SET_FACEBLINKFROWN:
 		ent->client->facial_blink = -(level.time + holdtime);
-	//fall through
+		//fall through
 	case SET_FACEFROWN:
 		ent->client->facial_timer = -(level.time + holdtime);
 		ent->client->facial_anim = FACE_FROWN;
 		break;
 
-	//Extra facial expressions:
+		//Extra facial expressions:
 	case SET_FACESMILE:
 		ent->client->facial_blink = -(level.time + holdtime);
 		ent->client->facial_timer = -(level.time + holdtime);
@@ -6326,7 +6326,7 @@ static void Q3_Face(const int entID, const int expression, float holdtime)
 		ent->client->facial_timer = level.time + Q_flrand(6000.0, 10000.0);
 		ent->client->facial_blink = level.time + Q_flrand(3000.0, 5000.0);
 		break;
-	default: ;
+	default:;
 	}
 }
 
@@ -6475,7 +6475,7 @@ static void Q3_SetStartFrame(const int entID, const int start_frame)
 	if (ent->client)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_WARNING,
-		                         "Q3_SetLoopAnim: command not valid on players/NPCs!\n");
+			"Q3_SetLoopAnim: command not valid on players/NPCs!\n");
 		return;
 	}
 
@@ -6508,7 +6508,7 @@ static void Q3_SetEndFrame(const int entID, const int end_frame)
 	if (ent->client)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_WARNING,
-		                         "Q3_SetEndFrame: command not valid on players/NPCs!\n");
+			"Q3_SetEndFrame: command not valid on players/NPCs!\n");
 		return;
 	}
 
@@ -6540,7 +6540,7 @@ static void Q3_SetAnimFrame(const int entID, const int animFrame)
 	if (ent->client)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_WARNING,
-		                         "Q3_SetAnimFrame: command not valid on players/NPCs!\n");
+			"Q3_SetAnimFrame: command not valid on players/NPCs!\n");
 		return;
 	}
 
@@ -6556,7 +6556,7 @@ static void Q3_SetAnimFrame(const int entID, const int animFrame)
 	{
 		// FIXME/NOTE: Set s.frame anyway??
 		Quake3Game()->DebugPrint(IGameInterface::WL_WARNING,
-		                         "Q3_SetAnimFrame: value must be valid number between StartFrame and EndFrame.\n");
+			"Q3_SetAnimFrame: value must be valid number between StartFrame and EndFrame.\n");
 	}
 }
 
@@ -6573,7 +6573,7 @@ void InflateOwner(gentity_t* self)
 	trace_t trace;
 
 	gi.trace(&trace, self->currentOrigin, self->mins, self->maxs, self->currentOrigin, self->owner->s.number,
-	         self->owner->clipmask & ~(CONTENTS_SOLID | CONTENTS_MONSTERCLIP), static_cast<EG2_Collision>(0), 0);
+		self->owner->clipmask & ~(CONTENTS_SOLID | CONTENTS_MONSTERCLIP), static_cast<EG2_Collision>(0), 0);
 	if (trace.allsolid || trace.startsolid)
 	{
 		self->e_ThinkFunc = thinkF_InflateOwner;
@@ -6612,7 +6612,7 @@ static void Q3_SetLoopAnim(const int entID, const qboolean loopAnim)
 	if (ent->client)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_WARNING,
-		                         "Q3_SetLoopAnim: command not valid on players/NPCs!\n");
+			"Q3_SetLoopAnim: command not valid on players/NPCs!\n");
 		return;
 	}
 
@@ -6676,7 +6676,7 @@ static void Q3_SetSaberActive(const int entID, const qboolean active)
 	if (!ent->client)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_SetSaberActive: '%s' is not an player/NPC!\n",
-		                         ent->targetname);
+			ent->targetname);
 		return;
 	}
 
@@ -6703,7 +6703,7 @@ static void Q3_SetSaberActive(const int entID, const qboolean active)
 		else
 		{
 			Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_SetSaberActive: '%s' is not using a saber!\n",
-			                         ent->targetname);
+				ent->targetname);
 			return;
 		}
 	}
@@ -6731,7 +6731,7 @@ static void Q3_SetSaberActive(const int entID, const qboolean active)
 ============
 */
 static void Q3_SetSaberBladeActive(const int entID, const int iSaber, const int iBlade,
-                                   const qboolean bActive = qtrue)
+	const qboolean bActive = qtrue)
 {
 	gentity_t* ent = &g_entities[entID];
 
@@ -6744,7 +6744,7 @@ static void Q3_SetSaberBladeActive(const int entID, const int iSaber, const int 
 	if (!ent->client)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_SetSaberBladeActive: '%s' is not an player/NPC!\n",
-		                         ent->targetname);
+			ent->targetname);
 		return;
 	}
 
@@ -6771,7 +6771,7 @@ static void Q3_SetSaberBladeActive(const int entID, const int iSaber, const int 
 		else
 		{
 			Quake3Game()->DebugPrint(IGameInterface::WL_ERROR,
-			                         "Q3_SetSaberBladeActive: '%s' is not using a saber!\n", ent->targetname);
+				"Q3_SetSaberBladeActive: '%s' is not using a saber!\n", ent->targetname);
 			return;
 		}
 	}
@@ -7205,21 +7205,21 @@ void Q3_DismemberLimb(const int entID, char* hitLocName)
 	if (!self->client)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_DismemberLimb: '%s' is not a player/NPC!\n",
-		                         self->targetname);
+			self->targetname);
 		return;
 	}
 
 	if (!self->ghoul2.size())
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_DismemberLimb: '%s' is not a ghoul model!\n",
-		                         self->targetname);
+			self->targetname);
 		return;
 	}
 
 	if (hit_loc <= HL_NONE || hit_loc >= HL_MAX)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_ERROR, "Q3_DismemberLimb: '%s' is not a valid hit location!\n",
-		                         hitLocName);
+			hitLocName);
 		return;
 	}
 
@@ -7269,7 +7269,7 @@ void Q3_DismemberLimb(const int entID, char* hitLocName)
 	case HL_GENERIC6:
 		VectorCopy(self->currentOrigin, point);
 		break;
-	default: ;
+	default:;
 	}
 	G_DoDismembermentcin(self, point, MOD_SABER, hit_loc, qtrue);
 }
@@ -7339,7 +7339,7 @@ void CQuake3GameInterface::SetVar(int taskID, int entID, const char* type_name, 
 		case VTYPE_VECTOR:
 			SetVectorVariable(type_name, data);
 			break;
-		default: ;
+		default:;
 		}
 
 		return;
@@ -7696,15 +7696,15 @@ void CQuake3GameInterface::VariableLoadStrings(const int type, varString_m& fmap
 		case TK_STRING:
 			DeclareVariable(TK_STRING, reinterpret_cast<const char*>(&tempBuffer));
 			SetStringVariable(reinterpret_cast<const char*>(&tempBuffer),
-			                  reinterpret_cast<const char*>(&tempBuffer2));
+				reinterpret_cast<const char*>(&tempBuffer2));
 			break;
 
 		case TK_VECTOR:
 			DeclareVariable(TK_VECTOR, reinterpret_cast<const char*>(&tempBuffer));
 			SetVectorVariable(reinterpret_cast<const char*>(&tempBuffer),
-			                  reinterpret_cast<const char*>(&tempBuffer2));
+				reinterpret_cast<const char*>(&tempBuffer2));
 			break;
-		default: ;
+		default:;
 		}
 	}
 }
@@ -8011,7 +8011,7 @@ int CQuake3GameInterface::PrecacheEntity(const gentity_t* pEntity)
 					IIcarusInterface::GetIcarus()->Precache(pBuf, iLength);
 			}
 			else
-			// otherwise try the next guy, maybe It will work.
+				// otherwise try the next guy, maybe It will work.
 				continue;
 		}
 	}
@@ -8027,12 +8027,12 @@ void CQuake3GameInterface::RunScript(const gentity_t* pEntity, const char* strSc
 
 	switch (RegisterScript(strScriptName, reinterpret_cast<void**>(&pBuf), iLength))
 	{
-	// If could not be loaded, leave!
+		// If could not be loaded, leave!
 	case SCRIPT_COULDNOTREGISTER:
 		DebugPrint(WL_WARNING, "RunScript: Script was not found and could not be loaded!!! %s\n", strScriptName);
 		return;
 
-	// We loaded the script and registered it, so run it!
+		// We loaded the script and registered it, so run it!
 	case SCRIPT_REGISTERED:
 	case SCRIPT_ALREADYREGISTERED:
 		assert(pBuf);
@@ -8040,8 +8040,8 @@ void CQuake3GameInterface::RunScript(const gentity_t* pEntity, const char* strSc
 		if (IIcarusInterface::GetIcarus()->Run(pEntity->m_iIcarusID, pBuf, iLength) !=
 			IIcarusInterface::ICARUS_INVALID)
 			DebugPrint(WL_VERBOSE, "%d Script %s executed by %s %s\n", level.time, strScriptName,
-			           pEntity->classname, pEntity->targetname);
-	default: ;
+				pEntity->classname, pEntity->targetname);
+	default:;
 	}
 }
 
@@ -8142,23 +8142,23 @@ void CQuake3GameInterface::DebugPrint(const e_DebugPrintLevel level, const char*
 		break;
 
 	case WL_DEBUG:
-		{
-			int ent_num;
+	{
+		int ent_num;
 
-			sscanf(text, "%d", &ent_num);
+		sscanf(text, "%d", &ent_num);
 
-			if (m_entFilter >= 0 && m_entFilter != ent_num)
-				return;
+		if (m_entFilter >= 0 && m_entFilter != ent_num)
+			return;
 
-			auto buffer = text;
-			buffer += 5;
+		auto buffer = text;
+		buffer += 5;
 
-			if (ent_num < 0 || ent_num >= MAX_GENTITIES)
-				ent_num = 0;
+		if (ent_num < 0 || ent_num >= MAX_GENTITIES)
+			ent_num = 0;
 
-			Com_Printf(S_COLOR_BLUE"DEBUG: %s(%d): %s\n", g_entities[ent_num].script_targetname, ent_num, buffer);
-			break;
-		}
+		Com_Printf(S_COLOR_BLUE"DEBUG: %s(%d): %s\n", g_entities[ent_num].script_targetname, ent_num, buffer);
+		break;
+	}
 	default:
 	case WL_VERBOSE:
 		Com_Printf(S_COLOR_GREEN"INFO: %s", text);
@@ -8212,7 +8212,7 @@ int CQuake3GameInterface::PlayIcarusSound(const int taskID, const int entID, con
 		type_voice = qtrue;
 	}
 	else if (Q_stricmp(channel, "CHAN_VOICE_GLOBAL") == 0)
-	// this should broadcast to everyone, put only casue animation on G_SoundOnEnt...
+		// this should broadcast to everyone, put only casue animation on G_SoundOnEnt...
 	{
 		voice_chan = CHAN_VOICE_GLOBAL;
 		type_voice = qtrue;
@@ -8224,7 +8224,7 @@ int CQuake3GameInterface::PlayIcarusSound(const int taskID, const int entID, con
 	//
 	if (!in_camera ||
 		(!g_skippingcin || !g_skippingcin->integer)
-	) // paranoia towards project end <g>
+		) // paranoia towards project end <g>
 	{
 		// Text on
 		// certain NPC's we always want to use subtitles regardless of subtitle setting
@@ -8471,7 +8471,7 @@ int CQuake3GameInterface::GetTag(const int entID, const char* name, const int lo
 	case TYPE_ANGLES:
 		//return TAG_GetAngles( ent->targetname, name, info );
 		return TAG_GetAngles(ent->ownername, name, info);
-	default: ;
+	default:;
 	}
 
 	return false;
@@ -8590,36 +8590,36 @@ void CQuake3GameInterface::Set(int taskID, int entID, const char* type_name, con
 		break;
 
 	case SET_ANIM_BOTH:
+	{
+		int both = 0;
+		if (Q3_SetAnimUpper(entID, data))
 		{
-			int both = 0;
-			if (Q3_SetAnimUpper(entID, data))
-			{
-				Q3_TaskIDSet(ent, TID_ANIM_UPPER, taskID);
-				both++;
-			}
-			else
-			{
-				DebugPrint(WL_ERROR, "SetAnimUpper: %s does not have anim %s!\n", ent->targetname, data);
-			}
-			if (Q3_SetAnimLower(entID, data))
-			{
-				Q3_TaskIDSet(ent, TID_ANIM_LOWER, taskID);
-				both++;
-			}
-			else
-			{
-				DebugPrint(WL_ERROR, "SetAnimLower: %s does not have anim %s!\n", ent->targetname, data);
-			}
-			if (both >= 2)
-			{
-				Q3_TaskIDSet(ent, TID_ANIM_BOTH, taskID);
-			}
-			if (both)
-			{
-				return; //Don't call it back
-			}
+			Q3_TaskIDSet(ent, TID_ANIM_UPPER, taskID);
+			both++;
 		}
-		break;
+		else
+		{
+			DebugPrint(WL_ERROR, "SetAnimUpper: %s does not have anim %s!\n", ent->targetname, data);
+		}
+		if (Q3_SetAnimLower(entID, data))
+		{
+			Q3_TaskIDSet(ent, TID_ANIM_LOWER, taskID);
+			both++;
+		}
+		else
+		{
+			DebugPrint(WL_ERROR, "SetAnimLower: %s does not have anim %s!\n", ent->targetname, data);
+		}
+		if (both >= 2)
+		{
+			Q3_TaskIDSet(ent, TID_ANIM_BOTH, taskID);
+		}
+		if (both)
+		{
+			return; //Don't call it back
+		}
+	}
+	break;
 
 	case SET_ANIM_HOLDTIME_LOWER:
 		int_data = atoi(data);
@@ -8920,7 +8920,7 @@ void CQuake3GameInterface::Set(int taskID, int entID, const char* type_name, con
 
 	case SET_DEFEND_TARGET:
 		DebugPrint(WL_WARNING, "SetDefendTarget unimplemented\n", entID);
-	//Q3_SetEnemy( entID, (char *) data);
+		//Q3_SetEnemy( entID, (char *) data);
 		break;
 
 	case SET_PARM1:
@@ -9119,10 +9119,10 @@ void CQuake3GameInterface::Set(int taskID, int entID, const char* type_name, con
 
 	case SET_TREASONED:
 		DebugPrint(WL_VERBOSE, "SET_TREASONED is disabled, do not use\n");
-	/*
-	G_TeamRetaliation( NULL, &g_entities[0], qfalse );
-	ffireLevel = FFIRE_LEVEL_RETALIATION;
-	*/
+		/*
+		G_TeamRetaliation( NULL, &g_entities[0], qfalse );
+		ffireLevel = FFIRE_LEVEL_RETALIATION;
+		*/
 		break;
 
 	case SET_UNDYING:
@@ -9235,7 +9235,7 @@ void CQuake3GameInterface::Set(int taskID, int entID, const char* type_name, con
 		Q3_CameraGroupTag(data);
 		break;
 
-	//FIXME: put these into camera commands
+		//FIXME: put these into camera commands
 	case SET_LOOK_TARGET:
 		Q3_LookTarget(entID, const_cast<char*>(data));
 		break;
@@ -9366,29 +9366,29 @@ void CQuake3GameInterface::Set(int taskID, int entID, const char* type_name, con
 		}
 		break;
 
-	// Created: 10/02/02 by Aurelio Reis, Modified: 10/02/02
-	// Make a specific Saber 1 Blade active.
+		// Created: 10/02/02 by Aurelio Reis, Modified: 10/02/02
+		// Make a specific Saber 1 Blade active.
 	case SET_SABER1BLADEON:
 		// Get which Blade to activate.
 		int_data = atoi(data);
 		Q3_SetSaberBladeActive(entID, 0, int_data, qtrue);
 		break;
 
-	// Make a specific Saber 1 Blade inactive.
+		// Make a specific Saber 1 Blade inactive.
 	case SET_SABER1BLADEOFF:
 		// Get which Blade to deactivate.
 		int_data = atoi(data);
 		Q3_SetSaberBladeActive(entID, 0, int_data, qfalse);
 		break;
 
-	// Make a specific Saber 2 Blade active.
+		// Make a specific Saber 2 Blade active.
 	case SET_SABER2BLADEON:
 		// Get which Blade to activate.
 		int_data = atoi(data);
 		Q3_SetSaberBladeActive(entID, 1, int_data, qtrue);
 		break;
 
-	// Make a specific Saber 2 Blade inactive.
+		// Make a specific Saber 2 Blade inactive.
 	case SET_SABER2BLADEOFF:
 		// Get which Blade to deactivate.
 		int_data = atoi(data);
@@ -9730,9 +9730,9 @@ void CQuake3GameInterface::Set(int taskID, int entID, const char* type_name, con
 	case SET_NO_PVS_CULL:
 		Q3_SetBroadcast(entID, static_cast<qboolean>(Q_stricmp("true", data) == 0));
 		break;
-	// Set a Saboteur to cloak (true) or un-cloak (false).
+		// Set a Saboteur to cloak (true) or un-cloak (false).
 	case SET_CLOAK: // Created: 01/08/03 by AReis.
-		extern void Saboteur_Cloak(gentity_t* self);
+		extern void Saboteur_Cloak(gentity_t * self);
 		if (Q_stricmp("true", data) == 0)
 		{
 			Saboteur_Cloak(&g_entities[entID]);
@@ -9827,41 +9827,41 @@ void CQuake3GameInterface::Set(int taskID, int entID, const char* type_name, con
 		break;
 
 	case SET_WINTER_GEAR: // Created: 03/26/03 by AReis.
+	{
+		// If this is a (fake) Player NPC or this IS the Player...
+		if (entID == 0 || ent->NPC_type && Q_stricmp(ent->NPC_type, "player") == 0)
 		{
-			// If this is a (fake) Player NPC or this IS the Player...
-			if (entID == 0 || ent->NPC_type && Q_stricmp(ent->NPC_type, "player") == 0)
+			extern cvar_t* g_char_skin_legs;
+			extern cvar_t* g_char_skin_torso;
+			extern cvar_t* g_char_skin_head;
+			extern cvar_t* g_char_model;
+			char strSkin[MAX_QPATH];
+			// Set the Winter Gear Skin if true, otherwise set back to normal configuration.
+			if (Q_stricmp("true", data) == 0)
 			{
-				extern cvar_t* g_char_skin_legs;
-				extern cvar_t* g_char_skin_torso;
-				extern cvar_t* g_char_skin_head;
-				extern cvar_t* g_char_model;
-				char strSkin[MAX_QPATH];
-				// Set the Winter Gear Skin if true, otherwise set back to normal configuration.
-				if (Q_stricmp("true", data) == 0)
-				{
-					Com_sprintf(strSkin, sizeof strSkin, "models/players/%s/|%s|%s|%s", g_char_model->string,
-					            g_char_skin_head->string, "torso_g1", "lower_e1");
-				}
-				else if (Q_stricmp(g_char_skin_head->string, "model_default") == 0 &&
-					Q_stricmp(g_char_skin_torso->string, "model_default") == 0 && Q_stricmp(
-						g_char_skin_legs->string, "model_default") == 0)
-				{
-					Com_sprintf(strSkin, sizeof strSkin, "models/players/%s/model_default.skin",
-					            g_char_model->string);
-				}
-				else
-				{
-					Com_sprintf(strSkin, sizeof strSkin, "models/players/%s/|%s|%s|%s", g_char_model->string,
-					            g_char_skin_head->string, g_char_skin_torso->string, g_char_skin_legs->string);
-				}
-				const int iSkinID = gi.RE_RegisterSkin(strSkin);
-				if (iSkinID)
-				{
-					gi.G2API_SetSkin(&ent->ghoul2[ent->playerModel], G_SkinIndex(strSkin), iSkinID);
-				}
+				Com_sprintf(strSkin, sizeof strSkin, "models/players/%s/|%s|%s|%s", g_char_model->string,
+					g_char_skin_head->string, "torso_g1", "lower_e1");
 			}
-			break;
+			else if (Q_stricmp(g_char_skin_head->string, "model_default") == 0 &&
+				Q_stricmp(g_char_skin_torso->string, "model_default") == 0 && Q_stricmp(
+					g_char_skin_legs->string, "model_default") == 0)
+			{
+				Com_sprintf(strSkin, sizeof strSkin, "models/players/%s/model_default.skin",
+					g_char_model->string);
+			}
+			else
+			{
+				Com_sprintf(strSkin, sizeof strSkin, "models/players/%s/|%s|%s|%s", g_char_model->string,
+					g_char_skin_head->string, g_char_skin_torso->string, g_char_skin_legs->string);
+			}
+			const int iSkinID = gi.RE_RegisterSkin(strSkin);
+			if (iSkinID)
+			{
+				gi.G2API_SetSkin(&ent->ghoul2[ent->playerModel], G_SkinIndex(strSkin), iSkinID);
+			}
 		}
+		break;
+	}
 	case SET_NO_ANGLES:
 		if (entID >= 0 && entID < ENTITYNUM_WORLD)
 		{
@@ -9877,19 +9877,19 @@ void CQuake3GameInterface::Set(int taskID, int entID, const char* type_name, con
 		break;
 	case SET_SKIN:
 		// If this is a (fake) Player NPC or this IS the Player...
+	{
+		//just blindly sets whatever skin you set!  include full path after "base/"... eg: "models/players/tavion_new/model_possessed.skin"
+		gentity_t* gentity_s = &g_entities[entID];
+		if (gentity_s && gentity_s->inuse && gentity_s->ghoul2.size())
 		{
-			//just blindly sets whatever skin you set!  include full path after "base/"... eg: "models/players/tavion_new/model_possessed.skin"
-			gentity_t* gentity_s = &g_entities[entID];
-			if (gentity_s && gentity_s->inuse && gentity_s->ghoul2.size())
+			const int iSkinID = gi.RE_RegisterSkin(const_cast<char*>(data));
+			if (iSkinID)
 			{
-				const int iSkinID = gi.RE_RegisterSkin(const_cast<char*>(data));
-				if (iSkinID)
-				{
-					gi.G2API_SetSkin(&gentity_s->ghoul2[gentity_s->playerModel], G_SkinIndex(data), iSkinID);
-				}
+				gi.G2API_SetSkin(&gentity_s->ghoul2[gentity_s->playerModel], G_SkinIndex(data), iSkinID);
 			}
 		}
-		break;
+	}
+	break;
 	case SET_RADAR_OBJECT:
 		if (entID >= 0 && entID < ENTITYNUM_WORLD)
 		{
@@ -9951,7 +9951,7 @@ void CQuake3GameInterface::Set(int taskID, int entID, const char* type_name, con
 		}
 		break;
 
-	//////////
+		//////////
 	case SET_ANIM_LOWER_FORCED:
 		ent->client->ps.forceLowerAnim = GetIDForString(anim_table, data);
 		return; //Don't call it back
@@ -10008,7 +10008,7 @@ void CQuake3GameInterface::Set(int taskID, int entID, const char* type_name, con
 		ent->client->ps.forceUpperAnimSpeed = float_data;
 		ent->client->ps.forceLowerAnimSpeed = float_data;
 		return; //Don't call it back
-	//////////////////////////////
+		//////////////////////////////
 
 	case SET_NO_SABER_RETURN:
 		if (!Q_stricmp("true", data))
@@ -10027,42 +10027,42 @@ void CQuake3GameInterface::Set(int taskID, int entID, const char* type_name, con
 
 	case SET_PLAYERSKIN:
 		// If this is a (fake) Player NPC or this IS the Player...
+	{
+		//just blindly sets whatever skin you set!  include full path after "base/"... eg: "models/players/tavion_new/model_possessed.skin"
+		gentity_t* gentity_s = &g_entities[entID];
+		if (gentity_s && gentity_s->inuse && gentity_s->ghoul2.size())
 		{
-			//just blindly sets whatever skin you set!  include full path after "base/"... eg: "models/players/tavion_new/model_possessed.skin"
-			gentity_t* gentity_s = &g_entities[entID];
-			if (gentity_s && gentity_s->inuse && gentity_s->ghoul2.size())
+			const int iSkinID = gi.RE_RegisterSkin(const_cast<char*>(data));
+			if (iSkinID)
 			{
-				const int iSkinID = gi.RE_RegisterSkin(const_cast<char*>(data));
-				if (iSkinID)
-				{
-					gi.G2API_SetSkin(&gentity_s->ghoul2[gentity_s->playerModel], G_SkinIndex(data), iSkinID);
-				}
-			}
-			if (gentity_s == player)
-			{
-				std::string str = const_cast<char*>(data);
-
-				const int modelFind = str.find("players/");
-
-				const int skinFind = str.find("/model_");
-
-				const int skinFileFind = str.find(".skin");
-
-				const std::string model = str.substr(modelFind + 8, skinFind - modelFind - 8);
-				const std::string skin = str.substr(skinFind + 1, skinFileFind - skinFind - 1);
-
-				const char* finalModel = model.c_str();
-				const char* finalSkin = skin.c_str();
-
-				gi.cvar_set("g_char_model", finalModel);
-				gi.cvar_set("g_char_skin_head", finalSkin);
-				gi.cvar_set("g_char_skin_torso", finalSkin);
-				gi.cvar_set("g_char_skin_legs", finalSkin);
-
-				G_ChangePlayerModel(player, finalModel);
+				gi.G2API_SetSkin(&gentity_s->ghoul2[gentity_s->playerModel], G_SkinIndex(data), iSkinID);
 			}
 		}
-		break;
+		if (gentity_s == player)
+		{
+			std::string str = const_cast<char*>(data);
+
+			const int modelFind = str.find("players/");
+
+			const int skinFind = str.find("/model_");
+
+			const int skinFileFind = str.find(".skin");
+
+			const std::string model = str.substr(modelFind + 8, skinFind - modelFind - 8);
+			const std::string skin = str.substr(skinFind + 1, skinFileFind - skinFind - 1);
+
+			const char* finalModel = model.c_str();
+			const char* finalSkin = skin.c_str();
+
+			gi.cvar_set("g_char_model", finalModel);
+			gi.cvar_set("g_char_skin_head", finalSkin);
+			gi.cvar_set("g_char_skin_torso", finalSkin);
+			gi.cvar_set("g_char_skin_legs", finalSkin);
+
+			G_ChangePlayerModel(player, finalModel);
+		}
+	}
+	break;
 
 	case SET_PLAYERSCALE:
 		G_ChangeScale(data);
@@ -10126,7 +10126,7 @@ const char* GetSaberColor(const int color)
 		return "rgb";
 	case SABER_BLACK:
 		return "black";
-	default: ;
+	default:;
 	}
 
 	return "blue";
@@ -10355,8 +10355,8 @@ void CQuake3GameInterface::CameraDistance(const float dist, const float initLerp
 }
 
 void CQuake3GameInterface::CameraFade(const float sr, const float sg, const float sb, const float sa,
-                                      const float dr, const float dg, const float db,
-                                      const float da, const float duration)
+	const float dr, const float dg, const float db,
+	const float da, const float duration)
 {
 	vec4_t src, dst;
 
@@ -10577,7 +10577,7 @@ int CQuake3GameInterface::GetFloat(const int entID, const char* name, float* val
 		}
 		*value = ent->NPC->followDist;
 		break;
-	//# #sep ints
+		//# #sep ints
 	case SET_ANIM_HOLDTIME_LOWER: //## %d="0" # Hold lower anim for number of milliseconds
 		if (ent->client == nullptr)
 		{
@@ -10717,7 +10717,7 @@ int CQuake3GameInterface::GetFloat(const int entID, const char* name, float* val
 	case SET_MISSIONSTATUSTIME: //## %d="0" # Amount of time until Mission Status should be shown after death
 		*value = cg.missionStatusDeadTime - level.time;
 		break;
-	//# #sep booleans
+		//# #sep booleans
 	case SET_IGNOREPAIN: //## %t="BOOL_TYPES" # Do not react to pain
 		if (ent->NPC == nullptr)
 		{
@@ -10856,23 +10856,23 @@ int CQuake3GameInterface::GetFloat(const int entID, const char* name, float* val
 		*value = ent->s.eFlags & EF_NODRAW;
 		break;
 	case SET_VAMPIRE: //## %t="BOOL_TYPES" # Makes an NPC not solid and not visible
+	{
+		if (!ent->client)
 		{
-			if (!ent->client)
-			{
-				return false;
-			}
-			*value = ent->client->ps.powerups[PW_DISINT_2] > level.time;
+			return false;
 		}
-		break;
+		*value = ent->client->ps.powerups[PW_DISINT_2] > level.time;
+	}
+	break;
 	case SET_FORCE_INVINCIBLE: //## %t="BOOL_TYPES" # Makes an NPC not solid and not visible
+	{
+		if (!ent->client)
 		{
-			if (!ent->client)
-			{
-				return false;
-			}
-			*value = ent->client->ps.powerups[PW_INVINCIBLE] > level.time;
+			return false;
 		}
-		break;
+		*value = ent->client->ps.powerups[PW_INVINCIBLE] > level.time;
+	}
+	break;
 	case SET_GREET_ALLIES: //## %t="BOOL_TYPES" # Makes an NPC greet teammates
 		if (ent->NPC == nullptr)
 		{
@@ -11012,30 +11012,30 @@ int CQuake3GameInterface::GetFloat(const int entID, const char* name, float* val
 		break;
 
 	case SET_OBJECTIVE_LIGHTSIDE:
+	{
+		if (g_darkkorriban->integer)
 		{
-			if (g_darkkorriban->integer)
-			{
-				*value = 2;
-				player->client->playerTeam = TEAM_FREE;
-				player->client->enemyTeam = TEAM_FREE;
-			}
-			else
-			{
-				*value = level.clients[0].sess.mission_objectives[LIGHTSIDE_OBJ].status;
-			}
-			break;
+			*value = 2;
+			player->client->playerTeam = TEAM_FREE;
+			player->client->enemyTeam = TEAM_FREE;
 		}
+		else
+		{
+			*value = level.clients[0].sess.mission_objectives[LIGHTSIDE_OBJ].status;
+		}
+		break;
+	}
 
 	// kef 4/16/03 -- just trying to put together some scripted meta-AI for swoop riders
 	case SET_DISTSQRD_TO_PLAYER:
-		{
-			vec3_t distSquared;
+	{
+		vec3_t distSquared;
 
-			VectorSubtract(player->currentOrigin, ent->s.origin, distSquared);
+		VectorSubtract(player->currentOrigin, ent->s.origin, distSquared);
 
-			*value = VectorLengthSquared(distSquared);
-			break;
-		}
+		*value = VectorLengthSquared(distSquared);
+		break;
+	}
 	case SET_MORELIGHT_PLAYER:
 		*value = ent->flags & FL_MORELIGHPLAYER;
 		break;
@@ -11172,7 +11172,7 @@ int CQuake3GameInterface::GetString(const int entID, const char* name, char** va
 		}
 		break;
 
-	//# #sep Scripts and other file paths
+		//# #sep Scripts and other file paths
 	case SET_SPAWNSCRIPT:
 		//## %s="NULL" !!"W:\game\base\scripts\!!#*.txt" # Script to run when spawned //0 - do not change these, these are equal to BSET_SPAWN, etc
 		*value = ent->behaviorSet[BSET_SPAWN];
@@ -11222,7 +11222,7 @@ int CQuake3GameInterface::GetString(const int entID, const char* name, char** va
 		*value = ent->behaviorSet[BSET_FFDEATH];
 		break;
 
-	//# #sep Standard strings
+		//# #sep Standard strings
 	case SET_ENEMY: //## %s="NULL" # Set enemy by targetname
 		if (ent->enemy != nullptr)
 		{
@@ -11231,33 +11231,33 @@ int CQuake3GameInterface::GetString(const int entID, const char* name, char** va
 		else return false;
 		break;
 	case SET_LEADER: //## %s="NULL" # Set for BS_FOLLOW_LEADER
+	{
+		if (ent->client == nullptr)
 		{
-			if (ent->client == nullptr)
-			{
-				DebugPrint(WL_WARNING, "GetString: SET_LEADER, %s not a client\n", ent->targetname);
-				return false;
-			}
-			if (ent->client->leader)
-			{
-				*value = ent->client->leader->targetname;
-			}
-			else return false;
+			DebugPrint(WL_WARNING, "GetString: SET_LEADER, %s not a client\n", ent->targetname);
+			return false;
 		}
-		break;
+		if (ent->client->leader)
+		{
+			*value = ent->client->leader->targetname;
+		}
+		else return false;
+	}
+	break;
 	case SET_CAPTURE: //## %s="NULL" # Set captureGoal by targetname
+	{
+		if (ent->NPC == nullptr)
 		{
-			if (ent->NPC == nullptr)
-			{
-				DebugPrint(WL_WARNING, "GetString: SET_CAPTURE, %s not an NPC\n", ent->targetname);
-				return false;
-			}
-			if (ent->NPC->captureGoal != nullptr)
-			{
-				*value = ent->NPC->captureGoal->targetname;
-			}
-			else return false;
+			DebugPrint(WL_WARNING, "GetString: SET_CAPTURE, %s not an NPC\n", ent->targetname);
+			return false;
 		}
-		break;
+		if (ent->NPC->captureGoal != nullptr)
+		{
+			*value = ent->NPC->captureGoal->targetname;
+		}
+		else return false;
+	}
+	break;
 
 	case SET_TARGETNAME: //## %s="NULL" # Set/change your targetname
 		*value = ent->targetname;
@@ -11274,20 +11274,20 @@ int CQuake3GameInterface::GetString(const int entID, const char* name, char** va
 	case SET_CAMERA_GROUP_TAG: //## %s="NULL" # all ents with this cameraGroup will be focused on
 		return false;
 	case SET_LOOK_TARGET: //## %s="NULL" # object for NPC to look at
+	{
+		if (ent->client == nullptr)
 		{
-			if (ent->client == nullptr)
-			{
-				DebugPrint(WL_WARNING, "GetString: SET_LOOK_TARGET, %s not a client\n", ent->targetname);
-				return false;
-			}
-			const gentity_t* lookTarg = &g_entities[ent->client->renderInfo.lookTarget];
-			if (lookTarg != nullptr)
-			{
-				*value = lookTarg->targetname;
-			}
-			else return false;
+			DebugPrint(WL_WARNING, "GetString: SET_LOOK_TARGET, %s not a client\n", ent->targetname);
+			return false;
 		}
-		break;
+		const gentity_t* lookTarg = &g_entities[ent->client->renderInfo.lookTarget];
+		if (lookTarg != nullptr)
+		{
+			*value = lookTarg->targetname;
+		}
+		else return false;
+	}
+	break;
 	case SET_TARGET2:
 		//## %s="NULL" # Set/change your target2: on NPC's: this fires when they're knocked out by the red hypo
 		*value = ent->target2;
@@ -11297,30 +11297,30 @@ int CQuake3GameInterface::GetString(const int entID, const char* name, char** va
 		*value = ent->target3;
 		break;
 	case SET_WEAPON:
+	{
+		if (ent->client == nullptr)
 		{
-			if (ent->client == nullptr)
-			{
-				DebugPrint(WL_WARNING, "GetString: SET_WEAPON, %s not a client\n", ent->targetname);
-				return false;
-			}
-			*value = const_cast<char*>(GetStringForID(WPTable, ent->client->ps.weapon));
+			DebugPrint(WL_WARNING, "GetString: SET_WEAPON, %s not a client\n", ent->targetname);
+			return false;
 		}
-		break;
+		*value = const_cast<char*>(GetStringForID(WPTable, ent->client->ps.weapon));
+	}
+	break;
 
 	case SET_ITEM:
+	{
+		if (ent->client == nullptr)
 		{
-			if (ent->client == nullptr)
-			{
-				DebugPrint(WL_WARNING, "GetString: SET_ITEM, %s not a client\n", ent->targetname);
-				return false;
-			}
-			//	*value = (char *)GetStringForID( WPTable, ent->client->ps.weapon );
+			DebugPrint(WL_WARNING, "GetString: SET_ITEM, %s not a client\n", ent->targetname);
+			return false;
 		}
-		break;
+		//	*value = (char *)GetStringForID( WPTable, ent->client->ps.weapon );
+	}
+	break;
 	case SET_MUSIC_STATE:
 		*value = const_cast<char*>(GetStringForID(DMSTable, level.dmState));
 		break;
-	//The below cannot be gotten
+		//The below cannot be gotten
 	case SET_NAVGOAL: //## %s="NULL" # *Move to this navgoal then continue script
 		DebugPrint(WL_WARNING, "GetString: SET_NAVGOAL not implemented\n");
 		return false;
@@ -11390,7 +11390,7 @@ int CQuake3GameInterface::Evaluate(int p1Type, const char* p1, int p2Type, const
 {
 	float f1 = 0, f2 = 0;
 	vec3_t v1, v2;
-	const char *c1 = nullptr, *c2 = nullptr;
+	const char* c1 = nullptr, * c2 = nullptr;
 	int i1 = 0, i2 = 0;
 
 	//Always demote to int on float to integer comparisons
@@ -11442,9 +11442,9 @@ int CQuake3GameInterface::Evaluate(int p1Type, const char* p1, int p2Type, const
 
 	switch (operatorType)
 	{
-	//
-	//	EQUAL TO
-	//
+		//
+		//	EQUAL TO
+		//
 	case TK_EQUALS:
 
 		switch (p1Type)
@@ -11461,16 +11461,16 @@ int CQuake3GameInterface::Evaluate(int p1Type, const char* p1, int p2Type, const
 		case TK_STRING:
 		case TK_IDENTIFIER:
 			return !Q_stricmp(c1, c2);
-		//NOTENOTE: The script uses proper string comparison logic (ex. ( a == a ) == true )
+			//NOTENOTE: The script uses proper string comparison logic (ex. ( a == a ) == true )
 
 		default:
 			DebugPrint(WL_ERROR, "Evaluate unknown type used!\n");
 			return false;
 		}
 
-	//
-	//	GREATER THAN
-	//
+		//
+		//	GREATER THAN
+		//
 
 	case TK_GREATER_THAN:
 
@@ -11496,9 +11496,9 @@ int CQuake3GameInterface::Evaluate(int p1Type, const char* p1, int p2Type, const
 			return false;
 		}
 
-	//
-	//	LESS THAN
-	//
+		//
+		//	LESS THAN
+		//
 
 	case TK_LESS_THAN:
 
@@ -11524,9 +11524,9 @@ int CQuake3GameInterface::Evaluate(int p1Type, const char* p1, int p2Type, const
 			return false;
 		}
 
-	//
-	//	NOT
-	//
+		//
+		//	NOT
+		//
 
 	case TK_NOT: //NOTENOTE: Implied "NOT EQUAL TO"
 
@@ -11550,9 +11550,9 @@ int CQuake3GameInterface::Evaluate(int p1Type, const char* p1, int p2Type, const
 			return false;
 		}
 
-	//
-	//	GREATER THAN OR EQUAL TO
-	//
+		//
+		//	GREATER THAN OR EQUAL TO
+		//
 
 	case TK_GE:
 
@@ -11566,13 +11566,13 @@ int CQuake3GameInterface::Evaluate(int p1Type, const char* p1, int p2Type, const
 
 		case TK_VECTOR:
 			DebugPrint(WL_ERROR,
-			           "Evaluate vector comparisons of type GREATER THAN OR EQUAL TO cannot be performed!");
+				"Evaluate vector comparisons of type GREATER THAN OR EQUAL TO cannot be performed!");
 			return false;
 
 		case TK_STRING:
 		case TK_IDENTIFIER:
 			DebugPrint(WL_ERROR,
-			           "Evaluate string comparisons of type GREATER THAN OR EQUAL TO cannot be performed!");
+				"Evaluate string comparisons of type GREATER THAN OR EQUAL TO cannot be performed!");
 			return false;
 
 		default:
@@ -11580,9 +11580,9 @@ int CQuake3GameInterface::Evaluate(int p1Type, const char* p1, int p2Type, const
 			return false;
 		}
 
-	//
-	//	LESS THAN OR EQUAL TO
-	//
+		//
+		//	LESS THAN OR EQUAL TO
+		//
 
 	case TK_LE:
 
@@ -11783,7 +11783,7 @@ void CQuake3GameInterface::PrecacheScript(const char* name)
 	// Try to Register the Script.
 	switch (RegisterScript(newname, reinterpret_cast<void**>(&pBuf), iLength))
 	{
-	// If the script has already been registered (or could not be loaded), leave!
+		// If the script has already been registered (or could not be loaded), leave!
 	case SCRIPT_COULDNOTREGISTER:
 		if (!Q_stricmp(newname, "NULL") || !Q_stricmp(newname, "default"))
 		{
@@ -11796,10 +11796,10 @@ void CQuake3GameInterface::PrecacheScript(const char* name)
 	case SCRIPT_ALREADYREGISTERED:
 		return;
 
-	// We loaded the script and registered it, so precache it through Icarus now.
+		// We loaded the script and registered it, so precache it through Icarus now.
 	case SCRIPT_REGISTERED:
 		IIcarusInterface::GetIcarus()->Precache(pBuf, iLength);
-	default: ;
+	default:;
 	}
 }
 
@@ -11876,20 +11876,20 @@ void CQuake3GameInterface::PrecacheFromSet(const char* setname, const char* file
 
 	case SET_ADDRHANDBOLT_MODEL:
 	case SET_ADDLHANDBOLT_MODEL:
-		{
-			gi.G2API_PrecacheGhoul2Model(filename);
-		}
-		break;
+	{
+		gi.G2API_PrecacheGhoul2Model(filename);
+	}
+	break;
 	case SET_WEAPON:
+	{
+		const int wp = GetIDForString(WPTable, filename);
+		if (wp > 0)
 		{
-			const int wp = GetIDForString(WPTable, filename);
-			if (wp > 0)
-			{
-				const gitem_t* item = FindItemForWeapon(static_cast<weapon_t>(wp));
-				RegisterItem(item); //make sure the weapon is cached in case this runs at startup
-			}
+			const gitem_t* item = FindItemForWeapon(static_cast<weapon_t>(wp));
+			RegisterItem(item); //make sure the weapon is cached in case this runs at startup
 		}
-		break;
+	}
+	break;
 
 	default:
 		break;

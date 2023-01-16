@@ -436,7 +436,7 @@ create_odither_tables(const j_decompress_ptr cinfo)
 
 METHODDEF(void)
 color_quantize(const j_decompress_ptr cinfo, const JSAMPARRAY input_buf,
-               const JSAMPARRAY output_buf, const int num_rows)
+	const JSAMPARRAY output_buf, const int num_rows)
 	/* General case, no dithering */
 {
 	const my_cquantize_ptr cquantize = (my_cquantize_ptr)cinfo->cquantize;
@@ -459,7 +459,7 @@ color_quantize(const j_decompress_ptr cinfo, const JSAMPARRAY input_buf,
 
 METHODDEF(void)
 color_quantize3(const j_decompress_ptr cinfo, const JSAMPARRAY input_buf,
-                const JSAMPARRAY output_buf, const int num_rows)
+	const JSAMPARRAY output_buf, const int num_rows)
 	/* Fast path for out_color_components==3, no dithering */
 {
 	const my_cquantize_ptr cquantize = (my_cquantize_ptr)cinfo->cquantize;
@@ -482,7 +482,7 @@ color_quantize3(const j_decompress_ptr cinfo, const JSAMPARRAY input_buf,
 
 METHODDEF(void)
 quantize_ord_dither(const j_decompress_ptr cinfo, const JSAMPARRAY input_buf,
-                    const JSAMPARRAY output_buf, const int num_rows)
+	const JSAMPARRAY output_buf, const int num_rows)
 	/* General case, with ordered dithering */
 {
 	const my_cquantize_ptr cquantize = (my_cquantize_ptr)cinfo->cquantize;
@@ -523,7 +523,7 @@ quantize_ord_dither(const j_decompress_ptr cinfo, const JSAMPARRAY input_buf,
 
 METHODDEF(void)
 quantize3_ord_dither(const j_decompress_ptr cinfo, const JSAMPARRAY input_buf,
-                     const JSAMPARRAY output_buf, const int num_rows)
+	const JSAMPARRAY output_buf, const int num_rows)
 	/* Fast path for out_color_components==3, with ordered dithering */
 {
 	const my_cquantize_ptr cquantize = (my_cquantize_ptr)cinfo->cquantize;
@@ -558,7 +558,7 @@ quantize3_ord_dither(const j_decompress_ptr cinfo, const JSAMPARRAY input_buf,
 
 METHODDEF(void)
 quantize_fs_dither(const j_decompress_ptr cinfo, const JSAMPARRAY input_buf,
-                   const JSAMPARRAY output_buf, const int num_rows)
+	const JSAMPARRAY output_buf, const int num_rows)
 	/* General case, with Floyd-Steinberg dithering */
 {
 	const my_cquantize_ptr cquantize = (my_cquantize_ptr)cinfo->cquantize;

@@ -36,7 +36,7 @@ Handles byte ordering and avoids alignment errors
 
 void MSG_Init(msg_t* buf, byte* data, const int length)
 {
-	memset(buf, 0, sizeof*buf);
+	memset(buf, 0, sizeof * buf);
 	buf->data = data;
 	buf->maxsize = length;
 }

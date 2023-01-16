@@ -58,7 +58,7 @@ extern qboolean PM_InForceGetUp(const playerState_t* ps);
 extern qboolean PM_InGetUp(const playerState_t* ps);
 extern qboolean PM_SaberInMassiveBounce(int move);
 extern void G_StartStasisEffect_FORCE_LEVEL_1(const gentity_t* ent, int me_flags = 0, int length = 1000,
-                                              float time_scale = 0.0f, int spin_time = 0);
+	float time_scale = 0.0f, int spin_time = 0);
 extern cvar_t* d_slowmoaction;
 extern void wp_block_points_regenerate_over_ride(const gentity_t* self, int override_amt);
 extern void WP_ForcePowerRegenerate(const gentity_t* self, int override_amt);
@@ -67,16 +67,16 @@ extern void SabBeh_SaberShouldBeDisarmedBlocker(gentity_t* blocker, int saber_nu
 extern void WP_BlockPointsRegenerate(const gentity_t* self, int override_amt);
 extern qboolean WP_SaberMBlock(gentity_t* victim, gentity_t* attacker, int saber_num, int blade_num, vec3_t hit_loc);
 extern qboolean WP_SaberFatiguedParry(gentity_t* victim, gentity_t* attacker, int saber_num, int blade_num,
-                                      vec3_t hit_loc);
+	vec3_t hit_loc);
 extern qboolean WP_SaberParry(gentity_t* victim, gentity_t* attacker, int saber_num, int blade_num);
 extern qboolean WP_SaberBlockedBounceBlock(gentity_t* victim, gentity_t* attacker, int saber_num, int blade_num,
-                                           vec3_t hit_loc);
+	vec3_t hit_loc);
 extern qboolean WP_SaberNPCParry(gentity_t* victim, gentity_t* attacker, int saber_num, int blade_num, vec3_t hit_loc);
 extern qboolean WP_SaberNPCFatiguedParry(gentity_t* victim, gentity_t* attacker, int saber_num, int blade_num,
-                                         vec3_t hit_loc);
+	vec3_t hit_loc);
 extern qboolean WP_SaberNPCMBlock(gentity_t* victim, gentity_t* attacker, int saber_num, int blade_num, vec3_t hit_loc);
 extern qboolean WP_SaberSlowBounceBlock(gentity_t* victim, gentity_t* attacker, int saber_num, int blade_num,
-                                        vec3_t hit_loc);
+	vec3_t hit_loc);
 extern cvar_t* g_saberAutoBlocking;
 extern void g_do_m_block_response(const gentity_t* speaker_npc_self);
 
@@ -472,13 +472,13 @@ void sab_beh_add_mishap_attacker(gentity_t* attacker, const int saber_num)
 				}
 			}
 			break;
-		default: ;
+		default:;
 		}
 	}
 }
 
 qboolean sab_beh_attack_blocked(gentity_t* attacker, gentity_t* blocker, const int saber_num,
-                                const qboolean force_mishap)
+	const qboolean force_mishap)
 {
 	//JaceSolaris
 	//if the attack is blocked -(Im the attacker)
@@ -670,7 +670,7 @@ void sab_beh_add_mishap_blocker(gentity_t* blocker, const int saber_num)
 				}
 			}
 			break;
-		default: ;
+		default:;
 		}
 	}
 }
@@ -787,9 +787,9 @@ qboolean sab_beh_attack_vs_block(gentity_t* attacker, gentity_t* blocker, const 
 		if (blocking || active_blocking || npc_blocking) // All types of active blocking
 		{
 			if (npc_blocking && (g_SerenityJediEngineMode->integer == 2 && blocker->client->ps.blockPoints >=
-					BLOCKPOINTS_MISSILE
-					|| g_SerenityJediEngineMode->integer == 1 && blocker->client->ps.forcePower >=
-					BLOCKPOINTS_MISSILE)
+				BLOCKPOINTS_MISSILE
+				|| g_SerenityJediEngineMode->integer == 1 && blocker->client->ps.forcePower >=
+				BLOCKPOINTS_MISSILE)
 				&& attacker->client->ps.saberFatigueChainCount >= MISHAPLEVEL_HUDFLASH
 				&& !Q_irand(0, 4))
 			{
@@ -869,7 +869,7 @@ qboolean sab_beh_attack_vs_block(gentity_t* attacker, gentity_t* blocker, const 
 }
 
 qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const int saber_num, const int blade_num,
-                                 vec3_t hit_loc)
+	vec3_t hit_loc)
 {
 	//-(Im the blocker)
 	const qboolean blocking = blocker->client->ps.ManualBlockingFlags & 1 << MBF_BLOCKING ? qtrue : qfalse;
@@ -980,7 +980,7 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 							}
 
 							G_Sound(blocker, G_SoundIndex(va("sound/weapons/saber/saber_perfectblock%d.mp3",
-							                                 Q_irand(1, 3))));
+								Q_irand(1, 3))));
 
 							if ((d_blockinfo->integer || g_DebugSaberCombat->integer) && blocker->s.number < MAX_CLIENTS
 								|| G_ControlledByPlayer(blocker))
@@ -1152,7 +1152,7 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 								PM_AddBlockFatigue(&blocker->client->ps, BLOCKPOINTS_THREE);
 
 								G_Sound(blocker, G_SoundIndex(va("sound/weapons/saber/saber_goodparry%d.mp3",
-								                                 Q_irand(1, 3))));
+									Q_irand(1, 3))));
 							}
 						}
 						//just so attacker knows that he was blocked
@@ -1323,7 +1323,7 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 							}
 
 							G_Sound(blocker, G_SoundIndex(va("sound/weapons/saber/saber_perfectblock%d.mp3",
-							                                 Q_irand(1, 3))));
+								Q_irand(1, 3))));
 
 							if ((d_blockinfo->integer || g_DebugSaberCombat->integer) && blocker->s.number < MAX_CLIENTS
 								|| G_ControlledByPlayer(blocker))
@@ -1492,7 +1492,7 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 								PM_AddFatigue(&blocker->client->ps, BLOCKPOINTS_THREE);
 
 								G_Sound(blocker, G_SoundIndex(va("sound/weapons/saber/saber_goodparry%d.mp3",
-								                                 Q_irand(1, 3))));
+									Q_irand(1, 3))));
 							}
 						}
 

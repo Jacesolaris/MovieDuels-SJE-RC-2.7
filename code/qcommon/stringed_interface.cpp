@@ -181,7 +181,7 @@ static void SE_R_ListFiles(const char* psExtension, const char* psDir, std::stri
 		//
 		/*		byte *pbData = NULL;
 				int iSize = FS_ReadFile( sFilename, (void **)&pbData);
-		
+
 				if (pbData)
 				{
 					FS_FreeFile( pbData );

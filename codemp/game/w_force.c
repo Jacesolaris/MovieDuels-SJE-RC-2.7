@@ -3801,7 +3801,7 @@ void DoGripAction(gentity_t* self, forcePowers_t forcePower)
 	trap->Trace(&tr, self->client->ps.origin, NULL, NULL, grip_ent->client->ps.origin, self->s.number, MASK_PLAYERSOLID, qfalse, 0, 0);
 
 	int gripLevel = WP_AbsorbConversion(grip_ent, grip_ent->client->ps.fd.forcePowerLevel[FP_ABSORB], FP_GRIP, self->client->ps.fd.forcePowerLevel[FP_GRIP],
-	                                    forcePowerNeeded[self->client->ps.fd.forcePowerLevel[FP_GRIP]][FP_GRIP]);
+		forcePowerNeeded[self->client->ps.fd.forcePowerLevel[FP_GRIP]][FP_GRIP]);
 
 	if (gripLevel == -1)
 	{

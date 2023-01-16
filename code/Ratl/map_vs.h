@@ -404,8 +404,8 @@ namespace ratl
 				int oldAt = at;
 
 				at = T::node(mPool[at]).left() == tree_node::NULL_NODE
-					     ? T::node(mPool[at]).right()
-					     : T::node(mPool[at]).left(); // If Left Is Null, At Goes Right
+					? T::node(mPool[at]).right()
+					: T::node(mPool[at]).left(); // If Left Is Null, At Goes Right
 
 				// Actually Free It!
 				//-------------------
@@ -996,7 +996,7 @@ namespace ratl
 
 		public:
 			const_iterator(const set_base<TStorageTraits, IS_MULTI>* owner = nullptr,
-			               const int loc = tree_node::NULL_NODE) :
+				const int loc = tree_node::NULL_NODE) :
 				mLoc(loc),
 				mOwner(owner)
 			{
@@ -1620,9 +1620,9 @@ namespace ratl
 
 	template <class K, class V, int ARG_CAPACITY>
 	class map_vs : public map_base<
-			storage::value_semantics_node<K, ARG_CAPACITY, tree_node>,
-			storage::value_semantics<V, ARG_CAPACITY>,
-			0>
+		storage::value_semantics_node<K, ARG_CAPACITY, tree_node>,
+		storage::value_semantics<V, ARG_CAPACITY>,
+		0>
 	{
 	public:
 		using VStorageTraits = storage::value_semantics<V, ARG_CAPACITY>;
@@ -1636,9 +1636,9 @@ namespace ratl
 
 	template <class K, class V, int ARG_CAPACITY>
 	class map_os : public map_base<
-			storage::value_semantics_node<K, ARG_CAPACITY, tree_node>,
-			storage::object_semantics<V, ARG_CAPACITY>,
-			0>
+		storage::value_semantics_node<K, ARG_CAPACITY, tree_node>,
+		storage::object_semantics<V, ARG_CAPACITY>,
+		0>
 	{
 	public:
 		using VStorageTraits = storage::object_semantics<V, ARG_CAPACITY>;
@@ -1652,9 +1652,9 @@ namespace ratl
 
 	template <class K, class V, int ARG_CAPACITY, int ARG_MAX_CLASS_SIZE>
 	class map_is : public map_base<
-			storage::value_semantics_node<K, ARG_CAPACITY, tree_node>,
-			storage::virtual_semantics<V, ARG_CAPACITY, ARG_MAX_CLASS_SIZE>,
-			0>
+		storage::value_semantics_node<K, ARG_CAPACITY, tree_node>,
+		storage::virtual_semantics<V, ARG_CAPACITY, ARG_MAX_CLASS_SIZE>,
+		0>
 	{
 	public:
 		using VStorageTraits = storage::virtual_semantics<V, ARG_CAPACITY, ARG_MAX_CLASS_SIZE>;

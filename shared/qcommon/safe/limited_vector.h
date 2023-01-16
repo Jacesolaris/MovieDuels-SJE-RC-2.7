@@ -18,7 +18,7 @@ namespace Q
 	class LimitedVector
 	{
 	private:
-		using Memory = std::array<char, sizeof(T) * maximum>;
+		using Memory = std::array<char, sizeof(T)* maximum>;
 
 	public:
 		using value_type = T;
@@ -166,12 +166,12 @@ namespace Q
 
 		iterator begin() NOEXCEPT
 		{
-			return {data()};
+			return { data() };
 		}
 
 		const_iterator begin() const NOEXCEPT
 		{
-			return {data()};
+			return { data() };
 		}
 
 		const_iterator cbegin() const NOEXCEPT
@@ -181,12 +181,12 @@ namespace Q
 
 		iterator end() NOEXCEPT
 		{
-			return {data() + size()};
+			return { data() + size() };
 		}
 
 		const_iterator end() const NOEXCEPT
 		{
-			return {data() + size()};
+			return { data() + size() };
 		}
 
 		const_iterator cend() const NOEXCEPT

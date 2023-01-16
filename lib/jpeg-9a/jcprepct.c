@@ -99,7 +99,7 @@ start_pass_prep(const j_compress_ptr cinfo, const J_BUF_MODE pass_mode)
 
 LOCAL(void)
 expand_bottom_edge(const JSAMPARRAY image_data, const JDIMENSION num_cols,
-                   const int input_rows, const int output_rows)
+	const int input_rows, const int output_rows)
 {
 	for (register int row = input_rows; row < output_rows; row++) {
 		jcopy_sample_rows(image_data, input_rows - 1, image_data, row,
@@ -118,10 +118,10 @@ expand_bottom_edge(const JSAMPARRAY image_data, const JDIMENSION num_cols,
 
 METHODDEF(void)
 pre_process_data(const j_compress_ptr cinfo,
-                 const JSAMPARRAY input_buf, JDIMENSION* in_row_ctr,
-                 const JDIMENSION in_rows_avail,
-                 const JSAMPIMAGE output_buf, JDIMENSION* out_row_group_ctr,
-                 const JDIMENSION out_row_groups_avail)
+	const JSAMPARRAY input_buf, JDIMENSION* in_row_ctr,
+	const JDIMENSION in_rows_avail,
+	const JSAMPIMAGE output_buf, JDIMENSION* out_row_group_ctr,
+	const JDIMENSION out_row_groups_avail)
 {
 	const my_prep_ptr prep = (my_prep_ptr)cinfo->prep;
 	int ci;
@@ -185,10 +185,10 @@ pre_process_data(const j_compress_ptr cinfo,
 
 METHODDEF(void)
 pre_process_context(const j_compress_ptr cinfo,
-                    const JSAMPARRAY input_buf, JDIMENSION* in_row_ctr,
-                    const JDIMENSION in_rows_avail,
-                    const JSAMPIMAGE output_buf, JDIMENSION* out_row_group_ctr,
-                    const JDIMENSION out_row_groups_avail)
+	const JSAMPARRAY input_buf, JDIMENSION* in_row_ctr,
+	const JDIMENSION in_rows_avail,
+	const JSAMPIMAGE output_buf, JDIMENSION* out_row_group_ctr,
+	const JDIMENSION out_row_groups_avail)
 {
 	const my_prep_ptr prep = (my_prep_ptr)cinfo->prep;
 	int ci;

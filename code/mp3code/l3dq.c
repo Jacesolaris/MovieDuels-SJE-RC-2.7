@@ -109,8 +109,8 @@ float* quant_init_subblock_addr()
 /*=============================================================*/
 
 void dequant(SAMPLE Sample[], int* nsamp,
-             const SCALEFACT* sf,
-             const GR* gr,
+	const SCALEFACT* sf,
+	const GR* gr,
 	CB_INFO* cb_info, const int ncbl_mixed)
 {
 	int j;

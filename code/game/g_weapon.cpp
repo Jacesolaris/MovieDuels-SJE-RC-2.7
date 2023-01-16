@@ -123,7 +123,7 @@ void WP_TraceSetStart(const gentity_t* ent, vec3_t start)
 	newstart[2] = start[2]; // force newstart to be on the same plane as the muzzle ( start )
 
 	gi.trace(&tr, newstart, entMins, entMaxs, start, ent->s.number, MASK_SOLID | CONTENTS_SHOTCLIP,
-	         static_cast<EG2_Collision>(0), 0);
+		static_cast<EG2_Collision>(0), 0);
 
 	if (tr.startsolid || tr.allsolid)
 	{
@@ -140,8 +140,8 @@ void WP_TraceSetStart(const gentity_t* ent, vec3_t start)
 extern Vehicle_t* G_IsRidingVehicle(const gentity_t* p_ent);
 //-----------------------------------------------------------------------------
 gentity_t* create_missile(vec3_t org, vec3_t dir, const float vel, const int life, gentity_t* owner,
-                         const qboolean altFire)
-//-----------------------------------------------------------------------------
+	const qboolean altFire)
+	//-----------------------------------------------------------------------------
 {
 	gentity_t* missile = G_Spawn();
 
@@ -200,7 +200,7 @@ void WP_Explode(gentity_t* self)
 //-----------------------------------------------------------------------------
 {
 	gentity_t* attacker = self;
-	vec3_t forward_vec = {0, 0, 1};
+	vec3_t forward_vec = { 0, 0, 1 };
 
 	// stop chain reaction runaway loops
 	self->takedamage = qfalse;
@@ -230,7 +230,7 @@ void WP_Explode(gentity_t* self)
 	if (self->splashDamage > 0 && self->splashRadius > 0)
 	{
 		G_RadiusDamage(self->currentOrigin, attacker, self->splashDamage, self->splashRadius,
-		               nullptr/*don't ignore attacker*/, MOD_EXPLOSIVE_SPLASH);
+			nullptr/*don't ignore attacker*/, MOD_EXPLOSIVE_SPLASH);
 	}
 
 	if (self->target)
@@ -247,8 +247,8 @@ void WP_Explode(gentity_t* self)
 // We need to have a dieFunc, otherwise G_Damage won't actually make us die.  I could modify G_Damage, but that entails too many changes
 //-----------------------------------------------------------------------------
 void WP_ExplosiveDie(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int meansOfDeath,
-                     int d_flags, int hit_loc)
-//-----------------------------------------------------------------------------
+	int d_flags, int hit_loc)
+	//-----------------------------------------------------------------------------
 {
 	self->enemy = attacker;
 
@@ -283,9 +283,9 @@ int G_GetHitLocFromTrace(trace_t* trace, const int mod)
 		if (coll.mFlags & G2_FRONTFACE)
 		{
 			G_GetHitLocFromSurfName(&g_entities[coll.mEntityNum],
-			                        gi.G2API_GetSurfaceName(&g_entities[coll.mEntityNum].ghoul2[coll.mModelIndex],
-			                                                coll.mSurfaceIndex), &hit_loc, coll.mCollisionPosition,
-			                        nullptr, nullptr, mod);
+				gi.G2API_GetSurfaceName(&g_entities[coll.mEntityNum].ghoul2[coll.mModelIndex],
+					coll.mSurfaceIndex), &hit_loc, coll.mCollisionPosition,
+				nullptr, nullptr, mod);
 			//we only want the first "entrance wound", so break
 			break;
 		}
@@ -361,7 +361,7 @@ qboolean W_AccuracyLoggableWeapon(const int weapon, const qboolean altFire, cons
 	{
 		switch (mod)
 		{
-		//standard weapons
+			//standard weapons
 		case MOD_BRYAR:
 		case MOD_BRYAR_ALT:
 		case MOD_BLASTER:
@@ -391,15 +391,15 @@ qboolean W_AccuracyLoggableWeapon(const int weapon, const qboolean altFire, cons
 		case MOD_CONC:
 		case MOD_CONC_ALT:
 			return qtrue;
-		//non-alt standard
+			//non-alt standard
 		case MOD_REPEATER:
 		case MOD_DEMP2:
 		case MOD_FLECHETTE:
 			return qtrue;
-		//emplaced gun
+			//emplaced gun
 		case MOD_EMPLACED:
 			return qtrue;
-		//atst
+			//atst
 		case MOD_ENERGY:
 		case MOD_EXPLOSIVE:
 			if (weapon == WP_ATST_MAIN || weapon == WP_ATST_SIDE)
@@ -407,7 +407,7 @@ qboolean W_AccuracyLoggableWeapon(const int weapon, const qboolean altFire, cons
 				return qtrue;
 			}
 			break;
-		default: ;
+		default:;
 		}
 	}
 	else if (weapon != WP_NONE)
@@ -437,7 +437,7 @@ qboolean W_AccuracyLoggableWeapon(const int weapon, const qboolean altFire, cons
 		case WP_JAWA:
 		case WP_DUAL_PISTOL:
 			return qtrue;
-		//non-alt standard
+			//non-alt standard
 		case WP_REPEATER:
 		case WP_DEMP2:
 		case WP_FLECHETTE:
@@ -446,14 +446,14 @@ qboolean W_AccuracyLoggableWeapon(const int weapon, const qboolean altFire, cons
 				return qtrue;
 			}
 			break;
-		//emplaced gun
+			//emplaced gun
 		case WP_EMPLACED_GUN:
 			return qtrue;
-		//atst
+			//atst
 		case WP_ATST_MAIN:
 		case WP_ATST_SIDE:
 			return qtrue;
-		default: ;
+		default:;
 		}
 	}
 	return qfalse;
@@ -500,7 +500,7 @@ qboolean LogAccuracyHit(const gentity_t* target, const gentity_t* attacker)
 }
 
 void CalcMuzzlePoint2(const gentity_t* const ent, vec3_t muzzle_point,
-                      const float lead_in)
+	const float lead_in)
 {
 	if (!lead_in) //&& ent->s.number != 0
 	{
@@ -569,10 +569,10 @@ void CalcMuzzlePoint(gentity_t* const ent, vec3_t forward_vec, vec3_t muzzle_poi
 		muzzle_point[2] -= 1;
 		if (ent->s.number == 0)
 			VectorMA(muzzle_point, 12, forward_vec, muzzle_point);
-			// player, don't set this any lower otherwise the projectile will impact immediately when your back is to a wall
+		// player, don't set this any lower otherwise the projectile will impact immediately when your back is to a wall
 		else
 			VectorMA(muzzle_point, 2, forward_vec, muzzle_point);
-	// NPC, don't set too far forwardVec otherwise the projectile can go through doors
+		// NPC, don't set too far forwardVec otherwise the projectile can go through doors
 
 		VectorMA(muzzle_point, 1, vrightVec, muzzle_point);
 		break;
@@ -583,10 +583,10 @@ void CalcMuzzlePoint(gentity_t* const ent, vec3_t forward_vec, vec3_t muzzle_poi
 		muzzle_point[2] -= 1;
 		if (ent->s.number == 0)
 			VectorMA(muzzle_point, 12, forward_vec, muzzle_point);
-			// player, don't set this any lower otherwise the projectile will impact immediately when your back is to a wall
+		// player, don't set this any lower otherwise the projectile will impact immediately when your back is to a wall
 		else
 			VectorMA(muzzle_point, 2, forward_vec, muzzle_point);
-	// NPC, don't set too far forwardVec otherwise the projectile can go through doors
+		// NPC, don't set too far forwardVec otherwise the projectile can go through doors
 
 		VectorMA(muzzle_point, 1, vrightVec, muzzle_point);
 		break;
@@ -597,10 +597,10 @@ void CalcMuzzlePoint(gentity_t* const ent, vec3_t forward_vec, vec3_t muzzle_poi
 		muzzle_point[2] -= 1;
 		if (ent->s.number == 0)
 			VectorMA(muzzle_point, 12, forward_vec, muzzle_point);
-			// player, don't set this any lower otherwise the projectile will impact immediately when your back is to a wall
+		// player, don't set this any lower otherwise the projectile will impact immediately when your back is to a wall
 		else
 			VectorMA(muzzle_point, 2, forward_vec, muzzle_point);
-	// NPC, don't set too far forwardVec otherwise the projectile can go through doors
+		// NPC, don't set too far forwardVec otherwise the projectile can go through doors
 
 		VectorMA(muzzle_point, 1, vrightVec, muzzle_point);
 		break;
@@ -611,10 +611,10 @@ void CalcMuzzlePoint(gentity_t* const ent, vec3_t forward_vec, vec3_t muzzle_poi
 		muzzle_point[2] -= 1;
 		if (ent->s.number == 0)
 			VectorMA(muzzle_point, 12, forward_vec, muzzle_point);
-			// player, don't set this any lower otherwise the projectile will impact immediately when your back is to a wall
+		// player, don't set this any lower otherwise the projectile will impact immediately when your back is to a wall
 		else
 			VectorMA(muzzle_point, 2, forward_vec, muzzle_point);
-	// NPC, don't set too far forwardVec otherwise the projectile can go through doors
+		// NPC, don't set too far forwardVec otherwise the projectile can go through doors
 
 		VectorMA(muzzle_point, 1, vrightVec, muzzle_point);
 		break;
@@ -626,10 +626,10 @@ void CalcMuzzlePoint(gentity_t* const ent, vec3_t forward_vec, vec3_t muzzle_poi
 		muzzle_point[2] -= 1;
 		if (ent->s.number == 0)
 			VectorMA(muzzle_point, 12, forward_vec, muzzle_point);
-			// player, don't set this any lower otherwise the projectile will impact immediately when your back is to a wall
+		// player, don't set this any lower otherwise the projectile will impact immediately when your back is to a wall
 		else
 			VectorMA(muzzle_point, 2, forward_vec, muzzle_point);
-	// NPC, don't set too far forwardVec otherwise the projectile can go through doors
+		// NPC, don't set too far forwardVec otherwise the projectile can go through doors
 
 		VectorMA(muzzle_point, 1, vrightVec, muzzle_point);
 		break;
@@ -640,10 +640,10 @@ void CalcMuzzlePoint(gentity_t* const ent, vec3_t forward_vec, vec3_t muzzle_poi
 		muzzle_point[2] -= 1;
 		if (ent->s.number == 0)
 			VectorMA(muzzle_point, 12, forward_vec, muzzle_point);
-			// player, don't set this any lower otherwise the projectile will impact immediately when your back is to a wall
+		// player, don't set this any lower otherwise the projectile will impact immediately when your back is to a wall
 		else
 			VectorMA(muzzle_point, 2, forward_vec, muzzle_point);
-	// NPC, don't set too far forwardVec otherwise the projectile can go through doors
+		// NPC, don't set too far forwardVec otherwise the projectile can go through doors
 
 		VectorMA(muzzle_point, 1, vrightVec, muzzle_point);
 		break;
@@ -662,10 +662,10 @@ void CalcMuzzlePoint(gentity_t* const ent, vec3_t forward_vec, vec3_t muzzle_poi
 		muzzle_point[2] -= 1;
 		if (ent->s.number == 0)
 			VectorMA(muzzle_point, 12, forward_vec, muzzle_point);
-			// player, don't set this any lower otherwise the projectile will impact immediately when your back is to a wall
+		// player, don't set this any lower otherwise the projectile will impact immediately when your back is to a wall
 		else
 			VectorMA(muzzle_point, 2, forward_vec, muzzle_point);
-	// NPC, don't set too far forwardVec otherwise the projectile can go through doors
+		// NPC, don't set too far forwardVec otherwise the projectile can go through doors
 
 		VectorMA(muzzle_point, 1, vrightVec, muzzle_point);
 		break;
@@ -676,10 +676,10 @@ void CalcMuzzlePoint(gentity_t* const ent, vec3_t forward_vec, vec3_t muzzle_poi
 		muzzle_point[2] -= 1;
 		if (ent->s.number == 0)
 			VectorMA(muzzle_point, 12, forward_vec, muzzle_point);
-			// player, don't set this any lower otherwise the projectile will impact immediately when your back is to a wall
+		// player, don't set this any lower otherwise the projectile will impact immediately when your back is to a wall
 		else
 			VectorMA(muzzle_point, 2, forward_vec, muzzle_point);
-	// NPC, don't set too far forwardVec otherwise the projectile can go through doors
+		// NPC, don't set too far forwardVec otherwise the projectile can go through doors
 
 		VectorMA(muzzle_point, 1, vrightVec, muzzle_point);
 		break;
@@ -717,17 +717,17 @@ void CalcMuzzlePoint(gentity_t* const ent, vec3_t forward_vec, vec3_t muzzle_poi
 		{
 			ent->count = 0;
 			gi.G2API_GetBoltMatrix(ent->ghoul2, ent->playerModel,
-			                       ent->handLBolt,
-			                       &bolt_matrix, ent->s.angles, ent->s.origin, cg.time ? cg.time : level.time,
-			                       nullptr, ent->s.modelScale);
+				ent->handLBolt,
+				&bolt_matrix, ent->s.angles, ent->s.origin, cg.time ? cg.time : level.time,
+				nullptr, ent->s.modelScale);
 		}
 		else
 		{
 			ent->count = 1;
 			gi.G2API_GetBoltMatrix(ent->ghoul2, ent->playerModel,
-			                       ent->handRBolt,
-			                       &bolt_matrix, ent->s.angles, ent->s.origin, cg.time ? cg.time : level.time,
-			                       nullptr, ent->s.modelScale);
+				ent->handRBolt,
+				&bolt_matrix, ent->s.angles, ent->s.origin, cg.time ? cg.time : level.time,
+				nullptr, ent->s.modelScale);
 		}
 
 		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, org);
@@ -735,7 +735,7 @@ void CalcMuzzlePoint(gentity_t* const ent, vec3_t forward_vec, vec3_t muzzle_poi
 		VectorCopy(org, muzzle_point);
 
 		break;
-	default: ;
+	default:;
 	}
 
 	AddLeanOfs(ent, muzzle_point);
@@ -805,7 +805,7 @@ void WP_RocketLock(const gentity_t* ent, const float lock_dist)
 	ang[2] = muzzle_point[2] + ang[2] * lock_dist;
 
 	gi.trace(&tr, muzzle_point, nullptr, nullptr, ang, ent->client->ps.client_num, MASK_PLAYERSOLID,
-	         static_cast<EG2_Collision>(0), 0);
+		static_cast<EG2_Collision>(0), 0);
 
 	if (tr.fraction != 1 && tr.entity_num < ENTITYNUM_NONE && tr.entity_num != ent->client->ps.client_num)
 	{
@@ -1053,7 +1053,7 @@ void WP_FireVehicleWeapon(gentity_t* ent, vec3_t start, vec3_t dir, const vehWea
 }
 
 void WP_VehLeadCrosshairVeh(gentity_t* camtrace_ent, vec3_t newEnd, const vec3_t dir, const vec3_t shotStart,
-                            vec3_t shotDir)
+	vec3_t shotDir)
 {
 	//FIXME: implement from MP?
 }
@@ -1093,7 +1093,7 @@ void FireVehicleWeapon(gentity_t* ent, const qboolean altFire)
 	// If this is not the alternate fire, fire a normal blaster shot...
 	if (p_veh->m_pVehicleInfo &&
 		(p_veh->m_pVehicleInfo->type != VH_FIGHTER || p_veh->m_ulFlags & VEH_WINGSOPEN))
-	// NOTE: Wings open also denotes that it has already launched.
+		// NOTE: Wings open also denotes that it has already launched.
 	{
 		//fighters can only fire when wings are open
 		int weapon_num;
@@ -1275,7 +1275,7 @@ void FireVehicleWeapon(gentity_t* ent, const qboolean altFire)
 						//VectorMA( ent->currentOrigin, 32768, dir, end );
 						VectorMA(ent->currentOrigin, 8192, dir, end);
 						gi.trace(&trace, ent->currentOrigin, vec3_origin, vec3_origin, end, ent->s.number, MASK_SHOT,
-						         static_cast<EG2_Collision>(0), 0);
+							static_cast<EG2_Collision>(0), 0);
 						if (trace.fraction < 1.0f && !trace.allsolid && !trace.startsolid)
 						{
 							vec3_t new_end;
@@ -1288,7 +1288,7 @@ void FireVehicleWeapon(gentity_t* ent, const qboolean altFire)
 					if (veh_weapon->iMuzzleFX)
 					{
 						G_PlayEffect(veh_weapon->iMuzzleFX, p_veh->m_Muzzles[i].m_vMuzzlePos,
-						             p_veh->m_Muzzles[i].m_vMuzzleDir);
+							p_veh->m_Muzzles[i].m_vMuzzleDir);
 					}
 					WP_FireVehicleWeapon(ent, start, dir, veh_weapon);
 				}
@@ -1405,7 +1405,7 @@ void WP_FireScepter(gentity_t* ent)
 
 			const int hit_loc = G_GetHitLocFromTrace(&tr, MOD_DISRUPTOR);
 			G_Damage(trace_ent, ent, ent, forwardVec, tr.endpos, damage, DAMAGE_EXTRA_KNOCKBACK, MOD_DISRUPTOR,
-			         hit_loc);
+				hit_loc);
 		}
 		else
 		{
@@ -1442,7 +1442,7 @@ qboolean DoesnotDrainMishap(const gentity_t* ent)
 	case WP_NOGHRI_STICK:
 	case WP_RAPID_FIRE_CONC:
 		return qtrue;
-	default: ;
+	default:;
 	}
 	return qfalse;
 }
@@ -1487,6 +1487,9 @@ extern Vehicle_t* G_IsRidingVehicle(const gentity_t* p_ent);
 extern qboolean PM_ReloadAnim(int anim);
 extern qboolean PM_WeponRestAnim(int anim);
 extern qboolean PM_CrouchAnim(int anim);
+extern qboolean PM_RunningAnim(int anim);
+extern qboolean PM_WalkingAnim(int anim);
+
 //---------------------------------------------------------
 void FireWeapon(gentity_t* ent, const qboolean altFire)
 //---------------------------------------------------------
@@ -1566,13 +1569,13 @@ void FireWeapon(gentity_t* ent, const qboolean altFire)
 				}
 			}
 
-			vec3_t yaw_only_angles = {0, ent->currentAngles[YAW], 0};
+			vec3_t yaw_only_angles = { 0, ent->currentAngles[YAW], 0 };
 			if (ent->currentAngles[YAW] != ent->client->ps.legsYaw)
 			{
 				yaw_only_angles[YAW] = ent->client->ps.legsYaw;
 			}
 			gi.G2API_GetBoltMatrix(ent->ghoul2, ent->playerModel, bolt, &bolt_matrix, yaw_only_angles, ent->currentOrigin,
-			                       cg.time ? cg.time : level.time, nullptr, ent->s.modelScale);
+				cg.time ? cg.time : level.time, nullptr, ent->s.modelScale);
 
 			// work the matrix axis stuff into the original axis and origins used.
 			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, ent->client->renderInfo.muzzlePoint);
@@ -1703,13 +1706,13 @@ void FireWeapon(gentity_t* ent, const qboolean altFire)
 				CalcMuzzlePoint2(ent, muzzle2, 0);
 			}
 
-			if (!DoesnotDrainMishap(ent) && !PM_CrouchAnim(ent->client->ps.legsAnim))
+			if (!DoesnotDrainMishap(ent) /*&& !PM_CrouchAnim(ent->client->ps.legsAnim)*/)
 			{
 				if (ent->s.weapon == WP_REPEATER)
 				{
 					ent->client->cloneFired++;
 
-					if (ent->client->cloneFired == 2)
+					if (ent->client->cloneFired == 4)
 					{
 						if (ent->client->pers.cmd.forwardmove == 0 && ent->client->pers.cmd.rightmove == 0)
 						{
@@ -1735,8 +1738,7 @@ void FireWeapon(gentity_t* ent, const qboolean altFire)
 					}
 					else
 					{
-						G_AddMercBalance(ent, Q_irand(BLASTERMISHAPLEVEL_MININACCURACY,
-						                              BLASTERMISHAPLEVEL_RUNINACCURACY)); // 1 was not enough
+						G_AddMercBalance(ent, Q_irand(BLASTERMISHAPLEVEL_MININACCURACY, BLASTERMISHAPLEVEL_TWO)); // 1 was not enough
 					}
 				}
 			}
@@ -1746,8 +1748,8 @@ void FireWeapon(gentity_t* ent, const qboolean altFire)
 	// fire the specific weapon
 	switch (ent->s.weapon)
 	{
-	// Player weapons
-	//-----------------
+		// Player weapons
+		//-----------------
 	case WP_SABER:
 		return;
 
@@ -1990,18 +1992,18 @@ void FireWeapon(gentity_t* ent, const qboolean altFire)
 		break;
 
 	case WP_BOBA:
+	{
+		if (altFire)
 		{
-			if (altFire)
+			for (int i = 0; i < 3; i++)
 			{
-				for (int i = 0; i < 3; i++)
-				{
-					WP_FireBobaRifle(ent, altFire);
-				}
-				break;
+				WP_FireBobaRifle(ent, altFire);
 			}
-			WP_FireBobaRifle(ent, altFire);
 			break;
 		}
+		WP_FireBobaRifle(ent, altFire);
+		break;
+	}
 
 	case WP_CLONEPISTOL:
 		if (!cg_trueguns.integer && !cg.renderingThirdPerson)

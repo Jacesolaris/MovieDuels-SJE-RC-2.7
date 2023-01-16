@@ -17,7 +17,7 @@
 
 png_uint_32 PNGAPI
 png_get_valid(const png_const_structrp png_ptr, const png_const_inforp info_ptr,
-              const png_uint_32 flag)
+	const png_uint_32 flag)
 {
 	if (png_ptr != NULL && info_ptr != NULL)
 		return(info_ptr->valid & flag);
@@ -376,7 +376,7 @@ png_fixed_inches_from_microns(const png_const_structrp png_ptr, const png_int_32
 
 png_fixed_point PNGAPI
 png_get_x_offset_inches_fixed(const png_const_structrp png_ptr,
-                              const png_const_inforp info_ptr)
+	const png_const_inforp info_ptr)
 {
 	return png_fixed_inches_from_microns(png_ptr,
 		png_get_x_offset_microns(png_ptr, info_ptr));
@@ -386,7 +386,7 @@ png_get_x_offset_inches_fixed(const png_const_structrp png_ptr,
 #ifdef PNG_FIXED_POINT_SUPPORTED
 png_fixed_point PNGAPI
 png_get_y_offset_inches_fixed(const png_const_structrp png_ptr,
-                              const png_const_inforp info_ptr)
+	const png_const_inforp info_ptr)
 {
 	return png_fixed_inches_from_microns(png_ptr,
 		png_get_y_offset_microns(png_ptr, info_ptr));
@@ -418,7 +418,7 @@ png_get_y_offset_inches(const png_const_structrp png_ptr, const png_const_inforp
 #ifdef PNG_pHYs_SUPPORTED
 png_uint_32 PNGAPI
 png_get_pHYs_dpi(const png_const_structrp png_ptr, const png_const_inforp info_ptr,
-                 png_uint_32* res_x, png_uint_32* res_y, int* unit_type)
+	png_uint_32* res_x, png_uint_32* res_y, int* unit_type)
 {
 	png_uint_32 retval = 0;
 
@@ -484,7 +484,7 @@ png_get_signature(const png_const_structrp png_ptr, const png_const_inforp info_
 #ifdef PNG_bKGD_SUPPORTED
 png_uint_32 PNGAPI
 png_get_bKGD(const png_const_structrp png_ptr, const png_inforp info_ptr,
-             png_color_16p* background)
+	png_color_16p* background)
 {
 	if (png_ptr != NULL && info_ptr != NULL &&
 		(info_ptr->valid & PNG_INFO_bKGD) != 0 &&
@@ -508,8 +508,8 @@ png_get_bKGD(const png_const_structrp png_ptr, const png_inforp info_ptr,
 #  ifdef PNG_FLOATING_POINT_SUPPORTED
 png_uint_32 PNGAPI
 png_get_cHRM(const png_const_structrp png_ptr, const png_const_inforp info_ptr,
-             double* white_x, double* white_y, double* red_x, double* red_y,
-             double* green_x, double* green_y, double* blue_x, double* blue_y)
+	double* white_x, double* white_y, double* red_x, double* red_y,
+	double* green_x, double* green_y, double* blue_x, double* blue_y)
 {
 	/* Quiet API change: this code used to only return the end points if a cHRM
 	 * chunk was present, but the end points can also come from iCCP or sRGB
@@ -554,9 +554,9 @@ png_get_cHRM(const png_const_structrp png_ptr, const png_const_inforp info_ptr,
 
 png_uint_32 PNGAPI
 png_get_cHRM_XYZ(const png_const_structrp png_ptr, const png_const_inforp info_ptr,
-                 double* red_X, double* red_Y, double* red_Z, double* green_X,
-                 double* green_Y, double* green_Z, double* blue_X, double* blue_Y,
-                 double* blue_Z)
+	double* red_X, double* red_Y, double* red_Z, double* green_X,
+	double* green_Y, double* green_Z, double* blue_X, double* blue_Y,
+	double* blue_Z)
 {
 	if (png_ptr != NULL && info_ptr != NULL &&
 		(info_ptr->colorspace.flags & PNG_COLORSPACE_HAVE_ENDPOINTS) != 0)
@@ -600,11 +600,11 @@ png_get_cHRM_XYZ(const png_const_structrp png_ptr, const png_const_inforp info_p
 #  ifdef PNG_FIXED_POINT_SUPPORTED
 png_uint_32 PNGAPI
 png_get_cHRM_XYZ_fixed(const png_const_structrp png_ptr, const png_const_inforp info_ptr,
-                       png_fixed_point* int_red_X, png_fixed_point* int_red_Y,
-                       png_fixed_point* int_red_Z, png_fixed_point* int_green_X,
-                       png_fixed_point* int_green_Y, png_fixed_point* int_green_Z,
-                       png_fixed_point* int_blue_X, png_fixed_point* int_blue_Y,
-                       png_fixed_point* int_blue_Z)
+	png_fixed_point* int_red_X, png_fixed_point* int_red_Y,
+	png_fixed_point* int_red_Z, png_fixed_point* int_green_X,
+	png_fixed_point* int_green_Y, png_fixed_point* int_green_Z,
+	png_fixed_point* int_blue_X, png_fixed_point* int_blue_Y,
+	png_fixed_point* int_blue_Z)
 {
 	if (png_ptr != NULL && info_ptr != NULL &&
 		(info_ptr->colorspace.flags & PNG_COLORSPACE_HAVE_ENDPOINTS) != 0)
@@ -637,9 +637,9 @@ png_get_cHRM_XYZ_fixed(const png_const_structrp png_ptr, const png_const_inforp 
 
 png_uint_32 PNGAPI
 png_get_cHRM_fixed(const png_const_structrp png_ptr, const png_const_inforp info_ptr,
-                   png_fixed_point* white_x, png_fixed_point* white_y, png_fixed_point* red_x,
-                   png_fixed_point* red_y, png_fixed_point* green_x, png_fixed_point* green_y,
-                   png_fixed_point* blue_x, png_fixed_point* blue_y)
+	png_fixed_point* white_x, png_fixed_point* white_y, png_fixed_point* red_x,
+	png_fixed_point* red_y, png_fixed_point* green_x, png_fixed_point* green_y,
+	png_fixed_point* blue_x, png_fixed_point* blue_y)
 {
 	png_debug1(1, "in %s retrieval function", "cHRM");
 
@@ -674,7 +674,7 @@ png_get_cHRM_fixed(const png_const_structrp png_ptr, const png_const_inforp info
 #  ifdef PNG_FIXED_POINT_SUPPORTED
 png_uint_32 PNGAPI
 png_get_gAMA_fixed(const png_const_structrp png_ptr, const png_const_inforp info_ptr,
-                   png_fixed_point* file_gamma)
+	png_fixed_point* file_gamma)
 {
 	png_debug1(1, "in %s retrieval function", "gAMA");
 
@@ -693,7 +693,7 @@ png_get_gAMA_fixed(const png_const_structrp png_ptr, const png_const_inforp info
 #  ifdef PNG_FLOATING_POINT_SUPPORTED
 png_uint_32 PNGAPI
 png_get_gAMA(const png_const_structrp png_ptr, const png_const_inforp info_ptr,
-             double* file_gamma)
+	double* file_gamma)
 {
 	png_debug1(1, "in %s retrieval function", "gAMA(float)");
 
@@ -714,7 +714,7 @@ png_get_gAMA(const png_const_structrp png_ptr, const png_const_inforp info_ptr,
 #ifdef PNG_sRGB_SUPPORTED
 png_uint_32 PNGAPI
 png_get_sRGB(const png_const_structrp png_ptr, const png_const_inforp info_ptr,
-             int* file_srgb_intent)
+	int* file_srgb_intent)
 {
 	png_debug1(1, "in %s retrieval function", "sRGB");
 
@@ -732,8 +732,8 @@ png_get_sRGB(const png_const_structrp png_ptr, const png_const_inforp info_ptr,
 #ifdef PNG_iCCP_SUPPORTED
 png_uint_32 PNGAPI
 png_get_iCCP(const png_const_structrp png_ptr, const png_inforp info_ptr,
-             const png_charpp name, int* compression_type,
-             const png_bytepp profile, png_uint_32* proflen)
+	const png_charpp name, int* compression_type,
+	const png_bytepp profile, png_uint_32* proflen)
 {
 	png_debug1(1, "in %s retrieval function", "iCCP");
 
@@ -759,7 +759,7 @@ png_get_iCCP(const png_const_structrp png_ptr, const png_inforp info_ptr,
 #ifdef PNG_sPLT_SUPPORTED
 int PNGAPI
 png_get_sPLT(const png_const_structrp png_ptr, const png_inforp info_ptr,
-             const png_sPLT_tpp spalettes)
+	const png_sPLT_tpp spalettes)
 {
 	if (png_ptr != NULL && info_ptr != NULL && spalettes != NULL)
 	{
@@ -774,7 +774,7 @@ png_get_sPLT(const png_const_structrp png_ptr, const png_inforp info_ptr,
 #ifdef PNG_hIST_SUPPORTED
 png_uint_32 PNGAPI
 png_get_hIST(const png_const_structrp png_ptr, const png_inforp info_ptr,
-             png_uint_16p* hist)
+	png_uint_16p* hist)
 {
 	png_debug1(1, "in %s retrieval function", "hIST");
 
@@ -791,9 +791,9 @@ png_get_hIST(const png_const_structrp png_ptr, const png_inforp info_ptr,
 
 png_uint_32 PNGAPI
 png_get_IHDR(const png_const_structrp png_ptr, const png_const_inforp info_ptr,
-             png_uint_32* width, png_uint_32* height, int* bit_depth,
-             int* color_type, int* interlace_type, int* compression_type,
-             int* filter_type)
+	png_uint_32* width, png_uint_32* height, int* bit_depth,
+	int* color_type, int* interlace_type, int* compression_type,
+	int* filter_type)
 {
 	png_debug1(1, "in %s retrieval function", "IHDR");
 
@@ -830,7 +830,7 @@ png_get_IHDR(const png_const_structrp png_ptr, const png_const_inforp info_ptr,
 #ifdef PNG_oFFs_SUPPORTED
 png_uint_32 PNGAPI
 png_get_oFFs(const png_const_structrp png_ptr, const png_const_inforp info_ptr,
-             png_int_32* offset_x, png_int_32* offset_y, int* unit_type)
+	png_int_32* offset_x, png_int_32* offset_y, int* unit_type)
 {
 	png_debug1(1, "in %s retrieval function", "oFFs");
 
@@ -851,8 +851,8 @@ png_get_oFFs(const png_const_structrp png_ptr, const png_const_inforp info_ptr,
 #ifdef PNG_pCAL_SUPPORTED
 png_uint_32 PNGAPI
 png_get_pCAL(const png_const_structrp png_ptr, const png_inforp info_ptr,
-             png_charp* purpose, png_int_32* X0, png_int_32* X1, int* type, int* nparams,
-             png_charp* units, png_charpp* params)
+	png_charp* purpose, png_int_32* X0, png_int_32* X1, int* type, int* nparams,
+	png_charp* units, png_charpp* params)
 {
 	png_debug1(1, "in %s retrieval function", "pCAL");
 
@@ -881,7 +881,7 @@ png_get_pCAL(const png_const_structrp png_ptr, const png_inforp info_ptr,
          defined(PNG_FLOATING_POINT_SUPPORTED)
 png_uint_32 PNGAPI
 png_get_sCAL_fixed(const png_const_structrp png_ptr, const png_const_inforp info_ptr,
-                   int* unit, png_fixed_point* width, png_fixed_point* height)
+	int* unit, png_fixed_point* width, png_fixed_point* height)
 {
 	if (png_ptr != NULL && info_ptr != NULL &&
 		(info_ptr->valid & PNG_INFO_sCAL) != 0)
@@ -904,7 +904,7 @@ png_get_sCAL_fixed(const png_const_structrp png_ptr, const png_const_inforp info
 #  ifdef PNG_FLOATING_POINT_SUPPORTED
 png_uint_32 PNGAPI
 png_get_sCAL(const png_const_structrp png_ptr, const png_const_inforp info_ptr,
-             int* unit, double* width, double* height)
+	int* unit, double* width, double* height)
 {
 	if (png_ptr != NULL && info_ptr != NULL &&
 		(info_ptr->valid & PNG_INFO_sCAL) != 0)
@@ -920,7 +920,7 @@ png_get_sCAL(const png_const_structrp png_ptr, const png_const_inforp info_ptr,
 #  endif /* FLOATING POINT */
 png_uint_32 PNGAPI
 png_get_sCAL_s(const png_const_structrp png_ptr, const png_const_inforp info_ptr,
-               int* unit, const png_charpp width, const png_charpp height)
+	int* unit, const png_charpp width, const png_charpp height)
 {
 	if (png_ptr != NULL && info_ptr != NULL &&
 		(info_ptr->valid & PNG_INFO_sCAL) != 0)
@@ -938,7 +938,7 @@ png_get_sCAL_s(const png_const_structrp png_ptr, const png_const_inforp info_ptr
 #ifdef PNG_pHYs_SUPPORTED
 png_uint_32 PNGAPI
 png_get_pHYs(const png_const_structrp png_ptr, const png_const_inforp info_ptr,
-             png_uint_32* res_x, png_uint_32* res_y, int* unit_type)
+	png_uint_32* res_x, png_uint_32* res_y, int* unit_type)
 {
 	png_uint_32 retval = 0;
 
@@ -972,7 +972,7 @@ png_get_pHYs(const png_const_structrp png_ptr, const png_const_inforp info_ptr,
 
 png_uint_32 PNGAPI
 png_get_PLTE(const png_const_structrp png_ptr, const png_inforp info_ptr,
-             png_colorp* palette, int* num_palette)
+	png_colorp* palette, int* num_palette)
 {
 	png_debug1(1, "in %s retrieval function", "PLTE");
 
@@ -991,7 +991,7 @@ png_get_PLTE(const png_const_structrp png_ptr, const png_inforp info_ptr,
 #ifdef PNG_sBIT_SUPPORTED
 png_uint_32 PNGAPI
 png_get_sBIT(const png_const_structrp png_ptr, const png_inforp info_ptr,
-             png_color_8p* sig_bit)
+	png_color_8p* sig_bit)
 {
 	png_debug1(1, "in %s retrieval function", "sBIT");
 
@@ -1009,7 +1009,7 @@ png_get_sBIT(const png_const_structrp png_ptr, const png_inforp info_ptr,
 #ifdef PNG_TEXT_SUPPORTED
 int PNGAPI
 png_get_text(const png_const_structrp png_ptr, const png_inforp info_ptr,
-             png_textp* text_ptr, int* num_text)
+	png_textp* text_ptr, int* num_text)
 {
 	if (png_ptr != NULL && info_ptr != NULL && info_ptr->num_text > 0)
 	{
@@ -1035,7 +1035,7 @@ png_get_text(const png_const_structrp png_ptr, const png_inforp info_ptr,
 #ifdef PNG_tIME_SUPPORTED
 png_uint_32 PNGAPI
 png_get_tIME(const png_const_structrp png_ptr, const png_inforp info_ptr,
-             png_timep* mod_time)
+	png_timep* mod_time)
 {
 	png_debug1(1, "in %s retrieval function", "tIME");
 
@@ -1053,7 +1053,7 @@ png_get_tIME(const png_const_structrp png_ptr, const png_inforp info_ptr,
 #ifdef PNG_tRNS_SUPPORTED
 png_uint_32 PNGAPI
 png_get_tRNS(const png_const_structrp png_ptr, const png_inforp info_ptr,
-             png_bytep* trans_alpha, int* num_trans, png_color_16p* trans_color)
+	png_bytep* trans_alpha, int* num_trans, png_color_16p* trans_color)
 {
 	png_uint_32 retval = 0;
 	if (png_ptr != NULL && info_ptr != NULL &&
@@ -1099,7 +1099,7 @@ png_get_tRNS(const png_const_structrp png_ptr, const png_inforp info_ptr,
 #ifdef PNG_STORE_UNKNOWN_CHUNKS_SUPPORTED
 int PNGAPI
 png_get_unknown_chunks(const png_const_structrp png_ptr, const png_inforp info_ptr,
-                       const png_unknown_chunkpp unknowns)
+	const png_unknown_chunkpp unknowns)
 {
 	if (png_ptr != NULL && info_ptr != NULL && unknowns != NULL)
 	{

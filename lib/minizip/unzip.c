@@ -228,7 +228,7 @@ local int unz64local_getShort OF((
 	uLong* pX));
 
 local int unz64local_getShort(const zlib_filefunc64_32_def* pzlib_filefunc_def,
-                              const voidpf filestream,
+	const voidpf filestream,
 	uLong* pX)
 {
 	int i = 0;
@@ -253,7 +253,7 @@ local int unz64local_getLong OF((
 	uLong* pX));
 
 local int unz64local_getLong(const zlib_filefunc64_32_def* pzlib_filefunc_def,
-                             const voidpf filestream,
+	const voidpf filestream,
 	uLong* pX)
 {
 	int i = 0;
@@ -286,7 +286,7 @@ local int unz64local_getLong64 OF((
 	ZPOS64_T* pX));
 
 local int unz64local_getLong64(const zlib_filefunc64_32_def* pzlib_filefunc_def,
-                               const voidpf filestream,
+	const voidpf filestream,
 	ZPOS64_T* pX)
 {
 	int i = 0;
@@ -452,7 +452,7 @@ local ZPOS64_T unz64local_SearchCentralDir64 OF((
 	voidpf filestream));
 
 local ZPOS64_T unz64local_SearchCentralDir64(const zlib_filefunc64_32_def* pzlib_filefunc_def,
-                                             const voidpf filestream)
+	const voidpf filestream)
 {
 	ZPOS64_T uMaxBack = 0xffff; /* maximum size of global comment */
 	ZPOS64_T uPosFound = 0;
@@ -833,15 +833,15 @@ local int unz64local_GetCurrentFileInfoInternal OF((unzFile file,
 	uLong commentBufferSize));
 
 local int unz64local_GetCurrentFileInfoInternal(const unzFile file,
-                                                unz_file_info64* pfile_info,
-                                                unz_file_info64_internal
-                                                * pfile_info_internal,
-                                                char* szFileName,
-                                                const uLong fileNameBufferSize,
-                                                void* extraField,
-                                                const uLong extraFieldBufferSize,
-                                                char* szComment,
-                                                const uLong commentBufferSize)
+	unz_file_info64* pfile_info,
+	unz_file_info64_internal
+	* pfile_info_internal,
+	char* szFileName,
+	const uLong fileNameBufferSize,
+	void* extraField,
+	const uLong extraFieldBufferSize,
+	char* szComment,
+	const uLong commentBufferSize)
 {
 	unz_file_info64 file_info;
 	unz_file_info64_internal file_info_internal;
@@ -1071,10 +1071,10 @@ local int unz64local_GetCurrentFileInfoInternal(const unzFile file,
   return UNZ_OK if there is no problem.
 */
 extern int ZEXPORT unzGetCurrentFileInfo64(const unzFile file,
-                                           unz_file_info64* pfile_info,
-                                           char* szFileName, const uLong fileNameBufferSize,
-                                           void* extraField, const uLong extraFieldBufferSize,
-                                           char* szComment, const uLong commentBufferSize)
+	unz_file_info64* pfile_info,
+	char* szFileName, const uLong fileNameBufferSize,
+	void* extraField, const uLong extraFieldBufferSize,
+	char* szComment, const uLong commentBufferSize)
 {
 	return unz64local_GetCurrentFileInfoInternal(file, pfile_info, NULL,
 		szFileName, fileNameBufferSize,
@@ -1083,10 +1083,10 @@ extern int ZEXPORT unzGetCurrentFileInfo64(const unzFile file,
 }
 
 extern int ZEXPORT unzGetCurrentFileInfo(const unzFile file,
-                                         unz_file_info* pfile_info,
-                                         char* szFileName, const uLong fileNameBufferSize,
-                                         void* extraField, const uLong extraFieldBufferSize,
-                                         char* szComment, const uLong commentBufferSize)
+	unz_file_info* pfile_info,
+	char* szFileName, const uLong fileNameBufferSize,
+	void* extraField, const uLong extraFieldBufferSize,
+	char* szComment, const uLong commentBufferSize)
 {
 	unz_file_info64 file_info64;
 	const int err = unz64local_GetCurrentFileInfoInternal(file, &file_info64, NULL,
@@ -1391,7 +1391,7 @@ local int unz64local_CheckCurrentFileCoherencyHeader(unz64_s* s, uInt* piSizeVar
   If there is no error and the file is opened, the return value is UNZ_OK.
 */
 extern int ZEXPORT unzOpenCurrentFile3(const unzFile file, int* method,
-                                       int* level, const int raw, const char* password)
+	int* level, const int raw, const char* password)
 {
 	int err = UNZ_OK;
 	uInt iSizeVar;

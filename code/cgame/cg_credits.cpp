@@ -36,7 +36,7 @@ constexpr auto MAX_LINE_BYTES = 2048;
 
 qhandle_t ghFontHandle = 0;
 float gfFontScale = 1.0f;
-vec4_t gv4Color = {0};
+vec4_t gv4Color = { 0 };
 
 struct StringAndSize_t
 {
@@ -299,7 +299,7 @@ void CG_Credits_Init(const char* psStripReference, vec4_t* pv4Color)
 			qboolean bIsTrailingPunctuation;
 			int iAdvanceCount;
 			unsigned int uiLetter = cgi_AnyLanguage_ReadCharFromString(psTextParse, &iAdvanceCount,
-			                                                           &bIsTrailingPunctuation);
+				&bIsTrailingPunctuation);
 			psTextParse += iAdvanceCount;
 
 			// concat onto string so far...
@@ -396,88 +396,88 @@ void CG_Credits_Init(const char* psStripReference, vec4_t* pv4Color)
 			{
 			case eNothing: break;
 			case eLine:
-				{
-					CreditLine_t CreditLine;
-					CreditLine.iLine = iLineNumber++;
-					CreditLine.strText = sLine;
+			{
+				CreditLine_t CreditLine;
+				CreditLine.iLine = iLineNumber++;
+				CreditLine.strText = sLine;
 
-					CreditData.CreditLines.push_back(CreditLine);
-				}
-				break;
+				CreditData.CreditLines.push_back(CreditLine);
+			}
+			break;
 
 			case eDotEntry:
+			{
+				CreditLine_t CreditLine;
+				CreditLine.iLine = iLineNumber;
+				CreditLine.bDotted = true;
+
+				std::string strResult(sLine);
+				const char* p;
+				while ((p = GetSubString(strResult)) != nullptr)
 				{
-					CreditLine_t CreditLine;
-					CreditLine.iLine = iLineNumber;
-					CreditLine.bDotted = true;
-
-					std::string strResult(sLine);
-					const char* p;
-					while ((p = GetSubString(strResult)) != nullptr)
+					if (CreditLine.strText.IsEmpty())
 					{
-						if (CreditLine.strText.IsEmpty())
-						{
-							CreditLine.strText = p;
-						}
-						else
-						{
-							CreditLine.vstrText.emplace_back(UpperCaseFirstLettersOnly(p));
-						}
+						CreditLine.strText = p;
 					}
-
-					if (!CreditLine.strText.IsEmpty() && CreditLine.vstrText.size())
+					else
 					{
-						// sort entries RHS dotted entries by alpha...
-						//
-						std::sort(CreditLine.vstrText.begin(), CreditLine.vstrText.end(), SortBySurname);
-
-						CreditData.CreditLines.push_back(CreditLine);
-						iLineNumber += CreditLine.vstrText.size();
+						CreditLine.vstrText.emplace_back(UpperCaseFirstLettersOnly(p));
 					}
 				}
-				break;
 
-			case eTitle:
+				if (!CreditLine.strText.IsEmpty() && CreditLine.vstrText.size())
 				{
-					iLineNumber++; // leading blank line
-
-					CreditLine_t CreditLine;
-					CreditLine.iLine = iLineNumber++;
-					CreditLine.strText = Capitalize(sLine);
+					// sort entries RHS dotted entries by alpha...
+					//
+					std::sort(CreditLine.vstrText.begin(), CreditLine.vstrText.end(), SortBySurname);
 
 					CreditData.CreditLines.push_back(CreditLine);
-
-					iLineNumber++; // trailing blank line
-					break;
+					iLineNumber += CreditLine.vstrText.size();
 				}
-			case eCard:
-				{
-					CreditCard_t CreditCard;
+			}
+			break;
 
-					std::string strResult(sLine);
-					const char* p;
-					while ((p = GetSubString(strResult)) != nullptr)
-					{
-						if (CreditCard.strTitle.IsEmpty())
-						{
-							CreditCard.strTitle = Capitalize(p);
-						}
-						else
-						{
-							CreditCard.vstrText.emplace_back(UpperCaseFirstLettersOnly(p));
-						}
-					}
+			case eTitle:
+			{
+				iLineNumber++; // leading blank line
 
-					if (!CreditCard.strTitle.IsEmpty())
-					{
-						// sort entries by alpha...
-						//
-						std::sort(CreditCard.vstrText.begin(), CreditCard.vstrText.end(), SortBySurname);
+				CreditLine_t CreditLine;
+				CreditLine.iLine = iLineNumber++;
+				CreditLine.strText = Capitalize(sLine);
 
-						CreditData.CreditCards.push_back(CreditCard);
-					}
-				}
+				CreditData.CreditLines.push_back(CreditLine);
+
+				iLineNumber++; // trailing blank line
 				break;
+			}
+			case eCard:
+			{
+				CreditCard_t CreditCard;
+
+				std::string strResult(sLine);
+				const char* p;
+				while ((p = GetSubString(strResult)) != nullptr)
+				{
+					if (CreditCard.strTitle.IsEmpty())
+					{
+						CreditCard.strTitle = Capitalize(p);
+					}
+					else
+					{
+						CreditCard.vstrText.emplace_back(UpperCaseFirstLettersOnly(p));
+					}
+				}
+
+				if (!CreditCard.strTitle.IsEmpty())
+				{
+					// sort entries by alpha...
+					//
+					std::sort(CreditCard.vstrText.begin(), CreditCard.vstrText.end(), SortBySurname);
+
+					CreditData.CreditCards.push_back(CreditCard);
+				}
+			}
+			break;
 			default:
 				break;
 			}
@@ -600,7 +600,7 @@ qboolean CG_Credits_Draw()
 
 			bool bEraseOccured;
 			for (auto it = CreditData.CreditLines.begin(); it != CreditData.CreditLines.end();
-			     bEraseOccured ? it : ++it)
+				bEraseOccured ? it : ++it)
 			{
 				CreditLine_t& CreditLine = *it;
 				bEraseOccured = false;
@@ -630,7 +630,7 @@ qboolean CG_Credits_Draw()
 					gv4Color[3] = 1.0f;
 
 					cgi_R_Font_DrawString(iXpos, iYpos, CreditLine.strText.c_str(), gv4Color, ghFontHandle, -1,
-					                      gfFontScale);
+						gfFontScale);
 
 					// now print any dotted members...
 					//
@@ -640,7 +640,7 @@ qboolean CG_Credits_Draw()
 						iWidth = StringAndSize.GetPixelLength();
 						iXpos = SCREEN_WIDTH - 4 - iWidth;
 						cgi_R_Font_DrawString(iXpos, iYpos, StringAndSize.c_str(), gv4Color, ghFontHandle, -1,
-						                      gfFontScale);
+							gfFontScale);
 						iYpos += iFontHeight;
 					}
 				}

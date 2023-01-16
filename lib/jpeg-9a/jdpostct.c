@@ -121,10 +121,10 @@ start_pass_dpost(const j_decompress_ptr cinfo, const J_BUF_MODE pass_mode)
 
 METHODDEF(void)
 post_process_1pass(const j_decompress_ptr cinfo,
-                   const JSAMPIMAGE input_buf, JDIMENSION* in_row_group_ctr,
-                   const JDIMENSION in_row_groups_avail,
-                   const JSAMPARRAY output_buf, JDIMENSION* out_row_ctr,
-                   const JDIMENSION out_rows_avail)
+	const JSAMPIMAGE input_buf, JDIMENSION* in_row_group_ctr,
+	const JDIMENSION in_row_groups_avail,
+	const JSAMPARRAY output_buf, JDIMENSION* out_row_ctr,
+	const JDIMENSION out_rows_avail)
 {
 	const my_post_ptr post = (my_post_ptr)cinfo->post;
 	JDIMENSION num_rows;
@@ -152,10 +152,10 @@ post_process_1pass(const j_decompress_ptr cinfo,
 
 METHODDEF(void)
 post_process_prepass(const j_decompress_ptr cinfo,
-                     const JSAMPIMAGE input_buf, JDIMENSION* in_row_group_ctr,
-                     const JDIMENSION in_row_groups_avail,
-                     JSAMPARRAY output_buf, JDIMENSION* out_row_ctr,
-                     JDIMENSION out_rows_avail)
+	const JSAMPIMAGE input_buf, JDIMENSION* in_row_group_ctr,
+	const JDIMENSION in_row_groups_avail,
+	JSAMPARRAY output_buf, JDIMENSION* out_row_ctr,
+	JDIMENSION out_rows_avail)
 {
 	const my_post_ptr post = (my_post_ptr)cinfo->post;
 
@@ -194,10 +194,10 @@ post_process_prepass(const j_decompress_ptr cinfo,
 
 METHODDEF(void)
 post_process_2pass(const j_decompress_ptr cinfo,
-                   JSAMPIMAGE input_buf, JDIMENSION* in_row_group_ctr,
-                   JDIMENSION in_row_groups_avail,
-                   const JSAMPARRAY output_buf, JDIMENSION* out_row_ctr,
-                   const JDIMENSION out_rows_avail)
+	JSAMPIMAGE input_buf, JDIMENSION* in_row_group_ctr,
+	JDIMENSION in_row_groups_avail,
+	const JSAMPARRAY output_buf, JDIMENSION* out_row_ctr,
+	const JDIMENSION out_rows_avail)
 {
 	const my_post_ptr post = (my_post_ptr)cinfo->post;
 

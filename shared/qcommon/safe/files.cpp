@@ -25,7 +25,7 @@ namespace FS
 
 	FileBuffer::FileBuffer(void* buffer, const long size) NOEXCEPT
 		: _buffer(buffer)
-		  , _size(size)
+		, _size(size)
 	{
 		assert(buffer != nullptr || size == 0);
 		assert(size >= 0);
@@ -38,7 +38,7 @@ namespace FS
 
 	FileBuffer::FileBuffer(FileBuffer&& rhs) NOEXCEPT
 		: _buffer(rhs._buffer)
-		  , _size(rhs._size)
+		, _size(rhs._size)
 	{
 		rhs._buffer = nullptr;
 		rhs._size = 0;
@@ -68,11 +68,11 @@ namespace FS
 #ifdef GCJ_VS_2013  // VS 2013 compiler fix
 		if (size >= 0)
 		{
-			return FileBuffer{buffer, size};
+			return FileBuffer{ buffer, size };
 		}
 		return FileBuffer{};
 #else
-		return size >= 0 ? FileBuffer{buffer, size} : FileBuffer{};
+		return size >= 0 ? FileBuffer{ buffer, size } : FileBuffer{};
 #endif
 	}
 
@@ -81,7 +81,7 @@ namespace FS
 
 	FileList::FileList(char** files, const int numFiles) NOEXCEPT
 		: _begin(files)
-		  , _end(files + numFiles)
+		, _end(files + numFiles)
 	{
 		assert(numFiles >= 0);
 	}
@@ -96,7 +96,7 @@ namespace FS
 
 	FileList::FileList(FileList&& rhs) NOEXCEPT
 		: _begin(rhs._begin)
-		  , _end(rhs._end)
+		, _end(rhs._end)
 	{
 		rhs._begin = nullptr;
 		rhs._end = nullptr;
@@ -119,7 +119,7 @@ namespace FS
 	{
 		int numFiles{};
 		const auto files = FS_ListFiles(directory, extension, &numFiles);
-		return FileList{files, numFiles};
+		return FileList{ files, numFiles };
 	}
 #endif
 }

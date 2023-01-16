@@ -134,28 +134,28 @@ qboolean BG_CanItemBeGrabbed(const entityState_t* ent, const playerState_t* ps)
 	{
 	case IT_WEAPON:
 		// See if we already have this weapon.
+	{
+		// See if we already have this weapon.
+		if (!ps->weapons[item->giTag])
 		{
-			// See if we already have this weapon.
-			if (!ps->weapons[item->giTag])
-			{
-				// Don't have this weapon yet, so pick it up.
-				return qtrue;
-			}
-			if (item->giTag == WP_SABER)
-			{
-				//always pick up a saber, might be a new one?
-				return qtrue;
-			}
+			// Don't have this weapon yet, so pick it up.
+			return qtrue;
 		}
+		if (item->giTag == WP_SABER)
+		{
+			//always pick up a saber, might be a new one?
+			return qtrue;
+		}
+	}
 
 	// Make sure that we aren't already full on ammo for this weapon
-		if (ps->ammo[weaponData[item->giTag].ammoIndex] >= ammoData[weaponData[item->giTag].ammoIndex].max)
-		{
-			// full, so don't grab the item
-			return qfalse;
-		}
+	if (ps->ammo[weaponData[item->giTag].ammoIndex] >= ammoData[weaponData[item->giTag].ammoIndex].max)
+	{
+		// full, so don't grab the item
+		return qfalse;
+	}
 
-		return qtrue; // could use more of this type of ammo, so grab the item
+	return qtrue; // could use more of this type of ammo, so grab the item
 
 	case IT_AMMO:
 
@@ -182,7 +182,7 @@ qboolean BG_CanItemBeGrabbed(const entityState_t* ent, const playerState_t* ps)
 					return qtrue;
 				}
 				break;
-			default: ;
+			default:;
 			}
 
 			if (ps->ammo[item->giTag] >= ammoData[item->giTag].max) // checkme
@@ -214,7 +214,7 @@ qboolean BG_CanItemBeGrabbed(const entityState_t* ent, const playerState_t* ps)
 			//ragers can't use health
 			return qfalse;
 		}
-	// don't pick up if already at max
+		// don't pick up if already at max
 		if (ps->stats[STAT_HEALTH] >= ps->stats[STAT_MAX_HEALTH])
 		{
 			return qfalse;
@@ -284,7 +284,7 @@ void EvaluateTrajectory(const trajectory_t* tr, int at_time, vec3_t result)
 		{
 			at_time = tr->trTime + tr->trDuration;
 		}
-	//old totally linear
+		//old totally linear
 		delta_time = (at_time - tr->trTime) * 0.001F; // milliseconds to seconds
 		if (delta_time < 0)
 		{
@@ -298,7 +298,7 @@ void EvaluateTrajectory(const trajectory_t* tr, int at_time, vec3_t result)
 		{
 			at_time = tr->trTime + tr->trDuration;
 		}
-	//new slow-down at end
+		//new slow-down at end
 		if (at_time - tr->trTime > tr->trDuration || at_time - tr->trTime <= 0)
 		{
 			delta_time = 0;
@@ -523,40 +523,40 @@ void PlayerStateToEntityState(playerState_t* ps, entityState_t* s)
 		}
 	}
 #if 0
-		if (ps->externalEvent) {
-			s->event = ps->externalEvent;
-			s->eventParm = ps->externalEventParm;
-		}
-		else {
-			int		seq;
+	if (ps->externalEvent) {
+		s->event = ps->externalEvent;
+		s->eventParm = ps->externalEventParm;
+	}
+	else {
+		int		seq;
 
-			seq = (ps->eventSequence - 1) & (MAX_PS_EVENTS - 1);
-			s->event = ps->events[seq] | ((ps->eventSequence & 3) << 8);
-			s->eventParm = ps->eventParms[seq];
-		}
+		seq = (ps->eventSequence - 1) & (MAX_PS_EVENTS - 1);
+		s->event = ps->events[seq] | ((ps->eventSequence & 3) << 8);
+		s->eventParm = ps->eventParms[seq];
+	}
 
-		// show some roll in the body based on velocity and angle
-		if (ps->stats[STAT_HEALTH] > 0) {
-			vec3_t		right;
-			float		sign;
-			float		side;
-			float		value;
+	// show some roll in the body based on velocity and angle
+	if (ps->stats[STAT_HEALTH] > 0) {
+		vec3_t		right;
+		float		sign;
+		float		side;
+		float		value;
 
-			AngleVectors(ps->viewangles, NULL, right, NULL);
+		AngleVectors(ps->viewangles, NULL, right, NULL);
 
-			side = DotProduct(ps->velocity, right);
-			sign = side < 0 ? -1 : 1;
-			side = fabs(side);
+		side = DotProduct(ps->velocity, right);
+		sign = side < 0 ? -1 : 1;
+		side = fabs(side);
 
-			value = 2;	// g_rollangle->value;
+		value = 2;	// g_rollangle->value;
 
-			if (side < 200 /* g_rollspeed->value */)
-				side = side * value / 200; // g_rollspeed->value;
-			else
-				side = value;
+		if (side < 200 /* g_rollspeed->value */)
+			side = side * value / 200; // g_rollspeed->value;
+		else
+			side = value;
 
-			s->angles[ROLL] = (int)(side * sign * 4);
-		}
+		s->angles[ROLL] = (int)(side * sign * 4);
+	}
 #endif
 }
 
@@ -569,7 +569,7 @@ Items can be picked up without actually touching their physical bounds
 */
 qboolean BG_PlayerTouchesItem(const playerState_t* ps, const entityState_t* item, const int at_time)
 {
-	vec3_t origin = {0.0f};
+	vec3_t origin = { 0.0f };
 
 	EvaluateTrajectory(&item->pos, at_time, origin);
 

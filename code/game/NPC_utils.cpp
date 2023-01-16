@@ -166,7 +166,7 @@ void CalcEntitySpot(const gentity_t* ent, const spot_t spot, vec3_t point)
 			AngleVectors(ent->client->ps.viewangles, forward, right, up);
 		}
 		CalcMuzzlePoint(const_cast<gentity_t*>(ent), forward, point, 0);
-	//NOTE: automatically takes leaning into account!
+		//NOTE: automatically takes leaning into account!
 		break;
 
 	case SPOT_GROUND:
@@ -178,20 +178,20 @@ void CalcEntitySpot(const gentity_t* ent, const spot_t spot, vec3_t point)
 			break;
 		}
 
-	// if it is reasonably close to the ground, give the point underneath of it
+		// if it is reasonably close to the ground, give the point underneath of it
 		VectorCopy(ent->currentOrigin, start);
 		start[2] = ent->absmin[2];
 		VectorCopy(start, end);
 		end[2] -= 64;
 		gi.trace(&tr, start, ent->mins, ent->maxs, end, ent->s.number, MASK_PLAYERSOLID, static_cast<EG2_Collision>(0),
-		         0);
+			0);
 		if (tr.fraction < 1.0)
 		{
 			VectorCopy(tr.endpos, point);
 			break;
 		}
 
-	// otherwise just use the origin
+		// otherwise just use the origin
 		VectorCopy(ent->currentOrigin, point);
 		break;
 
@@ -870,7 +870,7 @@ qboolean G_ActivateBehavior(gentity_t* self, const int bset)
 	else
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_VERBOSE, "%s attempting to run bSet %s (%s)\n", self->targetname,
-		                         GetStringForID(BSETTable, bset), bs_name);
+			GetStringForID(BSETTable, bset), bs_name);
 		Quake3Game()->RunScript(self, bs_name);
 	}
 	return qtrue;
@@ -1461,12 +1461,12 @@ void G_GetBoltPosition(gentity_t* self, const int bolt_index, vec3_t pos, const 
 		return;
 	}
 	mdxaBone_t bolt_matrix;
-	const vec3_t angles = {0, self->currentAngles[YAW], 0};
+	const vec3_t angles = { 0, self->currentAngles[YAW], 0 };
 
 	gi.G2API_GetBoltMatrix(self->ghoul2, modelIndex,
-	                       bolt_index,
-	                       &bolt_matrix, angles, self->currentOrigin, cg.time ? cg.time : level.time,
-	                       nullptr, self->s.modelScale);
+		bolt_index,
+		&bolt_matrix, angles, self->currentOrigin, cg.time ? cg.time : level.time,
+		nullptr, self->s.modelScale);
 	if (pos)
 	{
 		vec3_t result;
@@ -1477,7 +1477,7 @@ void G_GetBoltPosition(gentity_t* self, const int bolt_index, vec3_t pos, const 
 
 float NPC_EntRangeFromBolt(const gentity_t* targEnt, const int bolt_index)
 {
-	vec3_t org = {0.0f};
+	vec3_t org = { 0.0f };
 
 	if (!targEnt)
 	{
@@ -1499,7 +1499,7 @@ int G_GetEntsNearBolt(gentity_t* self, gentity_t** radius_ents, const float radi
 	vec3_t mins, maxs;
 
 	//get my handRBolt's position
-	vec3_t org = {0.0f};
+	vec3_t org = { 0.0f };
 
 	G_GetBoltPosition(self, bolt_index, org);
 

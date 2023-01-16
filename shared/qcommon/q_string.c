@@ -151,8 +151,7 @@ int Q_stricmpn(const char* s1, const char* s2, int n)
 				return c1 < c2 ? -1 : 1;
 			}
 		}
-	}
-	while (c1);
+	} while (c1);
 
 	return 0; // strings are equal
 }
@@ -180,8 +179,7 @@ int Q_strncmp(const char* s1, const char* s2, int n)
 		{
 			return c1 < c2 ? -1 : 1;
 		}
-	}
-	while (c1);
+	} while (c1);
 
 	return 0; // strings are equal
 }
@@ -251,10 +249,8 @@ const char* Q_stristr(const char* s, const char* find)
 				{
 					sc -= 'a' - 'A';
 				}
-			}
-			while (sc != c);
-		}
-		while (Q_stricmpn(s, find, len) != 0);
+			} while (sc != c);
+		} while (Q_stricmpn(s, find, len) != 0);
 		s--;
 	}
 	return s;
@@ -366,7 +362,7 @@ Q_strstrip( "Bo\nb is h\rairy!!", "\n\r!", NULL );	// "Bob is hairy"
 
 void Q_strstrip(char* string, const char* strip, const char* repl)
 {
-	char *out = string, *p = string, c;
+	char* out = string, * p = string, c;
 	const int replaceLen = repl ? strlen(repl) : 0;
 
 	while ((c = *p++) != '\0')

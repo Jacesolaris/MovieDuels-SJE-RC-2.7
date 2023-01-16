@@ -344,7 +344,7 @@ void CL_ParseSnapshot(msg_t* msg)
 	if (cl_shownet->integer == 3)
 	{
 		Com_Printf("   frame:%i  delta:%i\n", cl.frame.messageNum,
-		           cl.frame.deltaNum);
+			cl.frame.deltaNum);
 	}
 
 	// actions for valid frames

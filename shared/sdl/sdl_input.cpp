@@ -57,8 +57,8 @@ static void IN_PrintKey(const SDL_Keysym* keysym, const fakeAscii_t key, const q
 		Com_Printf("  ");
 
 	Com_Printf("Scancode: 0x%02x(%s) Sym: 0x%02x(%s)",
-	           keysym->scancode, SDL_GetScancodeName(keysym->scancode),
-	           keysym->sym, SDL_GetKeyName(keysym->sym));
+		keysym->scancode, SDL_GetScancodeName(keysym->scancode),
+		keysym->sym, SDL_GetKeyName(keysym->sym));
 
 	if (keysym->mod & KMOD_LSHIFT) Com_Printf(" KMOD_LSHIFT");
 	if (keysym->mod & KMOD_RSHIFT) Com_Printf(" KMOD_RSHIFT");
@@ -491,7 +491,7 @@ static void IN_GobbleMotionEvents()
 	// Gobble any mouse motion events
 	SDL_PumpEvents();
 	while ((val = SDL_PeepEvents(dummy, 1, SDL_GETEVENT,
-	                             SDL_MOUSEMOTION, SDL_MOUSEMOTION)) > 0)
+		SDL_MOUSEMOTION, SDL_MOUSEMOTION)) > 0)
 	{
 	}
 
@@ -720,7 +720,7 @@ uint8_t ConvertUTF32ToExpectedCharset(const uint32_t utf32)
 {
 	switch (utf32)
 	{
-	// Cyrillic characters - mapped to Windows-1251 encoding
+		// Cyrillic characters - mapped to Windows-1251 encoding
 	case 0x0410: return 192;
 	case 0x0411: return 193;
 	case 0x0412: return 194;
@@ -786,7 +786,7 @@ uint8_t ConvertUTF32ToExpectedCharset(const uint32_t utf32)
 	case 0x044E: return 254;
 	case 0x044F: return 255;
 
-	// Eastern european characters - polish, czech, etc use Windows-1250 encoding
+		// Eastern european characters - polish, czech, etc use Windows-1250 encoding
 	case 0x0160: return 138;
 	case 0x015A: return 140;
 	case 0x0164: return 141;
@@ -952,27 +952,27 @@ static void IN_ProcessEvents()
 
 		case SDL_MOUSEBUTTONDOWN:
 		case SDL_MOUSEBUTTONUP:
+		{
+			unsigned short b;
+			switch (e.button.button)
 			{
-				unsigned short b;
-				switch (e.button.button)
-				{
-				case SDL_BUTTON_LEFT: b = A_MOUSE1;
-					break;
-				case SDL_BUTTON_MIDDLE: b = A_MOUSE3;
-					break;
-				case SDL_BUTTON_RIGHT: b = A_MOUSE2;
-					break;
-				case SDL_BUTTON_X1: b = A_MOUSE4;
-					break;
-				case SDL_BUTTON_X2: b = A_MOUSE5;
-					break;
-				default: b = A_AUX0 + (e.button.button - 6) % 32;
-					break;
-				}
-				Sys_QueEvent(0, SE_KEY, b,
-				             (e.type == SDL_MOUSEBUTTONDOWN ? qtrue : qfalse), 0, nullptr);
+			case SDL_BUTTON_LEFT: b = A_MOUSE1;
+				break;
+			case SDL_BUTTON_MIDDLE: b = A_MOUSE3;
+				break;
+			case SDL_BUTTON_RIGHT: b = A_MOUSE2;
+				break;
+			case SDL_BUTTON_X1: b = A_MOUSE4;
+				break;
+			case SDL_BUTTON_X2: b = A_MOUSE5;
+				break;
+			default: b = A_AUX0 + (e.button.button - 6) % 32;
+				break;
 			}
-			break;
+			Sys_QueEvent(0, SE_KEY, b,
+				(e.type == SDL_MOUSEBUTTONDOWN ? qtrue : qfalse), 0, nullptr);
+		}
+		break;
 
 		case SDL_MOUSEWHEEL:
 			if (e.wheel.y > 0)
@@ -1000,19 +1000,19 @@ static void IN_ProcessEvents()
 			case SDL_WINDOWEVENT_MAXIMIZED: Cvar_SetValue("com_minimized", 0);
 				break;
 			case SDL_WINDOWEVENT_FOCUS_LOST:
-				{
-					Cvar_SetValue("com_unfocused", 1);
-					SNDDMA_Activate(qfalse);
-					break;
-				}
+			{
+				Cvar_SetValue("com_unfocused", 1);
+				SNDDMA_Activate(qfalse);
+				break;
+			}
 
 			case SDL_WINDOWEVENT_FOCUS_GAINED:
-				{
-					Cvar_SetValue("com_unfocused", 0);
-					SNDDMA_Activate(qtrue);
-					break;
-				}
-			default: ;
+			{
+				Cvar_SetValue("com_unfocused", 0);
+				SNDDMA_Activate(qtrue);
+				break;
+			}
+			default:;
 			}
 			break;
 

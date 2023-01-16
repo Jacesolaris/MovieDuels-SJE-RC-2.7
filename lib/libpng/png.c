@@ -417,7 +417,7 @@ PNG_FUNCTION(void, PNGAPI
 /* The following API is not called internally */
 void PNGAPI
 png_data_freer(const png_const_structrp png_ptr, const png_inforp info_ptr,
-               const int freer, const png_uint_32 mask)
+	const int freer, const png_uint_32 mask)
 {
 	png_debug(1, "in png_data_freer");
 
@@ -436,7 +436,7 @@ png_data_freer(const png_const_structrp png_ptr, const png_inforp info_ptr,
 
 void PNGAPI
 png_free_data(const png_const_structrp png_ptr, const png_inforp info_ptr, png_uint_32 mask,
-              const int num)
+	const int num)
 {
 	png_debug(1, "in png_free_data");
 
@@ -1009,7 +1009,7 @@ png_zstream_error(const png_structrp png_ptr, const int ret)
 #ifdef PNG_GAMMA_SUPPORTED /* always set if COLORSPACE */
 static int
 png_colorspace_check_gamma(const png_const_structrp png_ptr,
-                           const png_colorspacerp colorspace, const png_fixed_point gAMA, const int from)
+	const png_colorspacerp colorspace, const png_fixed_point gAMA, const int from)
 	/* This is called to check a new gamma value against an existing one.  The
 	 * routine returns false if the new gamma value should not be written.
 	 *
@@ -1051,7 +1051,7 @@ png_colorspace_check_gamma(const png_const_structrp png_ptr,
 
 void /* PRIVATE */
 png_colorspace_set_gamma(const png_const_structrp png_ptr,
-                         const png_colorspacerp colorspace, const png_fixed_point gAMA)
+	const png_colorspacerp colorspace, const png_fixed_point gAMA)
 {
 	/* Changed in libpng-1.5.4 to limit the values to ensure overflow can't
 	 * occur.  Since the fixed point representation is asymetrical it is
@@ -1601,8 +1601,8 @@ static const png_xy sRGB_xy = /* From ITU-R BT.709-3 */
 
 static int
 png_colorspace_set_xy_and_XYZ(const png_const_structrp png_ptr,
-                              const png_colorspacerp colorspace, const png_xy * xy, const png_XYZ * XYZ,
-                              const int preferred)
+	const png_colorspacerp colorspace, const png_xy * xy, const png_XYZ * XYZ,
+	const int preferred)
 {
 	if ((colorspace->flags & PNG_COLORSPACE_INVALID) != 0)
 		return 0;
@@ -1649,7 +1649,7 @@ png_colorspace_set_xy_and_XYZ(const png_const_structrp png_ptr,
 
 int /* PRIVATE */
 png_colorspace_set_chromaticities(const png_const_structrp png_ptr,
-                                  const png_colorspacerp colorspace, const png_xy * xy, const int preferred)
+	const png_colorspacerp colorspace, const png_xy * xy, const int preferred)
 {
 	/* We must check the end points to ensure they are reasonable - in the past
 	 * color management systems have crashed as a result of getting bogus
@@ -1686,7 +1686,7 @@ png_colorspace_set_chromaticities(const png_const_structrp png_ptr,
 
 int /* PRIVATE */
 png_colorspace_set_endpoints(const png_const_structrp png_ptr,
-                             const png_colorspacerp colorspace, const png_XYZ * XYZ_in, const int preferred)
+	const png_colorspacerp colorspace, const png_XYZ * XYZ_in, const int preferred)
 {
 	png_XYZ XYZ = *XYZ_in;
 	png_xy xy;
@@ -1751,7 +1751,7 @@ is_ICC_signature(const png_alloc_size_t it)
 
 static int
 png_icc_profile_error(const png_const_structrp png_ptr, const png_colorspacerp colorspace,
-                      const png_const_charp name, const png_alloc_size_t value, const png_const_charp reason)
+	const png_const_charp name, const png_alloc_size_t value, const png_const_charp reason)
 {
 	char message[196]; /* see below for calculation */
 
@@ -1799,7 +1799,7 @@ png_icc_profile_error(const png_const_structrp png_ptr, const png_colorspacerp c
 #ifdef PNG_sRGB_SUPPORTED
 int /* PRIVATE */
 png_colorspace_set_sRGB(const png_const_structrp png_ptr, const png_colorspacerp colorspace,
-                        const int intent)
+	const int intent)
 {
 	/* sRGB sets known gamma, end points and (from the chunk) intent. */
 	/* IMPORTANT: these are not necessarily the values found in an ICC profile
@@ -1897,7 +1897,7 @@ static const png_byte D50_nCIEXYZ[12] =
 
 int /* PRIVATE */
 png_icc_check_length(const png_const_structrp png_ptr, const png_colorspacerp colorspace,
-                     const png_const_charp name, const png_uint_32 profile_length)
+	const png_const_charp name, const png_uint_32 profile_length)
 {
 	if (profile_length < 132)
 		return png_icc_profile_error(png_ptr, colorspace, name, profile_length,
@@ -1908,8 +1908,8 @@ png_icc_check_length(const png_const_structrp png_ptr, const png_colorspacerp co
 
 int /* PRIVATE */
 png_icc_check_header(const png_const_structrp png_ptr, const png_colorspacerp colorspace,
-                     const png_const_charp name, const png_uint_32 profile_length,
-                     const png_const_bytep profile/* first 132 bytes only */, const int color_type)
+	const png_const_charp name, const png_uint_32 profile_length,
+	const png_const_bytep profile/* first 132 bytes only */, const int color_type)
 {
 	/* Length check; this cannot be ignored in this code because profile_length
 	 * is used later to check the tag table, so even if the profile seems over
@@ -2089,8 +2089,8 @@ png_icc_check_header(const png_const_structrp png_ptr, const png_colorspacerp co
 
 int /* PRIVATE */
 png_icc_check_tag_table(const png_const_structrp png_ptr, const png_colorspacerp colorspace,
-                        const png_const_charp name, const png_uint_32 profile_length,
-                        const png_const_bytep profile /* header plus whole tag table */)
+	const png_const_charp name, const png_uint_32 profile_length,
+	const png_const_bytep profile /* header plus whole tag table */)
 {
 	const png_uint_32 tag_count = png_get_uint_32(profile + 128);
 	png_const_bytep tag = profile + 132; /* The first tag */
@@ -2195,7 +2195,7 @@ static const struct
 
 static int
 png_compare_ICC_profile_with_sRGB(const png_const_structrp png_ptr,
-                                  const png_const_bytep profile, uLong adler)
+	const png_const_bytep profile, uLong adler)
 {
 	/* The quick check is to verify just the MD5 signature and trust the
 	 * rest of the data.  Because the profile has already been verified for
@@ -2317,7 +2317,7 @@ png_compare_ICC_profile_with_sRGB(const png_const_structrp png_ptr,
 #ifdef PNG_sRGB_SUPPORTED
 void /* PRIVATE */
 png_icc_set_sRGB(const png_const_structrp png_ptr,
-                 const png_colorspacerp colorspace, const png_const_bytep profile, const uLong adler)
+	const png_colorspacerp colorspace, const png_const_bytep profile, const uLong adler)
 {
 	/* Is this profile one of the known ICC sRGB profiles?  If it is, just set
 	 * the sRGB information.
@@ -2332,8 +2332,8 @@ png_icc_set_sRGB(const png_const_structrp png_ptr,
 
 int /* PRIVATE */
 png_colorspace_set_ICC(const png_const_structrp png_ptr, const png_colorspacerp colorspace,
-                       const png_const_charp name, const png_uint_32 profile_length, const png_const_bytep profile,
-                       const int color_type)
+	const png_const_charp name, const png_uint_32 profile_length, const png_const_bytep profile,
+	const int color_type)
 {
 	if ((colorspace->flags & PNG_COLORSPACE_INVALID) != 0)
 		return 0;
@@ -2600,7 +2600,7 @@ png_check_IHDR(png_const_structrp png_ptr,
 
 int /* PRIVATE */
 png_check_fp_number(const png_const_charp string, const png_size_t size, int* statep,
-                    const png_size_tp whereami)
+	const png_size_tp whereami)
 {
 	int state = *statep;
 	png_size_t i = *whereami;
@@ -2783,7 +2783,7 @@ png_pow10(int power)
  */
 void /* PRIVATE */
 png_ascii_from_fp(const png_const_structrp png_ptr, png_charp ascii, png_size_t size,
-                  double fp, unsigned int precision)
+	double fp, unsigned int precision)
 {
 	/* We use standard functions from math.h, but not printf because
 	 * that would require stdio.  The caller must supply a buffer of
@@ -3096,7 +3096,7 @@ png_ascii_from_fp(const png_const_structrp png_ptr, png_charp ascii, png_size_t 
  */
 void /* PRIVATE */
 png_ascii_from_fixed(const png_const_structrp png_ptr, png_charp ascii,
-                     png_size_t size, const png_fixed_point fp)
+	png_size_t size, const png_fixed_point fp)
 {
 	/* Require space for 10 decimal digits, a decimal point, a minus sign and a
 	 * trailing \0, 13 characters:
@@ -3314,7 +3314,7 @@ png_muldiv(png_fixed_point_p res, png_fixed_point a, png_int_32 times,
  */
 png_fixed_point
 png_muldiv_warn(const png_const_structrp png_ptr, const png_fixed_point a, const png_int_32 times,
-                const png_int_32 divisor)
+	const png_int_32 divisor)
 {
 	png_fixed_point result;
 
@@ -3786,7 +3786,7 @@ png_gamma_16bit_correct(unsigned int value, png_fixed_point gamma_val)
  */
 png_uint_16 /* PRIVATE */
 png_gamma_correct(const png_structrp png_ptr, const unsigned int value,
-                  const png_fixed_point gamma_val)
+	const png_fixed_point gamma_val)
 {
 	if (png_ptr->bit_depth == 8)
 		return png_gamma_8bit_correct(value, gamma_val);
@@ -3810,7 +3810,7 @@ png_gamma_correct(const png_structrp png_ptr, const unsigned int value,
  */
 static void
 png_build_16bit_table(const png_structrp png_ptr, png_uint_16pp * ptable,
-                      PNG_CONST unsigned int shift, PNG_CONST png_fixed_point gamma_val)
+	PNG_CONST unsigned int shift, PNG_CONST png_fixed_point gamma_val)
 {
 	/* Various values derived from 'shift': */
 	PNG_CONST unsigned int num = 1U << (8U - shift);
@@ -3874,7 +3874,7 @@ png_build_16bit_table(const png_structrp png_ptr, png_uint_16pp * ptable,
  */
 static void
 png_build_16to8_table(const png_structrp png_ptr, png_uint_16pp * ptable,
-                      PNG_CONST unsigned int shift, PNG_CONST png_fixed_point gamma_val)
+	PNG_CONST unsigned int shift, PNG_CONST png_fixed_point gamma_val)
 {
 	PNG_CONST unsigned int num = 1U << (8U - shift);
 	PNG_CONST unsigned int max = (1U << (16U - shift)) - 1U;
@@ -3941,7 +3941,7 @@ png_build_16to8_table(const png_structrp png_ptr, png_uint_16pp * ptable,
  */
 static void
 png_build_8bit_table(const png_structrp png_ptr, const png_bytepp ptable,
-                     PNG_CONST png_fixed_point gamma_val)
+	PNG_CONST png_fixed_point gamma_val)
 {
 	unsigned int i;
 	const png_bytep table = *ptable = (png_bytep)png_malloc(png_ptr, 256);

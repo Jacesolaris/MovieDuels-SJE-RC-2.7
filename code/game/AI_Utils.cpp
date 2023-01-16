@@ -102,7 +102,7 @@ void AI_SetClosestBuddy(AIGroupInfo_t* group)
 		for (int j = 0; j < group->numGroup; j++)
 		{
 			const int dist = DistanceSquared(g_entities[group->member[i].number].currentOrigin,
-			                                 g_entities[group->member[j].number].currentOrigin);
+				g_entities[group->member[j].number].currentOrigin);
 			if (dist < best_dist)
 			{
 				best_dist = dist;
@@ -604,7 +604,7 @@ void AI_DeleteSelfFromGroup(const gentity_t* self)
 extern void ST_AggressionAdjust(const gentity_t* self, int change);
 extern void ST_MarkToCover(const gentity_t* self);
 extern void ST_StartFlee(gentity_t* self, gentity_t* enemy, vec3_t danger_point, int danger_level, int min_time,
-                         int max_time);
+	int max_time);
 
 void AI_GroupMemberKilled(const gentity_t* self)
 {
@@ -664,7 +664,7 @@ void AI_GroupMemberKilled(const gentity_t* self)
 			{
 				//grunt
 				if (group->enemy && DistanceSquared(member->currentOrigin, group->enemy->currentOrigin) < 65536)
-				//256*256
+					//256*256
 				{
 					//those close to enemy run away!
 					ST_StartFlee(member, group->enemy, member->currentOrigin, AEL_DANGER_GREAT, 3000, 5000);
@@ -908,7 +908,7 @@ qboolean AI_RefreshGroup(AIGroupInfo_t* group)
 		case WP_ATST_SIDE:
 			group->morale -= 20;
 			break;
-		default: ;
+		default:;
 		}
 	}
 	if (group->moraleDebounce < level.time)

@@ -104,80 +104,80 @@ static void unpack_sampL1() /* unpack samples */
 	{
 		int k = -1;
 	dispatch:switch (samp_dispatch[++k])
-		{
-		case 0:
-			s[k] = 0.0F;
-			goto dispatch;
-		case 1:
-			UNPACKL1_N(2) /*  3 levels */
-		case 2:
-			UNPACKL1_N(3) /*  7 levels */
-		case 3:
-			UNPACKL1_N(4) /* 15 levels */
-		case 4:
-			UNPACKL1_N(5) /* 31 levels */
-		case 5:
-			UNPACKL1_N(6) /* 63 levels */
-		case 6:
-			UNPACKL1_N(7) /* 127 levels */
-		case 7:
-			UNPACKL1_N(8) /* 255 levels */
-		case 8:
-			UNPACKL1_N(9) /* 511 levels */
-		case 9:
-			UNPACKL1_N(10) /* 1023 levels */
-		case 10:
-			UNPACKL1_N(11) /* 2047 levels */
-		case 11:
-			UNPACKL1_N(12) /* 4095 levels */
-		case 12:
-			UNPACKL1_N(13) /* 8191 levels */
-		case 13:
-			UNPACKL1_N(14) /* 16383 levels */
-		case 14:
-			UNPACKL1_N(15) /* 32767 levels */
+	{
+	case 0:
+		s[k] = 0.0F;
+		goto dispatch;
+	case 1:
+		UNPACKL1_N(2) /*  3 levels */
+	case 2:
+		UNPACKL1_N(3) /*  7 levels */
+	case 3:
+		UNPACKL1_N(4) /* 15 levels */
+	case 4:
+		UNPACKL1_N(5) /* 31 levels */
+	case 5:
+		UNPACKL1_N(6) /* 63 levels */
+	case 6:
+		UNPACKL1_N(7) /* 127 levels */
+	case 7:
+		UNPACKL1_N(8) /* 255 levels */
+	case 8:
+		UNPACKL1_N(9) /* 511 levels */
+	case 9:
+		UNPACKL1_N(10) /* 1023 levels */
+	case 10:
+		UNPACKL1_N(11) /* 2047 levels */
+	case 11:
+		UNPACKL1_N(12) /* 4095 levels */
+	case 12:
+		UNPACKL1_N(13) /* 8191 levels */
+	case 13:
+		UNPACKL1_N(14) /* 16383 levels */
+	case 14:
+		UNPACKL1_N(15) /* 32767 levels */
+			/* -- joint ---- */
+	case 15 + 0:
+		s[k + 1] = s[k] = 0.0F;
+		k++; /* skip right chan dispatch */
+		goto dispatch;
 		/* -- joint ---- */
-		case 15 + 0:
-			s[k + 1] = s[k] = 0.0F;
-			k++; /* skip right chan dispatch */
-			goto dispatch;
-		/* -- joint ---- */
-		case 15 + 1:
-			UNPACKL1J_N(2) /*  3 levels */
-		case 15 + 2:
-			UNPACKL1J_N(3) /*  7 levels */
-		case 15 + 3:
-			UNPACKL1J_N(4) /* 15 levels */
-		case 15 + 4:
-			UNPACKL1J_N(5) /* 31 levels */
-		case 15 + 5:
-			UNPACKL1J_N(6) /* 63 levels */
-		case 15 + 6:
-			UNPACKL1J_N(7) /* 127 levels */
-		case 15 + 7:
-			UNPACKL1J_N(8) /* 255 levels */
-		case 15 + 8:
-			UNPACKL1J_N(9) /* 511 levels */
-		case 15 + 9:
-			UNPACKL1J_N(10) /* 1023 levels */
-		case 15 + 10:
-			UNPACKL1J_N(11) /* 2047 levels */
-		case 15 + 11:
-			UNPACKL1J_N(12) /* 4095 levels */
-		case 15 + 12:
-			UNPACKL1J_N(13) /* 8191 levels */
-		case 15 + 13:
-			UNPACKL1J_N(14) /* 16383 levels */
-		case 15 + 14:
-			UNPACKL1J_N(15) /* 32767 levels */
+	case 15 + 1:
+		UNPACKL1J_N(2) /*  3 levels */
+	case 15 + 2:
+		UNPACKL1J_N(3) /*  7 levels */
+	case 15 + 3:
+		UNPACKL1J_N(4) /* 15 levels */
+	case 15 + 4:
+		UNPACKL1J_N(5) /* 31 levels */
+	case 15 + 5:
+		UNPACKL1J_N(6) /* 63 levels */
+	case 15 + 6:
+		UNPACKL1J_N(7) /* 127 levels */
+	case 15 + 7:
+		UNPACKL1J_N(8) /* 255 levels */
+	case 15 + 8:
+		UNPACKL1J_N(9) /* 511 levels */
+	case 15 + 9:
+		UNPACKL1J_N(10) /* 1023 levels */
+	case 15 + 10:
+		UNPACKL1J_N(11) /* 2047 levels */
+	case 15 + 11:
+		UNPACKL1J_N(12) /* 4095 levels */
+	case 15 + 12:
+		UNPACKL1J_N(13) /* 8191 levels */
+	case 15 + 13:
+		UNPACKL1J_N(14) /* 16383 levels */
+	case 15 + 14:
+		UNPACKL1J_N(15) /* 32767 levels */
 
-		/* -- end of dispatch -- */
-		case 31:
-			skip(pMP3Stream->bit_skip);
-		case 30:
-			s += 64;
-		default: ;
-		} /* end switch */
+			/* -- end of dispatch -- */
+	case 31:
+		skip(pMP3Stream->bit_skip);
+	case 30:
+		s += 64;
+	default:;
+	} /* end switch */
 	} /* end j loop */
 
 	/*-- done --*/
@@ -221,8 +221,8 @@ IN_OUT L1audio_decode(unsigned char* bs, signed short* pcm)
 
 /*-------------------------------------------------------------------------*/
 int L1audio_decode_init(const MPEG_HEAD* h, const int framebytes_arg,
-                        int reduction_code, int transform_code, int convert_code,
-                        int freq_limit)
+	int reduction_code, int transform_code, int convert_code,
+	int freq_limit)
 {
 	int i;
 	static int first_pass = 1;

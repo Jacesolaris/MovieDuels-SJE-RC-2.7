@@ -42,7 +42,7 @@ cvar_t* con_DebugSaberCombat;
 
 constexpr auto DEFAULT_CONSOLE_WIDTH = 78;
 
-vec4_t console_color = {0.509f, 0.609f, 0.847f, 1.0f};
+vec4_t console_color = { 0.509f, 0.609f, 0.847f, 1.0f };
 
 /*
 ================
@@ -442,7 +442,7 @@ void Con_DrawInput()
 	SCR_DrawSmallChar(con.xadjust + 1 * SMALLCHAR_WIDTH, y, CONSOLE_PROMPT_CHAR);
 
 	Field_Draw(&g_consoleField, con.xadjust + 2 * SMALLCHAR_WIDTH, y,
-	           SCREEN_WIDTH - 3 * SMALLCHAR_WIDTH, qtrue, qtrue);
+		SCREEN_WIDTH - 3 * SMALLCHAR_WIDTH, qtrue, qtrue);
 }
 
 /*
@@ -485,7 +485,7 @@ void Con_DrawNotify()
 
 			// concat the text to be printed...
 			//
-			char sTemp[4096] = {0}; // ott
+			char sTemp[4096] = { 0 }; // ott
 			for (x = 0; x < con.linewidth; x++)
 			{
 				if (((text[x] >> 8) & Q_COLOR_BITS) != currentColor)
@@ -499,7 +499,7 @@ void Con_DrawNotify()
 			// and print...
 			//
 			re.Font_DrawString(con.xadjust * (con.xadjust + (1 * SMALLCHAR_WIDTH/*aesthetics*/)), con.yadjust * (v),
-			                   sTemp, g_color_table[currentColor], iFontIndex, -1, fFontScale);
+				sTemp, g_color_table[currentColor], iFontIndex, -1, fFontScale);
 
 			v += iPixelHeightToAdvance;
 		}
@@ -575,7 +575,7 @@ void Con_DrawSolidConsole(const float frac)
 	for (x = 0; x < i; x++)
 	{
 		SCR_DrawSmallChar(cls.glconfig.vidWidth - (i - x + 1) * SMALLCHAR_WIDTH,
-		                  (lines - (SMALLCHAR_HEIGHT + SMALLCHAR_HEIGHT / 2)), Q3_VERSION[x]);
+			(lines - (SMALLCHAR_HEIGHT + SMALLCHAR_HEIGHT / 2)), Q3_VERSION[x]);
 	}
 
 	// draw the text
@@ -639,7 +639,7 @@ void Con_DrawSolidConsole(const float frac)
 		{
 			// concat the text to be printed...
 			//
-			char sTemp[4096] = {0}; // ott
+			char sTemp[4096] = { 0 }; // ott
 			for (x = 0; x < con.linewidth; x++)
 			{
 				if (((text[x] >> 8) & Q_COLOR_BITS) != currentColor)
@@ -653,7 +653,7 @@ void Con_DrawSolidConsole(const float frac)
 			// and print...
 			//
 			re.Font_DrawString(con.xadjust * (con.xadjust + (1 * SMALLCHAR_WIDTH/*(aesthetics)*/)), con.yadjust * (y),
-			                   sTemp, g_color_table[currentColor], iFontIndexForAsian, -1, fFontScaleForAsian);
+				sTemp, g_color_table[currentColor], iFontIndexForAsian, -1, fFontScaleForAsian);
 		}
 		else
 		{

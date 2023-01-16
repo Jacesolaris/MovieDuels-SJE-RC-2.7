@@ -262,7 +262,7 @@ PutPointsOnCurve
 ==================
 */
 static void PutPointsOnCurve(drawVert_t	ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE],
-                             const int width, const int height) {
+	const int width, const int height) {
 	int			i, j;
 	drawVert_t	prev, next;
 

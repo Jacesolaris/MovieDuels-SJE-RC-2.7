@@ -306,7 +306,7 @@ start_output_gif(const j_decompress_ptr cinfo, const djpeg_dest_ptr dinfo)
 
 METHODDEF(void)
 put_pixel_rows(const j_decompress_ptr cinfo, const djpeg_dest_ptr dinfo,
-               JDIMENSION rows_supplied)
+	JDIMENSION rows_supplied)
 {
 	const gif_dest_ptr dest = (gif_dest_ptr)dinfo;
 

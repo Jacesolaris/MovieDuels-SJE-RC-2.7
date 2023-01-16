@@ -332,7 +332,7 @@ public:
 				mMinCol = static_cast<int>((mMins[mTrack->mWAxis] - mTrack->mMins[mTrack->mWAxis]) / mTrack->
 					mGridCellSize);
 				mMaxCol = static_cast<int>((mMaxs[mTrack->mWAxis] - mTrack->mMins[mTrack->mWAxis] - mTrack->
-						mGridCellSize / 2.0f) / mTrack->
+					mGridCellSize / 2.0f) / mTrack->
 					mGridCellSize);
 
 				//if (mTrack->mNegative)

@@ -176,7 +176,7 @@ static void IT_Name(const char** hold_buf)
 	else if (!Q_stricmp(token_str, "ITM_WRIST_BLASTER_PICKUP"))
 		itemNum = ITM_WRIST_BLASTER_PICKUP;
 
-		//ammo
+	//ammo
 	else if (!Q_stricmp(token_str, "ITM_AMMO_FORCE_PICKUP"))
 		itemNum = ITM_AMMO_FORCE_PICKUP;
 	else if (!Q_stricmp(token_str, "ITM_AMMO_BLASTER_PICKUP"))

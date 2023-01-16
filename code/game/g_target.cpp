@@ -310,13 +310,13 @@ void target_laser_think(gentity_t* self)
 	VectorMA(self->s.origin, 2048, self->movedir, end);
 
 	gi.trace(&tr, self->s.origin, nullptr, nullptr, end, self->s.number,
-	         CONTENTS_SOLID | CONTENTS_BODY | CONTENTS_CORPSE, static_cast<EG2_Collision>(0), 0);
+		CONTENTS_SOLID | CONTENTS_BODY | CONTENTS_CORPSE, static_cast<EG2_Collision>(0), 0);
 
 	if (tr.entity_num)
 	{
 		// hurt it if we can
 		G_Damage(&g_entities[tr.entity_num], self, self->activator, self->movedir,
-		         tr.endpos, self->damage, DAMAGE_NO_KNOCKBACK, MOD_ENERGY);
+			tr.endpos, self->damage, DAMAGE_NO_KNOCKBACK, MOD_ENERGY);
 	}
 
 	VectorCopy(tr.endpos, self->s.origin2);
@@ -533,7 +533,7 @@ void target_kill_use(gentity_t* self, gentity_t* other, gentity_t* activator)
 		if (!activator->s.number && activator->health <= 0)
 		{
 			extern void CGCam_Fade(vec4_t source, vec4_t dest, float duration);
-			float src[4] = {0, 0, 0, 0}, dst[4] = {0, 0, 0, 1};
+			float src[4] = { 0, 0, 0, 0 }, dst[4] = { 0, 0, 0, 1 };
 			CGCam_Fade(src, dst, 10000);
 		}
 	}
@@ -634,7 +634,7 @@ void target_counter_use(gentity_t* self, gentity_t* other, gentity_t* activator)
 	if (activator)
 	{
 		Quake3Game()->DebugPrint(IGameInterface::WL_VERBOSE, "target_counter %s used by %s (%d/%d)\n", self->targetname,
-		                         activator->targetname, self->max_health - self->count, self->max_health);
+			activator->targetname, self->max_health - self->count, self->max_health);
 	}
 
 	if (self->count)
@@ -799,7 +799,7 @@ void scriptrunner_run(gentity_t* self)
 			if (!self->activator)
 			{
 				Quake3Game()->DebugPrint(IGameInterface::WL_ERROR,
-				                         "target_scriptrunner tried to run on invalid entity!\n");
+					"target_scriptrunner tried to run on invalid entity!\n");
 				return;
 			}
 
@@ -819,13 +819,13 @@ void scriptrunner_run(gentity_t* self)
 				else
 				{
 					Quake3Game()->DebugPrint(IGameInterface::WL_ERROR,
-					                         "target_scriptrunner tried to run on invalid ICARUS activator!\n");
+						"target_scriptrunner tried to run on invalid ICARUS activator!\n");
 					return;
 				}
 			}
 
 			Quake3Game()->DebugPrint(IGameInterface::WL_VERBOSE, "target_scriptrunner running %s on activator %s\n",
-			                         self->behaviorSet[BSET_USE], self->activator->targetname);
+				self->behaviorSet[BSET_USE], self->activator->targetname);
 
 			Quake3Game()->RunScript(self->activator, self->behaviorSet[BSET_USE]);
 		}
@@ -834,7 +834,7 @@ void scriptrunner_run(gentity_t* self)
 			if (self->activator)
 			{
 				Quake3Game()->DebugPrint(IGameInterface::WL_VERBOSE, "target_scriptrunner %s used by %s\n",
-				                         self->targetname, self->activator->targetname);
+					self->targetname, self->activator->targetname);
 			}
 			G_ActivateBehavior(self, BSET_USE);
 		}
@@ -969,7 +969,7 @@ void SP_target_friction_change(gentity_t* self)
 
 void set_mission_stats_cvars()
 {
-	char text[1024] = {0};
+	char text[1024] = { 0 };
 
 	//we'll assume that the activator is the player
 	const gclient_t* const client = &level.clients[0];
@@ -985,9 +985,9 @@ void set_mission_stats_cvars()
 	{
 		cgi_SP_GetStringTextString("SP_INGAME_SECRETAREAS_OF", text, sizeof text);
 		gi.cvar_set("ui_stats_secretsfound", va("%d %s %d",
-		                                        cg_entities[0].gent->client->sess.missionStats.secretsFound,
-		                                        text,
-		                                        cg_entities[0].gent->client->sess.missionStats.totalSecrets));
+			cg_entities[0].gent->client->sess.missionStats.secretsFound,
+			text,
+			cg_entities[0].gent->client->sess.missionStats.totalSecrets));
 	}
 	else // Setting ui_stats_secretsfound to 0 will hide the text on screen
 	{
@@ -1021,9 +1021,9 @@ void set_mission_stats_cvars()
 	gi.cvar_set("ui_stats_hits", va("%d", client->sess.missionStats.hits)); //pass this on to the menu
 
 	const float percent = cg_entities[0].gent->client->sess.missionStats.shotsFired
-		                      ? 100.0f * static_cast<float>(cg_entities[0].gent->client->sess.missionStats.hits) /
-		                      cg_entities[0].gent->client->sess.missionStats.shotsFired
-		                      : 0;
+		? 100.0f * static_cast<float>(cg_entities[0].gent->client->sess.missionStats.hits) /
+		cg_entities[0].gent->client->sess.missionStats.shotsFired
+		: 0;
 	gi.cvar_set("ui_stats_accuracy", va("%.2f%%", percent)); //pass this on to the menu
 
 	gi.cvar_set("ui_stats_thrown", va("%d", client->sess.missionStats.saberThrownCnt)); //pass this on to the menu
@@ -1083,7 +1083,7 @@ void target_level_change_use(gentity_t* self, gentity_t* other, gentity_t* activ
 		gi.cvar_set("tier_storyinfo", va("%i", self->count));
 		if (level.mapname[0] == 't' && level.mapname[2] == '_'
 			&& (level.mapname[1] == '1' || level.mapname[1] == '2' || level.mapname[1] == '3')
-		)
+			)
 		{
 			char s[2048];
 			gi.Cvar_VariableStringBuffer("tiers_complete", s, sizeof s); //get the current list

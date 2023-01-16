@@ -2027,7 +2027,7 @@ static void parse_surface_parm(const char** text)
 
 	const char* token = COM_ParseExt(text, qfalse);
 
-	for (int i = 0; i < num_info_parms; i++) 
+	for (int i = 0; i < num_info_parms; i++)
 	{
 		if (!Q_stricmp(token, infoParms[i].name)) {
 			shader.surfaceFlags |= infoParms[i].surfaceFlags;

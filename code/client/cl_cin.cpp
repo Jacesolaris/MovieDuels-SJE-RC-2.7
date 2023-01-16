@@ -236,7 +236,7 @@ static long RllDecodeMonoToMono(unsigned char *from,short *to,unsigned int size,
 // Returns:		Number of samples placed in output buffer
 //-----------------------------------------------------------------------------
 static long RllDecodeMonoToStereo(const unsigned char* from, short* to, const unsigned int size, const char signed_output,
-                                  const unsigned short flag)
+	const unsigned short flag)
 {
 	int prev;
 
@@ -268,7 +268,7 @@ static long RllDecodeMonoToStereo(const unsigned char* from, short* to, const un
 // Returns:		Number of samples placed in output buffer
 //-----------------------------------------------------------------------------
 static long RllDecodeStereoToStereo(unsigned char* from, short* to, const unsigned int size, const char signed_output,
-                                    const unsigned short flag)
+	const unsigned short flag)
 {
 	unsigned char* zz = from;
 	int prev_l, prev_r;
@@ -477,7 +477,7 @@ static void blitVQQuad32fs(byte** status, unsigned char* data)
 
 				switch (code)
 				{
-				// code in top two bits of code
+					// code in top two bits of code
 				case 0x8000: // 4x4 vq code
 					blit4_32(reinterpret_cast<byte*>(&vq4[*data * 32]), status[index], spl);
 					data++;
@@ -496,7 +496,7 @@ static void blitVQQuad32fs(byte** status, unsigned char* data)
 					move4_32(status[index] + cin.mcomp[(*data)], status[index], spl);
 					data++;
 					break;
-				default: ;
+				default:;
 				}
 				index++;
 			}
@@ -509,10 +509,9 @@ static void blitVQQuad32fs(byte** status, unsigned char* data)
 		case 0x0000:
 			index += 5;
 			break;
-		default: ;
+		default:;
 		}
-	}
-	while (status[index] != nullptr);
+	} while (status[index] != nullptr);
 }
 
 /******************************************************************************
@@ -652,9 +651,9 @@ static unsigned int yuv_to_rgb24(const long y, const long u, const long v)
 static void decodeCodeBook(byte* input, unsigned short roq_flags)
 {
 	long i, j, two, four;
-	unsigned short *aptr, *bptr, *cptr, *dptr;
+	unsigned short* aptr, * bptr, * cptr, * dptr;
 	long y0, y2, cr, cb;
-	byte *bbptr, *baptr, *bcptr, *bdptr;
+	byte* bbptr, * baptr, * bcptr, * bdptr;
 	union
 	{
 		unsigned int* i;
@@ -996,8 +995,8 @@ static void recurseQuad(const long start_x, const long start_y, long quad_size, 
 		byte* scroff = cin.linbuf + (useY + ((cinTable[currentHandle].CIN_HEIGHT - bigy) >> 1) + y_off) * (cinTable[
 			currentHandle].samplesPerLine) + (((start_x + x_off)) * cinTable[currentHandle].samplesPerPixel);
 
-		cin.q_status[0][cinTable[currentHandle].onQuad] = scroff;
-		cin.q_status[1][cinTable[currentHandle].onQuad++] = scroff + offset;
+			cin.q_status[0][cinTable[currentHandle].onQuad] = scroff;
+			cin.q_status[1][cinTable[currentHandle].onQuad++] = scroff + offset;
 	}
 
 	if (quad_size != MINSIZE)
@@ -1252,7 +1251,7 @@ redump:
 		{
 			// first frame
 			Com_Memcpy(cin.linbuf + cinTable[currentHandle].screenDelta, cin.linbuf,
-			           cinTable[currentHandle].samplesPerLine * cinTable[currentHandle].ysize);
+				cinTable[currentHandle].samplesPerLine * cinTable[currentHandle].ysize);
 		}
 		cinTable[currentHandle].numQuads++;
 		cinTable[currentHandle].dirty = qtrue;
@@ -1264,7 +1263,7 @@ redump:
 		if (!cinTable[currentHandle].silent)
 		{
 			ssize = RllDecodeMonoToStereo(framedata, sbuf, cinTable[currentHandle].RoQFrameSize, 0,
-			                              static_cast<unsigned short>(cinTable[currentHandle].roq_flags));
+				static_cast<unsigned short>(cinTable[currentHandle].roq_flags));
 			S_RawSamples(ssize, 22050, 2, 1, reinterpret_cast<byte*>(sbuf), s_volume->value, qtrue);
 		}
 		break;
@@ -1277,7 +1276,7 @@ redump:
 				s_rawend = s_soundtime;
 			}
 			ssize = RllDecodeStereoToStereo(framedata, sbuf, cinTable[currentHandle].RoQFrameSize, 0,
-			                                static_cast<unsigned short>(cinTable[currentHandle].roq_flags));
+				static_cast<unsigned short>(cinTable[currentHandle].roq_flags));
 			S_RawSamples(ssize, 22050, 2, 2, reinterpret_cast<byte*>(sbuf), s_volume->value, qtrue);
 		}
 		break;
@@ -1627,7 +1626,7 @@ int CIN_PlayCinematic(const char* arg, const int x, const int y, const int w, co
 
 	cinTable[currentHandle].ROQSize = 0;
 	cinTable[currentHandle].ROQSize = FS_FOpenFileRead(cinTable[currentHandle].file_name, &cinTable[currentHandle].iFile,
-	                                                   qtrue);
+		qtrue);
 
 	if (cinTable[currentHandle].ROQSize <= 0)
 	{
@@ -1922,8 +1921,8 @@ extern qboolean s_soundStarted, s_soundMuted;
 //
 // ... and if the app isn't ready yet (which should only apply for the intro video), then I use these...
 //
-static char sPendingCinematic_Arg[256] = {0};
-static char sPendingCinematic_s[256] = {0};
+static char sPendingCinematic_Arg[256] = { 0 };
+static char sPendingCinematic_s[256] = { 0 };
 static qboolean gbPendingCinematic = qfalse;
 //
 // This stuff is for EF1-type ingame cinematics...
@@ -1940,7 +1939,7 @@ static qboolean CIN_HardwareReadyToPlayVideos()
 	if (com_fullyInitialized && cls.rendererStarted &&
 		cls.soundStarted &&
 		cls.soundRegistered
-	)
+		)
 	{
 		return qtrue;
 	}
@@ -2075,8 +2074,7 @@ static void PlayCinematic(const char* arg, const char* s, const qboolean qb_in_g
 			do
 			{
 				SCR_RunCinematic();
-			}
-			while (cinTable[currentHandle].buf == nullptr && cinTable[currentHandle].status == FMV_PLAY);
+			} while (cinTable[currentHandle].buf == nullptr && cinTable[currentHandle].status == FMV_PLAY);
 			// wait for first frame (load codebook and sound)
 
 			if (qb_in_game)
@@ -2212,7 +2210,7 @@ void SCR_StopCinematic(const qboolean b_allow_refusal /* = qfalse */)
 		if (CL_handle >= 0 && CL_handle < MAX_VIDEO_HANDLES
 			&&
 			cls.realtime < CL_iPlaybackStartTime + 1200 // 1.2 seconds have to have elapsed
-		)
+			)
 		{
 			return;
 		}
@@ -2317,7 +2315,7 @@ void CIN_UploadCinematic(const int handle)
 		{
 			// Upload video at normal resolution
 			re.UploadCinematic(cinTable[handle].drawX, cinTable[handle].drawY,
-			                   cinTable[handle].buf, handle, cinTable[handle].dirty);
+				cinTable[handle].buf, handle, cinTable[handle].dirty);
 			cinTable[handle].dirty = qfalse;
 		}
 

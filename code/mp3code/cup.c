@@ -306,7 +306,7 @@ case 4:			/* no allo */
 	goto dispatch;
 case 5:			/* all done */
 	;
-default: ;
+default:;
 }				/* end switch */
 }
 /*-------------------------------------------------------------------------*/
@@ -470,7 +470,7 @@ static void unpack_samp()	/* unpack samples */
 			skip(pMP3Stream->bit_skip);
 		case 36:
 			s += 3 * 64;
-		default: ;
+		default:;
 		}			/* end switch */
 		}				/* end j loop */
 	}				/* end i loop */

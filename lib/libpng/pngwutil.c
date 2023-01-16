@@ -70,7 +70,7 @@ png_write_sig(const png_structrp png_ptr)
  */
 static void
 png_write_chunk_header(const png_structrp png_ptr, png_uint_32 chunk_name,
-                       png_uint_32 length)
+	png_uint_32 length)
 {
 	png_byte buf[8];
 
@@ -112,7 +112,7 @@ png_write_chunk_header(const png_structrp png_ptr, png_uint_32 chunk_name,
 
 void PNGAPI
 png_write_chunk_start(const png_structrp png_ptr, const png_const_bytep chunk_string,
-                      const png_uint_32 length)
+	const png_uint_32 length)
 {
 	png_write_chunk_header(png_ptr, PNG_CHUNK_FROM_STRING(chunk_string), length);
 }
@@ -124,7 +124,7 @@ png_write_chunk_start(const png_structrp png_ptr, const png_const_bytep chunk_st
  */
 void PNGAPI
 png_write_chunk_data(const png_structrp png_ptr, const png_const_bytep data,
-                     const png_size_t length)
+	const png_size_t length)
 {
 	/* Write the data, and run the CRC over it */
 	if (png_ptr == NULL)
@@ -173,7 +173,7 @@ png_write_chunk_end(const png_structrp png_ptr)
  */
 static void
 png_write_complete_chunk(const png_structrp png_ptr, const png_uint_32 chunk_name,
-                         const png_const_bytep data, const png_size_t length)
+	const png_const_bytep data, const png_size_t length)
 {
 	if (png_ptr == NULL)
 		return;
@@ -190,7 +190,7 @@ png_write_complete_chunk(const png_structrp png_ptr, const png_uint_32 chunk_nam
 /* This is the API that calls the internal function above. */
 void PNGAPI
 png_write_chunk(const png_structrp png_ptr, const png_const_bytep chunk_string,
-                const png_const_bytep data, const png_size_t length)
+	const png_const_bytep data, const png_size_t length)
 {
 	png_write_complete_chunk(png_ptr, PNG_CHUNK_FROM_STRING(chunk_string), data,
 		length);
@@ -280,7 +280,7 @@ optimize_cmf(const png_bytep data, const png_alloc_size_t data_size)
 /* Initialize the compressor for the appropriate type of compression. */
 static int
 png_deflate_claim(png_structrp png_ptr, const png_uint_32 owner,
-                  const png_alloc_size_t data_size)
+	const png_alloc_size_t data_size)
 {
 	if (png_ptr->zowner != 0)
 	{
@@ -465,7 +465,7 @@ typedef struct
 
 static void
 png_text_compress_init(compression_state* comp, const png_const_bytep input,
-                       const png_alloc_size_t input_len)
+	const png_alloc_size_t input_len)
 {
 	comp->input = input;
 	comp->input_len = input_len;
@@ -475,7 +475,7 @@ png_text_compress_init(compression_state* comp, const png_const_bytep input,
 /* Compress the data in the compression state input */
 static int
 png_text_compress(const png_structrp png_ptr, const png_uint_32 chunk_name,
-                  compression_state* comp, const png_uint_32 prefix_len)
+	compression_state* comp, const png_uint_32 prefix_len)
 {
 	/* To find the length of the output it is necessary to first compress the
 	 * input. The result is buffered rather than using the two-pass algorithm
@@ -735,8 +735,8 @@ png_check_keyword(const png_structrp png_ptr, png_const_charp key, png_bytep new
  */
 void /* PRIVATE */
 png_write_IHDR(const png_structrp png_ptr, const png_uint_32 width, const png_uint_32 height,
-               int bit_depth, const int color_type, int compression_type, int filter_type,
-               int interlace_type)
+	int bit_depth, const int color_type, int compression_type, int filter_type,
+	int interlace_type)
 {
 	png_byte buf[13]; /* Buffer to store the IHDR info */
 
@@ -982,7 +982,7 @@ png_write_PLTE(png_structrp png_ptr, png_const_colorp palette,
  */
 void /* PRIVATE */
 png_compress_IDAT(const png_structrp png_ptr, const png_const_bytep input,
-                  png_alloc_size_t input_len, const int flush)
+	png_alloc_size_t input_len, const int flush)
 {
 	if (png_ptr->zowner != png_IDAT)
 	{
@@ -1164,7 +1164,7 @@ png_write_sRGB(const png_structrp png_ptr, const int srgb_intent)
 /* Write an iCCP chunk */
 void /* PRIVATE */
 png_write_iCCP(const png_structrp png_ptr, const png_const_charp name,
-               const png_const_bytep profile)
+	const png_const_bytep profile)
 {
 	png_byte new_name[81]; /* 1 byte for the compression byte */
 	compression_state comp;
@@ -1389,7 +1389,7 @@ png_write_cHRM_fixed(const png_structrp png_ptr, const png_xy* xy)
 /* Write the tRNS chunk */
 void /* PRIVATE */
 png_write_tRNS(const png_structrp png_ptr, const png_const_bytep trans_alpha,
-               const png_const_color_16p tran, const int num_trans, const int color_type)
+	const png_const_color_16p tran, const int num_trans, const int color_type)
 {
 	png_byte buf[6];
 
@@ -1547,7 +1547,7 @@ png_write_hIST(const png_structrp png_ptr, const png_const_uint_16p hist, const 
 /* Write a tEXt chunk */
 void /* PRIVATE */
 png_write_tEXt(const png_structrp png_ptr, const png_const_charp key, const png_const_charp text,
-               png_size_t text_len)
+	png_size_t text_len)
 {
 	png_byte new_key[80];
 
@@ -1589,7 +1589,7 @@ png_write_tEXt(const png_structrp png_ptr, const png_const_charp key, const png_
 /* Write a compressed text chunk */
 void /* PRIVATE */
 png_write_zTXt(const png_structrp png_ptr, const png_const_charp key, const png_const_charp text,
-               const int compression)
+	const int compression)
 {
 	png_byte new_key[81];
 	compression_state comp;
@@ -1639,7 +1639,7 @@ png_write_zTXt(const png_structrp png_ptr, const png_const_charp key, const png_
 /* Write an iTXt chunk */
 void /* PRIVATE */
 png_write_iTXt(const png_structrp png_ptr, int compression, const png_const_charp key,
-               png_const_charp lang, png_const_charp lang_key, png_const_charp text)
+	png_const_charp lang, png_const_charp lang_key, png_const_charp text)
 {
 	png_byte new_key[82];
 	compression_state comp;
@@ -1737,7 +1737,7 @@ png_write_iTXt(const png_structrp png_ptr, int compression, const png_const_char
 /* Write the oFFs chunk */
 void /* PRIVATE */
 png_write_oFFs(const png_structrp png_ptr, const png_int_32 x_offset, const png_int_32 y_offset,
-               const int unit_type)
+	const int unit_type)
 {
 	png_byte buf[9];
 
@@ -1757,8 +1757,8 @@ png_write_oFFs(const png_structrp png_ptr, const png_int_32 x_offset, const png_
 /* Write the pCAL chunk (described in the PNG extensions document) */
 void /* PRIVATE */
 png_write_pCAL(const png_structrp png_ptr, const png_charp purpose, const png_int_32 X0,
-               const png_int_32 X1, const int type, const int nparams, const png_const_charp units,
-               const png_charpp params)
+	const png_int_32 X1, const int type, const int nparams, const png_const_charp units,
+	const png_charpp params)
 {
 	png_byte buf[10];
 	png_byte new_purpose[80];
@@ -1819,7 +1819,7 @@ png_write_pCAL(const png_structrp png_ptr, const png_charp purpose, const png_in
 /* Write the sCAL chunk */
 void /* PRIVATE */
 png_write_sCAL_s(const png_structrp png_ptr, const int unit, const png_const_charp width,
-                 const png_const_charp height)
+	const png_const_charp height)
 {
 	png_byte buf[64];
 
@@ -1848,8 +1848,8 @@ png_write_sCAL_s(const png_structrp png_ptr, const int unit, const png_const_cha
 /* Write the pHYs chunk */
 void /* PRIVATE */
 png_write_pHYs(const png_structrp png_ptr, const png_uint_32 x_pixels_per_unit,
-               const png_uint_32 y_pixels_per_unit,
-               const int unit_type)
+	const png_uint_32 y_pixels_per_unit,
+	const int unit_type)
 {
 	png_byte buf[9];
 
@@ -2922,7 +2922,7 @@ png_write_find_filter(png_structrp png_ptr, png_row_infop row_info)
 /* Do the actual writing of a previously filtered row. */
 static void
 png_write_filtered_row(const png_structrp png_ptr, const png_bytep filtered_row,
-                       const png_size_t full_row_length/*includes filter byte*/)
+	const png_size_t full_row_length/*includes filter byte*/)
 {
 	png_debug(1, "in png_write_filtered_row");
 

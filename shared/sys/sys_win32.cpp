@@ -28,7 +28,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define MEM_THRESHOLD (128*1024*1024)
 
 // Used to determine where to store user-specific files
-static char homePath[MAX_OSPATH] = {0};
+static char homePath[MAX_OSPATH] = { 0 };
 
 static UINT timerResolution = 0;
 
@@ -39,7 +39,7 @@ Sys_Basename
 */
 const char* Sys_Basename(const char* path)
 {
-	static char base[MAX_OSPATH] = {0};
+	static char base[MAX_OSPATH] = { 0 };
 
 	int length = strlen(path) - 1;
 
@@ -68,7 +68,7 @@ Sys_Dirname
 */
 const char* Sys_Dirname(const char* path)
 {
-	static char dir[MAX_OSPATH] = {0};
+	static char dir[MAX_OSPATH] = { 0 };
 
 	Q_strncpyz(dir, path, sizeof(dir));
 	int length = strlen(dir) - 1;
@@ -114,7 +114,7 @@ bool Sys_RandomBytes(byte* string, const int len)
 	HCRYPTPROV prov;
 
 	if (!CryptAcquireContext(&prov, nullptr, nullptr,
-	                         PROV_RSA_FULL, CRYPT_VERIFYCONTEXT))
+		PROV_RSA_FULL, CRYPT_VERIFYCONTEXT))
 	{
 		return false;
 	}
@@ -367,8 +367,7 @@ void Sys_ListFilteredFiles(const char* basedir, char* subdirs, char* filter, cha
 			continue;
 		psList[*numfiles] = CopyString(filename);
 		(*numfiles)++;
-	}
-	while (_findnext(findhandle, &findinfo) != -1);
+	} while (_findnext(findhandle, &findinfo) != -1);
 
 	_findclose(findhandle);
 }
@@ -479,8 +478,7 @@ char** Sys_ListFiles(const char* directory, const char* extension, char* filter,
 			list[nfiles] = CopyString(findinfo.name);
 			nfiles++;
 		}
-	}
-	while (_findnext(findhandle, &findinfo) != -1);
+	} while (_findnext(findhandle, &findinfo) != -1);
 
 	list[nfiles] = nullptr;
 
@@ -514,8 +512,7 @@ char** Sys_ListFiles(const char* directory, const char* extension, char* filter,
 				flag = 1;
 			}
 		}
-	}
-	while (flag);
+	} while (flag);
 
 	return listCopy;
 }
@@ -596,7 +593,7 @@ void Sys_PlatformInit()
 		if (timerResolution > 1)
 		{
 			Com_Printf("Warning: Minimum supported timer resolution is %ums "
-			           "on this system, recommended resolution 1ms\n", timerResolution);
+				"on this system, recommended resolution 1ms\n", timerResolution);
 		}
 
 		timeBeginPeriod(timerResolution);

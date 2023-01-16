@@ -99,8 +99,8 @@ static void WP_DropDetPack(gentity_t* self, vec3_t start)
 	missile->s.radius = 30;
 	VectorSet(missile->s.modelScale, 1.0f, 1.0f, 1.0f);
 	gi.G2API_InitGhoul2Model(missile->ghoul2, weaponData[WP_DET_PACK].missileMdl,
-	                         G_ModelIndex(weaponData[WP_DET_PACK].missileMdl),
-	                         NULL_HANDLE, NULL_HANDLE, 0, 0);
+		G_ModelIndex(weaponData[WP_DET_PACK].missileMdl),
+		NULL_HANDLE, NULL_HANDLE, 0, 0);
 
 	AddSoundEvent(nullptr, missile->currentOrigin, 128, AEL_MINOR, qtrue);
 	AddSightEvent(nullptr, missile->currentOrigin, 128, AEL_SUSPICIOUS, 10);

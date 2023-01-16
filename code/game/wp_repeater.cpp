@@ -141,6 +141,8 @@ static void WP_RepeaterAltFire(gentity_t* ent)
 extern qboolean WalkCheck(const gentity_t* self);
 extern qboolean PM_CrouchAnim(int anim);
 extern qboolean G_ControlledByPlayer(const gentity_t* self);
+extern qboolean PM_RunningAnim(int anim);
+extern qboolean PM_WalkingAnim(int anim);
 
 //---------------------------------------------------------
 void WP_FireRepeater(gentity_t* ent, const qboolean altFire)
@@ -157,55 +159,42 @@ void WP_FireRepeater(gentity_t* ent, const qboolean altFire)
 	else
 	{
 		vec3_t dir;
-		if (!(ent->client->ps.forcePowersActive & 1 << FP_SEE) || ent->client->ps.forcePowerLevel[FP_SEE] <
-			FORCE_LEVEL_2)
+		if (ent->client && ent->client->NPC_class == CLASS_VEHICLE)
 		{
-			//force sight 2+ gives perfect aim
-			if (ent->NPC && ent->NPC->currentAim < 5)
+			//no inherent aim screw up
+		}
+		else if (!(ent->client->ps.forcePowersActive & 1 << FP_SEE) || ent->client->ps.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2)
+		{//force sight 2+ gives perfect aim
+			if (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent))
 			{
-				if (ent->client && ent->NPC &&
-					(ent->client->NPC_class == CLASS_STORMTROOPER ||
-						ent->client->NPC_class == CLASS_CLONETROOPER ||
-						ent->client->NPC_class == CLASS_STORMCOMMANDO ||
-						ent->client->NPC_class == CLASS_SWAMPTROOPER ||
-						ent->client->NPC_class == CLASS_DROIDEKA ||
-						ent->client->NPC_class == CLASS_SBD ||
-						ent->client->NPC_class == CLASS_IMPWORKER ||
-						ent->client->NPC_class == CLASS_REBEL ||
-						ent->client->NPC_class == CLASS_WOOKIE ||
-						ent->client->NPC_class == CLASS_BATTLEDROID))
+				if (PM_CrouchAnim(ent->client->ps.legsAnim))
+				{// firing position
+					angs[PITCH] += Q_flrand(-0.0f, 0.0f);
+					angs[YAW] += Q_flrand(-0.0f, 0.0f);
+				}
+				else
 				{
-					angs[PITCH] += Q_flrand(-1.0f, 1.0f) * (BLASTER_NPC_SPREAD + (1 - ent->NPC->currentAim) * 0.25f);
-					//was 0.5f
-					angs[YAW] += Q_flrand(-1.0f, 1.0f) * (BLASTER_NPC_SPREAD + (1 - ent->NPC->currentAim) * 0.25f);
-					//was 0.5
+					if (PM_RunningAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_FULL)
+					{ // running or very fatigued
+						angs[PITCH] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
+						angs[YAW] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
+					}
+					else if (PM_WalkingAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_HALF)
+					{//walking or fatigued a bit
+						angs[PITCH] += Q_flrand(-1.1f, 1.1f) * WALKING_SPREAD;
+						angs[YAW] += Q_flrand(-1.1f, 1.1f) * WALKING_SPREAD;
+					}
+					else
+					{// just standing
+						angs[PITCH] += Q_flrand(-1.0f, 1.0f) * BLASTER_MAIN_SPREAD;
+						angs[YAW] += Q_flrand(-1.0f, 1.0f) * BLASTER_MAIN_SPREAD;
+					}
 				}
 			}
-			else if (!WalkCheck(ent) && (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent)))
-			//if running aim is shit
-			{
-				angs[PITCH] += Q_flrand(-1.0f, 1.0f) * RUNNING_SPREAD;
-				angs[YAW] += Q_flrand(-1.0f, 1.0f) * RUNNING_SPREAD;
-			}
-			else if (ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_FULL)
-			{
-				// add some slop to the fire direction
-				angs[PITCH] += Q_flrand(-3.0f, 3.0f) * BLASTER_MAIN_SPREAD;
-				angs[YAW] += Q_flrand(-3.0f, 3.0f) * BLASTER_MAIN_SPREAD;
-			}
-			else if (ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_HEAVY)
-			{
-				// add some slop to the fire direction
-				angs[PITCH] += Q_flrand(-2.0f, 2.0f) * BLASTER_MAIN_SPREAD;
-				angs[YAW] += Q_flrand(-2.0f, 2.0f) * BLASTER_MAIN_SPREAD;
-			}
-			else if (PM_CrouchAnim(ent->client->ps.legsAnim))
-			{
-				//
-			}
 			else
-			{
-				//
+			{// add some slop to the fire direction for NPC,s
+				angs[PITCH] += Q_flrand(-1.0f, 1.0f) * BLASTER_MAIN_SPREAD;
+				angs[YAW] += Q_flrand(-1.0f, 1.0f) * BLASTER_MAIN_SPREAD;
 			}
 		}
 

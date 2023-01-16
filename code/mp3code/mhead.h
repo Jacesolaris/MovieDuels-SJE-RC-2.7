@@ -71,15 +71,15 @@ extern "C"
 
 	int head_info(const unsigned char* buf, unsigned int n, MPEG_HEAD* h);
 	int head_info2(const unsigned char* buf,
-	               unsigned int n, MPEG_HEAD* h, int* br);
+		unsigned int n, MPEG_HEAD* h, int* br);
 	int head_info3(const unsigned char* buf, unsigned int n, MPEG_HEAD* h, int* br, unsigned int* searchForward);
 	/* head_info returns framebytes > 0 for success */
 	/* audio_decode_init returns 1 for success, 0 for fail */
 	/* audio_decode returns in_bytes = 0 on sync loss */
 
 	int audio_decode_init(const MPEG_HEAD* h, int framebytes_arg,
-	                      int reduction_code, int transform_code, int convert_code,
-	                      int freq_limit);
+		int reduction_code, int transform_code, int convert_code,
+		int freq_limit);
 	void audio_decode_info(DEC_INFO* info);
 	IN_OUT audio_decode(unsigned char* bs, short* pcm, unsigned char* pNextByteAfterData);
 

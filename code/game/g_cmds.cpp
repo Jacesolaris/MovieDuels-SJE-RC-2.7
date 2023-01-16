@@ -1476,7 +1476,7 @@ void G_TauntSound(const gentity_t* ent, const int taunt)
 extern qboolean PM_CrouchAnim(int anim);
 extern qboolean is_holding_block_button(const gentity_t* defender);
 extern qboolean IsHoldingGun(const gentity_t* ent);
-extern void ReloadGun(gentity_t* ent);
+extern void wp_reload_gun(gentity_t* ent);
 extern void CancelReload(gentity_t* ent);
 extern qboolean npc_is_mando(const gentity_t* self);
 
@@ -2097,7 +2097,7 @@ void G_SetTauntAnim(gentity_t* ent, const int taunt)
 				}
 				else
 				{
-					ReloadGun(ent);
+					wp_reload_gun(ent);
 				}
 				break;
 			}

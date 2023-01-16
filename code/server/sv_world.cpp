@@ -308,7 +308,7 @@ void SV_LinkEntity(gentity_t* gEnt)
 
 	//get all leafs, including solids
 	const int num_leafs = CM_BoxLeafnums(gEnt->absmin, gEnt->absmax,
-	                                     leafs, MAX_TOTAL_ENT_LEAFS, &lastLeaf);
+		leafs, MAX_TOTAL_ENT_LEAFS, &lastLeaf);
 
 	// if none of the leafs were inside the map, the
 	// entity is outside the world and can be considered unlinked
@@ -330,8 +330,8 @@ void SV_LinkEntity(gentity_t* gEnt)
 				if (ent->areanum2 != -1 && ent->areanum2 != area && sv.state == SS_LOADING)
 				{
 					Com_DPrintf("Object %i touching 3 areas at %f %f %f\n",
-					            gEnt->s.number,
-					            gEnt->absmin[0], gEnt->absmin[1], gEnt->absmin[2]);
+						gEnt->s.number,
+						gEnt->absmin[0], gEnt->absmin[1], gEnt->absmin[2]);
 				}
 				ent->areanum2 = area;
 			}
@@ -619,7 +619,7 @@ SV_ClipMoveToEntities
 */
 void SV_ClipMoveToEntities(moveclip_t* clip)
 {
-	gentity_t *touchlist[MAX_GENTITIES], *owner;
+	gentity_t* touchlist[MAX_GENTITIES], * owner;
 	trace_t trace, oldTrace;
 
 	const int num = SV_AreaEntities(clip->boxmins, clip->boxmaxs, touchlist, MAX_GENTITIES);
@@ -715,8 +715,8 @@ void SV_ClipMoveToEntities(moveclip_t* clip)
 				origin, angles);
 #else
 			CM_TransformedBoxTrace(&trace, clip->start, clip->end,
-			                       clip->mins, clip->maxs, clipHandle, clip->contentmask,
-			                       origin, angles);
+				clip->mins, clip->maxs, clipHandle, clip->contentmask,
+				origin, angles);
 #endif
 			//FIXME: when startsolid in another ent, doesn't return correct entity_num
 			//ALSO: 2 players can be standing next to each other and this function will
@@ -807,18 +807,18 @@ void SV_ClipMoveToEntities(moveclip_t* clip)
 					world_angles[ROLL] = 0;
 
 					re.G2API_CollisionDetect(clip->trace.G2CollisionMap, touch->ghoul2,
-					                         world_angles, touch->client->origin, sv.time, touch->s.number, clip->start,
-					                         clip->end, touch->s.modelScale, G2VertSpaceServer, clip->e_g2_trace_type,
-					                         clip->use_lod, radius);
+						world_angles, touch->client->origin, sv.time, touch->s.number, clip->start,
+						clip->end, touch->s.modelScale, G2VertSpaceServer, clip->e_g2_trace_type,
+						clip->use_lod, radius);
 				}
 				// no, so use the normal entity state
 				else
 				{
 					//use the correct origin and angles!  is this right now?
 					re.G2API_CollisionDetect(clip->trace.G2CollisionMap, touch->ghoul2,
-					                         touch->currentAngles, touch->currentOrigin, sv.time, touch->s.number,
-					                         clip->start, clip->end, touch->s.modelScale, G2VertSpaceServer,
-					                         clip->e_g2_trace_type, clip->use_lod, radius);
+						touch->currentAngles, touch->currentOrigin, sv.time, touch->s.number,
+						clip->start, clip->end, touch->s.modelScale, G2VertSpaceServer,
+						clip->e_g2_trace_type, clip->use_lod, radius);
 				}
 
 				// set our new trace record size
@@ -871,7 +871,7 @@ pass_entity_num and entities owned by pass_entity_num are explicitly not checked
 Ghoul2 Insert Start
 */
 void SV_Trace(trace_t* results, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end,
-              const int pass_entity_num, const int contentmask, const EG2_Collision e_g2_trace_type, const int use_lod)
+	const int pass_entity_num, const int contentmask, const EG2_Collision e_g2_trace_type, const int use_lod)
 {
 	/*
 	Ghoul2 Insert End

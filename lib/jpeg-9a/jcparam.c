@@ -21,8 +21,8 @@
 
 GLOBAL(void)
 jpeg_add_quant_table(const j_compress_ptr cinfo, const int which_tbl,
-                     const unsigned int* basic_table,
-                     const int scale_factor, const boolean force_baseline)
+	const unsigned int* basic_table,
+	const int scale_factor, const boolean force_baseline)
 	/* Define a quantization table equal to the basic_table times
 	 * a scale factor (given as a percentage).
 	 * If force_baseline is TRUE, the computed quantization table entries
@@ -96,7 +96,7 @@ jpeg_default_qtables(const j_compress_ptr cinfo, const boolean force_baseline)
 
 GLOBAL(void)
 jpeg_set_linear_quality(const j_compress_ptr cinfo, const int scale_factor,
-                        const boolean force_baseline)
+	const boolean force_baseline)
 	/* Set or change the 'quality' (quantization) setting, using default tables
 	 * and a straight percentage-scaling quality scale.  In most cases it's better
 	 * to use jpeg_set_quality (below); this entry point is provided for
@@ -156,7 +156,7 @@ jpeg_set_quality(const j_compress_ptr cinfo, int quality, const boolean force_ba
 
 LOCAL(void)
 add_huff_table(const j_compress_ptr cinfo,
-               JHUFF_TBL** htblptr, const UINT8* bits, const UINT8* val)
+	JHUFF_TBL** htblptr, const UINT8* bits, const UINT8* val)
 	/* Define a Huffman table */
 {
 	if (*htblptr == NULL)
@@ -514,7 +514,7 @@ jpeg_set_colorspace(const j_compress_ptr cinfo, const J_COLOR_SPACE colorspace)
 
 LOCAL(jpeg_scan_info*)
 fill_a_scan(jpeg_scan_info* scanptr, const int ci,
-            const int Ss, const int Se, const int Ah, const int Al)
+	const int Ss, const int Se, const int Ah, const int Al)
 	/* Support routine: generate one scan for specified component */
 {
 	scanptr->comps_in_scan = 1;
@@ -529,7 +529,7 @@ fill_a_scan(jpeg_scan_info* scanptr, const int ci,
 
 LOCAL(jpeg_scan_info*)
 fill_scans(jpeg_scan_info* scanptr, const int ncomps,
-           const int Ss, const int Se, const int Ah, const int Al)
+	const int Ss, const int Se, const int Ah, const int Al)
 	/* Support routine: generate one scan for each component */
 {
 	for (int ci = 0; ci < ncomps; ci++) {

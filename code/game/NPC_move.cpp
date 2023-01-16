@@ -116,7 +116,7 @@ static qboolean NPC_Jump(vec3_t dest, const int goalEntNum)
 				EvaluateTrajectory(&tr, level.time + elapsedTime, testPos);
 				//FUCK IT, always check for do not enter...
 				gi.trace(&trace, lastPos, NPC->mins, NPC->maxs, testPos, NPC->s.number,
-				         NPC->clipmask | CONTENTS_BOTCLIP, static_cast<EG2_Collision>(0), 0);
+					NPC->clipmask | CONTENTS_BOTCLIP, static_cast<EG2_Collision>(0), 0);
 				/*
 				if ( testPos[2] < lastPos[2]
 					&& elapsedTime < floor( travelTime ) )
@@ -168,7 +168,7 @@ static qboolean NPC_Jump(vec3_t dest, const int goalEntNum)
 						break;
 					}
 					if (trace.plane.normal[2] > 0.7 && DistanceSquared(trace.endpos, dest) < 4096)
-					//hit within 64 of desired location, should be okay
+						//hit within 64 of desired location, should be okay
 					{
 						//close enough!
 						break;
@@ -197,7 +197,7 @@ static qboolean NPC_Jump(vec3_t dest, const int goalEntNum)
 						VectorCopy(trace.endpos, bottom);
 						bottom[2] -= 128;
 						gi.trace(&trace, trace.endpos, NPC->mins, NPC->maxs, bottom, NPC->s.number, NPC->clipmask,
-						         static_cast<EG2_Collision>(0), 0);
+							static_cast<EG2_Collision>(0), 0);
 						if (trace.fraction >= 1.0f)
 						{
 							//would fall too far
@@ -278,7 +278,7 @@ qboolean NPC_CanTryJump()
 		PM_InKnockDown(&NPC->client->ps) || // Don't Jump If In Knockdown
 		PM_InRoll(&NPC->client->ps) || // ... Or Roll
 		NPC->client->ps.groundEntityNum == ENTITYNUM_NONE // ... Or In The Air
-	)
+		)
 	{
 		return qfalse;
 	}
@@ -300,7 +300,7 @@ qboolean NPC_TryJump(const vec3_t& pos, const float max_xy_dist, const float max
 			VectorCopy(pos, groundTest);
 			groundTest[2] += NPC->mins[2] * 3;
 			gi.trace(&mJumpTrace, NPCInfo->jumpDest, vec3_origin, vec3_origin, groundTest, NPC->s.number, NPC->clipmask,
-			         static_cast<EG2_Collision>(0), 0);
+				static_cast<EG2_Collision>(0), 0);
 			if (mJumpTrace.fraction >= 1.0f)
 			{
 				return qfalse; //no ground = no jump
@@ -308,15 +308,15 @@ qboolean NPC_TryJump(const vec3_t& pos, const float max_xy_dist, const float max
 		}
 		NPCInfo->jumpTarget = nullptr;
 		NPCInfo->jumpMaxXYDist = max_xy_dist
-			                         ? max_xy_dist
-			                         : NPC->client->NPC_class == CLASS_ROCKETTROOPER
-			                         ? 1200
-			                         : 750;
+			? max_xy_dist
+			: NPC->client->NPC_class == CLASS_ROCKETTROOPER
+			? 1200
+			: 750;
 		NPCInfo->jumpMazZDist = max_z_diff
-			                        ? max_z_diff
-			                        : NPC->client->NPC_class == CLASS_ROCKETTROOPER
-			                        ? -1000
-			                        : -450;
+			? max_z_diff
+			: NPC->client->NPC_class == CLASS_ROCKETTROOPER
+			? -1000
+			: -450;
 		NPCInfo->jumpTime = 0;
 		NPCInfo->jumpBackupTime = 0;
 		return NPC_TryJump();
@@ -339,15 +339,15 @@ qboolean NPC_TryJump(gentity_t* goal, const float max_xy_dist, const float max_z
 		VectorCopy(goal->currentOrigin, NPCInfo->jumpDest);
 		NPCInfo->jumpTarget = goal;
 		NPCInfo->jumpMaxXYDist = max_xy_dist
-			                         ? max_xy_dist
-			                         : NPC->client->NPC_class == CLASS_ROCKETTROOPER
-			                         ? 1200
-			                         : 750;
+			? max_xy_dist
+			: NPC->client->NPC_class == CLASS_ROCKETTROOPER
+			? 1200
+			: 750;
 		NPCInfo->jumpMazZDist = max_z_diff
-			                        ? max_z_diff
-			                        : NPC->client->NPC_class == CLASS_ROCKETTROOPER
-			                        ? -1000
-			                        : -400;
+			? max_z_diff
+			: NPC->client->NPC_class == CLASS_ROCKETTROOPER
+			? -1000
+			: -400;
 		NPCInfo->jumpTime = 0;
 		NPCInfo->jumpBackupTime = 0;
 		return NPC_TryJump();
@@ -427,7 +427,7 @@ qboolean NPC_TryJump()
 		vec3_t actorProjectedTowardTarget;
 		VectorMA(NPC->currentOrigin, NPC_JUMP_PREP_BACKUP_DIST, targetDirection, actorProjectedTowardTarget);
 		gi.trace(&mJumpTrace, NPC->currentOrigin, vec3_origin, vec3_origin, actorProjectedTowardTarget, NPC->s.number,
-		         NPC->clipmask, static_cast<EG2_Collision>(0), 0);
+			NPC->clipmask, static_cast<EG2_Collision>(0), 0);
 		if (mJumpTrace.fraction < 1.0f ||
 			mJumpTrace.allsolid ||
 			mJumpTrace.startsolid)
@@ -529,15 +529,15 @@ qboolean NPC_TryJump()
 					NPCInfo->jumpDest[0] = startPos[0] + minSafeRadius;
 					NPCInfo->jumpDest[1] = startPos[1] -= minSafeRadius;
 					break;
-				default: ;
+				default:;
 				}
 
 				floorPos[0] = NPCInfo->jumpDest[0];
 				floorPos[1] = NPCInfo->jumpDest[1];
 
 				gi.trace(&mJumpTrace, NPCInfo->jumpDest, NPC->mins, NPC->maxs, floorPos,
-				         NPCInfo->jumpTarget ? NPCInfo->jumpTarget->s.number : NPC->s.number,
-				         NPC->clipmask | CONTENTS_BOTCLIP, static_cast<EG2_Collision>(0), 0);
+					NPCInfo->jumpTarget ? NPCInfo->jumpTarget->s.number : NPC->s.number,
+					NPC->clipmask | CONTENTS_BOTCLIP, static_cast<EG2_Collision>(0), 0);
 				if (mJumpTrace.fraction < 1.0f &&
 					!mJumpTrace.allsolid &&
 					!mJumpTrace.startsolid)

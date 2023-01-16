@@ -1107,7 +1107,7 @@ R_LerpTag
 ================
 */
 void	R_LerpTag(orientation_t* tag, const qhandle_t handle, const int start_frame, const int end_frame,
-                  const float frac, const char* tag_name) {
+	const float frac, const char* tag_name) {
 	md3Tag_t* start, * finish;
 
 	const model_t* model = R_GetModelByHandle(handle);

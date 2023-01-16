@@ -76,7 +76,6 @@ constexpr auto iMAX_EXPLORE_TRANSITIONS = 4; //;
 
 #define eBGRNDTRACK_DATAEND		eBGRNDTRACK_NONDYNAMIC // tracks from this point on are for logic or copies, do NOT free them.
 
-
 #define eBGRNDTRACK_FIRSTTRANSITION	eBGRNDTRACK_ACTIONTRANS0	// used for "are we in transition mode" check
 #define eBGRNDTRACK_LASTTRANSITION	eBGRNDTRACK_EXPLORETRANS3	//
 
@@ -89,7 +88,7 @@ float Music_GetRandomEntryTime(MusicState_e eMusicState);
 
 #ifdef		MP3STUFF_KNOWN
 qboolean Music_AllowedToTransition(float fPlayingTimeElapsed, MusicState_e eMusicState,
-                                   MusicState_e* peTransition = nullptr, float* pfNewTrackEntryTime = nullptr);
+	MusicState_e* peTransition = nullptr, float* pfNewTrackEntryTime = nullptr);
 #endif
 
 const char* Music_BaseStateToString(MusicState_e eMusicState, qboolean bDebugPrintQuery = qfalse);

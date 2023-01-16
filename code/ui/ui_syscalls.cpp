@@ -54,7 +54,7 @@ void trap_R_SetColor(const float* rgba)
 }
 
 void trap_R_DrawStretchPic(const float x, const float y, const float w, const float h, const float s1, const float t1, const float s2, const float t2,
-                           const qhandle_t h_shader)
+	const qhandle_t h_shader)
 {
 	//	syscall( UI_R_DRAWSTRETCHPIC, PASSFLOAT(x), PASSFLOAT(y), PASSFLOAT(w), PASSFLOAT(h), PASSFLOAT(s1), PASSFLOAT(t1), PASSFLOAT(s2), PASSFLOAT(t2), h_shader );
 	//	re.DrawStretchPic( x, y, w, h, s1, t1, s2, t2, h_shader  );
@@ -138,7 +138,7 @@ void trap_GetGlconfig(glconfig_t* glconfig)
 
 // this returns a handle.  arg0 is the name in the format "idlogo.roq", set arg1 to NULL, alteredstates to qfalse (do not alter gamestate)
 int trap_CIN_PlayCinematic(const char* arg0, const int xpos, const int ypos, const int width, const int height, const int bits,
-                           const char* psAudioFile)
+	const char* psAudioFile)
 {
 	//  return syscall(UI_CIN_PLAYCINEMATIC, arg0, xpos, ypos, width, height, bits, psAudioFile);
 	return CIN_PlayCinematic(arg0, xpos, ypos, width, height, bits, psAudioFile);

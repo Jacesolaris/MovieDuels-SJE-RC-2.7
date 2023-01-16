@@ -538,8 +538,8 @@ void CL_CheckForResend()
 		Info_SetValueForKey(info, "qport", va("%i", port));
 		Info_SetValueForKey(info, "challenge", va("%i", clc.challenge));
 		NET_OutOfBandPrint(NS_CLIENT, clc.serverAddress, "connect \"%s\"", info);
-	// the most current userinfo has been sent, so watch for any
-	// newer changes to userinfo variables
+		// the most current userinfo has been sent, so watch for any
+		// newer changes to userinfo variables
 		cvar_modifiedFlags &= ~CVAR_USERINFO;
 		break;
 
@@ -642,7 +642,7 @@ void CL_ConnectionlessPacket(const netadr_t from, msg_t* msg)
 		{
 			Com_Printf("connectResponse from a different address.  Ignored.\n");
 			Com_Printf("%s should have been %s\n", NET_AdrToString(from),
-			           NET_AdrToString(clc.serverAddress));
+				NET_AdrToString(clc.serverAddress));
 			return;
 		}
 		Netchan_Setup(NS_CLIENT, &clc.netchan, from, Cvar_VariableIntegerValue("net_qport"));
@@ -712,7 +712,7 @@ void CL_PacketEvent(const netadr_t from, msg_t* msg)
 	if (!NET_CompareAdr(from, clc.netchan.remoteAddress))
 	{
 		Com_DPrintf("%s:sequenced packet without connection\n"
-		            , NET_AdrToString(from));
+			, NET_AdrToString(from));
 		// FIXME: send a client disconnect?
 		return;
 	}

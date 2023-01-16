@@ -332,8 +332,8 @@ start_pass_main(const j_decompress_ptr cinfo, const J_BUF_MODE pass_mode)
 
 METHODDEF(void)
 process_data_simple_main(const j_decompress_ptr cinfo,
-                         const JSAMPARRAY output_buf, JDIMENSION* out_row_ctr,
-                         const JDIMENSION out_rows_avail)
+	const JSAMPARRAY output_buf, JDIMENSION* out_row_ctr,
+	const JDIMENSION out_rows_avail)
 {
 	const my_main_ptr mainp = (my_main_ptr)cinfo->main;
 
@@ -370,8 +370,8 @@ process_data_simple_main(const j_decompress_ptr cinfo,
 
 METHODDEF(void)
 process_data_context_main(const j_decompress_ptr cinfo,
-                          const JSAMPARRAY output_buf, JDIMENSION* out_row_ctr,
-                          const JDIMENSION out_rows_avail)
+	const JSAMPARRAY output_buf, JDIMENSION* out_row_ctr,
+	const JDIMENSION out_rows_avail)
 {
 	const my_main_ptr mainp = (my_main_ptr)cinfo->main;
 
@@ -443,8 +443,8 @@ process_data_context_main(const j_decompress_ptr cinfo,
 
 METHODDEF(void)
 process_data_crank_post(const j_decompress_ptr cinfo,
-                        const JSAMPARRAY output_buf, JDIMENSION* out_row_ctr,
-                        const JDIMENSION out_rows_avail)
+	const JSAMPARRAY output_buf, JDIMENSION* out_row_ctr,
+	const JDIMENSION out_rows_avail)
 {
 	(*cinfo->post->post_process_data) (cinfo, (JSAMPIMAGE)NULL,
 		(JDIMENSION*)NULL, (JDIMENSION)0,

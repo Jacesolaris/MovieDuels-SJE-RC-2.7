@@ -54,7 +54,7 @@ Coordinates are 640*480 virtual values
 =================
 */
 void CG_DrawRect(const float x, const float y, const float width, const float height, const float size,
-                 const float* color)
+	const float* color)
 {
 	cgi_R_SetColor(color);
 
@@ -113,7 +113,7 @@ Can also specify the exact texture coordinates
 =================
 */
 void CG_DrawPic2(const float x, const float y, const float width, const float height, const float s1, const float t1,
-                 const float s2, const float t2, const qhandle_t h_shader)
+	const float s2, const float t2, const qhandle_t h_shader)
 {
 	cgi_R_DrawStretchPic(x, y, width, height, s1, t1, s2, t2, h_shader);
 }
@@ -128,8 +128,8 @@ rotates around the upper right corner of the passed in point
 =================
 */
 void CG_DrawRotatePic(const float x, const float y, const float width, const float height, const float angle,
-                      const qhandle_t h_shader,
-                      const float aspect_correction)
+	const qhandle_t h_shader,
+	const float aspect_correction)
 {
 	cgi_R_DrawRotatePic(x, y, width, height, 0, 0, 1, 1, angle, h_shader, aspect_correction);
 }
@@ -144,8 +144,8 @@ Actually rotates around the center point of the passed in coordinates
 =================
 */
 void CG_DrawRotatePic2(const float x, const float y, const float width, const float height, const float angle,
-                       const qhandle_t h_shader,
-                       const float aspect_correction)
+	const qhandle_t h_shader,
+	const float aspect_correction)
 {
 	cgi_R_DrawRotatePic2(x, y, width, height, 0, 0, 1, 1, angle, h_shader, aspect_correction);
 }
@@ -190,7 +190,7 @@ void CG_DrawChar(const int x, const int y, const int width, const int height, in
 	constexpr float size2 = 0.0625;
 
 	cgi_R_DrawStretchPic(ax, ay, aw, ah, fcol, frow, fcol + size, frow + size2,
-	                     cgs.media.charsetShader);
+		cgs.media.charsetShader);
 }
 
 /*
@@ -204,7 +204,7 @@ Coordinates are at 640 by 480 virtual resolution
 ==================
 */
 void CG_DrawStringExt(const int x, const int y, const char* string, const float* set_color,
-                      const qboolean force_color, const qboolean shadow, const int char_width, const int char_height)
+	const qboolean force_color, const qboolean shadow, const int char_width, const int char_height)
 {
 	vec4_t color;
 	const char* s;
@@ -385,7 +385,7 @@ Take x,y positions as if 640 x 480 and scales them to the proper resolution
 ==============
 */
 void CG_DrawNumField(int x, const int y, int width, int value, const int char_width, const int char_height,
-                     const int style, const qboolean zero_fill)
+	const int style, const qboolean zero_fill)
 {
 	char num[16];
 	int frame;
@@ -420,7 +420,7 @@ void CG_DrawNumField(int x, const int y, int width, int value, const int char_wi
 		value = value > 9999 ? 9999 : value;
 		value = value < -999 ? -999 : value;
 		break;
-	default: ;
+	default:;
 	}
 
 	Com_sprintf(num, sizeof num, "%i", value);

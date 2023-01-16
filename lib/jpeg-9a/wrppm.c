@@ -118,7 +118,7 @@ copy_pixel_rows(j_decompress_ptr cinfo, const djpeg_dest_ptr dinfo,
 
 METHODDEF(void)
 put_demapped_rgb(const j_decompress_ptr cinfo, const djpeg_dest_ptr dinfo,
-                 JDIMENSION rows_supplied)
+	JDIMENSION rows_supplied)
 {
 	const ppm_dest_ptr dest = (ppm_dest_ptr)dinfo;
 	const register JSAMPROW color_map0 = cinfo->colormap[0];
@@ -138,7 +138,7 @@ put_demapped_rgb(const j_decompress_ptr cinfo, const djpeg_dest_ptr dinfo,
 
 METHODDEF(void)
 put_demapped_gray(const j_decompress_ptr cinfo, const djpeg_dest_ptr dinfo,
-                  JDIMENSION rows_supplied)
+	JDIMENSION rows_supplied)
 {
 	const ppm_dest_ptr dest = (ppm_dest_ptr)dinfo;
 	const register JSAMPROW color_map = cinfo->colormap[0];

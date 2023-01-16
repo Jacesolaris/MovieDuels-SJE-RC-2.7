@@ -302,7 +302,7 @@ static void SV_ConnectionlessPacket(const netadr_t from, msg_t* msg)
 	else
 	{
 		Com_DPrintf("bad connectionless packet from %s:\n%s\n"
-		            , NET_AdrToString(from), s);
+			, NET_AdrToString(from), s);
 	}
 }
 

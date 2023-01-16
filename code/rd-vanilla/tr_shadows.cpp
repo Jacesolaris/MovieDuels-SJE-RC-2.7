@@ -345,7 +345,7 @@ void RB_DoShadowTessEnd(vec3_t light_pos)
 		R_RenderShadowEdges();
 		qglDisable(GL_STENCIL_TEST);
 	}
-	else 
+	else
 	{
 		//qglCullFace( GL_FRONT );
 		GL_Cull(CT_FRONT_SIDED);

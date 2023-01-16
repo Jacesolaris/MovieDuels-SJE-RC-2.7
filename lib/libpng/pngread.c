@@ -629,7 +629,7 @@ png_read_row(png_structrp png_ptr, const png_bytep row, const png_bytep dsp_row)
 
 void PNGAPI
 png_read_rows(const png_structrp png_ptr, const png_bytepp row,
-              const png_bytepp display_row, const png_uint_32 num_rows)
+	const png_bytepp display_row, const png_uint_32 num_rows)
 {
 	png_uint_32 i;
 
@@ -976,7 +976,7 @@ png_read_destroy(const png_structrp png_ptr)
 /* Free all memory used by the read */
 void PNGAPI
 png_destroy_read_struct(const png_structpp png_ptr_ptr, const png_infopp info_ptr_ptr,
-                        const png_infopp end_info_ptr_ptr)
+	const png_infopp end_info_ptr_ptr)
 {
 	png_structrp png_ptr = NULL;
 
@@ -1013,8 +1013,8 @@ png_set_read_status_fn(const png_structrp png_ptr, const png_read_status_ptr rea
 #ifdef PNG_INFO_IMAGE_SUPPORTED
 void PNGAPI
 png_read_png(png_structrp png_ptr, const png_inforp info_ptr,
-             const int transforms,
-             const voidp params)
+	const int transforms,
+	const voidp params)
 {
 	if (png_ptr == NULL || info_ptr == NULL)
 		return;
@@ -1533,7 +1533,7 @@ png_image_memory_read(const png_structp png_ptr, const png_bytep out, const png_
 }
 
 int PNGAPI png_image_begin_read_from_memory(const png_imagep image,
-                                            const png_const_voidp memory, const png_size_t size)
+	const png_const_voidp memory, const png_size_t size)
 {
 	if (image != NULL && image->version == PNG_IMAGE_VERSION)
 	{
@@ -1686,8 +1686,8 @@ decode_gamma(png_image_read_control* display, png_uint_32 value, int encoding)
 
 static png_uint_32
 png_colormap_compose(png_image_read_control* display,
-                     const png_uint_32 foreground, const int foreground_encoding, const png_uint_32 alpha,
-                     const png_uint_32 background, const int encoding)
+	const png_uint_32 foreground, const int foreground_encoding, const png_uint_32 alpha,
+	const png_uint_32 background, const int encoding)
 {
 	/* The file value is composed on the background, the background has the given
 	 * encoding and so does the result, the file is encoded with P_FILE and the
@@ -1723,7 +1723,7 @@ png_colormap_compose(png_image_read_control* display,
  */
 static void
 png_create_colormap_entry(png_image_read_control* display,
-                          const png_uint_32 ip, png_uint_32 red, png_uint_32 green, png_uint_32 blue,
+	const png_uint_32 ip, png_uint_32 red, png_uint_32 green, png_uint_32 blue,
 	png_uint_32 alpha, int encoding)
 {
 	const png_imagep image = display->image;
@@ -4012,7 +4012,7 @@ png_image_read_direct(const png_voidp argument)
 
 int PNGAPI
 png_image_finish_read(const png_imagep image, const png_const_colorp background,
-                      void* buffer, png_int_32 row_stride, void* colormap)
+	void* buffer, png_int_32 row_stride, void* colormap)
 {
 	if (image != NULL && image->version == PNG_IMAGE_VERSION)
 	{

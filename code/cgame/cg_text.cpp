@@ -50,8 +50,8 @@ float gfAdvanceHack = 0.0f; // MUST default to this
 int giLinesOutput; // hack-city after release, only used by one function
 //
 const char* CG_DisplayBoxedText(const int iBoxX, const int iBoxY, const int iBoxWidth, const int iBoxHeight,
-                                const char* psText, const int iFontHandle, const float fScale,
-                                const vec4_t v4Color)
+	const char* psText, const int iFontHandle, const float fScale,
+	const vec4_t v4Color)
 {
 	giLinesOutput = 0;
 	cgi_R_SetColor(v4Color);
@@ -215,7 +215,7 @@ static int cg_SP_GetStringTextStringWithRetry(const char* psReference, char* psD
 //
 void CG_CaptionText(const char* str, const int sound)
 {
-	char text[8192] = {0};
+	char text[8192] = { 0 };
 
 	const float fFontScale = cgi_Language_IsAsian() ? 0.8f : 1.0f;
 

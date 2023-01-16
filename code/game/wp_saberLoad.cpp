@@ -810,7 +810,7 @@ static void Saber_ParseNumBlades(saberInfo_t* saber, const char** p)
 	if (n < 1 || n > MAX_BLADES)
 	{
 		Com_Error(ERR_DROP, "WP_SaberParseParms: saber %s has illegal number of blades (%d) max: %d", saber->name, n,
-		          MAX_BLADES);
+			MAX_BLADES);
 	}
 	saber->numBlades = n;
 }
@@ -3227,7 +3227,7 @@ void WP_SaberLoadParms()
 
 	//now load in the .sab definitions
 	const int fileCnt = gi.FS_GetFileList("ext_data/sabers", ".sab", saberExtensionListBuf,
-	                                      sizeof saberExtensionListBuf);
+		sizeof saberExtensionListBuf);
 
 	char* holdChar = saberExtensionListBuf;
 	for (int i = 0; i < fileCnt; i++, holdChar += saberExtFNLen + 1)
@@ -3254,7 +3254,7 @@ void WP_SaberLoadParms()
 			if (totallen + len >= MAX_SABER_DATA_SIZE)
 			{
 				G_Error("WP_SaberLoadParms: ran out of space before reading %s\n(you must make the .sab files smaller)",
-				        holdChar);
+					holdChar);
 			}
 			strcat(marker, buffer);
 			gi.FS_FreeFile(buffer);

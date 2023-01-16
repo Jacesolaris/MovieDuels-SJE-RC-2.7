@@ -160,7 +160,7 @@ void DEMP2_AltRadiusDamage(gentity_t* ent)
 		dir[2] += 12;
 
 		G_Damage(gent, ent, ent->owner, dir, ent->currentOrigin, weaponData[WP_DEMP2].altDamage, DAMAGE_DEATH_KNOCKBACK,
-		         ent->splashMethodOfDeath);
+			ent->splashMethodOfDeath);
 
 		if (gent->takedamage && gent->client)
 		{

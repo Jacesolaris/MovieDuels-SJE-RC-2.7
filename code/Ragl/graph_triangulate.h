@@ -216,8 +216,7 @@ namespace ragl
 			{
 				CurFlipped = flip();
 				TotalFlipped += CurFlipped;
-			}
-			while (CurFlipped != 0 && TotalFlipped < 10000 /*Sanity Condition*/);
+			} while (CurFlipped != 0 && TotalFlipped < 10000 /*Sanity Condition*/);
 		}
 
 		////////////////////////////////////////////////////////////////////////////////////
@@ -254,7 +253,7 @@ namespace ragl
 						mLinks.get(RInd, LInd) == 0 &&
 						mLinks.get(LInd, RInd) == 0 &&
 						(!user.on_same_floor(PtL, PtA) || !user.on_same_floor(PtL, PtB))
-					)
+						)
 					{
 						int nEdge = mEdges.alloc();
 
@@ -322,7 +321,7 @@ namespace ragl
 			{
 				TEDGE DefaultEdge;
 				user.setup_edge(DefaultEdge, (*it).mA, (*it).mB, (*it).mOnHull, mGraph.get_node((*it).mA),
-				                mGraph.get_node((*it).mB));
+					mGraph.get_node((*it).mB));
 				mGraph.connect_node(DefaultEdge, (*it).mA, (*it).mB);
 			}
 		}
@@ -735,7 +734,7 @@ namespace ragl
 					if (!mGraph.get_node(PtB).InCircle(mGraph.get_node(PtR), mGraph.get_node(PtL), mGraph.get_node(PtA))
 						&&
 						!mGraph.get_node(PtA).InCircle(mGraph.get_node(PtR), mGraph.get_node(PtB), mGraph.get_node(PtL))
-					)
+						)
 					{
 						// Change The Link: Remove The Old, Add The New
 						//----------------------------------------------

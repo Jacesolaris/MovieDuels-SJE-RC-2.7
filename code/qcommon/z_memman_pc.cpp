@@ -138,7 +138,7 @@ int Z_Validate()
 			&& pMemory->eTag != TAG_MODEL_MD3
 			&& pMemory->eTag != TAG_MODEL_GLM
 			&& pMemory->eTag != TAG_MODEL_GLA)
-		//don't bother with disk caches as they've already been hit or will be thrown out next
+			//don't bother with disk caches as they've already been hit or will be thrown out next
 		{
 			auto memstart = (unsigned char*)pMemory;
 			int totalSize = pMemory->iSize;
@@ -180,7 +180,7 @@ using StaticMem_t = struct
 #pragma pack(pop)
 
 constexpr static StaticZeroMem_t gZeroMalloc =
-	{{ZONE_MAGIC, TAG_STATIC, 0, nullptr, nullptr}, {ZONE_MAGIC}};
+{ {ZONE_MAGIC, TAG_STATIC, 0, nullptr, nullptr}, {ZONE_MAGIC} };
 
 #ifdef DEBUG_ZONE_ALLOCS
 #define DEF_STATIC(_char) {ZONE_MAGIC, TAG_STATIC,2,NULL,NULL, "<static>",0,"",0},{_char,'\0'},{ZONE_MAGIC}
@@ -189,7 +189,7 @@ constexpr static StaticZeroMem_t gZeroMalloc =
 #endif
 
 constexpr static StaticMem_t gEmptyString =
-	{DEF_STATIC('\0')};
+{ DEF_STATIC('\0') };
 
 constexpr static StaticMem_t gNumberString[] = {
 	{DEF_STATIC('0')},
@@ -347,7 +347,7 @@ void* Z_Malloc(const int iSize, const memtag_t eTag, const qboolean bZeroit, int
 			Com_Printf(S_COLOR_RED"Z_Malloc(): Failed to alloc %d bytes (TAG_%s) !!!!!\n", iSize, psTagStrings[eTag]);
 			Z_Details_f();
 			Com_Error(ERR_FATAL, "(Repeat): Z_Malloc(): Failed to alloc %d bytes (TAG_%s) !!!!!\n", iSize,
-			          psTagStrings[eTag]);
+				psTagStrings[eTag]);
 		}
 	}
 
@@ -677,14 +677,14 @@ static void Z_MemRecoverTest_f()
 static void Z_Stats_f()
 {
 	Com_Printf("\nThe zone is using %d bytes (%.2fMB) in %d memory blocks\n",
-	           TheZone.Stats.iCurrent,
-	           static_cast<float>(TheZone.Stats.iCurrent) / 1024.0f / 1024.0f,
-	           TheZone.Stats.iCount
+		TheZone.Stats.iCurrent,
+		static_cast<float>(TheZone.Stats.iCurrent) / 1024.0f / 1024.0f,
+		TheZone.Stats.iCount
 	);
 
 	Com_Printf("The zone peaked at %d bytes (%.2fMB)\n",
-	           TheZone.Stats.iPeak,
-	           static_cast<float>(TheZone.Stats.iPeak) / 1024.0f / 1024.0f
+		TheZone.Stats.iPeak,
+		static_cast<float>(TheZone.Stats.iPeak) / 1024.0f / 1024.0f
 	);
 }
 
@@ -709,10 +709,10 @@ static void Z_Details_f()
 			const int iSize = fSize;
 			const int iRemainder = 100.0f * (fSize - floor(fSize));
 			Com_Printf("%20s %9d (%2d.%02dMB) in %6d blocks (%9d Bytes/block)\n",
-			           psTagStrings[i],
-			           iThisSize,
-			           iSize, iRemainder,
-			           iThisCount, iThisSize / iThisCount);
+				psTagStrings[i],
+				iThisSize,
+				iSize, iRemainder,
+				iThisCount, iThisSize / iThisCount);
 		}
 	}
 	Com_Printf("---------------------------------------------------------------------------\n");
@@ -886,7 +886,7 @@ void Com_ShutdownZoneMemory()
 	if (TheZone.Stats.iCount)
 	{
 		Com_Printf("Automatically freeing %d blocks making up %d bytes\n", TheZone.Stats.iCount,
-		           TheZone.Stats.iCurrent);
+			TheZone.Stats.iCurrent);
 		Z_TagFree(TAG_ALL);
 
 		//assert(!TheZone.Stats.iCount);	// These aren't really problematic per se, it's just warning us that we're freeing extra
@@ -896,7 +896,7 @@ void Com_ShutdownZoneMemory()
 		if (TheZone.Stats.iCount < 0)
 		{
 			Com_Printf(S_COLOR_YELLOW"WARNING: Freeing %d extra blocks (%d bytes) not tracked by the zone manager\n",
-			           abs(TheZone.Stats.iCount), abs(TheZone.Stats.iCurrent));
+				abs(TheZone.Stats.iCount), abs(TheZone.Stats.iCurrent));
 		}
 	}
 }

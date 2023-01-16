@@ -115,9 +115,9 @@ void SCR_DrawBigChar(const int x, const int y, int ch)
 	constexpr float size2 = 0.0625;
 
 	re.DrawStretchPic(ax, ay, aw, ah,
-	                  fcol, frow,
-	                  fcol + size, frow + size2,
-	                  cls.charSetShader);
+		fcol, frow,
+		fcol + size, frow + size2,
+		cls.charSetShader);
 }
 
 /*
@@ -157,10 +157,10 @@ void SCR_DrawSmallChar(const int x, const int y, int ch)
 	constexpr float size2 = 0.0625;
 
 	re.DrawStretchPic(x * con.xadjust, y * con.yadjust,
-	                  SMALLCHAR_WIDTH * con.xadjust, SMALLCHAR_HEIGHT * con.yadjust,
-	                  fcol, frow,
-	                  fcol + size, frow + size2,
-	                  cls.charSetShader);
+		SMALLCHAR_WIDTH * con.xadjust, SMALLCHAR_HEIGHT * con.yadjust,
+		fcol, frow,
+		fcol + size, frow + size2,
+		cls.charSetShader);
 }
 
 /*
@@ -174,7 +174,7 @@ Coordinates are at 640 by 480 virtual resolution
 ==================
 */
 void SCR_DrawBigStringExt(const int x, const int y, const char* string, const float* setColor, const qboolean forceColor,
-                          const qboolean noColorEscape)
+	const qboolean noColorEscape)
 {
 	vec4_t color;
 
@@ -246,7 +246,7 @@ to a fixed color.
 ==================
 */
 void SCR_DrawSmallStringExt(const int x, const int y, const char* string, const float* setColor, const qboolean forceColor,
-                            const qboolean noColorEscape)
+	const qboolean noColorEscape)
 {
 	vec4_t color;
 
@@ -354,7 +354,7 @@ void SCR_DrawDebugGraph()
 	const int y = cls.glconfig.vidHeight;
 	re.SetColor(g_color_table[0]);
 	re.DrawStretchPic(x, y - cl_graphheight->integer,
-	                  w, cl_graphheight->integer, 0, 0, 0, 0, 0);
+		w, cl_graphheight->integer, 0, 0, 0, 0, 0);
 	re.SetColor(nullptr);
 
 	for (int a = 0; a < w; a++)

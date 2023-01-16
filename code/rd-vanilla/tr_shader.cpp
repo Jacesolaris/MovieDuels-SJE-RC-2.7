@@ -2060,7 +2060,7 @@ static void parse_surface_parm(const char** text)
 
 	for (int i = 0; i < num_info_parms; i++)
 	{
-		if (!Q_stricmp(token, infoParms[i].name)) 
+		if (!Q_stricmp(token, infoParms[i].name))
 		{
 			shader.surfaceFlags |= infoParms[i].surfaceFlags;
 			shader.contentFlags |= infoParms[i].contents;

@@ -127,7 +127,7 @@ inline	void	SnapFloatToGrid(float& f, const int GridSize)
 
 	f = static_cast<int>(f);
 
-	assert(static_cast<int>(f) % (int) GridSize == 0);
+	assert(static_cast<int>(f) % (int)GridSize == 0);
 }
 
 inline	void	SnapVectorToGrid(CVec3& Vec, const int GridSize)

@@ -114,7 +114,7 @@ NPC_ST_Pain
 */
 
 void NPC_Tusken_Pain(gentity_t* self, gentity_t* inflictor, gentity_t* other, vec3_t point, const int damage,
-                     const int mod)
+	const int mod)
 {
 	self->NPC->localState = LSTATE_UNDERFIRE;
 
@@ -318,7 +318,7 @@ void NPC_BSTusken_Attack()
 			player != NPC->enemy && // The Player Is Not Currently My Enemy
 			Distance(player->currentOrigin, NPC->currentOrigin) < 130.0f && // The Player Is Close Enough
 			NAV::InSameRegion(NPC, player) // And In The Same Region
-		)
+			)
 		{
 			G_SetEnemy(NPC, player);
 		}
@@ -360,7 +360,7 @@ void NPC_BSTusken_Attack()
 			if (!(NPCInfo->scriptFlags & SCF_FIRE_WEAPON) && // If This Flag Is On, It Calls Attack From Elsewhere
 				!(NPCInfo->scriptFlags & SCF_DONT_FIRE) && // If This Flag Is On, Don't Fire At All
 				TIMER_Done(NPC, "attackDelay")
-			)
+				)
 			{
 				ucmd.buttons &= ~BUTTON_ALT_ATTACK;
 
@@ -401,7 +401,7 @@ void NPC_BSTusken_Attack()
 }
 
 extern void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, float strength,
-                        qboolean break_saber_lock);
+	qboolean break_saber_lock);
 
 void Tusken_StaffTrace()
 {
@@ -421,14 +421,14 @@ void Tusken_StaffTrace()
 		{
 			mdxaBone_t bolt_matrix;
 			vec3_t tip, dir, base;
-			const vec3_t angles = {0, NPC->currentAngles[YAW], 0};
-			constexpr vec3_t mins = {-2, -2, -2}, maxs = {2, 2, 2};
+			const vec3_t angles = { 0, NPC->currentAngles[YAW], 0 };
+			constexpr vec3_t mins = { -2, -2, -2 }, maxs = { 2, 2, 2 };
 			trace_t trace;
 
 			gi.G2API_GetBoltMatrix(NPC->ghoul2, NPC->weaponModel[0],
-			                       bolt_index,
-			                       &bolt_matrix, angles, NPC->currentOrigin, time,
-			                       nullptr, NPC->s.modelScale);
+				bolt_index,
+				&bolt_matrix, angles, NPC->currentOrigin, time,
+				nullptr, NPC->s.modelScale);
 			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, base);
 			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, NEGATIVE_Y, dir);
 			VectorMA(base, -20, dir, base);
@@ -487,14 +487,14 @@ void Tusken_StaffTracenew(gentity_t* self)
 		{
 			mdxaBone_t bolt_matrix;
 			vec3_t tip, dir, base;
-			const vec3_t angles = {0, self->currentAngles[YAW], 0};
-			constexpr vec3_t mins = {-2, -2, -2}, maxs = {2, 2, 2};
+			const vec3_t angles = { 0, self->currentAngles[YAW], 0 };
+			constexpr vec3_t mins = { -2, -2, -2 }, maxs = { 2, 2, 2 };
 			trace_t trace;
 
 			gi.G2API_GetBoltMatrix(self->ghoul2, self->weaponModel[0],
-			                       bolt_index,
-			                       &bolt_matrix, angles, self->currentOrigin, time,
-			                       nullptr, self->s.modelScale);
+				bolt_index,
+				&bolt_matrix, angles, self->currentOrigin, time,
+				nullptr, self->s.modelScale);
 			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, base);
 			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, NEGATIVE_Y, dir);
 			VectorMA(base, -20, dir, base);
@@ -546,15 +546,15 @@ qboolean G_TuskenAttackAnimDamage(gentity_t* self)
 		int end = 0;
 		int start = 0;
 		if (!!gi.G2API_GetBoneAnimIndex(&
-		                                self->ghoul2[self->playerModel],
-		                                self->lowerLumbarBone,
-		                                level.time,
-		                                &current,
-		                                &start,
-		                                &end,
-		                                nullptr,
-		                                nullptr,
-		                                nullptr))
+			self->ghoul2[self->playerModel],
+			self->lowerLumbarBone,
+			level.time,
+			&current,
+			&start,
+			&end,
+			nullptr,
+			nullptr,
+			nullptr))
 		{
 			const float percent_complete = (current - start) / (end - start);
 			//gi.Printf("%f\n", percentComplete);
@@ -564,7 +564,7 @@ qboolean G_TuskenAttackAnimDamage(gentity_t* self)
 			case BOTH_TUSKENATTACK2: return static_cast<qboolean>(percent_complete > 0.3 && percent_complete < 0.7);
 			case BOTH_TUSKENATTACK3: return static_cast<qboolean>(percent_complete > 0.1 && percent_complete < 0.5);
 			case BOTH_TUSKENLUNGE1: return static_cast<qboolean>(percent_complete > 0.3 && percent_complete < 0.5);
-			default: ;
+			default:;
 			}
 		}
 	}

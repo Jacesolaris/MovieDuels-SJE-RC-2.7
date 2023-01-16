@@ -68,9 +68,9 @@ typedef union {
 
 METHODDEF(void)
 forward_DCT(const j_compress_ptr cinfo, jpeg_component_info* compptr,
-            JSAMPARRAY sample_data, const JBLOCKROW coef_blocks,
-            const JDIMENSION start_row, JDIMENSION start_col,
-            const JDIMENSION num_blocks)
+	JSAMPARRAY sample_data, const JBLOCKROW coef_blocks,
+	const JDIMENSION start_row, JDIMENSION start_col,
+	const JDIMENSION num_blocks)
 	/* This version is used for integer DCT implementations. */
 {
 	/* This routine is heavily used, so it's worth coding it tightly. */
@@ -129,9 +129,9 @@ forward_DCT(const j_compress_ptr cinfo, jpeg_component_info* compptr,
 
 METHODDEF(void)
 forward_DCT_float(const j_compress_ptr cinfo, jpeg_component_info* compptr,
-                  JSAMPARRAY sample_data, const JBLOCKROW coef_blocks,
-                  const JDIMENSION start_row, JDIMENSION start_col,
-                  const JDIMENSION num_blocks)
+	JSAMPARRAY sample_data, const JBLOCKROW coef_blocks,
+	const JDIMENSION start_row, JDIMENSION start_col,
+	const JDIMENSION num_blocks)
 	/* This version is used for floating-point DCT implementations. */
 {
 	/* This routine is heavily used, so it's worth coding it tightly. */

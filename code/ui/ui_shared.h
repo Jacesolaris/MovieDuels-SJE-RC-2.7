@@ -189,9 +189,9 @@ using displayContextDef_t = struct
 	void (*drawRect)(float x, float y, float w, float h, float size, const vec4_t color);
 	void (*drawSides)(float x, float y, float w, float h, float size);
 	void (*drawText)(float x, float y, float scale, vec4_t color, const char* text, int iMaxPixelWidth, int style,
-	                 int iFontIndex);
+		int iFontIndex);
 	void (*drawTextWithCursor)(float x, float y, float scale, vec4_t color, const char* text, int cursorPos,
-	                           char cursor, int iMaxPixelWidth, int style, int iFontIndex);
+		char cursor, int iMaxPixelWidth, int style, int iFontIndex);
 	void (*drawTopBottom)(float x, float y, float w, float h, float size);
 	void (*executeText)(int exec_when, const char* text);
 	int (*feederCount)(float feederID);
@@ -200,25 +200,25 @@ using displayContextDef_t = struct
 	void (*getBindingBuf)(int keynum, char* buf, int buflen);
 	void (*getCVarString)(const char* cvar, char* buffer, int bufsize);
 	float (*getCVarValue)(const char* cvar);
-	qboolean (*getOverstrikeMode)();
+	qboolean(*getOverstrikeMode)();
 	float (*getValue)(int ownerDraw);
 	void (*keynumToStringBuf)(int keynum, char* buf, int buflen);
 	void (*modelBounds)(qhandle_t model, vec3_t min, vec3_t max);
-	qboolean (*ownerDrawHandleKey)(int ownerDraw, int flags, float* special, int key);
+	qboolean(*ownerDrawHandleKey)(int ownerDraw, int flags, float* special, int key);
 	void (*ownerDrawItem)(float x, float y, float w, float h, float text_x, float text_y, int ownerDraw,
-	                      int ownerDrawFlags, int align, float special, float scale, vec4_t color, qhandle_t shader,
-	                      int textStyle, int iFontIndex);
-	qboolean (*ownerDrawVisible)(int flags);
+		int ownerDrawFlags, int align, float special, float scale, vec4_t color, qhandle_t shader,
+		int textStyle, int iFontIndex);
+	qboolean(*ownerDrawVisible)(int flags);
 	int (*ownerDrawWidth)(int ownerDraw, float scale);
 	void (*Pause)(qboolean b);
 	void (*Print)(const char* msg, ...);
 	int (*registerFont)(const char* pFontname);
-	qhandle_t (*registerModel)(const char* p);
-	qhandle_t (*registerShaderNoMip)(const char* p);
-	sfxHandle_t (*registerSound)(const char* name, qboolean compressed);
+	qhandle_t(*registerModel)(const char* p);
+	qhandle_t(*registerShaderNoMip)(const char* p);
+	sfxHandle_t(*registerSound)(const char* name, qboolean compressed);
 	void (*renderScene)(const refdef_t* fd);
-	qboolean (*runScript)(const char** p);
-	qboolean (*deferScript)(const char** p);
+	qboolean(*runScript)(const char** p);
+	qboolean(*deferScript)(const char** p);
 	void (*setBinding)(int keynum, const char* binding);
 	void (*setColor)(const vec4_t v);
 	void (*setCVar)(const char* cvar, const char* value);
@@ -227,23 +227,23 @@ using displayContextDef_t = struct
 	void (*stopCinematic)(int handle);
 	int (*textHeight)(const char* text, float scale, int iFontIndex);
 	int (*textWidth)(const char* text, float scale, int iFontIndex);
-	qhandle_t (*feederItemImage)(float feederID, int index);
+	qhandle_t(*feederItemImage)(float feederID, int index);
 	const char* (*feederItemText)(float feederID, int index, int column, qhandle_t* handle);
 
-	qhandle_t (*registerSkin)(const char* name);
+	qhandle_t(*registerSkin)(const char* name);
 
 	//rww - ghoul2 stuff. Add whatever you need here, remember to set it in _UI_Init or it will crash when you try to use it.
-	qboolean (*g2_SetSkin)(CGhoul2Info* ghl_info, qhandle_t customSkin, qhandle_t renderSkin);
-	qboolean (*g2_SetBoneAnim)(CGhoul2Info* ghl_info, const char* bone_name, int start_frame, int end_frame,
-	                           int flags, float anim_speed, int current_time, float setFrame, int blend_time);
-	qboolean (*g2_RemoveGhoul2Model)(CGhoul2Info_v& ghl_info, int model_index);
+	qboolean(*g2_SetSkin)(CGhoul2Info* ghl_info, qhandle_t customSkin, qhandle_t renderSkin);
+	qboolean(*g2_SetBoneAnim)(CGhoul2Info* ghl_info, const char* bone_name, int start_frame, int end_frame,
+		int flags, float anim_speed, int current_time, float setFrame, int blend_time);
+	qboolean(*g2_RemoveGhoul2Model)(CGhoul2Info_v& ghl_info, int model_index);
 	int (*g2_InitGhoul2Model)(CGhoul2Info_v& ghoul2, const char* fileName, int, qhandle_t customSkin,
-	                          qhandle_t customShader, int modelFlags, int lodBias);
+		qhandle_t customShader, int modelFlags, int lodBias);
 	void (*g2_CleanGhoul2Models)(CGhoul2Info_v& ghoul2);
 	int (*g2_AddBolt)(CGhoul2Info* ghl_info, const char* bone_name);
-	qboolean (*g2_GetBoltMatrix)(CGhoul2Info_v& ghoul2, int model_index, int bolt_index, mdxaBone_t* matrix,
-	                             const vec3_t angles, const vec3_t position, int frame_num, qhandle_t* model_list,
-	                             const vec3_t scale);
+	qboolean(*g2_GetBoltMatrix)(CGhoul2Info_v& ghoul2, int model_index, int bolt_index, mdxaBone_t* matrix,
+		const vec3_t angles, const vec3_t position, int frame_num, qhandle_t* model_list,
+		const vec3_t scale);
 	void (*g2_GiveMeVectorFromMatrix)(mdxaBone_t& bolt_matrix, Eorientations flags, vec3_t& vec);
 
 	//Utility functions that don't immediately redirect to ghoul2 functions
@@ -483,7 +483,7 @@ using textScrollDef_t = struct textScrollDef_s
 using commandDef_t = struct
 {
 	const char* name;
-	qboolean (*handler)(itemDef_t* item, const char** args);
+	qboolean(*handler)(itemDef_t* item, const char** args);
 };
 
 menuDef_t* Menu_GetFocused();

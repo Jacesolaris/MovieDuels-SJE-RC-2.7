@@ -238,7 +238,7 @@ jpeg_stdio_src(const j_decompress_ptr cinfo, FILE* infile)
 
 GLOBAL(void)
 jpeg_mem_src(const j_decompress_ptr cinfo,
-             unsigned char* inbuffer, const unsigned long insize)
+	unsigned char* inbuffer, const unsigned long insize)
 {
 	if (inbuffer == NULL || insize == 0)	/* Treat empty input as fatal error */
 		ERREXIT(cinfo, JERR_INPUT_EMPTY);

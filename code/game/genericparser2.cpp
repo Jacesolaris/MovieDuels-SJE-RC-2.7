@@ -41,7 +41,7 @@ static void skipWhitespace(gsl::cstring_view& text, const bool allow_line_breaks
 	{
 		++whitespaceEnd;
 	}
-	text = {whitespaceEnd, text.end()};
+	text = { whitespaceEnd, text.end() };
 }
 
 static void skipWhitespaceAndComments(gsl::cstring_view& text, const bool allow_line_breaks)
@@ -53,10 +53,10 @@ static void skipWhitespaceAndComments(gsl::cstring_view& text, const bool allow_
 		auto commentEnd = std::find(text.begin() + 2, text.end(), '\n');
 		if (commentEnd == text.end())
 		{
-			text = {text.end(), text.end()};
+			text = { text.end(), text.end() };
 			return;
 		}
-		text = {commentEnd, text.end()};
+		text = { commentEnd, text.end() };
 		skipWhitespaceAndComments(text, allow_line_breaks);
 		return;
 	}
@@ -64,14 +64,14 @@ static void skipWhitespaceAndComments(gsl::cstring_view& text, const bool allow_
 	// skip multi line comments
 	if (text.size() >= 2 && text[0] == '/' && text[1] == '*')
 	{
-		static const std::array<char, 2> endStr{'*', '/'};
+		static const std::array<char, 2> endStr{ '*', '/' };
 		auto commentEnd = std::search(text.begin(), text.end(), endStr.begin(), endStr.end());
 		if (commentEnd == text.end())
 		{
-			text = {text.end(), text.end()};
+			text = { text.end(), text.end() };
 			return;
 		}
-		text = {commentEnd + endStr.size(), text.end()};
+		text = { commentEnd + endStr.size(), text.end() };
 		skipWhitespace(text, allow_line_breaks);
 	}
 }
@@ -110,12 +110,12 @@ static gsl::cstring_view GetToken(gsl::cstring_view& text, const bool allow_line
 		auto tokenEnd = std::find(text.begin() + 1, text.end(), '"');
 		if (tokenEnd == text.end())
 		{
-			gsl::cstring_view token = {text.begin() + 1, text.end()};
-			text = {text.end(), text.end()};
+			gsl::cstring_view token = { text.begin() + 1, text.end() };
+			text = { text.end(), text.end() };
 			return token;
 		}
-		gsl::cstring_view token = {text.begin() + 1, tokenEnd};
-		text = {tokenEnd + 1, text.end()};
+		gsl::cstring_view token = { text.begin() + 1, tokenEnd };
+		text = { tokenEnd + 1, text.end() };
 		return token;
 	}
 	if (read_to_eol)
@@ -136,14 +136,14 @@ static gsl::cstring_view GetToken(gsl::cstring_view& text, const bool allow_line
 				)
 			);
 		}
-		const gsl::cstring_view token{text.begin(), tokenEnd};
-		text = {tokenEnd, text.end()};
+		const gsl::cstring_view token{ text.begin(), tokenEnd };
+		text = { tokenEnd, text.end() };
 		return removeTrailingWhitespace(token);
 	}
 	// consume until first whitespace (if allowLineBreaks == false, that may be text.begin(); in that case token is empty.)
 	auto tokenEnd = std::find_if(text.begin(), text.end(), std::isspace);
-	gsl::cstring_view token{text.begin(), tokenEnd};
-	text = {tokenEnd, text.end()};
+	gsl::cstring_view token{ text.begin(), tokenEnd };
+	text = { tokenEnd, text.end() };
 	return token;
 }
 

@@ -35,7 +35,7 @@ extern cvar_t* g_SerenityJediEngineMode;
 void rocketThink(gentity_t* ent)
 //---------------------------------------------------------
 {
-	constexpr vec3_t up = {0, 0, 1};
+	constexpr vec3_t up = { 0, 0, 1 };
 
 	if (ent->disconnectDebounceTime && ent->disconnectDebounceTime < level.time)
 	{
@@ -263,7 +263,7 @@ void WP_FireRocket(gentity_t* ent, const qboolean altFire)
 
 				if (missile->enemy
 					&& missile->enemy->inuse)
-				//&& DistanceSquared( missile->currentOrigin, missile->enemy->currentOrigin ) < 262144 && InFOV( missile->currentOrigin, missile->enemy->currentOrigin, missile->enemy->client->ps.viewangles, 45, 45 ) )
+					//&& DistanceSquared( missile->currentOrigin, missile->enemy->currentOrigin ) < 262144 && InFOV( missile->currentOrigin, missile->enemy->currentOrigin, missile->enemy->client->ps.viewangles, 45, 45 ) )
 				{
 					if (missile->enemy->client
 						&& missile->enemy->client->ps.forcePowersKnown & 1 << FP_PUSH
@@ -281,7 +281,7 @@ void WP_FireRocket(gentity_t* ent, const qboolean altFire)
 						if (DotProduct(dir, dir2) < 0.0f)
 						{
 							G_StartFlee(missile->enemy, ent, missile->enemy->currentOrigin, AEL_DANGER_GREAT, 3000,
-							            5000);
+								5000);
 							if (!TIMER_Done(missile->enemy, "flee"))
 							{
 								TIMER_Set(missile->enemy, "rocketChasing", 500);

@@ -201,11 +201,11 @@ static const SBT_FUNCTION sbt_table[2][3][5] =
 };
 
 static const int out_chans[5] =
-	{1, 2, 1, 1, 1};
+{ 1, 2, 1, 1, 1 };
 
 int audio_decode_initL1(MPEG_HEAD* h, int framebytes_arg,
-                        int reduction_code, int transform_code, int convert_code,
-                        int freq_limit);
+	int reduction_code, int transform_code, int convert_code,
+	int freq_limit);
 void sbt_init();
 
 IN_OUT L1audio_decode(unsigned char* bs, signed short* pcm);
@@ -274,17 +274,17 @@ static void table_init()
 
 /*---------------------------------------------------------*/
 int L1audio_decode_init(const MPEG_HEAD* h, int framebytes_arg,
-                        int reduction_code, int transform_code, int convert_code,
-                        int freq_limit);
+	int reduction_code, int transform_code, int convert_code,
+	int freq_limit);
 int L3audio_decode_init(const MPEG_HEAD* h, int framebytes_arg,
-                        int reduction_code, int transform_code, int convert_code,
-                        int freq_limit);
+	int reduction_code, int transform_code, int convert_code,
+	int freq_limit);
 
 /*---------------------------------------------------------*/
 /* mpeg_head defined in mhead.h  frame bytes is without pad */
 int audio_decode_init(const MPEG_HEAD* h, const int framebytes_arg,
-                      int reduction_code, const int transform_code, int convert_code,
-                      int freq_limit)
+	int reduction_code, const int transform_code, int convert_code,
+	int freq_limit)
 {
 	int i;
 	static int first_pass = 1;
@@ -301,11 +301,11 @@ int audio_decode_init(const MPEG_HEAD* h, const int framebytes_arg,
 
 	if (h->option == 3) /* layer I */
 		return L1audio_decode_init(h, framebytes_arg,
-		                           reduction_code, transform_code, convert_code, freq_limit);
+			reduction_code, transform_code, convert_code, freq_limit);
 
 	if (h->option == 1) /* layer III */
 		return L3audio_decode_init(h, framebytes_arg,
-		                           reduction_code, transform_code, convert_code, freq_limit);
+			reduction_code, transform_code, convert_code, freq_limit);
 
 	int bit_code = 0;
 	if (convert_code & 8)

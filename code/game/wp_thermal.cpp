@@ -41,7 +41,7 @@ void thermalDetonatorExplode(gentity_t* ent)
 		ent->takedamage = qfalse; // don't allow double deaths!
 
 		G_Damage(ent->activator, ent, ent->owner, vec3_origin, ent->currentOrigin, weaponData[WP_THERMAL].altDamage, 0,
-		         MOD_EXPLOSIVE);
+			MOD_EXPLOSIVE);
 		G_PlayEffect("thermal/explosion", ent->currentOrigin);
 		G_PlayEffect("thermal/shockwave", ent->currentOrigin);
 
@@ -63,9 +63,9 @@ void thermalDetonatorExplode(gentity_t* ent)
 		ent->takedamage = qfalse; // don't allow double deaths!
 
 		G_RadiusDamage(ent->currentOrigin, ent->owner, weaponData[WP_THERMAL].splashDamage,
-		               weaponData[WP_THERMAL].splashRadius, nullptr, MOD_EXPLOSIVE_SPLASH);
+			weaponData[WP_THERMAL].splashRadius, nullptr, MOD_EXPLOSIVE_SPLASH);
 
-		if (ent->owner && ent->owner->client->NPC_class == CLASS_GRAN && g_SerenityJediEngineMode->integer == 2)
+		/*if (ent->owner && ent->owner->client->NPC_class == CLASS_GRAN && g_SerenityJediEngineMode->integer == 2)
 		{
 			switch (thermal_effect)
 			{
@@ -86,7 +86,8 @@ void thermalDetonatorExplode(gentity_t* ent)
 		else
 		{
 			G_PlayEffect("thermal/explosion", ent->currentOrigin);
-		}
+		}*/
+		G_PlayEffect("thermal/explosion", ent->currentOrigin);
 
 		G_PlayEffect("thermal/shockwave", ent->currentOrigin);
 
@@ -96,21 +97,21 @@ void thermalDetonatorExplode(gentity_t* ent)
 
 //-------------------------------------------------------------------------------------------------------------
 void thermal_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod, int d_flags,
-                 int hit_loc)
-//-------------------------------------------------------------------------------------------------------------
+	int hit_loc)
+	//-------------------------------------------------------------------------------------------------------------
 {
 	thermalDetonatorExplode(self);
 }
 
 //---------------------------------------------------------
 qboolean WP_LobFire(const gentity_t* self, vec3_t start, vec3_t target, vec3_t mins, vec3_t maxs, const int clipmask,
-                    vec3_t velocity, const qboolean trace_path, const int ignore_ent_num, const int enemy_num,
-                    float ideal_speed, const qboolean must_hit)
-//---------------------------------------------------------
+	vec3_t velocity, const qboolean trace_path, const int ignore_ent_num, const int enemy_num,
+	float ideal_speed, const qboolean must_hit)
+	//---------------------------------------------------------
 {
 	constexpr float speed_inc = 100;
 	float best_impact_dist = Q3_INFINITE; //fireSpeed,
-	vec3_t shot_vel, fail_case = {0.0f};
+	vec3_t shot_vel, fail_case = { 0.0f };
 	trace_t trace;
 	trajectory_t tr;
 	int hit_count = 0;
@@ -172,7 +173,7 @@ qboolean WP_LobFire(const gentity_t* self, vec3_t start, vec3_t target, vec3_t m
 				}
 				EvaluateTrajectory(&tr, level.time + elapsed_time, test_pos);
 				gi.trace(&trace, last_pos, mins, maxs, test_pos, ignore_ent_num, clipmask, static_cast<EG2_Collision>(0),
-				         0);
+					0);
 
 				if (trace.allsolid || trace.startsolid)
 				{
@@ -188,7 +189,7 @@ qboolean WP_LobFire(const gentity_t* self, vec3_t start, vec3_t target, vec3_t m
 						break;
 					}
 					if (trace.plane.normal[2] > 0.7 && DistanceSquared(trace.endpos, target) < 4096)
-					//hit within 64 of desired location, should be okay
+						//hit within 64 of desired location, should be okay
 					{
 						//close enough!
 						break;
@@ -439,13 +440,13 @@ gentity_t* WP_FireThermalDetonator(gentity_t* ent, const qboolean altFire)
 			target[2] += Q_flrand(-5, 5) + Q_flrand(-1.0f, 1.0f) * (6 - ent->NPC->currentAim) * 2;
 
 			WP_LobFire(ent, start, target, bolt->mins, bolt->maxs, bolt->clipmask, bolt->s.pos.trDelta, qtrue,
-			           ent->s.number, ent->enemy->s.number);
+				ent->s.number, ent->enemy->s.number);
 		}
 		else if (this_is_a_shooter && ent->target && !VectorCompare(ent->pos1, vec3_origin))
 		{
 			//misc_weapon_shooter firing at a position
 			WP_LobFire(ent, start, ent->pos1, bolt->mins, bolt->maxs, bolt->clipmask, bolt->s.pos.trDelta, qtrue,
-			           ent->s.number, ent->enemy->s.number);
+				ent->s.number, ent->enemy->s.number);
 		}
 	}
 

@@ -29,7 +29,7 @@ namespace Q
 	};
 
 	gsl::cstring_view substr(const gsl::cstring_view& lhs, std::string::size_type pos = 0,
-	                         std::string::size_type count = std::string::npos);
+		std::string::size_type count = std::string::npos);
 
 	int svtoi(const gsl::cstring_view& view);
 	float svtof(const gsl::cstring_view& view);

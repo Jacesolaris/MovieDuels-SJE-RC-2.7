@@ -231,7 +231,7 @@ extern char GoToMenu[];
 // ui_syscalls.c
 //
 int trap_CIN_PlayCinematic(const char* arg0, int xpos, int ypos, int width, int height, int bits,
-                           const char* psAudioFile /* = NULL */);
+	const char* psAudioFile /* = NULL */);
 int trap_CIN_StopCinematic(int handle);
 void trap_Cvar_Set(const char* var_name, const char* value);
 float trap_Cvar_VariableValue(const char* var_name);
@@ -243,7 +243,7 @@ void trap_Key_SetBinding(int keynum, const char* binding);
 void trap_Key_SetCatcher(int catcher);
 void trap_Key_SetOverstrikeMode(qboolean state);
 void trap_R_DrawStretchPic(float x, float y, float w, float h, float s1, float t1, float s2, float t2,
-                           qhandle_t h_shader);
+	qhandle_t h_shader);
 void trap_R_ModelBounds(clipHandle_t model, vec3_t mins, vec3_t maxs);
 void trap_R_SetColor(const float* rgba);
 void trap_R_ClearScene();

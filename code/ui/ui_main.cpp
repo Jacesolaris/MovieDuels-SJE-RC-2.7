@@ -122,11 +122,11 @@ static void UI_GiveWeapon(int weaponIndex);
 static void UI_EquipWeapon(int weaponIndex);
 static void UI_LoadMissionSelectMenu(const char* cvarName);
 static void UI_AddWeaponSelection(int weaponIndex, int ammoIndex, int ammoAmount, const char* iconItemName,
-                                  const char* litIconItemName, const char* hexBackground, const char* soundfile);
+	const char* litIconItemName, const char* hexBackground, const char* soundfile);
 static void UI_AddPistolSelection(int weaponIndex, int ammoIndex, int ammoAmount, const char* iconItemName,
-                                  const char* litIconItemName, const char* hexBackground, const char* soundfile);
+	const char* litIconItemName, const char* hexBackground, const char* soundfile);
 static void UI_AddThrowWeaponSelection(int weaponIndex, int ammoIndex, int ammoAmount, const char* iconItemName,
-                                       const char* litIconItemName, const char* hexBackground, const char* soundfile);
+	const char* litIconItemName, const char* hexBackground, const char* soundfile);
 static void UI_RemoveWeaponSelection(int weaponIndex);
 static void UI_Removepistolselection();
 static void UI_RemoveThrowWeaponSelection();
@@ -168,8 +168,8 @@ static void UI_ResetCharacterListBoxes();
 
 void UI_LoadMenus(const char* menuFile, qboolean reset);
 static void UI_OwnerDraw(float x, float y, float w, float h, float text_x, float text_y, int ownerDraw,
-                         int ownerDrawFlags, int align, float special, float scale, vec4_t color, qhandle_t shader,
-                         int textStyle, int iFontIndex);
+	int ownerDrawFlags, int align, float special, float scale, vec4_t color, qhandle_t shader,
+	int textStyle, int iFontIndex);
 static qboolean UI_OwnerDrawVisible(int flags);
 int UI_OwnerDrawWidth(int ownerDraw, float scale);
 static void UI_Update(const char* name);
@@ -358,7 +358,7 @@ static datpadmovedata_t datapadMoveData[MD_MOVE_TITLE_MAX][MAX_MOVES] =
 	}
 };
 
-static int gamecodetoui[] = {4, 2, 3, 0, 5, 1, 6};
+static int gamecodetoui[] = { 4, 2, 3, 0, 5, 1, 6 };
 
 uiInfo_t uiInfo;
 
@@ -612,7 +612,7 @@ static constexpr size_t cvarTableSize = std::size(cvarTable);
 extern void SE_CheckForLanguageUpdates();
 
 void Text_Paint(float x, float y, float scale, vec4_t color, const char* text, int iMaxPixelWidth, int style,
-                int iFontIndex);
+	int iFontIndex);
 int Key_GetCatcher();
 
 constexpr auto UI_FPS_FRAMES = 4;
@@ -703,7 +703,7 @@ void _UI_Refresh(const int realtime)
 			else if (ui_cursor.integer == 7)
 			{
 				UI_DrawHandlePic(uiInfo.uiDC.cursorx, uiInfo.uiDC.cursory, 48, 48,
-				                 uiInfo.uiDC.Assets.cursor_oldrepublic);
+					uiInfo.uiDC.Assets.cursor_oldrepublic);
 			}
 			else if (ui_cursor.integer == 8)
 			{
@@ -769,7 +769,7 @@ This must be the very first function compiled into the .qvm file
 ================
 */
 extern "C" Q_EXPORT intptr_t QDECL vmMain(int command, int arg0, int arg1, int arg2, int arg3, int arg4, int arg5,
-                                          int arg6, int arg7, int arg8, int arg9, int arg10, int arg11)
+	int arg6, int arg7, int arg8, int arg9, int arg10, int arg11)
 {
 	return 0;
 }
@@ -798,7 +798,7 @@ Text_Paint
 // iMaxPixelWidth is 0 here for no limit (but gets converted to -1), else max printable pixel width relative to start pos
 //
 void Text_Paint(const float x, const float y, const float scale, vec4_t color, const char* text, const int iMaxPixelWidth, const int style,
-                int iFontIndex)
+	int iFontIndex)
 {
 	if (iFontIndex == 0)
 	{
@@ -809,8 +809,8 @@ void Text_Paint(const float x, const float y, const float scale, vec4_t color, c
 	int iStyleOR = 0;
 	switch (style)
 	{
-	//	case  ITEM_TEXTSTYLE_NORMAL:			iStyleOR = 0;break;					// JK2 normal text
-	//	case  ITEM_TEXTSTYLE_BLINK:				iStyleOR = STYLE_BLINK;break;		// JK2 fast blinking
+		//	case  ITEM_TEXTSTYLE_NORMAL:			iStyleOR = 0;break;					// JK2 normal text
+		//	case  ITEM_TEXTSTYLE_BLINK:				iStyleOR = STYLE_BLINK;break;		// JK2 fast blinking
 	case ITEM_TEXTSTYLE_PULSE: iStyleOR = STYLE_BLINK;
 		break; // JK2 slow pulsing
 	case ITEM_TEXTSTYLE_SHADOWED: iStyleOR = STYLE_DROPSHADOW;
@@ -821,16 +821,16 @@ void Text_Paint(const float x, const float y, const float scale, vec4_t color, c
 		break; // JK2 drop shadow ( need a color for this )
 	case ITEM_TEXTSTYLE_SHADOWEDMORE: iStyleOR = STYLE_DROPSHADOW;
 		break; // JK2 drop shadow ( need a color for this )
-	default: ;
+	default:;
 	}
 
 	ui.R_Font_DrawString(x, // int ox
-	                     y, // int oy
-	                     text, // const char *text
-	                     color, // paletteRGBA_c c
-	                     iStyleOR | iFontIndex, // const int iFontHandle
-	                     !iMaxPixelWidth ? -1 : iMaxPixelWidth, // iMaxPixelWidth (-1 = none)
-	                     scale // const float scale = 1.0f
+		y, // int oy
+		text, // const char *text
+		color, // paletteRGBA_c c
+		iStyleOR | iFontIndex, // const int iFontHandle
+		!iMaxPixelWidth ? -1 : iMaxPixelWidth, // iMaxPixelWidth (-1 = none)
+		scale // const float scale = 1.0f
 	);
 }
 
@@ -841,7 +841,7 @@ Text_PaintWithCursor
 */
 // iMaxPixelWidth is 0 here for no-limit
 void Text_PaintWithCursor(const float x, const float y, const float scale, vec4_t color, const char* text, const int cursorPos, const char cursor,
-                          const int iMaxPixelWidth, const int style, const int iFontIndex)
+	const int iMaxPixelWidth, const int style, const int iFontIndex)
 {
 	Text_Paint(x, y, scale, color, text, iMaxPixelWidth, style, iFontIndex);
 
@@ -860,7 +860,7 @@ void Text_PaintWithCursor(const float x, const float y, const float scale, vec4_
 	const int iNextXpos = ui.R_Font_StrLenPixels(sTemp, iFontIndex, scale);
 
 	Text_Paint(x + iNextXpos, y, scale, color, va("%c", cursor), iMaxPixelWidth, style | ITEM_TEXTSTYLE_BLINK,
-	           iFontIndex);
+		iFontIndex);
 }
 
 const char* UI_FeederItemText(const float feederID, const int index, const int column, qhandle_t* handle)
@@ -904,9 +904,9 @@ const char* UI_FeederItemText(const float feederID, const int index, const int c
 		if (index >= 0 && index < uiInfo.playerSpecies[uiInfo.playerSpeciesIndex].SkinHeadCount)
 		{
 			*handle = ui.R_RegisterShaderNoMip(va("models/players/%s/icon_%s.jpg",
-			                                      uiInfo.playerSpecies[uiInfo.playerSpeciesIndex].Name,
-			                                      uiInfo.playerSpecies[uiInfo.playerSpeciesIndex].SkinHead[index].
-			                                      name));
+				uiInfo.playerSpecies[uiInfo.playerSpeciesIndex].Name,
+				uiInfo.playerSpecies[uiInfo.playerSpeciesIndex].SkinHead[index].
+				name));
 			return uiInfo.playerSpecies[uiInfo.playerSpeciesIndex].SkinHead[index].name;
 		}
 	}
@@ -915,9 +915,9 @@ const char* UI_FeederItemText(const float feederID, const int index, const int c
 		if (index >= 0 && index < uiInfo.playerSpecies[uiInfo.playerSpeciesIndex].SkinTorsoCount)
 		{
 			*handle = ui.R_RegisterShaderNoMip(va("models/players/%s/icon_%s.jpg",
-			                                      uiInfo.playerSpecies[uiInfo.playerSpeciesIndex].Name,
-			                                      uiInfo.playerSpecies[uiInfo.playerSpeciesIndex].SkinTorso[index].
-			                                      name));
+				uiInfo.playerSpecies[uiInfo.playerSpeciesIndex].Name,
+				uiInfo.playerSpecies[uiInfo.playerSpeciesIndex].SkinTorso[index].
+				name));
 			return uiInfo.playerSpecies[uiInfo.playerSpeciesIndex].SkinTorso[index].name;
 		}
 	}
@@ -926,8 +926,8 @@ const char* UI_FeederItemText(const float feederID, const int index, const int c
 		if (index >= 0 && index < uiInfo.playerSpecies[uiInfo.playerSpeciesIndex].SkinLegCount)
 		{
 			*handle = ui.R_RegisterShaderNoMip(va("models/players/%s/icon_%s.jpg",
-			                                      uiInfo.playerSpecies[uiInfo.playerSpeciesIndex].Name,
-			                                      uiInfo.playerSpecies[uiInfo.playerSpeciesIndex].SkinLeg[index].name));
+				uiInfo.playerSpecies[uiInfo.playerSpeciesIndex].Name,
+				uiInfo.playerSpecies[uiInfo.playerSpeciesIndex].SkinLeg[index].name));
 			return uiInfo.playerSpecies[uiInfo.playerSpeciesIndex].SkinLeg[index].name;
 		}
 	}
@@ -962,8 +962,8 @@ qhandle_t UI_FeederItemImage(const float feederID, const int index)
 		{
 			//return uiInfo.playerSpecies[uiInfo.playerSpeciesIndex].SkinHeadIcons[index];
 			return ui.R_RegisterShaderNoMip(va("models/players/%s/icon_%s.jpg",
-			                                   uiInfo.playerSpecies[uiInfo.playerSpeciesIndex].Name,
-			                                   uiInfo.playerSpecies[uiInfo.playerSpeciesIndex].SkinHead[index].name));
+				uiInfo.playerSpecies[uiInfo.playerSpeciesIndex].Name,
+				uiInfo.playerSpecies[uiInfo.playerSpeciesIndex].SkinHead[index].name));
 		}
 	}
 	else if (feederID == FEEDER_PLAYER_SKIN_TORSO)
@@ -972,8 +972,8 @@ qhandle_t UI_FeederItemImage(const float feederID, const int index)
 		{
 			//return uiInfo.playerSpecies[uiInfo.playerSpeciesIndex].SkinTorsoIcons[index];
 			return ui.R_RegisterShaderNoMip(va("models/players/%s/icon_%s.jpg",
-			                                   uiInfo.playerSpecies[uiInfo.playerSpeciesIndex].Name,
-			                                   uiInfo.playerSpecies[uiInfo.playerSpeciesIndex].SkinTorso[index].name));
+				uiInfo.playerSpecies[uiInfo.playerSpeciesIndex].Name,
+				uiInfo.playerSpecies[uiInfo.playerSpeciesIndex].SkinTorso[index].name));
 		}
 	}
 	else if (feederID == FEEDER_PLAYER_SKIN_LEGS)
@@ -982,8 +982,8 @@ qhandle_t UI_FeederItemImage(const float feederID, const int index)
 		{
 			//return uiInfo.playerSpecies[uiInfo.playerSpeciesIndex].SkinLegIcons[index];
 			return ui.R_RegisterShaderNoMip(va("models/players/%s/icon_%s.jpg",
-			                                   uiInfo.playerSpecies[uiInfo.playerSpeciesIndex].Name,
-			                                   uiInfo.playerSpecies[uiInfo.playerSpeciesIndex].SkinLeg[index].name));
+				uiInfo.playerSpecies[uiInfo.playerSpeciesIndex].Name,
+				uiInfo.playerSpecies[uiInfo.playerSpeciesIndex].SkinLeg[index].name));
 		}
 	}
 	else if (feederID == FEEDER_COLORCHOICES)
@@ -1086,7 +1086,7 @@ UI_RunMenuScript
 */
 static qboolean UI_RunMenuScript(const char** args)
 {
-	const char *name, *name2, *mapName, *menuName, *warningMenuName;
+	const char* name, * name2, * mapName, * menuName, * warningMenuName;
 
 	if (String_Parse(args, &name))
 	{
@@ -1122,7 +1122,7 @@ static qboolean UI_RunMenuScript(const char** args)
 			{
 				Menus_CloseAll();
 				ui.Cmd_ExecuteText(EXEC_APPEND,
-				                   va("load %s\n", s_savedata[s_savegame.currentLine].currentSaveFileName));
+					va("load %s\n", s_savedata[s_savegame.currentLine].currentSaveFileName));
 			}
 			// after loading a game, the list box (and it's highlight) get's reset back to 0, but currentLine sticks around, so set it to 0 here
 			s_savegame.currentLine = 0;
@@ -1471,10 +1471,10 @@ static qboolean UI_RunMenuScript(const char** args)
 						uiInfo.moveAnimTime = 0;
 						DC->g2hilev_SetAnim(&item->ghoul2[0], "model_root", modelPtr->g2anim, qtrue);
 						Com_sprintf(skin, sizeof skin, "models/players/%s/|%s|%s|%s",
-						            Cvar_VariableString("g_char_model"),
-						            Cvar_VariableString("g_char_skin_head"),
-						            Cvar_VariableString("g_char_skin_torso"),
-						            Cvar_VariableString("g_char_skin_legs")
+							Cvar_VariableString("g_char_model"),
+							Cvar_VariableString("g_char_skin_head"),
+							Cvar_VariableString("g_char_skin_torso"),
+							Cvar_VariableString("g_char_skin_legs")
 						);
 
 						ItemParse_model_g2skin_go(item, skin);
@@ -1710,7 +1710,7 @@ static qboolean UI_RunMenuScript(const char** args)
 			String_Parse(args, &soundfile);
 
 			UI_AddWeaponSelection(atoi(weaponIndex), atoi(ammoIndex), atoi(ammoAmount), itemName, litItemName,
-			                      backgroundName, soundfile);
+				backgroundName, soundfile);
 		}
 		else if (Q_stricmp(name, "addpistolselection") == 0)
 		{
@@ -1760,7 +1760,7 @@ static qboolean UI_RunMenuScript(const char** args)
 			String_Parse(args, &soundfile);
 
 			UI_AddPistolSelection(atoi(weaponIndex), atoi(ammoIndex), atoi(ammoAmount), itemName, litItemName,
-			                      backgroundName, soundfile);
+				backgroundName, soundfile);
 		}
 		else if (Q_stricmp(name, "addthrowweaponselection") == 0)
 		{
@@ -1810,7 +1810,7 @@ static qboolean UI_RunMenuScript(const char** args)
 			String_Parse(args, &soundfile);
 
 			UI_AddThrowWeaponSelection(atoi(weaponIndex), atoi(ammoIndex), atoi(ammoAmount), itemName, litItemName,
-			                           backgroundName, soundfile);
+				backgroundName, soundfile);
 		}
 		else if (Q_stricmp(name, "removeweaponselection") == 0)
 		{
@@ -1873,7 +1873,7 @@ static qboolean UI_RunMenuScript(const char** args)
 		}
 		else if (Q_stricmp(name, "giveinventory") == 0)
 		{
-			const char *inventoryIndex, *amount;
+			const char* inventoryIndex, * amount;
 			String_Parse(args, &inventoryIndex);
 			String_Parse(args, &amount);
 			UI_GiveInventory(atoi(inventoryIndex), atoi(amount));
@@ -2257,7 +2257,7 @@ static void UI_FeederSelection(const float feederID, const int index, itemDef_t*
 						char skin[MAX_QPATH];
 						ItemParse_model_g2anim_go(item_def_s, datapadMoveData[uiInfo.movesTitleIndex][index].anim);
 						uiInfo.moveAnimTime = DC->g2hilev_SetAnim(&item_def_s->ghoul2[0], "model_root",
-						                                          modelPtr->g2anim, qtrue);
+							modelPtr->g2anim, qtrue);
 
 						uiInfo.moveAnimTime += uiInfo.uiDC.realTime;
 
@@ -2305,10 +2305,10 @@ static void UI_FeederSelection(const float feederID, const int index, itemDef_t*
 						}
 
 						Com_sprintf(skin, sizeof skin, "models/players/%s/|%s|%s|%s",
-						            Cvar_VariableString("g_char_model"),
-						            Cvar_VariableString("g_char_skin_head"),
-						            Cvar_VariableString("g_char_skin_torso"),
-						            Cvar_VariableString("g_char_skin_legs")
+							Cvar_VariableString("g_char_model"),
+							Cvar_VariableString("g_char_skin_head"),
+							Cvar_VariableString("g_char_skin_torso"),
+							Cvar_VariableString("g_char_skin_legs")
 						);
 
 						ItemParse_model_g2skin_go(item_def_s, skin);
@@ -2333,7 +2333,7 @@ static void UI_FeederSelection(const float feederID, const int index, itemDef_t*
 				{
 					ItemParse_model_g2anim_go(item_def_s, uiInfo.movesBaseAnim);
 					uiInfo.moveAnimTime = DC->g2hilev_SetAnim(&item_def_s->ghoul2[0], "model_root", modelPtr->g2anim,
-					                                          qtrue);
+						qtrue);
 				}
 			}
 		}
@@ -2376,7 +2376,7 @@ static void UI_FeederSelection(const float feederID, const int index, itemDef_t*
 	}
 	else if (feederID == FEEDER_COLORCHOICES)
 	{
-		extern void Item_RunScript(itemDef_t* item_def_item, const char* s); //from ui_shared;
+		extern void Item_RunScript(itemDef_t * item_def_item, const char* s); //from ui_shared;
 		if (index >= 0 && index < uiInfo.playerSpecies[uiInfo.playerSpeciesIndex].ColorCount)
 		{
 			Item_RunScript(item, uiInfo.playerSpecies[uiInfo.playerSpeciesIndex].Color[index].actionText);
@@ -2597,12 +2597,12 @@ qboolean UI_ParseAnimFileSet(const char* animCFG, int* animFileIndex)
 			Com_Printf("animfile[%d]: %s\n", i, ui_knownAnimFileSets[i].filename);
 		}
 		Com_Error(ERR_FATAL, "UI_ParseAnimFileSet: %d == MAX_ANIM_FILES == %d", ui_numKnownAnimFileSets,
-		          MAX_ANIM_FILES);
+			MAX_ANIM_FILES);
 	}
 
 	//Okay, time to parse in a new one
 	Q_strncpyz(ui_knownAnimFileSets[ui_numKnownAnimFileSets].filename, strippedName,
-	           sizeof ui_knownAnimFileSets[ui_numKnownAnimFileSets].filename);
+		sizeof ui_knownAnimFileSets[ui_numKnownAnimFileSets].filename);
 
 	// Load and parse animations.cfg file
 	Com_sprintf(afilename, sizeof afilename, "%s/animation.cfg", strippedName);
@@ -2801,8 +2801,8 @@ static void UI_BuildPlayerModel_List(const qboolean inGameLoad)
 	if (!dirlist)
 	{
 		Com_Printf(S_COLOR_YELLOW "WARNING: Failed to allocate %u bytes of memory for player model "
-		           "directory list. Using stack allocated buffer of %u bytes instead.",
-		           DIR_LIST_SIZE, sizeof stackDirList);
+			"directory list. Using stack allocated buffer of %u bytes instead.",
+			DIR_LIST_SIZE, sizeof stackDirList);
 
 		dirlist = stackDirList;
 		dirListSize = sizeof stackDirList;
@@ -3149,7 +3149,7 @@ UI_ParseMenu
 */
 void UI_ParseMenu(const char* menuFile)
 {
-	char *buffer, *holdBuffer;
+	char* buffer, * holdBuffer;
 	//	pc_token_t token;
 
 	//Com_DPrintf("Parsing menu file: %s\n", menuFile);
@@ -3272,7 +3272,7 @@ void UI_LoadMenus(const char* menuFile, const qboolean reset)
 		if (len < 1)
 		{
 			Com_Error(ERR_FATAL, "%s",
-			          va("default menu file not found: ui/menus.txt, unable to continue!\n", menuFile));
+				va("default menu file not found: ui/menus.txt, unable to continue!\n", menuFile));
 		}
 	}
 
@@ -3319,7 +3319,7 @@ void UI_LoadMenus(const char* menuFile, const qboolean reset)
 	Com_Printf("---------------- MovieDuels-SJE-RC-2.7---------------------------\n");
 	Com_Printf("-----------------------------------------------------------------\n");
 	Com_Printf("------------------------Update 7---------------------------------\n");
-	Com_Printf("------------------Build Date 15/01/2023--------------------------\n");
+	Com_Printf("------------------Build Date 16/01/2023--------------------------\n");
 	Com_Printf("-----------------------------------------------------------------\n");
 	Com_Printf("------------------------LightSaber-------------------------------\n");
 	Com_Printf("-----------An elegant weapon for a more civilized age------------\n");
@@ -3899,8 +3899,7 @@ qboolean Asset_Parse(char** buffer)
 							PC_ParseWarning("Can't locate precache sound");
 						}
 					}
-				}
-				while (soundFile[0]);
+				} while (soundFile[0]);
 			}
 		}
 	}
@@ -3944,7 +3943,7 @@ static void UI_Update(const char* name)
 		case 32:
 			Cvar_SetValue("ui_r_depthbits", 24);
 			break;
-		default: ;
+		default:;
 		}
 	}
 	else if (Q_stricmp(name, "ui_r_lodbias") == 0)
@@ -3961,7 +3960,7 @@ static void UI_Update(const char* name)
 		case 2:
 			Cvar_SetValue("ui_r_subdivisions", 20);
 			break;
-		default: ;
+		default:;
 		}
 	}
 	else if (Q_stricmp(name, "ui_r_glCustom") == 0)
@@ -4030,7 +4029,7 @@ static void UI_Update(const char* name)
 			Cvar_SetValue("ui_cg_shadows", 0);
 			Cvar_Set("ui_r_texturemode", "GL_LINEAR_MIPMAP_NEAREST");
 			break;
-		default: ;
+		default:;
 		}
 	}
 	else if (Q_stricmp(name, "ui_mousePitch") == 0)
@@ -4176,7 +4175,7 @@ static void UI_DrawEffects(const rectDef_t* rect, float scale, vec4_t color)
 {
 	UI_DrawHandlePic(rect->x, rect->y - 14, 128, 8, 0/*uiInfo.uiDC.Assets.fxBasePic*/);
 	UI_DrawHandlePic(rect->x + uiInfo.effectsColor * 16 + 8, rect->y - 16, 16, 12,
-	                 0/*uiInfo.uiDC.Assets.fxPic[uiInfo.effectsColor]*/);
+		0/*uiInfo.uiDC.Assets.fxPic[uiInfo.effectsColor]*/);
 }
 
 /*
@@ -4227,17 +4226,17 @@ static void UI_DrawGLInfo(const rectDef_t* rect, const float scale, vec4_t color
 
 	int y = rect->y;
 	Text_Paint(rect->x, y, scale, color, va("GL_VENDOR: %s", uiInfo.uiDC.glconfig.vendor_string), rect->w, textStyle,
-	           iFontIndex);
+		iFontIndex);
 	y += 15;
 	Text_Paint(rect->x, y, scale, color,
-	           va("GL_VERSION: %s: %s", uiInfo.uiDC.glconfig.version_string, uiInfo.uiDC.glconfig.renderer_string),
-	           rect->w, textStyle, iFontIndex);
+		va("GL_VERSION: %s: %s", uiInfo.uiDC.glconfig.version_string, uiInfo.uiDC.glconfig.renderer_string),
+		rect->w, textStyle, iFontIndex);
 	y += 15;
 	Text_Paint(rect->x, y, scale, color, "GL_PIXELFORMAT:", rect->w, textStyle, iFontIndex);
 	y += 15;
 	Text_Paint(rect->x, y, scale, color,
-	           va("Color(%d-bits) Z(%d-bits) stencil(%d-bits)", uiInfo.uiDC.glconfig.colorBits,
-	              uiInfo.uiDC.glconfig.depthBits, uiInfo.uiDC.glconfig.stencilBits), rect->w, textStyle, iFontIndex);
+		va("Color(%d-bits) Z(%d-bits) stencil(%d-bits)", uiInfo.uiDC.glconfig.colorBits,
+			uiInfo.uiDC.glconfig.depthBits, uiInfo.uiDC.glconfig.stencilBits), rect->w, textStyle, iFontIndex);
 	y += 15;
 	// build null terminated extension strings
 	Q_strncpyz(buff, uiInfo.uiDC.glconfig.extensions_string, sizeof buff);
@@ -4306,8 +4305,8 @@ UI_OwnerDraw
 =================
 */
 static void UI_OwnerDraw(float x, float y, float w, float h, const float text_x, const float text_y, const int ownerDraw,
-                         int ownerDrawFlags, int align, float special, const float scale, vec4_t color, qhandle_t shader,
-                         const int textStyle, const int iFontIndex)
+	int ownerDrawFlags, int align, float special, const float scale, vec4_t color, qhandle_t shader,
+	const int textStyle, const int iFontIndex)
 {
 	rectDef_t rect;
 
@@ -4357,22 +4356,22 @@ static void UI_OwnerDraw(float x, float y, float w, float h, const float text_x,
 		}
 		else
 #endif
-		if (levelshot)
-		{
-			ui.R_DrawStretchPic(x, y, w, h, 0, 0, 1, 1, levelshot);
-		}
-		else
-		{
-			UI_DrawHandlePic(x, y, w, h, uis.menuBackShader);
-		}
+			if (levelshot)
+			{
+				ui.R_DrawStretchPic(x, y, w, h, 0, 0, 1, 1, levelshot);
+			}
+			else
+			{
+				UI_DrawHandlePic(x, y, w, h, uis.menuBackShader);
+			}
 
 		ui.R_Font_DrawString(x, // int ox
-		                     y + h, // int oy
-		                     s_savedata[s_savegame.currentLine].currentSaveFileMap, // const char *text
-		                     color, // paletteRGBA_c c
-		                     iFontIndex, // const int iFontHandle
-		                     w, //-1,		// iMaxPixelWidth (-1 = none)
-		                     scale // const float scale = 1.0f
+			y + h, // int oy
+			s_savedata[s_savegame.currentLine].currentSaveFileMap, // const char *text
+			color, // paletteRGBA_c c
+			iFontIndex, // const int iFontHandle
+			w, //-1,		// iMaxPixelWidth (-1 = none)
+			scale // const float scale = 1.0f
 		);
 		break;
 	case UI_PREVIEWCINEMATIC:
@@ -4465,10 +4464,10 @@ int UI_OwnerDrawWidth(const int ownerDraw, const float scale)
 		}
 		break;
 
-	// FIXME BOB
-	//	case UI_SERVERREFRESHDATE:
-	//		s = UI_Cvar_VariableString(va("ui_lastServerRefresh_%i", ui_netSource.integer));
-	//		break;
+		// FIXME BOB
+		//	case UI_SERVERREFRESHDATE:
+		//		s = UI_Cvar_VariableString(va("ui_lastServerRefresh_%i", ui_netSource.integer));
+		//		break;
 	default:
 		break;
 	}
@@ -4688,7 +4687,7 @@ char* UI_GetCurrentLevelshot()
 
 			while (true)
 			{
-				char screenShot[128] = {0};
+				char screenShot[128] = { 0 };
 
 				strcpy(screenShot, va("menu/art/unknownmap%i", SCREENSHOT_TOTAL));
 
@@ -4917,8 +4916,8 @@ static void UI_UpdateSaberCvars()
 	{
 		char rgbColor[8];
 		Com_sprintf(rgbColor, 8, "x%02x%02x%02x", Cvar_VariableIntegerValue("ui_rgb_saber_red"),
-		            Cvar_VariableIntegerValue("ui_rgb_saber_green"),
-		            Cvar_VariableIntegerValue("ui_rgb_saber_blue"));
+			Cvar_VariableIntegerValue("ui_rgb_saber_green"),
+			Cvar_VariableIntegerValue("ui_rgb_saber_blue"));
 		if (!Cvar_VariableIntegerValue("g_NPCsaber") && !Cvar_VariableIntegerValue("g_NPCsabertwo"))
 		{
 			Cvar_Set("g_saber_color", rgbColor);
@@ -4933,8 +4932,8 @@ static void UI_UpdateSaberCvars()
 	{
 		char rgbColor[8];
 		Com_sprintf(rgbColor, 8, "x%02x%02x%02x", Cvar_VariableIntegerValue("ui_rgb_saber2_red"),
-		            Cvar_VariableIntegerValue("ui_rgb_saber2_green"),
-		            Cvar_VariableIntegerValue("ui_rgb_saber2_blue"));
+			Cvar_VariableIntegerValue("ui_rgb_saber2_green"),
+			Cvar_VariableIntegerValue("ui_rgb_saber2_blue"));
 		if (!Cvar_VariableIntegerValue("g_NPCsaber") && !Cvar_VariableIntegerValue("g_NPCsabertwo"))
 		{
 			Cvar_Set("g_saber2_color", rgbColor);
@@ -5258,7 +5257,7 @@ static void UI_ForcePowerWeaponsButton(qboolean activeFlag)
 void UI_SetItemColor(const itemDef_t* item, const char* itemname, const char* name, vec4_t color);
 
 static void UI_SetHexPicLevel(const menuDef_t* menu, const int forcePowerI, const int powerLevel,
-                              const qboolean goldFlag)
+	const qboolean goldFlag)
 {
 	char itemName[128];
 
@@ -5273,7 +5272,7 @@ static void UI_SetHexPicLevel(const menuDef_t* menu, const int forcePowerI, cons
 		if (goldFlag)
 		{
 			Com_sprintf(itemGraphic, sizeof itemGraphic, "gfx/menus/hex_pattern_%d_gold",
-			            powerLevel >= 4 ? 3 : powerLevel);
+				powerLevel >= 4 ? 3 : powerLevel);
 		}
 		else
 		{
@@ -5413,12 +5412,12 @@ static void UI_DemoSetForceLevels()
 		//i am carrying over from a previous level, so get the increased power! (non-core only)
 		uiInfo.forcePowerLevel[FP_HEAL] = Q_max(pState->forcePowerLevel[FP_HEAL], uiInfo.forcePowerLevel[FP_HEAL]);
 		uiInfo.forcePowerLevel[FP_TELEPATHY] = Q_max(pState->forcePowerLevel[FP_TELEPATHY],
-		                                             uiInfo.forcePowerLevel[FP_TELEPATHY]);
+			uiInfo.forcePowerLevel[FP_TELEPATHY]);
 		uiInfo.forcePowerLevel[FP_GRIP] = Q_max(pState->forcePowerLevel[FP_GRIP], uiInfo.forcePowerLevel[FP_GRIP]);
 		uiInfo.forcePowerLevel[FP_LIGHTNING] = Q_max(pState->forcePowerLevel[FP_LIGHTNING],
-		                                             uiInfo.forcePowerLevel[FP_LIGHTNING]);
+			uiInfo.forcePowerLevel[FP_LIGHTNING]);
 		uiInfo.forcePowerLevel[FP_PROTECT] = Q_max(pState->forcePowerLevel[FP_PROTECT],
-		                                           uiInfo.forcePowerLevel[FP_PROTECT]);
+			uiInfo.forcePowerLevel[FP_PROTECT]);
 
 		uiInfo.forcePowerLevel[FP_ABSORB] =
 			Q_max(pState->forcePowerLevel[FP_ABSORB], uiInfo.forcePowerLevel[FP_ABSORB]);
@@ -5426,20 +5425,20 @@ static void UI_DemoSetForceLevels()
 		uiInfo.forcePowerLevel[FP_RAGE] = Q_max(pState->forcePowerLevel[FP_RAGE], uiInfo.forcePowerLevel[FP_RAGE]);
 
 		uiInfo.forcePowerLevel[FP_DESTRUCTION] = Q_max(pState->forcePowerLevel[FP_DESTRUCTION],
-		                                               uiInfo.forcePowerLevel[FP_DESTRUCTION]);
+			uiInfo.forcePowerLevel[FP_DESTRUCTION]);
 		uiInfo.forcePowerLevel[FP_STASIS] =
 			Q_max(pState->forcePowerLevel[FP_STASIS], uiInfo.forcePowerLevel[FP_STASIS]);
 
 		uiInfo.forcePowerLevel[FP_GRASP] = Q_max(pState->forcePowerLevel[FP_GRASP], uiInfo.forcePowerLevel[FP_GRASP]);
 		uiInfo.forcePowerLevel[FP_REPULSE] = Q_max(pState->forcePowerLevel[FP_REPULSE],
-		                                           uiInfo.forcePowerLevel[FP_REPULSE]);
+			uiInfo.forcePowerLevel[FP_REPULSE]);
 		uiInfo.forcePowerLevel[FP_LIGHTNING_STRIKE] = Q_max(pState->forcePowerLevel[FP_LIGHTNING_STRIKE],
-		                                                    uiInfo.forcePowerLevel[FP_LIGHTNING_STRIKE]);
+			uiInfo.forcePowerLevel[FP_LIGHTNING_STRIKE]);
 		uiInfo.forcePowerLevel[FP_FEAR] = Q_max(pState->forcePowerLevel[FP_FEAR], uiInfo.forcePowerLevel[FP_FEAR]);
 		uiInfo.forcePowerLevel[FP_DEADLYSIGHT] = Q_max(pState->forcePowerLevel[FP_DEADLYSIGHT],
-		                                               uiInfo.forcePowerLevel[FP_DEADLYSIGHT]);
+			uiInfo.forcePowerLevel[FP_DEADLYSIGHT]);
 		uiInfo.forcePowerLevel[FP_PROJECTION] = Q_max(pState->forcePowerLevel[FP_PROJECTION],
-		                                              uiInfo.forcePowerLevel[FP_PROJECTION]);
+			uiInfo.forcePowerLevel[FP_PROJECTION]);
 		uiInfo.forcePowerLevel[FP_BLAST] = Q_max(pState->forcePowerLevel[FP_BLAST], uiInfo.forcePowerLevel[FP_BLAST]);
 	}
 }
@@ -5493,7 +5492,7 @@ static void UI_ShutdownForceHelp()
 {
 	char itemName[128];
 	itemDef_t* item;
-	vec4_t color = {0.65f, 0.65f, 0.65f, 1.0f};
+	vec4_t color = { 0.65f, 0.65f, 0.65f, 1.0f };
 
 	const menuDef_t* menu = Menu_GetFocused(); // Get current menu
 
@@ -5576,7 +5575,7 @@ static void UI_ShutdownForceHelp()
 	{
 		char itemhexName[128];
 		char itemiconName[128];
-		vec4_t color2 = {1.0f, 1.0f, 1.0f, 1.0f};
+		vec4_t color2 = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 		Com_sprintf(itemhexName, sizeof itemhexName, "%s_hexpic", powerEnums[uiInfo.forcePowerUpdated].title);
 		Com_sprintf(itemiconName, sizeof itemiconName, "%s_iconpic", powerEnums[uiInfo.forcePowerUpdated].title);
@@ -5596,7 +5595,7 @@ static void UI_ShutdownForceHelp()
 static void UI_DecrementCurrentForcePower()
 {
 	itemDef_t* item;
-	vec4_t color = {0.65f, 0.65f, 0.65f, 1.0f};
+	vec4_t color = { 0.65f, 0.65f, 0.65f, 1.0f };
 
 	const menuDef_t* menu = Menu_GetFocused(); // Get current menu
 
@@ -5753,7 +5752,7 @@ static void UI_AffectForcePowerLevel(const char* forceName)
 	if (uiInfo.forcePowerUpdated > FP_UPDATED_NONE)
 	{
 		itemDef_t* item;
-		vec4_t color = {0.25f, 0.25f, 0.25f, 1.0f};
+		vec4_t color = { 0.25f, 0.25f, 0.25f, 1.0f };
 
 		// Make it so none of the other buttons can be clicked
 		for (short i = 0; i < MAX_POWER_ENUMS; i++)
@@ -6277,8 +6276,8 @@ static void UI_LoadMissionSelectMenu(const char* cvarName)
 
 // Update the player weapons with the chosen weapon
 static void UI_AddWeaponSelection(const int weaponIndex, const int ammoIndex, const int ammoAmount,
-                                  const char* iconItemName, const char* litIconItemName, const char* hexBackground,
-                                  const char* soundfile)
+	const char* iconItemName, const char* litIconItemName, const char* hexBackground,
+	const char* soundfile)
 {
 	const menuDef_t* menu = Menu_GetFocused(); // Get current menu
 
@@ -6290,7 +6289,7 @@ static void UI_AddWeaponSelection(const int weaponIndex, const int ammoIndex, co
 	const itemDef_s* iconItem = Menu_FindItemByName(menu, iconItemName);
 	const itemDef_s* litIconItem = Menu_FindItemByName(menu, litIconItemName);
 
-	const char *chosenItemName, *chosenButtonName;
+	const char* chosenItemName, * chosenButtonName;
 
 	// has this weapon already been chosen?
 	if (weaponIndex == uiInfo.selectedWeapon1)
@@ -6401,8 +6400,8 @@ static void UI_AddWeaponSelection(const int weaponIndex, const int ammoIndex, co
 }
 
 static void UI_AddPistolSelection(const int weaponIndex, const int ammoIndex, const int ammoAmount,
-                                  const char* iconItemName, const char* litIconItemName, const char* hexBackground,
-                                  const char* soundfile)
+	const char* iconItemName, const char* litIconItemName, const char* hexBackground,
+	const char* soundfile)
 {
 	const menuDef_t* menu = Menu_GetFocused(); // Get current menu
 
@@ -6505,7 +6504,7 @@ static void UI_AddPistolSelection(const int weaponIndex, const int ammoIndex, co
 // Update the player weapons with the chosen weapon
 static void UI_RemoveWeaponSelection(const int weaponSelectionIndex)
 {
-	const char *chosenItemName, *chosenButtonName, *background;
+	const char* chosenItemName, * chosenButtonName, * background;
 	int ammoIndex, weaponIndex;
 
 	const menuDef_t* menu = Menu_GetFocused(); // Get current menu
@@ -6786,8 +6785,8 @@ static void UI_Highlightpistolselection()
 
 // Update the player throwable weapons (okay it's a bad description) with the chosen weapon
 static void UI_AddThrowWeaponSelection(const int weaponIndex, const int ammoIndex, const int ammoAmount,
-                                       const char* iconItemName, const char* litIconItemName, const char* hexBackground,
-                                       const char* soundfile)
+	const char* iconItemName, const char* litIconItemName, const char* hexBackground,
+	const char* soundfile)
 {
 	const menuDef_t* menu = Menu_GetFocused(); // Get current menu
 
@@ -7067,10 +7066,10 @@ static void UI_UpdateCharacterSkin()
 	}
 
 	Com_sprintf(skin, sizeof skin, "models/players/%s/|%s|%s|%s",
-	            Cvar_VariableString("ui_char_model"),
-	            Cvar_VariableString("ui_char_skin_head"),
-	            Cvar_VariableString("ui_char_skin_torso"),
-	            Cvar_VariableString("ui_char_skin_legs")
+		Cvar_VariableString("ui_char_model"),
+		Cvar_VariableString("ui_char_skin_head"),
+		Cvar_VariableString("ui_char_skin_torso"),
+		Cvar_VariableString("ui_char_skin_legs")
 	);
 
 	ItemParse_model_g2skin_go(item, skin);
@@ -7338,7 +7337,7 @@ void ReadSaveDirectory()
 			{
 				// Is this a valid file??? & Get comment of file
 				result = ui.SG_GetSaveGameComment(holdChar, s_savedata[s_savegame.saveFileCnt].currentSaveFileComments,
-				                                  s_savedata[s_savegame.saveFileCnt].currentSaveFileMap);
+					s_savedata[s_savegame.saveFileCnt].currentSaveFileMap);
 				if (result != 0) // ignore Bad save game
 				{
 					s_savedata[s_savegame.saveFileCnt].currentSaveFileName = holdChar;

@@ -34,7 +34,7 @@ if (png_ptr->buffer_size < N) \
 
 void PNGAPI
 png_process_data(const png_structrp png_ptr, const png_inforp info_ptr,
-                 const png_bytep buffer, const png_size_t buffer_size)
+	const png_bytep buffer, const png_size_t buffer_size)
 {
 	if (png_ptr == NULL || info_ptr == NULL)
 		return;
@@ -594,7 +594,7 @@ png_push_save_buffer(const png_structrp png_ptr)
 
 void /* PRIVATE */
 png_push_restore_buffer(const png_structrp png_ptr, const png_bytep buffer,
-                        const png_size_t buffer_length)
+	const png_size_t buffer_length)
 {
 	png_ptr->current_buffer = buffer;
 	png_ptr->current_buffer_size = buffer_length;
@@ -696,7 +696,7 @@ png_push_read_IDAT(const png_structrp png_ptr)
 
 void /* PRIVATE */
 png_process_IDAT_data(const png_structrp png_ptr, const png_bytep buffer,
-                      const png_size_t buffer_length)
+	const png_size_t buffer_length)
 {
 	/* The caller checks for a non-zero buffer length. */
 	if (!(buffer_length > 0) || buffer == NULL)
@@ -1111,7 +1111,7 @@ png_push_have_row(const png_structrp png_ptr, const png_bytep row)
 
 void PNGAPI
 png_progressive_combine_row(const png_const_structrp png_ptr, const png_bytep old_row,
-                            const png_const_bytep new_row)
+	const png_const_bytep new_row)
 {
 	if (png_ptr == NULL)
 		return;
@@ -1126,8 +1126,8 @@ png_progressive_combine_row(const png_const_structrp png_ptr, const png_bytep ol
 
 void PNGAPI
 png_set_progressive_read_fn(const png_structrp png_ptr, const png_voidp progressive_ptr,
-                            const png_progressive_info_ptr info_fn, const png_progressive_row_ptr row_fn,
-                            const png_progressive_end_ptr end_fn)
+	const png_progressive_info_ptr info_fn, const png_progressive_row_ptr row_fn,
+	const png_progressive_end_ptr end_fn)
 {
 	if (png_ptr == NULL)
 		return;

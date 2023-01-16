@@ -263,7 +263,7 @@ protected:
 	virtual void Draw()
 	{
 		theFxHelper.AddLightToScene(mOrigin1, mRefEnt.radius,
-		                            mRefEnt.lightingOrigin[0], mRefEnt.lightingOrigin[1], mRefEnt.lightingOrigin[2]);
+			mRefEnt.lightingOrigin[0], mRefEnt.lightingOrigin[1], mRefEnt.lightingOrigin[2]);
 	}
 
 public:
@@ -364,13 +364,13 @@ protected:
 
 public:
 	CParticle() : mOrgOffset{}, mVel{}, mAccel{}, mGravity(0), mSizeStart(0), mSizeEnd(0), mSizeParm(0), mRGBStart{},
-	              mRGBEnd{},
-	              mRGBParm(0),
-	              mAlphaStart(0),
-	              mAlphaEnd(0),
-	              mAlphaParm(0),
-	              mRotationDelta(0),
-	              mElasticity(0)
+		mRGBEnd{},
+		mRGBParm(0),
+		mAlphaStart(0),
+		mAlphaEnd(0),
+		mAlphaParm(0),
+		mRotationDelta(0),
+		mElasticity(0)
 	{
 		mRefEnt.reType = RT_SPRITE;
 		mClientID = -1;
@@ -642,8 +642,8 @@ protected:
 
 public:
 	CEmitter() : mOldOrigin{}, mLastOrigin{}, mOldVelocity{}, mOldTime(0), mAngles{}, mAngleDelta{}, mEmitterFxID(0),
-	             mDensity(0),
-	             mVariance(0)
+		mDensity(0),
+		mVariance(0)
 	{
 		// There may or may not be a model, but if there isn't one,
 		//	we just won't bother adding the refEnt in our Draw func

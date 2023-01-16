@@ -314,7 +314,7 @@ static const int jpeg_zigzag_order2[2][2] = {
 
 LOCAL(void)
 jpeg_make_d_derived_tbl(const j_decompress_ptr cinfo, const boolean isDC, const int tblno,
-                        d_derived_tbl** pdtbl)
+	d_derived_tbl** pdtbl)
 {
 	int i, l;
 	char huffsize[257];

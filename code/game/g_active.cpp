@@ -2451,7 +2451,7 @@ qboolean WP_AbsorbKick(gentity_t* hit_ent, const gentity_t* pusher, const vec3_t
 		}
 		G_Sound(hit_ent, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
 	}
-	else if (BotCanAbsorbKick(hit_ent, push_dir) 
+	else if (BotCanAbsorbKick(hit_ent, push_dir)
 		&& hit_ent->s.client_num >= MAX_CLIENTS && !G_ControlledByPlayer(hit_ent)) //NPC only any mode
 	{
 		if (g_SerenityJediEngineMode->integer)
@@ -7765,7 +7765,7 @@ int MagazineSize(const int ammo)
 	return -1;
 }
 
-void ReloadGun(gentity_t* ent)
+void wp_reload_gun(gentity_t* ent)
 {
 	if (ent->reloadCooldown > level.time)
 	{

@@ -681,7 +681,7 @@ CM_SetBorderInward
 ===================
 */
 static void CM_SetBorderInward(facet_t* facet, cGrid_t* grid,
-                               const int i, const int j, const int which) {
+	const int i, const int j, const int which) {
 	float* points[4];
 	int		num_points;
 

@@ -446,8 +446,6 @@ struct boltInfo_t
 
 #define MAX_GHOUL_COUNT_BITS 8 // bits required to send across the MAX_G2_MODELS inside of the networking - this is the only restriction on ghoul models possible per entity
 
-
-
 using surfaceInfo_v = std::vector<surfaceInfo_t>;
 using boneInfo_v = std::vector<boneInfo_t>;
 using boltInfo_v = std::vector<boltInfo_t>;
@@ -515,8 +513,6 @@ public:
 	int mFlags; // used for determining whether to do full collision detection against this object
 	// to here
 #define BSAVE_END_FIELD mTransformedVertsArray	// this is the end point for loadsave, keep it up to date it you change anything
-
-
 
 	intptr_t* mTransformedVertsArray;
 	// used to create an array of pointers to transformed verts per surface for collision detection

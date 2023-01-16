@@ -533,7 +533,7 @@ int FS_FTell(fileHandle_t f);
 void FS_Flush(fileHandle_t f);
 
 void FS_FilenameCompletion(const char* dir, const char* ext, qboolean stripExt, callbackFunc_t callback,
-                           qboolean allowNonPureFilesOnDisk);
+	qboolean allowNonPureFilesOnDisk);
 
 const char* FS_GetCurrentGameDir(bool emptybase = false);
 

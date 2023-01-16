@@ -364,7 +364,7 @@ void SCR_DebugGraph(float value, int color);
 int SCR_GetBigStringWidth(const char* str); // returns in virtual 640x480 coordinates
 
 void SCR_FillRect(float x, float y, float width, float height,
-                  const float* color);
+	const float* color);
 void SCR_DrawPic(float x, float y, float width, float height, qhandle_t h_shader);
 void SCR_DrawNamedPic(float x, float y, float width, float height, const char* picname);
 
@@ -373,7 +373,7 @@ void SCR_DrawBigString(int x, int y, const char* s, float alpha, qboolean noColo
 void SCR_DrawBigStringColor(int x, int y, const char* s, vec4_t color, qboolean noColorEscape);
 // ignores embedded color control characters
 void SCR_DrawSmallStringExt(int x, int y, const char* string, const float* setColor, qboolean forceColor,
-                            qboolean noColorEscape);
+	qboolean noColorEscape);
 void SCR_DrawBigChar(int x, int y, int ch);
 void SCR_DrawSmallChar(int x, int y, int ch);
 
@@ -394,7 +394,7 @@ void SCR_RunCinematic();
 void SCR_StopCinematic(qboolean b_allow_refusal = qfalse);
 
 int CIN_PlayCinematic(const char* arg, int x, int y, int w, int h, int systemBits,
-                      const char* ps_audio_file /* = NULL */);
+	const char* ps_audio_file /* = NULL */);
 e_status CIN_StopCinematic(int handle);
 e_status CIN_RunCinematic(int handle);
 void CIN_DrawCinematic(int handle);

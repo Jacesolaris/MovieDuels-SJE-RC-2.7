@@ -639,7 +639,7 @@ void R_PlaneForSurface(surfaceType_t* surf_type, cplane_t* plane) {
 	vec4_t			plane4;
 
 	if (!surf_type) {
-		memset(plane, 0, sizeof*plane);
+		memset(plane, 0, sizeof * plane);
 		plane->normal[0] = 1;
 		return;
 	}
@@ -672,7 +672,7 @@ void R_PlaneForSurface(surfaceType_t* surf_type, cplane_t* plane) {
 		plane->dist = plane4[3];
 		return;
 	default:
-		memset(plane, 0, sizeof*plane);
+		memset(plane, 0, sizeof * plane);
 		plane->normal[0] = 1;
 	}
 }
@@ -960,7 +960,6 @@ Returns qtrue if another view has been rendered
 int	recursivePortalCount;
 qboolean R_MirrorViewBySurface(drawSurf_t* draw_surf, int entity_num)
 {
-	
 	viewParms_t		new_parms;
 	viewParms_t		old_parms;
 	orientation_t	surface, camera;
@@ -1152,7 +1151,7 @@ R_DecomposeSort
 =================
 */
 void R_DecomposeSort(const unsigned sort, int* entity_num, shader_t** shader,
-                     int* fog_num, int* dlight_map) {
+	int* fog_num, int* dlight_map) {
 	*fog_num = sort >> QSORT_FOGNUM_SHIFT & 31;
 	*shader = tr.sortedShaders[sort >> QSORT_SHADERNUM_SHIFT & MAX_SHADERS - 1];
 	*entity_num = sort >> QSORT_REFENTITYNUM_SHIFT & REFENTITYNUM_MASK;

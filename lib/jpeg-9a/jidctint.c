@@ -426,8 +426,8 @@ Sorry, this code only copes with 8x8 DCT blocks. /* deliberate syntax err */
 
 GLOBAL(void)
 jpeg_idct_7x7(const j_decompress_ptr cinfo, jpeg_component_info* compptr,
-              const JCOEFPTR coef_block,
-              const JSAMPARRAY output_buf, const JDIMENSION output_col)
+	const JCOEFPTR coef_block,
+	const JSAMPARRAY output_buf, const JDIMENSION output_col)
 {
 	INT32 tmp0, tmp1, tmp2, tmp10, tmp11, tmp12, tmp13;
 	INT32 z1, z2, z3;
@@ -570,8 +570,8 @@ jpeg_idct_7x7(const j_decompress_ptr cinfo, jpeg_component_info* compptr,
 
 GLOBAL(void)
 jpeg_idct_6x6(const j_decompress_ptr cinfo, jpeg_component_info* compptr,
-              const JCOEFPTR coef_block,
-              const JSAMPARRAY output_buf, const JDIMENSION output_col)
+	const JCOEFPTR coef_block,
+	const JSAMPARRAY output_buf, const JDIMENSION output_col)
 {
 	INT32 tmp0, tmp1, tmp2, tmp10, tmp11, tmp12;
 	INT32 z1, z2, z3;
@@ -686,8 +686,8 @@ jpeg_idct_6x6(const j_decompress_ptr cinfo, jpeg_component_info* compptr,
 
 GLOBAL(void)
 jpeg_idct_5x5(const j_decompress_ptr cinfo, jpeg_component_info* compptr,
-              const JCOEFPTR coef_block,
-              const JSAMPARRAY output_buf, const JDIMENSION output_col)
+	const JCOEFPTR coef_block,
+	const JSAMPARRAY output_buf, const JDIMENSION output_col)
 {
 	INT32 tmp0, tmp1, tmp10, tmp11, tmp12;
 	INT32 z1, z2, z3;
@@ -796,8 +796,8 @@ jpeg_idct_5x5(const j_decompress_ptr cinfo, jpeg_component_info* compptr,
 
 GLOBAL(void)
 jpeg_idct_4x4(const j_decompress_ptr cinfo, jpeg_component_info* compptr,
-              const JCOEFPTR coef_block,
-              const JSAMPARRAY output_buf, const JDIMENSION output_col)
+	const JCOEFPTR coef_block,
+	const JSAMPARRAY output_buf, const JDIMENSION output_col)
 {
 	INT32 tmp0, tmp2, tmp10, tmp12;
 	INT32 z1, z2, z3;
@@ -896,8 +896,8 @@ jpeg_idct_4x4(const j_decompress_ptr cinfo, jpeg_component_info* compptr,
 
 GLOBAL(void)
 jpeg_idct_3x3(const j_decompress_ptr cinfo, jpeg_component_info* compptr,
-              const JCOEFPTR coef_block,
-              const JSAMPARRAY output_buf, const JDIMENSION output_col)
+	const JCOEFPTR coef_block,
+	const JSAMPARRAY output_buf, const JDIMENSION output_col)
 {
 	INT32 tmp0, tmp2, tmp10, tmp12;
 	const JSAMPLE* range_limit = IDCT_range_limit(cinfo);
@@ -980,8 +980,8 @@ jpeg_idct_3x3(const j_decompress_ptr cinfo, jpeg_component_info* compptr,
 
 GLOBAL(void)
 jpeg_idct_2x2(const j_decompress_ptr cinfo, jpeg_component_info* compptr,
-              const JCOEFPTR coef_block,
-              const JSAMPARRAY output_buf, const JDIMENSION output_col)
+	const JCOEFPTR coef_block,
+	const JSAMPARRAY output_buf, const JDIMENSION output_col)
 {
 	const JSAMPLE* range_limit = IDCT_range_limit(cinfo);
 	SHIFT_TEMPS
@@ -1031,8 +1031,8 @@ jpeg_idct_2x2(const j_decompress_ptr cinfo, jpeg_component_info* compptr,
 
 GLOBAL(void)
 jpeg_idct_1x1(const j_decompress_ptr cinfo, jpeg_component_info* compptr,
-              const JCOEFPTR coef_block,
-              const JSAMPARRAY output_buf, const JDIMENSION output_col)
+	const JCOEFPTR coef_block,
+	const JSAMPARRAY output_buf, const JDIMENSION output_col)
 {
 	const JSAMPLE* range_limit = IDCT_range_limit(cinfo);
 	SHIFT_TEMPS
@@ -3427,8 +3427,8 @@ jpeg_idct_12x6(j_decompress_ptr cinfo, jpeg_component_info* compptr,
 
 GLOBAL(void)
 jpeg_idct_10x5(const j_decompress_ptr cinfo, jpeg_component_info* compptr,
-               const JCOEFPTR coef_block,
-               const JSAMPARRAY output_buf, const JDIMENSION output_col)
+	const JCOEFPTR coef_block,
+	const JSAMPARRAY output_buf, const JDIMENSION output_col)
 {
 	INT32 tmp10, tmp11, tmp12, tmp13, tmp14;
 	INT32 z1, z2, z3;
@@ -3584,8 +3584,8 @@ jpeg_idct_10x5(const j_decompress_ptr cinfo, jpeg_component_info* compptr,
 
 GLOBAL(void)
 jpeg_idct_8x4(const j_decompress_ptr cinfo, jpeg_component_info* compptr,
-              const JCOEFPTR coef_block,
-              const JSAMPARRAY output_buf, const JDIMENSION output_col)
+	const JCOEFPTR coef_block,
+	const JSAMPARRAY output_buf, const JDIMENSION output_col)
 {
 	INT32 tmp0, tmp2;
 	INT32 tmp10, tmp12;
@@ -3737,8 +3737,8 @@ jpeg_idct_8x4(const j_decompress_ptr cinfo, jpeg_component_info* compptr,
 
 GLOBAL(void)
 jpeg_idct_6x3(const j_decompress_ptr cinfo, jpeg_component_info* compptr,
-              const JCOEFPTR coef_block,
-              const JSAMPARRAY output_buf, const JDIMENSION output_col)
+	const JCOEFPTR coef_block,
+	const JSAMPARRAY output_buf, const JDIMENSION output_col)
 {
 	INT32 tmp0, tmp2, tmp10, tmp12;
 	const JSAMPLE* range_limit = IDCT_range_limit(cinfo);
@@ -3843,8 +3843,8 @@ jpeg_idct_6x3(const j_decompress_ptr cinfo, jpeg_component_info* compptr,
 
 GLOBAL(void)
 jpeg_idct_4x2(const j_decompress_ptr cinfo, jpeg_component_info* compptr,
-              const JCOEFPTR coef_block,
-              const JSAMPARRAY output_buf, const JDIMENSION output_col)
+	const JCOEFPTR coef_block,
+	const JSAMPARRAY output_buf, const JDIMENSION output_col)
 {
 	INT32 tmp0, tmp10;
 	const JSAMPLE* range_limit = IDCT_range_limit(cinfo);
@@ -3928,8 +3928,8 @@ jpeg_idct_4x2(const j_decompress_ptr cinfo, jpeg_component_info* compptr,
 
 GLOBAL(void)
 jpeg_idct_2x1(const j_decompress_ptr cinfo, jpeg_component_info* compptr,
-              const JCOEFPTR coef_block,
-              const JSAMPARRAY output_buf, const JDIMENSION output_col)
+	const JCOEFPTR coef_block,
+	const JSAMPARRAY output_buf, const JDIMENSION output_col)
 {
 	const JSAMPLE* range_limit = IDCT_range_limit(cinfo);
 	SHIFT_TEMPS
@@ -4536,8 +4536,8 @@ jpeg_idct_6x12(j_decompress_ptr cinfo, jpeg_component_info* compptr,
 
 GLOBAL(void)
 jpeg_idct_5x10(const j_decompress_ptr cinfo, jpeg_component_info* compptr,
-               const JCOEFPTR coef_block,
-               const JSAMPARRAY output_buf, const JDIMENSION output_col)
+	const JCOEFPTR coef_block,
+	const JSAMPARRAY output_buf, const JDIMENSION output_col)
 {
 	INT32 tmp10, tmp11, tmp12, tmp13, tmp14;
 	INT32 z1, z2, z3;
@@ -4684,8 +4684,8 @@ jpeg_idct_5x10(const j_decompress_ptr cinfo, jpeg_component_info* compptr,
 
 GLOBAL(void)
 jpeg_idct_4x8(const j_decompress_ptr cinfo, jpeg_component_info* compptr,
-              const JCOEFPTR coef_block,
-              const JSAMPARRAY output_buf, const JDIMENSION output_col)
+	const JCOEFPTR coef_block,
+	const JSAMPARRAY output_buf, const JDIMENSION output_col)
 {
 	INT32 tmp0, tmp2;
 	INT32 tmp10, tmp12;
@@ -4864,8 +4864,8 @@ jpeg_idct_4x8(const j_decompress_ptr cinfo, jpeg_component_info* compptr,
 
 GLOBAL(void)
 jpeg_idct_3x6(const j_decompress_ptr cinfo, jpeg_component_info* compptr,
-              const JCOEFPTR coef_block,
-              const JSAMPARRAY output_buf, const JDIMENSION output_col)
+	const JCOEFPTR coef_block,
+	const JSAMPARRAY output_buf, const JDIMENSION output_col)
 {
 	INT32 tmp0, tmp2, tmp10, tmp12;
 	const JSAMPLE* range_limit = IDCT_range_limit(cinfo);
@@ -4964,8 +4964,8 @@ jpeg_idct_3x6(const j_decompress_ptr cinfo, jpeg_component_info* compptr,
 
 GLOBAL(void)
 jpeg_idct_2x4(const j_decompress_ptr cinfo, jpeg_component_info* compptr,
-              const JCOEFPTR coef_block,
-              const JSAMPARRAY output_buf, const JDIMENSION output_col)
+	const JCOEFPTR coef_block,
+	const JSAMPARRAY output_buf, const JDIMENSION output_col)
 {
 	INT32 tmp0, tmp10;
 	const JSAMPLE* range_limit = IDCT_range_limit(cinfo);
@@ -5043,8 +5043,8 @@ jpeg_idct_2x4(const j_decompress_ptr cinfo, jpeg_component_info* compptr,
 
 GLOBAL(void)
 jpeg_idct_1x2(const j_decompress_ptr cinfo, jpeg_component_info* compptr,
-              const JCOEFPTR coef_block,
-              const JSAMPARRAY output_buf, const JDIMENSION output_col)
+	const JCOEFPTR coef_block,
+	const JSAMPARRAY output_buf, const JDIMENSION output_col)
 {
 	const JSAMPLE* range_limit = IDCT_range_limit(cinfo);
 	SHIFT_TEMPS

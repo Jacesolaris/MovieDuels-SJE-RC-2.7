@@ -34,7 +34,7 @@ extern cvar_t* g_Advancedaitalk;
 extern qboolean npc_is_dark_jedi(const gentity_t* self);
 extern qboolean npc_is_light_jedi(const gentity_t* self);
 extern void jedi_set_enemy_info(vec3_t enemy_dest, vec3_t enemy_dir, float* enemy_dist, vec3_t enemy_movedir,
-                                float* enemy_movespeed, int prediction);
+	float* enemy_movespeed, int prediction);
 
 void npc_check_speak(gentity_t* speaker_npc)
 {
@@ -325,7 +325,7 @@ void NPC_LostEnemyDecideChase()
 			//FIXME: Should we only do this if there's no other enemies or we've got LOCKED_ENEMY on?
 			NPC_BSSearchStart(NPC->enemy->lastWaypoint, BS_SEARCH);
 		}
-	//If he's not our goalEntity, we're running somewhere else, so lose him
+		//If he's not our goalEntity, we're running somewhere else, so lose him
 		break;
 	default:
 		break;

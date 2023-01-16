@@ -59,7 +59,7 @@ jpeg_write_coefficients(const j_compress_ptr cinfo, jvirt_barray_ptr* coef_array
 
 GLOBAL(void)
 jpeg_copy_critical_parameters(const j_decompress_ptr srcinfo,
-                              const j_compress_ptr dstinfo)
+	const j_compress_ptr dstinfo)
 {
 	jpeg_component_info* incomp, * outcomp;
 	int tblno, ci;
@@ -158,7 +158,7 @@ jpeg_copy_critical_parameters(const j_decompress_ptr srcinfo,
 
 LOCAL(void)
 transencode_master_selection(const j_compress_ptr cinfo,
-                             jvirt_barray_ptr* coef_arrays)
+	jvirt_barray_ptr* coef_arrays)
 {
 	/* Initialize master control (includes parameter checking/processing) */
 	jinit_c_master_control(cinfo, TRUE /* transcode only */);
@@ -347,7 +347,7 @@ compress_output(const j_compress_ptr cinfo, JSAMPIMAGE input_buf)
 
 LOCAL(void)
 transencode_coef_controller(const j_compress_ptr cinfo,
-                            jvirt_barray_ptr* coef_arrays)
+	jvirt_barray_ptr* coef_arrays)
 {
 	const my_coef_ptr coef = (my_coef_ptr)
 		(*cinfo->mem->alloc_small)((j_common_ptr)cinfo, JPOOL_IMAGE,

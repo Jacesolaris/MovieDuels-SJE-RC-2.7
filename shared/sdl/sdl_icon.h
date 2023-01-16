@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-/* GIMP RGBA C-Source image dump (sdl_icon.c) */ //MovieDuels
+ /* GIMP RGBA C-Source image dump (sdl_icon.c) */ //MovieDuels
 #pragma once
 
 static const struct

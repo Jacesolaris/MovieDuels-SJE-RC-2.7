@@ -4521,8 +4521,8 @@ void player_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, cons
 		else
 		{
 			assert(!!"How did we get to this point?");
-			}
 		}
+	}
 
 #ifndef FINAL_BUILD
 	if (d_saberCombat->integer && attacker && attacker->client)
@@ -5594,7 +5594,7 @@ void player_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, cons
 
 	// Start any necessary death fx for this entity
 	DeathFX(self);
-	}
+}
 
 qboolean G_CheckForStrongAttackMomentum(const gentity_t* self)
 {
