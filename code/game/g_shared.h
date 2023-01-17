@@ -881,6 +881,7 @@ public:
 	qboolean noHead;
 	int cloneFired; //[CloneRifle]
 	qboolean saberCollisions;
+	int reloadTime;
 
 	void sg_export(
 		ojk::SavedGameHelper& saved_game) const
@@ -986,6 +987,7 @@ public:
 		saved_game.write<int32_t>(noHead);
 		saved_game.write<int32_t>(cloneFired);
 		saved_game.write<int32_t>(saberCollisions);
+		saved_game.write<int32_t>(reloadTime);
 	}
 
 	void sg_import(
@@ -1092,6 +1094,7 @@ public:
 		saved_game.read<int32_t>(noHead);
 		saved_game.read<int32_t>(cloneFired);
 		saved_game.read<int32_t>(saberCollisions);
+		saved_game.read<int32_t>(reloadTime);
 	}
 }; // GClientBase
 
@@ -1501,6 +1504,7 @@ struct gentity_s
 
 	int reloadTime; //Every 0.2 seconds reload a bullet
 	int reloadCooldown;
+	int weaponfiredelaytime;
 	int TimeOfWeaponDrop;
 
 	void sg_export(
@@ -1715,6 +1719,7 @@ struct gentity_s
 
 		saved_game.write<int32_t>(reloadTime);
 		saved_game.write<int32_t>(reloadCooldown);
+		saved_game.write<int32_t>(weaponfiredelaytime);
 		saved_game.write<int32_t>(TimeOfWeaponDrop);
 	}
 
@@ -1930,6 +1935,7 @@ struct gentity_s
 
 		saved_game.read<int32_t>(reloadTime);
 		saved_game.read<int32_t>(reloadCooldown);
+		saved_game.read<int32_t>(weaponfiredelaytime);
 		saved_game.read<int32_t>(TimeOfWeaponDrop);
 	}
 };

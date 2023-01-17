@@ -2196,6 +2196,8 @@ public:
 	int kickstartTime;
 	int kicklaststartTime;
 
+	int weaponfiredelaytime;
+
 #endif // !JK2_MODE
 
 	void sg_export(
@@ -2371,6 +2373,9 @@ public:
 		saved_game.write<int32_t>(brokenLimbs);
 		saved_game.write<int32_t>(electrifyTime);
 
+		saved_game.write<int32_t>(hyperSpaceTime);
+		saved_game.write<float>(hyperSpaceAngles);
+
 		saved_game.write<int32_t>(stunDamage);
 		saved_game.write<int32_t>(stunTime);
 		saved_game.write<int32_t>(stasisTime);
@@ -2463,8 +2468,7 @@ public:
 		saved_game.write<int32_t>(kickstartTime);
 		saved_game.write<int32_t>(kicklaststartTime);
 
-		saved_game.write<int32_t>(hyperSpaceTime);
-		saved_game.write<float>(hyperSpaceAngles);
+		saved_game.write<int32_t>(weaponfiredelaytime);
 
 #endif // !JK2_MODE
 	}
@@ -2642,6 +2646,9 @@ public:
 		saved_game.read<int32_t>(brokenLimbs);
 		saved_game.read<int32_t>(electrifyTime);
 
+		saved_game.read<int32_t>(hyperSpaceTime);
+		saved_game.read<float>(hyperSpaceAngles);
+
 		saved_game.read<int32_t>(stunDamage);
 		saved_game.read<int32_t>(stunTime);
 		saved_game.read<int32_t>(stasisTime);
@@ -2734,8 +2741,7 @@ public:
 		saved_game.read<int32_t>(kickstartTime);
 		saved_game.read<int32_t>(kicklaststartTime);
 
-		saved_game.read<int32_t>(hyperSpaceTime);
-		saved_game.read<float>(hyperSpaceAngles);
+		saved_game.read<int32_t>(weaponfiredelaytime);
 
 #endif // !JK2_MODE
 	}

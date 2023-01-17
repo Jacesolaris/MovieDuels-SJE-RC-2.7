@@ -50,6 +50,7 @@ extern void G_SoundOnEnt(const gentity_t* ent, soundChannel_t channel, const cha
 const char* CG_DisplayBoxedText(int iBoxX, int iBoxY, int iBoxWidth, int iBoxHeight,
 	const char* psText, int iFontHandle, float fScale,
 	const vec4_t v4Color);
+extern int fire_deley_time();
 
 /*
 ==========================
@@ -3549,15 +3550,16 @@ void CG_NextWeapon_f()
 			cg_entities[0].gent->s.weapon == WP_CLONEPISTOL ||
 			cg_entities[0].gent->s.weapon == WP_REBELBLASTER)
 		{
-			NPC_SetAnim(cg_entities[0].gent, SETANIM_TORSO, BOTH_PISTOLFAIL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+			NPC_SetAnim(cg_entities[0].gent, SETANIM_TORSO, BOTH_PISTOLFAIL, SETANIM_AFLAG_BLOCKPACE);
 		}
 		else
 		{
-			NPC_SetAnim(cg_entities[0].gent, SETANIM_TORSO, BOTH_RIFLEFAIL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+			NPC_SetAnim(cg_entities[0].gent, SETANIM_TORSO, BOTH_RIFLEFAIL, SETANIM_AFLAG_BLOCKPACE);
 		}
 		G_SoundOnEnt(cg_entities[0].gent, CHAN_WEAPON, "sound/weapons/reloadfail.mp3");
 		G_SoundOnEnt(cg_entities[0].gent, CHAN_VOICE_ATTEN, "*pain25.wav");
 		G_Damage(cg_entities[0].gent, nullptr, nullptr, nullptr, cg_entities[0].gent->currentOrigin, 2, DAMAGE_NO_ARMOR, MOD_LAVA);
+		cg_entities[0].gent->reloadTime = level.time + fire_deley_time();
 		return;
 	}
 
@@ -3611,10 +3613,10 @@ void CG_NextWeapon_f()
 	if (cg.snap->ps.viewEntity)
 	{
 		// yeah, probably need a better check here
-		if (g_entities[cg.snap->ps.viewEntity].client && (g_entities[cg.snap->ps.viewEntity].client->NPC_class ==
-			CLASS_R5D2
-			|| g_entities[cg.snap->ps.viewEntity].client->NPC_class == CLASS_R2D2
-			|| g_entities[cg.snap->ps.viewEntity].client->NPC_class == CLASS_MOUSE))
+		if (g_entities[cg.snap->ps.viewEntity].client &&
+			(g_entities[cg.snap->ps.viewEntity].client->NPC_class == CLASS_R5D2
+				|| g_entities[cg.snap->ps.viewEntity].client->NPC_class == CLASS_R2D2
+				|| g_entities[cg.snap->ps.viewEntity].client->NPC_class == CLASS_MOUSE))
 		{
 			return;
 		}
@@ -3622,9 +3624,11 @@ void CG_NextWeapon_f()
 
 	const int original = cg.weaponSelect;
 
-	constexpr int first_weapon = FIRST_WEAPON;
+	constexpr int first_weapon = FIRST_WEAPON; // saber
 
-	constexpr int first_vehicle_weapon = FIRST_VEHICLEWEAPON;
+	constexpr int first_vehicle_weapon = FIRST_VEHICLEWEAPON; // blaster pistol
+
+	const int n_cur_wpn = cg.predicted_player_state.weapon;
 
 	if (G_IsRidingVehicle(&g_entities[cg.snap->ps.viewEntity])) //PM_WeaponOkOnVehicle
 	{
@@ -3658,15 +3662,18 @@ void CG_NextWeapon_f()
 			cg.weaponSelect = first_weapon;
 		}
 
+		if (cg.weaponSelect != n_cur_wpn)
+		{
+			if (g_entities[0].client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_NONE)
+			{
+				g_entities[0].client->ps.BlasterAttackChainCount = BLASTERMISHAPLEVEL_NONE;
+			}
+		}
+
 		if (CG_WeaponSelectable(cg.weaponSelect, original, qfalse))
 		{
 			G_StartNextItemEffect(cg_entities[0].gent, MEF_NO_SPIN, 700, 0.3f, 0);
 			SetWeaponSelectTime();
-
-			if (g_entities[0].client && g_entities[0].client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_NONE)
-			{
-				g_entities[0].client->ps.BlasterAttackChainCount = BLASTERMISHAPLEVEL_NONE;
-			}
 			return;
 		}
 	}
@@ -3797,15 +3804,16 @@ void CG_PrevWeapon_f()
 			cg_entities[0].gent->s.weapon == WP_CLONEPISTOL ||
 			cg_entities[0].gent->s.weapon == WP_REBELBLASTER)
 		{
-			NPC_SetAnim(cg_entities[0].gent, SETANIM_TORSO, BOTH_PISTOLFAIL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+			NPC_SetAnim(cg_entities[0].gent, SETANIM_TORSO, BOTH_PISTOLFAIL, SETANIM_AFLAG_BLOCKPACE);
 		}
 		else
 		{
-			NPC_SetAnim(cg_entities[0].gent, SETANIM_TORSO, BOTH_RIFLEFAIL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+			NPC_SetAnim(cg_entities[0].gent, SETANIM_TORSO, BOTH_RIFLEFAIL, SETANIM_AFLAG_BLOCKPACE);
 		}
 		G_SoundOnEnt(cg_entities[0].gent, CHAN_WEAPON, "sound/weapons/reloadfail.mp3");
 		G_SoundOnEnt(cg_entities[0].gent, CHAN_VOICE_ATTEN, "*pain25.wav");
 		G_Damage(cg_entities[0].gent, nullptr, nullptr, nullptr, cg_entities[0].gent->currentOrigin, 2, DAMAGE_NO_ARMOR, MOD_LAVA);
+		cg_entities[0].gent->reloadTime = level.time + fire_deley_time();
 		return;
 	}
 
@@ -3853,10 +3861,10 @@ void CG_PrevWeapon_f()
 	if (cg.snap->ps.viewEntity)
 	{
 		// yeah, probably need a better check here
-		if (g_entities[cg.snap->ps.viewEntity].client && (g_entities[cg.snap->ps.viewEntity].client->NPC_class ==
-			CLASS_R5D2
-			|| g_entities[cg.snap->ps.viewEntity].client->NPC_class == CLASS_R2D2
-			|| g_entities[cg.snap->ps.viewEntity].client->NPC_class == CLASS_MOUSE))
+		if (g_entities[cg.snap->ps.viewEntity].client &&
+			(g_entities[cg.snap->ps.viewEntity].client->NPC_class == CLASS_R5D2
+				|| g_entities[cg.snap->ps.viewEntity].client->NPC_class == CLASS_R2D2
+				|| g_entities[cg.snap->ps.viewEntity].client->NPC_class == CLASS_MOUSE))
 		{
 			return;
 		}
@@ -3867,6 +3875,8 @@ void CG_PrevWeapon_f()
 	constexpr int first_weapon = FIRST_WEAPON;
 
 	constexpr int first_vehicle_weapon = FIRST_VEHICLEWEAPON;
+
+	const int n_cur_wpn = cg.predicted_player_state.weapon;
 
 	if (G_IsRidingVehicle(&g_entities[cg.snap->ps.viewEntity])) //PM_WeaponOkOnVehicle
 	{
@@ -3901,15 +3911,18 @@ void CG_PrevWeapon_f()
 			cg.weaponSelect = WP_NUM_WEAPONS;
 		}
 
+		if (cg.weaponSelect != n_cur_wpn)
+		{
+			if (g_entities[0].client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_NONE)
+			{
+				g_entities[0].client->ps.BlasterAttackChainCount = BLASTERMISHAPLEVEL_NONE;
+			}
+		}
+
 		if (CG_WeaponSelectable(cg.weaponSelect, original, qfalse))
 		{
 			G_StartNextItemEffect(cg_entities[0].gent, MEF_NO_SPIN, 700, 0.3f, 0);
 			SetWeaponSelectTime();
-
-			if (g_entities[0].client && g_entities[0].client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_NONE)
-			{
-				g_entities[0].client->ps.BlasterAttackChainCount = BLASTERMISHAPLEVEL_NONE;
-			}
 			return;
 		}
 	}
@@ -3926,6 +3939,8 @@ void CG_ChangeWeapon(const int num)
 {
 	const gentity_t* player = &g_entities[0];
 
+	const int n_cur_wpn = cg.predicted_player_state.weapon;
+
 	if (num < WP_NONE || num >= WP_NUM_WEAPONS)
 	{
 		return;
@@ -3936,7 +3951,7 @@ void CG_ChangeWeapon(const int num)
 		return;
 	}
 
-	if (g_entities[0].client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_TWENTYSIX)
+	if (player->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_TWENTYSIX)
 	{
 		if (cg_entities[0].gent->s.weapon == WP_BRYAR_PISTOL ||
 			cg_entities[0].gent->s.weapon == WP_BLASTER_PISTOL ||
@@ -3946,15 +3961,16 @@ void CG_ChangeWeapon(const int num)
 			cg_entities[0].gent->s.weapon == WP_CLONEPISTOL ||
 			cg_entities[0].gent->s.weapon == WP_REBELBLASTER)
 		{
-			NPC_SetAnim(cg_entities[0].gent, SETANIM_TORSO, BOTH_PISTOLFAIL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+			NPC_SetAnim(cg_entities[0].gent, SETANIM_TORSO, BOTH_PISTOLFAIL, SETANIM_AFLAG_BLOCKPACE);
 		}
 		else
 		{
-			NPC_SetAnim(cg_entities[0].gent, SETANIM_TORSO, BOTH_RIFLEFAIL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+			NPC_SetAnim(cg_entities[0].gent, SETANIM_TORSO, BOTH_RIFLEFAIL, SETANIM_AFLAG_BLOCKPACE);
 		}
 		G_SoundOnEnt(cg_entities[0].gent, CHAN_WEAPON, "sound/weapons/reloadfail.mp3");
 		G_SoundOnEnt(cg_entities[0].gent, CHAN_VOICE_ATTEN, "*pain25.wav");
 		G_Damage(cg_entities[0].gent, nullptr, nullptr, nullptr, cg_entities[0].gent->currentOrigin, 2, DAMAGE_NO_ARMOR, MOD_LAVA);
+		cg_entities[0].gent->reloadTime = level.time + fire_deley_time();
 		return;
 	}
 
@@ -4019,9 +4035,12 @@ void CG_ChangeWeapon(const int num)
 	SetWeaponSelectTime();
 	cg.weaponSelect = num;
 
-	if (g_entities[0].client && g_entities[0].client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_NONE)
+	if (cg.weaponSelect != n_cur_wpn)
 	{
-		g_entities[0].client->ps.BlasterAttackChainCount = BLASTERMISHAPLEVEL_NONE;
+		if (g_entities[0].client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_NONE)
+		{
+			g_entities[0].client->ps.BlasterAttackChainCount = BLASTERMISHAPLEVEL_NONE;
+		}
 	}
 }
 
@@ -4034,6 +4053,8 @@ extern void G_SetWeapon(gentity_t* self, int wp);
 
 void CG_Weapon_f()
 {
+	const int n_cur_wpn = cg.predicted_player_state.weapon;
+
 	if (cg.weaponSelectTime + 200 > cg.time)
 	{
 		return;
@@ -4076,15 +4097,16 @@ void CG_Weapon_f()
 			cg_entities[0].gent->s.weapon == WP_CLONEPISTOL ||
 			cg_entities[0].gent->s.weapon == WP_REBELBLASTER)
 		{
-			NPC_SetAnim(cg_entities[0].gent, SETANIM_TORSO, BOTH_PISTOLFAIL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+			NPC_SetAnim(cg_entities[0].gent, SETANIM_TORSO, BOTH_PISTOLFAIL, SETANIM_AFLAG_BLOCKPACE);
 		}
 		else
 		{
-			NPC_SetAnim(cg_entities[0].gent, SETANIM_TORSO, BOTH_RIFLEFAIL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+			NPC_SetAnim(cg_entities[0].gent, SETANIM_TORSO, BOTH_RIFLEFAIL, SETANIM_AFLAG_BLOCKPACE);
 		}
 		G_SoundOnEnt(cg_entities[0].gent, CHAN_WEAPON, "sound/weapons/reloadfail.mp3");
 		G_SoundOnEnt(cg_entities[0].gent, CHAN_VOICE_ATTEN, "*pain25.wav");
 		G_Damage(cg_entities[0].gent, nullptr, nullptr, nullptr, cg_entities[0].gent->currentOrigin, 2, DAMAGE_NO_ARMOR, MOD_LAVA);
+		cg_entities[0].gent->reloadTime = level.time + fire_deley_time();
 		return;
 	}
 
@@ -4292,9 +4314,12 @@ void CG_Weapon_f()
 	SetWeaponSelectTime();
 	cg.weaponSelect = num;
 
-	if (g_entities[0].client && g_entities[0].client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_NONE)
+	if (cg.weaponSelect != n_cur_wpn)
 	{
-		g_entities[0].client->ps.BlasterAttackChainCount = BLASTERMISHAPLEVEL_NONE;
+		if (g_entities[0].client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_NONE)
+		{
+			g_entities[0].client->ps.BlasterAttackChainCount = BLASTERMISHAPLEVEL_NONE;
+		}
 	}
 }
 
@@ -4376,11 +4401,17 @@ CG_FireWeapon
 Caused by an EV_FIRE_WEAPON event
 ================
 */
-void CG_FireWeapon(centity_t* cent, const qboolean altFire)
+
+void CG_FireWeapon(centity_t* cent, const qboolean alt_fire)
 {
 	const entityState_t* ent = &cent->currentState;
 
 	if (ent->weapon == WP_NONE)
+	{
+		return;
+	}
+
+	if (cg_entities[0].gent->weaponfiredelaytime > level.time)
 	{
 		return;
 	}
@@ -4391,7 +4422,7 @@ void CG_FireWeapon(centity_t* cent, const qboolean altFire)
 		return;
 	}
 
-	if (g_entities[0].client->ps.BlasterAttackChainCount == BLASTERMISHAPLEVEL_MAX)
+	if (g_entities[0].client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_TWENTYNINE)
 	{
 		if (cg_entities[0].gent->s.weapon == WP_BRYAR_PISTOL ||
 			cg_entities[0].gent->s.weapon == WP_BLASTER_PISTOL ||
@@ -4401,15 +4432,16 @@ void CG_FireWeapon(centity_t* cent, const qboolean altFire)
 			cg_entities[0].gent->s.weapon == WP_CLONEPISTOL ||
 			cg_entities[0].gent->s.weapon == WP_REBELBLASTER)
 		{
-			NPC_SetAnim(cg_entities[0].gent, SETANIM_TORSO, BOTH_PISTOLFAIL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+			NPC_SetAnim(cg_entities[0].gent, SETANIM_TORSO, BOTH_PISTOLFAIL, SETANIM_AFLAG_BLOCKPACE);
 		}
 		else
 		{
-			NPC_SetAnim(cg_entities[0].gent, SETANIM_TORSO, BOTH_RIFLEFAIL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+			NPC_SetAnim(cg_entities[0].gent, SETANIM_TORSO, BOTH_RIFLEFAIL, SETANIM_AFLAG_BLOCKPACE);
 		}
 		G_SoundOnEnt(cg_entities[0].gent, CHAN_WEAPON, "sound/weapons/reloadfail.mp3");
 		G_SoundOnEnt(cg_entities[0].gent, CHAN_VOICE_ATTEN, "*pain25.wav");
 		G_Damage(cg_entities[0].gent, nullptr, nullptr, nullptr, cg_entities[0].gent->currentOrigin, 2, DAMAGE_NO_ARMOR, MOD_LAVA);
+		cg_entities[0].gent->reloadTime = level.time + fire_deley_time();
 		return;
 	}
 
@@ -4437,7 +4469,7 @@ void CG_FireWeapon(centity_t* cent, const qboolean altFire)
 		cent->muzzleFlashTimeL = cg.time;
 	}
 
-	cent->altFire = altFire;
+	cent->altFire = alt_fire;
 
 	if (ent->weapon == WP_SABER)
 	{

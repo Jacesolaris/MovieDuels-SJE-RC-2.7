@@ -2001,13 +2001,13 @@ void ClientTimerActions(gentity_t* ent, const int msec)
 		{
 			if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_MIN && ent->client->ps.weaponTime < 1)
 			{
-				if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_FULL && ent->client->ps.weaponTime < 1)
+				if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_FULL)
 				{
 					WP_BlasterFatigueRegenerate(4);
 				}
 				else
 				{
-					WP_BlasterFatigueRegenerate(1);					
+					WP_BlasterFatigueRegenerate(1);
 				}
 			}
 		}
@@ -2188,6 +2188,9 @@ but any server game effects are handled here
 */
 extern void WP_SabersDamageTrace(gentity_t* ent, qboolean no_effects = qfalse);
 extern void WP_SaberUpdateOldBladeData(gentity_t* ent);
+extern qboolean PM_ReloadAnim(int anim);
+extern qboolean PM_WeponRestAnim(int anim);
+void cancel_firing(gentity_t* ent);
 
 void ClientEvents(gentity_t* ent, const int old_event_sequence)
 {
@@ -2215,12 +2218,20 @@ void ClientEvents(gentity_t* ent, const int old_event_sequence)
 
 		case EV_FIRE_WEAPON:
 #ifndef FINAL_BUILD
-			if (fired) {
+			if (fired)
+			{
 				gi.Printf("DOUBLE EV_FIRE_WEAPON AND-OR EV_ALT_FIRE!!\n");
 			}
 			fired = qtrue;
 #endif
-			FireWeapon(ent, qfalse);
+			if (ent->reloadTime > 0)
+			{
+				cancel_firing(ent);
+			}
+			else
+			{
+				FireWeapon(ent, qfalse);
+			}
 			break;
 
 		case EV_ALT_FIRE:
@@ -2230,7 +2241,15 @@ void ClientEvents(gentity_t* ent, const int old_event_sequence)
 			}
 			fired = qtrue;
 #endif
-			FireWeapon(ent, qtrue);
+
+			if (ent->reloadTime > 0)
+			{
+				cancel_firing(ent);
+			}
+			else
+			{
+				FireWeapon(ent, qtrue);
+			}
 			break;
 
 		default:
@@ -7691,7 +7710,7 @@ int ReloadTime(const gentity_t* ent)
 	return 300;
 }
 
-int PainTime(const gentity_t* ent)
+int pain_time(const gentity_t* ent)
 {
 	if (ent->client->ps.weapon == WP_FLECHETTE)
 	{
@@ -7702,6 +7721,11 @@ int PainTime(const gentity_t* ent)
 		return 500;
 	}
 	return 150;
+}
+
+int fire_deley_time()
+{
+	return 500;
 }
 
 qboolean IsHoldingGun(const gentity_t* ent)
@@ -7803,26 +7827,26 @@ void wp_reload_gun(gentity_t* ent)
 			{
 				if (ent->weaponModel[1] > 0)
 				{
-					NPC_SetAnim(ent, SETANIM_TORSO, BOTH_2PISTOLFAIL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+					NPC_SetAnim(ent, SETANIM_TORSO, BOTH_2PISTOLFAIL, SETANIM_AFLAG_BLOCKPACE);
 				}
 				else
 				{
-					NPC_SetAnim(ent, SETANIM_TORSO, BOTH_PISTOLFAIL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+					NPC_SetAnim(ent, SETANIM_TORSO, BOTH_PISTOLFAIL, SETANIM_AFLAG_BLOCKPACE);
 				}
 			}
 			else if (ent->s.weapon == WP_ROCKET_LAUNCHER)
 			{
-				NPC_SetAnim(ent, SETANIM_TORSO, BOTH_ROCKETFAIL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+				NPC_SetAnim(ent, SETANIM_TORSO, BOTH_ROCKETFAIL, SETANIM_AFLAG_BLOCKPACE);
 			}
 			else
 			{
-				NPC_SetAnim(ent, SETANIM_TORSO, BOTH_RIFLEFAIL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+				NPC_SetAnim(ent, SETANIM_TORSO, BOTH_RIFLEFAIL, SETANIM_AFLAG_BLOCKPACE);
 			}
 
 			G_SoundOnEnt(ent, CHAN_WEAPON, "sound/weapons/reloadfail.mp3");
 			G_SoundOnEnt(ent, CHAN_VOICE_ATTEN, "*pain25.wav");
 			G_Damage(ent, nullptr, nullptr, nullptr, ent->currentOrigin, 2, DAMAGE_NO_ARMOR, MOD_LAVA);
-			ent->reloadTime = level.time + PainTime(ent);
+			ent->reloadTime = level.time + pain_time(ent);
 		}
 		else
 		{
@@ -8007,10 +8031,16 @@ void wp_reload_gun(gentity_t* ent)
 	}
 }
 
-void CancelReload(gentity_t* ent)
+void cancel_reload(gentity_t* ent)
 {
 	ent->reloadTime = 0;
 	ent->reloadCooldown = level.time + 500;
+}
+
+void cancel_firing(gentity_t* ent)
+{
+	ent->reloadTime = 0;
+	ent->weaponfiredelaytime = level.time + 500;
 }
 
 ////////////////////// reload

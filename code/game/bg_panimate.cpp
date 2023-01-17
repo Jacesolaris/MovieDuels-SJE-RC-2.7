@@ -5746,7 +5746,7 @@ void PM_SetAnimFinal(int* torso_anim, int* legs_anim,
 	//--------------------------------------------------------------------------------------
 	if (g_noFootSlide->integer
 		&& anim_foot_move
-		&& anim_speed > 0.0f
+		&& anim_speed >= 0.0f
 		&& gent->client->NPC_class != CLASS_HOWLER
 		&& gent->client->NPC_class != CLASS_WAMPA
 		&& gent->client->NPC_class != CLASS_GONK
@@ -7730,7 +7730,6 @@ void PM_TorsoAnimation()
 		}
 		else
 		{
-			//Used to default to both_stand1 which is an arms-down anim
 			if ((pm->ps->client_num < MAX_CLIENTS || PM_ControlledByPlayer()) && pm->ps->torsoAnim == BOTH_BUTTON_HOLD)
 			{
 				//using something

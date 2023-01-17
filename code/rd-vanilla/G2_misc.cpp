@@ -1473,7 +1473,7 @@ static void G2_TraceSurfaces(CTraceSurface& TS)
 		if (TS.collRecMap)
 		{
 #endif
-			if (!(Q_fabs(TS.m_fRadius) < 0.1))	// if not a point-trace
+			if (Q_fabs(TS.m_fRadius) >= 0.1)	// if not a point-trace
 			{
 				// .. then use radius check
 				//

@@ -1489,6 +1489,7 @@ extern qboolean PM_WeponRestAnim(int anim);
 extern qboolean PM_CrouchAnim(int anim);
 extern qboolean PM_RunningAnim(int anim);
 extern qboolean PM_WalkingAnim(int anim);
+extern int fire_deley_time();
 
 //---------------------------------------------------------
 void FireWeapon(gentity_t* ent, const qboolean alt_fire)
@@ -1506,7 +1507,12 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 		return;
 	}
 
-	if (ent->client->ps.BlasterAttackChainCount == BLASTERMISHAPLEVEL_MAX)
+	if (ent->weaponfiredelaytime > level.time)
+	{
+		return;
+	}
+
+	if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_TWENTYNINE)
 	{
 		if (ent->s.weapon == WP_BRYAR_PISTOL ||
 			ent->s.weapon == WP_BLASTER_PISTOL ||
@@ -1516,15 +1522,16 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 			ent->s.weapon == WP_CLONEPISTOL ||
 			ent->s.weapon == WP_REBELBLASTER)
 		{
-			NPC_SetAnim(ent, SETANIM_TORSO, BOTH_PISTOLFAIL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+			NPC_SetAnim(ent, SETANIM_TORSO, BOTH_PISTOLFAIL, SETANIM_AFLAG_BLOCKPACE);
 		}
 		else
 		{
-			NPC_SetAnim(ent, SETANIM_TORSO, BOTH_RIFLEFAIL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+			NPC_SetAnim(ent, SETANIM_TORSO, BOTH_RIFLEFAIL, SETANIM_AFLAG_BLOCKPACE);
 		}
 		G_SoundOnEnt(ent, CHAN_WEAPON, "sound/weapons/reloadfail.mp3");
 		G_SoundOnEnt(ent, CHAN_VOICE_ATTEN, "*pain25.wav");
 		G_Damage(ent, nullptr, nullptr, nullptr, ent->currentOrigin, 2, DAMAGE_NO_ARMOR, MOD_LAVA);
+		ent->reloadTime = level.time + fire_deley_time();
 		return;
 	}
 

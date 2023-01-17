@@ -192,7 +192,6 @@ void CG_Respawn()
 	cg.thisFrameTeleport = qtrue;
 
 	// display weapons available
-	//	cg.weaponSelectTime = cg.time;
 	SetWeaponSelectTime();
 
 	// select the weapon the server says we are using

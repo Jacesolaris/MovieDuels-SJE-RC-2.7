@@ -20846,11 +20846,15 @@ static void PM_Weapon()
 			}
 			return;
 		}
-		if (pm->gent->s.m_iVehicleNum != 0)
+
+		if (pm->gent->s.m_iVehicleNum != 0 || pm->ps->weaponfiredelaytime > level.time ||
+			pm->ps->torsoAnim == BOTH_PISTOLFAIL ||
+			pm->ps->torsoAnim == BOTH_RIFLEFAIL ||
+			pm->ps->torsoAnim == BOTH_ROCKETFAIL ||
+			pm->ps->torsoAnim == BOTH_2PISTOLFAIL)
 		{
 			// No Anims if on Veh
 		}
-
 		// start the animation even if out of ammo
 		else if (pm->gent && pm->gent->client && pm->gent->client->NPC_class == CLASS_ROCKETTROOPER)
 		{

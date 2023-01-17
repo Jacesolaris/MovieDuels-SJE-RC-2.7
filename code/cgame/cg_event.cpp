@@ -176,14 +176,13 @@ void CG_ItemPickup(const int item_num, const qboolean b_had_item)
 		{
 			// safe switching
 			if (n_new_wpn > n_cur_wpn &&
-				!(n_new_wpn == WP_DET_PACK) &&
-				!(n_new_wpn == WP_TRIP_MINE) &&
-				!(n_new_wpn == WP_THERMAL) &&
-				!(n_new_wpn == WP_ROCKET_LAUNCHER) &&
-				!(n_new_wpn == WP_CONCUSSION))
+				n_new_wpn != WP_DET_PACK &&
+				n_new_wpn != WP_TRIP_MINE &&
+				n_new_wpn != WP_THERMAL &&
+				n_new_wpn != WP_ROCKET_LAUNCHER &&
+				n_new_wpn != WP_CONCUSSION)
 			{
 				// switch to new wpn
-				//				cg.weaponSelectTime = cg.time;
 				SetWeaponSelectTime();
 				cg.weaponSelect = n_new_wpn;
 			}
@@ -328,6 +327,8 @@ An entity has an event value
 ==============
 */
 #define	DEBUGNAME(x) if(cg_debugEvents.integer){CG_Printf(x"\n");}
+
+extern void cancel_firing(gentity_t* ent);
 
 void CG_EntityEvent(centity_t* cent, vec3_t position)
 {
@@ -624,14 +625,32 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 		}
 		break;
 
+
+
 	case EV_FIRE_WEAPON:
 		DEBUGNAME("EV_FIRE_WEAPON");
-		CG_FireWeapon(cent, qfalse);
+
+		if (g_entities[0].client->reloadTime > 0)
+		{
+			cancel_firing(cg_entities[0].gent);
+		}
+		else
+		{
+			CG_FireWeapon(cent, qfalse);
+		}
 		break;
 
 	case EV_ALT_FIRE:
 		DEBUGNAME("EV_ALT_FIRE");
-		CG_FireWeapon(cent, qtrue);
+
+		if (g_entities[0].client->reloadTime > 0)
+		{
+			cancel_firing(cg_entities[0].gent);
+		}
+		else
+		{
+			CG_FireWeapon(cent, qtrue);
+		}
 		break;
 
 	case EV_DISRUPTOR_MAIN_SHOT:

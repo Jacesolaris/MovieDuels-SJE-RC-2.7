@@ -1477,7 +1477,7 @@ extern qboolean PM_CrouchAnim(int anim);
 extern qboolean is_holding_block_button(const gentity_t* defender);
 extern qboolean IsHoldingGun(const gentity_t* ent);
 extern void wp_reload_gun(gentity_t* ent);
-extern void CancelReload(gentity_t* ent);
+extern void cancel_reload(gentity_t* ent);
 extern qboolean npc_is_mando(const gentity_t* self);
 
 void G_SetTauntAnim(gentity_t* ent, const int taunt)
@@ -2093,7 +2093,7 @@ void G_SetTauntAnim(gentity_t* ent, const int taunt)
 			{
 				if (ent->reloadTime > 0)
 				{
-					CancelReload(ent);
+					cancel_reload(ent);
 				}
 				else
 				{
