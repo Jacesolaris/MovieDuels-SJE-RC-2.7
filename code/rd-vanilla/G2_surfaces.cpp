@@ -398,16 +398,16 @@ int G2_IsSurfaceRendered(const CGhoul2Info* ghl_info, const char* surface_name, 
 		{
 			uint32_t parent_flags = 0u;
 
-			const mdxmSurfHierarchy_t* parentSurfInfo = reinterpret_cast<mdxmSurfHierarchy_t*>((byte*)surf_indexes +
+			const mdxmSurfHierarchy_t* parent_surf_info = reinterpret_cast<mdxmSurfHierarchy_t*>((byte*)surf_indexes +
 				surf_indexes->offsets[
 					surf_num]);
 
 			// find the original surface in the surface list
 			//G2 was error, above comment was accurate, but we don't want the original flags, we want the parent flags
-			G2_IsSurfaceLegal(ghl_info->currentModel, parentSurfInfo->name, &parent_flags);
+			G2_IsSurfaceLegal(ghl_info->currentModel, parent_surf_info->name, &parent_flags);
 
 			// now see if we already have overriden this surface in the slist
-			const mdxmSurface_t* parent_surf = G2_FindSurface(ghl_info, slist, parentSurfInfo->name, &surf_index);
+			const mdxmSurface_t* parent_surf = G2_FindSurface(ghl_info, slist, parent_surf_info->name, &surf_index);
 			if (parent_surf)
 			{
 				// set descendants value
@@ -420,7 +420,7 @@ int G2_IsSurfaceRendered(const CGhoul2Info* ghl_info, const char* surface_name, 
 				break;
 			}
 			// set up scan of next parent
-			surf_num = parentSurfInfo->parentIndex;
+			surf_num = parent_surf_info->parentIndex;
 		}
 	}
 	else

@@ -177,14 +177,14 @@ void rocketThink(gentity_t* ent)
 }
 
 //---------------------------------------------------------
-void WP_FireRocket(gentity_t* ent, const qboolean altFire)
+void WP_FireRocket(gentity_t* ent, const qboolean alt_fire)
 //---------------------------------------------------------
 {
 	vec3_t start;
 	int damage = weaponData[WP_ROCKET_LAUNCHER].damage;
 	float vel = ROCKET_VELOCITY;
 
-	if (altFire)
+	if (alt_fire)
 	{
 		vel *= 0.5f;
 	}
@@ -193,7 +193,7 @@ void WP_FireRocket(gentity_t* ent, const qboolean altFire)
 	WP_TraceSetStart(ent, start);
 	//make sure our start point isn't on the other side of a wall
 
-	gentity_t* missile = create_missile(start, forwardVec, vel, 10000, ent, altFire);
+	gentity_t* missile = create_missile(start, forwardVec, vel, 10000, ent, alt_fire);
 
 	missile->classname = "rocket_proj";
 	missile->s.weapon = WP_ROCKET_LAUNCHER;
@@ -221,7 +221,7 @@ void WP_FireRocket(gentity_t* ent, const qboolean altFire)
 		}
 	}
 
-	if (altFire)
+	if (alt_fire)
 	{
 		int lockEntNum, lockTime;
 		if (ent->NPC && ent->enemy)
@@ -313,7 +313,7 @@ void WP_FireRocket(gentity_t* ent, const qboolean altFire)
 		missile->dflags = DAMAGE_DEATH_KNOCKBACK;
 	}
 
-	if (altFire)
+	if (alt_fire)
 	{
 		missile->methodOfDeath = MOD_ROCKET_ALT;
 		missile->splashMethodOfDeath = MOD_ROCKET_ALT; // ?SPLASH;

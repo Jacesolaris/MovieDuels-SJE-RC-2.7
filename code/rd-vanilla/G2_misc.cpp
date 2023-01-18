@@ -128,7 +128,7 @@ void ResetGoreTag()
 
 GoreTextureCoordinates* FindGoreRecord(const int tag)
 {
-	const std::map<int, GoreTextureCoordinates>::iterator i = GoreRecords.find(tag);
+	const auto i = GoreRecords.find(tag);
 	if (i != GoreRecords.end())
 	{
 		return &(*i).second;
@@ -152,7 +152,7 @@ static std::map<int, CGoreSet*> GoreSets; // map from uuid to goreset
 
 CGoreSet* FindGoreSet(const int goreSetTag)
 {
-	const std::map<int, CGoreSet*>::iterator f = GoreSets.find(goreSetTag);
+	const auto f = GoreSets.find(goreSetTag);
 	if (f != GoreSets.end())
 	{
 		return (*f).second;
@@ -411,7 +411,7 @@ void R_TransformEachSurface(const mdxmSurface_t* surface, vec3_t scale, CMiniHea
 	const int* pi_bone_references = reinterpret_cast<int*>((byte*)surface + surface->ofsBoneReferences);
 
 	// alloc some space for the transformed verts to get put in
-	float* transformed_verts = reinterpret_cast<float*>(g2_vert_space->MiniHeapAlloc(surface->num_verts * 5 * 4));
+	auto transformed_verts = reinterpret_cast<float*>(g2_vert_space->MiniHeapAlloc(surface->num_verts * 5 * 4));
 	transformed_verts_array[surface->thisSurfaceIndex] = reinterpret_cast<intptr_t>(transformed_verts);
 	if (!transformed_verts)
 	{
@@ -858,7 +858,7 @@ static void G2_GorePolys(const mdxmSurface_t* surface, CTraceSurface& ts)
 	VectorMA(saxis, .5f * c / ts.ssize, basis2, saxis);
 
 	//fixme, everything above here should be pre-calculated in G2API_AddSkinGore
-	const float* verts = (float*)ts.TransformedVertsArray[surface->thisSurfaceIndex];
+	const float* verts = reinterpret_cast<float*>(ts.TransformedVertsArray[surface->thisSurfaceIndex]);
 	const int num_verts = surface->num_verts;
 	int flags = 63;
 	assert(num_verts < MAX_GORE_VERTS);
@@ -908,7 +908,7 @@ static void G2_GorePolys(const mdxmSurface_t* surface, CTraceSurface& ts)
 		return; // completely off the gore splotch.
 	}
 	const int num_tris = surface->numTriangles;
-	const mdxmTriangle_t* tris = (mdxmTriangle_t*)((byte*)surface + surface->ofsTriangles);
+	const mdxmTriangle_t* tris = reinterpret_cast<mdxmTriangle_t*>((byte*)surface + surface->ofsTriangles);
 	verts = reinterpret_cast<float*>(ts.TransformedVertsArray[surface->thisSurfaceIndex]);
 	int new_num_tris = 0;
 	int new_num_verts = 0;
@@ -974,7 +974,7 @@ static void G2_GorePolys(const mdxmSurface_t* surface, CTraceSurface& ts)
 	}
 
 	int new_tag;
-	const std::map<std::pair<int, int>, int>::iterator f = GoreTagsTemp.find(std::make_pair(goreModelIndex, ts.surface_num));
+	const auto f = GoreTagsTemp.find(std::make_pair(goreModelIndex, ts.surface_num));
 	if (f == GoreTagsTemp.end()) // need to generate a record
 	{
 		new_tag = AllocGoreRecord();
@@ -1040,7 +1040,7 @@ static void G2_GorePolys(const mdxmSurface_t* surface, CTraceSurface& ts)
 		if (gore->tex[ts.lod])
 			R_Free(gore->tex[ts.lod]);
 
-		gore->tex[ts.lod] = (float*)data;
+		gore->tex[ts.lod] = reinterpret_cast<float*>(data);
 		*data++ = new_num_verts;
 		*data++ = new_num_tris;
 
@@ -1069,12 +1069,12 @@ static void G2_GorePolys(const mdxmSurface_t* surface, CTraceSurface& ts)
 		fdata[7] = -0.5f;
 		fdata[11] = 0.0f;
 		vec3_t shot_origin_in_current_space; // unknown space
-		TransformPoint(ts.rayStart, shot_origin_in_current_space, (mdxaBone_t*)fdata); // dest middle arg
+		TransformPoint(ts.rayStart, shot_origin_in_current_space, reinterpret_cast<mdxaBone_t*>(fdata)); // dest middle arg
 		// this will insure the shot origin in our unknown space is now the shot origin, making it a known space
 		fdata[3] -= shot_origin_in_current_space[0];
 		fdata[7] -= shot_origin_in_current_space[1];
 		fdata[11] -= shot_origin_in_current_space[2];
-		Inverse_Matrix((mdxaBone_t*)fdata, (mdxaBone_t*)(fdata + 12));  // dest 2nd arg
+		Inverse_Matrix(reinterpret_cast<mdxaBone_t*>(fdata), reinterpret_cast<mdxaBone_t*>(fdata + 12));  // dest 2nd arg
 		data += 24;
 
 		//		assert((data - (int *)gore->tex[TS.lod]) * sizeof(int) == size);

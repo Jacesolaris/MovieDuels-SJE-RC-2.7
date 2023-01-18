@@ -831,7 +831,7 @@ static const char* SE_Load_Actual(const char* psFileName, SE_BOOL bLoadDebug, SE
 	{
 		// now parse the data...
 		//
-		const char* psParsePos = (char*)psLoadedData;
+		const char* psParsePos = reinterpret_cast<char*>(psLoadedData);
 
 		TheStringPackage.SetupNewFileParse(psFileName, bLoadDebug);
 

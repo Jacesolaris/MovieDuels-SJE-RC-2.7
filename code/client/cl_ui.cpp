@@ -307,7 +307,7 @@ void CL_InitUI()
 
 	uii.GetGlconfig = UI_GetGlconfig;
 
-	uii.GetConfigString = (void (*)(int, char*, int))GetConfigString;
+	uii.GetConfigString = reinterpret_cast<void (*)(int, char*, int)>(GetConfigString);
 
 	uii.Milliseconds = Sys_Milliseconds2;
 

@@ -35,11 +35,11 @@ extern qboolean G_ControlledByPlayer(const gentity_t* self);
 extern qboolean PM_RunningAnim(int anim);
 extern qboolean PM_WalkingAnim(int anim);
 //---------------------------------------------------------
-void WP_FireBryarPistol(gentity_t* ent, const qboolean altFire)
+void WP_FireBryarPistol(gentity_t* ent, const qboolean alt_fire)
 //---------------------------------------------------------
 {
 	vec3_t start;
-	int damage = !altFire ? weaponData[WP_BRYAR_PISTOL].damage : weaponData[WP_BRYAR_PISTOL].altDamage;
+	int damage = !alt_fire ? weaponData[WP_BRYAR_PISTOL].damage : weaponData[WP_BRYAR_PISTOL].altDamage;
 
 	VectorCopy(muzzle, start);
 	WP_TraceSetStart(ent, start);
@@ -55,7 +55,7 @@ void WP_FireBryarPistol(gentity_t* ent, const qboolean altFire)
 
 		vectoangles(forwardVec, angs);
 
-		if (altFire)
+		if (alt_fire)
 		{
 			if (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent))
 			{
@@ -129,7 +129,7 @@ void WP_FireBryarPistol(gentity_t* ent, const qboolean altFire)
 
 	WP_MissileTargetHint(ent, start, forwardVec);
 
-	gentity_t* missile = create_missile(start, forwardVec, BRYAR_PISTOL_VEL, 10000, ent, altFire);
+	gentity_t* missile = create_missile(start, forwardVec, BRYAR_PISTOL_VEL, 10000, ent, alt_fire);
 
 	missile->classname = "bryar_proj";
 
@@ -144,7 +144,7 @@ void WP_FireBryarPistol(gentity_t* ent, const qboolean altFire)
 		missile->s.weapon = WP_BRYAR_PISTOL;
 	}
 
-	if (altFire)
+	if (alt_fire)
 	{
 		int count = (level.time - ent->client->ps.weaponChargeTime) / BRYAR_CHARGE_UNIT;
 
@@ -164,7 +164,7 @@ void WP_FireBryarPistol(gentity_t* ent, const qboolean altFire)
 	missile->damage = damage;
 	missile->dflags = DAMAGE_DEATH_KNOCKBACK;
 
-	if (altFire)
+	if (alt_fire)
 	{
 		missile->methodOfDeath = MOD_BRYAR_ALT;
 	}
@@ -186,11 +186,11 @@ void WP_FireBryarPistol(gentity_t* ent, const qboolean altFire)
 }
 
 //---------------------------------------------------------
-void WP_FireBryarPistolDuals(gentity_t* ent, const qboolean altFire, const qboolean second_pistol)
+void WP_FireBryarPistolDuals(gentity_t* ent, const qboolean alt_fire, const qboolean second_pistol)
 //---------------------------------------------------------
 {
 	vec3_t start;
-	int damage = !altFire ? weaponData[WP_BLASTER_PISTOL].damage : weaponData[WP_BLASTER_PISTOL].altDamage;
+	int damage = !alt_fire ? weaponData[WP_BLASTER_PISTOL].damage : weaponData[WP_BLASTER_PISTOL].altDamage;
 
 	if (second_pistol)
 	{
@@ -214,7 +214,7 @@ void WP_FireBryarPistolDuals(gentity_t* ent, const qboolean altFire, const qbool
 
 		vectoangles(forwardVec, angs);
 
-		if (altFire)
+		if (alt_fire)
 		{
 			if (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent))
 			{
@@ -288,7 +288,7 @@ void WP_FireBryarPistolDuals(gentity_t* ent, const qboolean altFire, const qbool
 
 	WP_MissileTargetHint(ent, start, forwardVec);
 
-	gentity_t* missile = create_missile(start, forwardVec, BRYAR_PISTOL_VEL, 10000, ent, altFire);
+	gentity_t* missile = create_missile(start, forwardVec, BRYAR_PISTOL_VEL, 10000, ent, alt_fire);
 
 	missile->classname = "bryar_proj";
 
@@ -303,7 +303,7 @@ void WP_FireBryarPistolDuals(gentity_t* ent, const qboolean altFire, const qbool
 		missile->s.weapon = WP_BLASTER_PISTOL;
 	}
 
-	if (altFire)
+	if (alt_fire)
 	{
 		int count = (level.time - ent->client->ps.weaponChargeTime) / BRYAR_CHARGE_UNIT;
 
@@ -323,7 +323,7 @@ void WP_FireBryarPistolDuals(gentity_t* ent, const qboolean altFire, const qbool
 	missile->damage = damage;
 	missile->dflags = DAMAGE_DEATH_KNOCKBACK;
 
-	if (altFire)
+	if (alt_fire)
 	{
 		missile->methodOfDeath = MOD_BRYAR_ALT;
 	}
@@ -349,11 +349,11 @@ void WP_FireBryarPistolDuals(gentity_t* ent, const qboolean altFire, const qbool
 //---------------
 
 //---------------------------------------------------------
-void WP_FireReyPistol(gentity_t* ent, const qboolean altFire)
+void WP_FireReyPistol(gentity_t* ent, const qboolean alt_fire)
 //---------------------------------------------------------
 {
 	vec3_t start;
-	int damage = !altFire ? weaponData[WP_REY].damage : weaponData[WP_REY].altDamage;
+	int damage = !alt_fire ? weaponData[WP_REY].damage : weaponData[WP_REY].altDamage;
 
 	VectorCopy(muzzle, start);
 	WP_TraceSetStart(ent, start);
@@ -369,7 +369,7 @@ void WP_FireReyPistol(gentity_t* ent, const qboolean altFire)
 
 		vectoangles(forwardVec, angs);
 
-		if (altFire)
+		if (alt_fire)
 		{
 			if (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent))
 			{
@@ -443,7 +443,7 @@ void WP_FireReyPistol(gentity_t* ent, const qboolean altFire)
 
 	WP_MissileTargetHint(ent, start, forwardVec);
 
-	gentity_t* missile = create_missile(start, forwardVec, BRYAR_PISTOL_VEL, 10000, ent, altFire);
+	gentity_t* missile = create_missile(start, forwardVec, BRYAR_PISTOL_VEL, 10000, ent, alt_fire);
 
 	missile->classname = "bryar_proj";
 	if (ent->s.weapon == WP_BLASTER_PISTOL
@@ -457,7 +457,7 @@ void WP_FireReyPistol(gentity_t* ent, const qboolean altFire)
 		missile->s.weapon = WP_REY;
 	}
 
-	if (altFire)
+	if (alt_fire)
 	{
 		int count = (level.time - ent->client->ps.weaponChargeTime) / BRYAR_CHARGE_UNIT;
 
@@ -477,7 +477,7 @@ void WP_FireReyPistol(gentity_t* ent, const qboolean altFire)
 	missile->damage = damage;
 	missile->dflags = DAMAGE_DEATH_KNOCKBACK;
 
-	if (altFire)
+	if (alt_fire)
 	{
 		missile->methodOfDeath = MOD_REY_ALT;
 	}
@@ -499,11 +499,11 @@ void WP_FireReyPistol(gentity_t* ent, const qboolean altFire)
 }
 
 //---------------------------------------------------------
-void WP_FireReyPistolDuals(gentity_t* ent, const qboolean altFire, const qboolean second_pistol)
+void WP_FireReyPistolDuals(gentity_t* ent, const qboolean alt_fire, const qboolean second_pistol)
 //---------------------------------------------------------
 {
 	vec3_t start;
-	int damage = !altFire ? weaponData[WP_REY].damage : weaponData[WP_REY].altDamage;
+	int damage = !alt_fire ? weaponData[WP_REY].damage : weaponData[WP_REY].altDamage;
 
 	if (second_pistol)
 	{
@@ -527,7 +527,7 @@ void WP_FireReyPistolDuals(gentity_t* ent, const qboolean altFire, const qboolea
 
 		vectoangles(forwardVec, angs);
 
-		if (altFire)
+		if (alt_fire)
 		{
 			if (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent))
 			{
@@ -601,7 +601,7 @@ void WP_FireReyPistolDuals(gentity_t* ent, const qboolean altFire, const qboolea
 
 	WP_MissileTargetHint(ent, start, forwardVec);
 
-	gentity_t* missile = create_missile(start, forwardVec, BRYAR_PISTOL_VEL, 10000, ent, altFire);
+	gentity_t* missile = create_missile(start, forwardVec, BRYAR_PISTOL_VEL, 10000, ent, alt_fire);
 
 	missile->classname = "bryar_proj";
 	if (ent->s.weapon == WP_BLASTER_PISTOL
@@ -615,7 +615,7 @@ void WP_FireReyPistolDuals(gentity_t* ent, const qboolean altFire, const qboolea
 		missile->s.weapon = WP_REY;
 	}
 
-	if (altFire)
+	if (alt_fire)
 	{
 		int count = (level.time - ent->client->ps.weaponChargeTime) / BRYAR_CHARGE_UNIT;
 
@@ -635,7 +635,7 @@ void WP_FireReyPistolDuals(gentity_t* ent, const qboolean altFire, const qboolea
 	missile->damage = damage;
 	missile->dflags = DAMAGE_DEATH_KNOCKBACK;
 
-	if (altFire)
+	if (alt_fire)
 	{
 		missile->methodOfDeath = MOD_REY_ALT;
 	}
@@ -661,11 +661,11 @@ void WP_FireReyPistolDuals(gentity_t* ent, const qboolean altFire, const qboolea
 //---------------
 
 //---------------------------------------------------------
-void WP_FireClonePistol(gentity_t* ent, const qboolean altFire)
+void WP_FireClonePistol(gentity_t* ent, const qboolean alt_fire)
 //---------------------------------------------------------
 {
 	vec3_t start;
-	int damage = !altFire ? weaponData[WP_CLONEPISTOL].damage : weaponData[WP_CLONEPISTOL].altDamage;
+	int damage = !alt_fire ? weaponData[WP_CLONEPISTOL].damage : weaponData[WP_CLONEPISTOL].altDamage;
 
 	VectorCopy(muzzle, start);
 	WP_TraceSetStart(ent, start);
@@ -681,7 +681,7 @@ void WP_FireClonePistol(gentity_t* ent, const qboolean altFire)
 
 		vectoangles(forwardVec, angs);
 
-		if (altFire)
+		if (alt_fire)
 		{
 			if (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent))
 			{
@@ -755,7 +755,7 @@ void WP_FireClonePistol(gentity_t* ent, const qboolean altFire)
 
 	WP_MissileTargetHint(ent, start, forwardVec);
 
-	gentity_t* missile = create_missile(start, forwardVec, BRYAR_PISTOL_VEL, 10000, ent, altFire);
+	gentity_t* missile = create_missile(start, forwardVec, BRYAR_PISTOL_VEL, 10000, ent, alt_fire);
 
 	missile->classname = "clone_proj";
 	if (ent->s.weapon == WP_BLASTER_PISTOL
@@ -769,7 +769,7 @@ void WP_FireClonePistol(gentity_t* ent, const qboolean altFire)
 		missile->s.weapon = WP_CLONEPISTOL;
 	}
 
-	if (altFire)
+	if (alt_fire)
 	{
 		int count = (level.time - ent->client->ps.weaponChargeTime) / BRYAR_CHARGE_UNIT;
 
@@ -789,7 +789,7 @@ void WP_FireClonePistol(gentity_t* ent, const qboolean altFire)
 	missile->damage = damage;
 	missile->dflags = DAMAGE_DEATH_KNOCKBACK;
 
-	if (altFire)
+	if (alt_fire)
 	{
 		missile->methodOfDeath = MOD_CLONEPISTOL_ALT;
 	}
@@ -811,11 +811,11 @@ void WP_FireClonePistol(gentity_t* ent, const qboolean altFire)
 }
 
 //---------------------------------------------------------
-void WP_FireClonePistolDuals(gentity_t* ent, const qboolean altFire, const qboolean second_pistol)
+void WP_FireClonePistolDuals(gentity_t* ent, const qboolean alt_fire, const qboolean second_pistol)
 //---------------------------------------------------------
 {
 	vec3_t start;
-	int damage = !altFire ? weaponData[WP_CLONEPISTOL].damage : weaponData[WP_CLONEPISTOL].altDamage;
+	int damage = !alt_fire ? weaponData[WP_CLONEPISTOL].damage : weaponData[WP_CLONEPISTOL].altDamage;
 
 	if (second_pistol)
 	{
@@ -839,7 +839,7 @@ void WP_FireClonePistolDuals(gentity_t* ent, const qboolean altFire, const qbool
 
 		vectoangles(forwardVec, angs);
 
-		if (altFire)
+		if (alt_fire)
 		{
 			if (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent))
 			{
@@ -913,7 +913,7 @@ void WP_FireClonePistolDuals(gentity_t* ent, const qboolean altFire, const qbool
 
 	WP_MissileTargetHint(ent, start, forwardVec);
 
-	gentity_t* missile = create_missile(start, forwardVec, BRYAR_PISTOL_VEL, 10000, ent, altFire);
+	gentity_t* missile = create_missile(start, forwardVec, BRYAR_PISTOL_VEL, 10000, ent, alt_fire);
 
 	missile->classname = "clone_proj";
 	if (ent->s.weapon == WP_BLASTER_PISTOL
@@ -927,7 +927,7 @@ void WP_FireClonePistolDuals(gentity_t* ent, const qboolean altFire, const qbool
 		missile->s.weapon = WP_CLONEPISTOL;
 	}
 
-	if (altFire)
+	if (alt_fire)
 	{
 		int count = (level.time - ent->client->ps.weaponChargeTime) / BRYAR_CHARGE_UNIT;
 
@@ -947,7 +947,7 @@ void WP_FireClonePistolDuals(gentity_t* ent, const qboolean altFire, const qbool
 	missile->damage = damage;
 	missile->dflags = DAMAGE_DEATH_KNOCKBACK;
 
-	if (altFire)
+	if (alt_fire)
 	{
 		missile->methodOfDeath = MOD_CLONEPISTOL_ALT;
 	}
@@ -969,11 +969,11 @@ void WP_FireClonePistolDuals(gentity_t* ent, const qboolean altFire, const qbool
 }
 
 //---------------------------------------------------------
-void WP_FireSBDPistol(gentity_t* ent, const qboolean altFire)
+void WP_FireSBDPistol(gentity_t* ent, const qboolean alt_fire)
 //---------------------------------------------------------
 {
 	vec3_t start;
-	int damage = !altFire ? weaponData[WP_SBD_BLASTER].damage : weaponData[WP_SBD_BLASTER].altDamage;
+	int damage = !alt_fire ? weaponData[WP_SBD_BLASTER].damage : weaponData[WP_SBD_BLASTER].altDamage;
 
 	VectorCopy(muzzle, start);
 	WP_TraceSetStart(ent, start);
@@ -989,7 +989,7 @@ void WP_FireSBDPistol(gentity_t* ent, const qboolean altFire)
 
 		vectoangles(forwardVec, angs);
 
-		if (altFire)
+		if (alt_fire)
 		{
 			if (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent))
 			{
@@ -1063,13 +1063,13 @@ void WP_FireSBDPistol(gentity_t* ent, const qboolean altFire)
 
 	WP_MissileTargetHint(ent, start, forwardVec);
 
-	gentity_t* missile = create_missile(start, forwardVec, BRYAR_PISTOL_VEL, 10000, ent, altFire);
+	gentity_t* missile = create_missile(start, forwardVec, BRYAR_PISTOL_VEL, 10000, ent, alt_fire);
 
 	missile->classname = "bryar_proj";
 
 	missile->s.weapon = WP_SBD_BLASTER;
 
-	if (altFire)
+	if (alt_fire)
 	{
 		int count = (level.time - ent->client->ps.weaponChargeTime) / BRYAR_CHARGE_UNIT;
 
@@ -1089,7 +1089,7 @@ void WP_FireSBDPistol(gentity_t* ent, const qboolean altFire)
 	missile->damage = damage;
 	missile->dflags = DAMAGE_DEATH_KNOCKBACK;
 
-	if (altFire)
+	if (alt_fire)
 	{
 		missile->methodOfDeath = MOD_BRYAR_ALT;
 	}
@@ -1105,11 +1105,11 @@ void WP_FireSBDPistol(gentity_t* ent, const qboolean altFire)
 }
 
 //---------------------------------------------------------
-void WP_FireJawaPistol(gentity_t* ent, const qboolean altFire)
+void WP_FireJawaPistol(gentity_t* ent, const qboolean alt_fire)
 //---------------------------------------------------------
 {
 	vec3_t start;
-	int damage = !altFire ? weaponData[WP_JAWA].damage : weaponData[WP_JAWA].altDamage;
+	int damage = !alt_fire ? weaponData[WP_JAWA].damage : weaponData[WP_JAWA].altDamage;
 
 	VectorCopy(muzzle, start);
 	WP_TraceSetStart(ent, start);
@@ -1127,7 +1127,7 @@ void WP_FireJawaPistol(gentity_t* ent, const qboolean altFire)
 
 		vectoangles(forwardVec, angs);
 
-		if (altFire)
+		if (alt_fire)
 		{
 			// add some slop to the alt-fire direction
 			if (!WalkCheck(ent) && (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent))) //if running aim is shit
@@ -1211,7 +1211,7 @@ void WP_FireJawaPistol(gentity_t* ent, const qboolean altFire)
 
 		WP_MissileTargetHint(ent, start, forwardVec);
 
-		gentity_t* missile = create_missile(start, forwardVec, BRYAR_PISTOL_VEL, 10000, ent, altFire);
+		gentity_t* missile = create_missile(start, forwardVec, BRYAR_PISTOL_VEL, 10000, ent, alt_fire);
 
 		missile->classname = "bryar_proj";
 		if (ent->s.weapon == WP_BLASTER_PISTOL)
@@ -1224,7 +1224,7 @@ void WP_FireJawaPistol(gentity_t* ent, const qboolean altFire)
 			missile->s.weapon = WP_JAWA;
 		}
 
-		if (altFire)
+		if (alt_fire)
 		{
 			int count = (level.time - ent->client->ps.weaponChargeTime) / BRYAR_CHARGE_UNIT;
 
@@ -1244,7 +1244,7 @@ void WP_FireJawaPistol(gentity_t* ent, const qboolean altFire)
 		missile->damage = damage;
 		missile->dflags = DAMAGE_DEATH_KNOCKBACK;
 
-		if (altFire)
+		if (alt_fire)
 		{
 			missile->methodOfDeath = MOD_BRYAR_ALT;
 		}

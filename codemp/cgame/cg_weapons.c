@@ -1962,7 +1962,7 @@ CG_MissileHitWall
 Caused by an EV_MISSILE_MISS event, or directly by local bullet tracing
 =================
 */
-void CG_MissileHitWall(int weapon, int client_num, vec3_t origin, vec3_t dir, impactSound_t soundType, qboolean altFire, int charge)
+void CG_MissileHitWall(int weapon, int client_num, vec3_t origin, vec3_t dir, impactSound_t soundType, qboolean alt_fire, int charge)
 {
 	int parm;
 	vec3_t up = { 0,0,1 };
@@ -1970,7 +1970,7 @@ void CG_MissileHitWall(int weapon, int client_num, vec3_t origin, vec3_t dir, im
 	switch (weapon)
 	{
 	case WP_BRYAR_PISTOL:
-		if (altFire)
+		if (alt_fire)
 		{
 			parm = charge;
 			FX_BryarAltHitWall(origin, dir, parm);
@@ -1986,7 +1986,7 @@ void CG_MissileHitWall(int weapon, int client_num, vec3_t origin, vec3_t dir, im
 		break;
 
 	case WP_BRYAR_OLD:
-		if (altFire)
+		if (alt_fire)
 		{
 			parm = charge;
 			FX_BryarAltHitWall(origin, dir, parm);
@@ -2014,7 +2014,7 @@ void CG_MissileHitWall(int weapon, int client_num, vec3_t origin, vec3_t dir, im
 		break;
 
 	case WP_REPEATER:
-		if (altFire)
+		if (alt_fire)
 		{
 			FX_RepeaterAltHitWall(origin, dir);
 		}
@@ -2025,7 +2025,7 @@ void CG_MissileHitWall(int weapon, int client_num, vec3_t origin, vec3_t dir, im
 		break;
 
 	case WP_DEMP2:
-		if (altFire)
+		if (alt_fire)
 		{
 			trap->FX_PlayEffectID(cgs.effects.mAltDetonate, origin, dir, -1, -1, qfalse);
 		}
@@ -2036,13 +2036,13 @@ void CG_MissileHitWall(int weapon, int client_num, vec3_t origin, vec3_t dir, im
 		break;
 
 	case WP_FLECHETTE:
-		/*if (altFire)
+		/*if (alt_fire)
 		{
 			CG_SurfaceExplosion(origin, dir, 20.0f, 12.0f, qtrue);
 		}
 		else
 		*/
-		if (!altFire)
+		if (!alt_fire)
 		{
 			FX_FlechetteWeaponHitWall(origin, dir);
 		}
@@ -2086,7 +2086,7 @@ void CG_MissileHitWall(int weapon, int client_num, vec3_t origin, vec3_t dir, im
 		break;
 
 	case WP_REY:
-		if (altFire)
+		if (alt_fire)
 		{
 			parm = charge;
 			FX_BryarAltHitWall(origin, dir, parm);
@@ -2106,7 +2106,7 @@ void CG_MissileHitWall(int weapon, int client_num, vec3_t origin, vec3_t dir, im
 		break;
 
 	case WP_CLONEPISTOL:
-		if (altFire)
+		if (alt_fire)
 		{
 			parm = charge;
 			FX_CloneAltHitWall(origin, dir, parm);
@@ -2129,7 +2129,7 @@ void CG_MissileHitWall(int weapon, int client_num, vec3_t origin, vec3_t dir, im
 CG_MissileHitPlayer
 =================
 */
-void CG_MissileHitPlayer(int weapon, vec3_t origin, vec3_t dir, int entity_num, qboolean altFire)
+void CG_MissileHitPlayer(int weapon, vec3_t origin, vec3_t dir, int entity_num, qboolean alt_fire)
 {
 	const qboolean	humanoid = qtrue;
 	vec3_t up = { 0,0,1 };
@@ -2151,7 +2151,7 @@ void CG_MissileHitPlayer(int weapon, vec3_t origin, vec3_t dir, int entity_num, 
 	// others will just make the blood
 	switch (weapon) {
 	case WP_BRYAR_PISTOL:
-		if (altFire)
+		if (alt_fire)
 		{
 			FX_BryarAltHitPlayer(origin, dir, humanoid);
 		}
@@ -2166,7 +2166,7 @@ void CG_MissileHitPlayer(int weapon, vec3_t origin, vec3_t dir, int entity_num, 
 		break;
 
 	case WP_BRYAR_OLD:
-		if (altFire)
+		if (alt_fire)
 		{
 			FX_BryarAltHitPlayer(origin, dir, humanoid);
 		}
@@ -2193,7 +2193,7 @@ void CG_MissileHitPlayer(int weapon, vec3_t origin, vec3_t dir, int entity_num, 
 		break;
 
 	case WP_REPEATER:
-		if (altFire)
+		if (alt_fire)
 		{
 			FX_RepeaterAltHitPlayer(origin, dir, humanoid);
 		}
@@ -2213,7 +2213,7 @@ void CG_MissileHitPlayer(int weapon, vec3_t origin, vec3_t dir, int entity_num, 
 			other->client->ps.powerups[PW_DISINT_1] = cg.time + 650;
 		}
 		*/
-		if (altFire)
+		if (alt_fire)
 		{
 			trap->FX_PlayEffectID(cgs.effects.mAltDetonate, origin, dir, -1, -1, qfalse);
 		}
@@ -2269,7 +2269,7 @@ void CG_MissileHitPlayer(int weapon, vec3_t origin, vec3_t dir, int entity_num, 
 		break;
 
 	case WP_REY:
-		if (altFire)
+		if (alt_fire)
 		{
 			FX_BryarAltHitPlayer(origin, dir, humanoid);
 		}
@@ -2288,7 +2288,7 @@ void CG_MissileHitPlayer(int weapon, vec3_t origin, vec3_t dir, int entity_num, 
 		break;
 
 	case WP_CLONEPISTOL:
-		if (altFire)
+		if (alt_fire)
 		{
 			FX_CloneAltHitPlayer(origin, dir, humanoid);
 		}

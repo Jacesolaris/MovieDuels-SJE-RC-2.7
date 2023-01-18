@@ -689,7 +689,7 @@ void CL_PacketEvent(const netadr_t from, msg_t* msg)
 {
 	clc.lastPacketTime = cls.realtime;
 
-	if (msg->cursize >= 4 && *(int*)msg->data == -1)
+	if (msg->cursize >= 4 && *reinterpret_cast<int*>(msg->data) == -1)
 	{
 		CL_ConnectionlessPacket(from, msg);
 		return;

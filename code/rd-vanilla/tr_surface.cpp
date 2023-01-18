@@ -126,7 +126,7 @@ void RB_AddQuadStampExt(vec3_t origin, vec3_t left, vec3_t up, byte* color, cons
 	// constant color all the way around
 	// should this be identity and let the shader specify from entity?
 	const byteAlias_t* ba_source = reinterpret_cast<byteAlias_t*>(color);
-	byteAlias_t* ba_dest = reinterpret_cast<byteAlias_t*>(&tess.vertexColors[ndx + 0]);
+	auto ba_dest = reinterpret_cast<byteAlias_t*>(&tess.vertexColors[ndx + 0]);
 	ba_dest->ui = ba_source->ui;
 	ba_dest = reinterpret_cast<byteAlias_t*>(&tess.vertexColors[ndx + 1]);
 	ba_dest->ui = ba_source->ui;
@@ -889,7 +889,7 @@ void RB_SurfacePolychain(const srfPoly_t* p) {
 		VectorCopy(p->verts[i].xyz, tess.xyz[numv]);
 		tess.texCoords[numv][0][0] = p->verts[i].st[0];
 		tess.texCoords[numv][0][1] = p->verts[i].st[1];
-		byteAlias_t* ba_dest = reinterpret_cast<byteAlias_t*>(&tess.vertexColors[numv++]);
+		const auto ba_dest = reinterpret_cast<byteAlias_t*>(&tess.vertexColors[numv++]);
 		const byteAlias_t* ba_source = reinterpret_cast<byteAlias_t*>(&p->verts[i].modulate);
 		ba_dest->i = ba_source->i;
 	}
@@ -1434,7 +1434,7 @@ void RB_SurfaceGrid(srfGridMesh_t* cv) {
 		float* xyz = tess.xyz[num_vertexes];
 		float* normal = tess.normal[num_vertexes];
 		float* tex_coords = tess.texCoords[num_vertexes][0];
-		unsigned char* color = reinterpret_cast<unsigned char*>(&tess.vertexColors[num_vertexes]);
+		auto color = reinterpret_cast<unsigned char*>(&tess.vertexColors[num_vertexes]);
 		int* v_dlight_bits = &tess.vertexDlightBits[num_vertexes];
 
 		for (i = 0; i < rows; i++) {

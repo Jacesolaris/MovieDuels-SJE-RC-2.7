@@ -11668,7 +11668,7 @@ static void PM_BeginWeaponChange(const int weapon)
 
 	if (pm->gent && pm->gent->client && pm->gent->client->NPC_class == CLASS_GALAKMECH)
 	{
-		if (pm->gent->altFire)
+		if (pm->gent->alt_fire)
 		{
 			//FIXME: attack delay?
 			PM_SetAnim(pm, SETANIM_TORSO, TORSO_DROPWEAP3, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
@@ -11934,7 +11934,7 @@ static void PM_FinishWeaponChange()
 
 		if (pm->gent && pm->gent->client && pm->gent->client->NPC_class == CLASS_GALAKMECH)
 		{
-			if (pm->gent->altFire)
+			if (pm->gent->alt_fire)
 			{
 				//FIXME: attack delay?
 				PM_SetAnim(pm, SETANIM_TORSO, TORSO_RAISEWEAP3, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
@@ -20012,7 +20012,7 @@ static bool PM_DoChargedWeapons()
 //---------------------------------------
 {
 	qboolean charging = qfalse,
-		altFire = qfalse;
+		alt_fire = qfalse;
 
 	//FIXME: make jedi aware they're being aimed at with a charged-up weapon (strafe and be evasive?)
 	// If you want your weapon to be a charging weapon, just set this bit up
@@ -20027,7 +20027,7 @@ static bool PM_DoChargedWeapons()
 		if (pm->cmd.buttons & BUTTON_ALT_ATTACK)
 		{
 			charging = qtrue;
-			altFire = qtrue;
+			alt_fire = qtrue;
 		}
 		break;
 
@@ -20037,7 +20037,7 @@ static bool PM_DoChargedWeapons()
 		if (pm->cmd.buttons & BUTTON_ALT_ATTACK)
 		{
 			charging = qtrue;
-			altFire = qtrue;
+			alt_fire = qtrue;
 		}
 		break;
 
@@ -20047,7 +20047,7 @@ static bool PM_DoChargedWeapons()
 		if (pm->cmd.buttons & BUTTON_ALT_ATTACK)
 		{
 			charging = qtrue;
-			altFire = qtrue;
+			alt_fire = qtrue;
 		}
 		break;
 
@@ -20063,7 +20063,7 @@ static bool PM_DoChargedWeapons()
 				if (pm->cmd.buttons & BUTTON_ATTACK)
 				{
 					charging = qtrue;
-					altFire = qtrue; // believe it or not, it really is an alt-fire in this case!
+					alt_fire = qtrue; // believe it or not, it really is an alt-fire in this case!
 				}
 			}
 		}
@@ -20074,7 +20074,7 @@ static bool PM_DoChargedWeapons()
 				if (pm->gent->fly_sound_debounce_time > level.time)
 				{
 					charging = qtrue;
-					altFire = qtrue;
+					alt_fire = qtrue;
 				}
 			}
 		}
@@ -20097,7 +20097,7 @@ static bool PM_DoChargedWeapons()
 		if (pm->cmd.buttons & BUTTON_ALT_ATTACK)
 		{
 			charging = qtrue;
-			altFire = qtrue;
+			alt_fire = qtrue;
 		}
 		break;
 
@@ -20109,7 +20109,7 @@ static bool PM_DoChargedWeapons()
 		if (pm->cmd.buttons & BUTTON_ALT_ATTACK)
 		{
 			charging = qtrue;
-			altFire = qtrue;
+			alt_fire = qtrue;
 		}
 		break;
 
@@ -20120,7 +20120,7 @@ static bool PM_DoChargedWeapons()
 		//			the actual throw when he lets go...
 		if (pm->cmd.buttons & BUTTON_ALT_ATTACK)
 		{
-			altFire = qtrue; // override default of not being an alt-fire
+			alt_fire = qtrue; // override default of not being an alt-fire
 			charging = qtrue;
 		}
 		else if (pm->cmd.buttons & BUTTON_ATTACK)
@@ -20135,7 +20135,7 @@ static bool PM_DoChargedWeapons()
 	//	Note that we ALWAYS return if charging is set ( meaning the buttons are still down )
 	if (charging)
 	{
-		if (altFire)
+		if (alt_fire)
 		{
 			if (pm->ps->weaponstate != WEAPON_CHARGING_ALT && pm->ps->weaponstate != WEAPON_DROPPING)
 			{
@@ -20582,7 +20582,7 @@ static void PM_Weapon()
 				delayed_fire = qtrue;
 				if ((pm->ps->client_num < MAX_CLIENTS || PM_ControlledByPlayer())
 					&& pm->ps->weapon == WP_THERMAL
-					&& pm->gent->altFire)
+					&& pm->gent->alt_fire)
 				{
 					pm->cmd.buttons |= BUTTON_ALT_ATTACK;
 				}
@@ -20777,7 +20777,7 @@ static void PM_Weapon()
 				SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_RESTART | SETANIM_FLAG_HOLD);
 			pm->gent->client->fireDelay = 300;
 			pm->ps->weaponstate = WEAPON_FIRING;
-			pm->gent->altFire = static_cast<qboolean>(pm->cmd.buttons & BUTTON_ALT_ATTACK);
+			pm->gent->alt_fire = static_cast<qboolean>(pm->cmd.buttons & BUTTON_ALT_ATTACK);
 			return;
 		}
 
@@ -20792,7 +20792,7 @@ static void PM_Weapon()
 			//delay the actual firing of the missile until the anim has played some
 			pm->gent->client->fireDelay = 200;
 			pm->ps->weaponstate = WEAPON_FIRING;
-			pm->gent->altFire = static_cast<qboolean>(pm->cmd.buttons & BUTTON_ALT_ATTACK);
+			pm->gent->alt_fire = static_cast<qboolean>(pm->cmd.buttons & BUTTON_ALT_ATTACK);
 			return;
 		}
 	}
@@ -22056,7 +22056,7 @@ void PM_AdjustAttackStates(pmove_t* pm)
 			if (pm->ps->client_num < MAX_CLIENTS && pm->gent && pm->ps->eFlags & EF_IN_ATST)
 			{
 				//switch ATST barrels
-				pm->gent->altFire = qtrue;
+				pm->gent->alt_fire = qtrue;
 			}
 		}
 		else
@@ -22065,7 +22065,7 @@ void PM_AdjustAttackStates(pmove_t* pm)
 			if (pm->ps->client_num < MAX_CLIENTS && pm->gent && pm->ps->eFlags & EF_IN_ATST)
 			{
 				//switch ATST barrels
-				pm->gent->altFire = qfalse;
+				pm->gent->alt_fire = qfalse;
 			}
 		}
 

@@ -393,7 +393,7 @@ int CSequencer::ParseRun(CBlock* block, CIcarus* icarus)
 	COM_StripExtension(static_cast<char*>(block->GetMemberData(0)), newname, sizeof newname);
 
 	//Get the file from the game engine
-	const int buffer_size = game->LoadFile(newname, (void**)&buffer);
+	const int buffer_size = game->LoadFile(newname, reinterpret_cast<void**>(&buffer));
 
 	if (buffer_size <= 0)
 	{

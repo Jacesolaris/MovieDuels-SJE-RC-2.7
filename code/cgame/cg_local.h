@@ -164,7 +164,7 @@ struct centity_s
 	int muzzleFlashTime; // move to playerEntity?
 	int muzzleFlashTimeL; // move to playerEntity?
 	int muzzleFlashTimeR; // move to playerEntity?
-	qboolean altFire; // move to playerEntity?
+	qboolean alt_fire; // move to playerEntity?
 
 	int previousEvent;
 	//	int				teleportFlag;
@@ -1249,8 +1249,8 @@ void FX_StrikeProjectileThink(centity_t* cent, const weaponInfo_s* weapon);
 void FX_StrikeHitWall(vec3_t origin, vec3_t normal);
 void FX_StrikeHitPlayer(vec3_t origin, vec3_t normal, qboolean humanoid);
 
-void CG_MissileHitPlayer(const centity_t* cent, int weapon, vec3_t origin, vec3_t dir, qboolean altFire);
-void CG_MissileHitWall(const centity_t* cent, int weapon, vec3_t origin, vec3_t dir, qboolean altFire);
+void CG_MissileHitPlayer(const centity_t* cent, int weapon, vec3_t origin, vec3_t dir, qboolean alt_fire);
+void CG_MissileHitWall(const centity_t* cent, int weapon, vec3_t origin, vec3_t dir, qboolean alt_fire);
 
 void CG_DrawTargetBeam(vec3_t start, vec3_t end, vec3_t norm, const char* beam_fx, const char* impact_fx);
 

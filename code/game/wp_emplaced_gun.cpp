@@ -101,7 +101,7 @@ void WP_EmplacedFire(gentity_t* ent)
 
 	if (missile->owner->e_UseFunc == useF_eweb_use)
 	{
-		missile->altFire = qtrue;
+		missile->alt_fire = qtrue;
 	}
 
 	VectorSet(missile->maxs, EMPLACED_SIZE, EMPLACED_SIZE, EMPLACED_SIZE);

@@ -334,7 +334,7 @@ void WP_ThermalThink(gentity_t* ent)
 }
 
 //---------------------------------------------------------
-gentity_t* WP_FireThermalDetonator(gentity_t* ent, const qboolean altFire)
+gentity_t* WP_FireThermalDetonator(gentity_t* ent, const qboolean alt_fire)
 //---------------------------------------------------------
 {
 	vec3_t dir, start;
@@ -353,7 +353,7 @@ gentity_t* WP_FireThermalDetonator(gentity_t* ent, const qboolean altFire)
 		damage_scale = TD_NPC_DAMAGE_CUT;
 	}
 
-	if (!altFire && ent->s.number == 0)
+	if (!alt_fire && ent->s.number == 0)
 	{
 		// Main fires for the players do a little bit of extra thinking
 		bolt->e_ThinkFunc = thinkF_WP_ThermalThink;
@@ -450,9 +450,9 @@ gentity_t* WP_FireThermalDetonator(gentity_t* ent, const qboolean altFire)
 		}
 	}
 
-	if (altFire)
+	if (alt_fire)
 	{
-		bolt->altFire = qtrue;
+		bolt->alt_fire = qtrue;
 	}
 	else
 	{
@@ -470,7 +470,7 @@ gentity_t* WP_FireThermalDetonator(gentity_t* ent, const qboolean altFire)
 	bolt->svFlags = SVF_USE_CURRENT_ORIGIN;
 	bolt->s.weapon = WP_THERMAL;
 
-	if (altFire)
+	if (alt_fire)
 	{
 		bolt->methodOfDeath = MOD_THERMAL_ALT;
 		bolt->splashMethodOfDeath = MOD_THERMAL_ALT; //? SPLASH;

@@ -498,7 +498,7 @@ model_t* R_AllocModel() {
 		return nullptr;
 	}
 
-	model_t* mod = static_cast<model_t*>(R_Hunk_Alloc(sizeof * tr.models[tr.numModels], qtrue));
+	const auto mod = static_cast<model_t*>(R_Hunk_Alloc(sizeof * tr.models[tr.numModels], qtrue));
 	mod->index = tr.numModels;
 	tr.models[tr.numModels] = mod;
 	tr.numModels++;
@@ -534,7 +534,7 @@ void RE_InsertModelIntoHash(const char* name, const model_t* mod)
 	const int hash = generateHashValue(name, FILE_HASH_SIZE);
 
 	// insert this file into the hash table so we can look it up faster later
-	modelHash_t* mh = static_cast<modelHash_t*>(R_Hunk_Alloc(sizeof(modelHash_t), qtrue));
+	const auto mh = static_cast<modelHash_t*>(R_Hunk_Alloc(sizeof(modelHash_t), qtrue));
 
 	mh->next = mhHashTable[hash];	// I have the breakpoint triggered here where mhHashTable[986] would be assigned
 	mh->handle = mod->index;

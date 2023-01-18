@@ -71,7 +71,7 @@ public:
 	// give me some space from the heap please
 	char* MiniHeapAlloc(const int size)
 	{
-		if (size < (mSize - ((intptr_t)mCurrentHeap - (intptr_t)mHeap)))
+		if (size < (mSize - (reinterpret_cast<intptr_t>(mCurrentHeap) - reinterpret_cast<intptr_t>(mHeap))))
 		{
 			char* tempAddress = mCurrentHeap;
 			mCurrentHeap += size;

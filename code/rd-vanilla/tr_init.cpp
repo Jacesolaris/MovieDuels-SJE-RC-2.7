@@ -1886,7 +1886,7 @@ void RE_GetLightStyle(const int style, color4ub_t color)
 {
 	if (style >= MAX_LIGHT_STYLES)
 	{
-		Com_Error(ERR_FATAL, "RE_GetLightStyle: %d is out of range", (int)style);
+		Com_Error(ERR_FATAL, "RE_GetLightStyle: %d is out of range", static_cast<int>(style));
 	}
 
 	const auto ba_dest = reinterpret_cast<byteAlias_t*>(&color);
@@ -1898,7 +1898,7 @@ void RE_SetLightStyle(const int style, const int color)
 {
 	if (style >= MAX_LIGHT_STYLES)
 	{
-		Com_Error(ERR_FATAL, "RE_SetLightStyle: %d is out of range", (int)style);
+		Com_Error(ERR_FATAL, "RE_SetLightStyle: %d is out of range", static_cast<int>(style));
 	}
 
 	const auto ba = reinterpret_cast<byteAlias_t*>(&styleColors[style]);

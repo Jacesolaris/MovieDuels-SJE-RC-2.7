@@ -394,7 +394,7 @@ qboolean Netchan_Process(netchan_t* chan, msg_t* msg)
 		// copy the full message over the partial fragment
 
 		// make sure the sequence number is still there
-		*(int*)msg->data = LittleLong(sequence);
+		*reinterpret_cast<int*>(msg->data) = LittleLong(sequence);
 
 		memcpy(msg->data + 4, chan->fragmentBuffer, chan->fragmentLength);
 		msg->cursize = chan->fragmentLength + 4;

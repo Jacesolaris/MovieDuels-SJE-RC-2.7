@@ -334,7 +334,7 @@ extern void G_SetSabersFromCVars(gentity_t* ent);
 
 qboolean Pickup_Saber(gentity_t* self, qboolean hadSaber, gentity_t* pickUpSaber)
 {
-	//NOTE: loopAnim = saberSolo, altFire = saberLeftHand, NPC_type = saberType, NPC_targetname = saberColor
+	//NOTE: loopAnim = saberSolo, alt_fire = saberLeftHand, NPC_type = saberType, NPC_targetname = saberColor
 	qboolean foundIt = qfalse;
 
 	if (!pickUpSaber || !self || !self->client)
@@ -372,7 +372,7 @@ qboolean Pickup_Saber(gentity_t* self, qboolean hadSaber, gentity_t* pickUpSaber
 			//successfully found a saber .sab entry to use
 			int saber_num = 0;
 			qboolean removeLeftSaber = qfalse;
-			if (pickUpSaber->altFire)
+			if (pickUpSaber->alt_fire)
 			{
 				//always go in the left hand
 				if (!hadSaber)

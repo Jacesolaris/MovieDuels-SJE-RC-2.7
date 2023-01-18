@@ -486,7 +486,7 @@ IN_GobbleMotionEvents
 static void IN_GobbleMotionEvents()
 {
 	SDL_Event dummy[1];
-	int val = 0;
+	int val;
 
 	// Gobble any mouse motion events
 	SDL_PumpEvents();
@@ -884,7 +884,7 @@ void SNDDMA_Activate(qboolean activate);
 static void IN_ProcessEvents()
 {
 	SDL_Event e;
-	fakeAscii_t key = A_NULL;
+	fakeAscii_t key;
 	static fakeAscii_t lastKeyDown = A_NULL;
 
 	if (!SDL_WasInit(SDL_INIT_VIDEO))
@@ -1031,7 +1031,7 @@ static void IN_JoyMove()
 {
 	unsigned int axes = 0;
 	unsigned int hats = 0;
-	int i = 0;
+	int i;
 
 	if (!stick)
 		return;
@@ -1088,7 +1088,7 @@ static void IN_JoyMove()
 		if (total > 4) total = 4;
 		for (i = 0; i < total; i++)
 		{
-			((Uint8*)&hats)[i] = SDL_JoystickGetHat(stick, i);
+			reinterpret_cast<Uint8*>(&hats)[i] = SDL_JoystickGetHat(stick, i);
 		}
 	}
 
@@ -1097,10 +1097,10 @@ static void IN_JoyMove()
 	{
 		for (i = 0; i < 4; i++)
 		{
-			if (((Uint8*)&hats)[i] != ((Uint8*)&stick_state.oldhats)[i])
+			if (reinterpret_cast<Uint8*>(&hats)[i] != reinterpret_cast<Uint8*>(&stick_state.oldhats)[i])
 			{
 				// release event
-				switch (((Uint8*)&stick_state.oldhats)[i])
+				switch (reinterpret_cast<Uint8*>(&stick_state.oldhats)[i])
 				{
 				case SDL_HAT_UP:
 					Sys_QueEvent(0, SE_KEY, hat_keys[4 * i + 0], qfalse, 0, nullptr);
@@ -1134,7 +1134,7 @@ static void IN_JoyMove()
 					break;
 				}
 				// press event
-				switch (((Uint8*)&hats)[i])
+				switch (reinterpret_cast<Uint8*>(&hats)[i])
 				{
 				case SDL_HAT_UP:
 					Sys_QueEvent(0, SE_KEY, hat_keys[4 * i + 0], qtrue, 0, nullptr);

@@ -239,7 +239,7 @@ static int R_ComputeFogNum(md3Header_t* header, const trRefEntity_t* ent) {
 	}
 
 	// FIXME: non-normalized axis issues
-	const md3Frame_t* md3_frame = reinterpret_cast<md3Frame_t*>((byte*)header + header->ofsFrames) + ent->e.frame;
+	const md3Frame_t* md3_frame = reinterpret_cast<md3Frame_t*>(reinterpret_cast<byte*>(header) + header->ofsFrames) + ent->e.frame;
 	VectorAdd(ent->e.origin, md3_frame->localOrigin, local_origin);
 
 	int partial_fog = 0;

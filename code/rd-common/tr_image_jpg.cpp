@@ -94,7 +94,7 @@ void LoadJPG(const char* filename, unsigned char** pic, int* width, int* height)
 	* requires it in order to read binary files.
 	*/
 
-	int len = ri.FS_ReadFile((char*)filename, &fbuffer.v);
+	int len = ri.FS_ReadFile(const_cast<char*>(filename), &fbuffer.v);
 	if (!fbuffer.b || len < 0) {
 		return;
 	}
@@ -394,7 +394,7 @@ typedef my_destination_mgr* my_dest_ptr;
 
 static void init_destination(const j_compress_ptr cinfo)
 {
-	const my_dest_ptr dest = (my_dest_ptr)cinfo->dest;
+	const my_dest_ptr dest = reinterpret_cast<my_dest_ptr>(cinfo->dest);
 
 	dest->pub.next_output_byte = dest->outfile;
 	dest->pub.free_in_buffer = dest->size;
@@ -425,7 +425,7 @@ static void init_destination(const j_compress_ptr cinfo)
 
 static boolean empty_output_buffer(const j_compress_ptr cinfo)
 {
-	const my_dest_ptr dest = (my_dest_ptr)cinfo->dest;
+	const my_dest_ptr dest = reinterpret_cast<my_dest_ptr>(cinfo->dest);
 
 	jpeg_destroy_compress(cinfo);
 
@@ -461,11 +461,11 @@ static void jpegDest(const j_compress_ptr cinfo, byte* outfile, const int size)
 	* sizes may be different.  Caveat programmer.
 	*/
 	if (cinfo->dest == nullptr) {	/* first time for this JPEG object? */
-		cinfo->dest = static_cast<jpeg_destination_mgr*>((*cinfo->mem->alloc_small)((j_common_ptr)cinfo, JPOOL_PERMANENT,
+		cinfo->dest = static_cast<jpeg_destination_mgr*>((*cinfo->mem->alloc_small)(reinterpret_cast<j_common_ptr>(cinfo), JPOOL_PERMANENT,
 			sizeof(my_destination_mgr)));
 	}
 
-	const my_dest_ptr dest = (my_dest_ptr)cinfo->dest;
+	const my_dest_ptr dest = reinterpret_cast<my_dest_ptr>(cinfo->dest);
 	dest->pub.init_destination = init_destination;
 	dest->pub.empty_output_buffer = empty_output_buffer;
 	dest->pub.term_destination = term_destination;
@@ -548,7 +548,7 @@ size_t RE_SaveJPGToBuffer(byte* buffer, size_t bufSize, int quality,
 	/* Step 6: Finish compression */
 	jpeg_finish_compress(&cinfo);
 
-	dest = (my_dest_ptr)cinfo.dest;
+	dest = reinterpret_cast<my_dest_ptr>(cinfo.dest);
 	outcount = dest->size - dest->pub.free_in_buffer;
 
 	/* Step 7: release JPEG compression object */
@@ -561,7 +561,7 @@ size_t RE_SaveJPGToBuffer(byte* buffer, size_t bufSize, int quality,
 void RE_SaveJPG(const char* filename, const int quality, const int image_width, const int image_height, byte* image_buffer, const int padding)
 {
 	size_t bufSize = image_width * image_height * 3;
-	byte* out = static_cast<byte*>(R_Malloc(bufSize, TAG_TEMP_WORKSPACE, qfalse));
+	const auto out = static_cast<byte*>(R_Malloc(bufSize, TAG_TEMP_WORKSPACE, qfalse));
 
 	bufSize = RE_SaveJPGToBuffer(out, bufSize, quality, image_width, image_height, image_buffer, padding, false);
 	ri.FS_WriteFile(filename, out, bufSize);

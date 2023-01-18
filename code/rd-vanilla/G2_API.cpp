@@ -1767,9 +1767,9 @@ qboolean G2API_GetBoltMatrix(CGhoul2Info_v& ghoul2, const int model_index, const
 				{
 					bolt.matrix[2][3] *= scale[2];
 				}
-				VectorNormalize((float*)&bolt.matrix[0]);
-				VectorNormalize((float*)&bolt.matrix[1]);
-				VectorNormalize((float*)&bolt.matrix[2]);
+				VectorNormalize(reinterpret_cast<float*>(&bolt.matrix[0]));
+				VectorNormalize(reinterpret_cast<float*>(&bolt.matrix[1]));
+				VectorNormalize(reinterpret_cast<float*>(&bolt.matrix[2]));
 
 				Multiply_3x4Matrix(matrix, &worldMatrix, &bolt);
 #if G2API_DEBUG

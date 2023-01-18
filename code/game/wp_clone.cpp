@@ -32,11 +32,11 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 extern cvar_t* g_SerenityJediEngineMode;
 //---------------------------------------------------------
-void WP_FireCloneMissile(gentity_t* ent, vec3_t start, vec3_t dir, const qboolean altFire)
+void WP_FireCloneMissile(gentity_t* ent, vec3_t start, vec3_t dir, const qboolean alt_fire)
 //---------------------------------------------------------
 {
 	int velocity = BLASTER_VELOCITY;
-	int damage = altFire ? weaponData[WP_CLONECARBINE].altDamage : weaponData[WP_CLONECARBINE].damage;
+	int damage = alt_fire ? weaponData[WP_CLONECARBINE].altDamage : weaponData[WP_CLONECARBINE].damage;
 
 	if (ent && ent->client && ent->client->NPC_class == CLASS_VEHICLE)
 	{
@@ -67,7 +67,7 @@ void WP_FireCloneMissile(gentity_t* ent, vec3_t start, vec3_t dir, const qboolea
 
 	WP_MissileTargetHint(ent, start, dir);
 
-	gentity_t* missile = create_missile(start, dir, velocity, 10000, ent, altFire);
+	gentity_t* missile = create_missile(start, dir, velocity, 10000, ent, alt_fire);
 
 	missile->classname = "clone_proj";
 	missile->s.weapon = WP_CLONECARBINE;
@@ -102,7 +102,7 @@ void WP_FireCloneMissile(gentity_t* ent, vec3_t start, vec3_t dir, const qboolea
 	{
 		missile->dflags = DAMAGE_DEATH_KNOCKBACK;
 	}
-	if (altFire)
+	if (alt_fire)
 	{
 		missile->methodOfDeath = MOD_BLASTER_ALT;
 	}
@@ -123,7 +123,7 @@ extern qboolean PM_RunningAnim(int anim);
 extern qboolean PM_WalkingAnim(int anim);
 
 //---------------------------------------------------------
-void WP_FireClone(gentity_t* ent, const qboolean altFire)
+void WP_FireClone(gentity_t* ent, const qboolean alt_fire)
 //---------------------------------------------------------
 {
 	vec3_t dir, angs;
@@ -136,7 +136,7 @@ void WP_FireClone(gentity_t* ent, const qboolean altFire)
 	}
 	else if (!(ent->client->ps.forcePowersActive & 1 << FP_SEE) || ent->client->ps.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2)
 	{//force sight 2+ gives perfect aim
-		if (altFire)
+		if (alt_fire)
 		{
 			if (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent))
 			{
@@ -209,7 +209,7 @@ void WP_FireClone(gentity_t* ent, const qboolean altFire)
 	AngleVectors(angs, dir, nullptr, nullptr);
 
 	// FIXME: if temp_org does not have clear trace to inside the bbox, don't shoot!
-	WP_FireCloneMissile(ent, muzzle, dir, altFire);
+	WP_FireCloneMissile(ent, muzzle, dir, alt_fire);
 }
 
 //---------------
@@ -217,11 +217,11 @@ void WP_FireClone(gentity_t* ent, const qboolean altFire)
 //---------------
 
 //---------------------------------------------------------
-void WP_FireCloneRifleMissile(gentity_t* ent, vec3_t start, vec3_t dir, const qboolean altFire)
+void WP_FireCloneRifleMissile(gentity_t* ent, vec3_t start, vec3_t dir, const qboolean alt_fire)
 //---------------------------------------------------------
 {
 	int velocity = CLONERIFLE_VELOCITY;
-	int damage = altFire ? weaponData[WP_CLONERIFLE].altDamage : weaponData[WP_CLONERIFLE].damage;
+	int damage = alt_fire ? weaponData[WP_CLONERIFLE].altDamage : weaponData[WP_CLONERIFLE].damage;
 
 	if (ent && ent->client && ent->client->NPC_class == CLASS_VEHICLE)
 	{
@@ -252,7 +252,7 @@ void WP_FireCloneRifleMissile(gentity_t* ent, vec3_t start, vec3_t dir, const qb
 
 	WP_MissileTargetHint(ent, start, dir);
 
-	gentity_t* missile = create_missile(start, dir, velocity, 10000, ent, altFire);
+	gentity_t* missile = create_missile(start, dir, velocity, 10000, ent, alt_fire);
 
 	missile->classname = "clone_proj";
 	missile->s.weapon = WP_CLONERIFLE;
@@ -286,7 +286,7 @@ void WP_FireCloneRifleMissile(gentity_t* ent, vec3_t start, vec3_t dir, const qb
 	{
 		missile->dflags = DAMAGE_DEATH_KNOCKBACK;
 	}
-	if (altFire)
+	if (alt_fire)
 	{
 		missile->methodOfDeath = MOD_CLONERIFLE_ALT;
 	}
@@ -301,7 +301,7 @@ void WP_FireCloneRifleMissile(gentity_t* ent, vec3_t start, vec3_t dir, const qb
 }
 
 //---------------------------------------------------------
-void WP_FireCloneRifle(gentity_t* ent, const qboolean altFire)
+void WP_FireCloneRifle(gentity_t* ent, const qboolean alt_fire)
 //---------------------------------------------------------
 {
 	vec3_t dir, angs;
@@ -314,7 +314,7 @@ void WP_FireCloneRifle(gentity_t* ent, const qboolean altFire)
 	}
 	else if (!(ent->client->ps.forcePowersActive & 1 << FP_SEE) || ent->client->ps.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2)
 	{//force sight 2+ gives perfect aim
-		if (altFire)
+		if (alt_fire)
 		{
 			if (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent))
 			{
@@ -387,7 +387,7 @@ void WP_FireCloneRifle(gentity_t* ent, const qboolean altFire)
 	AngleVectors(angs, dir, nullptr, nullptr);
 
 	// FIXME: if temp_org does not have clear trace to inside the bbox, don't shoot!
-	WP_FireCloneRifleMissile(ent, muzzle, dir, altFire);
+	WP_FireCloneRifleMissile(ent, muzzle, dir, alt_fire);
 }
 
 //---------------
@@ -395,11 +395,11 @@ void WP_FireCloneRifle(gentity_t* ent, const qboolean altFire)
 //---------------
 
 //---------------------------------------------------------
-void WP_FireCloneCommandoMissile(gentity_t* ent, vec3_t start, vec3_t dir, const qboolean altFire)
+void WP_FireCloneCommandoMissile(gentity_t* ent, vec3_t start, vec3_t dir, const qboolean alt_fire)
 //---------------------------------------------------------
 {
 	int velocity = CLONECOMMANDO_VELOCITY;
-	int damage = altFire ? weaponData[WP_CLONECOMMANDO].altDamage : weaponData[WP_CLONECOMMANDO].damage;
+	int damage = alt_fire ? weaponData[WP_CLONECOMMANDO].altDamage : weaponData[WP_CLONECOMMANDO].damage;
 
 	if (ent && ent->client && ent->client->NPC_class == CLASS_VEHICLE)
 	{
@@ -430,7 +430,7 @@ void WP_FireCloneCommandoMissile(gentity_t* ent, vec3_t start, vec3_t dir, const
 
 	WP_MissileTargetHint(ent, start, dir);
 
-	gentity_t* missile = create_missile(start, dir, velocity, 10000, ent, altFire);
+	gentity_t* missile = create_missile(start, dir, velocity, 10000, ent, alt_fire);
 
 	missile->classname = "clone_proj";
 	missile->s.weapon = WP_CLONECOMMANDO;
@@ -464,7 +464,7 @@ void WP_FireCloneCommandoMissile(gentity_t* ent, vec3_t start, vec3_t dir, const
 	{
 		missile->dflags = DAMAGE_DEATH_KNOCKBACK;
 	}
-	if (altFire)
+	if (alt_fire)
 	{
 		missile->methodOfDeath = MOD_CLONECOMMANDO_ALT;
 	}
@@ -479,7 +479,7 @@ void WP_FireCloneCommandoMissile(gentity_t* ent, vec3_t start, vec3_t dir, const
 }
 
 //---------------------------------------------------------
-void WP_FireCloneCommando(gentity_t* ent, const qboolean altFire)
+void WP_FireCloneCommando(gentity_t* ent, const qboolean alt_fire)
 //---------------------------------------------------------
 {
 	vec3_t dir, angs;
@@ -492,7 +492,7 @@ void WP_FireCloneCommando(gentity_t* ent, const qboolean altFire)
 	}
 	else if (!(ent->client->ps.forcePowersActive & 1 << FP_SEE) || ent->client->ps.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2)
 	{//force sight 2+ gives perfect aim
-		if (altFire)
+		if (alt_fire)
 		{
 			if (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent))
 			{
@@ -564,5 +564,5 @@ void WP_FireCloneCommando(gentity_t* ent, const qboolean altFire)
 
 	AngleVectors(angs, dir, nullptr, nullptr);
 
-	WP_FireCloneCommandoMissile(ent, muzzle, dir, altFire);
+	WP_FireCloneCommandoMissile(ent, muzzle, dir, alt_fire);
 }

@@ -6975,7 +6975,7 @@ void npc_evasion_saber()
 	}
 }
 
-extern float WP_SpeedOfMissileForWeapon(int wp, qboolean altFire);
+extern float WP_SpeedOfMissileForWeapon(int wp, qboolean alt_fire);
 
 static void jedi_face_enemy(const qboolean do_pitch)
 {

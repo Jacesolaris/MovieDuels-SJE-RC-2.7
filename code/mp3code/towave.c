@@ -646,17 +646,17 @@ char* C_MP3Stream_DecodeInit(const LP_MP3STREAM pSFX_MP3Stream, void* pvSourceDa
 //
 unsigned int C_MP3Stream_Decode(const LP_MP3STREAM pSFX_MP3Stream, const int bFastForwarding)
 {
-	unsigned int uiDecoded = 0; // default to "finished"
+	unsigned int ui_decoded; // default to "finished"
 
 	pMP3Stream = pSFX_MP3Stream;
 
 	if (pSFX_MP3Stream->iSourceBytesRemaining == 0)
 		//|| pSFX_MP3Stream->iSourceBytesRemaining < pSFX_MP3Stream->iSourceFrameBytes)
 	{
-		uiDecoded = 0; // finished
+		ui_decoded = 0; // finished
 		pMP3Stream = &_MP3Stream;
 
-		return uiDecoded;
+		return ui_decoded;
 	}
 
 	bFastEstimateOnly = bFastForwarding; ///////////////////////////////
@@ -679,22 +679,22 @@ unsigned int C_MP3Stream_Decode(const LP_MP3STREAM pSFX_MP3Stream, const int bFa
 	pSFX_MP3Stream->iBytesDecodedTotal += x.out_bytes;
 	pSFX_MP3Stream->iBytesDecodedThisPacket = x.out_bytes;
 
-	uiDecoded = x.out_bytes;
+	ui_decoded = x.out_bytes;
 
 	if (x.in_bytes <= 0)
 	{
 		//psReturn = "MP3ERR: Bad sync in file";
-		uiDecoded = 0; // finished
+		ui_decoded = 0; // finished
 		pMP3Stream = &_MP3Stream;
 
-		return uiDecoded;
+		return ui_decoded;
 	}
 
 	// restore global stream ptr before returning to normal functions (so the rest of the MP3 code still works)...
 	//
 	pMP3Stream = &_MP3Stream;
 
-	return uiDecoded;
+	return ui_decoded;
 }
 
 // ret is char* errstring, else NULL for ok

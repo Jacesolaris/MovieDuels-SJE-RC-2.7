@@ -217,7 +217,7 @@ static vehField_t* FindVehWeaponParm(const char* parmName)
 static qboolean BG_ParseVehWeaponParm(vehWeaponInfo_t* vehWeapon, const char* parmName, const char* pValue)
 {
 	vec3_t vec;
-	auto b = (byte*)vehWeapon;
+	auto b = reinterpret_cast<byte*>(vehWeapon);
 	int _iFieldsRead;
 	vehicleType_t vehType;
 	char value[1024];

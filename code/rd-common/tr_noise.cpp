@@ -41,7 +41,7 @@ static int s_noise_perm[NOISE_SIZE];
 
 static float GetNoiseValue(const int x, const int y, const int z, const int t)
 {
-	const int index = INDEX((int)x, (int)y, (int)z, (int)t);
+	const int index = INDEX(static_cast<int>(x), (int)y, static_cast<int>(z), static_cast<int>(t));
 
 	return s_noise_table[index];
 }
@@ -59,8 +59,8 @@ void R_NoiseInit()
 
 	for (int i = 0; i < NOISE_SIZE; i++)
 	{
-		s_noise_table[i] = static_cast<float>((rand() / (float)RAND_MAX * 2.0 - 1.0));
-		s_noise_perm[i] = static_cast<unsigned char>(rand() / (float)RAND_MAX * 255);
+		s_noise_table[i] = static_cast<float>((rand() / static_cast<float>(RAND_MAX) * 2.0 - 1.0));
+		s_noise_perm[i] = static_cast<unsigned char>(rand() / static_cast<float>(RAND_MAX) * 255);
 	}
 	srand(ri.com_frameTime());
 }

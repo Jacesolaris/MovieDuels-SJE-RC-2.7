@@ -35,8 +35,8 @@ void user_flush_data(png_structp png_ptr) {
 
 int RE_SavePNG(const char* filename, const byte* buf, size_t width, size_t height, int byteDepth) {
 	fileHandle_t fp;
-	png_structp png_ptr = nullptr;
-	png_infop info_ptr = nullptr;
+	png_structp png_ptr;
+	png_infop info_ptr;
 	unsigned int y;
 	/* "status" contains the return value of this function. At first
 	it is set to a value which means 'failure'. When the routine
@@ -46,7 +46,7 @@ int RE_SavePNG(const char* filename, const byte* buf, size_t width, size_t heigh
 	/* The following number is set by trial and error only. I cannot
 	see where it it is documented in the libpng manual.
 	*/
-	const int depth = 8;
+	constexpr int depth = 8;
 
 	fp = ri->FS_FOpenFileWrite(filename, qtrue);
 	if (!fp) {

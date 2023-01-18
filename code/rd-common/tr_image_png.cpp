@@ -86,9 +86,9 @@ int RE_SavePNG(const char* filename, const byte* buf, const size_t width, const 
 
 	/* Initialize rows of PNG. */
 
-	png_byte** row_pointers = static_cast<png_byte**>(png_malloc(png_ptr, height * sizeof(png_byte*)));
+	const auto row_pointers = static_cast<png_byte**>(png_malloc(png_ptr, height * sizeof(png_byte*)));
 	for (y = 0; y < height; ++y) {
-		png_byte* row = static_cast<png_byte*>(png_malloc(png_ptr, sizeof(uint8_t) * width * byteDepth));
+		auto row = static_cast<png_byte*>(png_malloc(png_ptr, sizeof(uint8_t) * width * byteDepth));
 		row_pointers[height - y - 1] = row;
 		for (unsigned int x = 0; x < width; ++x) {
 			const byte* px = buf + (width * y + x) * 3;
@@ -234,7 +234,7 @@ struct PNGFileReader
 		png_read_update_info(png_ptr, info_ptr);
 
 		// We always assume there are 4 channels. RGB channels are expanded to RGBA when read.
-		byte* tempData = static_cast<byte*>(R_Malloc(width_ * height_ * 4, TAG_TEMP_PNG, qfalse));
+		const auto tempData = static_cast<byte*>(R_Malloc(width_ * height_ * 4, TAG_TEMP_PNG, qfalse));
 		if (!tempData)
 		{
 			ri.Printf(PRINT_ERROR, "Could not allocate enough memory to load the image.");
@@ -242,7 +242,7 @@ struct PNGFileReader
 		}
 
 		// Dynamic array of row pointers, with 'height' elements, initialized to NULL.
-		byte** row_pointers = static_cast<byte**>(R_Malloc(sizeof(byte*) * height_, TAG_TEMP_PNG, qfalse));
+		const auto row_pointers = static_cast<byte**>(R_Malloc(sizeof(byte*) * height_, TAG_TEMP_PNG, qfalse));
 		if (!row_pointers)
 		{
 			ri.Printf(PRINT_ERROR, "Could not allocate enough memory to load the image.");
@@ -295,7 +295,7 @@ private:
 
 void user_read_data(const png_structp png_ptr, const png_bytep data, const png_size_t length) {
 	const png_voidp r = png_get_io_ptr(png_ptr);
-	PNGFileReader* reader = static_cast<PNGFileReader*>(r);
+	const auto reader = static_cast<PNGFileReader*>(r);
 	reader->ReadBytes(data, length);
 }
 

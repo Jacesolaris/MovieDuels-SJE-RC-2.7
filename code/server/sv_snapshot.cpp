@@ -645,7 +645,7 @@ static clientSnapshot_t* SV_BuildClientSnapshot(client_t* client)
 	// all of them to make it a mask vector, which is what the renderer wants
 	for (i = 0; i < MAX_MAP_AREA_BYTES / 4; i++)
 	{
-		((int*)frame->areabits)[i] = ((int*)frame->areabits)[i] ^ -1;
+		reinterpret_cast<int*>(frame->areabits)[i] = reinterpret_cast<int*>(frame->areabits)[i] ^ -1;
 	}
 
 	// copy the entity states out

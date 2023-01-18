@@ -840,7 +840,7 @@ void MSG_ReadField(msg_t* msg, int* to_f, const netField_t* field, const int pri
 				*to_f = MSG_ReadBits(msg, 32);
 				if (print)
 				{
-					Com_Printf("%s:%f ", field->name, *(float*)to_f);
+					Com_Printf("%s:%f ", field->name, *reinterpret_cast<float*>(to_f));
 				}
 			}
 		}

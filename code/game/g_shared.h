@@ -1292,7 +1292,7 @@ struct gentity_s
 	float wait;
 	float random;
 	int delay;
-	qboolean altFire;
+	qboolean alt_fire;
 	int count;
 	int bounceCount;
 	int fly_sound_debounce_time; // wind tunnel
@@ -1589,7 +1589,7 @@ struct gentity_s
 		saved_game.write<float>(wait);
 		saved_game.write<float>(random);
 		saved_game.write<int32_t>(delay);
-		saved_game.write<int32_t>(altFire);
+		saved_game.write<int32_t>(alt_fire);
 		saved_game.write<int32_t>(count);
 		saved_game.write<int32_t>(bounceCount);
 		saved_game.write<int32_t>(fly_sound_debounce_time);
@@ -1805,7 +1805,7 @@ struct gentity_s
 		saved_game.read<float>(wait);
 		saved_game.read<float>(random);
 		saved_game.read<int32_t>(delay);
-		saved_game.read<int32_t>(altFire);
+		saved_game.read<int32_t>(alt_fire);
 		saved_game.read<int32_t>(count);
 		saved_game.read<int32_t>(bounceCount);
 		saved_game.read<int32_t>(fly_sound_debounce_time);

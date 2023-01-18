@@ -1326,7 +1326,7 @@ static void CG_DoMuzzleFlash(centity_t* cent, vec3_t org, vec3_t dir, const weap
 			effect = &w_data->mMuzzleEffect[0];
 		}
 
-		if (cent->altFire)
+		if (cent->alt_fire)
 		{
 			// We're alt-firing, so see if we need to override with a custom alt-fire effect
 			if (w_data->mAltMuzzleEffect[0])
@@ -4469,7 +4469,7 @@ void CG_FireWeapon(centity_t* cent, const qboolean alt_fire)
 		cent->muzzleFlashTimeL = cg.time;
 	}
 
-	cent->altFire = alt_fire;
+	cent->alt_fire = alt_fire;
 
 	if (ent->weapon == WP_SABER)
 	{
@@ -4571,7 +4571,7 @@ CG_MissileHitWall
 Caused by an EV_MISSILE_MISS event, or directly by local bullet tracing
 =================
 */
-void CG_MissileHitWall(const centity_t* cent, const int weapon, vec3_t origin, vec3_t dir, const qboolean altFire)
+void CG_MissileHitWall(const centity_t* cent, const int weapon, vec3_t origin, vec3_t dir, const qboolean alt_fire)
 {
 	int parm;
 
@@ -4581,7 +4581,7 @@ void CG_MissileHitWall(const centity_t* cent, const int weapon, vec3_t origin, v
 	case WP_BRYAR_PISTOL:
 	case WP_BLASTER_PISTOL:
 	case WP_JAWA:
-		if (altFire)
+		if (alt_fire)
 		{
 			parm = 0;
 
@@ -4614,7 +4614,7 @@ void CG_MissileHitWall(const centity_t* cent, const int weapon, vec3_t origin, v
 		break;
 
 	case WP_REPEATER:
-		if (altFire)
+		if (alt_fire)
 		{
 			FX_RepeaterAltHitWall(origin, dir);
 		}
@@ -4625,7 +4625,7 @@ void CG_MissileHitWall(const centity_t* cent, const int weapon, vec3_t origin, v
 		break;
 
 	case WP_STUN_BATON:
-		if (altFire)
+		if (alt_fire)
 		{
 			theFxScheduler.PlayEffect("impacts/impactsmall1", origin, dir);
 		}
@@ -4634,7 +4634,7 @@ void CG_MissileHitWall(const centity_t* cent, const int weapon, vec3_t origin, v
 		}
 		break;
 	case WP_DEMP2:
-		if (altFire)
+		if (alt_fire)
 		{
 		}
 		else
@@ -4644,7 +4644,7 @@ void CG_MissileHitWall(const centity_t* cent, const int weapon, vec3_t origin, v
 		break;
 
 	case WP_FLECHETTE:
-		if (altFire)
+		if (alt_fire)
 		{
 			theFxScheduler.PlayEffect("flechette/alt_blow", origin, dir);
 		}
@@ -4683,7 +4683,7 @@ void CG_MissileHitWall(const centity_t* cent, const int weapon, vec3_t origin, v
 		break;
 
 	case WP_EMPLACED_GUN:
-		FX_EmplacedHitWall(origin, dir, static_cast<qboolean>(cent->gent && cent->gent->altFire));
+		FX_EmplacedHitWall(origin, dir, static_cast<qboolean>(cent->gent && cent->gent->alt_fire));
 		break;
 
 	case WP_ATST_MAIN:
@@ -4691,7 +4691,7 @@ void CG_MissileHitWall(const centity_t* cent, const int weapon, vec3_t origin, v
 		break;
 
 	case WP_ATST_SIDE:
-		if (altFire)
+		if (alt_fire)
 		{
 			theFxScheduler.PlayEffect("atst/side_alt_explosion", origin, dir);
 		}
@@ -4760,7 +4760,7 @@ void CG_MissileHitWall(const centity_t* cent, const int weapon, vec3_t origin, v
 		break;
 
 	case WP_REY:
-		if (altFire)
+		if (alt_fire)
 		{
 			parm = 0;
 
@@ -4778,7 +4778,7 @@ void CG_MissileHitWall(const centity_t* cent, const int weapon, vec3_t origin, v
 		break;
 
 	case WP_CLONEPISTOL:
-		if (altFire)
+		if (alt_fire)
 		{
 			parm = 0;
 
@@ -4804,7 +4804,7 @@ CG_MissileHitPlayer
 -------------------------
 */
 
-void CG_MissileHitPlayer(const centity_t* cent, const int weapon, vec3_t origin, vec3_t dir, const qboolean altFire)
+void CG_MissileHitPlayer(const centity_t* cent, const int weapon, vec3_t origin, vec3_t dir, const qboolean alt_fire)
 {
 	gentity_t* other = nullptr;
 	qboolean humanoid = qtrue;
@@ -4838,7 +4838,7 @@ void CG_MissileHitPlayer(const centity_t* cent, const int weapon, vec3_t origin,
 	case WP_BRYAR_PISTOL:
 	case WP_BLASTER_PISTOL:
 	case WP_JAWA:
-		if (altFire)
+		if (alt_fire)
 		{
 			FX_BryarAltHitPlayer(origin, dir, humanoid);
 		}
@@ -4864,7 +4864,7 @@ void CG_MissileHitPlayer(const centity_t* cent, const int weapon, vec3_t origin,
 		break;
 
 	case WP_REPEATER:
-		if (altFire)
+		if (alt_fire)
 		{
 			FX_RepeaterAltHitPlayer(origin, dir, humanoid);
 		}
@@ -4875,7 +4875,7 @@ void CG_MissileHitPlayer(const centity_t* cent, const int weapon, vec3_t origin,
 		break;
 
 	case WP_DEMP2:
-		if (!altFire)
+		if (!alt_fire)
 		{
 			FX_DEMP2_HitPlayer(origin, dir, humanoid);
 		}
@@ -4889,7 +4889,7 @@ void CG_MissileHitPlayer(const centity_t* cent, const int weapon, vec3_t origin,
 		break;
 
 	case WP_FLECHETTE:
-		if (altFire)
+		if (alt_fire)
 		{
 			theFxScheduler.PlayEffect("flechette/alt_blow", origin, dir);
 		}
@@ -4927,7 +4927,7 @@ void CG_MissileHitPlayer(const centity_t* cent, const int weapon, vec3_t origin,
 		break;
 
 	case WP_EMPLACED_GUN:
-		FX_EmplacedHitPlayer(origin, dir, static_cast<qboolean>(cent->gent && cent->gent->altFire));
+		FX_EmplacedHitPlayer(origin, dir, static_cast<qboolean>(cent->gent && cent->gent->alt_fire));
 		break;
 
 	case WP_TRIP_MINE:
@@ -4947,7 +4947,7 @@ void CG_MissileHitPlayer(const centity_t* cent, const int weapon, vec3_t origin,
 		break;
 
 	case WP_ATST_SIDE:
-		if (altFire)
+		if (alt_fire)
 		{
 			theFxScheduler.PlayEffect("atst/side_alt_explosion", origin, dir);
 		}
@@ -4994,7 +4994,7 @@ void CG_MissileHitPlayer(const centity_t* cent, const int weapon, vec3_t origin,
 		break;
 
 	case WP_REY:
-		if (altFire)
+		if (alt_fire)
 		{
 			FX_BryarAltHitPlayer(origin, dir, humanoid);
 		}
@@ -5014,7 +5014,7 @@ void CG_MissileHitPlayer(const centity_t* cent, const int weapon, vec3_t origin,
 		break;
 
 	case WP_CLONEPISTOL:
-		if (altFire)
+		if (alt_fire)
 		{
 			FX_CloneAltHitPlayer(origin, dir, humanoid);
 		}

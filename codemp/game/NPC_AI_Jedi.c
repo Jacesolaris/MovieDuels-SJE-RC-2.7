@@ -3694,7 +3694,7 @@ static void jedi_set_enemy_info(vec3_t enemy_dest, vec3_t enemy_dir, float* enem
 	}
 }
 
-extern float WP_SpeedOfMissileForWeapon(int wp, qboolean altFire);
+extern float WP_SpeedOfMissileForWeapon(int wp, qboolean alt_fire);
 static void Jedi_FaceEnemy(qboolean doPitch)
 {
 	vec3_t	enemy_eyes, eyes, angles;

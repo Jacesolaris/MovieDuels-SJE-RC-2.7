@@ -275,10 +275,10 @@ static void WP_DEMP2_AltFire(gentity_t* ent)
 }
 
 //---------------------------------------------------------
-void WP_FireDEMP2(gentity_t* ent, const qboolean altFire)
+void WP_FireDEMP2(gentity_t* ent, const qboolean alt_fire)
 //---------------------------------------------------------
 {
-	if (altFire)
+	if (alt_fire)
 	{
 		WP_DEMP2_AltFire(ent);
 	}

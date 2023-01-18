@@ -352,7 +352,7 @@ static inline void Channel_Clear(channel_t* ch)
 
 	memset(ch, 0, offsetof(channel_t, MP3SlidingDecodeBuffer));
 
-	byte* const p = (byte*)ch + offsetof(channel_t, MP3SlidingDecodeBuffer) + sizeof(ch->MP3SlidingDecodeBuffer);
+	byte* const p = reinterpret_cast<byte*>(ch) + offsetof(channel_t, MP3SlidingDecodeBuffer) + sizeof(ch->MP3SlidingDecodeBuffer);
 
 	memset(p, 0, (sizeof(*ch) - offsetof(channel_t, MP3SlidingDecodeBuffer)) - sizeof(ch->MP3SlidingDecodeBuffer));
 }
@@ -501,7 +501,7 @@ void S_Init()
 	{
 		int i;
 
-		ALCdevice* ALCDevice = alcOpenDevice((ALubyte*)"DirectSound3D");
+		ALCdevice* ALCDevice = alcOpenDevice(reinterpret_cast<ALubyte*>("DirectSound3D"));
 		if (!ALCDevice)
 			return;
 
@@ -2428,7 +2428,7 @@ static int S_CheckAmplitude(channel_t* ch, const int s_oldpaintedtime)
 				{
 					const int iIndex = (i * 100) + ((offset * /*ch->thesfx->width*/2) - ch->
 						iMP3SlidingDecodeWindowPos);
-					const short* pwSamples = (short*)(ch->MP3SlidingDecodeBuffer + iIndex);
+					const short* pwSamples = reinterpret_cast<short*>(ch->MP3SlidingDecodeBuffer + iIndex);
 
 					sample = *pwSamples;
 				}
@@ -2990,7 +2990,7 @@ void S_Update_()
 							if (ch->thesfx->lipSyncData)
 							{
 								ch->thesfx->lipSyncData[(i * NUM_STREAMING_BUFFERS) + j] = S_MP3PreProcessLipSync(
-									ch, (short*)(ch->MP3StreamHeader.bDecodeBuffer));
+									ch, reinterpret_cast<short*>(ch->MP3StreamHeader.bDecodeBuffer));
 							}
 							else
 							{
@@ -3240,7 +3240,7 @@ void UpdateSingleShotSounds()
 										if (ch->thesfx->lipSyncData)
 										{
 											ch->thesfx->lipSyncData[(j * 4) + k] = S_MP3PreProcessLipSync(
-												ch, (short*)(ch->buffers[j].Data));
+												ch, reinterpret_cast<short*>(ch->buffers[j].Data));
 										}
 										else
 										{
@@ -4272,7 +4272,7 @@ static qboolean S_StartBackgroundTrack_Actual(MusicInfo_t* pMusicInfo, const qbo
 
 		MP3MusicStream_Reset(pMusicInfo);
 
-		byte* pbMP3DataSegment = nullptr;
+		byte* pb_mp_3data_segment;
 		int iInitialMP3ReadSize = 8192; // fairly arbitrary, whatever size this is then the decoder is allowed to
 		// scan up to halfway of it to find floating headers, so don't make it
 		// too small. 8k works fine.
@@ -4291,20 +4291,20 @@ static qboolean S_StartBackgroundTrack_Actual(MusicInfo_t* pMusicInfo, const qbo
 
 			// enable the rest of the code to work as before...
 			//
-			pbMP3DataSegment = pMusicInfo->pLoadedData;
+			pb_mp_3data_segment = pMusicInfo->pLoadedData;
 			iInitialMP3ReadSize = pMusicInfo->iLoadedDataLen;
 		}
 		else
 		{
-			pbMP3DataSegment = MP3MusicStream_ReadFromDisk(pMusicInfo, 0, iInitialMP3ReadSize);
+			pb_mp_3data_segment = MP3MusicStream_ReadFromDisk(pMusicInfo, 0, iInitialMP3ReadSize);
 		}
 
-		if (MP3_IsValid(name, pbMP3DataSegment, iInitialMP3ReadSize, qtrue /*bStereoDesired*/))
+		if (MP3_IsValid(name, pb_mp_3data_segment, iInitialMP3ReadSize, qtrue /*bStereoDesired*/))
 		{
 			// init stream struct...
 			//
 			memset(&pMusicInfo->streamMP3_Bgrnd, 0, sizeof(pMusicInfo->streamMP3_Bgrnd));
-			char* psError = C_MP3Stream_DecodeInit(&pMusicInfo->streamMP3_Bgrnd, pbMP3DataSegment,
+			char* psError = C_MP3Stream_DecodeInit(&pMusicInfo->streamMP3_Bgrnd, pb_mp_3data_segment,
 				pMusicInfo->iLoadedDataLen,
 				dma.speed,
 				16, // sfx->width * 8,
@@ -4324,7 +4324,7 @@ static qboolean S_StartBackgroundTrack_Actual(MusicInfo_t* pMusicInfo, const qbo
 
 				if (qbDynamic)
 				{
-					MP3Stream_InitPlayingTimeFields(&pMusicInfo->streamMP3_Bgrnd, name, pbMP3DataSegment,
+					MP3Stream_InitPlayingTimeFields(&pMusicInfo->streamMP3_Bgrnd, name, pb_mp_3data_segment,
 						pMusicInfo->iLoadedDataLen, qtrue);
 				}
 
@@ -4929,7 +4929,7 @@ static qboolean S_UpdateBackgroundTrack_Actual(MusicInfo_t* pMusicInfo, const qb
 				// in-mem...
 				//
 				qbForceFinish = (MP3Stream_GetSamples(&pMusicInfo->chMP3_Bgrnd, iStartingSampleNum, fileBytes / 2,
-					(short*)raw, qtrue))
+					reinterpret_cast<short*>(raw), qtrue))
 					? qfalse
 					: qtrue;
 
@@ -4947,7 +4947,7 @@ static qboolean S_UpdateBackgroundTrack_Actual(MusicInfo_t* pMusicInfo, const qb
 					MP3StreamHeader.iSourceReadIndex;
 
 				qbForceFinish = (MP3Stream_GetSamples(&pMusicInfo->chMP3_Bgrnd, iStartingSampleNum, fileBytes / 2,
-					(short*)raw, qtrue))
+					reinterpret_cast<short*>(raw), qtrue))
 					? qfalse
 					: qtrue;
 			}
@@ -5267,7 +5267,7 @@ void SND_setup()
 
 // ask how much mem an sfx has allocated...
 //
-static int SND_MemUsed(sfx_t* sfx)
+static int SND_MemUsed(const sfx_t* sfx)
 {
 	int iSize = 0;
 	if (sfx->pSoundData)
@@ -5387,7 +5387,7 @@ void S_FreeAllSFXMem()
 //
 // new param is so we can be usre of not freeing ourselves (without having to rely on possible uninitialised timers etc)
 //
-int SND_FreeOldestSound(sfx_t* pButNotThisOne /* = NULL */)
+int SND_FreeOldestSound(const sfx_t* p_but_not_this_one /* = NULL */)
 {
 	int iBytesFreed = 0;
 	sfx_t* sfx;
@@ -5401,21 +5401,21 @@ int SND_FreeOldestSound(sfx_t* pButNotThisOne /* = NULL */)
 	{
 		sfx = &s_knownSfx[i];
 
-		if (sfx != pButNotThisOne)
+		if (sfx != p_but_not_this_one)
 		{
 			if (!sfx->bDefaultSound && sfx->bInMemory && sfx->iLastTimeUsed < iOldest)
 			{
 				// new bit, we can't throw away any sfx_t struct in use by a channel, else the paint code will crash...
 				//
-				int iChannel = 0;
-				for (iChannel = 0; iChannel < MAX_CHANNELS; iChannel++)
+				int i_channel;
+				for (i_channel = 0; i_channel < MAX_CHANNELS; i_channel++)
 				{
-					const channel_t* ch = &s_channels[iChannel];
+					const channel_t* ch = &s_channels[i_channel];
 
 					if (ch->thesfx == sfx)
 						break; // damn, being used
 				}
-				if (iChannel == MAX_CHANNELS)
+				if (i_channel == MAX_CHANNELS)
 				{
 					// this sfx_t struct wasn't used by any channels, so we can lose it...
 					//
@@ -5472,18 +5472,18 @@ qboolean SND_RegisterAudio_LevelLoadEnd(const qboolean bDeleteEverythingNotUsedT
 
 			if (sfx->bInMemory)
 			{
-				qboolean bDeleteThis = qfalse;
+				qboolean b_delete_this;
 
 				if (bDeleteEverythingNotUsedThisLevel)
 				{
-					bDeleteThis = static_cast<qboolean>(sfx->iLastLevelUsedOn != re.RegisterMedia_GetLevel());
+					b_delete_this = static_cast<qboolean>(sfx->iLastLevelUsedOn != re.RegisterMedia_GetLevel());
 				}
 				else
 				{
-					bDeleteThis = static_cast<qboolean>(sfx->iLastLevelUsedOn < re.RegisterMedia_GetLevel());
+					b_delete_this = static_cast<qboolean>(sfx->iLastLevelUsedOn < re.RegisterMedia_GetLevel());
 				}
 
-				if (bDeleteThis)
+				if (b_delete_this)
 				{
 					Com_DPrintf("Dumping sfx_t \"%s\"\n", sfx->sSoundName);
 
@@ -5522,7 +5522,7 @@ void InitEAXManager()
 	s_bEALFileLoaded = false;
 
 	// Check for EAX 4.0 support
-	s_bEAX = alIsExtensionPresent((ALubyte*)"EAX4.0");
+	s_bEAX = alIsExtensionPresent(reinterpret_cast<ALubyte*>("EAX4.0"));
 
 	if (s_bEAX)
 	{
@@ -5531,7 +5531,7 @@ void InitEAXManager()
 	else
 	{
 		// Support for EAXUnified (automatic translation of EAX 4.0 calls into EAX 3.0)
-		if ((alIsExtensionPresent((ALubyte*)"EAX3.0")) && (alIsExtensionPresent((ALubyte*)"EAX4.0Emulated")))
+		if ((alIsExtensionPresent(reinterpret_cast<ALubyte*>("EAX3.0"))) && (alIsExtensionPresent(reinterpret_cast<ALubyte*>("EAX4.0Emulated"))))
 		{
 			s_bEAX = AL_TRUE;
 			Com_Printf("Found EAX 4.0 EMULATION support\n");
@@ -5540,10 +5540,10 @@ void InitEAXManager()
 
 	if (s_bEAX)
 	{
-		s_eaxSet = static_cast<EAXSet>(alGetProcAddress((ALubyte*)"EAXSet"));
+		s_eaxSet = static_cast<EAXSet>(alGetProcAddress(reinterpret_cast<ALubyte*>("EAXSet")));
 		if (s_eaxSet == nullptr)
 			s_bEAX = false;
-		s_eaxGet = static_cast<EAXGet>(alGetProcAddress((ALubyte*)"EAXGet"));
+		s_eaxGet = static_cast<EAXGet>(alGetProcAddress(reinterpret_cast<ALubyte*>("EAXGet")));
 		if (s_eaxGet == nullptr)
 			s_bEAX = false;
 	}
@@ -5554,7 +5554,7 @@ void InitEAXManager()
 		s_hEAXManInst = LoadLibrary("EAXMan.dll");
 		if (s_hEAXManInst)
 		{
-			const auto lpEAXManagerCreateFn = (LPEAXMANAGERCREATE)GetProcAddress(s_hEAXManInst, "EaxManagerCreate");
+			const auto lpEAXManagerCreateFn = reinterpret_cast<LPEAXMANAGERCREATE>(GetProcAddress(s_hEAXManInst, "EaxManagerCreate"));
 			if (lpEAXManagerCreateFn)
 			{
 				if (lpEAXManagerCreateFn(&s_lpEAXManager) == EM_OK)
@@ -5675,7 +5675,7 @@ static bool LoadEALFile(char* szEALFilename)
 	s_lpEnvTable = nullptr;
 
 	// Load EAL file from PAK file
-	const int result = FS_ReadFile(szEALFilename, (void**)&ealData);
+	const int result = FS_ReadFile(szEALFilename, reinterpret_cast<void**>(&ealData));
 
 	if ((ealData) && (result != -1))
 	{

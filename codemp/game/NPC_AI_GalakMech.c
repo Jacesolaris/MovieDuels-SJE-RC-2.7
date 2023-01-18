@@ -316,7 +316,7 @@ void NPC_GM_Pain(gentity_t* self, gentity_t* attacker, int damage)
 				if (TIMER_Done(self, "noRapid"))
 				{
 					self->NPC->scriptFlags &= ~SCF_ALT_FIRE;
-					self->altFire = qfalse;
+					self->alt_fire = qfalse;
 					TIMER_Set(self, "noLob", Q_irand(2000, 6000));
 				}
 				else
@@ -329,7 +329,7 @@ void NPC_GM_Pain(gentity_t* self, gentity_t* attacker, int damage)
 				if (TIMER_Done(self, "noLob"))
 				{
 					self->NPC->scriptFlags |= SCF_ALT_FIRE;
-					self->altFire = qtrue;
+					self->alt_fire = qtrue;
 					TIMER_Set(self, "noRapid", Q_irand(2000, 6000));
 				}
 				else
@@ -761,7 +761,7 @@ void NPC_BSGM_Attack(void)
 		{//he's deflecting my shots, switch to the laser or the lob fire for a while
 			TIMER_Set( NPC, "noRapid", Q_irand( 2000, 6000 ) );
 			NPCInfo->scriptFlags |= SCF_ALT_FIRE;
-			NPC->altFire = qtrue;
+			NPC->alt_fire = qtrue;
 			if ( NPC->locationDamage[HL_GENERIC1] > GENERATOR_HEALTH && (Q_irand( 0, 1 )||enemyDist4 < MAX_LOB_DIST_SQUARED) )
 			{//shield down, use laser
 				NPC_GM_StartLaser();
@@ -813,7 +813,7 @@ void NPC_BSGM_Attack(void)
 			if ((NPCS.NPC->client->ps.weapon == WP_REPEATER) && (NPCS.NPCInfo->scriptFlags & SCF_ALT_FIRE))
 			{//shooting an explosive, but enemy too close, switch to primary fire
 				NPCS.NPCInfo->scriptFlags &= ~SCF_ALT_FIRE;
-				NPCS.NPC->altFire = qfalse;
+				NPCS.NPC->alt_fire = qfalse;
 				//FIXME: use weap raise & lower anims
 				NPC_ChangeWeapon(WP_REPEATER);
 			}
@@ -824,7 +824,7 @@ void NPC_BSGM_Attack(void)
 			if ((NPCS.NPC->client->ps.weapon == WP_REPEATER) && !(NPCS.NPCInfo->scriptFlags & SCF_ALT_FIRE))
 			{//enemy far enough away to use lobby explosives
 				NPCS.NPCInfo->scriptFlags |= SCF_ALT_FIRE;
-				NPCS.NPC->altFire = qtrue;
+				NPCS.NPC->alt_fire = qtrue;
 				//FIXME: use weap raise & lower anims
 				NPC_ChangeWeapon(WP_REPEATER);
 			}
@@ -989,7 +989,7 @@ void NPC_BSGM_Attack(void)
 			if (enemyLOS4 && enemyCS4 && TIMER_Done(NPCS.NPC, "noRapid"))
 			{//have a clear straight shot, so switch to primary
 				NPCS.NPCInfo->scriptFlags &= ~SCF_ALT_FIRE;
-				NPCS.NPC->altFire = qfalse;
+				NPCS.NPC->alt_fire = qfalse;
 				NPC_ChangeWeapon(WP_REPEATER);
 				//keep this weap for a bit
 				TIMER_Set(NPCS.NPC, "noLob", Q_irand(500, 1000));

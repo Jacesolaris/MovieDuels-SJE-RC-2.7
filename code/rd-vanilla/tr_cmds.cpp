@@ -146,7 +146,7 @@ void* R_GetCommandBufferReserved(unsigned int bytes, const int reserved_bytes)
 
 	// always leave room for the end of list command
 	if (cmd_list->used + bytes + sizeof(int) + reserved_bytes > MAX_RENDER_COMMANDS) {
-		if (bytes > MAX_RENDER_COMMANDS - (int)sizeof(int)) {
+		if (bytes > MAX_RENDER_COMMANDS - static_cast<int>(sizeof(int))) {
 			Com_Error(ERR_FATAL, "R_GetCommandBuffer: bad size %i", bytes);
 		}
 		// if we run out of room, just start dropping commands

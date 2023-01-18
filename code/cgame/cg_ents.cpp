@@ -1382,7 +1382,7 @@ static void CG_Missile(centity_t* cent)
 			return;
 		}
 	}
-	else if (cent->gent->altFire)
+	else if (cent->gent->alt_fire)
 	{
 		// add trails
 		if (weapon->alt_missileTrailFunc)
@@ -1478,7 +1478,7 @@ static void CG_Missile(centity_t* cent)
 	if (s1->otherEntityNum2 && g_vehWeaponInfo[s1->otherEntityNum2].iModel && cgs.model_draw[g_vehWeaponInfo[s1->
 		otherEntityNum2].iModel] != NULL_HANDLE)
 		ent.hModel = cgs.model_draw[g_vehWeaponInfo[s1->otherEntityNum2].iModel];
-	else if (cent->gent->altFire)
+	else if (cent->gent->alt_fire)
 		ent.hModel = weapon->alt_missileModel;
 	else
 		ent.hModel = weapon->missileModel;

@@ -3690,7 +3690,7 @@ static void ScanAndLoadShaderFiles()
 		Com_sprintf(filename, sizeof filename, "shaders/%s", shader_files[i]);
 		//ri.Printf( PRINT_DEVELOPER, "...loading '%s'\n", filename );
 		// Looks like stripping out crap in the shaders will save about 200k
-		const long summand = ri.FS_ReadFile(filename, (void**)&buffers[i]);
+		const long summand = ri.FS_ReadFile(filename, reinterpret_cast<void**>(&buffers[i]));
 		if (!buffers[i])
 			ri.Error(ERR_DROP, "Couldn't load %s", filename);
 

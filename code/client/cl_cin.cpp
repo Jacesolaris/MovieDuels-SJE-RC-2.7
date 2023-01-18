@@ -1147,8 +1147,8 @@ static void initRoQ()
 {
 	if (currentHandle < 0) return;
 
-	cinTable[currentHandle].VQNormal = (void (*)(byte*, void*))blitVQQuad32fs;
-	cinTable[currentHandle].VQBuffer = (void (*)(byte*, void*))blitVQQuad32fs;
+	cinTable[currentHandle].VQNormal = reinterpret_cast<void (*)(byte*, void*)>(blitVQQuad32fs);
+	cinTable[currentHandle].VQBuffer = reinterpret_cast<void (*)(byte*, void*)>(blitVQQuad32fs);
 	cinTable[currentHandle].samplesPerPixel = 4;
 	ROQ_GenYUVTables();
 	RllSetupTable();
@@ -1904,7 +1904,7 @@ void CIN_DrawCinematic(const int handle)
 
 		CIN_ResampleCinematic(handle, buf2);
 
-		re.DrawStretchRaw(x, y, w, h, 256, 256, (byte*)buf2, handle, qtrue);
+		re.DrawStretchRaw(x, y, w, h, 256, 256, reinterpret_cast<byte*>(buf2), handle, qtrue);
 		cinTable[handle].dirty = qfalse;
 		Z_Free(buf2); //Hunk_FreeTempMemory(buf2);
 		return;

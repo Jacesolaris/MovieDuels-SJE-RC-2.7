@@ -172,8 +172,8 @@ void fx_runner_link(gentity_t* self)
 		if (!target)
 		{
 			// Bah, no good, dump a warning, but continue on and use the UP vector
-			Com_Printf("fx_runner_link: target specified but not found: %s\n", self->target);
-			Com_Printf("  -assuming UP orientation.\n");
+			//Com_Printf("fx_runner_link: target specified but not found: %s\n", self->target);
+			//Com_Printf("  -assuming UP orientation.\n");
 		}
 		else
 		{

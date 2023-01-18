@@ -95,7 +95,7 @@ void CL_ParsePacketEntities(msg_t* msg, const clSnapshot_t* oldframe, clSnapshot
 
 	// delta from the entities present in oldframe
 	int oldindex = 0;
-	const entityState_t* oldstate = nullptr;
+	const entityState_t* oldstate;
 	if (!oldframe)
 	{
 		oldnum = 99999;

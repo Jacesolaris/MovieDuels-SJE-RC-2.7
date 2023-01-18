@@ -1624,7 +1624,7 @@ void G_SpawnNoghriGasCloud(gentity_t* ent)
 }
 
 extern void laserTrapStick(gentity_t* ent, vec3_t endpos, vec3_t normal);
-extern qboolean W_AccuracyLoggableWeapon(int weapon, qboolean altFire, int mod);
+extern qboolean W_AccuracyLoggableWeapon(int weapon, qboolean alt_fire, int mod);
 
 void G_MissileImpacted(gentity_t* ent, gentity_t* other, vec3_t impactPos, vec3_t normal, const int hit_loc = HL_NONE)
 {
@@ -1879,7 +1879,7 @@ void G_MissileImpact_MD(gentity_t* ent, trace_t* trace, const int hit_loc = HL_N
 		// demp2 shots can never bounce
 		bounce = qfalse;
 		// in fact, alt-charge shots will not call the regular impact functions
-		if (ent->altFire)
+		if (ent->alt_fire)
 		{
 			// detonate at the trace end
 			VectorCopy(trace->endpos, ent->currentOrigin);
@@ -1966,7 +1966,7 @@ void G_MissileImpact_MD(gentity_t* ent, trace_t* trace, const int hit_loc = HL_N
 
 	if ((!other->takedamage || other->client && other->health <= 0)
 		&& ent->s.weapon == WP_THERMAL
-		&& !ent->altFire)
+		&& !ent->alt_fire)
 	{
 		//rolling thermal det
 		if (ent->owner)
@@ -2336,7 +2336,7 @@ void G_MissileImpactJKA(gentity_t* ent, trace_t* trace, const int hit_loc = HL_N
 		bounce = qfalse;
 
 		// in fact, alt-charge shots will not call the regular impact functions
-		if (ent->altFire)
+		if (ent->alt_fire)
 		{
 			// detonate at the trace end
 			VectorCopy(trace->endpos, ent->currentOrigin);
@@ -2401,7 +2401,7 @@ void G_MissileImpactJKA(gentity_t* ent, trace_t* trace, const int hit_loc = HL_N
 
 	if ((!other->takedamage || other->client && other->health <= 0)
 		&& ent->s.weapon == WP_THERMAL
-		&& !ent->altFire)
+		&& !ent->alt_fire)
 	{
 		//rolling thermal det - FIXME: make this an eFlag like bounce & stick!!!
 		if (ent->owner)

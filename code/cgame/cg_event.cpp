@@ -660,7 +660,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 
 	case EV_DISRUPTOR_SNIPER_SHOT:
 		DEBUGNAME("EV_DISRUPTOR_SNIPER_SHOT");
-		FX_DisruptorAltShot(cent->currentState.origin2, cent->lerpOrigin, cent->gent->altFire);
+		FX_DisruptorAltShot(cent->currentState.origin2, cent->lerpOrigin, cent->gent->alt_fire);
 		break;
 
 	case EV_DISRUPTOR_SNIPER_MISS:
@@ -847,7 +847,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 		}
 		else
 		{
-			CG_MissileHitPlayer(cent, es->weapon, position, cent->gent->pos1, cent->gent->altFire);
+			CG_MissileHitPlayer(cent, es->weapon, position, cent->gent->pos1, cent->gent->alt_fire);
 		}
 		break;
 
@@ -858,7 +858,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 		}
 		else
 		{
-			CG_MissileHitWall(cent, es->weapon, position, cent->gent->pos1, cent->gent->altFire);
+			CG_MissileHitWall(cent, es->weapon, position, cent->gent->pos1, cent->gent->alt_fire);
 		}
 		break;
 

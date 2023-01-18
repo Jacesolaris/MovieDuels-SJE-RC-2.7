@@ -214,7 +214,7 @@ void S_Spatialize(channel_t* ch);
 
 byte* SND_malloc(int iSize, sfx_t* sfx);
 void	 SND_setup();
-int		 SND_FreeOldestSound(sfx_t* pButNotThisOne = NULL);
+int		 SND_FreeOldestSound(const sfx_t* p_but_not_this_one = NULL);
 void	 SND_TouchSFX(sfx_t* sfx);
 
 qboolean SND_RegisterAudio_LevelLoadEnd(qboolean bDeleteEverythingNotUsedThisLevel /* 99% qfalse */);

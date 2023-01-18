@@ -273,8 +273,8 @@ static	void R_LoadVisibility(const lump_t* l, world_t& world_data) {
 	}
 	byte* buf = fileBase + l->fileofs;
 
-	world_data.numClusters = LittleLong((int*)buf)[0];
-	world_data.clusterBytes = LittleLong((int*)buf)[1];
+	world_data.numClusters = LittleLong reinterpret_cast<int*>(buf)[0];
+	world_data.clusterBytes = LittleLong reinterpret_cast<int*>(buf)[1];
 
 	// CM_Load should have given us the vis data to share, so
 	// we don't need to allocate another copy
@@ -371,7 +371,7 @@ static void ParseFace(const dsurface_t* ds, mapVert_t* verts, msurface_t* surf, 
 	const int ofs_indexes = sface_size;
 	sface_size += sizeof(int) * num_indexes;
 
-	srfSurfaceFace_t* cv = reinterpret_cast<srfSurfaceFace_t*>(p_face_data_buffer);//R_Hunk_Alloc( sfaceSize );
+	const auto cv = reinterpret_cast<srfSurfaceFace_t*>(p_face_data_buffer);//R_Hunk_Alloc( sfaceSize );
 	p_face_data_buffer += sface_size;	// :-)
 
 	cv->surfaceType = SF_FACE;
@@ -534,7 +534,7 @@ static void ParseTriSurf(const dsurface_t* ds, mapVert_t* verts, msurface_t* sur
 	tri->num_verts = num_verts;
 	tri->num_indexes = num_indexes;
 	tri->verts = reinterpret_cast<drawVert_t*>(tri + 1);
-	tri->indexes = (int*)(tri->verts + tri->num_verts);
+	tri->indexes = reinterpret_cast<int*>(tri->verts + tri->num_verts);
 
 	surf->data = reinterpret_cast<surfaceType_t*>(tri);
 
@@ -958,7 +958,7 @@ static	void R_LoadFogs(const lump_t* l, const lump_t* brushes_lump, const lump_t
 	}
 	const int brushes_count = brushes_lump->filelen / sizeof * brushes;
 
-	const dbrushside_t* sides = (dbrushside_t*)(fileBase + sides_lump->fileofs);
+	const dbrushside_t* sides = reinterpret_cast<dbrushside_t*>(fileBase + sides_lump->fileofs);
 	if (sides_lump->filelen % sizeof * sides) {
 		Com_Error(ERR_DROP, "LoadMap: funny lump size in %s", world_data.name);
 	}
@@ -1285,7 +1285,7 @@ void RE_LoadWorldMap_Actual(const char* name, world_t& world_data, const int ind
 	{
 		// still needs loading...
 		//
-		ri.FS_ReadFile(name, (void**)&buffer);
+		ri.FS_ReadFile(name, reinterpret_cast<void**>(&buffer));
 		if (!buffer) {
 			Com_Error(ERR_DROP, "RE_LoadWorldMap: %s not found", name);
 		}

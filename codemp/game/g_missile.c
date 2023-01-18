@@ -285,7 +285,7 @@ void G_BounceProjectile(vec3_t start, vec3_t impact, vec3_t dir, vec3_t endout) 
 
 //-----------------------------------------------------------------------------
 gentity_t* create_missile(vec3_t org, vec3_t dir, float vel, int life,
-	gentity_t* owner, qboolean altFire)
+	gentity_t* owner, qboolean alt_fire)
 	//-----------------------------------------------------------------------------
 {
 	gentity_t* missile = G_Spawn();
@@ -297,7 +297,7 @@ gentity_t* create_missile(vec3_t org, vec3_t dir, float vel, int life,
 	missile->parent = owner;
 	missile->r.ownerNum = owner->s.number;
 
-	if (altFire)
+	if (alt_fire)
 	{
 		missile->s.eFlags |= EF_ALT_FIRING;
 	}
@@ -386,7 +386,7 @@ void G_MissileImpact(gentity_t* ent, trace_t* trace) {
 	}
 
 	/*
-	if ( !other->takedamage && ent->s.weapon == WP_THERMAL && !ent->altFire )
+	if ( !other->takedamage && ent->s.weapon == WP_THERMAL && !ent->alt_fire )
 	{//rolling thermal det - FIXME: make this an eFlag like bounce & stick!!!
 		//G_BounceRollMissile( ent, trace );
 		if ( ent->owner && ent->owner->s.number == 0 )

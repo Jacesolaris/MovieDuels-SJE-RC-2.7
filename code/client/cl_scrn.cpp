@@ -563,7 +563,7 @@ byte* SCR_GetScreenshot(qboolean* qValid)
 	{
 		*qValid = screenDataValid;
 	}
-	return (byte*)&bScreenData;
+	return reinterpret_cast<byte*>(&bScreenData);
 }
 
 // called from save-game code to set the lo-res loading screen to be the one from the save file...

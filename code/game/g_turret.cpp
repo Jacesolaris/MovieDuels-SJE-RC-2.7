@@ -37,7 +37,7 @@ extern gentity_t* player;
 extern qboolean G_ClearViewEntity(gentity_t* ent);
 extern void G_SetViewEntity(gentity_t* self, gentity_t* view_entity);
 extern gentity_t* create_missile(vec3_t org, vec3_t dir, float vel, int life, gentity_t* owner,
-	qboolean altFire = qfalse);
+	qboolean alt_fire = qfalse);
 extern cvar_t* com_outcast;
 
 constexpr auto ARM_ANGLE_RANGE = 60;
@@ -205,7 +205,7 @@ static void turret_fire(gentity_t* ent, vec3_t start, vec3_t dir)
 		G_SoundOnEnt(ent, CHAN_LESS_ATTEN, "sound/vehicles/weapons/turbolaser/fire1");
 
 		WP_FireTurboLaserMissile(ent, start, dir);
-		if (ent->altFire)
+		if (ent->alt_fire)
 		{
 			TurboLaser_SetBoneAnim(ent, 2, 3);
 		}
@@ -303,7 +303,7 @@ void turret_head_think(gentity_t* self)
 		gi.G2API_GetBoltMatrix(self->ghoul2,
 			0,
 			self->spawnflags & SPF_TURRETG2_TURBO
-			? (self->altFire
+			? (self->alt_fire
 				? gi.G2API_AddBolt(&self->ghoul2[0], "*muzzle2")
 				: gi.G2API_AddBolt(&self->ghoul2[0], "*muzzle1"))
 			: gi.G2API_AddBolt(&self->ghoul2[0], "*flash03"),
@@ -315,7 +315,7 @@ void turret_head_think(gentity_t* self)
 			self->modelScale);
 		if (self->spawnflags & SPF_TURRETG2_TURBO)
 		{
-			self->altFire = static_cast<qboolean>(!self->altFire);
+			self->alt_fire = static_cast<qboolean>(!self->alt_fire);
 		}
 
 		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, org);
@@ -386,7 +386,7 @@ static void turret_aim(gentity_t* self)
 		gi.G2API_GetBoltMatrix(self->ghoul2,
 			0,
 			self->spawnflags & SPF_TURRETG2_TURBO
-			? (self->altFire
+			? (self->alt_fire
 				? gi.G2API_AddBolt(&self->ghoul2[0], "*muzzle2")
 				: gi.G2API_AddBolt(&self->ghoul2[0], "*muzzle1"))
 			: gi.G2API_AddBolt(&self->ghoul2[0], "*flash03"),
@@ -1126,10 +1126,10 @@ void laser_arm_fire(gentity_t* ent)
 	vec3_t start, end, fwd, rt, up;
 	trace_t trace;
 
-	if (ent->attackDebounceTime < level.time && ent->altFire)
+	if (ent->attackDebounceTime < level.time && ent->alt_fire)
 	{
 		// If I'm firing the laser and it's time to quit....then quit!
-		ent->altFire = qfalse;
+		ent->alt_fire = qfalse;
 		//		ent->e_ThinkFunc = thinkF_NULL;
 		//		return;
 	}
@@ -1149,7 +1149,7 @@ void laser_arm_fire(gentity_t* ent)
 	ent->fly_sound_debounce_time = level.time; //used as lastShotTime
 
 	// Only deal damage when in alt-fire mode
-	if (trace.fraction < 1.0 && ent->altFire)
+	if (trace.fraction < 1.0 && ent->alt_fire)
 	{
 		if (trace.entity_num < ENTITYNUM_WORLD)
 		{
@@ -1162,7 +1162,7 @@ void laser_arm_fire(gentity_t* ent)
 		}
 	}
 
-	if (ent->altFire)
+	if (ent->alt_fire)
 	{
 		//		CG_FireLaser( start, trace.endpos, trace.plane.normal, ent->nextTrain->startRGBA, qfalse );
 	}
@@ -1186,7 +1186,7 @@ void laser_arm_use(gentity_t* self, gentity_t* other, gentity_t* activator)
 		//		self->lastEnemy->lastEnemy->e_ThinkFunc = thinkF_laser_arm_fire;
 		//		self->lastEnemy->lastEnemy->nextthink = level.time + FRAMETIME;
 		//For 3 seconds
-		self->lastEnemy->lastEnemy->altFire = qtrue; // Let 'er rip!
+		self->lastEnemy->lastEnemy->alt_fire = qtrue; // Let 'er rip!
 		self->lastEnemy->lastEnemy->attackDebounceTime = level.time + self->lastEnemy->lastEnemy->wait;
 		G_Sound(self->lastEnemy->lastEnemy, G_SoundIndex("sound/chars/l_arm/fire.wav"));
 		break;
@@ -1375,7 +1375,7 @@ void laser_arm_start(gentity_t* base)
 	// The head should always think, since it will be either firing a damage laser or just a target laser
 	head->e_ThinkFunc = thinkF_laser_arm_fire;
 	head->nextthink = level.time + FRAMETIME;
-	head->altFire = qfalse; // Don't do damage until told to
+	head->alt_fire = qfalse; // Don't do damage until told to
 }
 
 void SP_laser_arm(gentity_t* base)

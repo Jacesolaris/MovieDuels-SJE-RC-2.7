@@ -302,7 +302,7 @@ from executable path, then fs_basepath.
 */
 void* Sys_LoadDll(const char* name, const qboolean useSystemLib)
 {
-	void* dllhandle = nullptr;
+	void* dllhandle;
 
 	// Don't load any DLLs that end with the pk3 extension
 	if (COM_CompareExtension(name, ".pk3"))

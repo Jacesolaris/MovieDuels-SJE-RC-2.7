@@ -235,7 +235,7 @@ CMod_LoadNodes
 
 =================
 */
-void CMod_LoadNodes(lump_t* l, clipMap_t& cm)
+void CMod_LoadNodes(const lump_t* l, clipMap_t& cm)
 {
 	auto in = reinterpret_cast<dnode_t*>(cmod_base + l->fileofs);
 	if (l->filelen % sizeof * in)

@@ -523,7 +523,7 @@ static void Cmd_TokenizeString2(const char* text_in, const qboolean ignore_quote
 		while (true)
 		{
 			// skip whitespace
-			while (*text && *(const unsigned char* /*eurofix*/)text <= ' ')
+			while (*text && *reinterpret_cast<const unsigned char*>(text) <= ' ')
 			{
 				text++;
 			}
@@ -807,7 +807,7 @@ Cmd_List_f
 */
 void Cmd_List_f()
 {
-	const cmd_function_t* cmd = nullptr;
+	const cmd_function_t* cmd;
 	int i, j;
 	const char* match = nullptr;
 

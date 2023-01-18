@@ -713,7 +713,7 @@ qboolean Music_DynamicDataAvailable(const char* psDynamicMusicLabel)
 
 const char* Music_GetFileNameForState(MusicState_e eMusicState)
 {
-	MusicFile_t* pMusicFile = nullptr;
+	MusicFile_t* p_music_file;
 	switch (eMusicState)
 	{
 	case eBGRNDTRACK_EXPLORE:
@@ -721,10 +721,10 @@ const char* Music_GetFileNameForState(MusicState_e eMusicState)
 	case eBGRNDTRACK_BOSS:
 	case eBGRNDTRACK_DEATH:
 
-		pMusicFile = Music_GetBaseMusicFile(eMusicState);
-		if (pMusicFile)
+		p_music_file = Music_GetBaseMusicFile(eMusicState);
+		if (p_music_file)
 		{
-			return Music_BuildFileName(pMusicFile->sFileNameBase.c_str(), eMusicState);
+			return Music_BuildFileName(p_music_file->sFileNameBase.c_str(), eMusicState);
 		}
 		break;
 
@@ -733,13 +733,13 @@ const char* Music_GetFileNameForState(MusicState_e eMusicState)
 	case eBGRNDTRACK_ACTIONTRANS2:
 	case eBGRNDTRACK_ACTIONTRANS3:
 
-		pMusicFile = Music_GetBaseMusicFile(eBGRNDTRACK_ACTION);
-		if (pMusicFile)
+		p_music_file = Music_GetBaseMusicFile(eBGRNDTRACK_ACTION);
+		if (p_music_file)
 		{
 			const size_t iTransNum = eMusicState - eBGRNDTRACK_ACTIONTRANS0;
-			if (iTransNum < pMusicFile->MusicExitPoints.size())
+			if (iTransNum < p_music_file->MusicExitPoints.size())
 			{
-				return Music_BuildFileName(pMusicFile->MusicExitPoints[iTransNum].sNextFile.c_str(), eMusicState);
+				return Music_BuildFileName(p_music_file->MusicExitPoints[iTransNum].sNextFile.c_str(), eMusicState);
 			}
 		}
 		break;
@@ -749,13 +749,13 @@ const char* Music_GetFileNameForState(MusicState_e eMusicState)
 	case eBGRNDTRACK_EXPLORETRANS2:
 	case eBGRNDTRACK_EXPLORETRANS3:
 
-		pMusicFile = Music_GetBaseMusicFile(eBGRNDTRACK_EXPLORE);
-		if (pMusicFile)
+		p_music_file = Music_GetBaseMusicFile(eBGRNDTRACK_EXPLORE);
+		if (p_music_file)
 		{
 			const size_t iTransNum = eMusicState - eBGRNDTRACK_EXPLORETRANS0;
-			if (iTransNum < pMusicFile->MusicExitPoints.size())
+			if (iTransNum < p_music_file->MusicExitPoints.size())
 			{
-				return Music_BuildFileName(pMusicFile->MusicExitPoints[iTransNum].sNextFile.c_str(), eMusicState);
+				return Music_BuildFileName(p_music_file->MusicExitPoints[iTransNum].sNextFile.c_str(), eMusicState);
 			}
 		}
 		break;
@@ -873,7 +873,7 @@ qboolean Music_AllowedToTransition(const float fPlayingTimeElapsed,
 				//
 				// the two params to give back...
 				//
-				MusicState_e eFeedBackTransition = eBGRNDTRACK_EXPLORETRANS0; // any old default
+				MusicState_e e_feed_back_transition; // any old default
 				float fFeedBackNewTrackEntryTime = 0.0f;
 				//
 				// check legality in case of crap data...
@@ -890,7 +890,7 @@ qboolean Music_AllowedToTransition(const float fPlayingTimeElapsed,
 						assert(!ExitPoint.sNextMark.c_str()[0]);
 						// simple error checking, but harmless if tripped. explore transitions go to silence, hence no entry time for [silence] state after transition
 
-						eFeedBackTransition = static_cast<MusicState_e>(eBGRNDTRACK_EXPLORETRANS0 + iExitPoint);
+						e_feed_back_transition = static_cast<MusicState_e>(eBGRNDTRACK_EXPLORETRANS0 + iExitPoint);
 					}
 					break;
 
@@ -918,7 +918,7 @@ qboolean Music_AllowedToTransition(const float fPlayingTimeElapsed,
 								if (itEntryTime != MusicFile_Explore.MusicEntryTimes.end())
 								{
 									fFeedBackNewTrackEntryTime = (*itEntryTime).second;
-									eFeedBackTransition = static_cast<MusicState_e>(eBGRNDTRACK_ACTIONTRANS0 +
+									e_feed_back_transition = static_cast<MusicState_e>(eBGRNDTRACK_ACTIONTRANS0 +
 										iExitPoint);
 								}
 								else
@@ -941,7 +941,7 @@ qboolean Music_AllowedToTransition(const float fPlayingTimeElapsed,
 						}
 						else
 						{
-							eFeedBackTransition = eBGRNDTRACK_ACTIONTRANS0;
+							e_feed_back_transition = eBGRNDTRACK_ACTIONTRANS0;
 							fFeedBackNewTrackEntryTime = 0.0f; // already set to this, but FYI
 						}
 					}
@@ -970,7 +970,7 @@ qboolean Music_AllowedToTransition(const float fPlayingTimeElapsed,
 				//
 				if (peTransition)
 				{
-					*peTransition = eFeedBackTransition;
+					*peTransition = e_feed_back_transition;
 				}
 
 				if (pfNewTrackEntryTime)

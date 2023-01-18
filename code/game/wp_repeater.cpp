@@ -145,14 +145,14 @@ extern qboolean PM_RunningAnim(int anim);
 extern qboolean PM_WalkingAnim(int anim);
 
 //---------------------------------------------------------
-void WP_FireRepeater(gentity_t* ent, const qboolean altFire)
+void WP_FireRepeater(gentity_t* ent, const qboolean alt_fire)
 //---------------------------------------------------------
 {
 	vec3_t angs;
 
 	vectoangles(forwardVec, angs);
 
-	if (altFire)
+	if (alt_fire)
 	{
 		WP_RepeaterAltFire(ent);
 	}

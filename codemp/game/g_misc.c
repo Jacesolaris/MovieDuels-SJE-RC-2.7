@@ -104,7 +104,7 @@ static void misc_lightstyle_set(const gentity_t* ent)
 	const int mLightStyle = ent->count;
 	const int mLightSwitchStyle = ent->bounceCount;
 	const int mLightOffStyle = ent->fly_sound_debounce_time;
-	if (!ent->altFire)
+	if (!ent->alt_fire)
 	{	//turn off
 		if (mLightOffStyle)	//i have a light style i'd like to use when off
 		{
@@ -152,7 +152,7 @@ void misc_dlight_use(gentity_t* ent, gentity_t* other, gentity_t* activator)
 {
 	G_ActivateBehavior(ent, BSET_USE);
 
-	ent->altFire = !ent->altFire;	//toggle
+	ent->alt_fire = !ent->alt_fire;	//toggle
 	misc_lightstyle_set(ent);
 }
 
@@ -172,12 +172,12 @@ void SP_light(gentity_t* self) {
 	self->use = misc_dlight_use;
 
 	self->s.eType = ET_GENERAL;
-	self->altFire = qfalse;
+	self->alt_fire = qfalse;
 	self->r.svFlags |= SVF_NOCLIENT;
 
 	if (!(self->spawnflags & 4))
 	{	//turn myself on now
-		self->altFire = qtrue;
+		self->alt_fire = qtrue;
 	}
 	misc_lightstyle_set(self);
 }

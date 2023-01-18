@@ -55,7 +55,7 @@ void S_WriteLinearBlastStereo16()
 
 void S_TransferStereo16(unsigned long* pbuf, const int endtime)
 {
-	snd_p = (int*)paintbuffer;
+	snd_p = reinterpret_cast<int*>(paintbuffer);
 	int ls_paintedtime = s_paintedtime;
 
 	while (ls_paintedtime < endtime)
@@ -63,7 +63,7 @@ void S_TransferStereo16(unsigned long* pbuf, const int endtime)
 		// handle recirculating buffer issues
 		const int lpos = ls_paintedtime & ((dma.samples >> 1) - 1);
 
-		snd_out = (short*)pbuf + (lpos << 1);
+		snd_out = reinterpret_cast<short*>(pbuf) + (lpos << 1);
 
 		snd_linear_count = (dma.samples >> 1) - lpos;
 		if (ls_paintedtime + snd_linear_count > endtime)
@@ -87,7 +87,7 @@ S_TransferPaintBuffer
 */
 void S_TransferPaintBuffer(const int endtime)
 {
-	const auto pbuf = (unsigned long*)dma.buffer;
+	const auto pbuf = reinterpret_cast<unsigned long*>(dma.buffer);
 
 	if (s_testsound->integer)
 	{
@@ -106,7 +106,7 @@ void S_TransferPaintBuffer(const int endtime)
 	{
 		int val;
 		// general case
-		auto p = (int*)paintbuffer;
+		auto p = reinterpret_cast<int*>(paintbuffer);
 		int count = (endtime - s_paintedtime) * dma.channels;
 		const int out_mask = dma.samples - 1;
 		int out_idx = s_paintedtime * dma.channels & out_mask;
@@ -114,7 +114,7 @@ void S_TransferPaintBuffer(const int endtime)
 
 		if (dma.samplebits == 16)
 		{
-			const auto out = (short*)pbuf;
+			const auto out = reinterpret_cast<short*>(pbuf);
 			while (count--)
 			{
 				val = *p >> 8;
@@ -129,7 +129,7 @@ void S_TransferPaintBuffer(const int endtime)
 		}
 		else if (dma.samplebits == 8)
 		{
-			const auto out = (unsigned char*)pbuf;
+			const auto out = reinterpret_cast<unsigned char*>(pbuf);
 			while (count--)
 			{
 				val = *p >> 8;

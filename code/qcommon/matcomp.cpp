@@ -84,7 +84,7 @@ void MC_Compress(const float mat[3][4], unsigned char* _comp)
 	if (val < 0)
 		val = 0;
 
-	byteAlias_t* ba = reinterpret_cast<byteAlias_t*>(&comp[MC_POS_X]);
+	auto ba = reinterpret_cast<byteAlias_t*>(&comp[MC_POS_X]);
 	ba->ui |= static_cast<uint32_t>(val) << MC_SHIFT_X;
 
 	val = static_cast<int>(mat[1][3] / MC_SCALE_Y);

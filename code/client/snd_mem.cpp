@@ -364,7 +364,7 @@ void R_CheckMP3s(const char* ps_dir)
 
 						if (!qbForceStereo)	// no point for stereo files, which are for music and therefore no lip-sync
 						{
-							byte* pb_unpack_buffer = static_cast<byte*>(Z_Malloc(i_raw_pcm_data_size + 10, TAG_TEMP_WORKSPACE, qfalse));	// won't return if fails
+							const auto pb_unpack_buffer = static_cast<byte*>(Z_Malloc(i_raw_pcm_data_size + 10, TAG_TEMP_WORKSPACE, qfalse));	// won't return if fails
 
 							i_actual_unpacked_size = MP3_UnpackRawPCM(s_filename, pb_data, i_size, pb_unpack_buffer);
 							if (i_actual_unpacked_size != i_raw_pcm_data_size)
@@ -792,7 +792,7 @@ static qboolean S_LoadSound_Actual(sfx_t* sfx)
 				//
 				{
 					{
-						byte* pb_unpack_buffer = static_cast<byte*>(Z_Malloc(i_raw_pcm_data_size + 10 + 2304 /* <g> */, TAG_TEMP_WORKSPACE, qfalse));
+						const auto pb_unpack_buffer = static_cast<byte*>(Z_Malloc(i_raw_pcm_data_size + 10 + 2304 /* <g> */, TAG_TEMP_WORKSPACE, qfalse));
 						const int i_result_bytes = MP3_UnpackRawPCM(s_load_name, data, size, pb_unpack_buffer, qfalse);
 
 						if (i_result_bytes != i_raw_pcm_data_size) {

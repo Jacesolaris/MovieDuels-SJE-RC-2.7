@@ -553,7 +553,7 @@ void FS_CopyFile(char* fromOSPath, char* toOSPath, const qboolean qbSilent) {
 
 	// we are using direct malloc instead of Z_Malloc here, so it
 	// probably won't work on a mac... Its only for developers anyway...
-	byte* buf = static_cast<unsigned char*>(malloc(len));
+	const auto buf = static_cast<unsigned char*>(malloc(len));
 	if (fread(buf, 1, len, f) != static_cast<size_t>(len))
 	{
 		fclose(f);
@@ -1249,11 +1249,11 @@ long FS_FOpenFileRead(const char* filename, fileHandle_t* file, const qboolean u
 	//	file handle on your local version, not the net build. This uses a bit more CPU to re-do the loop
 	//	logic, but should read faster than accessing the net version a second time.
 	//
-	qboolean bFasterToReOpenUsingNewLocalFile = qfalse;
+	qboolean b_faster_to_re_open_using_new_local_file;
 
 	do
 	{
-		bFasterToReOpenUsingNewLocalFile = qfalse;
+		b_faster_to_re_open_using_new_local_file = qfalse;
 
 		for (const searchpath_t* search = fs_searchpaths; search; search = search->next) {
 			//
@@ -1389,7 +1389,7 @@ long FS_FOpenFileRead(const char* filename, fileHandle_t* file, const qboolean u
 							{
 								// clear this handle and setup for re-opening of the new local copy...
 								//
-								bFasterToReOpenUsingNewLocalFile = qtrue;
+								b_faster_to_re_open_using_new_local_file = qtrue;
 								fclose(fsh[*file].handleFiles.file.o);
 								fsh[*file].handleFiles.file.o = nullptr;
 							}
@@ -1399,7 +1399,7 @@ long FS_FOpenFileRead(const char* filename, fileHandle_t* file, const qboolean u
 					}
 				}
 #endif
-				if (bFasterToReOpenUsingNewLocalFile)
+				if (b_faster_to_re_open_using_new_local_file)
 				{
 					break;	// and re-read the local copy, not the net version
 				}
@@ -1407,7 +1407,7 @@ long FS_FOpenFileRead(const char* filename, fileHandle_t* file, const qboolean u
 				return FS_fplength(fsh[*file].handleFiles.file.o);
 			}
 		}
-	} while (bFasterToReOpenUsingNewLocalFile);
+	} while (b_faster_to_re_open_using_new_local_file);
 
 	Com_DPrintf("Can't find %s\n", filename);
 	*file = 0;
@@ -1428,7 +1428,7 @@ int FS_Read(void* buffer, const int len, const fileHandle_t f) {
 		return 0;
 	}
 
-	byte* buf = static_cast<byte*>(buffer);
+	auto buf = static_cast<byte*>(buffer);
 	fs_readCount += len;
 
 	if (fsh[f].zipFile == qfalse) {
@@ -1475,7 +1475,7 @@ int FS_Write(const void* buffer, const int len, const fileHandle_t h) {
 	}
 
 	FILE* f = FS_FileForHandle(h);
-	byte* buf = (byte*)buffer;
+	auto buf = (byte*)buffer;
 
 	int remaining = len;
 	int tries = 0;
@@ -1701,7 +1701,7 @@ long FS_ReadFile(const char* qpath, void** buffer) {
 
 	fs_loadCount++;
 
-	byte* buf = static_cast<byte*>(Z_Malloc(len + 1, TAG_FILESYS, qfalse));
+	const auto buf = static_cast<byte*>(Z_Malloc(len + 1, TAG_FILESYS, qfalse));
 	buf[len] = '\0';	// because we're not calling Z_Malloc with optional trailing 'bZeroIt' bool
 	*buffer = buf;
 
@@ -1806,10 +1806,10 @@ static pack_t* FS_LoadZipFile(const char* zipfile, const char* basename)
 		unzGoToNextFile(uf);
 	}
 
-	fileInPack_t* buildBuffer = static_cast<fileInPack_s*>(Z_Malloc((gi.number_entry * sizeof(fileInPack_t)) + len,
-		TAG_FILESYS, qtrue));
-	char* namePtr = ((char*)buildBuffer) + gi.number_entry * sizeof(fileInPack_t);
-	int* fs_headerLongs = static_cast<int*>(Z_Malloc(gi.number_entry * sizeof(int), TAG_FILESYS, qtrue));
+	const auto build_buffer = static_cast<fileInPack_s*>(Z_Malloc((gi.number_entry * sizeof(fileInPack_t)) + len,
+	                                                             TAG_FILESYS, qtrue));
+	char* namePtr = reinterpret_cast<char*>(build_buffer) + gi.number_entry * sizeof(fileInPack_t);
+	const auto fs_header_longs = static_cast<int*>(Z_Malloc(gi.number_entry * sizeof(int), TAG_FILESYS, qtrue));
 
 	// get the hash table size from the number of files in the zip
 	// because lots of custom pk3 files have less than 32 or 64 files
@@ -1819,9 +1819,9 @@ static pack_t* FS_LoadZipFile(const char* zipfile, const char* basename)
 		}
 	}
 
-	pack_t* pack = static_cast<pack_t*>(Z_Malloc(sizeof(pack_t) + i * sizeof(fileInPack_t*), TAG_FILESYS, qtrue));
+	auto pack = static_cast<pack_t*>(Z_Malloc(sizeof(pack_t) + i * sizeof(fileInPack_t*), TAG_FILESYS, qtrue));
 	pack->hashSize = i;
-	pack->hashTable = (fileInPack_t**)(((char*)pack) + sizeof(pack_t));
+	pack->hashTable = reinterpret_cast<fileInPack_t**>(reinterpret_cast<char*>(pack) + sizeof(pack_t));
 	for (int j = 0; j < pack->hashSize; j++) {
 		pack->hashTable[j] = nullptr;
 	}
@@ -1845,27 +1845,27 @@ static pack_t* FS_LoadZipFile(const char* zipfile, const char* basename)
 			break;
 		}
 		if (file_info.uncompressed_size > 0) {
-			fs_headerLongs[fs_numHeaderLongs++] = LittleLong(file_info.crc);
+			fs_header_longs[fs_numHeaderLongs++] = LittleLong(file_info.crc);
 		}
 		Q_strlwr(filename_inzip);
 		const long hash = FS_HashFileName(filename_inzip, pack->hashSize);
-		buildBuffer[i].name = namePtr;
-		strcpy(buildBuffer[i].name, filename_inzip);
+		build_buffer[i].name = namePtr;
+		strcpy(build_buffer[i].name, filename_inzip);
 		namePtr += strlen(filename_inzip) + 1;
 		// store the file position in the zip
-		buildBuffer[i].pos = unzGetOffset(uf);
-		buildBuffer[i].len = file_info.uncompressed_size;
-		buildBuffer[i].next = pack->hashTable[hash];
-		pack->hashTable[hash] = &buildBuffer[i];
+		build_buffer[i].pos = unzGetOffset(uf);
+		build_buffer[i].len = file_info.uncompressed_size;
+		build_buffer[i].next = pack->hashTable[hash];
+		pack->hashTable[hash] = &build_buffer[i];
 		unzGoToNextFile(uf);
 	}
 
-	pack->checksum = Com_BlockChecksum(fs_headerLongs, sizeof(*fs_headerLongs) * fs_numHeaderLongs);
+	pack->checksum = Com_BlockChecksum(fs_header_longs, sizeof(*fs_header_longs) * fs_numHeaderLongs);
 	pack->checksum = LittleLong(pack->checksum);
 
-	Z_Free(fs_headerLongs);
+	Z_Free(fs_header_longs);
 
-	pack->buildBuffer = buildBuffer;
+	pack->buildBuffer = build_buffer;
 	return pack;
 }
 

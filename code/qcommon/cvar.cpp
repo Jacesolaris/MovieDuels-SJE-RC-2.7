@@ -1049,8 +1049,8 @@ Cvar_List_f
 */
 void Cvar_List_f()
 {
-	const cvar_t* var = nullptr;
-	int i = 0;
+	const cvar_t* var;
+	int i;
 	const char* match = nullptr;
 
 	if (Cmd_Argc() > 1)

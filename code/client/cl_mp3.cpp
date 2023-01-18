@@ -185,7 +185,7 @@ qboolean MP3_ReadSpecialTagInfo(byte* pbLoadedFile, const int iLoadedFileLen,
 {
 	qboolean qbError = qfalse;
 
-	auto pTAG = (id3v1_1*)((pbLoadedFile + iLoadedFileLen) - sizeof(id3v1_1)); // sizeof = 128
+	auto pTAG = reinterpret_cast<id3v1_1*>((pbLoadedFile + iLoadedFileLen) - sizeof(id3v1_1)); // sizeof = 128
 
 	if (strncmp(pTAG->id, "TAG", 3) == 0)
 	{
@@ -284,7 +284,7 @@ qboolean MP3Stream_InitFromFile(sfx_t* sfx, byte* pbSrcData, const int iSrcDatal
 		//
 		// alloc mem for data and store it (raw MP3 in this case)...
 		//
-		sfx->pSoundData = (short*)SND_malloc(iSrcDatalen, sfx);
+		sfx->pSoundData = reinterpret_cast<short*>(SND_malloc(iSrcDatalen, sfx));
 		memcpy(sfx->pSoundData, pbSrcData, iSrcDatalen);
 
 		// now init the low-level MP3 stuff...
@@ -295,7 +295,7 @@ qboolean MP3Stream_InitFromFile(sfx_t* sfx, byte* pbSrcData, const int iSrcDatal
 			2/*sfx->width*/ * 8,
 			bStereoDesired
 		);
-		SFX_MP3Stream.pbSourceData = (byte*)sfx->pSoundData;
+		SFX_MP3Stream.pbSourceData = reinterpret_cast<byte*>(sfx->pSoundData);
 		if (psError)
 		{
 			// This should never happen, since any errors or problems with the MP3 file would have stopped us getting

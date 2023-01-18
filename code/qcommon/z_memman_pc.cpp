@@ -33,6 +33,7 @@ typedef sstring<DEBUG_ZONE_ALLOC_OPTIONAL_LABEL_SIZE> sDebugString_t;
 #endif
 
 static void Z_Details_f();
+extern int SND_FreeOldestSound();
 
 // define a string table of all mem tags...
 //
@@ -75,7 +76,7 @@ using zoneTail_t = struct
 
 static inline zoneTail_t* ZoneTailFromHeader(zoneHeader_t* pHeader)
 {
-	return (zoneTail_t*)((char*)pHeader + sizeof(*pHeader) + pHeader->iSize);
+	return reinterpret_cast<zoneTail_t*>(reinterpret_cast<char*>(pHeader) + sizeof(*pHeader) + pHeader->iSize);
 }
 
 #ifdef DETAILED_ZONE_DEBUG_CODE
@@ -140,7 +141,7 @@ int Z_Validate()
 			&& pMemory->eTag != TAG_MODEL_GLA)
 			//don't bother with disk caches as they've already been hit or will be thrown out next
 		{
-			auto memstart = (unsigned char*)pMemory;
+			auto memstart = reinterpret_cast<unsigned char*>(pMemory);
 			int totalSize = pMemory->iSize;
 			while (totalSize > 4096)
 			{
@@ -321,17 +322,16 @@ void* Z_Malloc(const int iSize, const memtag_t eTag, const qboolean bZeroit, int
 			//	eventually or not free up enough and drop through to the final ERR_DROP. No worries...
 			//
 			extern qboolean gbInsideLoadSound;
-			extern int SND_FreeOldestSound();
 			// I had to add a void-arg version of this because of link issues, sigh
 			if (!gbInsideLoadSound)
 			{
 				int iBytesFreed = SND_FreeOldestSound();
 				if (iBytesFreed)
 				{
-					int iTheseBytesFreed = 0;
-					while ((iTheseBytesFreed = SND_FreeOldestSound()) != 0)
+					int i_these_bytes_freed;
+					while ((i_these_bytes_freed = SND_FreeOldestSound()) != 0)
 					{
-						iBytesFreed += iTheseBytesFreed;
+						iBytesFreed += i_these_bytes_freed;
 						if (iBytesFreed >= iRealSize)
 							break; // early opt-out since we've managed to recover enough (mem-contiguity issues aside)
 					}
@@ -940,13 +940,13 @@ char* CopyString(const char* in)
 {
 	if (!in[0])
 	{
-		return ((char*)&gEmptyString) + sizeof(zoneHeader_t);
+		return (char*)&gEmptyString + sizeof(zoneHeader_t);
 	}
 	if (!in[1])
 	{
 		if (in[0] >= '0' && in[0] <= '9')
 		{
-			return ((char*)&gNumberString[in[0] - '0']) + sizeof(zoneHeader_t);
+			return (char*)&gNumberString[in[0] - '0'] + sizeof(zoneHeader_t);
 		}
 	}
 
@@ -977,11 +977,11 @@ void Com_TouchMemory()
 	zoneHeader_t* pMemory = TheZone.Header.pNext;
 	while (pMemory)
 	{
-		const auto pMem = (byte*)&pMemory[1];
+		const auto pMem = reinterpret_cast<byte*>(&pMemory[1]);
 		const int j = pMemory->iSize >> 2;
 		for (int i = 0; i < j; i += 64)
 		{
-			sum += ((int*)pMem)[i];
+			sum += reinterpret_cast<int*>(pMem)[i];
 		}
 		totalTouched += pMemory->iSize;
 		pMemory = pMemory->pNext;

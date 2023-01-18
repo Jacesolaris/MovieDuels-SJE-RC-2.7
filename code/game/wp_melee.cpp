@@ -74,7 +74,7 @@ void WP_Melee(gentity_t* ent)
 
 	if (ent->client && !PM_DroidMelee(ent->client->NPC_class))
 	{
-		if (ent->s.number || ent->altFire)
+		if (ent->s.number || ent->alt_fire)
 		{
 			damage *= Q_irand(2, 3);
 		}

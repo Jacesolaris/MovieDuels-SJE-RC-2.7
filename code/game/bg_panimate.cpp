@@ -8010,7 +8010,7 @@ void PM_TorsoAnimation()
 					{
 						if (cg.renderingThirdPerson)
 						{
-							if (pm->gent->altFire)
+							if (pm->gent->alt_fire)
 							{
 								PM_SetAnim(pm, SETANIM_TORSO, TORSO_WEAPONREADY3, SETANIM_FLAG_NORMAL);
 							}
@@ -8034,7 +8034,7 @@ void PM_TorsoAnimation()
 					{
 						if (cg.renderingThirdPerson)
 						{
-							if (pm->gent->altFire)
+							if (pm->gent->alt_fire)
 							{
 								PM_SetAnim(pm, SETANIM_TORSO, TORSO_WEAPONREADY3, SETANIM_FLAG_NORMAL);
 							}
@@ -8053,7 +8053,7 @@ void PM_TorsoAnimation()
 				case WP_REPEATER:
 					if (pm->gent && pm->gent->client && pm->gent->client->NPC_class == CLASS_GALAKMECH)
 					{
-						if (pm->gent->altFire)
+						if (pm->gent->alt_fire)
 						{
 							PM_SetAnim(pm, SETANIM_TORSO, TORSO_WEAPONREADY3, SETANIM_FLAG_NORMAL);
 						}
@@ -8274,7 +8274,7 @@ void PM_TorsoAnimation()
 					}
 					break;
 				default:
-					if (pm->gent->altFire)
+					if (pm->gent->alt_fire)
 					{
 						PM_SetAnim(pm, SETANIM_TORSO, TORSO_WEAPONREADY3, SETANIM_FLAG_NORMAL);
 					}
@@ -8728,7 +8728,7 @@ void PM_TorsoAnimation()
 					{
 						if (cg.renderingThirdPerson)
 						{
-							if (pm->gent->altFire)
+							if (pm->gent->alt_fire)
 							{
 								PM_SetAnim(pm, SETANIM_TORSO, TORSO_WEAPONREADY3, SETANIM_FLAG_NORMAL);
 							}
@@ -8775,7 +8775,7 @@ void PM_TorsoAnimation()
 					}
 					if (pm->gent && pm->gent->client && pm->gent->client->NPC_class == CLASS_GALAKMECH)
 					{
-						if (pm->gent->altFire)
+						if (pm->gent->alt_fire)
 						{
 							PM_SetAnim(pm, SETANIM_TORSO, TORSO_WEAPONIDLE3, SETANIM_FLAG_NORMAL);
 						}
@@ -9081,7 +9081,7 @@ void PM_TorsoAnimation()
 					}
 					if (weapon_busy)
 					{
-						if (pm->gent->altFire)
+						if (pm->gent->alt_fire)
 						{
 							PM_SetAnim(pm, SETANIM_TORSO, TORSO_WEAPONREADY3, SETANIM_FLAG_NORMAL);
 						}
@@ -9108,7 +9108,7 @@ void PM_TorsoAnimation()
 					}
 					else
 					{
-						if (pm->gent->altFire)
+						if (pm->gent->alt_fire)
 						{
 							PM_SetAnim(pm, SETANIM_TORSO, TORSO_WEAPONIDLE3, SETANIM_FLAG_NORMAL);
 						}

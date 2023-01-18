@@ -121,7 +121,7 @@ struct ThaiCodes_t
 	//
 	int GetValidIndex(const int iCode)
 	{
-		const std::map <int, int>::iterator it = m_mapValidCodes.find(iCode);
+		const auto it = m_mapValidCodes.find(iCode);
 		if (it != m_mapValidCodes.end())
 		{
 			return (*it).second;
@@ -152,7 +152,7 @@ struct ThaiCodes_t
 				//
 				// read the valid-codes table in...
 				//
-				int iBytesRead = ri.FS_ReadFile(sFILENAME_THAI_CODES, (void**)&piData);
+				int iBytesRead = ri.FS_ReadFile(sFILENAME_THAI_CODES, reinterpret_cast<void**>(&piData));
 				if (iBytesRead > 0 && !(iBytesRead & 3))	// valid length and multiple of 4 bytes long
 				{
 					const int iTableEntries = iBytesRead / sizeof(int);
@@ -165,7 +165,7 @@ struct ThaiCodes_t
 
 					// now read in the widths... (I'll keep these in a simple STL vector, so they'all disappear when the <map> entries do...
 					//
-					iBytesRead = ri.FS_ReadFile(sFILENAME_THAI_WIDTHS, (void**)&piData);
+					iBytesRead = ri.FS_ReadFile(sFILENAME_THAI_WIDTHS, reinterpret_cast<void**>(&piData));
 					if (iBytesRead > 0 && !(iBytesRead & 3) && iBytesRead >> 2/*sizeof(int)*/ == iTableEntries)
 					{
 						for (int i = 0; i < iTableEntries; i++)
@@ -751,7 +751,7 @@ unsigned int AnyLanguage_ReadCharFromString(char* psText, int* piAdvanceCount, q
 
 	return uiLetter;
 #else
-	const byte* psString = (const byte*)psText;	// avoid sign-promote bug
+	auto psString = reinterpret_cast<const byte*>(psText);	// avoid sign-promote bug
 	unsigned int uiLetter;
 
 	switch (GetLanguageEnum())
@@ -951,7 +951,7 @@ CFontInfo::CFontInfo(const char* _fontName)
 	if (len == sizeof(dfontdat_t))
 	{
 		ri.FS_ReadFile(fontName, &buff);
-		dfontdat_t* fontdat = static_cast<dfontdat_t*>(buff);
+		auto fontdat = static_cast<dfontdat_t*>(buff);
 
 		for (int i = 0; i < GLYPH_COUNT; i++)
 		{
@@ -1929,7 +1929,7 @@ void RE_Font_DrawString(int ox, int oy, const char* psText, const float* rgba, c
 
 int RE_RegisterFont(const char* psName)
 {
-	const FontIndexMap_t::iterator it = g_mapFontIndexes.find(psName);
+	const auto it = g_mapFontIndexes.find(psName);
 	if (it != g_mapFontIndexes.end())
 	{
 		const int iFontIndex = (*it).second;
@@ -1939,7 +1939,7 @@ int RE_RegisterFont(const char* psName)
 	// not registered, so...
 	//
 	{
-		CFontInfo* pFont = new CFontInfo(psName);
+		const auto pFont = new CFontInfo(psName);
 		if (pFont->GetPointSize() > 0)
 		{
 			const int iFontIndex = g_iCurrentFontIndex - 1;
@@ -1969,7 +1969,7 @@ void R_FontList_f()
 {
 	Com_Printf("------------------------------------\n");
 
-	for (FontIndexMap_t::iterator it = g_mapFontIndexes.begin(); it != g_mapFontIndexes.end(); ++it)
+	for (auto it = g_mapFontIndexes.begin(); it != g_mapFontIndexes.end(); ++it)
 	{
 		CFontInfo* font = GetFont((*it).second);
 		if (font)
@@ -2005,7 +2005,7 @@ void R_ReloadFonts_f()
 	int iFontToFind = 1;
 	for (; iFontToFind < g_iCurrentFontIndex; iFontToFind++)
 	{
-		FontIndexMap_t::iterator it = g_mapFontIndexes.begin();
+		auto it = g_mapFontIndexes.begin();
 		for (; it != g_mapFontIndexes.end(); ++it)
 		{
 			if (iFontToFind == (*it).second)

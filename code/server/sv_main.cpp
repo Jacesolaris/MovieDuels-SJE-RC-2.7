@@ -134,21 +134,21 @@ void SV_SendServerCommand(client_t* cl, const char* fmt, ...)
 	message[0] = svc_serverCommand;
 
 	va_start(argptr, fmt);
-	Q_vsnprintf((char*)message + 1, sizeof(message) - 1, fmt, argptr);
+	Q_vsnprintf(reinterpret_cast<char*>(message) + 1, sizeof(message) - 1, fmt, argptr);
 	va_end(argptr);
 
 	// Fix to http://aluigi.altervista.org/adv/q3msgboom-adv.txt
 	// The actual cause of the error is probably further downstream
 	// and should maybe be addressed later, but this certainly
 	// fixes the problem for now
-	if (strlen((char*)message + 1) > 1022)
+	if (strlen(reinterpret_cast<char*>(message) + 1) > 1022)
 	{
 		return;
 	}
 
 	if (cl != nullptr)
 	{
-		SV_AddServerCommand(cl, (char*)message);
+		SV_AddServerCommand(cl, reinterpret_cast<char*>(message));
 		return;
 	}
 
@@ -159,7 +159,7 @@ void SV_SendServerCommand(client_t* cl, const char* fmt, ...)
 		{
 			continue;
 		}
-		SV_AddServerCommand(client, (char*)message);
+		SV_AddServerCommand(client, reinterpret_cast<char*>(message));
 	}
 }
 
@@ -319,7 +319,7 @@ void SV_PacketEvent(const netadr_t from, msg_t* msg)
 	client_t* cl;
 
 	// check for connectionless packet (0xffffffff) first
-	if (msg->cursize >= 4 && *(int*)msg->data == -1)
+	if (msg->cursize >= 4 && *reinterpret_cast<int*>(msg->data) == -1)
 	{
 		SV_ConnectionlessPacket(from, msg);
 		return;

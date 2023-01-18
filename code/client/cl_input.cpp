@@ -71,19 +71,19 @@ extern cvar_t* in_joystick;
 static void IN_UseGivenForce()
 {
 	const char* c = Cmd_Argv(1);
-	int forceNum = -1;
+	int force_num;
 	int genCmdNum = 0;
 
 	if (c)
 	{
-		forceNum = atoi(c);
+		force_num = atoi(c);
 	}
 	else
 	{
 		return;
 	}
 
-	switch (forceNum)
+	switch (force_num)
 	{
 #ifndef JK2_MODE
 	case FP_DRAIN:

@@ -443,7 +443,7 @@ static void AS_GetGeneralSet(ambientSet_t& set)
 		if (iFieldsScanned <= 0)
 			return;
 
-		const int keywordID = AS_GetKeywordIDForString((const char*)&tempBuffer);
+		const int keywordID = AS_GetKeywordIDForString(reinterpret_cast<const char*>(&tempBuffer));
 
 		//Find and parse the keyword info
 		switch (keywordID)
@@ -467,7 +467,7 @@ static void AS_GetGeneralSet(ambientSet_t& set)
 		default:
 
 			//Check to see if we've finished this group
-			if (AS_GetSetNameIDForString((const char*)&tempBuffer) == -1)
+			if (AS_GetSetNameIDForString(reinterpret_cast<const char*>(&tempBuffer)) == -1)
 			{
 				//Ignore comments
 				if (tempBuffer[0] == ';')
@@ -499,7 +499,7 @@ static void AS_GetLocalSet(ambientSet_t& set)
 		if (iFieldsScanned <= 0)
 			return;
 
-		const int keywordID = AS_GetKeywordIDForString((const char*)&tempBuffer);
+		const int keywordID = AS_GetKeywordIDForString(reinterpret_cast<const char*>(&tempBuffer));
 
 		//Find and parse the keyword info
 		switch (keywordID)
@@ -527,7 +527,7 @@ static void AS_GetLocalSet(ambientSet_t& set)
 		default:
 
 			//Check to see if we've finished this group
-			if (AS_GetSetNameIDForString((const char*)&tempBuffer) == -1)
+			if (AS_GetSetNameIDForString(reinterpret_cast<const char*>(&tempBuffer)) == -1)
 			{
 				//Ignore comments
 				if (tempBuffer[0] == ';')
@@ -559,7 +559,7 @@ static void AS_GetBModelSet(ambientSet_t& set)
 		if (iFieldsScanned <= 0)
 			return;
 
-		const int keywordID = AS_GetKeywordIDForString((const char*)&tempBuffer);
+		const int keywordID = AS_GetKeywordIDForString(reinterpret_cast<const char*>(&tempBuffer));
 
 		//Find and parse the keyword info
 		switch (keywordID)
@@ -571,7 +571,7 @@ static void AS_GetBModelSet(ambientSet_t& set)
 		default:
 
 			//Check to see if we've finished this group
-			if (AS_GetSetNameIDForString((const char*)&tempBuffer) == -1)
+			if (AS_GetSetNameIDForString(reinterpret_cast<const char*>(&tempBuffer)) == -1)
 			{
 				//Ignore comments
 				if (tempBuffer[0] == ';')
@@ -627,12 +627,12 @@ static qboolean AS_ParseSet(const int setID, CSetGroup* sg)
 			if (tempBuffer[0])
 			{
 				//Not in our precache listings, so skip it
-				if ((pMap->find((const char*)&tempBuffer) == pMap->end()))
+				if ((pMap->find(reinterpret_cast<const char*>(&tempBuffer)) == pMap->end()))
 					continue;
 			}
 
 			//Create a new set
-			ambientSet_t* set = sg->AddSet((const char*)&tempBuffer);
+			ambientSet_t* set = sg->AddSet(reinterpret_cast<const char*>(&tempBuffer));
 
 			//Run the function to parse the data out
 			parseFuncs[setID](*set);
@@ -661,7 +661,7 @@ static void AS_ParseHeader()
 		char typeBuffer[128];
 		sscanf(parseBuffer + parsePos, "%s", tempBuffer);
 
-		const int keywordID = AS_GetKeywordIDForString((const char*)&tempBuffer);
+		const int keywordID = AS_GetKeywordIDForString(reinterpret_cast<const char*>(&tempBuffer));
 
 		switch (keywordID)
 		{
@@ -703,7 +703,7 @@ Opens and parses a sound set file
 static qboolean AS_ParseFile(const char* filename, CSetGroup* sg)
 {
 	//Open the file and read the information from it
-	parseSize = FS_ReadFile(filename, (void**)&parseBuffer);
+	parseSize = FS_ReadFile(filename, reinterpret_cast<void**>(&parseBuffer));
 
 	if (parseSize <= 0)
 		return qfalse;

@@ -93,9 +93,9 @@ float weaponSpeed[WP_NUM_WEAPONS][2] =
 	{CLONEPISTOL_VEL,CLONEPISTOL_VEL}, //WP_CLONEPISTOL,
 };
 
-float WP_SpeedOfMissileForWeapon(const int wp, const qboolean altFire)
+float WP_SpeedOfMissileForWeapon(const int wp, const qboolean alt_fire)
 {
-	if (altFire)
+	if (alt_fire)
 	{
 		return weaponSpeed[wp][1];
 	}
@@ -140,7 +140,7 @@ void WP_TraceSetStart(const gentity_t* ent, vec3_t start)
 extern Vehicle_t* G_IsRidingVehicle(const gentity_t* p_ent);
 //-----------------------------------------------------------------------------
 gentity_t* create_missile(vec3_t org, vec3_t dir, const float vel, const int life, gentity_t* owner,
-	const qboolean altFire)
+	const qboolean alt_fire)
 	//-----------------------------------------------------------------------------
 {
 	gentity_t* missile = G_Spawn();
@@ -152,7 +152,7 @@ gentity_t* create_missile(vec3_t org, vec3_t dir, const float vel, const int lif
 
 	const Vehicle_t* p_veh = G_IsRidingVehicle(owner);
 
-	missile->altFire = altFire;
+	missile->alt_fire = alt_fire;
 
 	missile->s.pos.trType = TR_LINEAR;
 	missile->s.pos.trTime = level.time; // - 10;	// move a bit on the very first frame
@@ -355,7 +355,7 @@ void ViewHeightFix(const gentity_t* const ent)
 	}
 }
 
-qboolean W_AccuracyLoggableWeapon(const int weapon, const qboolean altFire, const int mod)
+qboolean W_AccuracyLoggableWeapon(const int weapon, const qboolean alt_fire, const int mod)
 {
 	if (mod != MOD_UNKNOWN)
 	{
@@ -441,7 +441,7 @@ qboolean W_AccuracyLoggableWeapon(const int weapon, const qboolean altFire, cons
 		case WP_REPEATER:
 		case WP_DEMP2:
 		case WP_FLECHETTE:
-			if (!altFire)
+			if (!alt_fire)
 			{
 				return qtrue;
 			}
@@ -876,7 +876,7 @@ void WP_FireVehicleWeapon(gentity_t* ent, vec3_t start, vec3_t dir, const vehWea
 		//make sure our start point isn't on the other side of a wall
 		WP_TraceSetStart(ent, start);
 
-		//QUERY: altFire true or not?  Does it matter?
+		//QUERY: alt_fire true or not?  Does it matter?
 		gentity_t* missile = create_missile(start, dir, veh_weapon->fSpeed, 10000, ent, qfalse);
 		if (veh_weapon->bHasGravity)
 		{
@@ -1065,7 +1065,7 @@ qboolean WP_VehCheckTraceFromCamPos(gentity_t* ent, const vec3_t shotStart, vec3
 }
 
 //---------------------------------------------------------
-void FireVehicleWeapon(gentity_t* ent, const qboolean altFire)
+void FireVehicleWeapon(gentity_t* ent, const qboolean alt_fire)
 //---------------------------------------------------------
 {
 	Vehicle_t* p_veh = ent->m_pVehicle;
@@ -1099,7 +1099,7 @@ void FireVehicleWeapon(gentity_t* ent, const qboolean altFire)
 		int weapon_num;
 		qboolean linked_firing = qfalse;
 
-		if (!altFire)
+		if (!alt_fire)
 		{
 			weapon_num = 0;
 		}
@@ -1566,8 +1566,8 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 
 			if (ent->client->ps.weapon == WP_ATST_MAIN)
 			{
-				//FIXME: altFire should fire both barrels, but slower?
-				if (ent->altFire)
+				//FIXME: alt_fire should fire both barrels, but slower?
+				if (ent->alt_fire)
 				{
 					bolt = ent->handRBolt;
 				}
@@ -1579,7 +1579,7 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 			else
 			{
 				// ATST SIDE weapons
-				if (ent->altFire)
+				if (ent->alt_fire)
 				{
 					if (gi.G2API_GetSurfaceRenderStatus(&ent->ghoul2[ent->playerModel], "head_light_blaster_cann"))
 					{
@@ -1717,7 +1717,7 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 		}
 	}
 
-	ent->altFire = alt_fire;
+	ent->alt_fire = alt_fire;
 	if (!p_veh)
 	{
 		if (ent->NPC && ent->NPC->scriptFlags & SCF_FIRE_WEAPON_NO_ANIM)

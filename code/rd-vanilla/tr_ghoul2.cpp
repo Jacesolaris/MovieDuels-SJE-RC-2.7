@@ -253,7 +253,7 @@ public:
 
 		for (int i = 0; i < mNumBones; i++)
 		{
-			auto skel = reinterpret_cast<mdxaSkel_t*>((byte*)header + sizeof(mdxaHeader_t) + offsets->offsets[i]);
+			const auto skel = reinterpret_cast<mdxaSkel_t*>((byte*)header + sizeof(mdxaHeader_t) + offsets->offsets[i]);
 			mSkels[i] = skel;
 			mFinalBones[i].parent = skel->parent;
 		}
