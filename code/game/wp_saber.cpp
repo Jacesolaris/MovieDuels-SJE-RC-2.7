@@ -4746,10 +4746,18 @@ void WP_SaberKnockaway(const gentity_t* attacker, trace_t* tr)
 
 qboolean G_InCinematicSaberAnim(const gentity_t* self)
 {
+	const char* info = CG_ConfigString(CS_SERVERINFO);
+	const char* s = Info_ValueForKey(info, "mapname");
+
 	if (self->NPC
 		&& self->NPC->behaviorState == BS_CINEMATIC
-		&& (self->client->ps.torsoAnim == BOTH_CIN_16 || self->client->ps.torsoAnim == BOTH_CIN_17)
-		|| self->client->saberCollisions)
+		&& (self->client->ps.torsoAnim == BOTH_CIN_16 || self->client->ps.torsoAnim == BOTH_CIN_17))
+	{
+		return qtrue;
+	}
+	if (self->NPC
+		&& self->NPC->behaviorState == BS_CINEMATIC
+		&& (!strcmp(s, "kor1") == 0 && self->client->saberCollisions))
 	{
 		return qtrue;
 	}

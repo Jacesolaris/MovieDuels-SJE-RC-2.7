@@ -365,6 +365,8 @@ static void CG_General(centity_t* cent)
 {
 	refEntity_t ent;
 	entityState_t* s1;
+	const char* info = CG_ConfigString(CS_SERVERINFO);
+	const char* s = Info_ValueForKey(info, "mapname");
 
 	if (cent->currentState.eFlags2 & EF2_RADAROBJECT)
 	{
@@ -609,9 +611,6 @@ static void CG_General(centity_t* cent)
 			{
 				// not animating..pausing was leaving the barrels in a bad state
 				gi.G2API_PauseBoneAnim(&cent->gent->ghoul2[cent->gent->playerModel], "model_root", cg.time);
-
-				//				gi.G2API_SetBoneAnimIndex( &cent->gent->ghoul2[cent->gent->playerModel], cent->gent->rootBone,
-				//						0, 0, BONE_ANIM_OVERRIDE, 1.0f, cg.time );
 			}
 
 			// get alternating muzzle end bolts
@@ -690,14 +689,26 @@ static void CG_General(centity_t* cent)
 				}
 			}
 
-			if (cent->gent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_OVERLOAD && w_data)
+			if (!in_camera && cc->muzzleOverheatTime > 0 && w_data)
 			{
+				const char* effect = nullptr;
 				if (!cg.renderingThirdPerson && cg_trueguns.integer)
 				{
+					if (w_data->mTrueOverloadMuzzleEffect[0])
+					{
+						effect = &w_data->mTrueOverloadMuzzleEffect[0];
+					}
+
+					if (effect)
+					{
+						// We got an effect and we're firing, so let 'er rip.
+						theFxScheduler.PlayEffect(effect, cc->gent->client->renderInfo.muzzlePoint,
+							cc->gent->client->renderInfo.muzzleDir);
+					}
+					cc->muzzleOverheatTime = 0;
 				}
 				else
 				{
-					const char* effect = nullptr;
 					if (w_data->mOverloadMuzzleEffect[0])
 					{
 						effect = &w_data->mOverloadMuzzleEffect[0];
@@ -709,6 +720,7 @@ static void CG_General(centity_t* cent)
 						theFxScheduler.PlayEffect(effect, cc->gent->client->renderInfo.muzzlePoint,
 							cc->gent->client->renderInfo.muzzleDir);
 					}
+					cc->muzzleOverheatTime = 0;
 				}
 			}
 

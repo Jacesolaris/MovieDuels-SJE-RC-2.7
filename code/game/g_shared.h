@@ -880,7 +880,7 @@ public:
 
 	qboolean noHead;
 	int cloneFired; //[CloneRifle]
-	qboolean saberCollisions;
+	bool saberCollisions;
 	int reloadTime;
 
 	void sg_export(

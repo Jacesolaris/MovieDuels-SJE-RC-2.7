@@ -199,6 +199,9 @@ using weaponData_t = struct weaponData_s
 	char mOverloadMuzzleEffect[64];
 	int mOverloadMuzzleEffectID;
 
+	char mTrueOverloadMuzzleEffect[64];
+	int mTrueOverloadMuzzleEffectID;
+
 	int damage;
 	int altDamage;
 	int splashDamage;

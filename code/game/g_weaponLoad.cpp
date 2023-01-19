@@ -232,6 +232,7 @@ void WPN_AltMissileHitSound(const char** hold_buf);
 void WPN_MuzzleEffect(const char** hold_buf);
 void WPN_AltMuzzleEffect(const char** hold_buf);
 void WPN_overloadmuzzleEffect(const char** hold_buf);
+void WPN_trueoverloadmuzzleEffect(const char** hold_buf);
 
 // OPENJK ADD
 
@@ -620,6 +621,7 @@ wpnParms_t WpnParms[] =
 	{"muzzleEffect", WPN_MuzzleEffect},
 	{"altmuzzleEffect", WPN_AltMuzzleEffect},
 	{"overloadmuzzleEffect", WPN_overloadmuzzleEffect},
+	{"trueoverloadmuzzleEffect", WPN_trueoverloadmuzzleEffect},
 	// OPENJK NEW FIELDS
 	{"damage", WPN_Damage},
 	{"altdamage", WPN_AltDamage},
@@ -1549,6 +1551,27 @@ void WPN_overloadmuzzleEffect(const char** hold_buf)
 
 	G_EffectIndex(token_str);
 	Q_strncpyz(weaponData[wpnParms.weaponNum].mOverloadMuzzleEffect, token_str, len);
+}
+
+void WPN_trueoverloadmuzzleEffect(const char** hold_buf)
+{
+	const char* token_str;
+
+	if (COM_ParseString(hold_buf, &token_str))
+	{
+		return;
+	}
+	size_t len = strlen(token_str);
+
+	len++;
+	if (len > 64)
+	{
+		len = 64;
+		gi.Printf(S_COLOR_YELLOW"WARNING: mTrueOverloadMuzzleEffect '%s' too long in external WEAPONS.DAT\n", token_str);
+	}
+
+	G_EffectIndex(token_str);
+	Q_strncpyz(weaponData[wpnParms.weaponNum].mTrueOverloadMuzzleEffect, token_str, len);
 }
 
 //--------------------------------------------

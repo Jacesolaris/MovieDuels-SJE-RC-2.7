@@ -275,6 +275,11 @@ void CG_RegisterWeapon(const int weapon_num)
 		weaponData[weapon_num].mOverloadMuzzleEffectID = theFxScheduler.RegisterEffect(weaponData[weapon_num].mOverloadMuzzleEffect);
 	}
 
+	if (weaponData[weapon_num].mTrueOverloadMuzzleEffect[0])
+	{
+		weaponData[weapon_num].mTrueOverloadMuzzleEffectID = theFxScheduler.RegisterEffect(weaponData[weapon_num].mTrueOverloadMuzzleEffect);
+	}
+
 	//fixme: don't really need to copy these, should just use directly
 	// give ourselves the functions if we can
 	if (weaponData[weapon_num].func)
@@ -1353,25 +1358,52 @@ static void CG_DoMuzzleFlash(centity_t* cent, vec3_t org, vec3_t dir, const weap
 		//
 	}
 
-	if (cent->gent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_OVERLOAD)
+	if (!in_camera && cent->muzzleOverheatTime > 0)
 	{
 		const char* effect = nullptr;
-		if (w_data->mOverloadMuzzleEffect[0])
+		if (!cg.renderingThirdPerson && cg_trueguns.integer)
 		{
-			effect = &w_data->mOverloadMuzzleEffect[0];
-		}
+			if (w_data->mTrueOverloadMuzzleEffect[0])
+			{
+				effect = &w_data->mTrueOverloadMuzzleEffect[0];
+			}
 
-		if (effect)
+			if (effect)
+			{
+				if (cent->gent && cent->gent->NPC || cg.renderingThirdPerson)
+				{
+					theFxScheduler.PlayEffect(effect, org, dir);
+				}
+				else
+				{
+					// We got an effect and we're firing, so let 'er rip.
+					theFxScheduler.PlayEffect(effect, cent->currentState.client_num);
+				}
+			}
+			cent->muzzleOverheatTime = 0;
+		}
+		else
 		{
-			if (cent->gent && cent->gent->NPC || cg.renderingThirdPerson)
+
+			if (w_data->mOverloadMuzzleEffect[0])
 			{
-				theFxScheduler.PlayEffect(effect, org, dir);
+				effect = &w_data->mOverloadMuzzleEffect[0];
 			}
-			else
+
+			if (effect)
 			{
-				// We got an effect and we're firing, so let 'er rip.
-				theFxScheduler.PlayEffect(effect, cent->currentState.client_num);
+				if (cent->gent && cent->gent->NPC || cg.renderingThirdPerson)
+				{
+					theFxScheduler.PlayEffect(effect, org, dir);
+				}
+				else
+				{
+					// We got an effect and we're firing, so let 'er rip.
+					theFxScheduler.PlayEffect(effect, cent->currentState.client_num);
+				}
 			}
+			cent->muzzleOverheatTime = 0;
+			
 		}
 	}
 }
@@ -1912,11 +1944,22 @@ void CG_AddViewWeapon(playerState_t* ps)
 			cent->muzzleFlashTimeR = 0;
 		}
 
-		if (cent->gent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_OVERLOAD)
+		if (!in_camera && cent->muzzleOverheatTime > 0)
 		{
-			theFxScheduler.PlayEffect(weaponData[cent->gent->client->ps.weapon].mOverloadMuzzleEffect,
-				cent->gent->client->renderInfo.muzzlePoint,
-				cent->gent->client->renderInfo.muzzleDir);
+			if (!cg.renderingThirdPerson && cg_trueguns.integer)
+			{
+				theFxScheduler.PlayEffect(weaponData[cent->gent->client->ps.weapon].mTrueOverloadMuzzleEffect,
+					cent->gent->client->renderInfo.muzzlePoint,
+					cent->gent->client->renderInfo.muzzleDir);
+			}
+			else
+			{
+				theFxScheduler.PlayEffect(weaponData[cent->gent->client->ps.weapon].mOverloadMuzzleEffect,
+					cent->gent->client->renderInfo.muzzlePoint,
+					cent->gent->client->renderInfo.muzzleDir);
+				
+			}
+			cent->muzzleOverheatTime = 0;
 		}
 		CG_AddViewWeaponDuals(ps);
 	}
@@ -2388,11 +2431,22 @@ void CG_AddViewWeaponDuals(playerState_t* ps)
 		cent->muzzleFlashTimeL = 0;
 	}
 
-	if (cent->gent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_OVERLOAD)
+	if (!in_camera && cent->muzzleOverheatTime > 0)
 	{
-		theFxScheduler.PlayEffect(weaponData[cent->gent->client->ps.weapon].mOverloadMuzzleEffect,
-			cent->gent->client->renderInfo.muzzlePoint,
-			cent->gent->client->renderInfo.muzzleDir);
+		if (!cg.renderingThirdPerson && cg_trueguns.integer)
+		{
+			theFxScheduler.PlayEffect(weaponData[cent->gent->client->ps.weapon].mOverloadMuzzleEffect,
+				cent->gent->client->renderInfo.muzzlePoint,
+				cent->gent->client->renderInfo.muzzleDir);
+		}
+		else
+		{
+			theFxScheduler.PlayEffect(weaponData[cent->gent->client->ps.weapon].mTrueOverloadMuzzleEffect,
+				cent->gent->client->renderInfo.muzzlePoint,
+				cent->gent->client->renderInfo.muzzleDir);
+			
+		}
+		cent->muzzleOverheatTime = 0;
 	}
 }
 
@@ -4467,6 +4521,15 @@ void CG_FireWeapon(centity_t* cent, const qboolean alt_fire)
 	{
 		cent->muzzleFlashTimeR = cg.time;
 		cent->muzzleFlashTimeL = cg.time;
+	}
+
+	if (g_entities[0].client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_OVERLOAD)
+	{
+		cent->muzzleOverheatTime = cg.time;
+	}
+	else
+	{
+		cent->muzzleOverheatTime = 0;
 	}
 
 	cent->alt_fire = alt_fire;

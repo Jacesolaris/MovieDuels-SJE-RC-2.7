@@ -16003,14 +16003,50 @@ void CG_Player(centity_t* cent)
 				}
 			}
 
-			if (cent->gent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_OVERLOAD && w_data)
+			if (!in_camera && cent->muzzleOverheatTime > 0 && w_data)
 			{
+				const char* effect = nullptr;
 				if (!cg.renderingThirdPerson && cg_trueguns.integer)
 				{
+					if (w_data->mTrueOverloadMuzzleEffect[0])
+					{
+						effect = &w_data->mTrueOverloadMuzzleEffect[0];
+					}
+
+					if (effect)
+					{
+						if (cent->gent && cent->gent->NPC ||
+							(cent->gent->s.weapon == WP_BLASTER_PISTOL ||
+								cent->gent->s.weapon == WP_REBELBLASTER ||
+								cent->gent->s.weapon == WP_REY ||
+								cent->gent->s.weapon == WP_JANGO ||
+								cent->gent->s.weapon == WP_CLONEPISTOL ||
+								cent->gent->s.weapon == WP_DUAL_PISTOL) && (cent->currentState.eFlags & EF2_JANGO_DUALS ||
+									cent->currentState.eFlags & EF2_DUAL_PISTOLS)
+							&& !G_IsRidingVehicle(cent->gent)) //PM_WeaponOkOnVehicle)
+						{
+							if (!VectorCompare(old_mp, vec3_origin) && !VectorCompare(old_md, vec3_origin))
+							{
+								//we have an old muzzlePoint we want to use
+								theFxScheduler.PlayEffect(effect, old_mp, old_md);
+							}
+							else
+							{
+								//use the current one
+								theFxScheduler.PlayEffect(effect, cent->gent->client->renderInfo.muzzlePoint,
+									cent->gent->client->renderInfo.muzzleDir);
+							}
+						}
+						else
+						{
+							// We got an effect and we're firing, so let 'er rip.
+							theFxScheduler.PlayEffect(effect, cent->currentState.client_num);
+						}
+					}
+					cent->muzzleOverheatTime = 0;
 				}
 				else
 				{
-					const char* effect = nullptr;
 
 					if (w_data->mOverloadMuzzleEffect[0])
 					{
@@ -16047,6 +16083,7 @@ void CG_Player(centity_t* cent)
 							theFxScheduler.PlayEffect(effect, cent->currentState.client_num);
 						}
 					}
+					cent->muzzleOverheatTime = 0;
 				}
 			}
 
@@ -16683,15 +16720,39 @@ void CG_Player(centity_t* cent)
 					}
 				}
 
-				if (cent->gent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_OVERLOAD && w_data)
+				if (!in_camera && cent->muzzleOverheatTime > 0 && w_data)
 				{
+					int effect = 0;
 					if (!cg.renderingThirdPerson && cg_trueguns.integer)
 					{
+						if (w_data->mTrueOverloadMuzzleEffectID)
+						{
+							effect = w_data->mTrueOverloadMuzzleEffectID;
+						}
+
+						if (effect)
+						{
+							vec3_t up = { 0, 0, 1 }, ax[3];
+
+							VectorCopy(flash.axis[0], ax[0]);
+
+							CrossProduct(up, ax[0], ax[1]);
+							CrossProduct(ax[0], ax[1], ax[2]);
+
+							if (cent->gent && cent->gent->NPC || cg.renderingThirdPerson)
+							{
+								theFxScheduler.PlayEffect(effect, flash.origin, ax);
+							}
+							else
+							{
+								// We got an effect and we're firing, so let 'er rip.
+								theFxScheduler.PlayEffect(effect, flash.origin, ax);
+							}
+						}
+						cent->muzzleOverheatTime = 0;
 					}
 					else
 					{
-						int effect = 0;
-
 						if (w_data->mOverloadMuzzleEffectID)
 						{
 							effect = w_data->mOverloadMuzzleEffectID;
@@ -16716,6 +16777,9 @@ void CG_Player(centity_t* cent)
 								theFxScheduler.PlayEffect(effect, flash.origin, ax);
 							}
 						}
+						cent->muzzleOverheatTime = 0;
+
+						
 					}
 				}
 

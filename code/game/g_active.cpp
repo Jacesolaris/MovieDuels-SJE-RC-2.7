@@ -8019,6 +8019,7 @@ void wp_reload_gun(gentity_t* ent)
 			}
 			ent->client->ps.weaponTime = ent->client->ps.torsoAnimTimer;
 			BG_ReduceBlasterMishapLevelAdvanced(&ent->client->ps);
+			ent->client->ps.muzzleOverheatTime = 0;
 		}
 
 		if (ent->s.number == 0 && cg.zoomMode)

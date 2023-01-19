@@ -193,6 +193,7 @@ struct centity_s
 
 	int shieldHitTime;
 	int shieldRechargeTime;
+	int muzzleOverheatTime;
 };
 
 using centity_t = centity_s;

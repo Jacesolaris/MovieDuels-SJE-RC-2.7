@@ -691,15 +691,15 @@ namespace ragl
 		////////////////////////////////////////////////////////////////////////////////////
 		// Connect Node With An Edge Object  (A->B)  if reflexive, also (B->A)
 		////////////////////////////////////////////////////////////////////////////////////
-		int			connect_node(const TEDGE& t, int nodeA, int nodeB, bool reflexive = true)
+		int			connect_node(const TEDGE& t, int node_a, int node_b, bool reflexive = true)
 		{
-			if (nodeA == nodeB || !nodeA || !nodeB || !mNodes.is_used(nodeA) || !mNodes.is_used(nodeB))
+			if (node_a == node_b || !node_a || !node_b || !mNodes.is_used(node_a) || !mNodes.is_used(node_b))
 			{
 				assert("ERROR: Cannot Connect A and B!" == nullptr);
 				return 0;
 			}
 
-			if (mLinks[nodeA].full() || reflexive && mLinks[nodeB].full())
+			if (mLinks[node_a].full() || reflexive && mLinks[node_b].full())
 			{
 				assert("ERROR: Max edges per node exceeded!" == nullptr);
 				return 0;
@@ -711,20 +711,20 @@ namespace ragl
 				return 0;
 			}
 
-			SNodeNeighbor	nNbr;
+			SNodeNeighbor	n_nbr;
 
-			nNbr.mNode = nodeB;
-			nNbr.mEdge = mEdges.alloc();
-			mEdges[nNbr.mEdge] = t;
+			n_nbr.mNode = node_b;
+			n_nbr.mEdge = mEdges.alloc();
+			mEdges[n_nbr.mEdge] = t;
 
-			mLinks[nodeA].push_back(nNbr);
+			mLinks[node_a].push_back(n_nbr);
 			if (reflexive)
 			{
-				nNbr.mNode = nodeA;
-				mLinks[nodeB].push_back(nNbr);
+				n_nbr.mNode = node_a;
+				mLinks[node_b].push_back(n_nbr);
 			}
 
-			return nNbr.mEdge;
+			return n_nbr.mEdge;
 		}
 
 		////////////////////////////////////////////////////////////////////////////////////

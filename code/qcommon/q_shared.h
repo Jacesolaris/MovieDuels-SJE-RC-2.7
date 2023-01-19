@@ -1847,6 +1847,7 @@ public:
 	//			or descend them as classes - so not every client has all this info
 	TSaberInfo saber[MAX_SABERS];
 	qboolean dualSabers;
+	int muzzleOverheatTime;
 
 	qboolean SaberStaff()
 	{
@@ -2187,7 +2188,7 @@ public:
 	int forceUpperAnimSpeed;
 	int forceLowerAnimSpeed;
 
-	qboolean saberCollisions;
+	bool saberCollisions;
 
 	qboolean hookhasbeenfired;
 	int repulseChargeStart;
@@ -2277,6 +2278,7 @@ public:
 		saved_game.write<>(saber);
 		saved_game.write<int32_t>(dualSabers);
 #endif // !JK2_MODE
+		saved_game.write<int32_t>(muzzleOverheatTime);
 
 		saved_game.write<int16_t>(saber_move);
 
@@ -2550,6 +2552,7 @@ public:
 		saved_game.read<>(saber);
 		saved_game.read<int32_t>(dualSabers);
 #endif // !JK2_MODE
+		saved_game.read<int32_t>(muzzleOverheatTime);
 
 		saved_game.read<int16_t>(saber_move);
 
@@ -3059,7 +3062,7 @@ using entityState_t = struct entityState_s
 	int kicklaststartTime;
 	int brokenLimbs;
 
-	qboolean saberCollisions;
+	bool saberCollisions;
 
 	void sg_export(
 		ojk::SavedGameHelper& saved_game) const
