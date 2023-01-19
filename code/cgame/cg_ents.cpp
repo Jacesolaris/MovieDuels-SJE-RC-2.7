@@ -365,8 +365,6 @@ static void CG_General(centity_t* cent)
 {
 	refEntity_t ent;
 	entityState_t* s1;
-	const char* info = CG_ConfigString(CS_SERVERINFO);
-	const char* s = Info_ValueForKey(info, "mapname");
 
 	if (cent->currentState.eFlags2 & EF2_RADAROBJECT)
 	{

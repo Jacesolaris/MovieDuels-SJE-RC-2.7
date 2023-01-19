@@ -97,7 +97,7 @@ extern int G_CheckLedgeDive(gentity_t* self, float check_dist, const vec3_t chec
 extern void G_BounceMissile(gentity_t* ent, trace_t* trace);
 extern qboolean G_PointInBounds(const vec3_t point, const vec3_t mins, const vec3_t maxs);
 extern void NPC_UseResponse(gentity_t* self, const gentity_t* user, qboolean useWhenDone);
-extern void G_MissileImpacted(gentity_t* ent, gentity_t* other, vec3_t impactPos, vec3_t normal, int hit_loc = HL_NONE);
+extern void G_MissileImpacted(gentity_t* ent, gentity_t* other, vec3_t impact_pos, vec3_t normal, int hit_loc = HL_NONE);
 extern evasionType_t jedi_saber_block_go(gentity_t* self, usercmd_t* cmd, vec3_t p_hitloc, vec3_t phit_dir,
 	const gentity_t* incoming, float dist = 0.0f);
 extern void jedi_rage_stop(const gentity_t* self);
@@ -271,6 +271,7 @@ extern cvar_t* g_SerenityJediEngineMode;
 extern cvar_t* g_IsSaberDoingAttackDamage;
 extern cvar_t* g_DebugSaberCombat;
 extern cvar_t* g_lightningdamage;
+extern cvar_t* com_outcast;
 
 extern int g_crosshairEntNum;
 
@@ -4746,9 +4747,6 @@ void WP_SaberKnockaway(const gentity_t* attacker, trace_t* tr)
 
 qboolean G_InCinematicSaberAnim(const gentity_t* self)
 {
-	const char* info = CG_ConfigString(CS_SERVERINFO);
-	const char* s = Info_ValueForKey(info, "mapname");
-
 	if (self->NPC
 		&& self->NPC->behaviorState == BS_CINEMATIC
 		&& (self->client->ps.torsoAnim == BOTH_CIN_16 || self->client->ps.torsoAnim == BOTH_CIN_17))
@@ -4757,7 +4755,7 @@ qboolean G_InCinematicSaberAnim(const gentity_t* self)
 	}
 	if (self->NPC
 		&& self->NPC->behaviorState == BS_CINEMATIC
-		&& (!strcmp(s, "kor1") == 0 && self->client->saberCollisions))
+		&& com_outcast->integer == 0 && self->client->saberCollisions)
 	{
 		return qtrue;
 	}

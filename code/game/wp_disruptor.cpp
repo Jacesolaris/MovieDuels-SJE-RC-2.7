@@ -34,7 +34,7 @@ extern qboolean WP_DoingForcedAnimationForForcePowers(const gentity_t* ent);
 extern int WP_SaberMustDisruptorBlock(gentity_t* self, const gentity_t* atk, qboolean check_b_box_block, vec3_t point,
 	int r_saber_num, int r_blade_num);
 extern qboolean WP_SaberBlockBolt_MD(gentity_t* self, vec3_t hitloc, qboolean missileBlock);
-extern void G_MissileReflectEffect(const gentity_t* ent, vec3_t org, vec3_t dir);
+extern void G_MissileReflectEffect(const gentity_t* ent, vec3_t dir);
 extern void WP_ForcePowerDrain(const gentity_t* self, forcePowers_t force_power, int override_amt);
 extern int WP_SaberBlockCost(gentity_t* defender, const gentity_t* attacker, vec3_t hit_locs);
 extern qboolean G_ControlledByPlayer(const gentity_t* self);
@@ -89,7 +89,7 @@ static void WP_DisruptorMainFire(gentity_t* ent)
 				if (WP_SaberMustDisruptorBlock(trace_ent, ent, qfalse, tr.endpos, -1, -1) && !
 					WP_DoingForcedAnimationForForcePowers(trace_ent))
 				{
-					G_MissileReflectEffect(trace_ent, tr.endpos, tr.plane.normal);
+					G_MissileReflectEffect(trace_ent, tr.plane.normal);
 					WP_ForcePowerDrain(trace_ent, FP_SABER_DEFENSE, WP_SaberBlockCost(trace_ent, ent, tr.endpos));
 					//force player into a projective block move.
 					WP_SaberBlockBolt_MD(trace_ent, tr.endpos, qtrue);
@@ -113,7 +113,7 @@ static void WP_DisruptorMainFire(gentity_t* ent)
 				if (WP_SaberMustDisruptorBlock(trace_ent, ent, qfalse, tr.endpos, -1, -1) && !
 					WP_DoingForcedAnimationForForcePowers(trace_ent))
 				{
-					G_MissileReflectEffect(trace_ent, tr.endpos, tr.plane.normal);
+					G_MissileReflectEffect(trace_ent, tr.plane.normal);
 					WP_ForcePowerDrain(trace_ent, FP_SABER_DEFENSE, WP_SaberBlockCost(trace_ent, ent, tr.endpos));
 					//force player into a projective block move.
 					WP_SaberBlockBolt_MD(trace_ent, tr.endpos, qtrue);
@@ -298,7 +298,7 @@ void WP_DisruptorAltFire(gentity_t* ent)
 			if (WP_SaberMustDisruptorBlock(trace_ent, ent, qfalse, tr.endpos, -1, -1) && !
 				WP_DoingForcedAnimationForForcePowers(trace_ent))
 			{
-				G_MissileReflectEffect(trace_ent, tr.endpos, tr.plane.normal);
+				G_MissileReflectEffect(trace_ent, tr.plane.normal);
 				WP_ForcePowerDrain(trace_ent, FP_SABER_DEFENSE, WP_SaberBlockCost(trace_ent, ent, tr.endpos));
 				//force player into a projective block move.
 				hit_dodged = WP_SaberBlockBolt_MD(trace_ent, tr.endpos, qtrue);
