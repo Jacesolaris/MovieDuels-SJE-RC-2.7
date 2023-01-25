@@ -7894,7 +7894,7 @@ void PM_TorsoAnimation()
 						{
 							PM_SetAnim(pm, SETANIM_TORSO, BOTH_STAND1, SETANIM_FLAG_NORMAL);
 						}
-					}					
+					}
 					break;
 
 				case WP_NONE:

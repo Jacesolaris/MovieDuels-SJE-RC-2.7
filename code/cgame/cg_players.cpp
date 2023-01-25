@@ -15182,7 +15182,7 @@ void CG_Player(centity_t* cent)
 		if (cent->currentState.number != 0
 			|| cg.renderingThirdPerson
 			|| cg.snap->ps.stats[STAT_HEALTH] <= 0
-			|| cg_trueguns.integer 
+			|| cg_trueguns.integer
 			&& !cg.zoomMode
 			|| !cg.renderingThirdPerson && (cg.snap->ps.weapon == WP_SABER || cg.snap->ps.weapon == WP_MELEE))
 			//First person saber
@@ -15240,7 +15240,7 @@ void CG_Player(centity_t* cent)
 		if (cg.snap && cent->currentState.number == cg.snap->ps.viewEntity && cg_truebobbing.integer)
 		{
 			if (!cg.renderingThirdPerson &&
-				(cg_trueguns.integer || cent->currentState.weapon == WP_SABER|| cent->currentState.weapon == WP_MELEE) &&
+				(cg_trueguns.integer || cent->currentState.weapon == WP_SABER || cent->currentState.weapon == WP_MELEE) &&
 				!cg.zoomMode)
 			{
 				//<True View varibles
@@ -15946,49 +15946,49 @@ void CG_Player(centity_t* cent)
 					&& cent->gent->s.weapon == WP_DROIDEKA
 					&& !G_IsRidingVehicle(cent->gent) //PM_WeaponOkOnVehicle
 					&& cent->gent->weaponModel[1]) //one in each hand
+				{
+					qboolean get_both = qfalse;
+					int old_one = 0;
+					if (cent->muzzleFlashTime > 0 && w_data && !(cent->currentState.eFlags & EF_LOCKED_TO_WEAPON))
 					{
-						qboolean get_both = qfalse;
-						int old_one = 0;
-						if (cent->muzzleFlashTime > 0 && w_data && !(cent->currentState.eFlags & EF_LOCKED_TO_WEAPON))
-						{
-							//we need to get both muzzles since we're toggling and we fired recently
-							get_both = qtrue;
-							old_one = cent->gent->count ? 0 : 1;
-						}
-						if (cent->gent->weaponModel[cent->gent->count] != -1
-							&& cent->gent->ghoul2.size() > cent->gent->weaponModel[cent->gent->count]
-							&& cent->gent->ghoul2[cent->gent->weaponModel[cent->gent->count]].mModelindex != -1)
-						{
-							//get whichever one we're using now
-							mdxaBone_t matrix;
-							// figure out where the actual model muzzle is
-							gi.G2API_GetBoltMatrix(cent->gent->ghoul2, cent->gent->weaponModel[cent->gent->count], 0,
-								&matrix, temp_angles, ent.origin, cg.time, cgs.model_draw,
-								cent->currentState.modelScale);
-							// work the matrix axis stuff into the original axis and origins used.
-							gi.G2API_GiveMeVectorFromMatrix(matrix, ORIGIN,
-								cent->gent->client->renderInfo.muzzlePoint);
-							gi.G2API_GiveMeVectorFromMatrix(matrix, NEGATIVE_Y,
-								cent->gent->client->renderInfo.muzzleDir);
-						}
-						//get the old one too, if needbe, and store it in muzzle2
-						if (get_both
-							&& cent->gent->weaponModel[old_one] != -1 //have a second weapon
-							&& cent->gent->ghoul2.size() > cent->gent->weaponModel[old_one]
-							//have a valid ghoul model index
-							&& cent->gent->ghoul2[cent->gent->weaponModel[old_one]].mModelindex != -1)
-							//model exists and was loaded
-						{
-							//saboteur commando, toggle the muzzle point back and forth between the two pistols each time he fires
-							mdxaBone_t matrix;
-							// figure out where the actual model muzzle is
-							gi.G2API_GetBoltMatrix(cent->gent->ghoul2, cent->gent->weaponModel[old_one], 0, &matrix,
-								temp_angles, ent.origin, cg.time, cgs.model_draw,
-								cent->currentState.modelScale);
-							// work the matrix axis stuff into the original axis and origins used.
-							gi.G2API_GiveMeVectorFromMatrix(matrix, ORIGIN, old_mp);
-							gi.G2API_GiveMeVectorFromMatrix(matrix, NEGATIVE_Y, old_md);
-						}
+						//we need to get both muzzles since we're toggling and we fired recently
+						get_both = qtrue;
+						old_one = cent->gent->count ? 0 : 1;
+					}
+					if (cent->gent->weaponModel[cent->gent->count] != -1
+						&& cent->gent->ghoul2.size() > cent->gent->weaponModel[cent->gent->count]
+						&& cent->gent->ghoul2[cent->gent->weaponModel[cent->gent->count]].mModelindex != -1)
+					{
+						//get whichever one we're using now
+						mdxaBone_t matrix;
+						// figure out where the actual model muzzle is
+						gi.G2API_GetBoltMatrix(cent->gent->ghoul2, cent->gent->weaponModel[cent->gent->count], 0,
+							&matrix, temp_angles, ent.origin, cg.time, cgs.model_draw,
+							cent->currentState.modelScale);
+						// work the matrix axis stuff into the original axis and origins used.
+						gi.G2API_GiveMeVectorFromMatrix(matrix, ORIGIN,
+							cent->gent->client->renderInfo.muzzlePoint);
+						gi.G2API_GiveMeVectorFromMatrix(matrix, NEGATIVE_Y,
+							cent->gent->client->renderInfo.muzzleDir);
+					}
+					//get the old one too, if needbe, and store it in muzzle2
+					if (get_both
+						&& cent->gent->weaponModel[old_one] != -1 //have a second weapon
+						&& cent->gent->ghoul2.size() > cent->gent->weaponModel[old_one]
+						//have a valid ghoul model index
+						&& cent->gent->ghoul2[cent->gent->weaponModel[old_one]].mModelindex != -1)
+						//model exists and was loaded
+					{
+						//saboteur commando, toggle the muzzle point back and forth between the two pistols each time he fires
+						mdxaBone_t matrix;
+						// figure out where the actual model muzzle is
+						gi.G2API_GetBoltMatrix(cent->gent->ghoul2, cent->gent->weaponModel[old_one], 0, &matrix,
+							temp_angles, ent.origin, cg.time, cgs.model_draw,
+							cent->currentState.modelScale);
+						// work the matrix axis stuff into the original axis and origins used.
+						gi.G2API_GiveMeVectorFromMatrix(matrix, ORIGIN, old_mp);
+						gi.G2API_GiveMeVectorFromMatrix(matrix, NEGATIVE_Y, old_md);
+					}
 				}
 				else if (cent->gent->weaponModel[0] != -1 &&
 					cent->gent->ghoul2.size() > cent->gent->weaponModel[0] &&

@@ -1578,7 +1578,7 @@ void G_BoneOrientationsForClass(const int npc_class, const char* bone_name, Eori
 
 extern void G_LoadAnimFileSet(gentity_t* ent, const char* p_model_name);
 
-qboolean g_set_g2_player_model_info(gentity_t* ent, const char* model_name, const char* surf_off,const char* surf_on)
+qboolean g_set_g2_player_model_info(gentity_t* ent, const char* model_name, const char* surf_off, const char* surf_on)
 {
 	if (ent->playerModel != -1)
 	{
@@ -2232,7 +2232,7 @@ qboolean g_set_g2_player_model_info(gentity_t* ent, const char* model_name, cons
 }
 
 constexpr auto TURN_OFF = 0x00000100;
-void g_set_g2_player_model(gentity_t* ent, const char* model_name, const char* custom_skin, const char* surf_off,const char* surf_on)
+void g_set_g2_player_model(gentity_t* ent, const char* model_name, const char* custom_skin, const char* surf_off, const char* surf_on)
 {
 	char skin_name[MAX_QPATH];
 

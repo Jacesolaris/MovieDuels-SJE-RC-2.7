@@ -1807,7 +1807,7 @@ static pack_t* FS_LoadZipFile(const char* zipfile, const char* basename)
 	}
 
 	const auto build_buffer = static_cast<fileInPack_s*>(Z_Malloc((gi.number_entry * sizeof(fileInPack_t)) + len,
-	                                                             TAG_FILESYS, qtrue));
+		TAG_FILESYS, qtrue));
 	char* namePtr = reinterpret_cast<char*>(build_buffer) + gi.number_entry * sizeof(fileInPack_t);
 	const auto fs_header_longs = static_cast<int*>(Z_Malloc(gi.number_entry * sizeof(int), TAG_FILESYS, qtrue));
 

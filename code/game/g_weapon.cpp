@@ -1555,7 +1555,7 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 		return;
 	}
 
-	if (ent->client->ps.powerups[PW_GALAK_SHIELD])
+	if (ent->client->ps.powerups[PW_GALAK_SHIELD] && ent->s.weapon == WP_DROIDEKA)
 	{
 		TurnBarrierOff(ent);
 	}

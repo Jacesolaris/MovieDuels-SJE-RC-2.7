@@ -1392,7 +1392,6 @@ static void CG_DoMuzzleFlash(centity_t* cent, vec3_t org, vec3_t dir, const weap
 		}
 		else
 		{
-
 			if (w_data->mOverloadMuzzleEffect[0])
 			{
 				effect = &w_data->mOverloadMuzzleEffect[0];
@@ -1411,7 +1410,6 @@ static void CG_DoMuzzleFlash(centity_t* cent, vec3_t org, vec3_t dir, const weap
 				}
 			}
 			cent->muzzleOverheatTime = 0;
-			
 		}
 	}
 }
@@ -1964,7 +1962,6 @@ void CG_AddViewWeapon(playerState_t* ps)
 				theFxScheduler.PlayEffect(weaponData[cent->gent->client->ps.weapon].mOverloadMuzzleEffect,
 					cent->gent->client->renderInfo.muzzlePoint,
 					cent->gent->client->renderInfo.muzzleDir);
-				
 			}
 			cent->muzzleOverheatTime = 0;
 		}
@@ -2451,7 +2448,6 @@ void CG_AddViewWeaponDuals(playerState_t* ps)
 			theFxScheduler.PlayEffect(weaponData[cent->gent->client->ps.weapon].mTrueOverloadMuzzleEffect,
 				cent->gent->client->renderInfo.muzzlePoint,
 				cent->gent->client->renderInfo.muzzleDir);
-			
 		}
 		cent->muzzleOverheatTime = 0;
 	}
@@ -4543,7 +4539,7 @@ void CG_FireWeapon(centity_t* cent, const qboolean alt_fire)
 		}
 	}
 
-	if (cent->gent->client->ps.powerups[PW_GALAK_SHIELD])
+	if (cent->gent->client->ps.powerups[PW_GALAK_SHIELD] && ent->weapon == WP_DROIDEKA)
 	{
 		TurnBarrierOff(cg_entities[0].gent);
 	}

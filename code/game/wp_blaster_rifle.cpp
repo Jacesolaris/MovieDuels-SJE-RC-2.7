@@ -1973,11 +1973,7 @@ void WP_FireBobaRifle(gentity_t* ent, const qboolean alt_fire)
 	WP_FireBobaRifleMissile(ent, muzzle, dir, alt_fire);
 }
 
-
-
 //////// DROIDEKA ////////
-
-
 
 //---------------------------------------------------------
 void WP_FireDroidekaDualPistolMissileDuals(gentity_t* ent, vec3_t start, vec3_t dir, const qboolean alt_fire)
@@ -2165,7 +2161,6 @@ void WP_FireDroidekaDualPistolMissile(gentity_t* ent, vec3_t start, vec3_t dir, 
 	}
 }
 
-
 //---------------------------------------------------------
 void WP_FireDroidekaDualPistol(gentity_t* ent, const qboolean alt_fire)
 //---------------------------------------------------------
@@ -2178,7 +2173,7 @@ void WP_FireDroidekaDualPistol(gentity_t* ent, const qboolean alt_fire)
 	{
 		//no inherent aim screw up
 	}
-	else 
+	else
 	{//force sight 2+ gives perfect aim
 		vectoangles(forwardVec, angs);
 
@@ -2203,7 +2198,6 @@ void WP_FireDroidekaDualPistol(gentity_t* ent, const qboolean alt_fire)
 	WP_FireDroidekaDualPistolMissile(ent, muzzle, dir, alt_fire);
 }
 
-
 //---------------------------------------------------------
 void WP_FireDroidekaFPPistolDuals(gentity_t* ent, const qboolean alt_fire, const qboolean second_pistol)
 //---------------------------------------------------------
@@ -2216,7 +2210,7 @@ void WP_FireDroidekaFPPistolDuals(gentity_t* ent, const qboolean alt_fire, const
 	{
 		//no inherent aim screw up
 	}
-	else 
+	else
 	{//force sight 2+ gives perfect aim
 		vectoangles(forwardVec, angs);
 

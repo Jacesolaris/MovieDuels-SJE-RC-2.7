@@ -2336,7 +2336,7 @@ constexpr auto CLOAK_REFUEL_RATE = 100; //seems fair;
 
 constexpr auto BARRIER_DEFUEL_RATE = 100; //approx. 50 seconds of idle use from a fully charged fuel amt;
 constexpr auto BARRIER_REFUEL_RATE = 200; //seems fair;
-constexpr auto DROIDEKA_BARRIER_DEFUEL_RATE = 1000; 
+constexpr auto DROIDEKA_BARRIER_DEFUEL_RATE = 1000;
 
 void G_RunFrame(const int level_time)
 {
@@ -2669,7 +2669,7 @@ void G_RunFrame(const int level_time)
 	if (navTime > 20)
 	{
 		gi.Printf(S_COLOR_RED"ERROR: total nav time: %d\n", navTime);
-}
+	}
 	else if (navTime > 10)
 	{
 		gi.Printf(S_COLOR_YELLOW"WARNING: total nav time: %d\n", navTime);

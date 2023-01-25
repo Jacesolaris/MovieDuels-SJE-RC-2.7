@@ -1496,9 +1496,9 @@ qboolean G_GetHitLocFromSurfName(gentity_t* ent, const char* surf_name, int* hit
 		dismember = qtrue;
 	}
 	else if (ent->client &&
-		(ent->client->NPC_class == CLASS_PROTOCOL || 
+		(ent->client->NPC_class == CLASS_PROTOCOL ||
 			ent->client->NPC_class == CLASS_ASSASSIN_DROID ||
-			ent->client->NPC_class == CLASS_DROIDEKA || 
+			ent->client->NPC_class == CLASS_DROIDEKA ||
 			ent->client->NPC_class == CLASS_SABER_DROID))
 	{
 		dismember = qtrue;
@@ -4941,7 +4941,7 @@ void player_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, cons
 		}
 	}
 	else if (self->s.weapon != WP_BRYAR_PISTOL && self->s.weapon != WP_SBD_BLASTER && self->s.weapon != WP_JAWA
-		&& self	->s.weapon != WP_DUAL_PISTOL && self->s.weapon != WP_WRIST_BLASTER && self->s.weapon != WP_DROIDEKA)
+		&& self->s.weapon != WP_DUAL_PISTOL && self->s.weapon != WP_WRIST_BLASTER && self->s.weapon != WP_DROIDEKA)
 	{
 		//since player can't pick up bryar pistols, never drop those
 		self->s.weapon = WP_NONE;
