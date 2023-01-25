@@ -11907,8 +11907,7 @@ static void PM_FinishWeaponChange()
 				//might be NONE, so check if it has a model
 				G_CreateG2AttachedWeaponModel(pm->gent, weaponData[weapon].weaponMdl, pm->gent->handRBolt, 0);
 
-				if (PM_AllowedDualPistol() && g_allowdualpistols->integer == 1 && pm->gent->client->NPC_class !=
-					CLASS_JANGODUAL)
+				if (PM_AllowedDualPistol() && g_allowdualpistols->integer == 1 && pm->gent->client->NPC_class != CLASS_JANGODUAL)
 				{
 					G_CreateG2AttachedWeaponModel(pm->gent, weaponData[weapon].weaponMdl, pm->gent->handLBolt, 1);
 					pm->ps->eFlags |= EF2_DUAL_PISTOLS;
@@ -11918,16 +11917,19 @@ static void PM_FinishWeaponChange()
 					pm->ps->eFlags &= ~EF2_DUAL_PISTOLS;
 				}
 
-				if (weapon == WP_DUAL_PISTOL && (pm->gent && pm->gent->client && pm->gent->client->NPC_class ==
-					CLASS_JANGODUAL))
+				if (weapon == WP_DUAL_PISTOL && (pm->gent && pm->gent->client && pm->gent->client->NPC_class == CLASS_JANGODUAL))
 				{
-					G_CreateG2AttachedWeaponModel(pm->gent, weaponData[WP_DUAL_PISTOL].weaponMdl,
-						pm->gent->handLBolt, 1);
+					G_CreateG2AttachedWeaponModel(pm->gent, weaponData[WP_DUAL_PISTOL].weaponMdl, pm->gent->handLBolt, 1);
 					pm->ps->eFlags |= EF2_JANGO_DUALS;
 				}
 				else
 				{
 					pm->ps->eFlags &= ~EF2_JANGO_DUALS;
+				}
+
+				if (weapon == WP_DROIDEKA && (pm->gent->client->NPC_class == CLASS_DROIDEKA))
+				{
+					G_CreateG2AttachedWeaponModel(pm->gent, weaponData[WP_DROIDEKA].weaponMdl, pm->gent->handLBolt, 1);
 				}
 			}
 		}
@@ -20495,6 +20497,7 @@ qboolean PM_IsFatiguedGunner()
 	case WP_CLONEPISTOL:
 	case WP_SBD_BLASTER:
 	case WP_DUAL_PISTOL:
+	case WP_DROIDEKA:
 		return qtrue;
 	default:;
 	}
@@ -20720,6 +20723,18 @@ static void PM_Weapon()
 					PM_SetAnim(pm, SETANIM_TORSO, TORSO_WEAPONIDLE2, SETANIM_FLAG_NORMAL);
 				}
 				break;
+			case WP_DROIDEKA:
+				if (pm->gent && pm->gent->weaponModel[1] > 0)
+				{
+					//dual pistols
+					PM_SetAnim(pm, SETANIM_TORSO, BOTH_STAND1, SETANIM_FLAG_NORMAL);
+				}
+				else
+				{
+					//single pistol
+					PM_SetAnim(pm, SETANIM_TORSO, BOTH_STAND2, SETANIM_FLAG_NORMAL);
+				}
+				break;
 
 			default:
 				PM_SetAnim(pm, SETANIM_TORSO, TORSO_WEAPONIDLE3, SETANIM_FLAG_NORMAL);
@@ -20738,11 +20753,11 @@ static void PM_Weapon()
 			//add the thermal model back in our hand
 			// remove anything if we have anything already
 			G_RemoveWeaponModels(pm->gent);
+
 			if (weaponData[pm->ps->weapon].weaponMdl[0])
 			{
 				//might be NONE, so check if it has a model
-				G_CreateG2AttachedWeaponModel(pm->gent, weaponData[pm->ps->weapon].weaponMdl, pm->gent->handRBolt,
-					0);
+				G_CreateG2AttachedWeaponModel(pm->gent, weaponData[pm->ps->weapon].weaponMdl, pm->gent->handRBolt, 0);
 				//make it sound like we took another one out from... uh.. somewhere...
 				if (cg.time > 0)
 				{
@@ -20904,6 +20919,23 @@ static void PM_Weapon()
 					SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_RESTART | SETANIM_FLAG_HOLDLESS);
 			}
 		}
+		else if (pm->gent && pm->gent->client && pm->gent->client->NPC_class == CLASS_DROIDEKA)
+		{
+			// Crouched Attack
+			if (PM_CrouchAnim(pm->gent->client->ps.legsAnim))
+			{
+				PM_SetAnim(pm, SETANIM_TORSO, BOTH_ATTACK1,
+					SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_RESTART | SETANIM_FLAG_HOLDLESS);
+			}
+
+			// Standing Attack
+			//-----------------
+			else
+			{
+				PM_SetAnim(pm, SETANIM_TORSO, BOTH_ATTACK1,
+					SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_RESTART | SETANIM_FLAG_HOLDLESS);
+			}
+		}
 		else
 		{
 			switch (pm->ps->weapon)
@@ -20932,6 +20964,19 @@ static void PM_Weapon()
 					//single pistol
 					PM_SetAnim(pm, SETANIM_TORSO, BOTH_ATTACK2,
 						SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_RESTART | SETANIM_FLAG_HOLD);
+				}
+				break;
+
+			case WP_DROIDEKA:
+				if (pm->gent && pm->gent->weaponModel[1] > 0)
+				{
+					//dual pistols
+					PM_SetAnim(pm, SETANIM_TORSO, BOTH_ATTACK1, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_RESTART | SETANIM_FLAG_HOLD);
+				}
+				else
+				{
+					//single pistol
+					PM_SetAnim(pm, SETANIM_TORSO, BOTH_ATTACK1, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_RESTART | SETANIM_FLAG_HOLD);
 				}
 				break;
 

@@ -213,6 +213,10 @@ int client_numberFromString(const gentity_t* to, char* s)
 
 extern qboolean HeIsJedi(const gentity_t* ent);
 
+extern void BubbleShield_TurnOff();
+extern void TurnBarrierOff(gentity_t* ent);
+extern void TurnBarrierON(gentity_t* ent);
+
 void G_Give(gentity_t* ent, const char* name, const char* args, const int argc)
 {
 	qboolean give_all = qfalse;
@@ -270,22 +274,43 @@ void G_Give(gentity_t* ent, const char* name, const char* args, const int argc)
 
 			if (!HeIsJedi(ent))
 			{
-				if (ent->client && ent->client->NPC_class == CLASS_BOBAFETT
-					|| ent->client->NPC_class == CLASS_JANGO
-					|| ent->client->NPC_class == CLASS_JANGODUAL
-					|| !Q_stricmp("md_dindjarin", ent->NPC_type))
+				if (ent->client->NPC_class == CLASS_DROIDEKA)
 				{
-					ent->client->ps.inventory[INV_GRAPPLEHOOK] = 1;
+					ent->client->ps.inventory[INV_BARRIER] = 1;
+
+					ent->client->ps.inventory[INV_CLOAK] = 0;
+					ent->client->ps.inventory[INV_SEEKER] = 0;
+					ent->client->ps.inventory[INV_ELECTROBINOCULARS] = 0;
+					ent->client->ps.inventory[INV_LIGHTAMP_GOGGLES] = 0;
+					ent->client->ps.inventory[INV_CLOAK] = 0;
+					ent->client->ps.inventory[INV_SEEKER] = 0;
+					ent->client->ps.inventory[INV_BACTA_CANISTER] = 0;
+					ent->client->ps.inventory[INV_SENTRY] = 0;
+
+					if (ent->client->ps.powerups[PW_GALAK_SHIELD] || ent->flags & FL_SHIELDED)
+					{
+						TurnBarrierOff(ent);
+					}
 				}
 				else
 				{
-					ent->client->ps.inventory[INV_GRAPPLEHOOK] = 0;
-				}
-				ent->client->ps.inventory[INV_BARRIER] = 1;
-				ent->client->ps.inventory[INV_SENTRY] = 5;
+					if (ent->client && ent->client->NPC_class == CLASS_BOBAFETT
+						|| ent->client->NPC_class == CLASS_JANGO
+						|| ent->client->NPC_class == CLASS_JANGODUAL
+						|| !Q_stricmp("md_dindjarin", ent->NPC_type))
+					{
+						ent->client->ps.inventory[INV_GRAPPLEHOOK] = 1;
+					}
+					else
+					{
+						ent->client->ps.inventory[INV_GRAPPLEHOOK] = 0;
+					}
+					ent->client->ps.inventory[INV_BARRIER] = 1;
+					ent->client->ps.inventory[INV_SENTRY] = 5;
 
-				ent->client->ps.inventory[INV_CLOAK] = 0;
-				ent->client->ps.inventory[INV_SEEKER] = 0;
+					ent->client->ps.inventory[INV_CLOAK] = 0;
+					ent->client->ps.inventory[INV_SEEKER] = 0;
+				}
 			}
 		}
 		else
@@ -1475,7 +1500,7 @@ void G_TauntSound(const gentity_t* ent, const int taunt)
 
 extern qboolean PM_CrouchAnim(int anim);
 extern qboolean is_holding_block_button(const gentity_t* defender);
-extern qboolean IsHoldingGun(const gentity_t* ent);
+extern qboolean is_holding_reloadable_gun(const gentity_t* ent);
 extern void wp_reload_gun(gentity_t* ent);
 extern void cancel_reload(gentity_t* ent);
 extern qboolean npc_is_mando(const gentity_t* self);
@@ -2089,7 +2114,7 @@ void G_SetTauntAnim(gentity_t* ent, const int taunt)
 			break;
 		case TAUNT_RELOAD:
 		{
-			if (IsHoldingGun(ent) && g_AllowReload->integer == 1) //SP
+			if (is_holding_reloadable_gun(ent) && g_AllowReload->integer == 1) //SP
 			{
 				if (ent->reloadTime > 0)
 				{
@@ -2591,7 +2616,7 @@ void ClientCommand(const int client_num)
 	}
 	else if (Q_stricmp(cmd, "saberdown") == 0)
 	{
-		if (IsHoldingGun(ent) && g_AllowReload->integer == 1) //SP
+		if (is_holding_reloadable_gun(ent) && g_AllowReload->integer == 1) //SP
 		{
 			ent = G_GetSelfForPlayerCmd();
 			G_SetTauntAnim(ent, TAUNT_RELOAD);

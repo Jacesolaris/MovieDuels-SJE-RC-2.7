@@ -91,8 +91,9 @@ void WP_FireJangoPistol(gentity_t* ent, qboolean alt_fire, qboolean second_pisto
 void WP_FireJangoDualPistolMissile(gentity_t* ent, vec3_t start, vec3_t dir, qboolean alt_fire);
 void WP_FireJangoDualPistolMissileDuals(gentity_t* ent, vec3_t start, vec3_t dir, qboolean alt_fire);
 void WP_FireJangoDualPistol(gentity_t* ent, qboolean alt_fire);
+void WP_FireDroidekaDualPistol(gentity_t* ent, qboolean alt_fire);
 void WP_FireJangoFPPistolDuals(gentity_t* ent, qboolean alt_fire, qboolean second_pistol);
-//void WP_FireClonePistollMissile(gentity_t *ent, vec3_t start, vec3_t dir, qboolean alt_fire);
+void WP_FireDroidekaFPPistolDuals(gentity_t* ent, qboolean alt_fire, qboolean second_pistol);
 void WP_FireClonePistol(gentity_t* ent, qboolean alt_fire);
 void WP_FireClonePistolDuals(gentity_t* ent, qboolean alt_fire, qboolean second_pistol);
 void WP_BotLaser(gentity_t* ent);

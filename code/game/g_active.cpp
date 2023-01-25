@@ -7728,7 +7728,7 @@ int fire_deley_time()
 	return 500;
 }
 
-qboolean IsHoldingGun(const gentity_t* ent)
+qboolean is_holding_reloadable_gun(const gentity_t* ent)
 {
 	switch (ent->s.weapon)
 	{
@@ -7813,7 +7813,7 @@ void wp_reload_gun(gentity_t* ent)
 		return;
 	}
 
-	if (IsHoldingGun(ent))
+	if (is_holding_reloadable_gun(ent))
 	{
 		if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_TWENTYSIX)
 		{

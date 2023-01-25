@@ -126,7 +126,7 @@ extern void Jetpack_Off(const gentity_t* ent);
 extern void Boba_FlyStop(gentity_t* self);
 extern void WP_ForcePowerRegenerate(const gentity_t* self, int override_amt);
 extern void WP_BlockPointsRegenerate(const gentity_t* self, int override_amt);
-extern void RemoveBarrier(gentity_t* ent);
+extern void TurnBarrierOff(gentity_t* ent);
 
 qboolean G_GetRootSurfNameWithVariant(gentity_t* ent, const char* root_surf_name, char* return_surf_name,
 	int return_size);
@@ -262,7 +262,7 @@ gentity_t* TossClientItems(gentity_t* self)
 	{
 		//FIXME: either drop the pistol and make the pickup only give ammo or drop ammo
 	}
-	else if (weapon == WP_STUN_BATON || weapon == WP_MELEE || weapon == WP_DUAL_PISTOL)
+	else if (weapon == WP_STUN_BATON || weapon == WP_MELEE || weapon == WP_DUAL_PISTOL || weapon == WP_DROIDEKA)
 	{
 		//never drop these
 	}
@@ -373,7 +373,6 @@ gentity_t* TossClientItems(gentity_t* self)
 					dropped->count = 15;
 					break;
 				case WP_JANGO:
-				case WP_DUAL_PISTOL:
 					dropped->count = 15;
 					break;
 				case WP_BOBA:
@@ -877,6 +876,12 @@ void DeathFX(const gentity_t* ent)
 		VectorCopy(ent->currentOrigin, effect_pos);
 		G_PlayEffect("env/small_explode", effect_pos);
 		G_SoundOnEnt(ent, CHAN_AUTO, "sound/chars/battledroid/misc/death2");
+		break;
+
+	case CLASS_DROIDEKA:
+		VectorCopy(ent->currentOrigin, effect_pos);
+		G_PlayEffect("env/small_explode", effect_pos);
+		G_SoundOnEnt(ent, CHAN_AUTO, "sound/chars/droideka/foldin");
 		break;
 
 	default:
@@ -1490,15 +1495,11 @@ qboolean G_GetHitLocFromSurfName(gentity_t* ent, const char* surf_name, int* hit
 	{
 		dismember = qtrue;
 	}
-	else if (ent->client && ent->client->NPC_class == CLASS_PROTOCOL)
-	{
-		dismember = qtrue;
-	}
-	else if (ent->client && ent->client->NPC_class == CLASS_ASSASSIN_DROID)
-	{
-		dismember = qtrue;
-	}
-	else if (ent->client && ent->client->NPC_class == CLASS_SABER_DROID)
+	else if (ent->client &&
+		(ent->client->NPC_class == CLASS_PROTOCOL || 
+			ent->client->NPC_class == CLASS_ASSASSIN_DROID ||
+			ent->client->NPC_class == CLASS_DROIDEKA || 
+			ent->client->NPC_class == CLASS_SABER_DROID))
 	{
 		dismember = qtrue;
 	}
@@ -4531,10 +4532,10 @@ void player_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, cons
 	}
 #endif//FINAL_BUILD
 
-	// Remove The Bubble Shield From The DROIDEKA
-	if (G_ControlledByPlayer(self) && self->client->ps.powerups[PW_GALAK_SHIELD])
+	// Remove The Bubble Shield
+	if (self->client->ps.powerups[PW_GALAK_SHIELD] || self->flags & FL_SHIELDED)
 	{
-		RemoveBarrier(self);
+		TurnBarrierOff(self);
 	}
 
 	if (self->client &&
@@ -4563,6 +4564,13 @@ void player_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, cons
 
 		// Remove The Bubble Shield From The Assassin Droid
 		if (self->client && self->client->NPC_class == CLASS_ASSASSIN_DROID && self->flags & FL_SHIELDED)
+		{
+			self->flags &= ~FL_SHIELDED;
+			self->client->ps.stats[STAT_ARMOR] = 0;
+			self->client->ps.powerups[PW_GALAK_SHIELD] = 0;
+			gi.G2API_SetSurfaceOnOff(&self->ghoul2[self->playerModel], "force_shield", TURN_OFF);
+		}
+		if (self->client && self->client->NPC_class == CLASS_DROIDEKA && self->flags & FL_SHIELDED)
 		{
 			self->flags &= ~FL_SHIELDED;
 			self->client->ps.stats[STAT_ARMOR] = 0;
@@ -4932,8 +4940,8 @@ void player_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, cons
 			G_SoundIndexOnEnt(self, CHAN_AUTO, self->client->ps.saber[0].soundOff);
 		}
 	}
-	else if (self->s.weapon != WP_BRYAR_PISTOL && self->s.weapon != WP_SBD_BLASTER && self->s.weapon != WP_JAWA && self
-		->s.weapon != WP_DUAL_PISTOL && self->s.weapon != WP_WRIST_BLASTER)
+	else if (self->s.weapon != WP_BRYAR_PISTOL && self->s.weapon != WP_SBD_BLASTER && self->s.weapon != WP_JAWA
+		&& self	->s.weapon != WP_DUAL_PISTOL && self->s.weapon != WP_WRIST_BLASTER && self->s.weapon != WP_DROIDEKA)
 	{
 		//since player can't pick up bryar pistols, never drop those
 		self->s.weapon = WP_NONE;
@@ -5777,7 +5785,7 @@ int CheckArmor(const gentity_t* ent, const int damage, const int dflags, const i
 		}
 	}
 
-	if (client->NPC_class == CLASS_ASSASSIN_DROID)
+	if (client->NPC_class == CLASS_ASSASSIN_DROID || client->NPC_class == CLASS_DROIDEKA)
 	{
 		// The Assassin Always Completely Ignores These Damage Types
 		//-----------------------------------------------------------
@@ -7418,6 +7426,7 @@ qboolean G_ImmuneToGas(const gentity_t* ent)
 		|| ent->client->NPC_class == CLASS_ROCKETTROOPER
 		|| ent->client->NPC_class == CLASS_SABER_DROID
 		|| ent->client->NPC_class == CLASS_ASSASSIN_DROID
+		|| ent->client->NPC_class == CLASS_DROIDEKA
 		|| ent->client->NPC_class == CLASS_HAZARD_TROOPER
 		|| ent->client->NPC_class == CLASS_VEHICLE)
 	{
@@ -7485,7 +7494,7 @@ qboolean NPC_IsNotDismemberable(const gentity_t* self)
 	case CLASS_VEHICLE:
 	case CLASS_DROIDEKA:
 	case CLASS_SBD:
-	case MOD_PROJECTION_END:
+	case CLASS_PROJECTION:
 		return qtrue;
 	default:
 		break;
@@ -7776,6 +7785,7 @@ void G_Damage(gentity_t* targ, gentity_t* inflictor, gentity_t* attacker, const 
 		(
 			client->NPC_class == CLASS_SABER_DROID ||
 			client->NPC_class == CLASS_ASSASSIN_DROID ||
+			client->NPC_class == CLASS_DROIDEKA ||
 			client->NPC_class == CLASS_GONK ||
 			client->NPC_class == CLASS_MOUSE ||
 			client->NPC_class == CLASS_PROBE ||

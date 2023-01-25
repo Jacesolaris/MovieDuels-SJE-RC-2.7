@@ -42,7 +42,7 @@ gclient_t		g_clients[MAX_CLIENTS];
 qboolean gDuelExit = qfalse;
 
 void G_InitGame(int levelTime, int randomSeed, int restart);
-void G_RunFrame(int levelTime);
+void G_RunFrame(int level_time);
 void G_ShutdownGame(int restart);
 void CheckExitRules(void);
 void G_ROFF_NotetrackCallback(gentity_t* cent, const char* notetrack);
@@ -2842,7 +2842,7 @@ qboolean G_PointInBounds(vec3_t point, vec3_t mins, vec3_t maxs);
 int g_siegeRespawnCheck = 0;
 void SetMoverState(gentity_t* ent, moverState_t moverState, int time);
 
-void G_RunFrame(int levelTime) {
+void G_RunFrame(int level_time) {
 	int			i;
 	gentity_t* ent;
 #ifdef _G_FRAME_PERFANAL
@@ -2939,7 +2939,7 @@ void G_RunFrame(int levelTime) {
 
 	level.framenum++;
 	level.previousTime = level.time;
-	level.time = levelTime;
+	level.time = level_time;
 
 	if (g_allowNPC.integer)
 	{

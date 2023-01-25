@@ -1697,6 +1697,8 @@ extern void NPC_BSSD_Default();
 extern void NPC_BehaviorSet_Trooper(int b_state);
 extern bool NPC_IsTrooper(const gentity_t* ent);
 extern bool Pilot_MasterUpdate();
+extern qboolean G_ControlledByPlayer(const gentity_t* self);
+extern qboolean droideka_npc(const gentity_t* ent);
 
 void NPC_RunBehavior(const int team, const int b_state)
 {
@@ -1901,6 +1903,11 @@ void NPC_RunBehavior(const int team, const int b_state)
 				BubbleShield_Update();
 			}
 
+			if (droideka_npc(NPC))
+			{
+				BubbleShield_Update();
+			}
+
 			if (NPC_IsTrooper(NPC))
 			{
 				NPC_BehaviorSet_Trooper(b_state);
@@ -2045,24 +2052,6 @@ void NPC_ExecuteBState(const gentity_t* self) //, int msec )
 
 	//Pick the proper bstate for us and run it
 	NPC_RunBehavior(self->client->playerTeam, b_state);
-
-	//	if(b_state != BS_POINT_COMBAT && NPCInfo->combatPoint != -1)
-	//	{
-	//level.combatPoints[NPCInfo->combatPoint].occupied = qfalse;
-	//NPCInfo->combatPoint = -1;
-	//	}
-
-	//Here we need to see what the scripted stuff told us to do
-	//Only process snapshot if independant and in combat mode- this would pick enemies and go after needed items
-	//	ProcessSnapshot();
-
-	//Ignore my needs if I'm under script control- this would set needs for items
-	//	CheckSelf();
-
-	//Back to normal?  All decisions made?
-
-	//FIXME: don't walk off ledges unless we can get to our goal faster that way, or that's our goal's surface
-	//NPCPredict();
 
 	if (NPC->enemy)
 	{

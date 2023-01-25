@@ -257,6 +257,7 @@ void G_ClassSetDontFlee(const gentity_t* self)
 	case CLASS_JANGODUAL:
 	case CLASS_SABER_DROID:
 	case CLASS_ASSASSIN_DROID:
+	case CLASS_DROIDEKA:
 	case CLASS_PLAYER:
 	case CLASS_PROJECTION:
 	case CLASS_VEHICLE:
@@ -297,6 +298,7 @@ extern void Vehicle_Register(gentity_t* ent);
 extern void RT_FlyStart(gentity_t* self);
 extern void SandCreature_ClearTimers();
 extern cvar_t* g_noAutoFollow;
+extern qboolean droideka_npc(const gentity_t* ent);
 
 void NPC_SetMiscDefaultData(gentity_t* ent)
 {
@@ -407,6 +409,15 @@ void NPC_SetMiscDefaultData(gentity_t* ent)
 		{
 			ent->NPC->scriptFlags |= SCF_ALT_FIRE;
 		}
+		ent->flags |= FL_NO_KNOCKBACK;
+	}
+	else if (ent->client->NPC_class == CLASS_DROIDEKA)
+	{
+		if (ent->s.weapon == WP_DROIDEKA && droideka_npc(ent))
+		{
+			ent->NPC->scriptFlags |= SCF_ALT_FIRE;
+		}
+		ent->client->ps.stats[STAT_ARMOR] = 250; // start with full armor
 		ent->flags |= FL_NO_KNOCKBACK;
 	}
 
@@ -674,6 +685,17 @@ void NPC_SetMiscDefaultData(gentity_t* ent)
 				}
 				break;
 
+			case WP_DROIDEKA:
+				if (ent->client->NPC_class == CLASS_DROIDEKA
+					&& (!(ent->NPC->aiFlags & NPCAI_MATCHPLAYERWEAPON) || !ent->weaponModel[0]))
+					//they do this themselves
+				{
+					//dual blaster pistols, so add the left-hand one, too
+					G_CreateG2AttachedWeaponModel(ent, weaponData[ent->client->ps.weapon].weaponMdl, ent->handLBolt,
+						1);
+				}
+				break;
+
 			case WP_JANGO:
 			case WP_BRYAR_PISTOL:
 			case WP_CLONEPISTOL:
@@ -827,6 +849,16 @@ void NPC_SetMiscDefaultData(gentity_t* ent)
 				break;
 			case WP_DUAL_PISTOL:
 				if ((ent->client->NPC_class == CLASS_JANGODUAL || Q_stricmp(ent->NPC_type, "md_jango_dual") == 0)
+					&& (!(ent->NPC->aiFlags & NPCAI_MATCHPLAYERWEAPON) || !ent->weaponModel[0]))
+					//they do this themselves
+				{
+					//dual blaster pistols, so add the left-hand one, too
+					G_CreateG2AttachedWeaponModel(ent, weaponData[ent->client->ps.weapon].weaponMdl, ent->handLBolt,
+						1);
+				}
+				break;
+			case WP_DROIDEKA:
+				if (ent->client->NPC_class == CLASS_DROIDEKA
 					&& (!(ent->NPC->aiFlags & NPCAI_MATCHPLAYERWEAPON) || !ent->weaponModel[0]))
 					//they do this themselves
 				{

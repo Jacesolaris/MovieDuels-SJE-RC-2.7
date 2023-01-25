@@ -321,7 +321,7 @@ extern char* G_GetLocationForEnt(const gentity_t* ent);
 extern void CP_FindCombatPointWaypoints();
 extern qboolean InFront(vec3_t spot, vec3_t from, vec3_t fromAngles, float threshHold = 0.0f);
 
-void G_RunFrame(int levelTime);
+void G_RunFrame(int level_time);
 void ClearNPCGlobals();
 extern void AI_UpdateGroups();
 
@@ -1836,6 +1836,12 @@ static inline qboolean G_RagWantsHumanoidsOnly(CGhoul2Info* ghl_info)
 		return qtrue;
 	}
 
+	if (!Q_stricmp("models/players/_humanoid_deka/_humanoid", GLAName))
+	{
+		//only _humanoid skeleton is expected to have these
+		return qtrue;
+	}
+
 	if (!Q_stricmp("models/players/_humanoid_vader/_humanoid", GLAName))
 	{
 		//only _humanoid skeleton is expected to have these
@@ -2330,8 +2336,9 @@ constexpr auto CLOAK_REFUEL_RATE = 100; //seems fair;
 
 constexpr auto BARRIER_DEFUEL_RATE = 100; //approx. 50 seconds of idle use from a fully charged fuel amt;
 constexpr auto BARRIER_REFUEL_RATE = 200; //seems fair;
+constexpr auto DROIDEKA_BARRIER_DEFUEL_RATE = 1000; 
 
-void G_RunFrame(const int levelTime)
+void G_RunFrame(const int level_time)
 {
 	gentity_t* ent;
 	int ents_inuse = 0; // someone's gonna be pissed I put this here...
@@ -2342,7 +2349,7 @@ void G_RunFrame(const int levelTime)
 
 	level.framenum++;
 	level.previousTime = level.time;
-	level.time = levelTime;
+	level.time = level_time;
 	g_entities[0].nearAllies = ENTITYNUM_NONE;
 
 	//ResetTeamCounters();
@@ -2479,7 +2486,15 @@ void G_RunFrame(const int levelTime)
 						ent->client->ps.BarrierFuel = 0;
 						RemoveBarrier(ent);
 					}
-					ent->client->BarrierDebReduce = level.time + BARRIER_DEFUEL_RATE;
+
+					if (ent->client->NPC_class == CLASS_DROIDEKA)
+					{
+						ent->client->BarrierDebReduce = level.time + DROIDEKA_BARRIER_DEFUEL_RATE;
+					}
+					else
+					{
+						ent->client->BarrierDebReduce = level.time + BARRIER_DEFUEL_RATE;
+					}
 				}
 			}
 			else if (ent->client->ps.BarrierFuel < 100)
@@ -2654,7 +2669,7 @@ void G_RunFrame(const int levelTime)
 	if (navTime > 20)
 	{
 		gi.Printf(S_COLOR_RED"ERROR: total nav time: %d\n", navTime);
-	}
+}
 	else if (navTime > 10)
 	{
 		gi.Printf(S_COLOR_YELLOW"WARNING: total nav time: %d\n", navTime);

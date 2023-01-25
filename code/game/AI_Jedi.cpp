@@ -7398,6 +7398,7 @@ static void jedi_combat_timers_update(const int enemy_dist)
 			case WP_BOBA:
 			case WP_CLONEPISTOL:
 			case WP_JAWA:
+			case WP_DROIDEKA:
 				//if he has a blaster, move in when:
 				//They're not shooting at me
 				if (NPC->enemy->attackDebounceTime < level.time)

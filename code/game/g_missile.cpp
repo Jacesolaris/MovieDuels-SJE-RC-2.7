@@ -108,6 +108,7 @@ void G_MissileBounceEffect(const gentity_t* ent, vec3_t org, vec3_t dir, const q
 	case WP_SBD_BLASTER:
 	case WP_BLASTER_PISTOL:
 	case WP_DUAL_PISTOL:
+	case WP_DROIDEKA:
 	case WP_JAWA:
 		G_PlayEffect("blaster/deflect", ent->currentOrigin, dir);
 		break;
@@ -133,6 +134,7 @@ void G_MissileReflectEffect(const gentity_t* ent, vec3_t dir)
 	case WP_SBD_BLASTER:
 	case WP_BLASTER_PISTOL:
 	case WP_DUAL_PISTOL:
+	case WP_DROIDEKA:
 	case WP_JAWA:
 		G_PlayEffect("blaster/deflect", ent->currentOrigin, dir);
 		break;

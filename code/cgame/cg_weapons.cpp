@@ -51,6 +51,7 @@ const char* CG_DisplayBoxedText(int iBoxX, int iBoxY, int iBoxWidth, int iBoxHei
 	const char* psText, int iFontHandle, float fScale,
 	const vec4_t v4Color);
 extern int fire_deley_time();
+extern qboolean is_holding_reloadable_gun(const gentity_t* ent);
 
 /*
 ==========================
@@ -683,6 +684,7 @@ void CG_RegisterWeapon(const int weapon_num)
 		theFxScheduler.RegisterEffect("blaster/smokin_hot_muzzle");
 		theFxScheduler.RegisterEffect("blaster/smokin_hot_muzzle2");
 		theFxScheduler.RegisterEffect("blaster/smokin_hot_muzzle3");
+		theFxScheduler.RegisterEffect("blaster/true_smokin_hot_muzzle");
 		break;
 
 	case WP_JANGO:
@@ -695,6 +697,7 @@ void CG_RegisterWeapon(const int weapon_num)
 		theFxScheduler.RegisterEffect("blaster/smokin_hot_muzzle");
 		theFxScheduler.RegisterEffect("blaster/smokin_hot_muzzle2");
 		theFxScheduler.RegisterEffect("blaster/smokin_hot_muzzle3");
+		theFxScheduler.RegisterEffect("blaster/true_smokin_hot_muzzle");
 		break;
 
 	case WP_BLASTER:
@@ -702,9 +705,12 @@ void CG_RegisterWeapon(const int weapon_num)
 	case WP_REBELBLASTER:
 	case WP_REBELRIFLE:
 	case WP_DUAL_PISTOL:
+	case WP_DROIDEKA:
 	case WP_BOBA:
 		cgs.effects.blasterShotEffect = theFxScheduler.RegisterEffect("blaster/shot");
 		theFxScheduler.RegisterEffect("blaster/NPCshot");
+		cgs.effects.DroidekaShotEffect = theFxScheduler.RegisterEffect("droideka/shot");
+		theFxScheduler.RegisterEffect("droideka/shotnpc");
 		cgs.effects.blasterWallImpactEffect = theFxScheduler.RegisterEffect("blaster/wall_impact");
 		cgs.effects.blasterFleshImpactEffect = theFxScheduler.RegisterEffect("blaster/flesh_impact");
 		theFxScheduler.RegisterEffect("blaster/deflect");
@@ -712,6 +718,7 @@ void CG_RegisterWeapon(const int weapon_num)
 		theFxScheduler.RegisterEffect("blaster/smokin_hot_muzzle");
 		theFxScheduler.RegisterEffect("blaster/smokin_hot_muzzle2");
 		theFxScheduler.RegisterEffect("blaster/smokin_hot_muzzle3");
+		theFxScheduler.RegisterEffect("blaster/true_smokin_hot_muzzle");
 		break;
 
 	case WP_CLONECARBINE:
@@ -744,6 +751,7 @@ void CG_RegisterWeapon(const int weapon_num)
 		theFxScheduler.RegisterEffect("blaster/smokin_hot_muzzle");
 		theFxScheduler.RegisterEffect("blaster/smokin_hot_muzzle2");
 		theFxScheduler.RegisterEffect("blaster/smokin_hot_muzzle3");
+		theFxScheduler.RegisterEffect("blaster/true_smokin_hot_muzzle");
 		break;
 
 	case WP_DISRUPTOR:
@@ -1434,8 +1442,7 @@ void CG_AddViewWeapon(playerState_t* ps)
 	float fov_offset, lean_offset;
 	const qboolean doing_dash_action = cg.predicted_player_state.communicatingflags & 1 << DASHING ? qtrue : qfalse;
 
-	if (cg.renderingThirdPerson && !cg_trueguns.integer && !cg.zoomMode && (ps->eFlags & EF2_JANGO_DUALS || ps->
-		eFlags & EF2_DUAL_PISTOLS))
+	if (cg.renderingThirdPerson && !cg_trueguns.integer && !cg.zoomMode && (ps->eFlags & EF2_JANGO_DUALS || ps->eFlags & EF2_DUAL_PISTOLS || ps->weapon == WP_DROIDEKA))
 	{
 		vec3_t origin;
 		cent = &cg_entities[ps->client_num];
@@ -1450,7 +1457,7 @@ void CG_AddViewWeapon(playerState_t* ps)
 		w_data = &weaponData[ps->weapon];
 
 		// Not doing regular flashes
-		if (!(ps->eFlags & EF2_JANGO_DUALS) && !(ps->eFlags & EF2_DUAL_PISTOLS))
+		if (!(ps->eFlags & EF2_JANGO_DUALS) && !(ps->eFlags & EF2_DUAL_PISTOLS) && ps->weapon != WP_DROIDEKA)
 		{
 			CG_DoMuzzleFlash(cent, origin, cg.refdef.viewaxis[0], w_data);
 		}
@@ -1578,7 +1585,7 @@ void CG_AddViewWeapon(playerState_t* ps)
 		weapon = &cg_weapons[ps->weapon];
 		w_data = &weaponData[ps->weapon];
 
-		if (!(ps->eFlags & EF2_JANGO_DUALS) && !(ps->eFlags & EF2_DUAL_PISTOLS))
+		if (!(ps->eFlags & EF2_JANGO_DUALS) && !(ps->eFlags & EF2_DUAL_PISTOLS) && ps->weapon != WP_DROIDEKA)
 		{
 			CG_DoMuzzleFlash(cent, origin, cg.refdef.viewaxis[0], w_data);
 		}
@@ -1806,7 +1813,7 @@ void CG_AddViewWeapon(playerState_t* ps)
 		// Seems like we should always do this in case we have an animating muzzle flash....that way we can always store the correct muzzle dir, etc.
 		CG_PositionEntityOnTag(&flash, &gun, gun.hModel, "tag_flash");
 
-		if (!(ps->eFlags & EF2_JANGO_DUALS) && !(ps->eFlags & EF2_DUAL_PISTOLS))
+		if (!(ps->eFlags & EF2_JANGO_DUALS) && !(ps->eFlags & EF2_DUAL_PISTOLS) && ps->weapon != WP_DROIDEKA)
 		{
 			CG_DoMuzzleFlash(cent, flash.origin, flash.axis[0], w_data);
 		}
@@ -1924,7 +1931,7 @@ void CG_AddViewWeapon(playerState_t* ps)
 		}
 	}
 
-	if (ps->eFlags & EF2_JANGO_DUALS || ps->eFlags & EF2_DUAL_PISTOLS)
+	if (ps->eFlags & EF2_JANGO_DUALS || ps->eFlags & EF2_DUAL_PISTOLS || ps->weapon == WP_DROIDEKA)
 	{
 		if (cg.time - cent->muzzleFlashTimeR <= MUZZLE_FLASH_TIME - 10)
 		{
@@ -2323,7 +2330,7 @@ void CG_AddViewWeaponDuals(playerState_t* ps)
 	{
 		int shader = 0;
 		float val = 0.0f, scale = 1.0f;
-		vec3_t WHITE = { 1.0f, 1.0f, 1.0f };
+		vec3_t white = { 1.0f, 1.0f, 1.0f };
 
 		if (ps->weapon == WP_BRYAR_PISTOL
 			|| ps->weapon == WP_BLASTER_PISTOL
@@ -2378,7 +2385,7 @@ void CG_AddViewWeaponDuals(playerState_t* ps)
 
 		val += Q_flrand(0.0f, 1.0f) * 0.5f;
 
-		FX_AddSprite(flash.origin, nullptr, nullptr, 3.0f * val * scale, 0.7f, 0.7f, WHITE, WHITE, Q_flrand(0.0f, 1.0f) * 360,
+		FX_AddSprite(flash.origin, nullptr, nullptr, 3.0f * val * scale, 0.7f, 0.7f, white, white, Q_flrand(0.0f, 1.0f) * 360,
 			0.0f, 1.0f, shader, FX_USE_ALPHA | FX_DEPTH_HACK);
 	}
 
@@ -3594,7 +3601,12 @@ void CG_NextWeapon_f()
 		return;
 	}
 
-	if (g_entities[0].client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_TWENTYSIX)
+	if (cg_entities[0].gent->s.weapon == WP_DROIDEKA)
+	{
+		return;
+	}
+
+	if (g_entities[0].client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_TWENTYSIX && is_holding_reloadable_gun(cg_entities[0].gent))
 	{
 		if (cg_entities[0].gent->s.weapon == WP_BRYAR_PISTOL ||
 			cg_entities[0].gent->s.weapon == WP_BLASTER_PISTOL ||
@@ -3848,7 +3860,12 @@ void CG_PrevWeapon_f()
 		return;
 	}
 
-	if (g_entities[0].client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_TWENTYSIX)
+	if (cg_entities[0].gent->s.weapon == WP_DROIDEKA)
+	{
+		return;
+	}
+
+	if (g_entities[0].client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_TWENTYSIX && is_holding_reloadable_gun(cg_entities[0].gent))
 	{
 		if (cg_entities[0].gent->s.weapon == WP_BRYAR_PISTOL ||
 			cg_entities[0].gent->s.weapon == WP_BLASTER_PISTOL ||
@@ -3942,7 +3959,6 @@ void CG_PrevWeapon_f()
 
 	for (int i = 0; i < WP_NUM_WEAPONS; i++)
 	{
-		//*SIGH*... Hack to put concussion rifle before rocketlauncher
 		if (cg.weaponSelect == WP_ROCKET_LAUNCHER)
 		{
 			cg.weaponSelect = WP_CONCUSSION;
@@ -4005,7 +4021,12 @@ void CG_ChangeWeapon(const int num)
 		return;
 	}
 
-	if (player->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_TWENTYSIX)
+	if (cg_entities[0].gent->s.weapon == WP_DROIDEKA)
+	{
+		return;
+	}
+
+	if (player->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_TWENTYSIX && is_holding_reloadable_gun(cg_entities[0].gent))
 	{
 		if (cg_entities[0].gent->s.weapon == WP_BRYAR_PISTOL ||
 			cg_entities[0].gent->s.weapon == WP_BLASTER_PISTOL ||
@@ -4141,7 +4162,7 @@ void CG_Weapon_f()
 		return;
 	}
 
-	if (g_entities[0].client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_TWENTYSIX)
+	if (g_entities[0].client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_TWENTYSIX && is_holding_reloadable_gun(cg_entities[0].gent))
 	{
 		if (cg_entities[0].gent->s.weapon == WP_BRYAR_PISTOL ||
 			cg_entities[0].gent->s.weapon == WP_BLASTER_PISTOL ||
@@ -4455,6 +4476,7 @@ CG_FireWeapon
 Caused by an EV_FIRE_WEAPON event
 ================
 */
+extern void TurnBarrierOff(gentity_t* ent);
 
 void CG_FireWeapon(centity_t* cent, const qboolean alt_fire)
 {
@@ -4476,7 +4498,7 @@ void CG_FireWeapon(centity_t* cent, const qboolean alt_fire)
 		return;
 	}
 
-	if (g_entities[0].client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_TWENTYNINE)
+	if (g_entities[0].client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_TWENTYNINE && is_holding_reloadable_gun(cg_entities[0].gent))
 	{
 		if (cg_entities[0].gent->s.weapon == WP_BRYAR_PISTOL ||
 			cg_entities[0].gent->s.weapon == WP_BLASTER_PISTOL ||
@@ -4515,9 +4537,14 @@ void CG_FireWeapon(centity_t* cent, const qboolean alt_fire)
 		}
 	}
 
+	if (cent->gent->client->ps.powerups[PW_GALAK_SHIELD])
+	{
+		TurnBarrierOff(cg_entities[0].gent);
+	}
+
 	cent->muzzleFlashTime = cg.time;
 
-	if (cent->currentState.eFlags & EF2_JANGO_DUALS || cent->currentState.eFlags & EF2_DUAL_PISTOLS)
+	if (cent->currentState.eFlags & EF2_JANGO_DUALS || cent->currentState.eFlags & EF2_DUAL_PISTOLS || ent->weapon == WP_DROIDEKA)
 	{
 		cent->muzzleFlashTimeR = cg.time;
 		cent->muzzleFlashTimeL = cg.time;
@@ -4815,6 +4842,7 @@ void CG_MissileHitWall(const centity_t* cent, const int weapon, vec3_t origin, v
 
 	case WP_JANGO:
 	case WP_DUAL_PISTOL:
+	case WP_DROIDEKA:
 		FX_BlasterWeaponHitWall(origin, dir);
 		break;
 
@@ -5069,6 +5097,7 @@ void CG_MissileHitPlayer(const centity_t* cent, const int weapon, vec3_t origin,
 
 	case WP_JANGO:
 	case WP_DUAL_PISTOL:
+	case WP_DROIDEKA:
 		FX_BlasterWeaponHitPlayer(other, origin, dir, humanoid);
 		break;
 

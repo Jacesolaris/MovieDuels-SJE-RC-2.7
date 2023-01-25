@@ -458,6 +458,7 @@ void G_AttackDelay(const gentity_t* self, const gentity_t* enemy)
 			}
 			break;
 		case WP_DUAL_PISTOL:
+		case WP_DROIDEKA:
 			if (self->NPC->scriptFlags & SCF_ALT_FIRE)
 			{
 				//rapid-fire blasters
@@ -682,6 +683,7 @@ void G_SetEnemy(gentity_t* self, gentity_t* enemy)
 			self->s.weapon == WP_THERMAL ||
 			self->s.weapon == WP_BLASTER_PISTOL ||
 			self->s.weapon == WP_DUAL_PISTOL ||
+			self->s.weapon == WP_DROIDEKA ||
 			self->s.weapon == WP_BOWCASTER ||
 			self->s.weapon == WP_BATTLEDROID ||
 			self->s.weapon == WP_CLONECARBINE ||
@@ -761,6 +763,13 @@ void G_SetEnemy(gentity_t* self, gentity_t* enemy)
 				self->client->ps.weapon = WP_DUAL_PISTOL;
 				self->client->ps.weaponstate = WEAPON_READY;
 				G_CreateG2AttachedWeaponModel(self, weaponData[WP_DUAL_PISTOL].weaponMdl, self->handRBolt, 0);
+			}
+			else if (self->client->ps.weapons[WP_DROIDEKA])
+			{
+				ChangeWeapon(self, WP_DROIDEKA);
+				self->client->ps.weapon = WP_DROIDEKA;
+				self->client->ps.weaponstate = WEAPON_READY;
+				G_CreateG2AttachedWeaponModel(self, weaponData[WP_DROIDEKA].weaponMdl, self->handRBolt, 0);
 			}
 		}
 		return;
@@ -1326,6 +1335,7 @@ void ChangeWeapon(const gentity_t* ent, const int new_weapon)
 		break;
 
 	case WP_DUAL_PISTOL:
+	case WP_DROIDEKA:
 		if (ent->NPC->scriptFlags & SCF_ALT_FIRE)
 		{
 			ent->NPC->aiFlags |= NPCAI_BURST_WEAPON;
@@ -1421,6 +1431,11 @@ void NPC_ChangeWeapon(const int new_weapon)
 			G_CreateG2AttachedWeaponModel(NPC, weaponData[NPC->client->ps.weapon].weaponMdl, NPC->handRBolt, 0);
 			G_CreateG2AttachedWeaponModel(NPC, weaponData[NPC->client->ps.weapon].weaponMdl, NPC->handLBolt, 1);
 		}
+		else if (NPC->client->ps.weapon == WP_DROIDEKA)
+		{
+			G_CreateG2AttachedWeaponModel(NPC, weaponData[NPC->client->ps.weapon].weaponMdl, NPC->handRBolt, 0);
+			G_CreateG2AttachedWeaponModel(NPC, weaponData[NPC->client->ps.weapon].weaponMdl, NPC->handLBolt, 1);
+		}
 		else
 		{
 			G_CreateG2AttachedWeaponModel(NPC, weaponData[NPC->client->ps.weapon].weaponMdl, NPC->handRBolt, 0);
@@ -1477,6 +1492,7 @@ void NPC_ApplyWeaponFireDelay()
 	case WP_BOBA:
 	case WP_JANGO:
 	case WP_DUAL_PISTOL:
+	case WP_DROIDEKA:
 	case WP_CLONECARBINE:
 		if (NPCInfo->scriptFlags & SCF_ALT_FIRE)
 		{
@@ -1590,6 +1606,9 @@ extern qboolean PM_SaberInSpecialAttack(int anim);
 extern qboolean PM_SpinningSaberAnim(int anim);
 extern qboolean PM_SpinningAnim(int anim);
 
+extern void BubbleShield_TurnOff();
+extern bool BubbleShield_IsOn();
+
 void WeaponThink()
 {
 	ucmd.buttons &= ~BUTTON_ATTACK;
@@ -1605,6 +1624,14 @@ void WeaponThink()
 	if (NPC->flags & FL_SHIELDED && NPC->client->NPC_class == CLASS_ASSASSIN_DROID)
 	{
 		return;
+	}
+
+	if (NPC->client->NPC_class == CLASS_DROIDEKA)
+	{
+		if (BubbleShield_IsOn())
+		{
+			BubbleShield_TurnOff();
+		}
 	}
 
 	// Can't Fire While Cloaked
@@ -1890,6 +1917,7 @@ float NPC_MaxDistSquaredForWeapon()
 
 	case WP_BLASTER_PISTOL: //prifle
 	case WP_DUAL_PISTOL:
+	case WP_DROIDEKA:
 		return 1024 * 1024;
 
 	case WP_DISRUPTOR: //disruptor
@@ -2599,7 +2627,7 @@ qboolean NPC_ClearShot(const gentity_t* ent)
 
 	// add aim error
 	// use weapon instead of specific npc types, although you could add certain npc classes if you wanted
-	if (NPC->s.weapon == WP_BLASTER || NPC->s.weapon == WP_BLASTER_PISTOL || NPC->s.weapon == WP_DUAL_PISTOL)
+	if (NPC->s.weapon == WP_BLASTER || NPC->s.weapon == WP_BLASTER_PISTOL || NPC->s.weapon == WP_DUAL_PISTOL || NPC->s.weapon == WP_DROIDEKA)
 		// any other guns to check for?
 	{
 		constexpr vec3_t mins = { -2, -2, -2 };
@@ -2664,7 +2692,7 @@ int NPC_ShotEntity(const gentity_t* ent, vec3_t impact_pos)
 	// add aim error
 	// use weapon instead of specific npc types, although you could add certain npc classes if you wanted
 	//	if ( NPC->client->playerTeam == TEAM_SCAVENGERS )
-	if (NPC->s.weapon == WP_BLASTER || NPC->s.weapon == WP_BLASTER_PISTOL || NPC->s.weapon == WP_DUAL_PISTOL)
+	if (NPC->s.weapon == WP_BLASTER || NPC->s.weapon == WP_BLASTER_PISTOL || NPC->s.weapon == WP_DUAL_PISTOL || NPC->s.weapon == WP_DROIDEKA)
 		// any other guns to check for?
 	{
 		constexpr vec3_t mins = { -2, -2, -2 };
@@ -2977,6 +3005,7 @@ float IdealDistance()
 	case WP_REY:
 	case WP_JANGO:
 	case WP_DUAL_PISTOL:
+	case WP_DROIDEKA:
 	case WP_JAWA:
 	default:
 		break;

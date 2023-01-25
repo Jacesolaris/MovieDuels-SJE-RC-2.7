@@ -2598,7 +2598,7 @@ void ST_Commander()
 
 		// Check To See If The Enemy Is Too Close For Comfort
 		//----------------------------------------------------
-		if (NPC->client->NPC_class != CLASS_ASSASSIN_DROID)
+		if (NPC->client->NPC_class != CLASS_ASSASSIN_DROID && NPC->client->NPC_class != CLASS_DROIDEKA)
 		{
 			if (TIMER_Done(NPC, "checkEnemyTooCloseDebouncer"))
 			{
@@ -3446,7 +3446,7 @@ void NPC_BSST_Attack()
 
 	if (!do_move)
 	{
-		if (NPC->client->NPC_class != CLASS_ASSASSIN_DROID)
+		if (NPC->client->NPC_class != CLASS_ASSASSIN_DROID && NPC->client->NPC_class != CLASS_DROIDEKA)
 		{
 			if (!TIMER_Done(NPC, "duck"))
 			{

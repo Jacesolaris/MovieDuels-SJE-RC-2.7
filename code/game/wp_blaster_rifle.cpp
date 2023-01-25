@@ -1972,3 +1972,278 @@ void WP_FireBobaRifle(gentity_t* ent, const qboolean alt_fire)
 	// FIXME: if temp_org does not have clear trace to inside the bbox, don't shoot!
 	WP_FireBobaRifleMissile(ent, muzzle, dir, alt_fire);
 }
+
+
+
+//////// DROIDEKA ////////
+
+
+
+//---------------------------------------------------------
+void WP_FireDroidekaDualPistolMissileDuals(gentity_t* ent, vec3_t start, vec3_t dir, const qboolean alt_fire)
+//---------------------------------------------------------
+{
+	int velocity = BLASTER_VELOCITY;
+	int damage = alt_fire ? weaponData[WP_DROIDEKA].altDamage : weaponData[WP_DROIDEKA].damage;
+
+	if (ent && ent->client && ent->client->NPC_class == CLASS_VEHICLE)
+	{
+		damage *= 3;
+		velocity = ATST_MAIN_VEL + ent->client->ps.speed;
+	}
+	else
+	{
+		// If an enemy is shooting at us, lower the velocity so you have a chance to evade
+		if (ent->client && ent->client->ps.client_num != 0
+			&& ent->client->NPC_class != CLASS_BOBAFETT
+			&& ent->client->NPC_class != CLASS_MANDALORIAN
+			&& ent->client->NPC_class != CLASS_JANGO
+			&& ent->client->NPC_class != CLASS_JANGODUAL)
+		{
+			if (g_spskill->integer < 2)
+			{
+				velocity *= JANGO_NPC_VEL_CUT;
+			}
+			else
+			{
+				velocity *= JANGO_NPC_HARD_VEL_CUT;
+			}
+		}
+	}
+
+	WP_TraceSetStart(ent, start);
+	//make sure our start point isn't on the other side of a wall
+
+	WP_MissileTargetHint(ent, start, dir);
+
+	gentity_t* missile = create_missile(start, dir, velocity, 10000, ent, alt_fire);
+
+	missile->classname = "blaster_proj";
+
+	missile->s.weapon = WP_DROIDEKA;
+
+	// Do the damages
+	if (ent->s.number != 0
+		&& ent->client->NPC_class != CLASS_BOBAFETT
+		&& ent->client->NPC_class != CLASS_MANDALORIAN
+		&& ent->client->NPC_class != CLASS_JANGO
+		&& ent->client->NPC_class != CLASS_JANGODUAL)
+	{
+		if (g_spskill->integer == 0)
+		{
+			damage = JANGO_NPC_DAMAGE_EASY;
+		}
+		else if (g_spskill->integer == 1)
+		{
+			damage = JANGO_NPC_DAMAGE_NORMAL;
+		}
+		else
+		{
+			damage = JANGO_NPC_DAMAGE_HARD;
+		}
+	}
+
+	missile->damage = damage;
+	if (g_SerenityJediEngineMode->integer == 2)
+	{
+		missile->dflags = DAMAGE_DEATH_KNOCKBACK | DAMAGE_EXTRA_KNOCKBACK;
+	}
+	else
+	{
+		missile->dflags = DAMAGE_DEATH_KNOCKBACK;
+	}
+	if (alt_fire)
+	{
+		missile->methodOfDeath = MOD_JANGO_ALT;
+	}
+	else
+	{
+		missile->methodOfDeath = MOD_JANGO;
+	}
+	missile->clipmask = MASK_SHOT | CONTENTS_LIGHTSABER;
+
+	// we don't want it to bounce forever
+	missile->bounceCount = 8;
+
+	if (ent->weaponModel[1] > 0)
+	{
+		//dual pistols, toggle the muzzle point back and forth between the two pistols each time he fires
+		ent->count = ent->count ? 0 : 1;
+	}
+}
+
+//---------------------------------------------------------
+void WP_FireDroidekaDualPistolMissile(gentity_t* ent, vec3_t start, vec3_t dir, const qboolean alt_fire)
+//---------------------------------------------------------
+{
+	int velocity = BLASTER_VELOCITY;
+	int damage = alt_fire ? weaponData[WP_DROIDEKA].altDamage : weaponData[WP_DROIDEKA].damage;
+
+	if (ent && ent->client && ent->client->NPC_class == CLASS_VEHICLE)
+	{
+		damage *= 3;
+		velocity = ATST_MAIN_VEL + ent->client->ps.speed;
+	}
+	else
+	{
+		// If an enemy is shooting at us, lower the velocity so you have a chance to evade
+		if (ent->client && ent->client->ps.client_num != 0
+			&& ent->client->NPC_class != CLASS_BOBAFETT
+			&& ent->client->NPC_class != CLASS_MANDALORIAN
+			&& ent->client->NPC_class != CLASS_JANGO
+			&& ent->client->NPC_class != CLASS_JANGODUAL)
+		{
+			if (g_spskill->integer < 2)
+			{
+				velocity *= JANGO_NPC_VEL_CUT;
+			}
+			else
+			{
+				velocity *= JANGO_NPC_HARD_VEL_CUT;
+			}
+		}
+	}
+
+	WP_TraceSetStart(ent, start);
+	//make sure our start point isn't on the other side of a wall
+
+	WP_MissileTargetHint(ent, start, dir);
+
+	gentity_t* missile = create_missile(start, dir, velocity, 10000, ent, alt_fire);
+
+	missile->classname = "blaster_proj";
+
+	missile->s.weapon = WP_DROIDEKA;
+
+	// Do the damages
+	if (ent->s.number != 0
+		&& ent->client->NPC_class != CLASS_BOBAFETT
+		&& ent->client->NPC_class != CLASS_MANDALORIAN
+		&& ent->client->NPC_class != CLASS_JANGO
+		&& ent->client->NPC_class != CLASS_JANGODUAL)
+	{
+		if (g_spskill->integer == 0)
+		{
+			damage = JANGO_NPC_DAMAGE_EASY;
+		}
+		else if (g_spskill->integer == 1)
+		{
+			damage = JANGO_NPC_DAMAGE_NORMAL;
+		}
+		else
+		{
+			damage = JANGO_NPC_DAMAGE_HARD;
+		}
+	}
+
+	missile->damage = damage;
+	if (g_SerenityJediEngineMode->integer == 2)
+	{
+		missile->dflags = DAMAGE_DEATH_KNOCKBACK | DAMAGE_EXTRA_KNOCKBACK;
+	}
+	else
+	{
+		missile->dflags = DAMAGE_DEATH_KNOCKBACK;
+	}
+	if (alt_fire)
+	{
+		missile->methodOfDeath = MOD_JANGO_ALT;
+	}
+	else
+	{
+		missile->methodOfDeath = MOD_JANGO;
+	}
+	missile->clipmask = MASK_SHOT | CONTENTS_LIGHTSABER;
+
+	// we don't want it to bounce forever
+	missile->bounceCount = 8;
+
+	if (ent->weaponModel[1] > 0)
+	{
+		//dual pistols, toggle the muzzle point back and forth between the two pistols each time he fires
+		ent->count = ent->count ? 0 : 1;
+	}
+}
+
+
+//---------------------------------------------------------
+void WP_FireDroidekaDualPistol(gentity_t* ent, const qboolean alt_fire)
+//---------------------------------------------------------
+{
+	vec3_t dir, angs;
+
+	vectoangles(forwardVec, angs);
+
+	if (ent->client && ent->client->NPC_class == CLASS_VEHICLE)
+	{
+		//no inherent aim screw up
+	}
+	else 
+	{//force sight 2+ gives perfect aim
+		vectoangles(forwardVec, angs);
+
+		if (alt_fire)
+		{
+			// add some slop to the alt-fire direction for NPC,s
+			angs[PITCH] += Q_flrand(-1.0f, 1.0f) * BLASTER_ALT_SPREAD;
+			angs[YAW] += Q_flrand(-1.0f, 1.0f) * BLASTER_ALT_SPREAD;
+		}
+		else
+		{
+			// add some slop to the fire direction for NPC,s
+			angs[PITCH] += Q_flrand(-1.0f, 1.0f) * BLASTER_MAIN_SPREAD;
+			angs[YAW] += Q_flrand(-1.0f, 1.0f) * BLASTER_MAIN_SPREAD;
+		}
+
+		AngleVectors(angs, forwardVec, nullptr, nullptr);
+	}
+
+	AngleVectors(angs, dir, nullptr, nullptr);
+
+	WP_FireDroidekaDualPistolMissile(ent, muzzle, dir, alt_fire);
+}
+
+
+//---------------------------------------------------------
+void WP_FireDroidekaFPPistolDuals(gentity_t* ent, const qboolean alt_fire, const qboolean second_pistol)
+//---------------------------------------------------------
+{
+	vec3_t dir, angs;
+
+	vectoangles(forwardVec, angs);
+
+	if (ent->client && ent->client->NPC_class == CLASS_VEHICLE)
+	{
+		//no inherent aim screw up
+	}
+	else 
+	{//force sight 2+ gives perfect aim
+		vectoangles(forwardVec, angs);
+
+		if (alt_fire)
+		{
+			// add some slop to the alt-fire direction for NPC,s
+			angs[PITCH] += Q_flrand(-1.0f, 1.0f) * BLASTER_ALT_SPREAD;
+			angs[YAW] += Q_flrand(-1.0f, 1.0f) * BLASTER_ALT_SPREAD;
+		}
+		else
+		{
+			// add some slop to the fire direction for NPC,s
+			angs[PITCH] += Q_flrand(-1.0f, 1.0f) * BLASTER_MAIN_SPREAD;
+			angs[YAW] += Q_flrand(-1.0f, 1.0f) * BLASTER_MAIN_SPREAD;
+		}
+
+		AngleVectors(angs, forwardVec, nullptr, nullptr);
+	}
+
+	AngleVectors(angs, dir, nullptr, nullptr);
+
+	if (second_pistol)
+	{
+		WP_FireDroidekaDualPistolMissileDuals(ent, muzzle2, dir, alt_fire);
+	}
+	else
+	{
+		WP_FireDroidekaDualPistolMissileDuals(ent, muzzle, dir, alt_fire);
+	}
+}

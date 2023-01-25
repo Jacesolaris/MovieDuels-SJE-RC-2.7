@@ -2330,6 +2330,22 @@ static void CG_G2ClientSpineAngles(centity_t* cent, vec3_t view_angles, const ve
 		ul_angles[ROLL] = 0.0f;
 		ll_angles[ROLL] = motion_bone_correct_angles[ROLL];
 	}
+	else if (cent->gent->client->NPC_class == CLASS_DROIDEKA)
+	{
+		//each bone has only 1 axis of rotation!
+		//upper lumbar does not pitch
+		thoracic_angles[PITCH] = view_angles[PITCH] * 0.40f;
+		ul_angles[PITCH] = 0.0f;
+		ll_angles[PITCH] = view_angles[PITCH] * 0.60f + motion_bone_correct_angles[PITCH];
+		//only upper lumbar yaws
+		thoracic_angles[YAW] = 0.0f;
+		ul_angles[YAW] = view_angles[YAW];
+		ll_angles[YAW] = motion_bone_correct_angles[YAW];
+		//no bone is capable of rolling
+		thoracic_angles[ROLL] = 0.0f;
+		ul_angles[ROLL] = 0.0f;
+		ll_angles[ROLL] = motion_bone_correct_angles[ROLL];
+	}
 	else
 	{
 		//use all 3 bones
@@ -2433,6 +2449,30 @@ static void CG_G2ClientNeckAngles(const centity_t* cent, const vec3_t look_angle
 
 	//split it up between the neck and cranium
 	if (cent->gent->client->NPC_class == CLASS_ASSASSIN_DROID)
+	{
+		//each bone has only 1 axis of rotation!
+		//thoracic only pitches, split with cervical
+		if (thoracic_angles[PITCH])
+		{
+			//already been set above, blend them
+			thoracic_angles[PITCH] = (thoracic_angles[PITCH] + l_a[PITCH] * 0.5f) * 0.5f;
+		}
+		else
+		{
+			thoracic_angles[PITCH] = l_a[PITCH] * 0.5f;
+		}
+		thoracic_angles[YAW] = thoracic_angles[ROLL] = 0.0f;
+		//cervical only pitches, split with thoracis
+		neck_angles[PITCH] = l_a[PITCH] * 0.5f;
+		neck_angles[YAW] = 0.0f;
+		neck_angles[ROLL] = 0.0f;
+		//cranium only yaws
+		head_angles[PITCH] = 0.0f;
+		head_angles[YAW] = l_a[YAW];
+		head_angles[ROLL] = 0.0f;
+		//no bones roll
+	}
+	else if (cent->gent->client->NPC_class == CLASS_DROIDEKA)
 	{
 		//each bone has only 1 axis of rotation!
 		//thoracic only pitches, split with cervical
@@ -5796,6 +5836,10 @@ void CG_AddRefEntityWithPowerups(refEntity_t* ent, int powerups, centity_t* cent
 			tent.customShader = cgi_R_RegisterShader("gfx/effects/barrier_shield");
 
 			cgi_R_AddRefEntityToScene(&tent);
+		}
+		else if (cent->gent->client->NPC_class == CLASS_DROIDEKA && cent->gent->client->ps.weapon == WP_DROIDEKA)
+		{
+			//
 		}
 		else
 		{
@@ -11236,9 +11280,9 @@ static void CG_DoCloakedSaber(vec3_t origin, vec3_t dir, float length, float len
 		{
 			saber.customShader = ignite;
 			saber.radius = ignite_radius * 0.25f;
-			saber.shaderRGBA[0] = (color & 0xff);
-			saber.shaderRGBA[1] = (color >> 8 & 0xff);
-			saber.shaderRGBA[2] = (color >> 16 & 0xff);
+			saber.shaderRGBA[0] = color & 0xff;
+			saber.shaderRGBA[1] = color >> 8 & 0xff;
+			saber.shaderRGBA[2] = color >> 16 & 0xff;
 			saber.shaderRGBA[3] = 0xff;
 			cgi_R_AddRefEntityToScene(&saber);
 		}
@@ -11415,9 +11459,9 @@ static void CG_DoSaber(vec3_t origin, vec3_t dir, float length, float length_max
 		}
 		else if (color >= SABER_RGB)
 		{
-			saber.shaderRGBA[0] = (color & 0xff);
-			saber.shaderRGBA[1] = (color >> 8 & 0xff);
-			saber.shaderRGBA[2] = (color >> 16 & 0xff);
+			saber.shaderRGBA[0] = color & 0xff;
+			saber.shaderRGBA[1] = color >> 8 & 0xff;
+			saber.shaderRGBA[2] = color >> 16 & 0xff;
 			saber.shaderRGBA[3] = 0xff;
 		}
 		else
@@ -11458,9 +11502,9 @@ static void CG_DoSaber(vec3_t origin, vec3_t dir, float length, float length_max
 		{
 			saber.customShader = ignite;
 			saber.radius = ignite_radius * 0.25f;
-			saber.shaderRGBA[0] = (color & 0xff);
-			saber.shaderRGBA[1] = (color >> 8 & 0xff);
-			saber.shaderRGBA[2] = (color >> 16 & 0xff);
+			saber.shaderRGBA[0] = color & 0xff;
+			saber.shaderRGBA[1] = color >> 8 & 0xff;
+			saber.shaderRGBA[2] = color >> 16 & 0xff;
 			saber.shaderRGBA[3] = 0xff;
 			cgi_R_AddRefEntityToScene(&saber);
 		}
@@ -12265,9 +12309,9 @@ static void CG_DoSaberUnstable(vec3_t origin, vec3_t dir, float length, float le
 		{
 			saber.customShader = ignite;
 			saber.radius = ignite_radius * 0.25f;
-			saber.shaderRGBA[0] = (color & 0xff);
-			saber.shaderRGBA[1] = (color >> 8 & 0xff);
-			saber.shaderRGBA[2] = (color >> 16 & 0xff);
+			saber.shaderRGBA[0] = color & 0xff;
+			saber.shaderRGBA[1] = color >> 8 & 0xff;
+			saber.shaderRGBA[2] = color >> 16 & 0xff;
 			saber.shaderRGBA[3] = 0xff;
 			cgi_R_AddRefEntityToScene(&saber);
 		}
@@ -15139,7 +15183,8 @@ void CG_Player(centity_t* cent)
 		if (cent->currentState.number != 0
 			|| cg.renderingThirdPerson
 			|| cg.snap->ps.stats[STAT_HEALTH] <= 0
-			|| cg_trueguns.integer && !cg.zoomMode
+			|| cg_trueguns.integer 
+			&& !cg.zoomMode
 			|| !cg.renderingThirdPerson && (cg.snap->ps.weapon == WP_SABER || cg.snap->ps.weapon == WP_MELEE))
 			//First person saber
 		{
@@ -15195,8 +15240,9 @@ void CG_Player(centity_t* cent)
 		//Restrict True View Model changes to the player and do the True View camera view work.
 		if (cg.snap && cent->currentState.number == cg.snap->ps.viewEntity && cg_truebobbing.integer)
 		{
-			if (!cg.renderingThirdPerson && (cg_trueguns.integer || cent->currentState.weapon == WP_SABER
-				|| cent->currentState.weapon == WP_MELEE) && !cg.zoomMode)
+			if (!cg.renderingThirdPerson &&
+				(cg_trueguns.integer || cent->currentState.weapon == WP_SABER|| cent->currentState.weapon == WP_MELEE) &&
+				!cg.zoomMode)
 			{
 				//<True View varibles
 				mdxaBone_t eye_matrix;
@@ -15557,23 +15603,10 @@ void CG_Player(centity_t* cent)
 			|| cg.snap->ps.stats[STAT_HEALTH] <= 0
 			|| !cg.renderingThirdPerson && (cg.snap->ps.weapon == WP_SABER || cg.snap->ps.weapon == WP_MELEE)
 			//First person saber
-			|| cg_trueguns.integer && !cg.zoomMode
-			)
+			|| cg_trueguns.integer && !cg.zoomMode)
 		{
 			vec3_t temp_axis;
-			//if NPC, third person, or dead, unless using saber
-			//Get eyePoint & eyeAngles
-			/*
-			if ( cg.snap->ps.viewEntity > 0
-				&& cg.snap->ps.viewEntity < ENTITYNUM_WORLD
-				&& cg.snap->ps.viewEntity == cent->currentState.client_num )
-			{//player is in an entity camera view, ME
-				VectorCopy( ent.origin, cent->gent->client->renderInfo.eyePoint );
-				VectorCopy( tempAngles, cent->gent->client->renderInfo.eyeAngles );
-				VectorCopy( ent.origin, cent->gent->client->renderInfo.headPoint );
-			}
-			else
-			*/
+
 			if (cent->gent->headBolt == -1)
 			{
 				//no headBolt
@@ -15762,7 +15795,7 @@ void CG_Player(centity_t* cent)
 					}
 				}
 				else if (cent->gent->client && cent->gent->NPC //client NPC
-					&& cent->gent->s.weapon == WP_BLASTER_PISTOL //using blaster pistol
+					&& (cent->gent->s.weapon == WP_BLASTER_PISTOL || cent->gent->s.weapon == WP_DROIDEKA) //using blaster pistol
 					&& cent->gent->weaponModel[1]) //one in each hand
 				{
 					qboolean get_both = qfalse;
@@ -15910,6 +15943,54 @@ void CG_Player(centity_t* cent)
 						gi.G2API_GiveMeVectorFromMatrix(matrix, NEGATIVE_Y, old_md);
 					}
 				}
+				else if (cent->gent->client
+					&& cent->gent->s.weapon == WP_DROIDEKA
+					&& !G_IsRidingVehicle(cent->gent) //PM_WeaponOkOnVehicle
+					&& cent->gent->weaponModel[1]) //one in each hand
+					{
+						qboolean get_both = qfalse;
+						int old_one = 0;
+						if (cent->muzzleFlashTime > 0 && w_data && !(cent->currentState.eFlags & EF_LOCKED_TO_WEAPON))
+						{
+							//we need to get both muzzles since we're toggling and we fired recently
+							get_both = qtrue;
+							old_one = cent->gent->count ? 0 : 1;
+						}
+						if (cent->gent->weaponModel[cent->gent->count] != -1
+							&& cent->gent->ghoul2.size() > cent->gent->weaponModel[cent->gent->count]
+							&& cent->gent->ghoul2[cent->gent->weaponModel[cent->gent->count]].mModelindex != -1)
+						{
+							//get whichever one we're using now
+							mdxaBone_t matrix;
+							// figure out where the actual model muzzle is
+							gi.G2API_GetBoltMatrix(cent->gent->ghoul2, cent->gent->weaponModel[cent->gent->count], 0,
+								&matrix, temp_angles, ent.origin, cg.time, cgs.model_draw,
+								cent->currentState.modelScale);
+							// work the matrix axis stuff into the original axis and origins used.
+							gi.G2API_GiveMeVectorFromMatrix(matrix, ORIGIN,
+								cent->gent->client->renderInfo.muzzlePoint);
+							gi.G2API_GiveMeVectorFromMatrix(matrix, NEGATIVE_Y,
+								cent->gent->client->renderInfo.muzzleDir);
+						}
+						//get the old one too, if needbe, and store it in muzzle2
+						if (get_both
+							&& cent->gent->weaponModel[old_one] != -1 //have a second weapon
+							&& cent->gent->ghoul2.size() > cent->gent->weaponModel[old_one]
+							//have a valid ghoul model index
+							&& cent->gent->ghoul2[cent->gent->weaponModel[old_one]].mModelindex != -1)
+							//model exists and was loaded
+						{
+							//saboteur commando, toggle the muzzle point back and forth between the two pistols each time he fires
+							mdxaBone_t matrix;
+							// figure out where the actual model muzzle is
+							gi.G2API_GetBoltMatrix(cent->gent->ghoul2, cent->gent->weaponModel[old_one], 0, &matrix,
+								temp_angles, ent.origin, cg.time, cgs.model_draw,
+								cent->currentState.modelScale);
+							// work the matrix axis stuff into the original axis and origins used.
+							gi.G2API_GiveMeVectorFromMatrix(matrix, ORIGIN, old_mp);
+							gi.G2API_GiveMeVectorFromMatrix(matrix, NEGATIVE_Y, old_md);
+						}
+				}
 				else if (cent->gent->weaponModel[0] != -1 &&
 					cent->gent->ghoul2.size() > cent->gent->weaponModel[0] &&
 					cent->gent->ghoul2[cent->gent->weaponModel[0]].mModelindex != -1)
@@ -15995,6 +16076,20 @@ void CG_Player(centity_t* cent)
 								cent->gent->client->renderInfo.muzzleDir);
 						}
 					}
+					else if (cent->gent->s.weapon == WP_DROIDEKA && !G_IsRidingVehicle(cent->gent)) //PM_WeaponOkOnVehicle)
+					{
+						if (!VectorCompare(old_mp, vec3_origin) && !VectorCompare(old_md, vec3_origin))
+						{
+							//we have an old muzzlePoint we want to use
+							theFxScheduler.PlayEffect(effect, old_mp, old_md);
+						}
+						else
+						{
+							//use the current one
+							theFxScheduler.PlayEffect(effect, cent->gent->client->renderInfo.muzzlePoint,
+								cent->gent->client->renderInfo.muzzleDir);
+						}
+					}
 					else
 					{
 						// We got an effect and we're firing, so let 'er rip.
@@ -16037,6 +16132,20 @@ void CG_Player(centity_t* cent)
 									cent->gent->client->renderInfo.muzzleDir);
 							}
 						}
+						else if (cent->gent->s.weapon == WP_DROIDEKA && !G_IsRidingVehicle(cent->gent)) //PM_WeaponOkOnVehicle)
+						{
+							if (!VectorCompare(old_mp, vec3_origin) && !VectorCompare(old_md, vec3_origin))
+							{
+								//we have an old muzzlePoint we want to use
+								theFxScheduler.PlayEffect(effect, old_mp, old_md);
+							}
+							else
+							{
+								//use the current one
+								theFxScheduler.PlayEffect(effect, cent->gent->client->renderInfo.muzzlePoint,
+									cent->gent->client->renderInfo.muzzleDir);
+							}
+						}
 						else
 						{
 							// We got an effect and we're firing, so let 'er rip.
@@ -16047,7 +16156,6 @@ void CG_Player(centity_t* cent)
 				}
 				else
 				{
-
 					if (w_data->mOverloadMuzzleEffect[0])
 					{
 						effect = &w_data->mOverloadMuzzleEffect[0];
@@ -16064,6 +16172,20 @@ void CG_Player(centity_t* cent)
 								cent->gent->s.weapon == WP_DUAL_PISTOL) && (cent->currentState.eFlags & EF2_JANGO_DUALS ||
 									cent->currentState.eFlags & EF2_DUAL_PISTOLS)
 							&& !G_IsRidingVehicle(cent->gent)) //PM_WeaponOkOnVehicle)
+						{
+							if (!VectorCompare(old_mp, vec3_origin) && !VectorCompare(old_md, vec3_origin))
+							{
+								//we have an old muzzlePoint we want to use
+								theFxScheduler.PlayEffect(effect, old_mp, old_md);
+							}
+							else
+							{
+								//use the current one
+								theFxScheduler.PlayEffect(effect, cent->gent->client->renderInfo.muzzlePoint,
+									cent->gent->client->renderInfo.muzzleDir);
+							}
+						}
+						else if (cent->gent->s.weapon == WP_DROIDEKA && !G_IsRidingVehicle(cent->gent)) //PM_WeaponOkOnVehicle)
 						{
 							if (!VectorCompare(old_mp, vec3_origin) && !VectorCompare(old_md, vec3_origin))
 							{
@@ -16778,8 +16900,6 @@ void CG_Player(centity_t* cent)
 							}
 						}
 						cent->muzzleOverheatTime = 0;
-
-						
 					}
 				}
 
@@ -16854,7 +16974,7 @@ void CG_Player(centity_t* cent)
 		{
 			int shader = 0;
 			float val = 0.0f, scale = 1.0f;
-			vec3_t WHITE = { 1.0f, 1.0f, 1.0f };
+			vec3_t white = { 1.0f, 1.0f, 1.0f };
 
 			if (ps->weapon == WP_BRYAR_PISTOL
 				|| ps->weapon == WP_BLASTER_PISTOL
@@ -16907,7 +17027,7 @@ void CG_Player(centity_t* cent)
 			val += Q_flrand(0.0f, 1.0f) * 0.5f;
 
 			FX_AddSprite(cent->gent->client->renderInfo.muzzlePoint, nullptr, nullptr, 3.0f * val * scale, 0.7f, 0.7f,
-				WHITE, WHITE, Q_flrand(0.0f, 1.0f) * 360, 0.0f, 1.0f, shader, FX_USE_ALPHA);
+				white, white, Q_flrand(0.0f, 1.0f) * 360, 0.0f, 1.0f, shader, FX_USE_ALPHA);
 		}
 	}
 }

@@ -126,3 +126,50 @@ void FX_BlasterWeaponHitPlayer(gentity_t* hit, vec3_t origin, vec3_t normal, con
 
 	theFxScheduler.PlayEffect(cgs.effects.blasterFleshImpactEffect, origin, normal);
 }
+
+
+//////////////// Droideka ////////////////
+
+void FX_DroidekaProjectileThink(centity_t* cent, const weaponInfo_s* weapon)
+{
+	vec3_t forward;
+
+	if (cent->currentState.eFlags & EF_USE_ANGLEDELTA)
+	{
+		AngleVectors(cent->currentState.angles, forward, nullptr, nullptr);
+	}
+	else
+	{
+		if (VectorNormalize2(cent->gent->s.pos.trDelta, forward) == 0.0f)
+		{
+			if (VectorNormalize2(cent->currentState.pos.trDelta, forward) == 0.0f)
+			{
+				forward[2] = 1.0f;
+			}
+		}
+	}
+
+	// hack the scale of the forward vector if we were just fired or bounced...this will shorten up the tail for a split second so tails don't clip so harshly
+	int dif = cg.time - cent->gent->s.pos.trTime;
+
+	if (dif < 75)
+	{
+		if (dif < 0)
+		{
+			dif = 0;
+		}
+
+		const float scale = dif / 75.0f * 0.95f + 0.05f;
+
+		VectorScale(forward, scale, forward);
+	}
+
+	if (cent->gent && cent->gent->owner && cent->gent->owner->s.number > 0)
+	{
+		theFxScheduler.PlayEffect("droideka/shotnpc", cent->lerpOrigin, forward);
+	}
+	else
+	{
+		theFxScheduler.PlayEffect(cgs.effects.DroidekaShotEffect, cent->lerpOrigin, forward);
+	}
+}

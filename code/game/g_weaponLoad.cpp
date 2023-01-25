@@ -47,6 +47,8 @@ void FX_CloneAltProjectileThink(centity_t* cent, const weaponInfo_s* weapon);
 
 void FX_WristProjectileThink(centity_t* cent, const weaponInfo_s* weapon);
 
+void FX_DroidekaProjectileThink(centity_t* cent, const weaponInfo_s* weapon);
+
 // Bowcaster
 void FX_BowcasterProjectileThink(centity_t* cent, const weaponInfo_s* weapon);
 
@@ -119,6 +121,7 @@ func_t funcs[] = {
 	{"clone_pistol_alt_func", FX_CloneAltProjectileThink},
 	{"stun_alt_func", FX_stunAltFireThink},
 	{"wrist_func", FX_WristProjectileThink},
+	{"dekka_func", FX_DroidekaProjectileThink},
 	{nullptr, nullptr}
 };
 
@@ -155,6 +158,7 @@ qboolean playerUsableWeapons[WP_NUM_WEAPONS] =
 	qtrue, //WP_BRYAR_PISTOL,	// NPC weapon - player can pick this up, but never starts with them
 
 	qfalse, //WP_EMPLACED_GUN,
+	qfalse, //WP_DROIDEKA,
 	qfalse, //WP_SBD_BLASTER,
 	qfalse, //WP_WRIST_BLASTER,
 	qtrue, //WP_DUAL_PISTOL,
@@ -278,6 +282,7 @@ const int defaultDamage[] = {
 
 	BRYAR_PISTOL_DAMAGE, // WP_BRYAR_PISTOL
 	EMPLACED_DAMAGE, // WP_EMPLACED_GUN
+	JANGO_DAMAGE, // WP_DROIDEKA
 
 	BRYAR_PISTOL_DAMAGE, // WP_SBD_BLASTER
 
@@ -341,6 +346,8 @@ const int defaultAltDamage[] = {
 	BRYAR_PISTOL_DAMAGE, // WP_BRYAR_PISTOL
 	EMPLACED_DAMAGE, // WP_EMPLACED_GUN
 
+	JANGO_DAMAGE, // WP_DROIDEKA
+
 	BRYAR_PISTOL_DAMAGE, // WP_SBD_BLASTER
 	CLONERIFLE_DAMAGE, // WP_WRIST_BLASTER
 
@@ -401,6 +408,7 @@ const int defaultSplashDamage[] = {
 
 	0, // WP_BRYAR_PISTOL
 	0, // WP_EMPLACED_GUN
+	0, // WP_DROIDEKA
 	0, // WP_SBD_BLASTER
 	0, // WP_WRIST_BLASTER
 	0, // WP_DUAL_PISTOL
@@ -452,6 +460,7 @@ constexpr float defaultSplashRadius[] = {
 
 	0.0f, // WP_BRYAR_PISTOL
 	0.0f, // WP_EMPLACED_GUN
+	0.0f, // WP_DROIDEKA
 	0.0f, // WP_SBD_BLASTER
 	0.0f, // WP_WRIST_BLASTER
 	0.0f, // WP_DUAL_PISTOL
@@ -503,6 +512,7 @@ const int defaultAltSplashDamage[] = {
 
 	0, // WP_BRYAR_PISTOL
 	0, // WP_EMPLACED_GUN
+	0, // WP_DROIDEKA
 	0, // WP_SBD_BLASTER
 	0, // WP_WRIST_BLASTER
 	0, // WP_DUAL_PISTOL
@@ -554,6 +564,7 @@ constexpr float defaultAltSplashRadius[] = {
 
 	0.0f, // WP_BRYAR_PISTOL
 	0.0f, // WP_EMPLACED_GUN
+	0.0f, // WP_DROIDEKA
 	0.0f, // WP_SBD_BLASTER
 	0.0f, // WP_WRIST_BLASTER
 	0.0f, // WP_DUAL_PISTOL
@@ -691,6 +702,8 @@ void WPN_WeaponType(const char** hold_buf)
 		weaponNum = WP_BOT_LASER;
 	else if (!Q_stricmp(token_str, "WP_EMPLACED_GUN"))
 		weaponNum = WP_EMPLACED_GUN;
+	else if (!Q_stricmp(token_str, "WP_DROIDEKA"))
+		weaponNum = WP_DROIDEKA;
 	else if (!Q_stricmp(token_str, "WP_SBD_BLASTER"))
 		weaponNum = WP_SBD_BLASTER;
 	else if (!Q_stricmp(token_str, "WP_WRIST_BLASTER"))

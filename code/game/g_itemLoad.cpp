@@ -125,6 +125,8 @@ static void IT_Name(const char** hold_buf)
 		itemNum = ITM_BOT_LASER_PICKUP;
 	else if (!Q_stricmp(token_str, "ITM_EMPLACED_GUN_PICKUP"))
 		itemNum = ITM_EMPLACED_GUN_PICKUP;
+	else if (!Q_stricmp(token_str, "ITM_DROIDEKA_PICKUP"))
+		itemNum = ITM_DROIDEKA_PICKUP;
 	else if (!Q_stricmp(token_str, "ITM_TURRET_PICKUP"))
 		itemNum = ITM_TURRET_PICKUP;
 	else if (!Q_stricmp(token_str, "ITM_MELEE"))
@@ -369,6 +371,8 @@ static void IT_Tag(const char** hold_buf)
 		tag = WP_BOT_LASER;
 	else if (!Q_stricmp(token_str, "WP_EMPLACED_GUN"))
 		tag = WP_EMPLACED_GUN;
+	else if (!Q_stricmp(token_str, "WP_DROIDEKA"))
+		tag = WP_DROIDEKA;
 	else if (!Q_stricmp(token_str, "WP_SBD_BLASTER"))
 		tag = WP_SBD_BLASTER;
 	else if (!Q_stricmp(token_str, "WP_DUAL_PISTOL"))

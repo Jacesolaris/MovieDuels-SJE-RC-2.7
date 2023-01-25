@@ -1183,6 +1183,8 @@ void FX_BlasterWeaponHitPlayer(gentity_t* hit, vec3_t origin, vec3_t normal, qbo
 
 void FX_WristProjectileThink(centity_t* cent, const weaponInfo_s* weapon);
 
+void FX_DroidekaProjectileThink(centity_t* cent, const weaponInfo_s* weapon);
+
 void FX_CloneProjectileThink(centity_t* cent, const weaponInfo_s* weapon);
 void FX_CloneAltFireThink(centity_t* cent, const weaponInfo_s* weapon);
 void FX_CloneAltHitWall(vec3_t origin, vec3_t normal, int power);

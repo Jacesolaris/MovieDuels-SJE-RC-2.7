@@ -70,7 +70,8 @@ vec3_t playerMinsStep = { DEFAULT_MINS_0, DEFAULT_MINS_1, DEFAULT_MINS_2 + STEPS
 vec3_t playerMaxs = { DEFAULT_MAXS_0, DEFAULT_MAXS_1, DEFAULT_MAXS_2 };
 extern void Player_CheckBurn(const gentity_t* self);
 extern void Player_CheckFreeze(gentity_t* self);
-extern void RemoveBarrier(gentity_t* ent);
+extern void TurnBarrierOff(gentity_t* ent);
+extern void TurnBarrierON(gentity_t* ent);
 
 void SP_misc_teleporter_dest(gentity_t* ent);
 
@@ -708,7 +709,7 @@ void ClientBegin(const int client_num, const usercmd_t* cmd, const SavedGameJust
 	gentity_t* ent = g_entities + client_num;
 	gclient_t* client = level.clients + client_num;
 
-	if (e_saved_game_just_loaded == eFULL) //qbFromSavedGame)
+	if (e_saved_game_just_loaded == eFULL)
 	{
 		client->pers.connected = CON_CONNECTED;
 		ent->client = client;
@@ -1177,6 +1178,11 @@ qboolean g_standard_humanoid(gentity_t* self)
 			//only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
+		if (!Q_stricmpn("models/players/_humanoid_deka", gla_name, 24))
+		{
+			//only _humanoid skeleton is expected to have these
+			return qtrue;
+		}
 		if (!Q_stricmpn("models/players/_humanoid_vader", gla_name, 24))
 		{
 			//only _humanoid skeleton is expected to have these
@@ -1221,6 +1227,11 @@ qboolean g_standard_humanoid(gentity_t* self)
 		if (!Q_stricmp("models/players/galak_mech/galak_mech", gla_name))
 		{
 			//galak duplicates many of these
+			return qtrue;
+		}
+		if (!Q_stricmp("models/players/droideka/droideka", gla_name))
+		{
+			//assassin_droid duplicates many of these
 			return qtrue;
 		}
 	}
@@ -1351,6 +1362,11 @@ qboolean G_StandardHumanoid(const char* gla_name)
 			// only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
+		if (!Q_stricmp("_humanoid_deka", gla_name))
+		{
+			// only _humanoid skeleton is expected to have these
+			return qtrue;
+		}
 		if (!Q_stricmp("_humanoid_vader", gla_name))
 		{
 			// only _humanoid skeleton is expected to have these
@@ -1374,6 +1390,7 @@ qboolean G_ClassHasBadBones(const int npc_class)
 	case CLASS_SABER_DROID:
 	case CLASS_HAZARD_TROOPER:
 	case CLASS_ASSASSIN_DROID:
+	case CLASS_DROIDEKA:
 	case CLASS_RANCOR:
 		return qtrue;
 	default:;
@@ -1541,14 +1558,27 @@ void G_BoneOrientationsForClass(const int npc_class, const char* bone_name, Eori
 			*o_fwd = POSITIVE_Z;
 		}
 		break;
+	case CLASS_DROIDEKA:
+		if (Q_stricmp("pelvis", bone_name) == 0
+			|| Q_stricmp("lower_lumbar", bone_name) == 0
+			|| Q_stricmp("upper_lumbar", bone_name) == 0)
+		{
+			//only these 3 bones on them are wrong
+			//*oUp = POSITIVE_X;
+			//*oRt = POSITIVE_Y;
+			//*oFwd = POSITIVE_Z;
+			*o_up = NEGATIVE_X;
+			*o_rt = POSITIVE_Y;
+			*o_fwd = POSITIVE_Z;
+		}
+		break;
 	default:;
 	}
 }
 
 extern void G_LoadAnimFileSet(gentity_t* ent, const char* p_model_name);
 
-qboolean g_set_g2_player_model_info(gentity_t* ent, const char* model_name, const char* surfOff,
-	const char* surfOn)
+qboolean g_set_g2_player_model_info(gentity_t* ent, const char* model_name, const char* surf_off,const char* surf_on)
 {
 	if (ent->playerModel != -1)
 	{
@@ -1558,9 +1588,9 @@ qboolean g_set_g2_player_model_info(gentity_t* ent, const char* model_name, cons
 		const char* p;
 
 		//Now turn on/off any surfaces
-		if (surfOff && surfOff[0])
+		if (surf_off && surf_off[0])
 		{
-			p = surfOff;
+			p = surf_off;
 			COM_BeginParseSession();
 			while (true)
 			{
@@ -1571,13 +1601,13 @@ qboolean g_set_g2_player_model_info(gentity_t* ent, const char* model_name, cons
 					break;
 				}
 				//turn off this surf
-				gi.G2API_SetSurfaceOnOff(&ent->ghoul2[ent->playerModel], token, 0x00000002/*G2SURFACEFLAG_OFF*/);
+				gi.G2API_SetSurfaceOnOff(&ent->ghoul2[ent->playerModel], token, 0x00000002);
 			}
 			COM_EndParseSession();
 		}
-		if (surfOn && surfOn[0])
+		if (surf_on && surf_on[0])
 		{
-			p = surfOn;
+			p = surf_on;
 			COM_BeginParseSession();
 			while (true)
 			{
@@ -1990,28 +2020,28 @@ qboolean g_set_g2_player_model_info(gentity_t* ent, const char* model_name, cons
 		else if (ent->client->NPC_class == CLASS_RANCOR)
 			/*!Q_stricmp( "rancor", modelName )	|| !Q_stricmp( "mutant_rancor", modelName ) )*/
 		{
-			Eorientations oUp, oRt, oFwd;
+			Eorientations o_up, o_rt, o_fwd;
 			//regular bones we need
 			ent->lowerLumbarBone = gi.G2API_GetBoneIndex(&ent->ghoul2[ent->playerModel], "lower_spine", qtrue);
 			if (ent->lowerLumbarBone >= 0)
 			{
-				G_BoneOrientationsForClass(ent->client->NPC_class, "lower_lumbar", &oUp, &oRt, &oFwd);
+				G_BoneOrientationsForClass(ent->client->NPC_class, "lower_lumbar", &o_up, &o_rt, &o_fwd);
 				gi.G2API_SetBoneAnglesIndex(&ent->ghoul2[ent->playerModel], ent->lowerLumbarBone, angles,
-					BONE_ANGLES_POSTMULT, oUp, oRt, oFwd, nullptr, 0, 0);
+					BONE_ANGLES_POSTMULT, o_up, o_rt, o_fwd, nullptr, 0, 0);
 			}
 			ent->upperLumbarBone = gi.G2API_GetBoneIndex(&ent->ghoul2[ent->playerModel], "mid_spine", qtrue);
 			if (ent->upperLumbarBone >= 0)
 			{
-				G_BoneOrientationsForClass(ent->client->NPC_class, "upper_lumbar", &oUp, &oRt, &oFwd);
+				G_BoneOrientationsForClass(ent->client->NPC_class, "upper_lumbar", &o_up, &o_rt, &o_fwd);
 				gi.G2API_SetBoneAnglesIndex(&ent->ghoul2[ent->playerModel], ent->upperLumbarBone, angles,
-					BONE_ANGLES_POSTMULT, oUp, oRt, oFwd, nullptr, 0, 0);
+					BONE_ANGLES_POSTMULT, o_up, o_rt, o_fwd, nullptr, 0, 0);
 			}
 			ent->thoracicBone = gi.G2API_GetBoneIndex(&ent->ghoul2[ent->playerModel], "upper_spine", qtrue);
 			if (ent->thoracicBone >= 0)
 			{
-				G_BoneOrientationsForClass(ent->client->NPC_class, "thoracic", &oUp, &oRt, &oFwd);
+				G_BoneOrientationsForClass(ent->client->NPC_class, "thoracic", &o_up, &o_rt, &o_fwd);
 				gi.G2API_SetBoneAnglesIndex(&ent->ghoul2[ent->playerModel], ent->thoracicBone, angles,
-					BONE_ANGLES_POSTMULT, oUp, oRt, oFwd, nullptr, 0, 0);
+					BONE_ANGLES_POSTMULT, o_up, o_rt, o_fwd, nullptr, 0, 0);
 			}
 		}
 		else if (!Q_stricmp("sand_creature", model_name))
@@ -2019,60 +2049,16 @@ qboolean g_set_g2_player_model_info(gentity_t* ent, const char* model_name, cons
 		}
 		else if (!Q_stricmp("wampa", model_name))
 		{
-			//Eorientations oUp, oRt, oFwd;
-			//bone needed for turning anims
-			/*
-			//SIGH... fucks him up BAD
-			ent->hipsBone = gi.G2API_GetBoneIndex( &ent->ghoul2[ent->playerModel], "pelvis", qtrue );
-			if (ent->hipsBone>=0)
-			{
-				G_BoneOrientationsForClass( ent->client->NPC_class, "pelvis", &oUp, &oRt, &oFwd );
-				gi.G2API_SetBoneAnglesIndex( &ent->ghoul2[ent->playerModel], ent->hipsBone, angles, BONE_ANGLES_POSTMULT, oUp, oRt, oFwd, NULL );
-			}
-			*/
-			/*
-			//SIGH... no anim split
-			ent->lowerLumbarBone = gi.G2API_GetBoneIndex( &ent->ghoul2[ent->playerModel], "lower_lumbar", qtrue );
-			if (ent->lowerLumbarBone>=0)
-			{
-				G_BoneOrientationsForClass( ent->client->NPC_class, "lower_lumbar", &oUp, &oRt, &oFwd );
-				gi.G2API_SetBoneAnglesIndex( &ent->ghoul2[ent->playerModel], ent->lowerLumbarBone, angles, BONE_ANGLES_POSTMULT, oUp, oRt, oFwd, NULL );
-			}
-			*/
-			/*
-			//SIGH... spine wiggles fuck all this shit
-			ent->upperLumbarBone = gi.G2API_GetBoneIndex( &ent->ghoul2[ent->playerModel], "upper_lumbar", qtrue );
-			if (ent->upperLumbarBone>=0)
-			{
-				G_BoneOrientationsForClass( ent->client->NPC_class, "upper_lumbar", &oUp, &oRt, &oFwd );
-				gi.G2API_SetBoneAnglesIndex( &ent->ghoul2[ent->playerModel], ent->upperLumbarBone, angles, BONE_ANGLES_POSTMULT, oUp, oRt, oFwd, NULL );
-			}
-			ent->thoracicBone = gi.G2API_GetBoneIndex( &ent->ghoul2[ent->playerModel], "thoracic", qtrue );
-			if (ent->thoracicBone>=0)
-			{
-				G_BoneOrientationsForClass( ent->client->NPC_class, "thoracic", &oUp, &oRt, &oFwd );
-				gi.G2API_SetBoneAnglesIndex( &ent->ghoul2[ent->playerModel], ent->thoracicBone, angles, BONE_ANGLES_POSTMULT, oUp, oRt, oFwd, NULL );
-			}
-			ent->cervicalBone = gi.G2API_GetBoneIndex( &ent->ghoul2[ent->playerModel], "cervical", qtrue );
-			if (ent->cervicalBone>=0)
-			{
-				G_BoneOrientationsForClass( ent->client->NPC_class, "cervical", &oUp, &oRt, &oFwd );
-				gi.G2API_SetBoneAnglesIndex( &ent->ghoul2[ent->playerModel], ent->cervicalBone, angles, BONE_ANGLES_POSTMULT, oUp, oRt, oFwd, NULL );
-			}
-			ent->craniumBone = gi.G2API_GetBoneIndex( &ent->ghoul2[ent->playerModel], "cranium", qtrue );
-			if (ent->craniumBone>=0)
-			{
-				G_BoneOrientationsForClass( ent->client->NPC_class, "cranium", &oUp, &oRt, &oFwd );
-				gi.G2API_SetBoneAnglesIndex( &ent->ghoul2[ent->playerModel], ent->craniumBone, angles, BONE_ANGLES_POSTMULT, oUp, oRt, oFwd, NULL );
-			}
-			*/
 		}
 		else if (!Q_stricmp("rockettrooper", model_name)
 			|| !Q_stricmp("hazardtrooper", model_name)
 			|| !Q_stricmp("saber_droid", model_name)
-			|| !Q_stricmp("assassin_droid", model_name))
+			|| !Q_stricmp("assassin_droid", model_name)
+			|| !Q_stricmp("md_dro_am", model_name)
+			|| !Q_stricmp("md_dro_sn", model_name))
 		{
-			Eorientations oUp, oRt, oFwd;
+			Eorientations o_up, o_rt, o_fwd;
+
 			if (Q_stricmp("saber_droid", model_name))
 			{
 				//saber droid doesn't use these lower bones
@@ -2080,16 +2066,16 @@ qboolean g_set_g2_player_model_info(gentity_t* ent, const char* model_name, cons
 				ent->upperLumbarBone = gi.G2API_GetBoneIndex(&ent->ghoul2[ent->playerModel], "upper_lumbar", qtrue);
 				if (ent->upperLumbarBone >= 0)
 				{
-					G_BoneOrientationsForClass(ent->client->NPC_class, "upper_lumbar", &oUp, &oRt, &oFwd);
+					G_BoneOrientationsForClass(ent->client->NPC_class, "upper_lumbar", &o_up, &o_rt, &o_fwd);
 					gi.G2API_SetBoneAnglesIndex(&ent->ghoul2[ent->playerModel], ent->upperLumbarBone, angles,
-						BONE_ANGLES_POSTMULT, oUp, oRt, oFwd, nullptr, 0, 0);
+						BONE_ANGLES_POSTMULT, o_up, o_rt, o_fwd, nullptr, 0, 0);
 				}
 				ent->lowerLumbarBone = gi.G2API_GetBoneIndex(&ent->ghoul2[ent->playerModel], "lower_lumbar", qtrue);
 				if (ent->lowerLumbarBone >= 0)
 				{
-					G_BoneOrientationsForClass(ent->client->NPC_class, "lower_lumbar", &oUp, &oRt, &oFwd);
+					G_BoneOrientationsForClass(ent->client->NPC_class, "lower_lumbar", &o_up, &o_rt, &o_fwd);
 					gi.G2API_SetBoneAnglesIndex(&ent->ghoul2[ent->playerModel], ent->lowerLumbarBone, angles,
-						BONE_ANGLES_POSTMULT, oUp, oRt, oFwd, nullptr, 0, 0);
+						BONE_ANGLES_POSTMULT, o_up, o_rt, o_fwd, nullptr, 0, 0);
 				}
 			}
 			if (Q_stricmp("hazardtrooper", model_name))
@@ -2101,24 +2087,24 @@ qboolean g_set_g2_player_model_info(gentity_t* ent, const char* model_name, cons
 					ent->thoracicBone = gi.G2API_GetBoneIndex(&ent->ghoul2[ent->playerModel], "thoracic", qtrue);
 					if (ent->thoracicBone >= 0)
 					{
-						G_BoneOrientationsForClass(ent->client->NPC_class, "thoracic", &oUp, &oRt, &oFwd);
+						G_BoneOrientationsForClass(ent->client->NPC_class, "thoracic", &o_up, &o_rt, &o_fwd);
 						gi.G2API_SetBoneAnglesIndex(&ent->ghoul2[ent->playerModel], ent->thoracicBone, angles,
-							BONE_ANGLES_POSTMULT, oUp, oRt, oFwd, nullptr, 0, 0);
+							BONE_ANGLES_POSTMULT, o_up, o_rt, o_fwd, nullptr, 0, 0);
 					}
 				}
 				ent->cervicalBone = gi.G2API_GetBoneIndex(&ent->ghoul2[ent->playerModel], "cervical", qtrue);
 				if (ent->cervicalBone >= 0)
 				{
-					G_BoneOrientationsForClass(ent->client->NPC_class, "cervical", &oUp, &oRt, &oFwd);
+					G_BoneOrientationsForClass(ent->client->NPC_class, "cervical", &o_up, &o_rt, &o_fwd);
 					gi.G2API_SetBoneAnglesIndex(&ent->ghoul2[ent->playerModel], ent->cervicalBone, angles,
-						BONE_ANGLES_POSTMULT, oUp, oRt, oFwd, nullptr, 0, 0);
+						BONE_ANGLES_POSTMULT, o_up, o_rt, o_fwd, nullptr, 0, 0);
 				}
 				ent->craniumBone = gi.G2API_GetBoneIndex(&ent->ghoul2[ent->playerModel], "cranium", qtrue);
 				if (ent->craniumBone >= 0)
 				{
-					G_BoneOrientationsForClass(ent->client->NPC_class, "cranium", &oUp, &oRt, &oFwd);
+					G_BoneOrientationsForClass(ent->client->NPC_class, "cranium", &o_up, &o_rt, &o_fwd);
 					gi.G2API_SetBoneAnglesIndex(&ent->ghoul2[ent->playerModel], ent->craniumBone, angles,
-						BONE_ANGLES_POSTMULT, oUp, oRt, oFwd, nullptr, 0, 0);
+						BONE_ANGLES_POSTMULT, o_up, o_rt, o_fwd, nullptr, 0, 0);
 				}
 			}
 		}
@@ -2245,8 +2231,8 @@ qboolean g_set_g2_player_model_info(gentity_t* ent, const char* model_name, cons
 	return qtrue;
 }
 
-void g_set_g2_player_model(gentity_t* ent, const char* model_name, const char* custom_skin, const char* surfOff,
-	const char* surfOn)
+constexpr auto TURN_OFF = 0x00000100;
+void g_set_g2_player_model(gentity_t* ent, const char* model_name, const char* custom_skin, const char* surf_off,const char* surf_on)
 {
 	char skin_name[MAX_QPATH];
 
@@ -2308,12 +2294,14 @@ void g_set_g2_player_model(gentity_t* ent, const char* model_name, const char* c
 	//this is going to set the surfs on/off matching the skin file
 
 	// did we find a ghoul2 model? if so, load the animation.cfg file
-	if (!g_set_g2_player_model_info(ent, model_name, surfOff, surfOn))
+	if (!g_set_g2_player_model_info(ent, model_name, surf_off, surf_on))
 	{
 		//couldn't set g2 info, fall back to a mouse md3
 		NPC_ParseParms("mouse", ent);
 		Com_Printf(S_COLOR_RED"couldn't load playerModel %s!\n", va("models/players/%s/model.glm", model_name));
 	}
+
+	gi.G2API_SetSurfaceOnOff(&ent->ghoul2[ent->playerModel], "force_shield", TURN_OFF);
 }
 
 /*
@@ -2381,6 +2369,11 @@ void G_AddWeaponModels(gentity_t* ent)
 			if (ent->client->ps.weapon == WP_EMPLACED_GUN && !(ent->client->ps.eFlags & EF_LOCKED_TO_WEAPON))
 			{
 				G_CreateG2AttachedWeaponModel(ent, "models/map_objects/hoth/eweb_model.glm", ent->handRBolt, 0);
+			}
+			else if (ent->client->ps.weapon == WP_DROIDEKA)
+			{
+				G_CreateG2AttachedWeaponModel(ent, weaponData[ent->client->ps.weapon].weaponMdl, ent->handRBolt, 0);
+				G_CreateG2AttachedWeaponModel(ent, weaponData[ent->client->ps.weapon].weaponMdl, ent->handLBolt, 1);
 			}
 			else
 			{
@@ -2581,6 +2574,8 @@ void G_ChangeScale(const char* data)
 
 extern const char* GetSaberColor(int color);
 
+extern void BubbleShield_TurnOff();
+
 void G_ChangePlayerModel(gentity_t* ent, const char* new_model)
 {
 	if (!ent || !ent->client || !new_model)
@@ -2622,11 +2617,6 @@ void G_ChangePlayerModel(gentity_t* ent, const char* new_model)
 		return;
 	}
 
-	if (ent->client->ps.powerups[PW_GALAK_SHIELD])
-	{
-		RemoveBarrier(ent);
-	}
-
 	if (ent->client->NPC_class != CLASS_JANGODUAL && ent->client->ps.eFlags & EF2_JANGO_DUALS)
 	{
 		ent->client->ps.eFlags &= ~EF2_JANGO_DUALS;
@@ -2641,6 +2631,11 @@ void G_ChangePlayerModel(gentity_t* ent, const char* new_model)
 	{
 		//Changing
 		ent->client->ps.eFlags &= ~EF2_DUAL_PISTOLS;
+	}
+
+	if (ent->client->ps.weapon == WP_DROIDEKA && ent->client->NPC_class == CLASS_DROIDEKA)
+	{
+		G_CreateG2AttachedWeaponModel(ent, weaponData[ent->client->ps.weapon].weaponMdl, ent->handLBolt, 1);
 	}
 
 	if (ent->client->ps.groundEntityNum == ENTITYNUM_NONE && PM_InLedgeMove(ent->client->ps.legsAnim))
@@ -2738,22 +2733,43 @@ void G_ChangePlayerModel(gentity_t* ent, const char* new_model)
 
 					if (!HeIsJedi(ent))
 					{
-						if (ent->client->NPC_class == CLASS_BOBAFETT
-							|| ent->client->NPC_class == CLASS_JANGO
-							|| ent->client->NPC_class == CLASS_JANGODUAL
-							|| !Q_stricmp("md_dindjarin", ent->NPC_type))
+						if (ent->client->NPC_class == CLASS_DROIDEKA)
 						{
-							ent->client->ps.inventory[INV_GRAPPLEHOOK] = 1;
+							ent->client->ps.inventory[INV_BARRIER] = 1;
+
+							ent->client->ps.inventory[INV_CLOAK] = 0;
+							ent->client->ps.inventory[INV_SEEKER] = 0;
+							ent->client->ps.inventory[INV_ELECTROBINOCULARS] = 0;
+							ent->client->ps.inventory[INV_LIGHTAMP_GOGGLES] = 0;
+							ent->client->ps.inventory[INV_CLOAK] = 0;
+							ent->client->ps.inventory[INV_SEEKER] = 0;
+							ent->client->ps.inventory[INV_BACTA_CANISTER] = 0;
+							ent->client->ps.inventory[INV_SENTRY] = 0;
+
+							if (ent->client->ps.powerups[PW_GALAK_SHIELD] || ent->flags & FL_SHIELDED)
+							{
+								TurnBarrierOff(ent);
+							}
 						}
 						else
 						{
-							ent->client->ps.inventory[INV_GRAPPLEHOOK] = 0;
-						}
-						ent->client->ps.inventory[INV_BARRIER] = 1;
-						ent->client->ps.inventory[INV_SENTRY] = 2;
+							if (ent->client->NPC_class == CLASS_BOBAFETT
+								|| ent->client->NPC_class == CLASS_JANGO
+								|| ent->client->NPC_class == CLASS_JANGODUAL
+								|| !Q_stricmp("md_dindjarin", ent->NPC_type))
+							{
+								ent->client->ps.inventory[INV_GRAPPLEHOOK] = 1;
+							}
+							else
+							{
+								ent->client->ps.inventory[INV_GRAPPLEHOOK] = 0;
+							}
+							ent->client->ps.inventory[INV_BARRIER] = 1;
+							ent->client->ps.inventory[INV_SENTRY] = 2;
 
-						ent->client->ps.inventory[INV_CLOAK] = 0;
-						ent->client->ps.inventory[INV_SEEKER] = 0;
+							ent->client->ps.inventory[INV_CLOAK] = 0;
+							ent->client->ps.inventory[INV_SEEKER] = 0;
+						}
 					}
 				}
 				else
@@ -2873,22 +2889,43 @@ void G_ChangePlayerModel(gentity_t* ent, const char* new_model)
 
 					if (!HeIsJedi(ent))
 					{
-						if (ent->client->NPC_class == CLASS_BOBAFETT
-							|| ent->client->NPC_class == CLASS_JANGO
-							|| ent->client->NPC_class == CLASS_JANGODUAL
-							|| !Q_stricmp("md_dindjarin", ent->NPC_type))
+						if (ent->client->NPC_class == CLASS_DROIDEKA)
 						{
-							ent->client->ps.inventory[INV_GRAPPLEHOOK] = 1;
+							ent->client->ps.inventory[INV_BARRIER] = 1;
+
+							ent->client->ps.inventory[INV_CLOAK] = 0;
+							ent->client->ps.inventory[INV_SEEKER] = 0;
+							ent->client->ps.inventory[INV_ELECTROBINOCULARS] = 0;
+							ent->client->ps.inventory[INV_LIGHTAMP_GOGGLES] = 0;
+							ent->client->ps.inventory[INV_CLOAK] = 0;
+							ent->client->ps.inventory[INV_SEEKER] = 0;
+							ent->client->ps.inventory[INV_BACTA_CANISTER] = 0;
+							ent->client->ps.inventory[INV_SENTRY] = 0;
+
+							if (ent->client->ps.powerups[PW_GALAK_SHIELD] || ent->flags & FL_SHIELDED)
+							{
+								TurnBarrierOff(ent);
+							}
 						}
 						else
 						{
-							ent->client->ps.inventory[INV_GRAPPLEHOOK] = 0;
-						}
-						ent->client->ps.inventory[INV_BARRIER] = 1;
-						ent->client->ps.inventory[INV_SENTRY] = 2;
+							if (ent->client->NPC_class == CLASS_BOBAFETT
+								|| ent->client->NPC_class == CLASS_JANGO
+								|| ent->client->NPC_class == CLASS_JANGODUAL
+								|| !Q_stricmp("md_dindjarin", ent->NPC_type))
+							{
+								ent->client->ps.inventory[INV_GRAPPLEHOOK] = 1;
+							}
+							else
+							{
+								ent->client->ps.inventory[INV_GRAPPLEHOOK] = 0;
+							}
+							ent->client->ps.inventory[INV_BARRIER] = 1;
+							ent->client->ps.inventory[INV_SENTRY] = 2;
 
-						ent->client->ps.inventory[INV_CLOAK] = 0;
-						ent->client->ps.inventory[INV_SEEKER] = 0;
+							ent->client->ps.inventory[INV_CLOAK] = 0;
+							ent->client->ps.inventory[INV_SEEKER] = 0;
+						}
 					}
 				}
 				else
@@ -2908,12 +2945,16 @@ void G_ChangePlayerModel(gentity_t* ent, const char* new_model)
 					ent->client->ps.inventory[INV_SEEKER] = 0;
 					ent->client->ps.inventory[INV_SENTRY] = 0;
 					ent->client->ps.inventory[INV_CLOAK] = 0;
+
+					TurnBarrierOff(ent);
 				}
 			}
 			else
 			{
 				gi.Printf(S_COLOR_RED"G_ChangePlayerModel: cannot find NPC %s\n", new_model);
 				G_ChangePlayerModel(ent, "stormtrooper"); //need a better fallback?
+
+				TurnBarrierOff(ent);
 			}
 		}
 	}
@@ -3394,6 +3435,11 @@ qboolean ClientSpawn(gentity_t* ent, SavedGameJustLoaded_e e_saved_game_just_loa
 			if (ent->client->ps.weapon == WP_EMPLACED_GUN && !(ent->client->ps.eFlags & EF_LOCKED_TO_WEAPON))
 			{
 				G_CreateG2AttachedWeaponModel(ent, "models/map_objects/hoth/eweb_model.glm", ent->handRBolt, 0);
+			}
+			else if (ent->client->ps.weapon == WP_DROIDEKA)
+			{
+				G_CreateG2AttachedWeaponModel(ent, weaponData[ent->client->ps.weapon].weaponMdl, ent->handRBolt, 0);
+				G_CreateG2AttachedWeaponModel(ent, weaponData[ent->client->ps.weapon].weaponMdl, ent->handLBolt, 1);
 			}
 			else
 			{

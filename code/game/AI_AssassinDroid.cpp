@@ -66,8 +66,7 @@ void BubbleShield_TurnOff()
 ////////////////////////////////////////////////////////////////////////////////////////
 void BubbleShield_PushEnt(gentity_t* pushed, vec3_t smack_dir)
 {
-	G_Damage(pushed, NPC, NPC, smack_dir, NPC->currentOrigin, (g_spskill->integer + 1) * Q_irand(5, 10),
-		DAMAGE_NO_KNOCKBACK, MOD_ELECTROCUTE);
+	G_Damage(pushed, NPC, NPC, smack_dir, NPC->currentOrigin, (g_spskill->integer + 1) * Q_irand(5, 10),DAMAGE_NO_KNOCKBACK, MOD_ELECTROCUTE);
 	G_Throw(pushed, smack_dir, 10);
 
 	// Make Em Electric
@@ -95,37 +94,37 @@ void BubbleShield_PushRadiusEnts()
 	}
 
 	const int num_ents = gi.EntitiesInBox(mins, maxs, radius_ents, 128);
-	for (int entIndex = 0; entIndex < num_ents; entIndex++)
+	for (int ent_index = 0; ent_index < num_ents; ent_index++)
 	{
 		vec3_t smack_dir;
 		// Only Clients
 		//--------------
-		if (!radius_ents[entIndex] || !radius_ents[entIndex]->client)
+		if (!radius_ents[ent_index] || !radius_ents[ent_index]->client)
 		{
 			continue;
 		}
 
 		// Don't Push Away Other Assassin Droids
 		//---------------------------------------
-		if (radius_ents[entIndex]->client->NPC_class == NPC->client->NPC_class)
+		if (radius_ents[ent_index]->client->NPC_class == NPC->client->NPC_class)
 		{
 			continue;
 		}
 
 		// Should Have Already Pushed The Enemy If He Touched Us
 		//-------------------------------------------------------
-		if (NPC->enemy && NPCInfo->touchedByPlayer == NPC->enemy && radius_ents[entIndex] == NPC->enemy)
+		if (NPC->enemy && NPCInfo->touchedByPlayer == NPC->enemy && radius_ents[ent_index] == NPC->enemy)
 		{
 			continue;
 		}
 
 		// Do The Vector Distance Test
 		//-----------------------------
-		VectorSubtract(radius_ents[entIndex]->currentOrigin, NPC->currentOrigin, smack_dir);
-		const float smackDist = VectorNormalize(smack_dir);
-		if (smackDist < radius)
+		VectorSubtract(radius_ents[ent_index]->currentOrigin, NPC->currentOrigin, smack_dir);
+		const float smack_dist = VectorNormalize(smack_dir);
+		if (smack_dist < radius)
 		{
-			BubbleShield_PushEnt(radius_ents[entIndex], smack_dir);
+			BubbleShield_PushEnt(radius_ents[ent_index], smack_dir);
 		}
 	}
 }
@@ -167,6 +166,7 @@ void BubbleShield_Update()
 		}
 
 		BubbleShield_TurnOn();
+
 		if (BubbleShield_IsOn())
 		{
 			// Update Our Shader Value

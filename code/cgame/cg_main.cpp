@@ -777,8 +777,6 @@ int CG_GetCameraPos(vec3_t camerapos)
 	}
 	if (cg_trueguns.integer && !cg.zoomMode)
 	{
-		//in third person
-		//FIXME: what about hacks that render in third person regardless of this value?
 		VectorCopy(cg.refdef.vieworg, camerapos);
 		return 1;
 	}
@@ -4296,7 +4294,14 @@ void CG_NextInventory_f()
 
 		if (cg.inventorySelect < INV_ELECTROBINOCULARS || cg.inventorySelect >= INV_GRAPPLEHOOK)
 		{
-			cg.inventorySelect = INV_ELECTROBINOCULARS;
+			if (cg_entities[0].gent->s.weapon == WP_DROIDEKA)
+			{
+				cg.inventorySelect = INV_BARRIER;
+			}
+			else
+			{
+				cg.inventorySelect = INV_ELECTROBINOCULARS;
+			}
 		}
 
 		if (CG_InventorySelectable(cg.inventorySelect) && inv_icons[cg.inventorySelect])
@@ -4348,7 +4353,14 @@ void CG_PrevInventory_f()
 
 		if (cg.inventorySelect < INV_ELECTROBINOCULARS || cg.inventorySelect >= INV_GRAPPLEHOOK)
 		{
-			cg.inventorySelect = INV_MAX - 1;
+			if (cg_entities[0].gent->s.weapon == WP_DROIDEKA)
+			{
+				cg.inventorySelect = INV_BARRIER;
+			}
+			else
+			{
+				cg.inventorySelect = INV_MAX - 1;
+			}
 		}
 
 		if (CG_InventorySelectable(cg.inventorySelect) && inv_icons[cg.inventorySelect])

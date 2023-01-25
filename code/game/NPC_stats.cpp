@@ -2035,8 +2035,8 @@ void NPC_BuildRandom()
 
 extern void G_MatchPlayerWeapon(gentity_t* ent);
 extern void G_InitPlayerFromCvars(gentity_t* ent);
-extern void g_set_g2_player_model(gentity_t* ent, const char* model_name, const char* custom_skin, const char* surfOff,
-	const char* surfOn);
+extern void g_set_g2_player_model(gentity_t* ent, const char* model_name, const char* custom_skin, const char* surf_off,
+	const char* surf_on);
 
 qboolean NPC_ParseParms(const char* npc_name, gentity_t* npc)
 {

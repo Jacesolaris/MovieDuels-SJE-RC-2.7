@@ -1953,6 +1953,8 @@ constexpr auto SHIELD_HEALTH_DEC = 10;
 static qhandle_t shieldLoopSound = 0;
 static qhandle_t shieldActivateSound = 0;
 static qhandle_t shieldDeactivateSound = 0;
+static qhandle_t DekashieldActivateSound = 0;
+static qhandle_t DekashieldDeactivateSound = 0;
 
 qboolean HeHasGun(const gentity_t* ent)
 {
@@ -1987,6 +1989,7 @@ qboolean HeHasGun(const gentity_t* ent)
 	case WP_CLONEPISTOL:
 	case WP_SBD_BLASTER:
 	case WP_DUAL_PISTOL:
+	case WP_DROIDEKA:
 		return qtrue;
 	default:;
 	}
@@ -2025,6 +2028,19 @@ qboolean HeIsJedi(const gentity_t* ent)
 	return qfalse;
 }
 
+qboolean droideka_npc(const gentity_t* ent)
+{
+	if (ent->NPC
+		&& ent->client->NPC_class == CLASS_DROIDEKA
+		&& ent->s.weapon == WP_DROIDEKA
+		&& ent->s.client_num >= MAX_CLIENTS
+		&& !G_ControlledByPlayer(ent))
+	{
+		return qtrue;
+	}
+	return qfalse;
+}
+
 void RemoveBarrier(gentity_t* ent)
 {
 	static qboolean registered = qfalse;
@@ -2032,23 +2048,78 @@ void RemoveBarrier(gentity_t* ent)
 	if (!registered)
 	{
 		shieldDeactivateSound = G_SoundIndex("sound/barrier/barrier_off.mp3");
+		DekashieldDeactivateSound = G_SoundIndex("sound/chars/droideka/shieldoff.mp3");
 		registered = qtrue;
+	}
+
+	if (droideka_npc(ent))
+	{
+		return;
 	}
 
 	if (ent && ent->client)
 	{
 		if (ent->client->ps.powerups[PW_GALAK_SHIELD])
 		{
-			G_AddEvent(ent, EV_GENERAL_SOUND, shieldDeactivateSound);
 			ent->s.loopSound = 0;
 			ent->client->ps.powerups[PW_GALAK_SHIELD] = 0; //temp, for effect
 			ent->flags &= ~FL_SHIELDED; //no more reflections
-			gi.G2API_SetSurfaceOnOff(&ent->ghoul2[ent->playerModel], "torso_shield_off", TURN_OFF);
-			NPC_SetAnim(ent, SETANIM_TORSO, BOTH_FORCE_DRAIN_RELEASE, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+			if (ent->client->NPC_class == CLASS_DROIDEKA && ent->s.weapon == WP_DROIDEKA)
+			{
+				G_AddEvent(ent, EV_GENERAL_SOUND, DekashieldDeactivateSound);
+				gi.G2API_SetSurfaceOnOff(&ent->ghoul2[ent->playerModel], "force_shield", TURN_OFF);
+			}
+			else
+			{
+				G_AddEvent(ent, EV_GENERAL_SOUND, shieldDeactivateSound);
+				gi.G2API_SetSurfaceOnOff(&ent->ghoul2[ent->playerModel], "torso_shield_off", TURN_OFF);
+
+				NPC_SetAnim(ent, SETANIM_TORSO, BOTH_FORCE_DRAIN_RELEASE, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+			}
 		}
 	}
 }
 
+void TurnBarrierOff(gentity_t* ent)
+{
+	if (droideka_npc(ent))
+	{
+		return;
+	}
+
+	ent->client->ps.powerups[PW_GALAK_SHIELD] = 0; //temp, for effect
+	ent->flags &= ~FL_SHIELDED; //no more reflections
+	if (ent->client->NPC_class == CLASS_DROIDEKA && ent->s.weapon == WP_DROIDEKA)
+	{
+		gi.G2API_SetSurfaceOnOff(&ent->ghoul2[ent->playerModel], "force_shield", TURN_OFF);
+	}
+	else
+	{
+		gi.G2API_SetSurfaceOnOff(&ent->ghoul2[ent->playerModel], "torso_shield_off", TURN_OFF);
+	}
+}
+
+void TurnBarrierON(gentity_t* ent)
+{
+	static qboolean registered = qfalse;
+
+	if (!registered)
+	{
+		shieldLoopSound = G_SoundIndex("sound/barrier/barrier_loop.wav");
+		registered = qtrue;
+	}
+	if (droideka_npc(ent))
+	{
+		return;
+	}
+
+	ent->client->ps.powerups[PW_GALAK_SHIELD] = Q3_INFINITE;
+	ent->flags |= FL_SHIELDED; //reflect normal shots
+	gi.G2API_SetSurfaceOnOff(&ent->ghoul2[ent->playerModel], "force_shield", TURN_ON);
+	ent->s.loopSound = shieldLoopSound;
+}
+
+void Barrier_Update(gentity_t* ent);
 void PlaceBarrier(gentity_t* ent)
 {
 	static qboolean registered = qfalse;
@@ -2057,6 +2128,7 @@ void PlaceBarrier(gentity_t* ent)
 	{
 		shieldLoopSound = G_SoundIndex("sound/barrier/barrier_loop.wav");
 		shieldActivateSound = G_SoundIndex("sound/barrier/barrier_on.mp3");
+		DekashieldActivateSound = G_SoundIndex("sound/chars/droideka/shieldon.mp3");
 		registered = qtrue;
 	}
 
@@ -2065,12 +2137,22 @@ void PlaceBarrier(gentity_t* ent)
 		if (!ent->client->ps.powerups[PW_GALAK_SHIELD])
 		{
 			ent->client->ps.powerups[PW_GALAK_SHIELD] = Q3_INFINITE;
-			G_AddEvent(ent, EV_GENERAL_SOUND, shieldActivateSound);
 			ent->client->ps.BarrierFuel -= 15;
 			ent->flags |= FL_SHIELDED; //reflect normal shots
 			ent->fx_time = level.time;
-			gi.G2API_SetSurfaceOnOff(&ent->ghoul2[ent->playerModel], "torso_shield_off", TURN_ON);
-			NPC_SetAnim(ent, SETANIM_TORSO, BOTH_ATTACK11, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+			if (ent->client->NPC_class == CLASS_DROIDEKA && ent->s.weapon == WP_DROIDEKA)
+			{
+				G_AddEvent(ent, EV_GENERAL_SOUND, DekashieldActivateSound);
+				gi.G2API_SetSurfaceOnOff(&ent->ghoul2[ent->playerModel], "force_shield", TURN_ON);
+				Barrier_Update(ent);
+			}
+			else
+			{
+				G_AddEvent(ent, EV_GENERAL_SOUND, shieldActivateSound);
+				gi.G2API_SetSurfaceOnOff(&ent->ghoul2[ent->playerModel], "torso_shield_off", TURN_ON);
+
+				NPC_SetAnim(ent, SETANIM_TORSO, BOTH_ATTACK11, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+			}
 		}
 		ent->s.loopSound = shieldLoopSound;
 	}
@@ -2279,5 +2361,118 @@ void ItemUse_Grapple(gentity_t* ent)
 		{
 			ent->client->fireHeld = qfalse;
 		}
+	}
+}
+
+extern void G_KnockOver(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, float strength,
+	qboolean break_saber_lock);
+void Barrier_PushEnt(gentity_t* ent, gentity_t* pushed, vec3_t smack_dir)
+{
+	G_Damage(pushed, ent, ent, smack_dir, ent->currentOrigin, (g_spskill->integer + 1) * Q_irand(5, 10), DAMAGE_EXTRA_KNOCKBACK, MOD_ELECTROCUTE);
+	//G_Throw(pushed, smack_dir, 10);
+	G_KnockOver(pushed, ent, smack_dir, 25, qtrue);
+
+	// Make Em Electric
+	//------------------
+	pushed->s.powerups |= 1 << PW_SHOCKED;
+	if (pushed->client)
+	{
+		pushed->client->ps.powerups[PW_SHOCKED] = level.time + 1000;
+	}
+}
+
+constexpr auto DROIDEKA_SHIELD_SIZE = 75;
+void BubbleShield_PushRadiusEnts(gentity_t* ent)
+{
+	gentity_t* radius_ents[128];
+	constexpr float radius = DROIDEKA_SHIELD_SIZE;
+	vec3_t mins, maxs;
+
+	for (int i = 0; i < 3; i++)
+	{
+		mins[i] = ent->currentOrigin[i] - radius;
+		maxs[i] = ent->currentOrigin[i] + radius;
+	}
+
+	const int num_ents = gi.EntitiesInBox(mins, maxs, radius_ents, 128);
+	for (int ent_index = 0; ent_index < num_ents; ent_index++)
+	{
+		vec3_t smack_dir;
+		// Only Clients
+		//--------------
+		if (!radius_ents[ent_index] || !radius_ents[ent_index]->client)
+		{
+			continue;
+		}
+
+		// Don't Push Away Other Assassin Droids
+		//---------------------------------------
+		if (radius_ents[ent_index]->client->NPC_class == ent->client->NPC_class)
+		{
+			continue;
+		}
+
+		// Should Have Already Pushed The Enemy If He Touched Us
+		//-------------------------------------------------------
+		if (ent->enemy && ent->enemy->touchedByPlayer == ent->enemy && radius_ents[ent_index] == ent->enemy)
+		{
+			continue;
+		}
+
+		// Do The Vector Distance Test
+		//-----------------------------
+		VectorSubtract(radius_ents[ent_index]->currentOrigin, ent->currentOrigin, smack_dir);
+		const float smack_dist = VectorNormalize(smack_dir);
+		if (smack_dist < radius)
+		{
+			Barrier_PushEnt(ent, radius_ents[ent_index], smack_dir);
+		}
+	}
+}
+
+void Barrier_Update(gentity_t* ent)
+{
+	// Shields Go When You Die
+	//-------------------------
+	if (ent->health <= 0)
+	{
+		if (ent->client->ps.powerups[PW_GALAK_SHIELD])
+		{
+			//decloak
+			RemoveBarrier(ent);
+		}
+		return;
+	}
+
+	// Recharge Shields
+	//------------------
+	ent->client->ps.stats[STAT_ARMOR] += 1;
+	if (ent->client->ps.stats[STAT_ARMOR] > 250)
+	{
+		ent->client->ps.stats[STAT_ARMOR] = 250;
+	}
+
+	if (ent->client->ps.powerups[PW_GALAK_SHIELD])
+	{
+		// Update Our Shader Value
+		//-------------------------
+		ent->client->renderInfo.customRGBA[0] =
+			ent->client->renderInfo.customRGBA[1] =
+			ent->client->renderInfo.customRGBA[2] =
+			ent->client->renderInfo.customRGBA[3] = ent->client->ps.stats[STAT_ARMOR] - 100;
+
+		// If Touched By An Enemy, ALWAYS Shove Them
+		//-------------------------------------------
+		if (ent->enemy && ent->enemy->touchedByPlayer == ent->enemy)
+		{
+			vec3_t dir;
+			VectorSubtract(ent->enemy->currentOrigin, ent->currentOrigin, dir);
+			VectorNormalize(dir);
+			Barrier_PushEnt(ent, ent->enemy, dir);
+		}
+
+		// Push Anybody Else Near
+		//------------------------
+		BubbleShield_PushRadiusEnts(ent);
 	}
 }

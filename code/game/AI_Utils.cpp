@@ -866,6 +866,7 @@ qboolean AI_RefreshGroup(AIGroupInfo_t* group)
 		case WP_BRYAR_PISTOL:
 		case WP_BLASTER_PISTOL:
 		case WP_DUAL_PISTOL:
+		case WP_DROIDEKA:
 		case WP_JAWA:
 			group->morale += 3;
 			break;

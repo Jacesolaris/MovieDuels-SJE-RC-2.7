@@ -689,6 +689,10 @@ using cgEffects_t = struct
 	fxHandle_t flechetteFleshImpactEffect;
 	fxHandle_t flechetteRicochetEffect;
 
+
+	// DROIDEKA
+	fxHandle_t DroidekaShotEffect;
+
 	//FORCE
 	fxHandle_t yellowstrike;
 

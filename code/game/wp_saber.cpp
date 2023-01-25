@@ -669,6 +669,14 @@ void G_CreateG2AttachedWeaponModel(gentity_t* ent, const char* ps_weapon_model, 
 		ent->weaponModel[0] = ent->weaponModel[1] = -1;
 		return;
 	}
+
+	//if (ent && ent->client && ent->client->NPC_class == CLASS_DROIDEKA)
+	//{
+	//	//hack for galakmech, no weaponmodel
+	//	ent->weaponModel[0] = ent->weaponModel[1] = -1;
+	//	return;
+	//}
+
 	if (weapon_num < 0 || weapon_num >= MAX_INHAND_WEAPONS)
 	{
 		return;
@@ -14816,6 +14824,7 @@ int WP_SaberBlockCost(gentity_t* defender, const gentity_t* attacker, vec3_t hit
 		if (attacker->activator && attacker->activator->s.weapon == WP_BRYAR_PISTOL
 			|| attacker->activator && attacker->activator->s.weapon == WP_BLASTER_PISTOL
 			|| attacker->activator && attacker->activator->s.weapon == WP_DUAL_PISTOL
+			|| attacker->activator && attacker->activator->s.weapon == WP_DROIDEKA
 			|| attacker->activator && attacker->activator->s.weapon == WP_SBD_BLASTER
 			|| attacker->activator && attacker->activator->s.weapon == WP_REPEATER
 			|| attacker->activator && attacker->activator->s.weapon == WP_BOWCASTER
@@ -15135,6 +15144,7 @@ int WP_SaberBoltBlockCost(gentity_t* defender, const gentity_t* attacker)
 		if (attacker->activator && attacker->activator->s.weapon == WP_BRYAR_PISTOL
 			|| attacker->activator && attacker->activator->s.weapon == WP_BLASTER_PISTOL
 			|| attacker->activator && attacker->activator->s.weapon == WP_DUAL_PISTOL
+			|| attacker->activator && attacker->activator->s.weapon == WP_DROIDEKA
 			|| attacker->activator && attacker->activator->s.weapon == WP_SBD_BLASTER
 			|| attacker->activator && attacker->activator->s.weapon == WP_REPEATER
 			|| attacker->activator && attacker->activator->s.weapon == WP_BOWCASTER
@@ -22558,7 +22568,8 @@ void ForceThrow_JKA(gentity_t* self, qboolean pull, qboolean fake)
 					forcePowerNeeded[self->client->ps.forcePowerLevel[
 						power_use]]);
 				if (push_list[x]->client->NPC_class == CLASS_ASSASSIN_DROID ||
-					push_list[x]->client->NPC_class == CLASS_HAZARD_TROOPER)
+					push_list[x]->client->NPC_class == CLASS_HAZARD_TROOPER ||
+					push_list[x]->client->NPC_class == CLASS_DROIDEKA)
 				{
 					mod_power_level = 0; // divides throw by 10
 				}
@@ -22788,6 +22799,7 @@ void ForceThrow_JKA(gentity_t* self, qboolean pull, qboolean fake)
 							&& push_list[x]->client->NPC_class != CLASS_TUSKEN
 							&& push_list[x]->client->NPC_class != CLASS_HAZARD_TROOPER
 							&& push_list[x]->client->NPC_class != CLASS_ASSASSIN_DROID
+							&& push_list[x]->client->NPC_class != CLASS_DROIDEKA
 							&& push_list[x]->client->NPC_class != CLASS_SBD
 							&& push_list[x]->s.weapon != WP_SABER
 							&& push_list[x]->s.weapon != WP_MELEE
@@ -24003,7 +24015,8 @@ void ForceThrow_MD(gentity_t* self, qboolean pull, qboolean fake) //MD Mode Push
 					power_level,
 					forcePowerNeeded[self->client->ps.forcePowerLevel[powerUse]]);
 				if (push_list[x]->client->NPC_class == CLASS_ASSASSIN_DROID ||
-					push_list[x]->client->NPC_class == CLASS_HAZARD_TROOPER)
+					push_list[x]->client->NPC_class == CLASS_HAZARD_TROOPER ||
+					push_list[x]->client->NPC_class == CLASS_DROIDEKA)
 				{
 					mod_power_level = 0; // divides throw by 10
 				}
@@ -24278,6 +24291,7 @@ void ForceThrow_MD(gentity_t* self, qboolean pull, qboolean fake) //MD Mode Push
 							&& push_list[x]->client->NPC_class != CLASS_TUSKEN
 							&& push_list[x]->client->NPC_class != CLASS_HAZARD_TROOPER
 							&& push_list[x]->client->NPC_class != CLASS_ASSASSIN_DROID
+							&& push_list[x]->client->NPC_class != CLASS_DROIDEKA
 							&& push_list[x]->client->NPC_class != CLASS_SBD
 							&& push_list[x]->s.weapon != WP_SABER
 							&& push_list[x]->s.weapon != WP_MELEE
@@ -26143,6 +26157,7 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 								&& push_list[x]->client->NPC_class != CLASS_TUSKEN
 								&& push_list[x]->client->NPC_class != CLASS_HAZARD_TROOPER
 								&& push_list[x]->client->NPC_class != CLASS_ASSASSIN_DROID
+								&& push_list[x]->client->NPC_class != CLASS_DROIDEKA
 								&& push_list[x]->client->NPC_class != CLASS_SBD
 								&& push_list[x]->s.weapon != WP_SABER
 								&& push_list[x]->s.weapon != WP_MELEE
@@ -27218,6 +27233,7 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 								&& push_list[x]->client->NPC_class != CLASS_TUSKEN
 								&& push_list[x]->client->NPC_class != CLASS_HAZARD_TROOPER
 								&& push_list[x]->client->NPC_class != CLASS_ASSASSIN_DROID
+								&& push_list[x]->client->NPC_class != CLASS_DROIDEKA
 								&& push_list[x]->client->NPC_class != CLASS_SBD
 								&& push_list[x]->s.weapon != WP_SABER
 								&& push_list[x]->s.weapon != WP_MELEE
@@ -28206,7 +28222,8 @@ void ForceRepulseThrow(gentity_t* self, int charge_time)
 				powerUse, power_level,
 				forcePowerNeeded[self->client->ps.forcePowerLevel[powerUse]]);
 			if (push_list[x]->client->NPC_class == CLASS_ASSASSIN_DROID ||
-				push_list[x]->client->NPC_class == CLASS_HAZARD_TROOPER)
+				push_list[x]->client->NPC_class == CLASS_HAZARD_TROOPER ||
+				push_list[x]->client->NPC_class == CLASS_DROIDEKA)
 			{
 				mod_power_level = 0; // divides throw by 10
 			}
@@ -29420,6 +29437,7 @@ void ForceTelepathy(gentity_t* self)
 		case CLASS_MANDALORIAN:
 		case CLASS_JANGO:
 		case CLASS_JANGODUAL:
+		case CLASS_DROIDEKA:
 			break;
 		case CLASS_RANCOR:
 			if (!(trace_ent->spawnflags & 1))
@@ -29858,6 +29876,7 @@ void ForceGrip(gentity_t* self)
 			//not even combat droids?  (No animation for being gripped...)
 		case CLASS_SABER_DROID:
 		case CLASS_ASSASSIN_DROID:
+		case CLASS_DROIDEKA:
 			//*sigh*... in JK3, you'll be able to grab and move *anything*...
 			return;
 		case CLASS_PROBE:
@@ -30002,6 +30021,7 @@ void ForceGrip(gentity_t* self)
 				&& trace_ent->client->NPC_class != CLASS_JANGO
 				&& trace_ent->client->NPC_class != CLASS_JANGODUAL
 				&& trace_ent->client->NPC_class != CLASS_ASSASSIN_DROID
+				&& trace_ent->client->NPC_class != CLASS_DROIDEKA
 				&& trace_ent->client->NPC_class != CLASS_SBD
 				&& trace_ent->s.weapon != WP_CONCUSSION) // so rax can't drop his
 			{
@@ -30342,6 +30362,7 @@ void ForceFear(gentity_t* self)
 		case CLASS_BOBAFETT:
 		case CLASS_MANDALORIAN:
 		case CLASS_JANGO:
+		case CLASS_DROIDEKA:
 			break;
 		case CLASS_RANCOR:
 			if (!(trace_ent->spawnflags & 1))
@@ -34500,6 +34521,7 @@ qboolean ForceDrain2(gentity_t* self)
 		case CLASS_PROTOCOL:
 		case CLASS_SABER_DROID:
 		case CLASS_ASSASSIN_DROID:
+		case CLASS_DROIDEKA:
 			return qfalse;
 		case CLASS_PROBE:
 		case CLASS_SEEKER:
@@ -34694,6 +34716,7 @@ qboolean FP_ForceDrainableEnt(const gentity_t* victim)
 	case CLASS_SENTRY:
 	case CLASS_SABER_DROID:
 	case CLASS_ASSASSIN_DROID:
+	case CLASS_DROIDEKA:
 	case CLASS_VEHICLE:
 		return qfalse;
 	default:
@@ -37115,6 +37138,7 @@ void ForceGrasp(gentity_t* self)
 			//not even combat droids?  (No animation for being gripped...)
 		case CLASS_SABER_DROID:
 		case CLASS_ASSASSIN_DROID:
+		case CLASS_DROIDEKA:
 			//*sigh*... in JK3, you'll be able to grab and move *anything*...
 			return;
 		case CLASS_PROBE:
@@ -37255,6 +37279,7 @@ void ForceGrasp(gentity_t* self)
 				&& trace_ent->client->NPC_class != CLASS_JANGO
 				&& trace_ent->client->NPC_class != CLASS_JANGODUAL
 				&& trace_ent->client->NPC_class != CLASS_ASSASSIN_DROID
+				&& trace_ent->client->NPC_class != CLASS_DROIDEKA
 				&& trace_ent->client->NPC_class != CLASS_SBD
 				&& trace_ent->s.weapon != WP_CONCUSSION) // so rax can't drop his
 			{

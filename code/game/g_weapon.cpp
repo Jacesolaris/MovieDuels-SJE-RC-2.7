@@ -66,6 +66,7 @@ float weaponSpeed[WP_NUM_WEAPONS][2] =
 	{0, 0}, //WP_STUN_BATON,
 	{BRYAR_PISTOL_VEL,BRYAR_PISTOL_VEL}, //WP_BRYAR_PISTOL,
 	{EMPLACED_VEL,EMPLACED_VEL}, //WP_EMPLACED_GUN,
+	{BLASTER_VELOCITY, BLASTER_VELOCITY}, // WP_DROIDEKA
 	{BRYAR_PISTOL_VEL,BRYAR_PISTOL_VEL}, //WP_SBD_BLASTER,
 	{CLONECOMMANDO_VELOCITY, CLONECOMMANDO_VELOCITY}, // WP_WRIST_BLASTER
 	{JANGO_VELOCITY, JANGO_VELOCITY}, // WP_DUAL_PISTOL
@@ -436,6 +437,7 @@ qboolean W_AccuracyLoggableWeapon(const int weapon, const qboolean alt_fire, con
 		case WP_WRIST_BLASTER:
 		case WP_JAWA:
 		case WP_DUAL_PISTOL:
+		case WP_DROIDEKA:
 			return qtrue;
 			//non-alt standard
 		case WP_REPEATER:
@@ -657,6 +659,7 @@ void CalcMuzzlePoint(gentity_t* const ent, vec3_t forward_vec, vec3_t muzzle_poi
 		break;
 
 	case WP_DUAL_PISTOL:
+	case WP_DROIDEKA:
 		ViewHeightFix(ent);
 		muzzle_point[2] += ent->client->ps.viewheight; //By eyes
 		muzzle_point[2] -= 1;
@@ -764,6 +767,7 @@ vec3_t WP_MuzzlePoint[WP_NUM_WEAPONS] =
 	{0, 0, 0}, // WP_ATST_SIDE,
 	{0, 8, 0}, // WP_STUN_BATON,
 	{12, 6, -6}, // WP_BRYAR_PISTOL,
+	{12, 6, -6}, // WP_DROIDEKA,
 	{12, 6, -6}, // WP_SBD_BLASTER,
 	{12, 6, -6}, // WP_WRIST_BLASTER,
 	{12, 6, -6}, // WP_DUAL_PISTOL,
@@ -1490,6 +1494,9 @@ extern qboolean PM_CrouchAnim(int anim);
 extern qboolean PM_RunningAnim(int anim);
 extern qboolean PM_WalkingAnim(int anim);
 extern int fire_deley_time();
+extern void CG_ChangeWeapon(int num);
+extern qboolean is_holding_reloadable_gun(const gentity_t* ent);
+extern void TurnBarrierOff(gentity_t* ent);
 
 //---------------------------------------------------------
 void FireWeapon(gentity_t* ent, const qboolean alt_fire)
@@ -1512,7 +1519,7 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 		return;
 	}
 
-	if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_TWENTYNINE)
+	if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_TWENTYNINE && is_holding_reloadable_gun(ent))
 	{
 		if (ent->s.weapon == WP_BRYAR_PISTOL ||
 			ent->s.weapon == WP_BLASTER_PISTOL ||
@@ -1540,6 +1547,11 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 	{
 		FireVehicleWeapon(ent, alt_fire);
 		return;
+	}
+
+	if (ent->client->ps.powerups[PW_GALAK_SHIELD])
+	{
+		TurnBarrierOff(ent);
 	}
 
 	// set aiming directions
@@ -1730,13 +1742,16 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 		{
 			CalcMuzzlePoint(ent, forwardVec, muzzle, 0);
 
-			if (!cg_trueguns.integer && !cg.renderingThirdPerson && (ent->client->ps.eFlags & EF2_JANGO_DUALS || ent->
-				client->ps.eFlags & EF2_DUAL_PISTOLS))
+			if (!cg_trueguns.integer && !cg.renderingThirdPerson && (ent->client->ps.eFlags & EF2_JANGO_DUALS || ent->client->ps.eFlags & EF2_DUAL_PISTOLS))
+			{
+				CalcMuzzlePoint2(ent, muzzle2, 0);
+			}
+			if (ent->s.weapon == WP_DROIDEKA)
 			{
 				CalcMuzzlePoint2(ent, muzzle2, 0);
 			}
 
-			if (!DoesnotDrainMishap(ent) /*&& !PM_CrouchAnim(ent->client->ps.legsAnim)*/)
+			if (!DoesnotDrainMishap(ent))
 			{
 				if (ent->s.weapon == WP_REPEATER)
 				{
@@ -2018,6 +2033,17 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 		else
 		{
 			WP_FireJangoDualPistol(ent, alt_fire);
+		}
+		break;
+
+	case WP_DROIDEKA:
+		if (!cg_trueguns.integer && !cg.renderingThirdPerson)
+		{
+			WP_FireDroidekaFPPistolDuals(ent, alt_fire, qtrue);
+		}
+		else
+		{
+			WP_FireDroidekaDualPistol(ent, alt_fire);
 		}
 		break;
 

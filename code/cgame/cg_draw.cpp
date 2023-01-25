@@ -973,6 +973,10 @@ static void cg_drawweapontype(const centity_t* cent)
 	{
 		wp_index = OHB_TUSKEN;
 	}
+	else if (cent->currentState.weapon == WP_DROIDEKA)
+	{
+		wp_index = OHB_DUAL;
+	}
 	else
 	{
 		wp_index = OHB_MELEE;
@@ -7396,8 +7400,11 @@ static void CG_DrawCrosshair(vec3_t world_point)
 		cg.snap->ps.weapon == WP_REY ||
 		cg.snap->ps.weapon == WP_JANGO ||
 		cg.snap->ps.weapon == WP_CLONEPISTOL ||
-		cg.snap->ps.weapon == WP_REBELBLASTER) && (cg_entities[0].currentState.eFlags & EF2_JANGO_DUALS || cg_entities[
-			0].currentState.eFlags & EF2_DUAL_PISTOLS) && cg_trueguns.integer)
+		cg.snap->ps.weapon == WP_REBELBLASTER) && (cg_entities[0].currentState.eFlags & EF2_JANGO_DUALS || cg_entities[0].currentState.eFlags & EF2_DUAL_PISTOLS) && cg_trueguns.integer)
+	{
+		w = h = cg_crosshairDualSize.value;
+	}
+	else if (cg.snap->ps.weapon == WP_DROIDEKA)
 	{
 		w = h = cg_crosshairDualSize.value;
 	}
@@ -7444,11 +7451,17 @@ static void CG_DrawCrosshair(vec3_t world_point)
 	}
 	else if ((cg.snap->ps.weapon == WP_DUAL_PISTOL ||
 		cg.snap->ps.weapon == WP_BLASTER_PISTOL ||
+		cg.snap->ps.weapon == WP_DROIDEKA ||
 		cg.snap->ps.weapon == WP_REY ||
 		cg.snap->ps.weapon == WP_JANGO ||
 		cg.snap->ps.weapon == WP_CLONEPISTOL ||
 		cg.snap->ps.weapon == WP_REBELBLASTER) && (cg_entities[0].currentState.eFlags & EF2_JANGO_DUALS || cg_entities[
 			0].currentState.eFlags & EF2_DUAL_PISTOLS) && cg_trueguns.integer)
+	{
+		cgi_R_DrawStretchPic(x + cg.refdef.x + 0.5 * (640 - w), y + cg.refdef.y + 0.5 * (480 - h), w, h, 0, 0, 1, 1,
+			cgs.media.crosshairShader[4]);
+	}
+	else if (cg.snap->ps.weapon == WP_DROIDEKA)
 	{
 		cgi_R_DrawStretchPic(x + cg.refdef.x + 0.5 * (640 - w), y + cg.refdef.y + 0.5 * (480 - h), w, h, 0, 0, 1, 1,
 			cgs.media.crosshairShader[4]);
@@ -7487,11 +7500,17 @@ static void CG_DrawCrosshair(vec3_t world_point)
 			}
 			else if ((cg.snap->ps.weapon == WP_DUAL_PISTOL ||
 				cg.snap->ps.weapon == WP_BLASTER_PISTOL ||
+				cg.snap->ps.weapon == WP_DROIDEKA ||
 				cg.snap->ps.weapon == WP_REY ||
 				cg.snap->ps.weapon == WP_JANGO ||
 				cg.snap->ps.weapon == WP_CLONEPISTOL ||
 				cg.snap->ps.weapon == WP_REBELBLASTER) && (cg_entities[0].currentState.eFlags & EF2_JANGO_DUALS ||
 					cg_entities[0].currentState.eFlags & EF2_DUAL_PISTOLS) && cg_trueguns.integer)
+			{
+				cgi_R_DrawStretchPic(x + cg.refdef.x + 0.5 * (640 - w), y + cg.refdef.y + 0.5 * (480 - h), w, h, 0, 0,
+					1, 1, cgs.media.crosshairShader[4]);
+			}
+			else if (cg.snap->ps.weapon == WP_DROIDEKA)
 			{
 				cgi_R_DrawStretchPic(x + cg.refdef.x + 0.5 * (640 - w), y + cg.refdef.y + 0.5 * (480 - h), w, h, 0, 0,
 					1, 1, cgs.media.crosshairShader[4]);
