@@ -802,6 +802,11 @@ void Touch_Item(gentity_t* ent, gentity_t* other, trace_t* trace)
 		return;
 	}
 
+	if (other->client->NPC_class == CLASS_DROIDEKA && (ent->item->giType == IT_WEAPON || ent->item->giType == IT_HOLDABLE))
+	{
+		return;
+	}
+
 	if (other->client->ps.pm_time > 0)
 	{
 		//cant pick up when out of control
@@ -924,7 +929,7 @@ void Touch_Item(gentity_t* ent, gentity_t* other, trace_t* trace)
 		NPC_SetAnim(other, SETANIM_TORSO, BOTH_BUTTON2, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 	}
 
-	qboolean bHadWeapon = qfalse;
+	qboolean b_had_weapon = qfalse;
 	// call the item-specific pickup function
 	switch (ent->item->giType)
 	{
@@ -932,16 +937,16 @@ void Touch_Item(gentity_t* ent, gentity_t* other, trace_t* trace)
 		if (other->NPC && other->s.weapon == WP_NONE)
 		{
 			//Make them duck and sit here for a few seconds
-			const int pickUpTime = Q_irand(1000, 3000);
-			TIMER_Set(other, "duck", pickUpTime);
-			TIMER_Set(other, "roamTime", pickUpTime);
-			TIMER_Set(other, "stick", pickUpTime);
-			TIMER_Set(other, "verifyCP", pickUpTime);
+			const int pick_up_time = Q_irand(1000, 3000);
+			TIMER_Set(other, "duck", pick_up_time);
+			TIMER_Set(other, "roamTime", pick_up_time);
+			TIMER_Set(other, "stick", pick_up_time);
+			TIMER_Set(other, "verifyCP", pick_up_time);
 			TIMER_Set(other, "attackDelay", 600);
 		}
 		if (other->client->ps.weapons[ent->item->giTag])
 		{
-			bHadWeapon = qtrue;
+			b_had_weapon = qtrue;
 		}
 		respawn = Pickup_Weapon(ent, other);
 		break;
@@ -980,11 +985,11 @@ void Touch_Item(gentity_t* ent, gentity_t* other, trace_t* trace)
 		// but we're SP so we'll cheat
 		cgi_S_StartSound(nullptr, other->s.number, CHAN_AUTO, cgi_S_RegisterSound(ent->item->pickup_sound));
 		// show icon and name on status bar
-		CG_ItemPickup(ent->s.modelindex, bHadWeapon);
+		CG_ItemPickup(ent->s.modelindex, b_had_weapon);
 	}
 	else
 	{
-		if (bHadWeapon)
+		if (b_had_weapon)
 		{
 			G_AddEvent(other, EV_ITEM_PICKUP, -ent->s.modelindex);
 		}
@@ -2119,7 +2124,7 @@ void TurnBarrierON(gentity_t* ent)
 	ent->s.loopSound = shieldLoopSound;
 }
 
-void Barrier_Update(gentity_t* ent);
+void barrier_update(gentity_t* ent);
 void PlaceBarrier(gentity_t* ent)
 {
 	static qboolean registered = qfalse;
@@ -2144,7 +2149,7 @@ void PlaceBarrier(gentity_t* ent)
 			{
 				G_AddEvent(ent, EV_GENERAL_SOUND, DekashieldActivateSound);
 				gi.G2API_SetSurfaceOnOff(&ent->ghoul2[ent->playerModel], "force_shield", TURN_ON);
-				Barrier_Update(ent);
+				barrier_update(ent);
 			}
 			else
 			{
@@ -2366,7 +2371,7 @@ void ItemUse_Grapple(gentity_t* ent)
 
 extern void G_KnockOver(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, float strength,
 	qboolean break_saber_lock);
-void Barrier_PushEnt(gentity_t* ent, gentity_t* pushed, vec3_t smack_dir)
+void barrier_push_ent(gentity_t* ent, gentity_t* pushed, vec3_t smack_dir)
 {
 	G_Damage(pushed, ent, ent, smack_dir, ent->currentOrigin, (g_spskill->integer + 1) * Q_irand(5, 10), DAMAGE_EXTRA_KNOCKBACK, MOD_ELECTROCUTE);
 	//G_Throw(pushed, smack_dir, 10);
@@ -2377,12 +2382,12 @@ void Barrier_PushEnt(gentity_t* ent, gentity_t* pushed, vec3_t smack_dir)
 	pushed->s.powerups |= 1 << PW_SHOCKED;
 	if (pushed->client)
 	{
-		pushed->client->ps.powerups[PW_SHOCKED] = level.time + 1000;
+		pushed->client->ps.powerups[PW_SHOCKED] = level.time + 3000;
 	}
 }
 
 constexpr auto DROIDEKA_SHIELD_SIZE = 75;
-void BubbleShield_PushRadiusEnts(gentity_t* ent)
+void barrier_shield_push_radius_ents(gentity_t* ent)
 {
 	gentity_t* radius_ents[128];
 	constexpr float radius = DROIDEKA_SHIELD_SIZE;
@@ -2425,12 +2430,12 @@ void BubbleShield_PushRadiusEnts(gentity_t* ent)
 		const float smack_dist = VectorNormalize(smack_dir);
 		if (smack_dist < radius)
 		{
-			Barrier_PushEnt(ent, radius_ents[ent_index], smack_dir);
+			barrier_push_ent(ent, radius_ents[ent_index], smack_dir);
 		}
 	}
 }
 
-void Barrier_Update(gentity_t* ent)
+void barrier_update(gentity_t* ent)
 {
 	// Shields Go When You Die
 	//-------------------------
@@ -2444,35 +2449,8 @@ void Barrier_Update(gentity_t* ent)
 		return;
 	}
 
-	// Recharge Shields
-	//------------------
-	ent->client->ps.stats[STAT_ARMOR] += 1;
-	if (ent->client->ps.stats[STAT_ARMOR] > 250)
-	{
-		ent->client->ps.stats[STAT_ARMOR] = 250;
-	}
-
 	if (ent->client->ps.powerups[PW_GALAK_SHIELD])
 	{
-		// Update Our Shader Value
-		//-------------------------
-		ent->client->renderInfo.customRGBA[0] =
-			ent->client->renderInfo.customRGBA[1] =
-			ent->client->renderInfo.customRGBA[2] =
-			ent->client->renderInfo.customRGBA[3] = ent->client->ps.stats[STAT_ARMOR] - 100;
-
-		// If Touched By An Enemy, ALWAYS Shove Them
-		//-------------------------------------------
-		if (ent->enemy && ent->enemy->touchedByPlayer == ent->enemy)
-		{
-			vec3_t dir;
-			VectorSubtract(ent->enemy->currentOrigin, ent->currentOrigin, dir);
-			VectorNormalize(dir);
-			Barrier_PushEnt(ent, ent->enemy, dir);
-		}
-
-		// Push Anybody Else Near
-		//------------------------
-		BubbleShield_PushRadiusEnts(ent);
+		barrier_shield_push_radius_ents(ent);
 	}
 }

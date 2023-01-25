@@ -553,7 +553,9 @@ qboolean jedi_is_kick_resistant(gentity_t* self)
 		|| Q_stricmp("md_grie4_egg", self->NPC_type) == 0
 		|| Q_stricmp("md_grievous", self->NPC_type) == 0
 		|| Q_stricmp("md_grievous4", self->NPC_type) == 0
-		|| Q_stricmp("md_grievous_robed", self->NPC_type) == 0)
+		|| Q_stricmp("md_grievous_robed", self->NPC_type) == 0
+		|| Q_stricmp("md_dro_am", self->NPC_type) == 0
+		|| Q_stricmp("md_dro_sn", self->NPC_type) == 0)
 	{
 		self->flags |= FL_NO_KNOCKBACK;
 		return qtrue;

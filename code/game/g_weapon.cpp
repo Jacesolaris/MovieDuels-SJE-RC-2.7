@@ -1445,6 +1445,7 @@ qboolean DoesnotDrainMishap(const gentity_t* ent)
 	case WP_JAWA:
 	case WP_NOGHRI_STICK:
 	case WP_RAPID_FIRE_CONC:
+	case WP_DROIDEKA:
 		return qtrue;
 	default:;
 	}
@@ -1515,6 +1516,11 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 	}
 
 	if (ent->weaponfiredelaytime > level.time)
+	{
+		return;
+	}
+
+	if (ent->s.weapon == WP_DROIDEKA && PM_RunningAnim(ent->client->ps.legsAnim))
 	{
 		return;
 	}

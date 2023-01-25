@@ -103,7 +103,6 @@ void G_ATSTCheckPain(gentity_t* self, gentity_t* other, const vec3_t point, int 
 			new_bolt = gi.G2API_AddBolt(&self->ghoul2[self->playerModel], "*flash3");
 			if (new_bolt != -1)
 			{
-				//				G_PlayEffect( "small_chunks", self->playerModel, self->genericBolt1, self->s.number);
 				ATST_PlayEffect(self, self->genericBolt1, "env/med_explode2");
 				G_PlayEffect(G_EffectIndex("blaster/smoke_bolton"), self->playerModel, new_bolt, self->s.number, point);
 			}
@@ -118,7 +117,6 @@ void G_ATSTCheckPain(gentity_t* self, gentity_t* other, const vec3_t point, int 
 			new_bolt = gi.G2API_AddBolt(&self->ghoul2[self->playerModel], "*flash4");
 			if (new_bolt != -1)
 			{
-				//				G_PlayEffect( "small_chunks", self->playerModel, self->genericBolt2, self->s.number);
 				ATST_PlayEffect(self, self->genericBolt2, "env/med_explode2");
 				G_PlayEffect(G_EffectIndex("blaster/smoke_bolton"), self->playerModel, new_bolt, self->s.number, point);
 			}

@@ -7861,7 +7861,7 @@ void PM_TorsoAnimation()
 					{
 						if (weapon_busy)
 						{
-							PM_SetAnim(pm, SETANIM_TORSO, BOTH_ATTACK1, SETANIM_FLAG_NORMAL);
+							PM_SetAnim(pm, SETANIM_TORSO, BOTH_ATTACK_DUAL, SETANIM_FLAG_NORMAL);
 						}
 						else if (PM_RunningAnim(pm->ps->legsAnim)
 							|| PM_WalkingAnim(pm->ps->legsAnim)
@@ -8537,7 +8537,7 @@ void PM_TorsoAnimation()
 						//dual pistols
 						if (weapon_busy)
 						{
-							PM_SetAnim(pm, SETANIM_TORSO, BOTH_ATTACK1, SETANIM_FLAG_NORMAL);
+							PM_SetAnim(pm, SETANIM_TORSO, BOTH_ATTACK_DUAL, SETANIM_FLAG_NORMAL);
 						}
 						else if (PM_RunningAnim(pm->ps->legsAnim)
 							|| PM_WalkingAnim(pm->ps->legsAnim)

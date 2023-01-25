@@ -8087,7 +8087,7 @@ static void CG_DrawCrosshairItem()
 
 	CG_ScanForCrosshairEntity(scan_all);
 
-	if (cg_entities[cg.crosshairclient_num].currentState.eType == ET_ITEM)
+	if (cg_entities[cg.crosshairclient_num].currentState.eType == ET_ITEM && cg.snap->ps.weapon != WP_DROIDEKA)
 	{
 		if (cg_SerenityJediEngineHudMode.integer == 4)
 		{

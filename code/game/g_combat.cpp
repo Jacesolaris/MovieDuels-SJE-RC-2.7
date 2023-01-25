@@ -3712,8 +3712,8 @@ extern qboolean PM_FinishedCurrentLegsAnim(gentity_t* self);
 
 static int G_PickDeathAnim(gentity_t* self, vec3_t point, const int damage, int hit_loc)
 {
-	//FIXME: play dead flop anims on body if in an appropriate _DEAD anim when this func is called
 	int death_anim = -1;
+
 	if (hit_loc == HL_NONE)
 	{
 		hit_loc = G_GetHitLocation(self, point); //self->hit_loc
@@ -5042,6 +5042,14 @@ void player_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, cons
 			NPC_SetAnim(self, SETANIM_BOTH, anim, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 		}
 	}
+	else if (self->client->NPC_class == CLASS_DROIDEKA)
+	{
+		anim = PM_PickAnim(self, BOTH_DEATH1, BOTH_DEATH1); //initialize to good data
+		if (anim != -1)
+		{
+			NPC_SetAnim(self, SETANIM_BOTH, anim, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+		}
+	}
 	else if (self->s.number && self->message && means_of_death != MOD_SNIPER && means_of_death != MOD_PROJECTION_END)
 	{
 		//imp with a key on his arm
@@ -5696,7 +5704,7 @@ void PlayerPain(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, cons
 				}
 			}
 		}
-		if (damage != -1 && (mod == MOD_MELEE || damage == 0/*fake damage*/ || Q_irand(0, 10) <= damage && self->client
+		if (damage != -1 && (mod == MOD_MELEE || damage == 0 || Q_irand(0, 10) <= damage && self->client
 			->damage_blood))
 		{
 			//-1 == don't play pain anim

@@ -78,6 +78,21 @@ void BubbleShield_PushEnt(gentity_t* pushed, vec3_t smack_dir)
 	}
 }
 
+extern void G_BlastDown(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, float strength);
+void deka_bubble_shield_push_ent(gentity_t* pushed, vec3_t smack_dir)
+{
+	G_Damage(pushed, NPC, NPC, smack_dir, NPC->currentOrigin, Q_irand(5, 10), DAMAGE_EXTRA_KNOCKBACK, MOD_ELECTROCUTE);
+	G_BlastDown(pushed, NPC, smack_dir, 25);
+
+	// Make Em Electric
+	//------------------
+	pushed->s.powerups |= 1 << PW_SHOCKED;
+	if (pushed->client)
+	{
+		pushed->client->ps.powerups[PW_SHOCKED] = level.time + 3000;
+	}
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////
 // Go Through All The Ents Within The Radius Of The Shield And Push Them
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -125,6 +140,54 @@ void BubbleShield_PushRadiusEnts()
 		if (smack_dist < radius)
 		{
 			BubbleShield_PushEnt(radius_ents[ent_index], smack_dir);
+		}
+	}
+}
+
+void deka_bubble_shield_push_radius_ents()
+{
+	gentity_t* radius_ents[128];
+	constexpr float radius = ASSASSIN_SHIELD_SIZE;
+	vec3_t mins, maxs;
+
+	for (int i = 0; i < 3; i++)
+	{
+		mins[i] = NPC->currentOrigin[i] - radius;
+		maxs[i] = NPC->currentOrigin[i] + radius;
+	}
+
+	const int num_ents = gi.EntitiesInBox(mins, maxs, radius_ents, 128);
+	for (int ent_index = 0; ent_index < num_ents; ent_index++)
+	{
+		vec3_t smack_dir;
+		// Only Clients
+		//--------------
+		if (!radius_ents[ent_index] || !radius_ents[ent_index]->client)
+		{
+			continue;
+		}
+
+		// Don't Push Away Other Assassin Droids
+		//---------------------------------------
+		if (radius_ents[ent_index]->client->NPC_class == NPC->client->NPC_class)
+		{
+			continue;
+		}
+
+		// Should Have Already Pushed The Enemy If He Touched Us
+		//-------------------------------------------------------
+		if (NPC->enemy && NPCInfo->touchedByPlayer == NPC->enemy && radius_ents[ent_index] == NPC->enemy)
+		{
+			continue;
+		}
+
+		// Do The Vector Distance Test
+		//-----------------------------
+		VectorSubtract(radius_ents[ent_index]->currentOrigin, NPC->currentOrigin, smack_dir);
+		const float smack_dist = VectorNormalize(smack_dir);
+		if (smack_dist < radius)
+		{
+			deka_bubble_shield_push_ent(radius_ents[ent_index], smack_dir);
 		}
 	}
 }
@@ -189,6 +252,74 @@ void BubbleShield_Update()
 			// Push Anybody Else Near
 			//------------------------
 			BubbleShield_PushRadiusEnts();
+		}
+	}
+
+	// Shields Gone
+	//--------------
+	else
+	{
+		BubbleShield_TurnOff();
+	}
+}
+
+void deka_bubble_shield_update()
+{
+	// Shields Go When You Die
+	//-------------------------
+	if (NPC->health <= 0)
+	{
+		if (BubbleShield_IsOn())
+		{
+			BubbleShield_TurnOff();
+		}
+		return;
+	}
+
+	// Recharge Shields
+	//------------------
+	NPC->client->ps.stats[STAT_ARMOR] += 1;
+	if (NPC->client->ps.stats[STAT_ARMOR] > 250)
+	{
+		NPC->client->ps.stats[STAT_ARMOR] = 250;
+	}
+
+	// If We Have Enough Armor And Are Not Shooting Right Now, Kick The Shield On
+	//----------------------------------------------------------------------------
+	if (NPC->client->ps.stats[STAT_ARMOR] > 100 && TIMER_Done(NPC, "ShieldsDown"))
+	{
+		// Check On Timers To Raise And Lower Shields
+		//--------------------------------------------
+		if (level.time - NPCInfo->enemyLastSeenTime < 1000 && TIMER_Done(NPC, "ShieldsUp"))
+		{
+			TIMER_Set(NPC, "ShieldsDown", 2000); // Drop Shields
+			TIMER_Set(NPC, "ShieldsUp", Q_irand(4000, 5000)); // Then Bring Them Back Up For At Least 3 sec
+		}
+
+		BubbleShield_TurnOn();
+
+		if (BubbleShield_IsOn() && NPC->client->ps.stats[STAT_ARMOR] > 50)
+		{
+			// Update Our Shader Value
+			//-------------------------
+			NPC->client->renderInfo.customRGBA[0] =
+				NPC->client->renderInfo.customRGBA[1] =
+				NPC->client->renderInfo.customRGBA[2] =
+				NPC->client->renderInfo.customRGBA[3] = NPC->client->ps.stats[STAT_ARMOR] - 100;
+
+			// If Touched By An Enemy, ALWAYS Shove Them
+			//-------------------------------------------
+			if (NPC->enemy && NPCInfo->touchedByPlayer == NPC->enemy)
+			{
+				vec3_t dir;
+				VectorSubtract(NPC->enemy->currentOrigin, NPC->currentOrigin, dir);
+				VectorNormalize(dir);
+				deka_bubble_shield_push_ent(NPC->enemy, dir);
+			}
+
+			// Push Anybody Else Near
+			//------------------------
+			deka_bubble_shield_push_radius_ents();
 		}
 	}
 

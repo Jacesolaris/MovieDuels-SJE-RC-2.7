@@ -4477,6 +4477,7 @@ Caused by an EV_FIRE_WEAPON event
 ================
 */
 extern void TurnBarrierOff(gentity_t* ent);
+extern qboolean PM_RunningAnim(int anim);
 
 void CG_FireWeapon(centity_t* cent, const qboolean alt_fire)
 {
@@ -4494,6 +4495,11 @@ void CG_FireWeapon(centity_t* cent, const qboolean alt_fire)
 
 	if (PM_ReloadAnim(cent->currentState.torsoAnim) ||
 		PM_WeponRestAnim(cent->currentState.torsoAnim))
+	{
+		return;
+	}
+
+	if (cg_entities[0].gent->s.weapon == WP_DROIDEKA && PM_RunningAnim(cent->gent->client->ps.legsAnim))
 	{
 		return;
 	}

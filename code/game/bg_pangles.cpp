@@ -1715,7 +1715,7 @@ void PM_UpdateViewAngles(int saber_anim_level, playerState_t* ps, usercmd_t* cmd
 	}
 
 	if (gent
-		&& gent->client
+		&& gent->client && gent->client->NPC_class != CLASS_DROIDEKA
 		&& (cmd->buttons & BUTTON_USE && !(cmd->buttons & BUTTON_BLOCK) && !(cmd->buttons & BUTTON_ATTACK)))
 	{
 		//check leaning

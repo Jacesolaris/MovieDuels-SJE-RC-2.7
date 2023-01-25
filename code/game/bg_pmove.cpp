@@ -6457,7 +6457,7 @@ static void PM_CheckDuck()
 		}
 
 		if (pm->ps->client_num < MAX_CLIENTS
-			&& (pm->gent->client->NPC_class == CLASS_ATST || pm->gent->client->NPC_class == CLASS_RANCOR)
+			&& (pm->gent->client->NPC_class == CLASS_ATST || pm->gent->client->NPC_class == CLASS_RANCOR || pm->gent->client->NPC_class == CLASS_DROIDEKA)
 			&& !BG_AllowThirdPersonSpecialMove(pm->ps))
 		{
 			standheight = crouchheight = 128;
@@ -10179,7 +10179,7 @@ static void PM_Footsteps()
 	// if not trying to move
 	if (!pm->cmd.forwardmove && !pm->cmd.rightmove)
 	{
-		if (pm->gent && pm->gent->client && pm->gent->client->NPC_class == CLASS_ATST)
+		if (pm->gent && pm->gent->client && (pm->gent->client->NPC_class == CLASS_ATST || pm->gent->client->NPC_class == CLASS_DROIDEKA))
 		{
 			if (!PM_AdjustStandAnimForSlope())
 			{
@@ -10562,6 +10562,25 @@ static void PM_Footsteps()
 				//no run anim
 				PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALKBACK1, set_anim_flags);
 			}
+			else if (pm->gent && pm->gent->client && (pm->gent->client->NPC_class == CLASS_ATST || pm->gent->client->NPC_class == CLASS_DROIDEKA))
+			{
+				if (pm->ps->legsAnim != BOTH_RUNBACK1)
+				{
+					if (pm->ps->legsAnim != BOTH_RUN1START)
+					{
+						//Hmm, he should really start slow and have to accelerate... also need to do this for stopping
+						PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN1START, set_anim_flags | SETANIM_FLAG_HOLD);
+					}
+					else if (!pm->ps->legsAnimTimer)
+					{
+						PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUNBACK1, set_anim_flags);
+					}
+				}
+				else
+				{
+					PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUNBACK1, set_anim_flags);
+				}
+			}
 			else
 			{
 				if (pm->ps->weapon == WP_BLASTER_PISTOL ||
@@ -10684,6 +10703,25 @@ static void PM_Footsteps()
 					{
 						PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALKBACK2, set_anim_flags);
 					}
+				}
+			}
+			else if (pm->gent && pm->gent->client && (pm->gent->client->NPC_class == CLASS_ATST || pm->gent->client->NPC_class == CLASS_DROIDEKA))
+			{
+				if (pm->ps->legsAnim != BOTH_WALKBACK1)
+				{
+					if (pm->ps->legsAnim != BOTH_RUN1STOP && pm->ps->legsAnim == BOTH_RUNBACK1)
+					{
+						//Hmm, he should really start slow and have to accelerate... also need to do this for stopping
+						PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN1STOP, set_anim_flags | SETANIM_FLAG_HOLD);
+					}
+					else if (!pm->ps->legsAnimTimer)
+					{
+						PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALKBACK1, set_anim_flags);
+					}
+				}
+				else
+				{
+					PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALKBACK1, set_anim_flags);
 				}
 			}
 			else
@@ -11037,7 +11075,7 @@ static void PM_Footsteps()
 							}
 						}
 					}
-					else if (pm->gent && pm->gent->client && pm->gent->client->NPC_class == CLASS_ATST)
+					else if (pm->gent && pm->gent->client && (pm->gent->client->NPC_class == CLASS_ATST || pm->gent->client->NPC_class == CLASS_DROIDEKA))
 					{
 						if (pm->ps->legsAnim != BOTH_RUN1)
 						{
@@ -11249,6 +11287,25 @@ static void PM_Footsteps()
 								}
 							}
 						}
+					}
+				}
+				else if (pm->gent && pm->gent->client && pm->gent->client->NPC_class == CLASS_DROIDEKA)
+				{
+					if (pm->ps->legsAnim != BOTH_WALK1 && pm->cmd.forwardmove > 0)
+					{
+						if (pm->ps->legsAnim != BOTH_RUN1STOP && pm->ps->legsAnim == BOTH_RUN1)
+						{
+							//Hmm, he should really start slow and have to accelerate... also need to do this for stopping
+							PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN1STOP, set_anim_flags | SETANIM_FLAG_HOLD);
+						}
+						else if (!pm->ps->legsAnimTimer)
+						{
+							PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALK1, set_anim_flags);
+						}
+					}
+					else
+					{
+						PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALK1, set_anim_flags);
 					}
 				}
 				else if (pm->gent && pm->gent->client && pm->gent->client->NPC_class == CLASS_WAMPA)
@@ -11700,7 +11757,7 @@ static void PM_BeginWeaponChange(const int weapon)
 
 	if (pm->gent
 		&& pm->gent->client
-		&& (pm->gent->client->NPC_class == CLASS_ATST || pm->gent->client->NPC_class == CLASS_RANCOR))
+		&& (pm->gent->client->NPC_class == CLASS_ATST || pm->gent->client->NPC_class == CLASS_RANCOR || pm->gent->client->NPC_class == CLASS_DROIDEKA))
 	{
 		if (pm->ps->client_num < MAX_CLIENTS)
 		{
@@ -11792,7 +11849,7 @@ static void PM_FinishWeaponChange()
 	pm->ps->weaponstate = WEAPON_RAISING;
 	pm->ps->weaponTime += 250;
 
-	if (pm->gent && pm->gent->client && pm->gent->client->NPC_class == CLASS_ATST)
+	if (pm->gent && pm->gent->client && (pm->gent->client->NPC_class == CLASS_ATST || pm->gent->client->NPC_class == CLASS_DROIDEKA))
 	{
 		//do nothing
 	}
@@ -16451,6 +16508,7 @@ qboolean PM_CheckKickAttack()
 {
 	if (pm->cmd.buttons & BUTTON_KICK
 		&& !(pm->cmd.buttons & BUTTON_DASH)
+		&& pm->gent->client->NPC_class != CLASS_DROIDEKA
 		&& !(pm->ps->forcePowersActive & 1 << FP_LIGHTNING)
 		&& (!PM_FlippingAnim(pm->ps->legsAnim) || pm->ps->legsAnimTimer <= 250))
 	{
@@ -16463,6 +16521,7 @@ qboolean PM_CheckAltKickAttack()
 {
 	if (pm->cmd.buttons & BUTTON_ALT_ATTACK || pm->cmd.buttons & BUTTON_KICK
 		&& !(pm->cmd.buttons & BUTTON_DASH)
+		&& pm->gent->client->NPC_class != CLASS_DROIDEKA
 		&& (!PM_FlippingAnim(pm->ps->legsAnim) || pm->ps->legsAnimTimer <= 250))
 	{
 		return qtrue;
@@ -18829,7 +18888,8 @@ void PM_WeaponLightsaber()
 	}
 	else
 	{
-		if (pm->cmd.buttons & BUTTON_KICK && pm->ps->communicatingflags & 1 << KICKING)
+		if (pm->cmd.buttons & BUTTON_KICK && pm->ps->communicatingflags & 1 << KICKING
+			&& pm->gent->client->NPC_class != CLASS_DROIDEKA)
 		{
 			//allow them to do the kick now!
 			pm->ps->weaponTime = 0;
@@ -20628,7 +20688,8 @@ static void PM_Weapon()
 	}
 	else
 	{
-		if (pm->cmd.buttons & BUTTON_KICK/* && pm->ps->communicatingflags & 1 << KICKING*/)
+		if (pm->cmd.buttons & BUTTON_KICK
+			&& pm->gent->client->NPC_class != CLASS_DROIDEKA)
 		{
 			//allow them to do the kick now!
 			if (PM_CheckKickAttack()) //trying to do a kick
@@ -20971,7 +21032,7 @@ static void PM_Weapon()
 				if (pm->gent && pm->gent->weaponModel[1] > 0)
 				{
 					//dual pistols
-					PM_SetAnim(pm, SETANIM_TORSO, BOTH_ATTACK1, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_RESTART | SETANIM_FLAG_HOLD);
+					PM_SetAnim(pm, SETANIM_TORSO, BOTH_ATTACK_DUAL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_RESTART | SETANIM_FLAG_HOLD);
 				}
 				else
 				{
@@ -21008,7 +21069,8 @@ static void PM_Weapon()
 									PM_CheckKick();
 								}
 							}
-							else if (pm->cmd.buttons & BUTTON_KICK/* && pm->ps->communicatingflags & 1 << KICKING*/)
+							else if (pm->cmd.buttons & BUTTON_KICK
+								&& pm->gent->client->NPC_class != CLASS_DROIDEKA)
 							{
 								PM_MeleeKickForConditions();
 							}

@@ -2909,7 +2909,6 @@ static void CG_G2PlayerAngles(centity_t* cent, vec3_t legs[], vec3_t angles)
 		}
 		VectorCopy(view_angles, look_angles);
 
-		//	if ( cent->gent && !Q_stricmp( "atst", cent->gent->NPC_type ) )
 		if (cent->gent && cent->gent->client && cent->gent->client->NPC_class == CLASS_ATST)
 		{
 			look_angles[YAW] = 0;
@@ -4202,13 +4201,13 @@ static void CG_PlayerFootsteps(const centity_t* cent, const footstepType_t foot_
 		temp_angles[YAW] = cent->pe.legs.yawAngle;
 		temp_angles[ROLL] = 0;
 
-		int footBolt = cent->gent->footLBolt;
+		int foot_bolt = cent->gent->footLBolt;
 		if (foot_step_type == FOOTSTEP_HEAVY_R || foot_step_type == FOOTSTEP_R)
 		{
-			footBolt = cent->gent->footRBolt;
+			foot_bolt = cent->gent->footRBolt;
 		}
 		//FIXME: get yaw orientation of the foot and use on decal
-		gi.G2API_GetBoltMatrix(cent->gent->ghoul2, cent->gent->playerModel, footBolt,
+		gi.G2API_GetBoltMatrix(cent->gent->ghoul2, cent->gent->playerModel, foot_bolt,
 			&bolt_matrix, temp_angles, cent->lerpOrigin,
 			cg.time, cgs.model_draw, cent->currentState.modelScale);
 		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, side_origin);

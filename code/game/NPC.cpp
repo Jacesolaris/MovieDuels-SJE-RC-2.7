@@ -56,6 +56,7 @@ extern void Boba_Update();
 extern bool Boba_Flee();
 extern bool Boba_Tactics();
 extern void BubbleShield_Update();
+extern void deka_bubble_shield_update();
 extern qboolean PM_LockedAnim(int anim);
 extern void NPC_BSGM_Default();
 
@@ -1905,7 +1906,7 @@ void NPC_RunBehavior(const int team, const int b_state)
 
 			if (droideka_npc(NPC))
 			{
-				BubbleShield_Update();
+				deka_bubble_shield_update();
 			}
 
 			if (NPC_IsTrooper(NPC))
