@@ -1959,6 +1959,7 @@ HUDMenuItem_t otherHUDBits[] =
 	{"righthud", "weapontype_clonepistol", 0, 0, 0, 0, {0.0f, 0.0f, 0.0f, 0.0f}, NULL_HANDLE}, // OHB_CLONEPISTOL
 	{"righthud", "weapontype_wrist", 0, 0, 0, 0, {0.0f, 0.0f, 0.0f, 0.0f}, NULL_HANDLE}, // OHB_WRIST
 	{"righthud", "weapontype_jangodual", 0, 0, 0, 0, {0.0f, 0.0f, 0.0f, 0.0f}, NULL_HANDLE}, // OHB_DUAL
+	{"righthud", "weapontype_droideka", 0, 0, 0, 0, {0.0f, 0.0f, 0.0f, 0.0f}, NULL_HANDLE}, // OHB_DEKA
 	{"righthud", "weapontype_nogri", 0, 0, 0, 0, {0.0f, 0.0f, 0.0f, 0.0f}, NULL_HANDLE}, // OHB_NOGRI
 	{"righthud", "weapontype_tusken", 0, 0, 0, 0, {0.0f, 0.0f, 0.0f, 0.0f}, NULL_HANDLE}, // OHB_TUSKEN
 	{"lefthud", "scanline", 0, 0, 0, 0, {0.0f, 0.0f, 0.0f, 0.0f}, NULL_HANDLE}, // OHB_SCANLINE_LEFT

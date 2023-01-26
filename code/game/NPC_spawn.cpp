@@ -617,13 +617,12 @@ void NPC_SetMiscDefaultData(gentity_t* ent)
 			ent->NPC->stats.walkSpeed = 65;
 		}
 	}
+
 	//***I'm not sure whether I should leave this as a TEAM_ switch, I think NPC_class may be more appropriate - dmv
 	switch (ent->client->playerTeam)
 	{
 	case TEAM_PLAYER:
-		//ent->flags |= FL_NO_KNOCKBACK;
 	{
-		//ent->flags |= FL_NO_KNOCKBACK;
 		if (ent->client->NPC_class == CLASS_SEEKER)
 		{
 			ent->NPC->defaultBehavior = BS_DEFAULT;
@@ -691,9 +690,9 @@ void NPC_SetMiscDefaultData(gentity_t* ent)
 					//they do this themselves
 				{
 					//dual blaster pistols, so add the left-hand one, too
-					G_CreateG2AttachedWeaponModel(ent, weaponData[ent->client->ps.weapon].weaponMdl, ent->handLBolt,
-						1);
+					G_CreateG2AttachedWeaponModel(ent, weaponData[ent->client->ps.weapon].weaponMdl, ent->handLBolt, 1);
 				}
+				//ent->NPC->scriptFlags |= SCF_ALT_FIRE;
 				break;
 
 			case WP_JANGO:
@@ -715,11 +714,9 @@ void NPC_SetMiscDefaultData(gentity_t* ent)
 			case WP_THERMAL:
 			case WP_BLASTER:
 				ST_ClearTimers(ent);
-				if (ent->NPC->rank >= RANK_LT || ent->client->ps.weapon == WP_THERMAL)
+				if ((ent->NPC->rank >= RANK_LT || ent->client->ps.weapon == WP_THERMAL) && com_outcast->integer == 1)
 				{
-					//officers, grenade-throwers use alt-fire
-					//ent->health = 50;
-					//ent->NPC->scriptFlags |= SCF_ALT_FIRE;
+					ent->NPC->scriptFlags |= SCF_ALT_FIRE;
 				}
 				break;
 			}
@@ -777,6 +774,7 @@ void NPC_SetMiscDefaultData(gentity_t* ent)
 	case TEAM_ENEMY:
 	{
 		ent->NPC->defaultBehavior = BS_DEFAULT;
+
 		if (ent->client->NPC_class == CLASS_SHADOWTROOPER
 			&& Q_stricmpn("shadowtrooper", ent->NPC_type, 13) == 0)
 		{
@@ -863,14 +861,17 @@ void NPC_SetMiscDefaultData(gentity_t* ent)
 					//they do this themselves
 				{
 					//dual blaster pistols, so add the left-hand one, too
-					G_CreateG2AttachedWeaponModel(ent, weaponData[ent->client->ps.weapon].weaponMdl, ent->handLBolt,
-						1);
+					G_CreateG2AttachedWeaponModel(ent, weaponData[ent->client->ps.weapon].weaponMdl, ent->handLBolt, 1);
 				}
+				//ent->NPC->scriptFlags |= SCF_ALT_FIRE;
 				break;
 
 			case WP_DISRUPTOR:
 				//Sniper
-				//ent->NPC->scriptFlags |= SCF_ALT_FIRE;//FIXME: use primary fire sometimes?  Up close?  Different class of NPC?
+				if (com_outcast->integer == 1) // PLAYING OUTCAST
+				{
+					ent->NPC->scriptFlags |= SCF_ALT_FIRE;
+				}
 				break;
 			case WP_BOWCASTER:
 				NPCInfo->scriptFlags |= SCF_PILOT;
@@ -886,7 +887,10 @@ void NPC_SetMiscDefaultData(gentity_t* ent)
 				//shotgunner
 				if (!Q_stricmp("stofficeralt", ent->NPC_type))
 				{
-					//ent->NPC->scriptFlags |= SCF_ALT_FIRE;
+					if (com_outcast->integer == 1) // PLAYING OUTCAST
+					{
+						ent->NPC->scriptFlags |= SCF_ALT_FIRE;
+					}
 				}
 				break;
 			case WP_ROCKET_LAUNCHER:
@@ -894,8 +898,6 @@ void NPC_SetMiscDefaultData(gentity_t* ent)
 			case WP_CONCUSSION:
 				break;
 			case WP_THERMAL:
-				//Gran, use main, bouncy fire
-				//					ent->NPC->scriptFlags |= SCF_ALT_FIRE;
 				break;
 			case WP_MELEE:
 				break;
@@ -910,12 +912,17 @@ void NPC_SetMiscDefaultData(gentity_t* ent)
 				ST_ClearTimers(ent);
 				if (ent->NPC->rank >= RANK_COMMANDER)
 				{
-					//commanders use alt-fire
-					//ent->NPC->scriptFlags |= SCF_ALT_FIRE;
+					if (com_outcast->integer == 1) // PLAYING OUTCAST
+					{
+						ent->NPC->scriptFlags |= SCF_ALT_FIRE;
+					}
 				}
 				if (!Q_stricmp("rodian2", ent->NPC_type))
 				{
-					//ent->NPC->scriptFlags |= SCF_ALT_FIRE;
+					if (com_outcast->integer == 1) // PLAYING OUTCAST
+					{
+						ent->NPC->scriptFlags |= SCF_ALT_FIRE;
+					}
 				}
 				break;
 			}
@@ -1030,6 +1037,10 @@ int NPC_WeaponsForTeam(const team_t team, const int spawnflags, const char* npc_
 			return 1 << WP_FLECHETTE;
 		}
 		if (Q_stricmp("stcommander", npc_type) == 0)
+		{
+			return 1 << WP_REPEATER;
+		}
+		if (Q_stricmp("stcommander_jk2", npc_type) == 0)
 		{
 			return 1 << WP_REPEATER;
 		}

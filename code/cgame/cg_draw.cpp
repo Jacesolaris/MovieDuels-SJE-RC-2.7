@@ -975,7 +975,7 @@ static void cg_drawweapontype(const centity_t* cent)
 	}
 	else if (cent->currentState.weapon == WP_DROIDEKA)
 	{
-		wp_index = OHB_DUAL;
+		wp_index = OHB_DEKA;
 	}
 	else
 	{
@@ -7451,7 +7451,6 @@ static void CG_DrawCrosshair(vec3_t world_point)
 	}
 	else if ((cg.snap->ps.weapon == WP_DUAL_PISTOL ||
 		cg.snap->ps.weapon == WP_BLASTER_PISTOL ||
-		cg.snap->ps.weapon == WP_DROIDEKA ||
 		cg.snap->ps.weapon == WP_REY ||
 		cg.snap->ps.weapon == WP_JANGO ||
 		cg.snap->ps.weapon == WP_CLONEPISTOL ||
@@ -7500,7 +7499,6 @@ static void CG_DrawCrosshair(vec3_t world_point)
 			}
 			else if ((cg.snap->ps.weapon == WP_DUAL_PISTOL ||
 				cg.snap->ps.weapon == WP_BLASTER_PISTOL ||
-				cg.snap->ps.weapon == WP_DROIDEKA ||
 				cg.snap->ps.weapon == WP_REY ||
 				cg.snap->ps.weapon == WP_JANGO ||
 				cg.snap->ps.weapon == WP_CLONEPISTOL ||

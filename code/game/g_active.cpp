@@ -7741,7 +7741,7 @@ qboolean is_holding_reloadable_gun(const gentity_t* ent)
 	case WP_CONCUSSION:
 	case WP_BRYAR_PISTOL:
 	case WP_DUAL_PISTOL:
-		//
+	case WP_DROIDEKA:
 	case WP_TUSKEN_RIFLE:
 	case WP_BATTLEDROID:
 	case WP_THEFIRSTORDER:
@@ -7760,7 +7760,7 @@ qboolean is_holding_reloadable_gun(const gentity_t* ent)
 	return qfalse;
 }
 
-int ClipSize(const int ammo)
+int clip_size(const int ammo)
 {
 	switch (ammo)
 	{
@@ -7777,12 +7777,18 @@ int ClipSize(const int ammo)
 	return -1;
 }
 
-int MagazineSize(const int ammo)
+int magazine_size(const gentity_t* ent,const int ammo)
 {
 	switch (ammo)
 	{
 	case AMMO_BLASTER:
-		return 50;
+		{
+			if (ent->s.weapon == WP_DROIDEKA)
+			{
+				return 150;
+			}
+			return 50;
+		}
 	case AMMO_POWERCELL:
 		return 50;
 	case AMMO_METAL_BOLTS:
@@ -7836,6 +7842,10 @@ void wp_reload_gun(gentity_t* ent)
 			{
 				NPC_SetAnim(ent, SETANIM_TORSO, BOTH_ROCKETFAIL, SETANIM_AFLAG_BLOCKPACE);
 			}
+			else if (ent->s.weapon == WP_DROIDEKA)
+			{
+				NPC_SetAnim(ent, SETANIM_TORSO, BOTH_RELOAD_DEKA, SETANIM_AFLAG_BLOCKPACE);
+			}
 			else
 			{
 				NPC_SetAnim(ent, SETANIM_TORSO, BOTH_RIFLEFAIL, SETANIM_AFLAG_BLOCKPACE);
@@ -7856,11 +7866,12 @@ void wp_reload_gun(gentity_t* ent)
 				ent->s.weapon == WP_REY ||
 				ent->s.weapon == WP_JANGO ||
 				ent->s.weapon == WP_DUAL_PISTOL ||
+				ent->s.weapon == WP_DROIDEKA ||
 				ent->s.weapon == WP_REBELBLASTER)
 			{
-				if (ent->client->ps.ammo[AMMO_BLASTER] < ClipSize(AMMO_BLASTER))
+				if (ent->client->ps.ammo[AMMO_BLASTER] < clip_size(AMMO_BLASTER))
 				{
-					ent->client->ps.ammo[AMMO_BLASTER] += MagazineSize(AMMO_BLASTER);
+					ent->client->ps.ammo[AMMO_BLASTER] += magazine_size(ent,AMMO_BLASTER);
 
 					if (ent->s.weapon == WP_BRYAR_PISTOL ||
 						ent->s.weapon == WP_BLASTER_PISTOL ||
@@ -7879,6 +7890,10 @@ void wp_reload_gun(gentity_t* ent)
 							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_PISTOLRELOAD,
 								SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						}
+					}
+					else if (ent->s.weapon == WP_DROIDEKA)
+					{
+						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_RELOAD_DEKA, SETANIM_AFLAG_BLOCKPACE);
 					}
 					else
 					{
@@ -7922,9 +7937,9 @@ void wp_reload_gun(gentity_t* ent)
 				ent->s.weapon == WP_REBELRIFLE ||
 				ent->s.weapon == WP_BOBA)
 			{
-				if (ent->client->ps.ammo[AMMO_POWERCELL] < ClipSize(AMMO_POWERCELL))
+				if (ent->client->ps.ammo[AMMO_POWERCELL] < clip_size(AMMO_POWERCELL))
 				{
-					ent->client->ps.ammo[AMMO_POWERCELL] += MagazineSize(AMMO_POWERCELL);
+					ent->client->ps.ammo[AMMO_POWERCELL] += magazine_size(ent, AMMO_POWERCELL);
 
 					NPC_SetAnim(ent, SETANIM_TORSO, BOTH_RIFLERELOAD, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 
@@ -7945,9 +7960,9 @@ void wp_reload_gun(gentity_t* ent)
 				ent->s.weapon == WP_CLONECOMMANDO ||
 				ent->s.weapon == WP_CLONEPISTOL)
 			{
-				if (ent->client->ps.ammo[AMMO_METAL_BOLTS] < ClipSize(AMMO_METAL_BOLTS))
+				if (ent->client->ps.ammo[AMMO_METAL_BOLTS] < clip_size(AMMO_METAL_BOLTS))
 				{
-					ent->client->ps.ammo[AMMO_METAL_BOLTS] += MagazineSize(AMMO_METAL_BOLTS);
+					ent->client->ps.ammo[AMMO_METAL_BOLTS] += magazine_size(ent, AMMO_METAL_BOLTS);
 
 					if (ent->s.weapon == WP_REPEATER ||
 						ent->s.weapon == WP_FLECHETTE ||
@@ -7998,9 +8013,9 @@ void wp_reload_gun(gentity_t* ent)
 			}
 			else if (ent->s.weapon == WP_ROCKET_LAUNCHER)
 			{
-				if (ent->client->ps.ammo[AMMO_ROCKETS] < ClipSize(AMMO_ROCKETS))
+				if (ent->client->ps.ammo[AMMO_ROCKETS] < clip_size(AMMO_ROCKETS))
 				{
-					ent->client->ps.ammo[AMMO_ROCKETS] += MagazineSize(AMMO_ROCKETS);
+					ent->client->ps.ammo[AMMO_ROCKETS] += magazine_size(ent, AMMO_ROCKETS);
 					NPC_SetAnim(ent, SETANIM_TORSO, BOTH_ROCKETRELOAD, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					G_SoundOnEnt(ent, CHAN_WEAPON, "sound/weapons/reload.mp3");
 					ent->reloadTime = level.time + ReloadTime(ent);

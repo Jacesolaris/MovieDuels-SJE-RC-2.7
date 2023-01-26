@@ -8696,6 +8696,7 @@ void G_Damage(gentity_t* targ, gentity_t* inflictor, gentity_t* attacker, const 
 			|| inflictor->s.weapon == WP_DUAL_PISTOL
 			|| inflictor->s.weapon == WP_BOBA
 			|| inflictor->s.weapon == WP_CLONEPISTOL
+			|| inflictor->s.weapon == WP_DROIDEKA
 			|| inflictor->s.weapon == WP_JAWA)
 		{
 			float targ_maxs2;

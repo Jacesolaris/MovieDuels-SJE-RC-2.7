@@ -458,7 +458,6 @@ void G_AttackDelay(const gentity_t* self, const gentity_t* enemy)
 			}
 			break;
 		case WP_DUAL_PISTOL:
-		case WP_DROIDEKA:
 			if (self->NPC->scriptFlags & SCF_ALT_FIRE)
 			{
 				//rapid-fire blasters
@@ -468,6 +467,18 @@ void G_AttackDelay(const gentity_t* self, const gentity_t* enemy)
 			{
 				//regular blaster
 				att_delay += Q_irand(500, 1500);
+			}
+			break;
+		case WP_DROIDEKA:
+			if (self->NPC->scriptFlags & SCF_ALT_FIRE)
+			{
+				//rapid-fire blasters
+				att_delay += Q_irand(250, 500);
+			}
+			else
+			{
+				//regular blaster
+				att_delay -= Q_irand(250, 500);
 			}
 			break;
 		default:;

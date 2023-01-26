@@ -984,7 +984,7 @@ public:
 	void Lerp2Angles(int taskID, int entID, vec3_t angles, float duration) OVERRIDE;
 	int GetTag(int entID, const char* name, int lookup, vec3_t info) OVERRIDE;
 	void Set(int taskID, int entID, const char* type_name, const char* data) OVERRIDE;
-	void Use(int entID, const char* name) OVERRIDE;
+	void Use(int ent_id, const char* name) OVERRIDE;
 	void Activate(int entID, const char* name) OVERRIDE;
 	void Deactivate(int entID, const char* name) OVERRIDE;
 	void Kill(int entID, const char* name) OVERRIDE;

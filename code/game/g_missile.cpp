@@ -1653,7 +1653,7 @@ void G_MissileImpacted(gentity_t* ent, gentity_t* other, vec3_t impact_pos, vec3
 					npc_class == CLASS_R2D2 || npc_class == CLASS_R5D2 ||
 					npc_class == CLASS_SEEKER || npc_class == CLASS_SENTRY ||
 					//npc_class == CLASS_SBD || npc_class == CLASS_BATTLEDROID ||
-					npc_class == CLASS_DROIDEKA || npc_class == CLASS_OBJECT ||
+					/*npc_class == CLASS_DROIDEKA ||*/ npc_class == CLASS_OBJECT ||
 					npc_class == CLASS_ASSASSIN_DROID || npc_class == CLASS_SABER_DROID)
 				{
 					// special droid only behaviors

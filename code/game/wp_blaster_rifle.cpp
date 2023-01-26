@@ -2169,7 +2169,7 @@ void WP_FireDroidekaDualPistol(gentity_t* ent, const qboolean alt_fire)
 
 	vectoangles(forwardVec, angs);
 
-	if (ent->client && ent->client->NPC_class == CLASS_VEHICLE)
+	if (ent->client && ent->client->ps.BlasterAttackChainCount <= BLASTERMISHAPLEVEL_HEAVYER)
 	{
 		//no inherent aim screw up
 	}
@@ -2206,7 +2206,7 @@ void WP_FireDroidekaFPPistolDuals(gentity_t* ent, const qboolean alt_fire, const
 
 	vectoangles(forwardVec, angs);
 
-	if (ent->client && ent->client->NPC_class == CLASS_VEHICLE)
+	if (ent->client && ent->client->ps.BlasterAttackChainCount <= BLASTERMISHAPLEVEL_HEAVYER)
 	{
 		//no inherent aim screw up
 	}

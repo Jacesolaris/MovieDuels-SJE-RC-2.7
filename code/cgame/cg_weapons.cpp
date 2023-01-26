@@ -4512,6 +4512,10 @@ void CG_FireWeapon(centity_t* cent, const qboolean alt_fire)
 		{
 			NPC_SetAnim(cg_entities[0].gent, SETANIM_TORSO, BOTH_PISTOLFAIL, SETANIM_AFLAG_BLOCKPACE);
 		}
+		else if (cg_entities[0].gent->s.weapon == WP_DROIDEKA)
+		{
+			NPC_SetAnim(cg_entities[0].gent, BOTH_PAIN4, BOTH_RELOAD_DEKA, SETANIM_AFLAG_BLOCKPACE);
+		}
 		else
 		{
 			NPC_SetAnim(cg_entities[0].gent, SETANIM_TORSO, BOTH_RIFLEFAIL, SETANIM_AFLAG_BLOCKPACE);

@@ -1445,7 +1445,6 @@ qboolean DoesnotDrainMishap(const gentity_t* ent)
 	case WP_JAWA:
 	case WP_NOGHRI_STICK:
 	case WP_RAPID_FIRE_CONC:
-	case WP_DROIDEKA:
 		return qtrue;
 	default:;
 	}
@@ -1536,6 +1535,10 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 			ent->s.weapon == WP_REBELBLASTER)
 		{
 			NPC_SetAnim(ent, SETANIM_TORSO, BOTH_PISTOLFAIL, SETANIM_AFLAG_BLOCKPACE);
+		}
+		else if (ent->s.weapon == WP_DROIDEKA)
+		{
+			NPC_SetAnim(ent, SETANIM_TORSO, BOTH_RELOAD_DEKA, SETANIM_AFLAG_BLOCKPACE);
 		}
 		else
 		{
@@ -1775,6 +1778,17 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 						}
 
 						ent->client->cloneFired = 0;
+					}
+				}
+				else if (ent->s.weapon == WP_DROIDEKA)
+				{
+					ent->client->DekaFired++;
+
+					if (ent->client->DekaFired == 5)
+					{
+						G_AddMercBalance(ent, BLASTERMISHAPLEVEL_MININACCURACY);
+
+						ent->client->DekaFired = 0;
 					}
 				}
 				else if (ent->s.weapon == WP_DISRUPTOR)

@@ -194,6 +194,7 @@ using otherhudbits_t = enum
 	OHB_CLONEPISTOL,
 	OHB_WRIST,
 	OHB_DUAL,
+	OHB_DEKA,
 	OHB_NOGRI,
 	OHB_TUSKEN,
 	OHB_SCANLINE_LEFT,

@@ -10150,13 +10150,13 @@ void CQuake3GameInterface::PrisonerObjCheck(const char* name, const char* data)
 }
 
 // Uses an entity.
-void CQuake3GameInterface::Use(const int entID, const char* name)
+void CQuake3GameInterface::Use(const int ent_id, const char* name)
 {
-	gentity_t* ent = &g_entities[entID];
+	gentity_t* ent = &g_entities[ent_id];
 
 	if (!ent)
 	{
-		DebugPrint(WL_WARNING, "Use: invalid entID %d\n", entID);
+		DebugPrint(WL_WARNING, "Use: invalid entID %d\n", ent_id);
 		return;
 	}
 

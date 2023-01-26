@@ -1308,13 +1308,7 @@ void SP_misc_model_breakable(gentity_t* ent)
 		//run a think
 		G_EffectIndex("explosions/fighter_explosion2");
 		G_SoundIndex("sound/weapons/tie_fighter/tiepass1.wav");
-		/*		G_SoundIndex( "sound/weapons/tie_fighter/tiepass2.wav" );
-				G_SoundIndex( "sound/weapons/tie_fighter/tiepass3.wav" );
-				G_SoundIndex( "sound/weapons/tie_fighter/tiepass4.wav" );
-				G_SoundIndex( "sound/weapons/tie_fighter/tiepass5.wav" );*/
 		G_SoundIndex("sound/weapons/tie_fighter/tie_fire.wav");
-		/*		G_SoundIndex( "sound/weapons/tie_fighter/tie_fire2.wav" );
-				G_SoundIndex( "sound/weapons/tie_fighter/tie_fire3.wav" );*/
 		G_SoundIndex("sound/weapons/tie_fighter/TIEexplode.wav");
 		RegisterItem(FindItemForWeapon(WP_TIE_FIGHTER));
 
@@ -1323,9 +1317,6 @@ void SP_misc_model_breakable(gentity_t* ent)
 		if (ent->splashDamage > 0 && ent->splashRadius > 0)
 		{
 			ent->s.loopSound = G_SoundIndex("sound/vehicles/tie-bomber/loop.wav");
-			//ent->e_ThinkFunc = thinkF_TieFighterThink;
-			//ent->e_UseFunc = thinkF_TieFighterThink;
-			//ent->nextthink = level.time + FRAMETIME;
 			ent->e_UseFunc = useF_TieFighterUse;
 
 			vec3_t color;

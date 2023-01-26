@@ -223,7 +223,7 @@ extern int G_PickPainAnim(const gentity_t* self, const vec3_t point, int hit_loc
 
 void NPC_ChoosePainAnimation(gentity_t* self, const gentity_t* other, const vec3_t point, const int damage,
 	const int mod, const int hit_loc,
-	const int voiceEvent = -1)
+	const int voice_event = -1)
 {
 	//If we've already taken pain, then don't take it again
 	if (level.time < self->painDebounceTime && mod != MOD_ELECTROCUTE && mod != MOD_MELEE)
@@ -307,15 +307,9 @@ void NPC_ChoosePainAnimation(gentity_t* self, const gentity_t* other, const vec3
 		{
 			pain_chance = NPC_GetPainChance(self, damage);
 		}
-		if (self->client->NPC_class == CLASS_DESANN)
-		{
-			pain_chance *= 0.5f;
-		}
-		if (self->client->NPC_class == CLASS_SITHLORD)
-		{
-			pain_chance *= 0.5f;
-		}
-		if (self->client->NPC_class == CLASS_VADER)
+		if (self->client->NPC_class == CLASS_DESANN ||
+			self->client->NPC_class == CLASS_SITHLORD || 
+			self->client->NPC_class == CLASS_VADER)
 		{
 			pain_chance *= 0.5f;
 		}
@@ -400,9 +394,9 @@ void NPC_ChoosePainAnimation(gentity_t* self, const gentity_t* other, const vec3
 			}
 			self->NPC->aiFlags &= ~NPCAI_KNEEL;
 			NPC_SetAnim(self, parts, pain_anim, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
-			if (voiceEvent != -1)
+			if (voice_event != -1)
 			{
-				G_AddVoiceEvent(self, voiceEvent, Q_irand(2000, 4000));
+				G_AddVoiceEvent(self, voice_event, Q_irand(2000, 4000));
 			}
 			else
 			{
@@ -452,8 +446,8 @@ void NPC_Pain(gentity_t* self, gentity_t* inflictor, gentity_t* other, const vec
 	const int mod,
 	const int hit_loc)
 {
-	team_t otherTeam = TEAM_FREE;
-	int voiceEvent = -1;
+	team_t other_team = TEAM_FREE;
+	int voice_event = -1;
 
 	if (self->NPC == nullptr)
 		return;
@@ -477,16 +471,12 @@ void NPC_Pain(gentity_t* self, gentity_t* inflictor, gentity_t* other, const vec
 	//MCG: Ignore damage from your own team for now
 	if (other->client)
 	{
-		otherTeam = other->client->playerTeam;
-		//	if ( otherTeam == TEAM_DISGUISE )
-		//	{
-		//		otherTeam = TEAM_PLAYER;
-		//	}
+		other_team = other->client->playerTeam;
 	}
 
 	if (self->client->playerTeam
 		&& other->client
-		&& otherTeam == self->client->playerTeam
+		&& other_team == self->client->playerTeam
 		&& (!player->client->ps.viewEntity || other->s.number != player->client->ps.viewEntity))
 	{
 		//hit by a teammate
@@ -560,7 +550,7 @@ void NPC_Pain(gentity_t* self, gentity_t* inflictor, gentity_t* other, const vec
 				}
 				//okay, we're going to turn on our ally, we need to set and lock our enemy and put ourselves in a bstate that lets us attack him (and clear any flags that would stop us)
 				self->NPC->blockedSpeechDebounceTime = 0;
-				voiceEvent = EV_FFTURN;
+				voice_event = EV_FFTURN;
 				self->NPC->behaviorState = self->NPC->tempBehavior = self->NPC->defaultBehavior = BS_DEFAULT;
 				other->flags &= ~FL_NOTARGET;
 				self->svFlags &= ~(SVF_IGNORE_ENEMIES | SVF_ICARUS_FREEZE | SVF_NO_COMBAT_SOUNDS);
@@ -594,7 +584,7 @@ void NPC_Pain(gentity_t* self, gentity_t* inflictor, gentity_t* other, const vec
 		{
 			//-1 == don't play pain anim
 			//Set our proper pain animation
-			NPC_ChoosePainAnimation(self, other, point, damage, mod, hit_loc, voiceEvent);
+			NPC_ChoosePainAnimation(self, other, point, damage, mod, hit_loc, voice_event);
 		}
 		//Check to take a new enemy
 		if (NPC->enemy != other && NPC != other)

@@ -38167,7 +38167,7 @@ qboolean WP_ForcePowerUsable(const gentity_t* self, const forcePowers_t force_po
 		//already using this power
 		return qfalse;
 	}
-	if (self->client->NPC_class == CLASS_ATST)
+	if (self->client->NPC_class == CLASS_ATST || self->client->NPC_class == CLASS_DROIDEKA)
 	{
 		//Doh!  No force powers in an AT-ST!
 		return qfalse;

@@ -159,7 +159,7 @@ extern qboolean PM_FaceProtectAnim(int anim);
 extern cvar_t* g_debugFatigueBars;
 extern qboolean PlayerAffectedByStasis();
 extern qboolean G_TryingSpecial(const usercmd_t* cmd);
-
+extern void TurnBarrierOff(gentity_t* ent);
 extern int parryDebounce[];
 extern qboolean cg_usingInFrontOf;
 extern qboolean player_locked;
@@ -10570,6 +10570,11 @@ static void PM_Footsteps()
 					{
 						//Hmm, he should really start slow and have to accelerate... also need to do this for stopping
 						PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN1START, set_anim_flags | SETANIM_FLAG_HOLD);
+
+						if (pm->ps->powerups[PW_GALAK_SHIELD] || pm->gent->flags & FL_SHIELDED)
+						{
+							TurnBarrierOff(pm->gent);
+						}
 					}
 					else if (!pm->ps->legsAnimTimer)
 					{
@@ -11083,6 +11088,11 @@ static void PM_Footsteps()
 							{
 								//Hmm, he should really start slow and have to accelerate... also need to do this for stopping
 								PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN1START, set_anim_flags | SETANIM_FLAG_HOLD);
+
+								if (pm->ps->powerups[PW_GALAK_SHIELD] || pm->gent->flags & FL_SHIELDED)
+								{
+									TurnBarrierOff(pm->gent);
+								}
 							}
 							else if (!pm->ps->legsAnimTimer)
 							{

@@ -993,7 +993,7 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 							//just so attacker knows that he was blocked
 							attacker->client->ps.saberEventFlags |= SEF_BLOCKED;
 
-							wp_block_points_regenerate_over_ride(blocker, BLOCKPOINTS_FATIGUE); //BP Reward blocker
+							wp_block_points_regenerate_over_ride(blocker, BLOCKPOINTS_TEN); //BP Reward blocker
 							blocker->client->ps.saberFatigueChainCount = MISHAPLEVEL_NONE; //SAC Reward blocker
 							if (attacker->client->ps.blockPoints <= BLOCKPOINTS_HALF)
 							{
@@ -1001,7 +1001,7 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 							}
 							else
 							{
-								PM_AddBlockFatigue(&attacker->client->ps, BLOCKPOINTS_TWENTYFIVE); //BP Punish Attacker
+								PM_AddBlockFatigue(&attacker->client->ps, BLOCKPOINTS_FATIGUE); //BP Punish Attacker
 							}
 						}
 						else
@@ -1336,7 +1336,7 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 							//just so attacker knows that he was blocked
 							attacker->client->ps.saberEventFlags |= SEF_BLOCKED;
 
-							WP_ForcePowerRegenerate(blocker, BLOCKPOINTS_FATIGUE); //BP Reward blocker
+							WP_ForcePowerRegenerate(blocker, BLOCKPOINTS_TEN); //BP Reward blocker
 							blocker->client->ps.saberFatigueChainCount = MISHAPLEVEL_NONE; //SAC Reward blocker
 							if (attacker->client->ps.forcePower <= BLOCKPOINTS_HALF)
 							{
@@ -1344,7 +1344,7 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 							}
 							else
 							{
-								PM_AddFatigue(&attacker->client->ps, BLOCKPOINTS_TWENTYFIVE); //BP Punish Attacker
+								PM_AddFatigue(&attacker->client->ps, BLOCKPOINTS_FATIGUE); //BP Punish Attacker
 							}
 						}
 						else

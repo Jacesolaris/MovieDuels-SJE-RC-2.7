@@ -587,7 +587,7 @@ extern void funcBBrushPain(gentity_t* self, gentity_t* inflictor, const gentity_
 	int mod, int hit_loc = HL_NONE);
 extern void misc_model_breakable_pain(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, const vec3_t point,
 	int damage, int mod, int hit_loc = HL_NONE);
-extern void NPC_Pain(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, const vec3_t point, int damage,
+extern void NPC_Pain(gentity_t* self, gentity_t* inflictor, gentity_t* other, const vec3_t point, int damage,
 	int mod, int hit_loc = HL_NONE);
 extern void station_pain(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, const vec3_t point, int damage,
 	int mod, int hit_loc = HL_NONE);
