@@ -984,7 +984,6 @@ void CG_RegisterWeapon(const int weapon_num)
 		theFxScheduler.RegisterEffect("noghri_stick/flesh_impact");
 		//explosion
 		theFxScheduler.RegisterEffect("noghri_stick/gas_cloud");
-		//cgi_S_RegisterSound("sound/weapons/noghri/smoke.wav");
 		break;
 
 	case WP_TIE_FIGHTER:
@@ -4474,6 +4473,7 @@ Caused by an EV_FIRE_WEAPON event
 */
 extern void TurnBarrierOff(gentity_t* ent);
 extern qboolean PM_RunningAnim(int anim);
+extern qboolean droideka_npc(const gentity_t* ent);
 
 void CG_FireWeapon(centity_t* cent, const qboolean alt_fire)
 {
@@ -4514,7 +4514,7 @@ void CG_FireWeapon(centity_t* cent, const qboolean alt_fire)
 		}
 		else if (cg_entities[0].gent->s.weapon == WP_DROIDEKA)
 		{
-			NPC_SetAnim(cg_entities[0].gent, BOTH_PAIN4, BOTH_RELOAD_DEKA, SETANIM_AFLAG_BLOCKPACE);
+			NPC_SetAnim(cg_entities[0].gent, SETANIM_TORSO, BOTH_RELOAD_DEKA, SETANIM_AFLAG_BLOCKPACE);
 		}
 		else
 		{
@@ -4543,7 +4543,7 @@ void CG_FireWeapon(centity_t* cent, const qboolean alt_fire)
 		}
 	}
 
-	if (cent->gent->client->ps.powerups[PW_GALAK_SHIELD] && ent->weapon == WP_DROIDEKA)
+	if (cent->gent->client->ps.powerups[PW_GALAK_SHIELD] && !droideka_npc(cg_entities[0].gent))
 	{
 		TurnBarrierOff(cg_entities[0].gent);
 	}

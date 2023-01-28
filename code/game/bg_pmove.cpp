@@ -11994,7 +11994,7 @@ static void PM_FinishWeaponChange()
 					pm->ps->eFlags &= ~EF2_JANGO_DUALS;
 				}
 
-				if (weapon == WP_DROIDEKA && (pm->gent->client->NPC_class == CLASS_DROIDEKA))
+				if (weapon == WP_DROIDEKA && pm->gent->client->NPC_class == CLASS_DROIDEKA)
 				{
 					G_CreateG2AttachedWeaponModel(pm->gent, weaponData[WP_DROIDEKA].weaponMdl, pm->gent->handLBolt, 1);
 				}
@@ -21047,7 +21047,7 @@ static void PM_Weapon()
 				else
 				{
 					//single pistol
-					PM_SetAnim(pm, SETANIM_TORSO, BOTH_ATTACK1, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_RESTART | SETANIM_FLAG_HOLD);
+					PM_SetAnim(pm, SETANIM_TORSO, BOTH_ATTACK2, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_RESTART | SETANIM_FLAG_HOLD);
 				}
 				break;
 

@@ -7873,14 +7873,14 @@ void PM_TorsoAnimation()
 						}
 						else
 						{
-							PM_SetAnim(pm, SETANIM_TORSO, BOTH_STAND1, SETANIM_FLAG_NORMAL);
+							PM_SetAnim(pm, SETANIM_TORSO, BOTH_READY_DUAL, SETANIM_FLAG_NORMAL);
 						}
 					}
 					else
 					{
 						if (weapon_busy)
 						{
-							PM_SetAnim(pm, SETANIM_TORSO, BOTH_ATTACK1, SETANIM_FLAG_NORMAL);
+							PM_SetAnim(pm, SETANIM_TORSO, BOTH_ATTACK_DUAL, SETANIM_FLAG_NORMAL);
 						}
 						else if (PM_RunningAnim(pm->ps->legsAnim)
 							|| PM_WalkingAnim(pm->ps->legsAnim)
@@ -7892,7 +7892,7 @@ void PM_TorsoAnimation()
 						}
 						else
 						{
-							PM_SetAnim(pm, SETANIM_TORSO, BOTH_STAND1, SETANIM_FLAG_NORMAL);
+							PM_SetAnim(pm, SETANIM_TORSO, TORSO_WEAPONREADY2, SETANIM_FLAG_NORMAL);
 						}
 					}
 					break;
@@ -8549,7 +8549,7 @@ void PM_TorsoAnimation()
 						}
 						else
 						{
-							PM_SetAnim(pm, SETANIM_TORSO, BOTH_STAND1, SETANIM_FLAG_NORMAL);
+							PM_SetAnim(pm, SETANIM_TORSO, BOTH_READY_DUAL, SETANIM_FLAG_NORMAL);
 						}
 					}
 					else
@@ -8557,7 +8557,7 @@ void PM_TorsoAnimation()
 						//single pistols
 						if (weapon_busy)
 						{
-							PM_SetAnim(pm, SETANIM_TORSO, BOTH_ATTACK1, SETANIM_FLAG_NORMAL);
+							PM_SetAnim(pm, SETANIM_TORSO, BOTH_ATTACK_DUAL, SETANIM_FLAG_NORMAL);
 						}
 						else if (PM_RunningAnim(pm->ps->legsAnim)
 							|| PM_WalkingAnim(pm->ps->legsAnim)
@@ -8569,7 +8569,7 @@ void PM_TorsoAnimation()
 						}
 						else
 						{
-							PM_SetAnim(pm, SETANIM_TORSO, BOTH_STAND1, SETANIM_FLAG_NORMAL);
+							PM_SetAnim(pm, SETANIM_TORSO, TORSO_WEAPONIDLE2, SETANIM_FLAG_NORMAL);
 						}
 					}
 					break;

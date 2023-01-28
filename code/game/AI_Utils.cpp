@@ -751,7 +751,7 @@ qboolean AI_RefreshGroup(AIGroupInfo_t* group)
 			if (level.groups[i].numGroup + group->numGroup < MAX_GROUP_MEMBERS - 1)
 			{
 				//combining the members would fit in one group
-				qboolean deleteWhenDone = qtrue;
+				qboolean delete_when_done = qtrue;
 				//combine the members of mine into theirs
 				for (int j = 0; j < group->numGroup; j++)
 				{
@@ -761,7 +761,7 @@ qboolean AI_RefreshGroup(AIGroupInfo_t* group)
 						//special case for groups without enemies, must be in range
 						if (!AI_ValidateNoEnemyGroupMember(&level.groups[i], member))
 						{
-							deleteWhenDone = qfalse;
+							delete_when_done = qfalse;
 							continue;
 						}
 					}
@@ -773,7 +773,7 @@ qboolean AI_RefreshGroup(AIGroupInfo_t* group)
 					AI_InsertGroupMember(&level.groups[i], member);
 				}
 				//return and delete this group
-				if (deleteWhenDone)
+				if (delete_when_done)
 				{
 					return qfalse;
 				}
