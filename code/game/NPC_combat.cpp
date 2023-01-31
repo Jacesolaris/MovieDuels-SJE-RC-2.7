@@ -1637,14 +1637,6 @@ void WeaponThink()
 		return;
 	}
 
-	if (NPC->client->NPC_class == CLASS_DROIDEKA)
-	{
-		if (BubbleShield_IsOn())
-		{
-			BubbleShield_TurnOff();
-		}
-	}
-
 	// Can't Fire While Cloaked
 	if (NPC->client &&
 		(NPC->client->ps.powerups[PW_CLOAKED] || level.time < NPC->client->ps.powerups[PW_UNCLOAKING]))

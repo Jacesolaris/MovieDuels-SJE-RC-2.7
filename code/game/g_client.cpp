@@ -2574,8 +2574,6 @@ void G_ChangeScale(const char* data)
 
 extern const char* GetSaberColor(int color);
 
-extern void BubbleShield_TurnOff();
-
 void G_ChangePlayerModel(gentity_t* ent, const char* new_model)
 {
 	if (!ent || !ent->client || !new_model)

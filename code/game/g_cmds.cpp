@@ -213,7 +213,6 @@ int client_numberFromString(const gentity_t* to, char* s)
 
 extern qboolean HeIsJedi(const gentity_t* ent);
 
-extern void BubbleShield_TurnOff();
 extern void TurnBarrierOff(gentity_t* ent);
 extern void TurnBarrierON(gentity_t* ent);
 

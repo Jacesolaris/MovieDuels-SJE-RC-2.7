@@ -2136,6 +2136,10 @@ void PlaceBarrier(gentity_t* ent)
 		DekashieldActivateSound = G_SoundIndex("sound/chars/droideka/shieldon.mp3");
 		registered = qtrue;
 	}
+	if (droideka_npc(ent))
+	{
+		return;
+	}
 
 	if (ent && ent->client)
 	{

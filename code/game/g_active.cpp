@@ -8062,6 +8062,7 @@ void cancel_firing(gentity_t* ent)
 extern void Weapon_AltStun_Fire(gentity_t* ent);
 extern void Ent_CheckBarrierIsAllowed(gentity_t* ent);
 extern void Ent_CheckBarrierIsAllowed_WithSaber(gentity_t* ent);
+extern qboolean droideka_npc(const gentity_t* ent);
 
 void ClientThink_real(gentity_t* ent, usercmd_t* ucmd)
 {
@@ -8088,7 +8089,7 @@ void ClientThink_real(gentity_t* ent, usercmd_t* ucmd)
 		G_HeldByMonster(ent, &ucmd);
 	}
 
-	if (ent->client && ent->client->ps.powerups[PW_GALAK_SHIELD])
+	if (ent->client && ent->client->ps.powerups[PW_GALAK_SHIELD] && !droideka_npc(ent))
 	{
 		if (ent->client->ps.weapon == WP_SABER)
 		{

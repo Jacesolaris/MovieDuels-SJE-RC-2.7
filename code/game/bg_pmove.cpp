@@ -10562,7 +10562,26 @@ static void PM_Footsteps()
 				//no run anim
 				PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALKBACK1, set_anim_flags);
 			}
-			else if (pm->gent && pm->gent->client && (pm->gent->client->NPC_class == CLASS_ATST || pm->gent->client->NPC_class == CLASS_DROIDEKA))
+			else if (pm->gent && pm->gent->client && (pm->gent->client->NPC_class == CLASS_ATST))
+			{
+				if (pm->ps->legsAnim != BOTH_RUNBACK1)
+				{
+					if (pm->ps->legsAnim != BOTH_RUN1START)
+					{
+						//Hmm, he should really start slow and have to accelerate... also need to do this for stopping
+						PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN1START, set_anim_flags | SETANIM_FLAG_HOLD);
+					}
+					else if (!pm->ps->legsAnimTimer)
+					{
+						PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUNBACK1, set_anim_flags);
+					}
+				}
+				else
+				{
+					PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUNBACK1, set_anim_flags);
+				}
+			}
+			else if (!in_camera && pm->gent && pm->gent->client && (pm->gent->client->NPC_class == CLASS_DROIDEKA))
 			{
 				if (pm->ps->legsAnim != BOTH_RUNBACK1)
 				{
@@ -10710,7 +10729,26 @@ static void PM_Footsteps()
 					}
 				}
 			}
-			else if (pm->gent && pm->gent->client && (pm->gent->client->NPC_class == CLASS_ATST || pm->gent->client->NPC_class == CLASS_DROIDEKA))
+			else if (pm->gent && pm->gent->client && (pm->gent->client->NPC_class == CLASS_ATST))
+			{
+				if (pm->ps->legsAnim != BOTH_WALKBACK1)
+				{
+					if (pm->ps->legsAnim != BOTH_RUN1STOP && pm->ps->legsAnim == BOTH_RUNBACK1)
+					{
+						//Hmm, he should really start slow and have to accelerate... also need to do this for stopping
+						PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN1STOP, set_anim_flags | SETANIM_FLAG_HOLD);
+					}
+					else if (!pm->ps->legsAnimTimer)
+					{
+						PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALKBACK1, set_anim_flags);
+					}
+				}
+				else
+				{
+					PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALKBACK1, set_anim_flags);
+				}
+			}
+			else if (!in_camera && pm->gent && pm->gent->client && (pm->gent->client->NPC_class == CLASS_DROIDEKA))
 			{
 				if (pm->ps->legsAnim != BOTH_WALKBACK1)
 				{
@@ -11080,7 +11118,26 @@ static void PM_Footsteps()
 							}
 						}
 					}
-					else if (pm->gent && pm->gent->client && (pm->gent->client->NPC_class == CLASS_ATST || pm->gent->client->NPC_class == CLASS_DROIDEKA))
+					else if (pm->gent && pm->gent->client && (pm->gent->client->NPC_class == CLASS_ATST))
+					{
+						if (pm->ps->legsAnim != BOTH_RUN1)
+						{
+							if (pm->ps->legsAnim != BOTH_RUN1START)
+							{
+								//Hmm, he should really start slow and have to accelerate... also need to do this for stopping
+								PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN1START, set_anim_flags | SETANIM_FLAG_HOLD);
+							}
+							else if (!pm->ps->legsAnimTimer)
+							{
+								PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN1, set_anim_flags);
+							}
+						}
+						else
+						{
+							PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN1, set_anim_flags);
+						}
+					}
+					else if (!in_camera && pm->gent && pm->gent->client && (pm->gent->client->NPC_class == CLASS_DROIDEKA))
 					{
 						if (pm->ps->legsAnim != BOTH_RUN1)
 						{
@@ -11299,7 +11356,7 @@ static void PM_Footsteps()
 						}
 					}
 				}
-				else if (pm->gent && pm->gent->client && pm->gent->client->NPC_class == CLASS_DROIDEKA)
+				else if (!in_camera && pm->gent && pm->gent->client && pm->gent->client->NPC_class == CLASS_DROIDEKA)
 				{
 					if (pm->ps->legsAnim != BOTH_WALK1 && pm->cmd.forwardmove > 0)
 					{

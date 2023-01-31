@@ -15794,7 +15794,7 @@ void CG_Player(centity_t* cent)
 					}
 				}
 				else if (cent->gent->client && cent->gent->NPC //client NPC
-					&& (cent->gent->s.weapon == WP_BLASTER_PISTOL || cent->gent->s.weapon == WP_DROIDEKA) //using blaster pistol
+					&& (cent->gent->s.weapon == WP_BLASTER_PISTOL) //using blaster pistol
 					&& cent->gent->weaponModel[1]) //one in each hand
 				{
 					qboolean get_both = qfalse;
