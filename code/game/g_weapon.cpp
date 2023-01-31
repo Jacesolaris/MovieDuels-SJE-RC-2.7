@@ -1496,8 +1496,6 @@ extern qboolean PM_WalkingAnim(int anim);
 extern int fire_deley_time();
 extern void CG_ChangeWeapon(int num);
 extern qboolean is_holding_reloadable_gun(const gentity_t* ent);
-extern void TurnBarrierOff(gentity_t* ent);
-extern qboolean droideka_npc(const gentity_t* ent);
 
 //---------------------------------------------------------
 void FireWeapon(gentity_t* ent, const qboolean alt_fire)

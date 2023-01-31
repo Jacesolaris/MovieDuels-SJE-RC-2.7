@@ -4471,9 +4471,7 @@ CG_FireWeapon
 Caused by an EV_FIRE_WEAPON event
 ================
 */
-extern void TurnBarrierOff(gentity_t* ent);
 extern qboolean PM_RunningAnim(int anim);
-extern qboolean droideka_npc(const gentity_t* ent);
 
 void CG_FireWeapon(centity_t* cent, const qboolean alt_fire)
 {
