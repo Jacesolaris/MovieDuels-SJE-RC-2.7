@@ -4543,11 +4543,6 @@ void CG_FireWeapon(centity_t* cent, const qboolean alt_fire)
 		}
 	}
 
-	if (cent->gent->client->ps.powerups[PW_GALAK_SHIELD] && !droideka_npc(cg_entities[0].gent))
-	{
-		TurnBarrierOff(cg_entities[0].gent);
-	}
-
 	cent->muzzleFlashTime = cg.time;
 
 	if (cent->currentState.eFlags & EF2_JANGO_DUALS || cent->currentState.eFlags & EF2_DUAL_PISTOLS || ent->weapon == WP_DROIDEKA)

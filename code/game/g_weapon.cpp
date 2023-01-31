@@ -1559,11 +1559,6 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 		return;
 	}
 
-	if (ent->client->ps.powerups[PW_GALAK_SHIELD] && !droideka_npc(ent))
-	{
-		TurnBarrierOff(ent);
-	}
-
 	// set aiming directions
 	if (ent && ent->client && ent->s.weapon == WP_DISRUPTOR && alt_fire)
 	{
