@@ -50,7 +50,6 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #include "g_functions.h"
 #include "anims.h"
 #include "../cgame/cg_local.h"	// yeah I know this is naughty, but we're shipping soon...
-
 #include "wp_saber.h"
 #include "g_vehicles.h"
 
@@ -10562,7 +10561,7 @@ static void PM_Footsteps()
 				//no run anim
 				PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALKBACK1, set_anim_flags);
 			}
-			else if (pm->gent && pm->gent->client && (pm->gent->client->NPC_class == CLASS_ATST))
+			else if (pm->gent && pm->gent->client && pm->gent->client->NPC_class == CLASS_ATST)
 			{
 				if (pm->ps->legsAnim != BOTH_RUNBACK1)
 				{
@@ -10581,7 +10580,7 @@ static void PM_Footsteps()
 					PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUNBACK1, set_anim_flags);
 				}
 			}
-			else if (!in_camera && pm->gent && pm->gent->client && (pm->gent->client->NPC_class == CLASS_DROIDEKA))
+			else if (!in_camera && pm->gent && pm->gent->client && pm->gent->client->NPC_class == CLASS_DROIDEKA)
 			{
 				if (pm->ps->legsAnim != BOTH_RUNBACK1)
 				{
@@ -10729,7 +10728,7 @@ static void PM_Footsteps()
 					}
 				}
 			}
-			else if (pm->gent && pm->gent->client && (pm->gent->client->NPC_class == CLASS_ATST))
+			else if (pm->gent && pm->gent->client && pm->gent->client->NPC_class == CLASS_ATST)
 			{
 				if (pm->ps->legsAnim != BOTH_WALKBACK1)
 				{
@@ -10748,7 +10747,7 @@ static void PM_Footsteps()
 					PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALKBACK1, set_anim_flags);
 				}
 			}
-			else if (!in_camera && pm->gent && pm->gent->client && (pm->gent->client->NPC_class == CLASS_DROIDEKA))
+			else if (!in_camera && pm->gent && pm->gent->client && pm->gent->client->NPC_class == CLASS_DROIDEKA)
 			{
 				if (pm->ps->legsAnim != BOTH_WALKBACK1)
 				{
@@ -11118,7 +11117,7 @@ static void PM_Footsteps()
 							}
 						}
 					}
-					else if (pm->gent && pm->gent->client && (pm->gent->client->NPC_class == CLASS_ATST))
+					else if (pm->gent && pm->gent->client && pm->gent->client->NPC_class == CLASS_ATST)
 					{
 						if (pm->ps->legsAnim != BOTH_RUN1)
 						{
@@ -11137,7 +11136,7 @@ static void PM_Footsteps()
 							PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN1, set_anim_flags);
 						}
 					}
-					else if (!in_camera && pm->gent && pm->gent->client && (pm->gent->client->NPC_class == CLASS_DROIDEKA))
+					else if (!in_camera && pm->gent && pm->gent->client && pm->gent->client->NPC_class == CLASS_DROIDEKA)
 					{
 						if (pm->ps->legsAnim != BOTH_RUN1)
 						{

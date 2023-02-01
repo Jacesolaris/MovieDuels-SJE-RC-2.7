@@ -42,9 +42,7 @@ extern void NPC_ApplyRoff();
 extern void NPC_TempLookTarget(const gentity_t* self, int lookEntNum, int minLookTime, int maxLookTime);
 extern void NPC_CheckPlayerAim();
 extern void NPC_CheckAllClear();
-extern void G_AddVoiceEvent(const gentity_t* self, int event, int speak_debounce_time);
 extern qboolean NPC_CheckLookTarget(const gentity_t* self);
-extern void NPC_SetLookTarget(const gentity_t* self, int ent_num, int clearTime);
 extern void Mark1_dying(gentity_t* self);
 extern void NPC_BSCinematic();
 extern int GetTime(int lastTime);
@@ -55,7 +53,7 @@ extern qboolean jedi_cultist_destroyer(const gentity_t* self);
 extern void Boba_Update();
 extern bool Boba_Flee();
 extern bool Boba_Tactics();
-extern void BubbleShield_Update();
+extern void bubble_shield_update();
 extern void deka_bubble_shield_update();
 extern qboolean PM_LockedAnim(int anim);
 extern void NPC_BSGM_Default();
@@ -89,8 +87,6 @@ gNPC_t* NPCInfo;
 gclient_t* client;
 usercmd_t ucmd;
 visibility_t enemyVisibility;
-
-void NPC_SetAnim(gentity_t* ent, int set_anim_parts, int anim, int set_anim_flags, int i_blend);
 static bState_t G_CurrentBState(gNPC_t* g_npc);
 
 extern int eventClearTime;
@@ -1017,8 +1013,6 @@ void NPC_CheckAttackScript()
 	G_ActivateBehavior(NPC, BSET_ATTACK);
 }
 
-float NPC_MaxDistSquaredForWeapon();
-
 void NPC_CheckAttackHold()
 {
 	vec3_t vec;
@@ -1397,8 +1391,6 @@ void NPC_BehaviorSet_Jedi(const int b_state)
 		break;
 
 	case BS_FOLLOW_LEADER:
-		npc_bs_jedi_follow_leader();
-		break;
 	case BS_FOLLOW_OVERRIDE: //# 40: Follow your leader and shoot any enemies you come across
 		npc_bs_jedi_follow_leader();
 		break;
@@ -1428,8 +1420,6 @@ void NPC_BehaviorSet_Grogu(const int b_state)
 		break;
 
 	case BS_FOLLOW_LEADER:
-		NPC_BSFollowLeader();
-		break;
 	case BS_FOLLOW_OVERRIDE: //# 40: Follow your leader and shoot any enemies you come across
 		NPC_BSFollowLeader();
 		break;
@@ -1676,8 +1666,6 @@ void NPC_BehaviorSet_Animal(const int b_state)
 	case BS_STAND_GUARD:
 	case BS_PATROL:
 		NPC_BSAnimal_Default();
-
-		//NPC_BSDroid_Default();
 		break;
 	default:
 		NPC_BehaviorSet_Default(b_state);
@@ -1703,8 +1691,6 @@ extern qboolean droideka_npc(const gentity_t* ent);
 
 void NPC_RunBehavior(const int team, const int b_state)
 {
-	//
-	//
 	if (b_state == BS_FOLLOW_OVERRIDE)
 	{
 		NPC_BSFollowLeader();
@@ -1712,12 +1698,6 @@ void NPC_RunBehavior(const int team, const int b_state)
 	if (b_state == BS_CINEMATIC)
 	{
 		NPC_BSCinematic();
-	}
-	else if (NPCInfo->scriptFlags & SCF_PILOT && Pilot_MasterUpdate())
-	{
-	}
-	else if (NPC_JumpBackingUp())
-	{
 	}
 	else if (!TIMER_Done(NPC, "DEMP2_StunTime"))
 	{
@@ -1741,24 +1721,12 @@ void NPC_RunBehavior(const int team, const int b_state)
 		//saber droid
 		NPC_BSSD_Default();
 	}
-	else if (NPC->client->ps.weapon == WP_SABER)
+	else if ((NPC->client->ps.weapon == WP_SABER) ||
+		(NPC->client->NPC_class == CLASS_REBORN && NPC->client->ps.weapon == WP_MELEE) ||
+		(NPC->client->NPC_class == CLASS_SITHLORD && NPC->client->ps.weapon == WP_MELEE) ||
+		(NPC->client->NPC_class == CLASS_SITHLORD && NPC->client->ps.weapon == WP_NONE))
 	{
 		//jedi
-		NPC_BehaviorSet_Jedi(b_state);
-	}
-	else if (NPC->client->NPC_class == CLASS_REBORN && NPC->client->ps.weapon == WP_MELEE)
-	{
-		//force-only reborn
-		NPC_BehaviorSet_Jedi(b_state);
-	}
-	else if (NPC->client->NPC_class == CLASS_SITHLORD && NPC->client->ps.weapon == WP_MELEE)
-	{
-		//force-only reborn
-		NPC_BehaviorSet_Jedi(b_state);
-	}
-	else if (NPC->client->NPC_class == CLASS_SITHLORD && NPC->client->ps.weapon == WP_NONE)
-	{
-		//force-only reborn
 		NPC_BehaviorSet_Jedi(b_state);
 	}
 	else if (NPC->client->NPC_class == CLASS_GROGU)
@@ -1901,7 +1869,7 @@ void NPC_RunBehavior(const int team, const int b_state)
 
 			if (NPC->client->NPC_class == CLASS_ASSASSIN_DROID)
 			{
-				BubbleShield_Update();
+				bubble_shield_update();
 			}
 
 			if (droideka_npc(NPC))
@@ -2345,7 +2313,7 @@ void NPC_Think(gentity_t* ent) //, int msec )
 		if (NPC->s.weapon == WP_SABER && NPC->client->ps.SaberActive())
 		{
 			//Jedi think faster
-			NPCInfo->nextBStateThink = level.time + FRAMETIME / 2;
+			NPCInfo->nextBStateThink = level.time + FRAMETIME / 4;
 		}
 		else
 		{

@@ -1868,14 +1868,7 @@ void WP_FireBobaRifleMissile(gentity_t* ent, vec3_t start, vec3_t dir, const qbo
 		missile->dflags = DAMAGE_DEATH_KNOCKBACK;
 	}
 
-	/*	if (alt_fire)
-		{
-			missile->methodOfDeath = MOD_BOBA_ALT;
-		}
-		else*/
-		//	{
 	missile->methodOfDeath = MOD_BOBA;
-	//	}
 
 	missile->clipmask = MASK_SHOT | CONTENTS_LIGHTSABER;
 
@@ -2060,6 +2053,8 @@ void WP_FireDroidekaDualPistolMissileDuals(gentity_t* ent, vec3_t start, vec3_t 
 
 	// we don't want it to bounce forever
 	missile->bounceCount = 8;
+	// alternate muzzles
+	ent->fxID = !ent->fxID;
 
 	if (ent->weaponModel[1] > 0)
 	{
@@ -2153,6 +2148,9 @@ void WP_FireDroidekaDualPistolMissile(gentity_t* ent, vec3_t start, vec3_t dir, 
 
 	// we don't want it to bounce forever
 	missile->bounceCount = 8;
+
+	// alternate muzzles
+	ent->fxID = !ent->fxID;
 
 	if (ent->weaponModel[1] > 0)
 	{

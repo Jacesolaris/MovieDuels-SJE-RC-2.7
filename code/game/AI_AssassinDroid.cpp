@@ -40,7 +40,7 @@ bool BubbleShield_IsOn()
 ////////////////////////////////////////////////////////////////////////////////////////
 void BubbleShield_TurnOn()
 {
-	if (!BubbleShield_IsOn())
+	if (!BubbleShield_IsOn() && !NPC->client->ps.powerups[PW_STUNNED])
 	{
 		NPC->flags |= FL_SHIELDED;
 		NPC->client->ps.powerups[PW_GALAK_SHIELD] = Q3_INFINITE;
@@ -81,8 +81,8 @@ void BubbleShield_PushEnt(gentity_t* pushed, vec3_t smack_dir)
 extern void G_BlastDown(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, float strength);
 void deka_bubble_shield_push_ent(gentity_t* pushed, vec3_t smack_dir)
 {
-	G_Damage(pushed, NPC, NPC, smack_dir, NPC->currentOrigin, Q_irand(5, 10), DAMAGE_EXTRA_KNOCKBACK, MOD_ELECTROCUTE);
-	G_BlastDown(pushed, NPC, smack_dir, 25);
+	G_Damage(pushed, NPC, NPC, smack_dir, NPC->currentOrigin, Q_irand(10, 20), DAMAGE_EXTRA_KNOCKBACK, MOD_ELECTROCUTE);
+	G_BlastDown(pushed, NPC, smack_dir, 50);
 
 	// Make Em Electric
 	//------------------
@@ -195,7 +195,7 @@ void deka_bubble_shield_push_radius_ents()
 ////////////////////////////////////////////////////////////////////////////////////////
 //
 ////////////////////////////////////////////////////////////////////////////////////////
-void BubbleShield_Update()
+void bubble_shield_update()
 {
 	// Shields Go When You Die
 	//-------------------------
@@ -279,6 +279,7 @@ void deka_bubble_shield_update()
 	// Recharge Shields
 	//------------------
 	NPC->client->ps.stats[STAT_ARMOR] += 1;
+
 	if (NPC->client->ps.stats[STAT_ARMOR] > 250)
 	{
 		NPC->client->ps.stats[STAT_ARMOR] = 250;
@@ -293,7 +294,7 @@ void deka_bubble_shield_update()
 		if (level.time - NPCInfo->enemyLastSeenTime < 1000 && TIMER_Done(NPC, "ShieldsUp"))
 		{
 			TIMER_Set(NPC, "ShieldsDown", 2000); // Drop Shields
-			TIMER_Set(NPC, "ShieldsUp", Q_irand(4000, 5000)); // Then Bring Them Back Up For At Least 3 sec
+			TIMER_Set(NPC, "ShieldsUp", Q_irand(8000, 16000)); // Then Bring Them Back Up For At Least 3 sec
 		}
 
 		BubbleShield_TurnOn();

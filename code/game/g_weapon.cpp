@@ -1421,7 +1421,7 @@ void WP_FireScepter(gentity_t* ent)
 extern qboolean WalkCheck(const gentity_t* self);
 extern qboolean G_ControlledByPlayer(const gentity_t* self);
 
-qboolean DoesnotDrainMishap(const gentity_t* ent)
+qboolean doesnot_drain_mishap(const gentity_t* ent)
 {
 	switch (ent->s.weapon)
 	{
@@ -1754,7 +1754,7 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 				CalcMuzzlePoint2(ent, muzzle2, 0);
 			}
 
-			if (!DoesnotDrainMishap(ent))
+			if (!doesnot_drain_mishap(ent))
 			{
 				if (ent->s.weapon == WP_REPEATER)
 				{
@@ -2053,7 +2053,7 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 	case WP_DROIDEKA:
 		if (!cg_trueguns.integer && !cg.renderingThirdPerson)
 		{
-			WP_FireDroidekaFPPistolDuals(ent, alt_fire, qtrue);
+			WP_FireDroidekaFPPistolDuals(ent, alt_fire, qtrue); // in first person // should never happen with deka
 		}
 		else
 		{

@@ -1346,7 +1346,6 @@ void ChangeWeapon(const gentity_t* ent, const int new_weapon)
 		break;
 
 	case WP_DUAL_PISTOL:
-	case WP_DROIDEKA:
 		if (ent->NPC->scriptFlags & SCF_ALT_FIRE)
 		{
 			ent->NPC->aiFlags |= NPCAI_BURST_WEAPON;
@@ -1355,6 +1354,35 @@ void ChangeWeapon(const gentity_t* ent, const int new_weapon)
 			ent->NPC->burstMax = 2;
 
 			ent->NPC->burstSpacing = 1500; //attack debounce
+		}
+		else
+		{
+			ent->NPC->aiFlags &= ~NPCAI_BURST_WEAPON;
+
+			if (ent->weaponModel[1] > 0)
+			{
+				//commando
+				ent->NPC->aiFlags |= NPCAI_BURST_WEAPON;
+				ent->NPC->burstMin = 2;
+				ent->NPC->burstMean = 2;
+				ent->NPC->burstMax = 2;
+				ent->NPC->burstSpacing = 600; //attack debounce
+			}
+			else
+			{
+				ent->NPC->burstSpacing = 750; //attack debounce
+			}
+		}
+		break;
+	case WP_DROIDEKA:
+		if (ent->NPC->scriptFlags & SCF_ALT_FIRE)
+		{
+			ent->NPC->aiFlags |= NPCAI_BURST_WEAPON;
+			ent->NPC->burstMin = 2;
+			ent->NPC->burstMean = 2;
+			ent->NPC->burstMax = 2;
+
+			ent->NPC->burstSpacing = 1000; //attack debounce
 		}
 		else
 		{
@@ -1503,11 +1531,16 @@ void NPC_ApplyWeaponFireDelay()
 	case WP_BOBA:
 	case WP_JANGO:
 	case WP_DUAL_PISTOL:
-	case WP_DROIDEKA:
 	case WP_CLONECARBINE:
 		if (NPCInfo->scriptFlags & SCF_ALT_FIRE)
 		{
 			client->fireDelay = Q_irand(1000, 3000);
+		}
+		break;
+	case WP_DROIDEKA:
+		if (NPCInfo->scriptFlags & SCF_ALT_FIRE)
+		{
+			client->fireDelay = Q_irand(500, 1000);
 		}
 		break;
 
@@ -1617,15 +1650,16 @@ extern qboolean PM_SaberInSpecialAttack(int anim);
 extern qboolean PM_SpinningSaberAnim(int anim);
 extern qboolean PM_SpinningAnim(int anim);
 
-extern void BubbleShield_TurnOff();
-extern bool BubbleShield_IsOn();
+extern void BubbleShield_TurnOn();
+extern qboolean droideka_npc(const gentity_t* ent);
 
 void WeaponThink()
 {
 	ucmd.buttons &= ~BUTTON_ATTACK;
 
-	if (client->ps.weaponstate == WEAPON_RAISING || client->ps.weaponstate == WEAPON_DROPPING || client->ps.weaponstate
-		== WEAPON_RELOADING)
+	if (client->ps.weaponstate == WEAPON_RAISING || 
+		client->ps.weaponstate == WEAPON_DROPPING ||
+		client->ps.weaponstate == WEAPON_RELOADING)
 	{
 		ucmd.weapon = client->ps.weapon;
 		return;
@@ -1658,6 +1692,28 @@ void WeaponThink()
 	if (level.time < NPCInfo->shotTime)
 	{
 		return;
+	}
+
+	// DROIDEKA
+
+	if (droideka_npc(NPC))
+	{
+		if (in_camera )
+		{
+			BubbleShield_TurnOn();
+		}
+		if (!NPC->flags & FL_SHIELDED)
+		{
+			BubbleShield_TurnOn();
+		}
+		if (!NPC->client->ps.powerups[PW_GALAK_SHIELD])
+		{
+			BubbleShield_TurnOn();
+		}
+		if (NPC->client->ps.powerups[PW_STUNNED])
+		{
+			return;
+		}
 	}
 
 	if (NPC->client->ps.ammo[weaponData[client->ps.weapon].ammoIndex] < weaponData[client->ps.weapon].energyPerShot)
