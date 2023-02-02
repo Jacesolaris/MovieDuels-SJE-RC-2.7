@@ -186,8 +186,8 @@ qboolean G2API_GetBoltMatrix(CGhoul2Info_v& ghoul2, int model_index, int bolt_in
 
 void G2API_ListSurfaces(CGhoul2Info* ghl_info);
 void G2API_ListBones(CGhoul2Info* ghl_info, int frame);
-qboolean G2API_HaveWeGhoul2Models(CGhoul2Info_v& ghoul2);
-void G2API_SetGhoul2ModelIndexes(CGhoul2Info_v& ghoul2, qhandle_t* model_list, qhandle_t* skin_list);
+qboolean G2API_HaveWeGhoul2Models(const CGhoul2Info_v& ghoul2);
+void G2API_SetGhoul2ModelIndexes(CGhoul2Info_v& ghoul2, qhandle_t* model_list, const qhandle_t* skin_list);
 qboolean G2API_SetGhoul2ModelFlags(CGhoul2Info* ghl_info, int flags);
 int G2API_GetGhoul2ModelFlags(CGhoul2Info* ghl_info);
 
@@ -198,7 +198,7 @@ void G2API_CollisionDetect(CCollisionRecord* coll_rec_map, CGhoul2Info_v& ghoul2
 	CMiniHeap* g2_vert_space,
 	EG2_Collision e_g2_trace_type, int use_lod, float f_radius);
 void G2API_GiveMeVectorFromMatrix(mdxaBone_t& bolt_matrix, Eorientations flags, vec3_t& vec);
-void G2API_CopyGhoul2Instance(CGhoul2Info_v& ghoul2From, CGhoul2Info_v& ghoul2_to, int model_index = -1);
+void G2API_CopyGhoul2Instance(const CGhoul2Info_v& ghoul2_from, CGhoul2Info_v& ghoul2_to, int model_index = -1);
 void G2API_CleanGhoul2Models(CGhoul2Info_v& ghoul2);
 int G2API_GetParentSurface(CGhoul2Info* ghl_info, int index);
 int G2API_GetSurfaceIndex(CGhoul2Info* ghl_info, const char* surface_name);
@@ -218,9 +218,9 @@ qboolean G2API_SetBoneAnglesMatrixIndex(CGhoul2Info* ghl_info, int index, const 
 qboolean G2API_SetBoneAnimIndex(CGhoul2Info* ghl_info, int index, int start_frame, int end_frame, int flags,
 	float anim_speed, int acurrent_time, float set_frame, int blend_time);
 qboolean G2API_SetAnimIndex(CGhoul2Info* ghl_info, int index);
-int G2API_GetAnimIndex(CGhoul2Info* ghl_info);
+int G2API_GetAnimIndex(const CGhoul2Info* ghl_info);
 void G2API_SaveGhoul2Models(CGhoul2Info_v& ghoul2);
-void G2API_LoadGhoul2Models(CGhoul2Info_v& ghoul2, char* buffer);
+void G2API_LoadGhoul2Models(CGhoul2Info_v& ghoul2, const char* buffer);
 void G2API_LoadSaveCodeDestructGhoul2Info(CGhoul2Info_v& ghoul2);
 char* G2API_GetAnimFileNameIndex(qhandle_t model_index);
 char* G2API_GetAnimFileInternalNameIndex(qhandle_t model_index);

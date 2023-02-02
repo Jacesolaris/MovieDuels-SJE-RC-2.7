@@ -151,7 +151,7 @@ typedef struct refexport_s {
 	int					(*G2API_AddSurface)						(CGhoul2Info* ghl_info, int surface_number, int polyNumber, float BarycentricI, float BarycentricJ, int lod);
 	void				(*G2API_AnimateG2ModelsRag)				(CGhoul2Info_v& ghoul2, int acurrent_time, CRagDollUpdateParams* params);
 	qboolean(*G2API_AttachEnt)						(int* bolt_info, CGhoul2Info_v& ghoul2, int model_index, int toBoltIndex, int ent_num, int toModelNum);
-	qboolean(*G2API_AttachG2Model)					(CGhoul2Info_v& ghoul2From, int modelFrom, CGhoul2Info_v& ghoul2To, int toBoltIndex, int toModel);
+	qboolean(*G2API_AttachG2Model)					(CGhoul2Info_v& ghoul2_from, int modelFrom, CGhoul2Info_v& ghoul2To, int toBoltIndex, int toModel);
 	void				(*G2API_AttachInstanceToEntNum)			(CGhoul2Info_v& ghoul2, int entity_num, qboolean server);
 	void				(*G2API_AbsurdSmoothing)				(CGhoul2Info_v& ghoul2, qboolean status);
 	void				(*G2API_BoltMatrixReconstruction)		(qboolean reconstruct);
@@ -162,7 +162,7 @@ typedef struct refexport_s {
 	void				(*G2API_CollisionDetect)				(CollisionRecord_t* collRecMap, CGhoul2Info_v& ghoul2, const vec3_t angles, const vec3_t position, int frameNumber, int ent_num, vec3_t rayStart, vec3_t rayEnd, vec3_t scale, IHeapAllocator* g2_vert_space, int traceFlags, int use_lod, float fRadius);
 	void				(*G2API_CollisionDetectCache)			(CollisionRecord_t* collRecMap, CGhoul2Info_v& ghoul2, const vec3_t angles, const vec3_t position, int frameNumber, int ent_num, vec3_t rayStart, vec3_t rayEnd, vec3_t scale, IHeapAllocator* g2_vert_space, int traceFlags, int use_lod, float fRadius);
 	int					(*G2API_CopyGhoul2Instance)				(CGhoul2Info_v& g2From, CGhoul2Info_v& g2To, int model_index);
-	void				(*G2API_CopySpecificG2Model)			(CGhoul2Info_v& ghoul2From, int modelFrom, CGhoul2Info_v& ghoul2To, int modelTo);
+	void				(*G2API_CopySpecificG2Model)			(CGhoul2Info_v& ghoul2_from, int modelFrom, CGhoul2Info_v& ghoul2To, int modelTo);
 	qboolean(*G2API_DetachG2Model)					(CGhoul2Info* ghl_info);
 	qboolean(*G2API_DoesBoneExist)					(CGhoul2Info_v& ghoul2, int model_index, const char* bone_name);
 	void				(*G2API_DuplicateGhoul2Instance)		(CGhoul2Info_v& g2From, CGhoul2Info_v** g2To);

@@ -965,7 +965,7 @@ qboolean G2API_RemoveGhoul2Model(CGhoul2Info_v& ghl_info, const int model_index)
 #define		GHOUL2_RAG_FORCESOLVE					0x1000		//api-override, determine if ragdoll should be forced to continue solving even if it thinks it is settled
 //rww - RAGDOLL_END
 
-int		 G2API_GetAnimIndex(CGhoul2Info* ghl_info)
+int G2API_GetAnimIndex(const CGhoul2Info* ghl_info)
 {
 	if (ghl_info)
 	{
@@ -1811,13 +1811,13 @@ void G2API_ListBones(CGhoul2Info* ghl_info, const int frame)
 }
 
 // decide if we have Ghoul2 models associated with this ghoul list or not
-qboolean G2API_HaveWeGhoul2Models(CGhoul2Info_v& ghoul2)
+qboolean G2API_HaveWeGhoul2Models(const CGhoul2Info_v& ghoul2)
 {
 	return static_cast<qboolean>(ghoul2.IsValid());
 }
 
 // run through the Ghoul2 models and set each of the mModel values to the correct one from the cgs.gameModel offset lsit
-void G2API_SetGhoul2ModelIndexes(CGhoul2Info_v& ghoul2, qhandle_t* model_list, qhandle_t* skin_list)
+void G2API_SetGhoul2ModelIndexes(CGhoul2Info_v& ghoul2, qhandle_t* model_list, const qhandle_t* skin_list)
 {
 	G2ERROR(ghoul2.IsValid(), "Invalid ghl_info");
 	for (int i = 0; i < ghoul2.size(); i++)
@@ -2004,16 +2004,16 @@ void G2API_GiveMeVectorFromMatrix(mdxaBone_t& bolt_matrix, const Eorientations f
 
 // copy a model from one ghoul2 instance to another, and reset the root surface on the new model if need be
 // NOTE if model_index = -1 then copy all the models
-void G2API_CopyGhoul2Instance(CGhoul2Info_v& ghoul2From, CGhoul2Info_v& ghoul2_to, int model_index)
+void G2API_CopyGhoul2Instance(const CGhoul2Info_v& ghoul2_from, CGhoul2Info_v& ghoul2_to, int model_index)
 {
 	//Ensiform: I'm commenting this out because model_index appears unused and legitimately set in gamecode
 	//assert(model_index==-1); // copy individual bolted parts is not used in jk2 and I didn't want to deal with it
 							// if ya want it, we will add it back correctly
 
-	G2ERROR(ghoul2From.IsValid(), "Invalid ghl_info");
-	if (ghoul2From.IsValid())
+	G2ERROR(ghoul2_from.IsValid(), "Invalid ghl_info");
+	if (ghoul2_from.IsValid())
 	{
-		ghoul2_to.DeepCopy(ghoul2From);
+		ghoul2_to.DeepCopy(ghoul2_from);
 #ifdef _G2_GORE //check through gore stuff then, as well.
 		int model = 0;
 
@@ -2035,7 +2035,7 @@ void G2API_CopyGhoul2Instance(CGhoul2Info_v& ghoul2From, CGhoul2Info_v& ghoul2_t
 			model++;
 		}
 #endif
-		G2ANIM(ghoul2From, "G2API_CopyGhoul2Instance (source)");
+		G2ANIM(ghoul2_from, "G2API_CopyGhoul2Instance (source)");
 		G2ANIM(ghoul2To, "G2API_CopyGhoul2Instance (dest)");
 	}
 }
@@ -2117,7 +2117,7 @@ void G2API_SaveGhoul2Models(CGhoul2Info_v& ghoul2)
 	G2_SaveGhoul2Models(ghoul2);
 }
 
-void G2API_LoadGhoul2Models(CGhoul2Info_v& ghoul2, char* buffer)
+void G2API_LoadGhoul2Models(CGhoul2Info_v& ghoul2, const char* buffer)
 {
 	G2_LoadGhoul2Model(ghoul2, buffer);
 	G2ANIM(ghoul2, "G2API_LoadGhoul2Models");

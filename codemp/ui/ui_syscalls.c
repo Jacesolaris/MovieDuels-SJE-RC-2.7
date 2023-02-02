@@ -445,8 +445,8 @@ qboolean trap_G2API_IKMove(void* ghoul2, int time, sharedIKMoveParams_t* params)
 void trap_G2API_GetSurfaceName(void* ghoul2, int surf_number, int model_index, char* fillBuf) {
 	Q_syscall(UI_G2_GETSURFACENAME, ghoul2, surf_number, model_index, fillBuf);
 }
-qboolean trap_G2API_AttachG2Model(void* ghoul2From, int modelIndexFrom, void* ghoul2To, int toBoltIndex, int toModel) {
-	return Q_syscall(UI_G2_ATTACHG2MODEL, ghoul2From, modelIndexFrom, ghoul2To, toBoltIndex, toModel);
+qboolean trap_G2API_AttachG2Model(void* ghoul2_from, int modelIndexFrom, void* ghoul2To, int toBoltIndex, int toModel) {
+	return Q_syscall(UI_G2_ATTACHG2MODEL, ghoul2_from, modelIndexFrom, ghoul2To, toBoltIndex, toModel);
 }
 
 // Translate import table funcptrs to syscalls

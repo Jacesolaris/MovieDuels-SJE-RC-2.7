@@ -148,15 +148,15 @@ RE_GetModelBounds
 =================
 */
 //rwwRMG - added
-void RE_GetModelBounds(refEntity_t* refEnt, vec3_t bounds1, vec3_t bounds2)
+void RE_GetModelBounds(refEntity_t* ref_ent, vec3_t bounds1, vec3_t bounds2)
 {
-	assert(refEnt);
+	assert(ref_ent);
 
-	const model_t* model = R_GetModelByHandle(refEnt->hModel);
+	const model_t* model = R_GetModelByHandle(ref_ent->hModel);
 	assert(model);
 	md3Header_t* header = model->md3[0];
 	assert(header);
-	const md3Frame_t* frame = (md3Frame_t*)((byte*)header + header->ofsFrames) + refEnt->frame;
+	const md3Frame_t* frame = (md3Frame_t*)((byte*)header + header->ofsFrames) + ref_ent->frame;
 	assert(frame);
 
 	VectorCopy(frame->bounds[0], bounds1);

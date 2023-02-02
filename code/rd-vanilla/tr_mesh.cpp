@@ -152,7 +152,7 @@ RE_GetModelBounds
 =================
 */
 
-void RE_GetModelBounds(refEntity_t* ref_ent, vec3_t bounds1, vec3_t bounds2)
+void RE_GetModelBounds(const refEntity_t* ref_ent, vec3_t bounds1, vec3_t bounds2)
 {
 	assert(ref_ent);
 

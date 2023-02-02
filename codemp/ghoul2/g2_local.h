@@ -290,7 +290,7 @@ qboolean	G2API_RemoveBolt(CGhoul2Info* ghl_info, int index);
 int			G2API_AddBolt(CGhoul2Info_v& ghoul2, int model_index, const char* bone_name);
 int			G2API_AddBoltSurfNum(CGhoul2Info* ghl_info, int surf_index);
 void		G2API_SetBoltInfo(CGhoul2Info_v& ghoul2, int model_index, int bolt_info);
-qboolean	G2API_AttachG2Model(CGhoul2Info_v& ghoul2From, int modelFrom, CGhoul2Info_v& ghoul2To, int toBoltIndex, int toModel);
+qboolean	G2API_AttachG2Model(CGhoul2Info_v& ghoul2_from, int modelFrom, CGhoul2Info_v& ghoul2To, int toBoltIndex, int toModel);
 qboolean	G2API_DetachG2Model(CGhoul2Info* ghl_info);
 qboolean	G2API_AttachEnt(int* bolt_info, CGhoul2Info_v& ghoul2, int model_index, int toBoltIndex, int ent_num, int toModelNum);
 void		G2API_DetachEnt(int* bolt_info);
@@ -330,7 +330,7 @@ void		G2API_LoadSaveCodeDestructGhoul2Info(CGhoul2Info_v& ghoul2);
 void		G2API_FreeSaveBuffer(char* buffer);
 char* G2API_GetAnimFileNameIndex(qhandle_t model_index);
 int			G2API_GetSurfaceRenderStatus(CGhoul2Info_v& ghoul2, int model_index, const char* surface_name);
-void		G2API_CopySpecificG2Model(CGhoul2Info_v& ghoul2From, int modelFrom, CGhoul2Info_v& ghoul2To, int modelTo);
+void		G2API_CopySpecificG2Model(CGhoul2Info_v& ghoul2_from, int modelFrom, CGhoul2Info_v& ghoul2To, int modelTo);
 void		G2API_DuplicateGhoul2Instance(CGhoul2Info_v& g2From, CGhoul2Info_v** g2To);
 void		G2API_SetBoltInfo(CGhoul2Info_v& ghoul2, int model_index, int bolt_info);
 

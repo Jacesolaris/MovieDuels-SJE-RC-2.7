@@ -691,12 +691,12 @@ static void CL_G2API_GetSurfaceName(void* ghoul2, int surf_number, int model_ind
 	strcpy(fillBuf, tmp);
 }
 
-static qboolean CL_G2API_AttachG2Model(void* ghoul2From, int modelIndexFrom, void* ghoul2To, int toBoltIndex, int toModel) {
-	if (!ghoul2From || !ghoul2To) {
+static qboolean CL_G2API_AttachG2Model(void* ghoul2_from, int modelIndexFrom, void* ghoul2To, int toBoltIndex, int toModel) {
+	if (!ghoul2_from || !ghoul2To) {
 		return qfalse;
 	}
 
-	CGhoul2Info_v* g2From = static_cast<CGhoul2Info_v*>(ghoul2From);
+	CGhoul2Info_v* g2From = static_cast<CGhoul2Info_v*>(ghoul2_from);
 	CGhoul2Info_v* g2To = static_cast<CGhoul2Info_v*>(ghoul2To);
 
 	return re->G2API_AttachG2Model(*g2From, modelIndexFrom, *g2To, toBoltIndex, toModel);

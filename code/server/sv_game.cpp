@@ -459,7 +459,7 @@ static void SV_G2API_CollisionDetect(
 		ent_num, ray_start, ray_end, scale, mini_heap, e_g2_trace_type, use_lod, f_radius);
 }
 
-static void SV_G2API_CopyGhoul2Instance(CGhoul2Info_v& ghoul2_from, CGhoul2Info_v& ghoul2_to, const int model_index)
+static void SV_G2API_CopyGhoul2Instance(const CGhoul2Info_v& ghoul2_from, CGhoul2Info_v& ghoul2_to, const int model_index)
 {
 	re.G2API_CopyGhoul2Instance(ghoul2_from, ghoul2_to, model_index);
 }
@@ -489,7 +489,7 @@ static char* SV_G2API_GetAnimFileInternalNameIndex(const qhandle_t model_index)
 	return re.G2API_GetAnimFileInternalNameIndex(model_index);
 }
 
-static int SV_G2API_GetAnimIndex(CGhoul2Info* ghl_info)
+static int SV_G2API_GetAnimIndex(const CGhoul2Info* ghl_info)
 {
 	return re.G2API_GetAnimIndex(ghl_info);
 }
@@ -574,7 +574,7 @@ static void SV_G2API_GiveMeVectorFromMatrix(mdxaBone_t& bolt_matrix, const Eorie
 	re.G2API_GiveMeVectorFromMatrix(bolt_matrix, flags, vec);
 }
 
-static qboolean SV_G2API_HaveWeGhoul2Models(CGhoul2Info_v& ghoul2)
+static qboolean SV_G2API_HaveWeGhoul2Models(const CGhoul2Info_v& ghoul2)
 {
 	return re.G2API_HaveWeGhoul2Models(ghoul2);
 }
@@ -605,7 +605,7 @@ static void SV_G2API_ListSurfaces(CGhoul2Info* ghl_info)
 	return re.G2API_ListSurfaces(ghl_info);
 }
 
-static void SV_G2API_LoadGhoul2Models(CGhoul2Info_v& ghoul2, char* buffer)
+static void SV_G2API_LoadGhoul2Models(CGhoul2Info_v& ghoul2, const char* buffer)
 {
 	return re.G2API_LoadGhoul2Models(ghoul2, buffer);
 }

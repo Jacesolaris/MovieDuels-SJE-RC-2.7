@@ -1356,7 +1356,7 @@ void R_GenerateDrawSurfs() {
 R_DebugPolygon
 ================
 */
-void R_DebugPolygon(const int color, const int num_points, float* points) {
+void R_DebugPolygon(const int color, const int num_points, const float* points) {
 	int		i;
 
 	GL_State(GLS_DEPTHMASK_TRUE | GLS_SRCBLEND_ONE | GLS_DSTBLEND_ONE);

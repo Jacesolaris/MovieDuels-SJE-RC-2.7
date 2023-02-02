@@ -1740,6 +1740,6 @@ Called from the renderer
 void BotDrawDebugPolygons(void (*draw_poly)(int color, int num_points, float* points), int value);
 #endif
 
-void CM_DrawDebugSurface(void (*draw_poly)(int color, int num_points, float* points))
+void CM_DrawDebugSurface(void (*draw_poly)(int color, int num_points, const float* points))
 {
 }

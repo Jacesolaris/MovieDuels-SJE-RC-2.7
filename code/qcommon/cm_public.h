@@ -80,6 +80,6 @@ int CM_MarkFragments(int numPoints, const vec3_t* points, const vec3_t projectio
 	int maxPoints, vec3_t pointBuffer, int maxFragments, markFragment_t* fragmentBuffer);
 
 // cm_patch.c
-void CM_DrawDebugSurface(void (*draw_poly)(int color, int num_points, float* points));
+void CM_DrawDebugSurface(void (*draw_poly)(int color, int num_points, const float* points));
 
 #endif //__CM_PUBLIC_H__

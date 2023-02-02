@@ -1631,24 +1631,24 @@ int G2API_AddBoltSurfNum(CGhoul2Info* ghl_info, const int surf_index)
 	return -1;
 }
 
-qboolean G2API_AttachG2Model(CGhoul2Info_v& ghoul2From, int modelFrom, CGhoul2Info_v& ghoul2To, int toBoltIndex, int toModel)
+qboolean G2API_AttachG2Model(CGhoul2Info_v& ghoul2_from, int modelFrom, CGhoul2Info_v& ghoul2To, int toBoltIndex, int toModel)
 {
 	assert(toBoltIndex >= 0);
 	if (toBoltIndex < 0)
 	{
 		return qfalse;
 	}
-	if (G2_SetupModelPointers(ghoul2From) && G2_SetupModelPointers(ghoul2To))
+	if (G2_SetupModelPointers(ghoul2_from) && G2_SetupModelPointers(ghoul2To))
 	{
 		// make sure we have a model to attach, a model to attach to, and a bolt on that model
-		if ((ghoul2From.size() > modelFrom) &&
+		if ((ghoul2_from.size() > modelFrom) &&
 			(ghoul2To.size() > toModel) &&
 			((ghoul2To[toModel].mBltlist[toBoltIndex].boneNumber != -1) || (ghoul2To[toModel].mBltlist[toBoltIndex].surface_number != -1)))
 		{
 			// encode the bolt address into the model bolt link
 			toModel &= MODEL_AND;
 			toBoltIndex &= BOLT_AND;
-			ghoul2From[modelFrom].mModelBoltLink = (toModel << MODEL_SHIFT) | (toBoltIndex << BOLT_SHIFT);
+			ghoul2_from[modelFrom].mModelBoltLink = (toModel << MODEL_SHIFT) | (toBoltIndex << BOLT_SHIFT);
 			return qtrue;
 		}
 	}
@@ -2186,7 +2186,7 @@ int G2API_CopyGhoul2Instance(CGhoul2Info_v& g2From, CGhoul2Info_v& g2To, int mod
 	assert(model_index == -1); // copy individual bolted parts is not used in jk2 and I didn't want to deal with it
 	// if ya want it, we will add it back correctly
 
-//G2ERROR(ghoul2From.IsValid(),"Invalid ghl_info");
+//G2ERROR(ghoul2_from.IsValid(),"Invalid ghl_info");
 	if (g2From.IsValid())
 	{
 #ifdef _DEBUG
@@ -2217,14 +2217,14 @@ int G2API_CopyGhoul2Instance(CGhoul2Info_v& g2From, CGhoul2Info_v& g2To, int mod
 			model++;
 		}
 #endif
-		//G2ANIM(ghoul2From,"G2API_CopyGhoul2Instance (source)");
+		//G2ANIM(ghoul2_from,"G2API_CopyGhoul2Instance (source)");
 		//G2ANIM(ghoul2To,"G2API_CopyGhoul2Instance (dest)");
 	}
 
 	return -1;
 }
 
-void G2API_CopySpecificG2Model(CGhoul2Info_v& ghoul2From, int modelFrom, CGhoul2Info_v& ghoul2To, int modelTo)
+void G2API_CopySpecificG2Model(CGhoul2Info_v& ghoul2_from, int modelFrom, CGhoul2Info_v& ghoul2To, int modelTo)
 {
 #if 0
 	qboolean forceReconstruct = qtrue;
@@ -2233,7 +2233,7 @@ void G2API_CopySpecificG2Model(CGhoul2Info_v& ghoul2From, int modelFrom, CGhoul2
 	//mangled and probably fixed. -rww
 
  // assume we actually have a model to copy from
-	if (ghoul2From.size() > modelFrom)
+	if (ghoul2_from.size() > modelFrom)
 	{
 		// if we don't have enough models on the to side, resize us so we do
 		if (ghoul2To.size() <= modelTo)
@@ -2254,7 +2254,7 @@ void G2API_CopySpecificG2Model(CGhoul2Info_v& ghoul2From, int modelFrom, CGhoul2
 				ghoul2To[modelTo].mBoneCache = nullptr;
 			}
 		}
-		ghoul2To[modelTo] = ghoul2From[modelFrom];
+		ghoul2To[modelTo] = ghoul2_from[modelFrom];
 
 #if 0
 		if (forceReconstruct)

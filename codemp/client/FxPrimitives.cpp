@@ -1269,7 +1269,7 @@ bool CCylinder::Update(void)
 CEmitter::CEmitter(void)
 {
 	// There may or may not be a model, but if there isn't one,
-	//	we just won't bother adding the refEnt in our Draw func
+	//	we just won't bother adding the ref_ent in our Draw func
 	mRefEnt.reType = RT_MODEL;
 }
 
