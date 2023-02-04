@@ -1008,7 +1008,7 @@ sfBandIndexTable[3][3] =
 };
 
 void sbt_mono_L3(float* sample, signed short* pcm, int ch);
-void sbt_dual_L3(float* sample, signed short* pcm, int ch);
+void sbt_dual_L3(float* sample, signed short* pcm, int n);
 void sbt16_mono_L3(float* sample, signed short* pcm, int ch);
 void sbt16_dual_L3(float* sample, signed short* pcm, int ch);
 void sbt8_mono_L3(float* sample, signed short* pcm, int ch);

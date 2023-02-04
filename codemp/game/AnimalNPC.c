@@ -669,7 +669,7 @@ extern void G_AllocateVehicleObject(Vehicle_t** p_veh);
 
 // Create/Allocate a new Animal Vehicle (initializing it as well).
 //this is a BG function too in MP so don't un-bg-compatibilify it -rww
-void G_CreateAnimalNPC(Vehicle_t** p_veh, const char* strAnimalType)
+void G_CreateAnimalNPC(Vehicle_t** p_veh, const char* str_animal_type)
 {
 	// Allocate the Vehicle.
 #ifdef _GAME
@@ -684,5 +684,5 @@ void G_CreateAnimalNPC(Vehicle_t** p_veh, const char* strAnimalType)
 	}
 #endif
 	memset(*p_veh, 0, sizeof(Vehicle_t));
-	(*p_veh)->m_pVehicleInfo = &g_vehicleInfo[BG_VehicleGetIndex(strAnimalType)];
+	(*p_veh)->m_pVehicleInfo = &g_vehicleInfo[BG_VehicleGetIndex(str_animal_type)];
 }

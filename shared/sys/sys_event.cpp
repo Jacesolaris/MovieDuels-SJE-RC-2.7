@@ -104,15 +104,15 @@ Ptr should either be null, or point to a block of data that can
 be freed by the game later.
 ================
 */
-void Sys_QueEvent(int evTime, const sysEventType_t evType, const int value, const int value2, const int ptrLength, void* ptr)
+void Sys_QueEvent(int ev_time, const sysEventType_t ev_type, const int value, const int value2, const int ptrLength, void* ptr)
 {
-	if (evTime == 0)
+	if (ev_time == 0)
 	{
-		evTime = Sys_Milliseconds();
+		ev_time = Sys_Milliseconds();
 	}
 
 	// try to combine all sequential mouse moves in one event
-	if (evType == SE_MOUSE && lastEvent && lastEvent->evType == SE_MOUSE)
+	if (ev_type == SE_MOUSE && lastEvent && lastEvent->evType == SE_MOUSE)
 	{
 		// try to reuse already processed item
 		if (eventTail == eventHead)
@@ -126,7 +126,7 @@ void Sys_QueEvent(int evTime, const sysEventType_t evType, const int value, cons
 			lastEvent->evValue += value;
 			lastEvent->evValue2 += value2;
 		}
-		lastEvent->evTime = evTime;
+		lastEvent->evTime = ev_time;
 		return;
 	}
 
@@ -134,7 +134,7 @@ void Sys_QueEvent(int evTime, const sysEventType_t evType, const int value, cons
 
 	if (eventHead - eventTail >= MAX_QUED_EVENTS)
 	{
-		Com_Printf("Sys_QueEvent(%s,time=%i): overflow\n", Sys_EventName(evType), evTime);
+		Com_Printf("Sys_QueEvent(%s,time=%i): overflow\n", Sys_EventName(ev_type), ev_time);
 		// we are discarding an event, but don't leak memory
 		if (ev->evPtr)
 		{
@@ -145,8 +145,8 @@ void Sys_QueEvent(int evTime, const sysEventType_t evType, const int value, cons
 
 	eventHead++;
 
-	ev->evTime = evTime;
-	ev->evType = evType;
+	ev->evTime = ev_time;
+	ev->evType = ev_type;
 	ev->evValue = value;
 	ev->evValue2 = value2;
 	ev->evPtrLength = ptrLength;

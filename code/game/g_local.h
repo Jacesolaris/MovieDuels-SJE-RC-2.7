@@ -385,7 +385,7 @@ qboolean G_SpawnInt(const char* key, const char* defaultString, int* out);
 qboolean G_SpawnVector(const char* key, const char* defaultString, float* out);
 qboolean G_SpawnVector4(const char* key, const char* defaultString, float* out);
 qboolean G_SpawnAngleHack(const char* key, const char* defaultString, float* out);
-void G_SpawnEntitiesFromString(const char* entities);
+void G_SpawnEntitiesFromString(const char* entity_string);
 void AnimateStun(gentity_t* self, gentity_t* inflictor);
 
 //
@@ -478,7 +478,7 @@ void G_Damage(gentity_t* targ, gentity_t* inflictor, gentity_t* attacker, const 
 void G_RadiusDamage(const vec3_t origin, gentity_t* attacker, float damage, float radius, const gentity_t* ignore,
 	int mod);
 gentity_t* TossClientItems(gentity_t* self);
-void ExplodeDeath_Wait(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int meansOfDeath,
+void ExplodeDeath_Wait(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod,
 	int d_flags, int hit_loc);
 void ExplodeDeath(gentity_t* self);
 void GoExplodeDeath(gentity_t* self, gentity_t* other, gentity_t* activator);

@@ -70,7 +70,7 @@ extern qboolean g_set_g2_player_model_info(gentity_t* p_ent, const char* model_n
 	const char* surf_off, const char* surf_on);
 extern void G_RemovePlayerModel(gentity_t* p_ent);
 extern void G_ChangePlayerModel(gentity_t* p_ent, const char* new_model);
-extern void G_RemoveWeaponModels(gentity_t* p_ent);
+extern void G_RemoveWeaponModels(gentity_t* ent);
 extern void CG_ChangeWeapon(int num);
 extern float DotToSpot(vec3_t spot, vec3_t from, vec3_t fromAngles);
 extern qboolean Q3_TaskIDPending(const gentity_t* ent, taskID_t taskType);

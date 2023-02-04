@@ -864,7 +864,7 @@ qboolean G2_Get_Bone_Anim_Range(CGhoul2Info* ghl_info, boneInfo_v& blist, const 
 void G2_TimingModel(boneInfo_t& bone, int current_time, int num_frames_in_file, int& current_frame, int& new_frame, float& lerp);
 
 qboolean G2_Get_Bone_Anim_Index(boneInfo_v& blist, const int index, const int current_time,
-	float* current_frame, int* start_frame, int* end_frame, int* flags, float* retAnimSpeed, qhandle_t* model_list, int num_frames)
+	float* current_frame, int* start_frame, int* end_frame, int* flags, float* retAnimSpeed, qhandle_t* model_list, const int num_frames)
 {
 	// did we find it?
 	if ((index >= 0) && !((index >= static_cast<int>(blist.size())) || (blist[index].boneNumber == -1)))

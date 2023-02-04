@@ -7776,9 +7776,9 @@ static void CG_RegisterVehicleAssets(Vehicle_t* p_veh)
 
 extern void CG_HandleNPCSounds(centity_t* cent);
 
-extern void G_CreateAnimalNPC(Vehicle_t** p_veh, const char* strAnimalType);
+extern void G_CreateAnimalNPC(Vehicle_t** p_veh, const char* str_animal_type);
 extern void G_CreateSpeederNPC(Vehicle_t** p_veh, const char* strType);
-extern void G_CreateWalkerNPC(Vehicle_t** p_veh, const char* strAnimalType);
+extern void G_CreateWalkerNPC(Vehicle_t** p_veh, const char* str_animal_type);
 extern void G_CreateFighterNPC(Vehicle_t** p_veh, const char* strType);
 
 extern playerState_t* cgSendPS[MAX_GENTITIES];

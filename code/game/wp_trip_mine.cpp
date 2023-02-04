@@ -299,7 +299,7 @@ void WP_PlaceLaserTrap(gentity_t* ent, const qboolean alt_fire)
 
 		laserTrap->s.eFlags |= EF_MISSILE_STICK;
 		laserTrap->s.pos.trType = TR_GRAVITY;
-		VectorScale(forwardVec, LT_VELOCITY, laserTrap->s.pos.trDelta);
+		VectorScale(forward_vec, LT_VELOCITY, laserTrap->s.pos.trDelta);
 
 		if (alt_fire)
 		{

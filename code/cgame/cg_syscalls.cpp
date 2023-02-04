@@ -339,10 +339,10 @@ qboolean cgi_Language_UsesSpaces()
 	return static_cast<qboolean>(Q_syscall(CG_LANGUAGE_USESSPACES) != 0);
 }
 
-unsigned int cgi_AnyLanguage_ReadCharFromString(const char* psText, int* piAdvanceCount,
+unsigned int cgi_AnyLanguage_ReadCharFromString(const char* psText, int* pi_advance_count,
 	qboolean* pbIsTrailingPunctuation /* = NULL */)
 {
-	return Q_syscall(CG_ANYLANGUAGE_READFROMSTRING, psText, piAdvanceCount, pbIsTrailingPunctuation);
+	return Q_syscall(CG_ANYLANGUAGE_READFROMSTRING, psText, pi_advance_count, pbIsTrailingPunctuation);
 }
 
 void cgi_R_Font_DrawString(const int ox, const int oy, const char* text, const float* rgba, const int setIndex,
@@ -662,9 +662,9 @@ int cgi_UI_GetItemText(char* menuFile, char* itemName, char* text)
 	return Q_syscall(CG_UI_GETITEMTEXT, menuFile, itemName, text);
 }
 
-int cgi_SP_GetStringTextString(const char* text, char* buffer, const int bufferLength)
+int cgi_SP_GetStringTextString(const char* text, char* buffer, const int buffer_length)
 {
-	return Q_syscall(CG_SP_GETSTRINGTEXTSTRING, text, buffer, bufferLength);
+	return Q_syscall(CG_SP_GETSTRINGTEXTSTRING, text, buffer, buffer_length);
 }
 
 /*

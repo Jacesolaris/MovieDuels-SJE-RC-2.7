@@ -1559,8 +1559,8 @@ struct gentity_s
 		saved_game.write<int32_t>(target4);
 		saved_game.write<int32_t>(targetJump);
 		saved_game.write<int32_t>(targetname);
-		saved_game.write<int32_t>(touchedByPlayer);
 		saved_game.write<int32_t>(team);
+		saved_game.write<int32_t>(touchedByPlayer);
 		saved_game.write<int32_t>(roff);
 		saved_game.write<int32_t>(roff_ctr);
 		saved_game.write<int32_t>(next_roff_time);
@@ -1776,8 +1776,8 @@ struct gentity_s
 		saved_game.read<int32_t>(target4);
 		saved_game.read<int32_t>(targetJump);
 		saved_game.read<int32_t>(targetname);
-		saved_game.read<int32_t>(touchedByPlayer);
 		saved_game.read<int32_t>(team);
+		saved_game.read<int32_t>(touchedByPlayer);
 		saved_game.read<int32_t>(roff);
 		saved_game.read<int32_t>(roff_ctr);
 		saved_game.read<int32_t>(next_roff_time);

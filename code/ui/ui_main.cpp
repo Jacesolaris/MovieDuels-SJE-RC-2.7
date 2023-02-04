@@ -127,7 +127,7 @@ static void UI_AddPistolSelection(int weaponIndex, int ammoIndex, int ammoAmount
 	const char* litIconItemName, const char* hexBackground, const char* soundfile);
 static void UI_AddThrowWeaponSelection(int weaponIndex, int ammoIndex, int ammoAmount, const char* iconItemName,
 	const char* litIconItemName, const char* hexBackground, const char* soundfile);
-static void UI_RemoveWeaponSelection(int weaponIndex);
+static void UI_RemoveWeaponSelection(int weapon_selection_index);
 static void UI_Removepistolselection();
 static void UI_RemoveThrowWeaponSelection();
 static void UI_HighLightWeaponSelection(int selectionslot);
@@ -3319,7 +3319,7 @@ void UI_LoadMenus(const char* menuFile, const qboolean reset)
 	Com_Printf("---------------- MovieDuels-SJE-RC-2.7---------------------------\n");
 	Com_Printf("-----------------------------------------------------------------\n");
 	Com_Printf("------------------------Update 7---------------------------------\n");
-	Com_Printf("------------------Build Date 02/02/2023--------------------------\n");
+	Com_Printf("------------------Build Date 04/02/2023--------------------------\n");
 	Com_Printf("-----------------------------------------------------------------\n");
 	Com_Printf("------------------------LightSaber-------------------------------\n");
 	Com_Printf("-----------An elegant weapon for a more civilized age------------\n");
@@ -6502,21 +6502,21 @@ static void UI_AddPistolSelection(const int weaponIndex, const int ammoIndex, co
 }
 
 // Update the player weapons with the chosen weapon
-static void UI_RemoveWeaponSelection(const int weaponSelectionIndex)
+static void UI_RemoveWeaponSelection(const int weapon_selection_index)
 {
-	const char* chosenItemName, * chosenButtonName, * background;
-	int ammoIndex, weaponIndex;
+	const char* chosen_item_name, * chosen_button_name, * background;
+	int ammo_index, weapon_index;
 
 	const menuDef_t* menu = Menu_GetFocused(); // Get current menu
 
 	// Which item has it?
-	if (weaponSelectionIndex == 1)
+	if (weapon_selection_index == 1)
 	{
-		chosenItemName = "chosenweapon1_icon";
-		chosenButtonName = "chosenweapon1_button";
+		chosen_item_name = "chosenweapon1_icon";
+		chosen_button_name = "chosenweapon1_button";
 		background = uiInfo.selectedWeapon1ItemName;
-		ammoIndex = uiInfo.selectedWeapon1AmmoIndex;
-		weaponIndex = uiInfo.selectedWeapon1;
+		ammo_index = uiInfo.selectedWeapon1AmmoIndex;
+		weapon_index = uiInfo.selectedWeapon1;
 
 		if (uiInfo.weapon1ItemButton)
 		{
@@ -6524,13 +6524,13 @@ static void UI_RemoveWeaponSelection(const int weaponSelectionIndex)
 			uiInfo.weapon1ItemButton = nullptr;
 		}
 	}
-	else if (weaponSelectionIndex == 2)
+	else if (weapon_selection_index == 2)
 	{
-		chosenItemName = "chosenweapon2_icon";
-		chosenButtonName = "chosenweapon2_button";
+		chosen_item_name = "chosenweapon2_icon";
+		chosen_button_name = "chosenweapon2_button";
 		background = uiInfo.selectedWeapon2ItemName;
-		ammoIndex = uiInfo.selectedWeapon2AmmoIndex;
-		weaponIndex = uiInfo.selectedWeapon2;
+		ammo_index = uiInfo.selectedWeapon2AmmoIndex;
+		weapon_index = uiInfo.selectedWeapon2;
 
 		if (uiInfo.weapon2ItemButton)
 		{
@@ -6554,14 +6554,14 @@ static void UI_RemoveWeaponSelection(const int weaponSelectionIndex)
 	}
 
 	// Hide it icon
-	item = Menu_FindItemByName(menu, chosenItemName);
+	item = Menu_FindItemByName(menu, chosen_item_name);
 	if (item)
 	{
 		item->window.flags &= ~WINDOW_VISIBLE;
 	}
 
 	// Hide button
-	item = Menu_FindItemByName(menu, chosenButtonName);
+	item = Menu_FindItemByName(menu, chosen_button_name);
 	if (item)
 	{
 		item->window.flags &= ~WINDOW_VISIBLE;
@@ -6579,31 +6579,31 @@ static void UI_RemoveWeaponSelection(const int weaponSelectionIndex)
 		{
 			playerState_t* pState = cl->gentity->client;
 
-			if (weaponIndex > 0 && weaponIndex < WP_NUM_WEAPONS)
+			if (weapon_index > 0 && weapon_index < WP_NUM_WEAPONS)
 			{
-				pState->weapons[weaponIndex] = 0;
+				pState->weapons[weapon_index] = 0;
 			}
 
 			// Remove ammo too
-			if (ammoIndex > 0 && ammoIndex < AMMO_MAX)
+			if (ammo_index > 0 && ammo_index < AMMO_MAX)
 			{
 				// But don't take it away if the other weapon is using that ammo
 				if (uiInfo.selectedWeapon1AmmoIndex != uiInfo.selectedWeapon2AmmoIndex)
 				{
-					pState->ammo[ammoIndex] = 0;
+					pState->ammo[ammo_index] = 0;
 				}
 			}
 		}
 	}
 
 	// Now do a little clean up
-	if (weaponSelectionIndex == 1)
+	if (weapon_selection_index == 1)
 	{
 		uiInfo.selectedWeapon1 = NOWEAPON;
 		memset(uiInfo.selectedWeapon1ItemName, 0, sizeof uiInfo.selectedWeapon1ItemName);
 		uiInfo.selectedWeapon1AmmoIndex = 0;
 	}
-	else if (weaponSelectionIndex == 2)
+	else if (weapon_selection_index == 2)
 	{
 		uiInfo.selectedWeapon2 = NOWEAPON;
 		memset(uiInfo.selectedWeapon2ItemName, 0, sizeof uiInfo.selectedWeapon2ItemName);

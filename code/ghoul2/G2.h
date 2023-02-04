@@ -215,8 +215,8 @@ qboolean G2API_SetBoneAnglesIndex(CGhoul2Info* ghl_info, int index, const vec3_t
 	qhandle_t* model_list, int blend_time, int acurrent_time);
 qboolean G2API_SetBoneAnglesMatrixIndex(CGhoul2Info* ghl_info, int index, const mdxaBone_t& matrix,
 	int flags, qhandle_t* model_list, int blend_time, int acurrent_time);
-qboolean G2API_SetBoneAnimIndex(CGhoul2Info* ghl_info, int index, int start_frame, int end_frame, int flags,
-	float anim_speed, int acurrent_time, float set_frame, int blend_time);
+qboolean G2API_SetBoneAnimIndex(CGhoul2Info* ghl_info, int index, int astart_frame, int aend_frame, int flags,
+	float anim_speed, int acurrent_time, float aset_frame, int blend_time);
 qboolean G2API_SetAnimIndex(CGhoul2Info* ghl_info, int index);
 int G2API_GetAnimIndex(const CGhoul2Info* ghl_info);
 void G2API_SaveGhoul2Models(CGhoul2Info_v& ghoul2);

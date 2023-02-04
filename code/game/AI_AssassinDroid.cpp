@@ -276,6 +276,15 @@ void deka_bubble_shield_update()
 		return;
 	}
 
+	if (NPC->client->ps.powerups[PW_STUNNED])
+	{
+		if (BubbleShield_IsOn())
+		{
+			BubbleShield_TurnOff();
+		}
+		return;
+	}
+
 	// Recharge Shields
 	//------------------
 	NPC->client->ps.stats[STAT_ARMOR] += 1;

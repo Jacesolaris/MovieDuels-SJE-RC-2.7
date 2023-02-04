@@ -56,7 +56,7 @@ static void WP_FlechetteMainFire(gentity_t* ent)
 	for (int i = 0; i < FLECHETTE_SHOTS; i++)
 	{
 		vec3_t fwd;
-		vectoangles(forwardVec, angs);
+		vectoangles(forward_vec, angs);
 
 		if (i == 0 && ent->s.number == 0)
 		{
@@ -259,7 +259,7 @@ static void WP_FlechetteAltFire(gentity_t* self)
 {
 	vec3_t dir, start, angs;
 
-	vectoangles(forwardVec, angs);
+	vectoangles(forward_vec, angs);
 	VectorCopy(muzzle, start);
 
 	WP_TraceSetStart(self, start);

@@ -66,7 +66,7 @@ extern void Field_Draw(field_t* edit, int x, int y, int width, qboolean showCurs
 // ui_menu.c
 //
 extern void UI_MainMenu();
-extern void UI_InGameMenu(const char* holoFlag);
+extern void UI_InGameMenu(const char* menuID);
 extern void AssetCache();
 extern void UI_DataPadMenu();
 

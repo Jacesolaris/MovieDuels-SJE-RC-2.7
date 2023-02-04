@@ -243,11 +243,11 @@ qboolean SV_inPVS(const vec3_t p1, const vec3_t p2);
 void SV_ClearWorld();
 // called after the world model has been loaded, before linking any entities
 
-void SV_UnlinkEntity(gentity_t* ent);
+void SV_UnlinkEntity(gentity_t* g_ent);
 // call before removing an entity, and before trying to move one,
 // so it doesn't clip against itself
 
-void SV_LinkEntity(gentity_t* ent);
+void SV_LinkEntity(gentity_t* g_ent);
 // Needs to be called any time an entity changes origin, mins, maxs,
 // or solid.  Automatically unlinks if needed.
 // sets ent->v.absmin and ent->v.absmax

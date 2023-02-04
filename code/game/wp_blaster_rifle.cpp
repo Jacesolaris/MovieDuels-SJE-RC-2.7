@@ -129,7 +129,7 @@ void WP_FireBlaster(gentity_t* ent, const qboolean alt_fire)
 {
 	vec3_t dir, angs;
 
-	vectoangles(forwardVec, angs);
+	vectoangles(forward_vec, angs);
 
 	if (ent->client && ent->client->NPC_class == CLASS_VEHICLE)
 	{
@@ -308,7 +308,7 @@ void WP_FireBattleDroid(gentity_t* ent, const qboolean alt_fire)
 {
 	vec3_t dir, angs;
 
-	vectoangles(forwardVec, angs);
+	vectoangles(forward_vec, angs);
 
 	if (ent->client && ent->client->NPC_class == CLASS_VEHICLE)
 	{
@@ -488,7 +488,7 @@ void WP_FireFirstOrder(gentity_t* ent, const qboolean alt_fire)
 {
 	vec3_t dir, angs;
 
-	vectoangles(forwardVec, angs);
+	vectoangles(forward_vec, angs);
 
 	if (ent->client && ent->client->NPC_class == CLASS_VEHICLE)
 	{
@@ -674,7 +674,7 @@ void WP_FireRebelBlaster(gentity_t* ent, const qboolean alt_fire)
 {
 	vec3_t dir, angs;
 
-	vectoangles(forwardVec, angs);
+	vectoangles(forward_vec, angs);
 
 	if (ent->client && ent->client->NPC_class == CLASS_VEHICLE)
 	{
@@ -764,7 +764,7 @@ void WP_FireRebelBlasterDuals(gentity_t* ent, const qboolean alt_fire, const qbo
 {
 	vec3_t dir, angs;
 
-	vectoangles(forwardVec, angs);
+	vectoangles(forward_vec, angs);
 
 	if (ent->client && ent->client->NPC_class == CLASS_VEHICLE)
 	{
@@ -950,7 +950,7 @@ void WP_FireRebelRifle(gentity_t* ent, const qboolean alt_fire)
 {
 	vec3_t dir, angs;
 
-	vectoangles(forwardVec, angs);
+	vectoangles(forward_vec, angs);
 
 	if (ent->client && ent->client->NPC_class == CLASS_VEHICLE)
 	{
@@ -1406,7 +1406,7 @@ void WP_FireJangoPistol(gentity_t* ent, const qboolean alt_fire, const qboolean 
 {
 	vec3_t dir, angs;
 
-	vectoangles(forwardVec, angs);
+	vectoangles(forward_vec, angs);
 
 	if (ent->client && ent->client->NPC_class == CLASS_VEHICLE)
 	{
@@ -1414,7 +1414,7 @@ void WP_FireJangoPistol(gentity_t* ent, const qboolean alt_fire, const qboolean 
 	}
 	else if (!(ent->client->ps.forcePowersActive & 1 << FP_SEE) || ent->client->ps.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2)
 	{//force sight 2+ gives perfect aim
-		vectoangles(forwardVec, angs);
+		vectoangles(forward_vec, angs);
 
 		if (alt_fire)
 		{
@@ -1485,7 +1485,7 @@ void WP_FireJangoPistol(gentity_t* ent, const qboolean alt_fire, const qboolean 
 			}
 		}
 
-		AngleVectors(angs, forwardVec, nullptr, nullptr);
+		AngleVectors(angs, forward_vec, nullptr, nullptr);
 	}
 
 	AngleVectors(angs, dir, nullptr, nullptr);
@@ -1506,7 +1506,7 @@ void WP_FireWristPistol(gentity_t* ent, const qboolean alt_fire)
 {
 	vec3_t dir, angs;
 
-	vectoangles(forwardVec, angs);
+	vectoangles(forward_vec, angs);
 
 	if (ent->client && ent->client->NPC_class == CLASS_VEHICLE)
 	{
@@ -1514,7 +1514,7 @@ void WP_FireWristPistol(gentity_t* ent, const qboolean alt_fire)
 	}
 	else if (!(ent->client->ps.forcePowersActive & 1 << FP_SEE) || ent->client->ps.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2)
 	{//force sight 2+ gives perfect aim
-		vectoangles(forwardVec, angs);
+		vectoangles(forward_vec, angs);
 
 		if (alt_fire)
 		{
@@ -1585,7 +1585,7 @@ void WP_FireWristPistol(gentity_t* ent, const qboolean alt_fire)
 			}
 		}
 
-		AngleVectors(angs, forwardVec, nullptr, nullptr);
+		AngleVectors(angs, forward_vec, nullptr, nullptr);
 	}
 
 	AngleVectors(angs, dir, nullptr, nullptr);
@@ -1599,7 +1599,7 @@ void WP_FireJangoDualPistol(gentity_t* ent, const qboolean alt_fire)
 {
 	vec3_t dir, angs;
 
-	vectoangles(forwardVec, angs);
+	vectoangles(forward_vec, angs);
 
 	if (ent->client && ent->client->NPC_class == CLASS_VEHICLE)
 	{
@@ -1607,7 +1607,7 @@ void WP_FireJangoDualPistol(gentity_t* ent, const qboolean alt_fire)
 	}
 	else if (!(ent->client->ps.forcePowersActive & 1 << FP_SEE) || ent->client->ps.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2)
 	{//force sight 2+ gives perfect aim
-		vectoangles(forwardVec, angs);
+		vectoangles(forward_vec, angs);
 
 		if (alt_fire)
 		{
@@ -1678,7 +1678,7 @@ void WP_FireJangoDualPistol(gentity_t* ent, const qboolean alt_fire)
 			}
 		}
 
-		AngleVectors(angs, forwardVec, nullptr, nullptr);
+		AngleVectors(angs, forward_vec, nullptr, nullptr);
 	}
 
 	AngleVectors(angs, dir, nullptr, nullptr);
@@ -1692,7 +1692,7 @@ void WP_FireJangoFPPistolDuals(gentity_t* ent, const qboolean alt_fire, const qb
 {
 	vec3_t dir, angs;
 
-	vectoangles(forwardVec, angs);
+	vectoangles(forward_vec, angs);
 
 	if (ent->client && ent->client->NPC_class == CLASS_VEHICLE)
 	{
@@ -1700,7 +1700,7 @@ void WP_FireJangoFPPistolDuals(gentity_t* ent, const qboolean alt_fire, const qb
 	}
 	else if (!(ent->client->ps.forcePowersActive & 1 << FP_SEE) || ent->client->ps.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2)
 	{//force sight 2+ gives perfect aim
-		vectoangles(forwardVec, angs);
+		vectoangles(forward_vec, angs);
 
 		if (alt_fire)
 		{
@@ -1771,7 +1771,7 @@ void WP_FireJangoFPPistolDuals(gentity_t* ent, const qboolean alt_fire, const qb
 			}
 		}
 
-		AngleVectors(angs, forwardVec, nullptr, nullptr);
+		AngleVectors(angs, forward_vec, nullptr, nullptr);
 	}
 
 	AngleVectors(angs, dir, nullptr, nullptr);
@@ -1882,7 +1882,7 @@ void WP_FireBobaRifle(gentity_t* ent, const qboolean alt_fire)
 {
 	vec3_t dir, angs;
 
-	vectoangles(forwardVec, angs);
+	vectoangles(forward_vec, angs);
 
 	if (ent->client && ent->client->NPC_class == CLASS_VEHICLE)
 	{
@@ -2165,7 +2165,7 @@ void WP_FireDroidekaDualPistol(gentity_t* ent, const qboolean alt_fire)
 {
 	vec3_t dir, angs;
 
-	vectoangles(forwardVec, angs);
+	vectoangles(forward_vec, angs);
 
 	if (ent->client && ent->client->ps.BlasterAttackChainCount <= BLASTERMISHAPLEVEL_HEAVYER)
 	{
@@ -2173,7 +2173,7 @@ void WP_FireDroidekaDualPistol(gentity_t* ent, const qboolean alt_fire)
 	}
 	else
 	{//force sight 2+ gives perfect aim
-		vectoangles(forwardVec, angs);
+		vectoangles(forward_vec, angs);
 
 		if (alt_fire)
 		{
@@ -2188,7 +2188,7 @@ void WP_FireDroidekaDualPistol(gentity_t* ent, const qboolean alt_fire)
 			angs[YAW] += Q_flrand(-1.0f, 1.0f) * BLASTER_MAIN_SPREAD;
 		}
 
-		AngleVectors(angs, forwardVec, nullptr, nullptr);
+		AngleVectors(angs, forward_vec, nullptr, nullptr);
 	}
 
 	AngleVectors(angs, dir, nullptr, nullptr);
@@ -2202,7 +2202,7 @@ void WP_FireDroidekaFPPistolDuals(gentity_t* ent, const qboolean alt_fire, const
 {
 	vec3_t dir, angs;
 
-	vectoangles(forwardVec, angs);
+	vectoangles(forward_vec, angs);
 
 	if (ent->client && ent->client->ps.BlasterAttackChainCount <= BLASTERMISHAPLEVEL_HEAVYER)
 	{
@@ -2210,7 +2210,7 @@ void WP_FireDroidekaFPPistolDuals(gentity_t* ent, const qboolean alt_fire, const
 	}
 	else
 	{//force sight 2+ gives perfect aim
-		vectoangles(forwardVec, angs);
+		vectoangles(forward_vec, angs);
 
 		if (alt_fire)
 		{
@@ -2225,7 +2225,7 @@ void WP_FireDroidekaFPPistolDuals(gentity_t* ent, const qboolean alt_fire, const
 			angs[YAW] += Q_flrand(-1.0f, 1.0f) * BLASTER_MAIN_SPREAD;
 		}
 
-		AngleVectors(angs, forwardVec, nullptr, nullptr);
+		AngleVectors(angs, forward_vec, nullptr, nullptr);
 	}
 
 	AngleVectors(angs, dir, nullptr, nullptr);

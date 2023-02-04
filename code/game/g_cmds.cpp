@@ -467,6 +467,12 @@ void Cmd_Give_f(gentity_t* ent)
 		return;
 	}
 
+	if (ent->client->NPC_class == CLASS_DROIDEKA
+		&& ent->s.weapon == WP_DROIDEKA)
+	{
+		return;
+	}
+
 	G_Give(ent, gi.argv(1), ConcatArgs(2), gi.argc());
 }
 

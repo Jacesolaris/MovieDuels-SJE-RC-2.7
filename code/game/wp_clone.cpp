@@ -128,7 +128,7 @@ void WP_FireClone(gentity_t* ent, const qboolean alt_fire)
 {
 	vec3_t dir, angs;
 
-	vectoangles(forwardVec, angs);
+	vectoangles(forward_vec, angs);
 
 	if (ent->client && ent->client->NPC_class == CLASS_VEHICLE)
 	{
@@ -306,7 +306,7 @@ void WP_FireCloneRifle(gentity_t* ent, const qboolean alt_fire)
 {
 	vec3_t dir, angs;
 
-	vectoangles(forwardVec, angs);
+	vectoangles(forward_vec, angs);
 
 	if (ent->client && ent->client->NPC_class == CLASS_VEHICLE)
 	{
@@ -484,7 +484,7 @@ void WP_FireCloneCommando(gentity_t* ent, const qboolean alt_fire)
 {
 	vec3_t dir, angs;
 
-	vectoangles(forwardVec, angs);
+	vectoangles(forward_vec, angs);
 
 	if (ent->client && ent->client->NPC_class == CLASS_VEHICLE)
 	{

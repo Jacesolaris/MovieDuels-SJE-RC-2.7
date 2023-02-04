@@ -1004,8 +1004,8 @@ qboolean G2API_SetAnimIndex(CGhoul2Info* ghl_info, const int index)
 	return qfalse;
 }
 
-qboolean G2API_SetBoneAnimIndex(CGhoul2Info* ghl_info, const int index, const int start_frame, const int end_frame, const int flags,
-	const float anim_speed, const int acurrent_time, const float set_frame, const int blend_time)
+qboolean G2API_SetBoneAnimIndex(CGhoul2Info* ghl_info, const int index, const int astart_frame, const int aend_frame, const int flags,
+	const float anim_speed, const int acurrent_time, const float aset_frame, const int blend_time)
 {
 	//rww - RAGDOLL_BEGIN
 	if (ghl_info && ghl_info->mFlags & GHOUL2_RAG_STARTED)
@@ -1023,17 +1023,17 @@ qboolean G2API_SetBoneAnimIndex(CGhoul2Info* ghl_info, const int index, const in
 		G2ERROR(end_frame <= ghl_info->aHeader->num_frames, "endframe>numframes");
 		G2ERROR(setFrame < ghl_info->aHeader->num_frames, "setframe>=numframes");
 		G2ERROR(setFrame == -1.0f || setFrame >= 0.0f, "setframe<0 but not -1");
-		if (start_frame < 0 || start_frame >= ghl_info->aHeader->num_frames)
+		if (astart_frame < 0 || astart_frame >= ghl_info->aHeader->num_frames)
 		{
-			*const_cast<int*>(&start_frame) = 0; // cast away const
+			*const_cast<int*>(&astart_frame) = 0; // cast away const
 		}
-		if (end_frame <= 0 || end_frame > ghl_info->aHeader->num_frames)
+		if (aend_frame <= 0 || aend_frame > ghl_info->aHeader->num_frames)
 		{
-			*const_cast<int*>(&end_frame) = 1;
+			*const_cast<int*>(&aend_frame) = 1;
 		}
-		if (set_frame != -1.0f && (set_frame < 0.0f || set_frame >= static_cast<float>(ghl_info->aHeader->num_frames)))
+		if (aset_frame != -1.0f && (aset_frame < 0.0f || aset_frame >= static_cast<float>(ghl_info->aHeader->num_frames)))
 		{
-			*const_cast<float*>(&set_frame) = 0.0f;
+			*const_cast<float*>(&aset_frame) = 0.0f;
 		}
 		ghl_info->mSkelFrameNum = 0;
 		G2ERROR(index >= 0 && index < (int)ghl_info->mBlist.size(), va("Out of Range Bone Index (%s)", ghl_info->mFileName));
@@ -1049,7 +1049,7 @@ qboolean G2API_SetBoneAnimIndex(CGhoul2Info* ghl_info, const int index, const in
 			}
 			*/
 #endif
-			ret = G2_Set_Bone_Anim_Index(ghl_info->mBlist, index, start_frame, end_frame, flags, anim_speed, current_time, set_frame, blend_time, ghl_info->aHeader->num_frames);
+			ret = G2_Set_Bone_Anim_Index(ghl_info->mBlist, index, astart_frame, aend_frame, flags, anim_speed, current_time, aset_frame, blend_time, ghl_info->aHeader->num_frames);
 			G2ANIM(ghl_info, "G2API_SetBoneAnimIndex");
 		}
 	}

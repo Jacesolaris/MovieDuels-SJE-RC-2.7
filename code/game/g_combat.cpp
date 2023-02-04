@@ -495,7 +495,7 @@ void ExplodeDeath(gentity_t* self)
 	ObjectDie(self, self);
 }
 
-void ExplodeDeath_Wait(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int meansOfDeath,
+void ExplodeDeath_Wait(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod,
 	int d_flags, int hit_loc)
 {
 	self->e_DieFunc = dieF_NULL;

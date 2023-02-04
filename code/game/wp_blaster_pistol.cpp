@@ -53,7 +53,7 @@ void WP_FireBryarPistol(gentity_t* ent, const qboolean alt_fire)
 	{//force sight 2+ gives perfect aim
 		vec3_t angs;
 
-		vectoangles(forwardVec, angs);
+		vectoangles(forward_vec, angs);
 
 		if (alt_fire)
 		{
@@ -124,12 +124,12 @@ void WP_FireBryarPistol(gentity_t* ent, const qboolean alt_fire)
 			}
 		}
 
-		AngleVectors(angs, forwardVec, nullptr, nullptr);
+		AngleVectors(angs, forward_vec, nullptr, nullptr);
 	}
 
-	WP_MissileTargetHint(ent, start, forwardVec);
+	WP_MissileTargetHint(ent, start, forward_vec);
 
-	gentity_t* missile = create_missile(start, forwardVec, BRYAR_PISTOL_VEL, 10000, ent, alt_fire);
+	gentity_t* missile = create_missile(start, forward_vec, BRYAR_PISTOL_VEL, 10000, ent, alt_fire);
 
 	missile->classname = "bryar_proj";
 
@@ -212,7 +212,7 @@ void WP_FireBryarPistolDuals(gentity_t* ent, const qboolean alt_fire, const qboo
 	{//force sight 2+ gives perfect aim
 		vec3_t angs;
 
-		vectoangles(forwardVec, angs);
+		vectoangles(forward_vec, angs);
 
 		if (alt_fire)
 		{
@@ -283,12 +283,12 @@ void WP_FireBryarPistolDuals(gentity_t* ent, const qboolean alt_fire, const qboo
 			}
 		}
 
-		AngleVectors(angs, forwardVec, nullptr, nullptr);
+		AngleVectors(angs, forward_vec, nullptr, nullptr);
 	}
 
-	WP_MissileTargetHint(ent, start, forwardVec);
+	WP_MissileTargetHint(ent, start, forward_vec);
 
-	gentity_t* missile = create_missile(start, forwardVec, BRYAR_PISTOL_VEL, 10000, ent, alt_fire);
+	gentity_t* missile = create_missile(start, forward_vec, BRYAR_PISTOL_VEL, 10000, ent, alt_fire);
 
 	missile->classname = "bryar_proj";
 
@@ -367,7 +367,7 @@ void WP_FireReyPistol(gentity_t* ent, const qboolean alt_fire)
 	{//force sight 2+ gives perfect aim
 		vec3_t angs;
 
-		vectoangles(forwardVec, angs);
+		vectoangles(forward_vec, angs);
 
 		if (alt_fire)
 		{
@@ -438,12 +438,12 @@ void WP_FireReyPistol(gentity_t* ent, const qboolean alt_fire)
 			}
 		}
 
-		AngleVectors(angs, forwardVec, nullptr, nullptr);
+		AngleVectors(angs, forward_vec, nullptr, nullptr);
 	}
 
-	WP_MissileTargetHint(ent, start, forwardVec);
+	WP_MissileTargetHint(ent, start, forward_vec);
 
-	gentity_t* missile = create_missile(start, forwardVec, BRYAR_PISTOL_VEL, 10000, ent, alt_fire);
+	gentity_t* missile = create_missile(start, forward_vec, BRYAR_PISTOL_VEL, 10000, ent, alt_fire);
 
 	missile->classname = "bryar_proj";
 	if (ent->s.weapon == WP_BLASTER_PISTOL
@@ -525,7 +525,7 @@ void WP_FireReyPistolDuals(gentity_t* ent, const qboolean alt_fire, const qboole
 	{//force sight 2+ gives perfect aim
 		vec3_t angs;
 
-		vectoangles(forwardVec, angs);
+		vectoangles(forward_vec, angs);
 
 		if (alt_fire)
 		{
@@ -596,12 +596,12 @@ void WP_FireReyPistolDuals(gentity_t* ent, const qboolean alt_fire, const qboole
 			}
 		}
 
-		AngleVectors(angs, forwardVec, nullptr, nullptr);
+		AngleVectors(angs, forward_vec, nullptr, nullptr);
 	}
 
-	WP_MissileTargetHint(ent, start, forwardVec);
+	WP_MissileTargetHint(ent, start, forward_vec);
 
-	gentity_t* missile = create_missile(start, forwardVec, BRYAR_PISTOL_VEL, 10000, ent, alt_fire);
+	gentity_t* missile = create_missile(start, forward_vec, BRYAR_PISTOL_VEL, 10000, ent, alt_fire);
 
 	missile->classname = "bryar_proj";
 	if (ent->s.weapon == WP_BLASTER_PISTOL
@@ -679,7 +679,7 @@ void WP_FireClonePistol(gentity_t* ent, const qboolean alt_fire)
 	{//force sight 2+ gives perfect aim
 		vec3_t angs;
 
-		vectoangles(forwardVec, angs);
+		vectoangles(forward_vec, angs);
 
 		if (alt_fire)
 		{
@@ -750,12 +750,12 @@ void WP_FireClonePistol(gentity_t* ent, const qboolean alt_fire)
 			}
 		}
 
-		AngleVectors(angs, forwardVec, nullptr, nullptr);
+		AngleVectors(angs, forward_vec, nullptr, nullptr);
 	}
 
-	WP_MissileTargetHint(ent, start, forwardVec);
+	WP_MissileTargetHint(ent, start, forward_vec);
 
-	gentity_t* missile = create_missile(start, forwardVec, BRYAR_PISTOL_VEL, 10000, ent, alt_fire);
+	gentity_t* missile = create_missile(start, forward_vec, BRYAR_PISTOL_VEL, 10000, ent, alt_fire);
 
 	missile->classname = "clone_proj";
 	if (ent->s.weapon == WP_BLASTER_PISTOL
@@ -837,7 +837,7 @@ void WP_FireClonePistolDuals(gentity_t* ent, const qboolean alt_fire, const qboo
 	{//force sight 2+ gives perfect aim
 		vec3_t angs;
 
-		vectoangles(forwardVec, angs);
+		vectoangles(forward_vec, angs);
 
 		if (alt_fire)
 		{
@@ -908,12 +908,12 @@ void WP_FireClonePistolDuals(gentity_t* ent, const qboolean alt_fire, const qboo
 			}
 		}
 
-		AngleVectors(angs, forwardVec, nullptr, nullptr);
+		AngleVectors(angs, forward_vec, nullptr, nullptr);
 	}
 
-	WP_MissileTargetHint(ent, start, forwardVec);
+	WP_MissileTargetHint(ent, start, forward_vec);
 
-	gentity_t* missile = create_missile(start, forwardVec, BRYAR_PISTOL_VEL, 10000, ent, alt_fire);
+	gentity_t* missile = create_missile(start, forward_vec, BRYAR_PISTOL_VEL, 10000, ent, alt_fire);
 
 	missile->classname = "clone_proj";
 	if (ent->s.weapon == WP_BLASTER_PISTOL
@@ -987,7 +987,7 @@ void WP_FireSBDPistol(gentity_t* ent, const qboolean alt_fire)
 	{//force sight 2+ gives perfect aim
 		vec3_t angs;
 
-		vectoangles(forwardVec, angs);
+		vectoangles(forward_vec, angs);
 
 		if (alt_fire)
 		{
@@ -1058,12 +1058,12 @@ void WP_FireSBDPistol(gentity_t* ent, const qboolean alt_fire)
 			}
 		}
 
-		AngleVectors(angs, forwardVec, nullptr, nullptr);
+		AngleVectors(angs, forward_vec, nullptr, nullptr);
 	}
 
-	WP_MissileTargetHint(ent, start, forwardVec);
+	WP_MissileTargetHint(ent, start, forward_vec);
 
-	gentity_t* missile = create_missile(start, forwardVec, BRYAR_PISTOL_VEL, 10000, ent, alt_fire);
+	gentity_t* missile = create_missile(start, forward_vec, BRYAR_PISTOL_VEL, 10000, ent, alt_fire);
 
 	missile->classname = "bryar_proj";
 
@@ -1125,7 +1125,7 @@ void WP_FireJawaPistol(gentity_t* ent, const qboolean alt_fire)
 		//force sight 2+ gives perfect aim
 		vec3_t angs;
 
-		vectoangles(forwardVec, angs);
+		vectoangles(forward_vec, angs);
 
 		if (alt_fire)
 		{
@@ -1206,12 +1206,12 @@ void WP_FireJawaPistol(gentity_t* ent, const qboolean alt_fire)
 			}
 		}
 
-		AngleVectors(angs, forwardVec, nullptr, nullptr);
+		AngleVectors(angs, forward_vec, nullptr, nullptr);
 	}
 
-		WP_MissileTargetHint(ent, start, forwardVec);
+		WP_MissileTargetHint(ent, start, forward_vec);
 
-		gentity_t* missile = create_missile(start, forwardVec, BRYAR_PISTOL_VEL, 10000, ent, alt_fire);
+		gentity_t* missile = create_missile(start, forward_vec, BRYAR_PISTOL_VEL, 10000, ent, alt_fire);
 
 		missile->classname = "bryar_proj";
 		if (ent->s.weapon == WP_BLASTER_PISTOL)

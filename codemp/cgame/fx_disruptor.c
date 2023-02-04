@@ -59,7 +59,7 @@ void FX_DisruptorMainShot(vec3_t start, vec3_t end)
 FX_DisruptorAltShot
 ---------------------------
 */
-void FX_DisruptorAltShot(vec3_t start, vec3_t end, qboolean fullCharge)
+void FX_DisruptorAltShot(vec3_t start, vec3_t end, qboolean full_charge)
 {
 	trap->FX_AddLine(start, end, 0.1f, 10.0f, 0.0f,
 		1.0f, 0.0f, 0.0f,
@@ -67,7 +67,7 @@ void FX_DisruptorAltShot(vec3_t start, vec3_t end, qboolean fullCharge)
 		175, trap->R_RegisterShader("gfx/effects/redLine"),
 		FX_SIZE_LINEAR | FX_ALPHA_LINEAR);
 
-	if (fullCharge)
+	if (full_charge)
 	{
 		vec3_t	YELLER = { 0.8f,0.7f,0.0f };
 

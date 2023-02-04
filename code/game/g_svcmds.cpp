@@ -387,8 +387,13 @@ static void Svcmd_ForceSetLevel_f(const int forcePower)
 	{
 		return;
 	}
-	const char* newVal = gi.argv(1);
-	if (!VALIDSTRING(newVal))
+	if (g_entities[0].client->NPC_class == CLASS_DROIDEKA
+		&& player->s.weapon == WP_DROIDEKA)
+	{
+		return;
+	}
+	const char* new_val = gi.argv(1);
+	if (!VALIDSTRING(new_val))
 	{
 		gi.Printf("Current %s level is %d\n", SetForceTable[forcePower].desc,
 			g_entities[0].client->ps.forcePowerLevel[forcePower]);
@@ -396,7 +401,7 @@ static void Svcmd_ForceSetLevel_f(const int forcePower)
 			SetForceTable[forcePower].maxlevel);
 		return;
 	}
-	const int val = atoi(newVal);
+	const int val = atoi(new_val);
 	if (val > FORCE_LEVEL_0)
 	{
 		g_entities[0].client->ps.forcePowersKnown |= 1 << forcePower;

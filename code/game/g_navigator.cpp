@@ -2934,19 +2934,19 @@ bool NAV::FindPath(gentity_t* actor, TNodeHandle target, const float MaxDangerLe
 ////////////////////////////////////////////////////////////////////////////////////////
 //
 ////////////////////////////////////////////////////////////////////////////////////////
-bool NAV::SafePathExists(const CVec3& startVec, const CVec3& stopVec, const CVec3& danger, const float dangerDistSq)
+bool NAV::SafePathExists(const CVec3& start_vec, const CVec3& stop_vec, const CVec3& danger, const float dangerDistSq)
 {
 	mUser.ClearActor();
 
 	// If Either Start Or End Is Invalid, We Can't Do Any Pathing
 	//------------------------------------------------------------
-	TNodeHandle target = GetNearestNode(stopVec.v, 0, 0, 0, true);
+	TNodeHandle target = GetNearestNode(stop_vec.v, 0, 0, 0, true);
 	if (target == WAYPOINT_NONE)
 	{
 		return false;
 	}
 
-	TNodeHandle start = GetNearestNode(startVec.v, 0, target, 0, true);
+	TNodeHandle start = GetNearestNode(start_vec.v, 0, target, 0, true);
 	if (start == WAYPOINT_NONE)
 	{
 		return false;
@@ -3008,7 +3008,7 @@ bool NAV::SafePathExists(const CVec3& startVec, const CVec3& stopVec, const CVec
 
 	// Failed To Find An Acceptibly Safe Path
 	//----------------------------------------
-	CVec3 Prev(stopVec);
+	CVec3 Prev(stop_vec);
 	CVec3 Next;
 	for (mSearch.path_begin(); !mSearch.path_end(); mSearch.path_inc())
 	{
@@ -3022,7 +3022,7 @@ bool NAV::SafePathExists(const CVec3& startVec, const CVec3& stopVec, const CVec
 	}
 	if (puser.mSuccess)
 	{
-		Next = startVec;
+		Next = start_vec;
 		if (dangerDistSq > danger.DistToLine2(Prev, Next))
 		{
 			puser.mSuccess = false;

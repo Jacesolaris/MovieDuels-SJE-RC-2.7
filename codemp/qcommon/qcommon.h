@@ -191,7 +191,7 @@ typedef struct netchan_s {
 	byte		unsentBuffer[MAX_MSGLEN];
 } netchan_t;
 
-void Netchan_Init(int qport);
+void Netchan_Init(int port);
 void Netchan_Setup(netsrc_t sock, netchan_t* chan, netadr_t adr, int qport);
 
 void Netchan_Transmit(netchan_t* chan, int length, const byte* data);
@@ -527,7 +527,7 @@ char* Cvar_InfoString_Big(int bit);
 // returns an info string containing all the cvars that have the given bit set
 // in their flags ( CVAR_USERINFO, CVAR_SERVERINFO, CVAR_SYSTEMINFO, etc )
 void	Cvar_InfoStringBuffer(int bit, char* buff, int buffsize);
-void Cvar_CheckRange(cvar_t* cv, float minVal, float maxVal, qboolean shouldBeIntegral);
+void Cvar_CheckRange(cvar_t* var, float min_val, float max, qboolean integral);
 
 void	Cvar_Restart(qboolean unsetVM);
 void	Cvar_Restart_f(void);
@@ -577,12 +577,12 @@ qboolean	FS_ConditionalRestart(int checksumFeed);
 void	FS_Restart(int checksumFeed);
 // shutdown and restart the filesystem so changes to fs_gamedir can take effect
 
-char** FS_ListFiles(const char* directory, const char* extension, int* numfiles);
+char** FS_ListFiles(const char* path, const char* extension, int* numfiles);
 // directory should not have either a leading or trailing /
 // if extension is "/", only subdirectories will be returned
 // the returned files will not include any directories or /
 
-void	FS_FreeFileList(char** fileList);
+void	FS_FreeFileList(char** file_list);
 //rwwRMG - changed to fileList to not conflict with list type
 
 void FS_Remove(const char* osPath);
@@ -599,14 +599,14 @@ qboolean FS_CompareZipChecksum(const char* zipfile);
 int		FS_GetFileList(const char* path, const char* extension, char* listbuf, int bufsize);
 int		FS_GetModList(char* listbuf, int bufsize);
 
-fileHandle_t	FS_FOpenFileWrite(const char* qpath, qboolean safe = qtrue);
+fileHandle_t	FS_FOpenFileWrite(const char* filename, qboolean safe = qtrue);
 // will properly create any needed paths and deal with seperater character issues
 
 int		FS_filelength(fileHandle_t f);
 fileHandle_t FS_SV_FOpenFileWrite(const char* filename);
 int		FS_SV_FOpenFileRead(const char* filename, fileHandle_t* fp);
 void	FS_SV_Rename(const char* from, const char* to, qboolean safe);
-long		FS_FOpenFileRead(const char* qpath, fileHandle_t* file, qboolean uniqueFILE);
+long		FS_FOpenFileRead(const char* filename, fileHandle_t* file, qboolean uniqueFILE);
 // if uniqueFILE is true, then a new FILE will be fopened even if the file
 // is found in an already open pak file.  If uniqueFILE is false, you must call
 // FS_FCloseFile instead of fclose, otherwise the pak FILE would be improperly closed
@@ -618,7 +618,7 @@ int		FS_FileIsInPAK(const char* filename, int* pChecksum);
 
 qboolean FS_FindPureDLL(const char* name);
 
-int		FS_Write(const void* buffer, int len, fileHandle_t f);
+int		FS_Write(const void* buffer, int len, fileHandle_t h);
 
 int		FS_Read(void* buffer, int len, fileHandle_t f);
 // properly handles partial reads and reads from other dlls
@@ -659,7 +659,7 @@ const char* FS_GetCurrentGameDir(bool emptybase = false);
 bool FS_LoadMachOBundle(const char* name);
 #endif
 
-void 	QDECL FS_Printf(fileHandle_t f, const char* fmt, ...);
+void 	QDECL FS_Printf(fileHandle_t h, const char* fmt, ...);
 // like fprintf
 
 int		FS_FOpenFileByMode(const char* qpath, fileHandle_t* f, fsMode_t mode);
@@ -698,7 +698,7 @@ qboolean FS_idPak(char* pak, char* base);
 qboolean FS_ComparePaks(char* neededpaks, int len, qboolean dlstring);
 void FS_Rename(const char* from, const char* to);
 
-qboolean FS_WriteToTemporaryFile(const void* data, size_t dataLength, char** tempFileName);
+qboolean FS_WriteToTemporaryFile(const void* data, size_t dataLength, char** tempFilePath);
 
 /*
 ==============================================================
@@ -720,7 +720,7 @@ typedef struct field_s {
 } field_t;
 
 void Field_Clear(field_t* edit);
-void Field_AutoComplete(field_t* edit);
+void Field_AutoComplete(field_t* field);
 void Field_CompleteKeyname(void);
 void Field_CompleteFilename(const char* dir, const char* ext, qboolean stripExt, qboolean allowNonPureFilesOnDisk);
 void Field_CompleteCommand(char* cmd, qboolean doCommands, qboolean doCvars);

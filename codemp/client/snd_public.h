@@ -33,8 +33,8 @@ void S_AddAmbientLoopingSound(const vec3_t origin, unsigned char volume, sfxHand
 void S_StartAmbientSound(const vec3_t origin, int entity_num, unsigned char volume, sfxHandle_t sfxHandle);
 void S_MuteSound(int entity_num, int entchannel);
 void S_StartSound(const vec3_t origin, int entnum, int entchannel, sfxHandle_t sfx);
-void S_StartLocalSound(sfxHandle_t sfx, int channelNum);
-void S_StartLocalLoopingSound(sfxHandle_t sfx);
+void S_StartLocalSound(sfxHandle_t sfxHandle, int channelNum);
+void S_StartLocalLoopingSound(sfxHandle_t sfxHandle);
 
 void S_UnCacheDynamicMusic(void);
 void S_RestartMusic(void);
@@ -74,7 +74,7 @@ void S_BeginRegistration(void);
 // RegisterSound will allways return a valid sample, even if it
 // has to create a placeholder.  This prevents continuous filesystem
 // checks for missing files
-sfxHandle_t	S_RegisterSound(const char* sample);
+sfxHandle_t	S_RegisterSound(const char* name);
 
 extern qboolean s_shutUp;
 

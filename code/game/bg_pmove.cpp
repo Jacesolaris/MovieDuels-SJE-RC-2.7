@@ -21059,8 +21059,16 @@ static void PM_Weapon()
 			//-----------------
 			else
 			{
-				PM_SetAnim(pm, SETANIM_TORSO, BOTH_ATTACK1,
-					SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_RESTART | SETANIM_FLAG_HOLDLESS);
+				if (pm->gent && pm->gent->weaponModel[1] > 0)
+				{
+					//dual pistols
+					PM_SetAnim(pm, SETANIM_TORSO, BOTH_ATTACK_DUAL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_RESTART | SETANIM_FLAG_HOLD);
+				}
+				else
+				{
+					//single pistol
+					PM_SetAnim(pm, SETANIM_TORSO, BOTH_ATTACK2, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_RESTART | SETANIM_FLAG_HOLD);
+				}
 			}
 		}
 		else
@@ -21091,19 +21099,6 @@ static void PM_Weapon()
 					//single pistol
 					PM_SetAnim(pm, SETANIM_TORSO, BOTH_ATTACK2,
 						SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_RESTART | SETANIM_FLAG_HOLD);
-				}
-				break;
-
-			case WP_DROIDEKA:
-				if (pm->gent && pm->gent->weaponModel[1] > 0)
-				{
-					//dual pistols
-					PM_SetAnim(pm, SETANIM_TORSO, BOTH_ATTACK_DUAL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_RESTART | SETANIM_FLAG_HOLD);
-				}
-				else
-				{
-					//single pistol
-					PM_SetAnim(pm, SETANIM_TORSO, BOTH_ATTACK2, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_RESTART | SETANIM_FLAG_HOLD);
 				}
 				break;
 

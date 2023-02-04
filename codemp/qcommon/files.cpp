@@ -2298,20 +2298,20 @@ char** FS_ListFiles(const char* path, const char* extension, int* numfiles) {
 FS_FreeFileList
 =================
 */
-void FS_FreeFileList(char** fileList) {
+void FS_FreeFileList(char** file_list) {
 	if (!fs_searchpaths) {
 		Com_Error(ERR_FATAL, "Filesystem call made without initialization\n");
 	}
 
-	if (!fileList) {
+	if (!file_list) {
 		return;
 	}
 
-	for (int i = 0; fileList[i]; i++) {
-		Z_Free(fileList[i]);
+	for (int i = 0; file_list[i]; i++) {
+		Z_Free(file_list[i]);
 	}
 
-	Z_Free(fileList);
+	Z_Free(file_list);
 }
 
 /*

@@ -4473,15 +4473,15 @@ static void S_SwitchDynamicTracks(const MusicState_e eOldState, const MusicState
 // This either changes the music right now (copying track structures etc), or leaves the new state as pending
 //	so it gets picked up by the general music player if in a transition that can't be overridden...
 //
-static void S_SetDynamicMusicState(const MusicState_e eNewState)
+static void S_SetDynamicMusicState(const MusicState_e musicState)
 {
-	if (eMusic_StateRequest != eNewState)
+	if (eMusic_StateRequest != musicState)
 	{
-		eMusic_StateRequest = eNewState;
+		eMusic_StateRequest = musicState;
 
 		if (s_debugdynamic->integer)
 		{
-			const char* psNewStateString = Music_BaseStateToString(eNewState, qtrue);
+			const char* psNewStateString = Music_BaseStateToString(musicState, qtrue);
 			psNewStateString = psNewStateString ? psNewStateString : "<unknown>";
 
 			Com_Printf(S_COLOR_MAGENTA "S_SetDynamicMusicState( Request: \"%s\" )\n", psNewStateString);

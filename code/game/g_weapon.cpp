@@ -33,7 +33,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #include "w_local.h"
 #include "../cgame/cg_local.h"
 
-vec3_t forwardVec, vrightVec, up;
+vec3_t forward_vec, vright_vec, up;
 vec3_t muzzle;
 vec3_t muzzle2;
 gentity_t* ent_list[MAX_GENTITIES];
@@ -247,7 +247,7 @@ void WP_Explode(gentity_t* self)
 
 // We need to have a dieFunc, otherwise G_Damage won't actually make us die.  I could modify G_Damage, but that entails too many changes
 //-----------------------------------------------------------------------------
-void WP_ExplosiveDie(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int meansOfDeath,
+void WP_ExplosiveDie(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int means_of_death,
 	int d_flags, int hit_loc)
 	//-----------------------------------------------------------------------------
 {
@@ -552,7 +552,7 @@ void CalcMuzzlePoint(gentity_t* const ent, vec3_t forward_vec, vec3_t muzzle_poi
 		muzzle_point[2] += ent->client->ps.viewheight; //By eyes
 		muzzle_point[2] -= 16;
 		VectorMA(muzzle_point, 28, forward_vec, muzzle_point);
-		VectorMA(muzzle_point, 6, vrightVec, muzzle_point);
+		VectorMA(muzzle_point, 6, vright_vec, muzzle_point);
 		break;
 
 	case WP_ROCKET_LAUNCHER:
@@ -576,7 +576,7 @@ void CalcMuzzlePoint(gentity_t* const ent, vec3_t forward_vec, vec3_t muzzle_poi
 			VectorMA(muzzle_point, 2, forward_vec, muzzle_point);
 		// NPC, don't set too far forwardVec otherwise the projectile can go through doors
 
-		VectorMA(muzzle_point, 1, vrightVec, muzzle_point);
+		VectorMA(muzzle_point, 1, vright_vec, muzzle_point);
 		break;
 
 	case WP_BATTLEDROID:
@@ -590,7 +590,7 @@ void CalcMuzzlePoint(gentity_t* const ent, vec3_t forward_vec, vec3_t muzzle_poi
 			VectorMA(muzzle_point, 2, forward_vec, muzzle_point);
 		// NPC, don't set too far forwardVec otherwise the projectile can go through doors
 
-		VectorMA(muzzle_point, 1, vrightVec, muzzle_point);
+		VectorMA(muzzle_point, 1, vright_vec, muzzle_point);
 		break;
 
 	case WP_REBELBLASTER:
@@ -604,7 +604,7 @@ void CalcMuzzlePoint(gentity_t* const ent, vec3_t forward_vec, vec3_t muzzle_poi
 			VectorMA(muzzle_point, 2, forward_vec, muzzle_point);
 		// NPC, don't set too far forwardVec otherwise the projectile can go through doors
 
-		VectorMA(muzzle_point, 1, vrightVec, muzzle_point);
+		VectorMA(muzzle_point, 1, vright_vec, muzzle_point);
 		break;
 
 	case WP_CLONERIFLE:
@@ -618,7 +618,7 @@ void CalcMuzzlePoint(gentity_t* const ent, vec3_t forward_vec, vec3_t muzzle_poi
 			VectorMA(muzzle_point, 2, forward_vec, muzzle_point);
 		// NPC, don't set too far forwardVec otherwise the projectile can go through doors
 
-		VectorMA(muzzle_point, 1, vrightVec, muzzle_point);
+		VectorMA(muzzle_point, 1, vright_vec, muzzle_point);
 		break;
 
 	case WP_CLONECOMMANDO:
@@ -633,7 +633,7 @@ void CalcMuzzlePoint(gentity_t* const ent, vec3_t forward_vec, vec3_t muzzle_poi
 			VectorMA(muzzle_point, 2, forward_vec, muzzle_point);
 		// NPC, don't set too far forwardVec otherwise the projectile can go through doors
 
-		VectorMA(muzzle_point, 1, vrightVec, muzzle_point);
+		VectorMA(muzzle_point, 1, vright_vec, muzzle_point);
 		break;
 
 	case WP_REBELRIFLE:
@@ -647,7 +647,7 @@ void CalcMuzzlePoint(gentity_t* const ent, vec3_t forward_vec, vec3_t muzzle_poi
 			VectorMA(muzzle_point, 2, forward_vec, muzzle_point);
 		// NPC, don't set too far forwardVec otherwise the projectile can go through doors
 
-		VectorMA(muzzle_point, 1, vrightVec, muzzle_point);
+		VectorMA(muzzle_point, 1, vright_vec, muzzle_point);
 		break;
 
 	case WP_REY:
@@ -655,7 +655,7 @@ void CalcMuzzlePoint(gentity_t* const ent, vec3_t forward_vec, vec3_t muzzle_poi
 		muzzle_point[2] += ent->client->ps.viewheight; //By eyes
 		muzzle_point[2] -= 16;
 		VectorMA(muzzle_point, 28, forward_vec, muzzle_point);
-		VectorMA(muzzle_point, 6, vrightVec, muzzle_point);
+		VectorMA(muzzle_point, 6, vright_vec, muzzle_point);
 		break;
 
 	case WP_DUAL_PISTOL:
@@ -670,7 +670,7 @@ void CalcMuzzlePoint(gentity_t* const ent, vec3_t forward_vec, vec3_t muzzle_poi
 			VectorMA(muzzle_point, 2, forward_vec, muzzle_point);
 		// NPC, don't set too far forwardVec otherwise the projectile can go through doors
 
-		VectorMA(muzzle_point, 1, vrightVec, muzzle_point);
+		VectorMA(muzzle_point, 1, vright_vec, muzzle_point);
 		break;
 
 	case WP_BOBA:
@@ -684,7 +684,7 @@ void CalcMuzzlePoint(gentity_t* const ent, vec3_t forward_vec, vec3_t muzzle_poi
 			VectorMA(muzzle_point, 2, forward_vec, muzzle_point);
 		// NPC, don't set too far forwardVec otherwise the projectile can go through doors
 
-		VectorMA(muzzle_point, 1, vrightVec, muzzle_point);
+		VectorMA(muzzle_point, 1, vright_vec, muzzle_point);
 		break;
 
 	case WP_CLONEPISTOL:
@@ -692,7 +692,7 @@ void CalcMuzzlePoint(gentity_t* const ent, vec3_t forward_vec, vec3_t muzzle_poi
 		muzzle_point[2] += ent->client->ps.viewheight; //By eyes
 		muzzle_point[2] -= 16;
 		VectorMA(muzzle_point, 28, forward_vec, muzzle_point);
-		VectorMA(muzzle_point, 6, vrightVec, muzzle_point);
+		VectorMA(muzzle_point, 6, vright_vec, muzzle_point);
 		break;
 
 	case WP_SABER:
@@ -708,7 +708,7 @@ void CalcMuzzlePoint(gentity_t* const ent, vec3_t forward_vec, vec3_t muzzle_poi
 			muzzle_point[2] += 16;
 		}
 		VectorMA(muzzle_point, 8, forward_vec, muzzle_point);
-		VectorMA(muzzle_point, 16, vrightVec, muzzle_point);
+		VectorMA(muzzle_point, 16, vright_vec, muzzle_point);
 		break;
 
 	case WP_BOT_LASER:
@@ -1383,8 +1383,8 @@ void WP_FireScepter(gentity_t* ent)
 	VectorCopy(muzzle, start);
 	WP_TraceSetStart(ent, start);
 
-	WP_MissileTargetHint(ent, start, forwardVec);
-	VectorMA(start, shot_range, forwardVec, end);
+	WP_MissileTargetHint(ent, start, forward_vec);
+	VectorMA(start, shot_range, forward_vec, end);
 
 	gi.trace(&tr, start, nullptr, nullptr, end, ent->s.number, MASK_SHOT, G2_RETURNONHIT, 10);
 	gentity_t* trace_ent = &g_entities[tr.entity_num];
@@ -1408,7 +1408,7 @@ void WP_FireScepter(gentity_t* ent)
 			G_PlayEffect(G_EffectIndex("disruptor/flesh_impact"), tr.endpos, tr.plane.normal);
 
 			const int hit_loc = G_GetHitLocFromTrace(&tr, MOD_DISRUPTOR);
-			G_Damage(trace_ent, ent, ent, forwardVec, tr.endpos, damage, DAMAGE_EXTRA_KNOCKBACK, MOD_DISRUPTOR,
+			G_Damage(trace_ent, ent, ent, forward_vec, tr.endpos, damage, DAMAGE_EXTRA_KNOCKBACK, MOD_DISRUPTOR,
 				hit_loc);
 		}
 		else
@@ -1563,7 +1563,7 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 		if (ent->NPC)
 		{
 			//snipers must use the angles they actually did their shot trace with
-			AngleVectors(ent->lastAngles, forwardVec, vrightVec, up);
+			AngleVectors(ent->lastAngles, forward_vec, vright_vec, up);
 		}
 	}
 	else if (ent && ent->s.weapon == WP_ATST_SIDE || ent->s.weapon == WP_ATST_MAIN)
@@ -1627,12 +1627,12 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, NEGATIVE_Y, ent->client->renderInfo.muzzleDir);
 			ent->client->renderInfo.mPCalcTime = level.time;
 
-			AngleVectors(ent->client->ps.viewangles, forwardVec, vrightVec, up);
+			AngleVectors(ent->client->ps.viewangles, forward_vec, vright_vec, up);
 		}
 		else if (!ent->enemy)
 		{
 			//an NPC with no enemy to auto-aim at
-			VectorCopy(ent->client->renderInfo.muzzleDir, forwardVec);
+			VectorCopy(ent->client->renderInfo.muzzleDir, forward_vec);
 		}
 		else
 		{
@@ -1645,7 +1645,7 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 			VectorSubtract(enemy_org1, muzzle1, delta1);
 
 			vectoangles(delta1, angle_to_enemy1);
-			AngleVectors(angle_to_enemy1, forwardVec, vrightVec, up);
+			AngleVectors(angle_to_enemy1, forward_vec, vright_vec, up);
 		}
 	}
 	else if (ent->s.weapon == WP_BOT_LASER && ent->enemy)
@@ -1659,7 +1659,7 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 		VectorSubtract(enemy_org1, muzzle1, delta1);
 
 		vectoangles(delta1, angle_to_enemy1);
-		AngleVectors(angle_to_enemy1, forwardVec, vrightVec, up);
+		AngleVectors(angle_to_enemy1, forward_vec, vright_vec, up);
 	}
 	else
 	{
@@ -1669,12 +1669,12 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 			if (ent->s.eFlags & EF_NODRAW) //we're inside it
 			{
 				vec3_t aim_angles;
-				VectorCopy(ent->client->renderInfo.muzzleDir, forwardVec);
-				vectoangles(forwardVec, aim_angles);
+				VectorCopy(ent->client->renderInfo.muzzleDir, forward_vec);
+				vectoangles(forward_vec, aim_angles);
 				//we're only keeping the yaw
 				aim_angles[PITCH] = ent->client->ps.viewangles[PITCH];
 				aim_angles[ROLL] = 0;
-				AngleVectors(aim_angles, forwardVec, vrightVec, up);
+				AngleVectors(aim_angles, forward_vec, vright_vec, up);
 			}
 			else
 			{
@@ -1688,21 +1688,21 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 				//-------------
 				if (ent->client->ps.torsoAnim == BOTH_VT_ATL_G || ent->client->ps.torsoAnim == BOTH_VS_ATL_G)
 				{
-					VectorScale(actor_right, -1.0f, forwardVec);
+					VectorScale(actor_right, -1.0f, forward_vec);
 				}
 
 				// Aiming Right
 				//--------------
 				else if (ent->client->ps.torsoAnim == BOTH_VT_ATR_G || ent->client->ps.torsoAnim == BOTH_VS_ATR_G)
 				{
-					VectorCopy(actor_right, forwardVec);
+					VectorCopy(actor_right, forward_vec);
 				}
 
 				// Aiming Forward
 				//----------------
 				else
 				{
-					VectorCopy(actor_fwd, forwardVec);
+					VectorCopy(actor_fwd, forward_vec);
 				}
 
 				// If We Have An Enemy, Fudge The Aim To Hit The Enemy
@@ -1711,24 +1711,24 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 					vec3_t to_enemy;
 					VectorSubtract(ent->enemy->currentOrigin, ent->currentOrigin, to_enemy);
 					VectorNormalize(to_enemy);
-					if (DotProduct(to_enemy, forwardVec) > 0.75f &&
+					if (DotProduct(to_enemy, forward_vec) > 0.75f &&
 						(ent->s.number == 0 && !Q_irand(0, 2) || // the player has a 1 in 3 chance
 							ent->s.number != 0 && !Q_irand(0, 5))) // other guys have a 1 in 6 chance
 					{
-						VectorCopy(to_enemy, forwardVec);
+						VectorCopy(to_enemy, forward_vec);
 					}
 					else
 					{
-						forwardVec[0] += Q_flrand(-0.1f, 0.1f);
-						forwardVec[1] += Q_flrand(-0.1f, 0.1f);
-						forwardVec[2] += Q_flrand(-0.1f, 0.1f);
+						forward_vec[0] += Q_flrand(-0.1f, 0.1f);
+						forward_vec[1] += Q_flrand(-0.1f, 0.1f);
+						forward_vec[2] += Q_flrand(-0.1f, 0.1f);
 					}
 				}
 			}
 		}
 		else
 		{
-			AngleVectors(ent->client->ps.viewangles, forwardVec, vrightVec, up);
+			AngleVectors(ent->client->ps.viewangles, forward_vec, vright_vec, up);
 		}
 	}
 
@@ -1738,12 +1738,12 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 		if (ent->NPC && ent->NPC->scriptFlags & SCF_FIRE_WEAPON_NO_ANIM)
 		{
 			VectorCopy(ent->client->renderInfo.muzzlePoint, muzzle);
-			VectorCopy(ent->client->renderInfo.muzzleDir, forwardVec);
-			MakeNormalVectors(forwardVec, vrightVec, up);
+			VectorCopy(ent->client->renderInfo.muzzleDir, forward_vec);
+			MakeNormalVectors(forward_vec, vright_vec, up);
 		}
 		else
 		{
-			CalcMuzzlePoint(ent, forwardVec, muzzle, 0);
+			CalcMuzzlePoint(ent, forward_vec, muzzle, 0);
 
 			if (!cg_trueguns.integer && !cg.renderingThirdPerson && (ent->client->ps.eFlags & EF2_JANGO_DUALS || ent->client->ps.eFlags & EF2_DUAL_PISTOLS))
 			{

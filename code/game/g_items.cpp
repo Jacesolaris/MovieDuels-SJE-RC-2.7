@@ -2249,7 +2249,7 @@ void ItemUse_Barrier(gentity_t* ent)
 		return;
 	}
 
-	if (ent->client->ps.powerups[PW_GALAK_SHIELD])
+	if (ent->client->ps.powerups[PW_GALAK_SHIELD] || ent->flags & FL_SHIELDED)
 	{
 		//decloak
 		RemoveBarrier(ent);

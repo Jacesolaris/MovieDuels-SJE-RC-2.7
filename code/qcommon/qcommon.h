@@ -135,7 +135,7 @@ static inline void NET_Shutdown()
 }
 
 void NET_SendPacket(netsrc_t sock, int length, const void* data, netadr_t to);
-void NET_OutOfBandPrint(netsrc_t net_socket, netadr_t adr, const char* format, ...);
+void NET_OutOfBandPrint(netsrc_t sock, netadr_t adr, const char* format, ...);
 
 qboolean NET_CompareAdr(netadr_t a, netadr_t b);
 qboolean NET_CompareBaseAdr(netadr_t a, netadr_t b);
@@ -179,7 +179,7 @@ using netchan_t = struct
 	byte fragmentBuffer[MAX_MSGLEN];
 };
 
-void Netchan_Init(int qport);
+void Netchan_Init(int port);
 void Netchan_Setup(netsrc_t sock, netchan_t* chan, netadr_t adr, int qport);
 
 void Netchan_Transmit(netchan_t* chan, int length, const byte* data);
@@ -365,7 +365,7 @@ modules of the program.
 
 */
 
-cvar_t* Cvar_Get(const char* var_name, const char* value, int flags);
+cvar_t* Cvar_Get(const char* var_name, const char* var_value, int flags);
 // creates the variable if it doesn't exist, or returns the existing one
 // if it exists, the value will not be changed, but flags will be ORed in
 // that allows variables to be unarchived without needing bitflags
@@ -421,7 +421,7 @@ char* Cvar_InfoString(int bit);
 // returns an info string containing all the cvars that have the given bit set
 // in their flags ( CVAR_USERINFO, CVAR_SERVERINFO, CVAR_SYSTEMINFO, etc )
 void Cvar_InfoStringBuffer(int bit, char* buff, int buffsize);
-void Cvar_CheckRange(cvar_t* cv, float minVal, float maxVal, qboolean shouldBeIntegral);
+void Cvar_CheckRange(cvar_t* var, float min_val, float max, qboolean integral);
 
 void Cvar_Restart(qboolean unsetVM);
 void Cvar_Restart_f();
@@ -454,12 +454,12 @@ void FS_Shutdown();
 
 qboolean FS_ConditionalRestart();
 
-char** FS_ListFiles(const char* directory, const char* extension, int* numfiles);
+char** FS_ListFiles(const char* path, const char* extension, int* numfiles);
 // directory should not have either a leading or trailing /
 // if extension is "/", only subdirectories will be returned
 // the returned files will not include any directories or /
 
-void FS_FreeFileList(char** filelist);
+void FS_FreeFileList(char** file_list);
 //rwwRMG - changed to fileList to not conflict with list type
 
 void FS_Remove(const char* osPath);
@@ -476,7 +476,7 @@ int FS_GetFileList(const char* path, const char* extension, char* listbuf, int b
 int FS_GetModList(char* listbuf, int bufsize);
 
 // will properly create any needed paths and deal with seperater character issues
-fileHandle_t FS_FOpenFileWrite(const char* qpath, qboolean safe = qtrue);
+fileHandle_t FS_FOpenFileWrite(const char* filename, qboolean safe = qtrue);
 
 fileHandle_t FS_FOpenFileAppend(const char* filename); // this was present already, but no public proto
 
@@ -484,7 +484,7 @@ int FS_filelength(fileHandle_t f);
 fileHandle_t FS_SV_FOpenFileWrite(const char* filename);
 int FS_SV_FOpenFileRead(const char* filename, fileHandle_t* fp);
 void FS_SV_Rename(const char* from, const char* to, qboolean safe);
-long FS_FOpenFileRead(const char* qpath, fileHandle_t* file, qboolean uniqueFILE);
+long FS_FOpenFileRead(const char* filename, fileHandle_t* file, qboolean uniqueFILE);
 // if uniqueFILE is true, then a new FILE will be fopened even if the file
 // is found in an already open pak file.  If uniqueFILE is false, you must call
 // FS_FCloseFile instead of fclose, otherwise the pak FILE would be improperly closed
@@ -499,7 +499,7 @@ static inline int FS_FileIsInPAK(const char* filename, int* checksum)
 	return FS_FileIsInPAK(filename);
 }
 
-int FS_Write(const void* buffer, int len, fileHandle_t f);
+int FS_Write(const void* buffer, int len, fileHandle_t h);
 
 int FS_Read(void* buffer, int len, fileHandle_t f);
 // properly handles partial reads and reads from other dlls
@@ -537,7 +537,7 @@ void FS_FilenameCompletion(const char* dir, const char* ext, qboolean stripExt, 
 
 const char* FS_GetCurrentGameDir(bool emptybase = false);
 
-void QDECL FS_Printf(fileHandle_t f, const char* fmt, ...);
+void QDECL FS_Printf(fileHandle_t h, const char* fmt, ...);
 // like fprintf
 
 int FS_FOpenFileByMode(const char* qpath, fileHandle_t* f, fsMode_t mode);
@@ -556,7 +556,7 @@ qboolean FS_MoveUserGenFile(const char* filename_src, const char* filename_dst);
 qboolean FS_CheckDirTraversal(const char* checkdir);
 void FS_Rename(const char* from, const char* to);
 
-qboolean FS_WriteToTemporaryFile(const void* data, size_t dataLength, char** tempFileName);
+qboolean FS_WriteToTemporaryFile(const void* data, size_t dataLength, char** tempFilePath);
 
 /*
 ==============================================================
@@ -676,7 +676,7 @@ temp file loading
 int Z_Validate(); // also used to insure all of these are paged in
 int Z_MemSize(memtag_t eTag);
 void Z_TagFree(memtag_t eTag);
-int Z_Free(void* ptr); //returns bytes freed
+int Z_Free(void* pv_address); //returns bytes freed
 int Z_Size(void* pvAddress);
 void Z_MorphMallocTag(void* pvAddress, memtag_t eDesiredTag);
 qboolean Z_IsFromZone(const void* pvAddress, memtag_t eTag); //returns size if true
@@ -750,7 +750,7 @@ void CL_JoystickEvent(int axis, int value, int time);
 
 void CL_PacketEvent(netadr_t from, msg_t* msg);
 
-void CL_ConsolePrint(char* text);
+void CL_ConsolePrint(char* txt);
 
 void CL_MapLoading();
 // do a screen update before starting to load a map

@@ -1335,9 +1335,9 @@ void NPC_DefaultScriptFlags(gentity_t* ent)
 NPC_Spawn_Go
 -------------------------
 */
-extern void G_CreateAnimalNPC(Vehicle_t** p_veh, const char* strAnimalType);
+extern void G_CreateAnimalNPC(Vehicle_t** p_veh, const char* str_animal_type);
 extern void G_CreateSpeederNPC(Vehicle_t** p_veh, const char* strType);
-extern void G_CreateWalkerNPC(Vehicle_t** p_veh, const char* strAnimalType);
+extern void G_CreateWalkerNPC(Vehicle_t** p_veh, const char* str_animal_type);
 extern void G_CreateFighterNPC(Vehicle_t** p_veh, const char* strType);
 
 gentity_t* NPC_Spawn_Do(gentity_t* ent)

@@ -82,7 +82,7 @@ extern float NPC_GetPainChance(const gentity_t* self, int damage);
 //
 // NPC_misc.cpp
 //
-extern void Debug_Printf(const cvar_t* cv, int level, char* fmt, ...);
+extern void Debug_Printf(const cvar_t* cv, int debug_level, char* fmt, ...);
 extern void Debug_NPCPrintf(const gentity_t* printNPC, const cvar_t* cv, int debugLevel, char* fmt, ...);
 
 //MCG - Begin============================================================
@@ -229,7 +229,7 @@ extern void CalcMuzzlePoint(gentity_t* ent, vec3_t forward_vec, vec3_t muzzle_po
 
 //g_combat
 extern void ExplodeDeath(gentity_t* self);
-extern void ExplodeDeath_Wait(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int meansOfDeath,
+extern void ExplodeDeath_Wait(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod,
 	int d_flags, int hit_loc);
 extern void GoExplodeDeath(gentity_t* self, gentity_t* other, gentity_t* activator);
 extern float IdealDistance();

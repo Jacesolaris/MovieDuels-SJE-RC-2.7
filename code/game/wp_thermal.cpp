@@ -340,7 +340,7 @@ gentity_t* WP_FireThermalDetonator(gentity_t* ent, const qboolean alt_fire)
 	vec3_t dir, start;
 	float damage_scale = 1.0f;
 
-	VectorCopy(forwardVec, dir);
+	VectorCopy(forward_vec, dir);
 	VectorCopy(muzzle, start);
 
 	gentity_t* bolt = G_Spawn();
@@ -496,7 +496,7 @@ gentity_t* WP_FireThermalDetonator(gentity_t* ent, const qboolean alt_fire)
 gentity_t* WP_DropThermal(gentity_t* ent)
 //---------------------------------------------------------
 {
-	AngleVectors(ent->client->ps.viewangles, forwardVec, vrightVec, up);
+	AngleVectors(ent->client->ps.viewangles, forward_vec, vright_vec, up);
 	CalcEntitySpot(ent, SPOT_WEAPON, muzzle);
 	return WP_FireThermalDetonator(ent, qfalse);
 }

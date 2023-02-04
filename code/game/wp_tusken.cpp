@@ -54,7 +54,7 @@ void WP_FireTuskenRifle(gentity_t* ent)
 	{//force sight 2+ gives perfect aim
 		vec3_t angs;
 
-		vectoangles(forwardVec, angs);
+		vectoangles(forward_vec, angs);
 
 		if (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent))
 		{
@@ -88,12 +88,12 @@ void WP_FireTuskenRifle(gentity_t* ent)
 			angs[YAW] += Q_flrand(-1.0f, 1.0f) * BLASTER_MAIN_SPREAD;
 		}
 
-		AngleVectors(angs, forwardVec, nullptr, nullptr);
+		AngleVectors(angs, forward_vec, nullptr, nullptr);
 	}
 
-	WP_MissileTargetHint(ent, start, forwardVec);
+	WP_MissileTargetHint(ent, start, forward_vec);
 
-	gentity_t* missile = create_missile(start, forwardVec, TUSKEN_RIFLE_VEL, 10000, ent, qfalse);
+	gentity_t* missile = create_missile(start, forward_vec, TUSKEN_RIFLE_VEL, 10000, ent, qfalse);
 
 	missile->classname = "trifle_proj";
 	missile->s.weapon = WP_TUSKEN_RIFLE;

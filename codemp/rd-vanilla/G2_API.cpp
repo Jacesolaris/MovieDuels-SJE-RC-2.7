@@ -1182,7 +1182,7 @@ qboolean G2API_DoesBoneExist(CGhoul2Info_v& ghoul2, int model_index, const char*
 #define		GHOUL2_RAG_FORCESOLVE					0x1000		//api-override, determine if ragdoll should be forced to continue solving even if it thinks it is settled
 //rww - RAGDOLL_END
 
-qboolean G2API_SetBoneAnimIndex(CGhoul2Info* ghl_info, const int index, const int AstartFrame, const int AendFrame, const int flags, const float anim_speed, const int acurrent_time, const float AsetFrame, const int blend_time)
+qboolean G2API_SetBoneAnimIndex(CGhoul2Info* ghl_info, const int index, const int astart_frame, const int aend_frame, const int flags, const float anim_speed, const int acurrent_time, const float aset_frame, const int blend_time)
 {
 	qboolean setPtrs = qfalse;
 	qboolean res = qfalse;
@@ -1203,9 +1203,9 @@ qboolean G2API_SetBoneAnimIndex(CGhoul2Info* ghl_info, const int index, const in
 	}
 	//rww - RAGDOLL_END
 
-	int end_frame = AendFrame;
-	int start_frame = AstartFrame;
-	float setFrame = AsetFrame;
+	int end_frame = aend_frame;
+	int start_frame = astart_frame;
+	float setFrame = aset_frame;
 	assert(end_frame > 0);
 	assert(start_frame >= 0);
 	assert(end_frame < 100000);
@@ -1252,11 +1252,11 @@ qboolean G2API_SetBoneAnimIndex(CGhoul2Info* ghl_info, const int index, const in
 
 #define _PLEASE_SHUT_THE_HELL_UP
 
-qboolean G2API_SetBoneAnim(CGhoul2Info_v& ghoul2, const int model_index, const char* bone_name, const int AstartFrame, const int AendFrame, const int flags, const float anim_speed, const int current_time, const float AsetFrame, const int blend_time)
+qboolean G2API_SetBoneAnim(CGhoul2Info_v& ghoul2, const int model_index, const char* bone_name, const int astart_frame, const int aend_frame, const int flags, const float anim_speed, const int current_time, const float aset_frame, const int blend_time)
 {
-	int end_frame = AendFrame;
-	int start_frame = AstartFrame;
-	float setFrame = AsetFrame;
+	int end_frame = aend_frame;
+	int start_frame = astart_frame;
+	float setFrame = aset_frame;
 #ifndef _PLEASE_SHUT_THE_HELL_UP
 	assert(end_frame > 0);
 	assert(start_frame >= 0);

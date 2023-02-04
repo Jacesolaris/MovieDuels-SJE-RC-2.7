@@ -56,9 +56,9 @@ void SFxHelper::Print(const char* msg, ...)
 }
 
 //------------------------------------------------------
-void SFxHelper::AdjustTime(int frameTime)
+void SFxHelper::AdjustTime(int frame_time)
 {
-	if (fx_freeze.integer || frameTime <= 0)
+	if (fx_freeze.integer || frame_time <= 0)
 	{
 		// Allow no time progression when we are paused.
 		mFrameTime = 0;
@@ -68,12 +68,12 @@ void SFxHelper::AdjustTime(int frameTime)
 	{
 		if (!cg_paused.integer)
 		{
-			if (frameTime > 300) // hack for returning from paused and time bursts
+			if (frame_time > 300) // hack for returning from paused and time bursts
 			{
-				frameTime = 300;
+				frame_time = 300;
 			}
 
-			mFrameTime = frameTime;
+			mFrameTime = frame_time;
 			mFloatFrameTime = mFrameTime * 0.001f;
 			mTime += mFrameTime;
 		}
@@ -99,15 +99,15 @@ void SFxHelper::CloseFile(const fileHandle_t fh)
 }
 
 //------------------------------------------------------
-void SFxHelper::PlaySound(const vec3_t org, const int entity_num, const int entchannel, const int sfxHandle)
+void SFxHelper::PlaySound(const vec3_t org, const int entity_num, const int entchannel, const int sfx_handle)
 {
-	cgi_S_StartSound(org, entity_num, entchannel, sfxHandle);
+	cgi_S_StartSound(org, entity_num, entchannel, sfx_handle);
 }
 
 //------------------------------------------------------
-void SFxHelper::PlayLocalSound(const int sfxHandle, const int channelNum)
+void SFxHelper::PlayLocalSound(const int sfx_handle, const int channelNum)
 {
-	cgi_S_StartLocalSound(sfxHandle, channelNum);
+	cgi_S_StartLocalSound(sfx_handle, channelNum);
 }
 
 //------------------------------------------------------

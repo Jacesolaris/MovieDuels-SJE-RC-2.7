@@ -70,8 +70,8 @@ static void WP_DisruptorMainFire(gentity_t* ent)
 	VectorCopy(muzzle, start);
 	WP_TraceSetStart(ent, start);
 
-	WP_MissileTargetHint(ent, start, forwardVec);
-	VectorMA(start, shot_range, forwardVec, end);
+	WP_MissileTargetHint(ent, start, forward_vec);
+	VectorMA(start, shot_range, forward_vec, end);
 
 	int ignore = ent->s.number;
 	int traces = 0;
@@ -163,11 +163,11 @@ static void WP_DisruptorMainFire(gentity_t* ent)
 			if (trace_ent && trace_ent->client && trace_ent->client->NPC_class == CLASS_GALAKMECH)
 			{
 				//hehe
-				G_Damage(trace_ent, ent, ent, forwardVec, tr.endpos, 3, DAMAGE_DEATH_KNOCKBACK, MOD_DISRUPTOR, hit_loc);
+				G_Damage(trace_ent, ent, ent, forward_vec, tr.endpos, 3, DAMAGE_DEATH_KNOCKBACK, MOD_DISRUPTOR, hit_loc);
 			}
 			else
 			{
-				G_Damage(trace_ent, ent, ent, forwardVec, tr.endpos, damage, DAMAGE_DEATH_KNOCKBACK, MOD_DISRUPTOR,
+				G_Damage(trace_ent, ent, ent, forward_vec, tr.endpos, damage, DAMAGE_DEATH_KNOCKBACK, MOD_DISRUPTOR,
 					hit_loc);
 			}
 		}
@@ -182,10 +182,10 @@ static void WP_DisruptorMainFire(gentity_t* ent)
 	for (float dist = 0; dist < shotDist; dist += 64)
 	{
 		//FIXME: on a really long shot, this could make a LOT of alerts in one frame...
-		VectorMA(start, dist, forwardVec, spot);
+		VectorMA(start, dist, forward_vec, spot);
 		AddSightEvent(ent, spot, 256, AEL_DISCOVERED, 50);
 	}
-	VectorMA(start, shotDist - 4, forwardVec, spot);
+	VectorMA(start, shotDist - 4, forward_vec, spot);
 	AddSightEvent(ent, spot, 256, AEL_DISCOVERED, 50);
 }
 
@@ -226,7 +226,7 @@ void WP_DisruptorAltFire(gentity_t* ent)
 	else
 	{
 		VectorCopy(ent->client->renderInfo.eyePoint, start);
-		AngleVectors(ent->client->renderInfo.eyeAngles, forwardVec, nullptr, nullptr);
+		AngleVectors(ent->client->renderInfo.eyeAngles, forward_vec, nullptr, nullptr);
 
 		// don't let NPC's do charging
 		int count = (level.time - ent->client->ps.weaponChargeTime - 50) / DISRUPTOR_CHARGE_UNIT;
@@ -261,7 +261,7 @@ void WP_DisruptorAltFire(gentity_t* ent)
 	{
 		constexpr float shot_range = 8192;
 		vec3_t end;
-		VectorMA(start, shot_range, forwardVec, end);
+		VectorMA(start, shot_range, forward_vec, end);
 
 		//NOTE: if you want to be able to hit guys in emplaced guns, use "G2_COLLIDE, 10" instead of "G2_RETURNONHIT, 0"
 		//alternately, if you end up hitting an emplaced_gun that has a sitter, just redo this one trace with the "G2_COLLIDE, 10" to see if we it the sitter
@@ -337,12 +337,12 @@ void WP_DisruptorAltFire(gentity_t* ent)
 					if (trace_ent && trace_ent->client && trace_ent->client->NPC_class == CLASS_GALAKMECH)
 					{
 						//hehe
-						G_Damage(trace_ent, ent, ent, forwardVec, tr.endpos, 10,
+						G_Damage(trace_ent, ent, ent, forward_vec, tr.endpos, 10,
 							DAMAGE_NO_KNOCKBACK | DAMAGE_NO_HIT_LOC,
 							full_charge ? MOD_SNIPER : MOD_DISRUPTOR, hit_loc);
 						break;
 					}
-					G_Damage(trace_ent, ent, ent, forwardVec, tr.endpos, damage,
+					G_Damage(trace_ent, ent, ent, forward_vec, tr.endpos, damage,
 						DAMAGE_NO_KNOCKBACK | DAMAGE_NO_HIT_LOC,
 						full_charge ? MOD_SNIPER : MOD_DISRUPTOR, hit_loc);
 					if (trace_ent->s.eType == ET_MOVER)
@@ -391,7 +391,7 @@ void WP_DisruptorAltFire(gentity_t* ent)
 		AddSightEvent(ent, spot, 256, AEL_DISCOVERED, 50);
 	}
 	//FIXME: spawn a temp ent that continuously spawns sight alerts here?  And 1 sound alert to draw their attention?
-	VectorMA(start, shot_dist - 4, forwardVec, spot);
+	VectorMA(start, shot_dist - 4, forward_vec, spot);
 	AddSightEvent(ent, spot, 256, AEL_DISCOVERED, 50);
 }
 
@@ -408,5 +408,5 @@ void WP_FireDisruptor(gentity_t* ent, const qboolean alt_fire)
 		WP_DisruptorMainFire(ent);
 	}
 
-	G_PlayEffect(G_EffectIndex("disruptor/line_cap"), muzzle, forwardVec);
+	G_PlayEffect(G_EffectIndex("disruptor/line_cap"), muzzle, forward_vec);
 }

@@ -154,7 +154,7 @@ const char* Sys_Basename(const char* path);
 bool Sys_PathCmp(const char* path1, const char* path2);
 
 char** Sys_ListFiles(const char* directory, const char* extension, char* filter, int* numfiles, qboolean wantsubs);
-void Sys_FreeFileList(char** fileList);
+void Sys_FreeFileList(char** ps_list);
 //rwwRMG - changed to fileList to not conflict with list type
 
 time_t Sys_FileTime(const char* path);
@@ -205,7 +205,7 @@ using windowDesc_t = struct windowDesc_s
 };
 
 using glconfig_t = struct glconfig_s;
-window_t WIN_Init(const windowDesc_t* desc, glconfig_t* glConfig);
+window_t WIN_Init(const windowDesc_t* window_desc, glconfig_t* glConfig);
 void WIN_Present(window_t* window);
 void WIN_SetGamma(glconfig_t* glConfig, byte red[256], byte green[256], byte blue[256]);
 void WIN_Shutdown();

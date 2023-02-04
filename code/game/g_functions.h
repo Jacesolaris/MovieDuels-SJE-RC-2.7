@@ -177,9 +177,9 @@ extern void Think_SpawnNewDoorTrigger(gentity_t* ent);
 extern void ref_link(gentity_t* ent);
 extern void Think_Target_Delay(gentity_t* ent);
 extern void target_laser_think(gentity_t* ent);
-extern void target_laser_start(gentity_t* ent);
+extern void target_laser_start(gentity_t* self);
 extern void target_location_linkup(gentity_t* ent);
-extern void scriptrunner_run(gentity_t* ent);
+extern void scriptrunner_run(gentity_t* self);
 extern void multi_wait(gentity_t* ent);
 extern void multi_trigger_run(gentity_t* ent);
 extern void trigger_always_think(gentity_t* ent);
@@ -192,9 +192,9 @@ extern void NPC_Spawn_Go(gentity_t* ent);
 extern void NPC_Begin(gentity_t* ent);
 extern void moverCallback(gentity_t* ent);
 extern void anglerCallback(gentity_t* ent);
-extern void RemoveOwner(gentity_t* ent);
+extern void RemoveOwner(gentity_t* self);
 extern void MakeOwnerInvis(gentity_t* self);
-extern void MakeOwnerEnergy(gentity_t* ent);
+extern void MakeOwnerEnergy(gentity_t* self);
 extern void func_usable_think(gentity_t* self);
 extern void misc_dlight_think(gentity_t* ent);
 extern void laser_link(gentity_t* ent);
@@ -224,7 +224,7 @@ extern void misc_replicator_item_finish_spawn(gentity_t* self);
 extern void fx_runner_link(gentity_t* self);
 extern void fx_runner_think(gentity_t* self);
 extern void fx_rain_think(gentity_t* ent);
-extern void set_MiscAnim(gentity_t* self);
+extern void set_MiscAnim(gentity_t* ent);
 extern void removeBoltSurface(gentity_t* self);
 extern void LimbThink(gentity_t* ent);
 extern void laserTrapThink(gentity_t* ent);
@@ -234,7 +234,7 @@ extern void rocketThink(gentity_t* ent);
 extern void prox_mine_think(gentity_t* ent);
 extern void emplaced_blow(gentity_t* ent);
 extern void WP_Explode(gentity_t* self);
-extern void pas_think(gentity_t* self);
+extern void pas_think(gentity_t* ent);
 extern void ion_cannon_think(gentity_t* self);
 extern void maglock_link(gentity_t* self);
 extern void WP_flechette_alt_blow(gentity_t* ent);
@@ -242,8 +242,8 @@ extern void WP_prox_mine_think(gentity_t* ent);
 extern void camera_aim(gentity_t* self);
 extern void fx_explosion_trail_link(gentity_t* ent);
 extern void fx_explosion_trail_think(gentity_t* ent);
-extern void fx_target_beam_link(gentity_t* self);
-extern void fx_target_beam_think(gentity_t* self);
+extern void fx_target_beam_link(gentity_t* ent);
+extern void fx_target_beam_think(gentity_t* ent);
 extern void spotlight_think(gentity_t* ent);
 extern void spotlight_link(gentity_t* ent);
 extern void trigger_push_checkclear(gentity_t* self);
@@ -253,14 +253,14 @@ extern void panel_turret_think(gentity_t* self);
 extern void welder_think(gentity_t* self);
 extern void gas_random_jet(gentity_t* self);
 extern void poll_converter(gentity_t* self);
-extern void spawn_rack_goods(gentity_t* self);
+extern void spawn_rack_goods(gentity_t* ent);
 extern void NoghriGasCloudThink(gentity_t* self);
 
 extern void G_PortalifyEntities(gentity_t* ent);
 extern void misc_weapon_shooter_aim(gentity_t* self);
 extern void misc_weapon_shooter_fire(gentity_t* self);
 
-extern void beacon_think(gentity_t* self);
+extern void beacon_think(gentity_t* ent);
 
 extern void shipboundary_think(gentity_t* ent);
 extern void asteroid_field_think(gentity_t* self);
@@ -322,8 +322,8 @@ using blockedFunc_t = enum
 
 // BLOCKED functions...
 //
-extern void Blocked_Door(gentity_t* self, gentity_t* other);
-extern void Blocked_Mover(gentity_t* self, gentity_t* other);
+extern void Blocked_Door(gentity_t* ent, gentity_t* other);
+extern void Blocked_Mover(gentity_t* ent, gentity_t* other);
 
 //	void		(*touch)(gentity_t *self, gentity_t *other, trace_t *trace);
 using touchFunc_t = enum
@@ -358,10 +358,10 @@ using touchFunc_t = enum
 extern void Touch_Item(gentity_t* ent, gentity_t* other, trace_t* trace);
 extern void teleporter_touch(const gentity_t* self, gentity_t* other, trace_t* trace);
 extern void charge_stick(gentity_t* self, gentity_t* other, const trace_t* trace);
-extern void Touch_DoorTrigger(gentity_t* self, gentity_t* other, trace_t* trace);
-extern void Touch_PlatCenterTrigger(gentity_t* self, gentity_t* other, trace_t* trace);
-extern void Touch_Plat(gentity_t* self, const gentity_t* other, trace_t* trace);
-extern void Touch_Button(gentity_t* self, gentity_t* other, trace_t* trace);
+extern void Touch_DoorTrigger(gentity_t* ent, gentity_t* other, trace_t* trace);
+extern void Touch_PlatCenterTrigger(gentity_t* ent, gentity_t* other, trace_t* trace);
+extern void Touch_Plat(gentity_t* ent, const gentity_t* other, trace_t* trace);
+extern void Touch_Button(gentity_t* ent, gentity_t* other, trace_t* trace);
 extern void Touch_Multi(gentity_t* self, gentity_t* other, trace_t* trace);
 extern void trigger_push_touch(gentity_t* self, gentity_t* other, trace_t* trace);
 extern void trigger_teleporter_touch(const gentity_t* self, gentity_t* other, trace_t* trace);
@@ -468,16 +468,16 @@ using useFunc_t = enum
 //
 extern void funcBBrushUse(gentity_t* self, gentity_t* other, gentity_t* activator);
 extern void misc_model_use(gentity_t* self, const gentity_t* other, gentity_t* activator);
-extern void Use_Item(gentity_t* self, gentity_t* other, gentity_t* activator);
+extern void Use_Item(gentity_t* ent, gentity_t* other, gentity_t* activator);
 extern void Use_Shooter(gentity_t* self, gentity_t* other, gentity_t* activator);
 extern void GoExplodeDeath(gentity_t* self, gentity_t* other, gentity_t* activator);
-extern void Use_BinaryMover(gentity_t* self, gentity_t* other, gentity_t* activator);
-extern void use_wall(gentity_t* self, gentity_t* other, gentity_t* activator);
-extern void Use_Target_Give(gentity_t* self, gentity_t* other, gentity_t* activator);
-extern void Use_Target_Delay(gentity_t* self, gentity_t* other, gentity_t* activator);
-extern void Use_Target_Score(gentity_t* self, gentity_t* other, const gentity_t* activator);
-extern void Use_Target_Print(gentity_t* self, gentity_t* other, const gentity_t* activator);
-extern void Use_Target_Speaker(gentity_t* self, gentity_t* other, gentity_t* activator);
+extern void Use_BinaryMover(gentity_t* ent, gentity_t* other, gentity_t* activator);
+extern void use_wall(gentity_t* ent, gentity_t* other, gentity_t* activator);
+extern void Use_Target_Give(gentity_t* ent, gentity_t* other, gentity_t* activator);
+extern void Use_Target_Delay(gentity_t* ent, gentity_t* other, gentity_t* activator);
+extern void Use_Target_Score(gentity_t* ent, gentity_t* other, const gentity_t* activator);
+extern void Use_Target_Print(gentity_t* ent, gentity_t* other, const gentity_t* activator);
+extern void Use_Target_Speaker(gentity_t* ent, gentity_t* other, gentity_t* activator);
 extern void target_laser_use(gentity_t* self, gentity_t* other, gentity_t* activator);
 extern void target_relay_use(gentity_t* self, gentity_t* other, gentity_t* activator);
 extern void target_kill_use(gentity_t* self, gentity_t* other, gentity_t* activator);
@@ -496,7 +496,7 @@ extern void func_usable_use(gentity_t* self, const gentity_t* other, gentity_t* 
 extern void target_activate_use(gentity_t* self, gentity_t* other, gentity_t* activator);
 extern void target_deactivate_use(gentity_t* self, gentity_t* other, gentity_t* activator);
 extern void NPC_Use(gentity_t* self, gentity_t* other, gentity_t* activator);
-extern void NPC_Spawn(gentity_t* self, const gentity_t* other, gentity_t* activator);
+extern void NPC_Spawn(gentity_t* ent, const gentity_t* other, gentity_t* activator);
 extern void transporter_use(gentity_t* self, gentity_t* other, gentity_t* activator);
 extern void teleporter_use(gentity_t* self, gentity_t* other, gentity_t* activator);
 extern void misc_dlight_use(gentity_t* ent, gentity_t* other, gentity_t* activator);
@@ -544,7 +544,7 @@ extern void item_spawn_use(gentity_t* self, gentity_t* other, gentity_t* activat
 extern void NPC_VehicleSpawnUse(gentity_t* self, gentity_t* other, gentity_t* activator);
 extern void misc_weapon_shooter_use(gentity_t* self, gentity_t* other, gentity_t* activator);
 extern void eweb_use(gentity_t* self, const gentity_t* other, gentity_t* activator);
-extern void radar_icon_use(gentity_t* self, gentity_t* other, gentity_t* activator);
+extern void radar_icon_use(gentity_t* ent, gentity_t* other, gentity_t* activator);
 
 //	void		(*pain)(gentity_t *self, gentity_t *attacker, int damage,int mod,int hit_loc);
 using painFunc_t = enum
@@ -585,7 +585,7 @@ using painFunc_t = enum
 extern void funcBBrushPain(gentity_t* self, gentity_t* inflictor, const gentity_t* attacker, const vec3_t point,
 	int damage,
 	int mod, int hit_loc = HL_NONE);
-extern void misc_model_breakable_pain(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, const vec3_t point,
+extern void misc_model_breakable_pain(gentity_t* self, gentity_t* inflictor, gentity_t* other, const vec3_t point,
 	int damage, int mod, int hit_loc = HL_NONE);
 extern void NPC_Pain(gentity_t* self, gentity_t* inflictor, gentity_t* other, const vec3_t point, int damage,
 	int mod, int hit_loc = HL_NONE);
@@ -603,19 +603,19 @@ extern void NPC_Droid_Pain(gentity_t* self, gentity_t* inflictor, gentity_t* att
 	int mod, int hit_loc = HL_NONE);
 extern void NPC_Probe_Pain(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, const vec3_t point, int damage,
 	int mod, int hit_loc = HL_NONE);
-extern void NPC_MineMonster_Pain(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, const vec3_t point,
+extern void NPC_MineMonster_Pain(gentity_t* self, gentity_t* inflictor, gentity_t* other, const vec3_t point,
 	int damage, int mod, int hit_loc = HL_NONE);
 extern void NPC_Howler_Pain(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, const vec3_t point, int damage,
 	int mod, int hit_loc = HL_NONE);
-extern void NPC_Rancor_Pain(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, const vec3_t point, int damage,
+extern void NPC_Rancor_Pain(gentity_t* self, gentity_t* inflictor, gentity_t* other, const vec3_t point, int damage,
 	int mod, int hit_loc = HL_NONE);
 extern void NPC_Wampa_Pain(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, const vec3_t point, int damage,
 	int mod, int hit_loc = HL_NONE);
-extern void NPC_SandCreature_Pain(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, const vec3_t point,
+extern void NPC_SandCreature_Pain(gentity_t* self, gentity_t* inflictor, gentity_t* other, const vec3_t point,
 	int damage, int mod, int hit_loc = HL_NONE);
-extern void NPC_Seeker_Pain(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, const vec3_t point, int damage,
+extern void NPC_Seeker_Pain(gentity_t* self, gentity_t* inflictor, gentity_t* other, const vec3_t point, int damage,
 	int mod, int hit_loc = HL_NONE);
-extern void NPC_Remote_Pain(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, const vec3_t point, int damage,
+extern void NPC_Remote_Pain(gentity_t* self, gentity_t* inflictor, gentity_t* other, const vec3_t point, int damage,
 	int mod, int hit_loc = HL_NONE);
 extern void emplaced_gun_pain(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, const vec3_t point,
 	int damage, int mod, int hit_loc = HL_NONE);
@@ -623,7 +623,7 @@ extern void NPC_Mark1_Pain(gentity_t* self, gentity_t* inflictor, gentity_t* att
 	int mod, int hit_loc = HL_NONE);
 extern void NPC_GM_Pain(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, const vec3_t point, int damage,
 	int mod, int hit_loc = HL_NONE);
-extern void NPC_Sentry_Pain(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, const vec3_t point, int damage,
+extern void NPC_Sentry_Pain(gentity_t* self, gentity_t* inflictor, gentity_t* other, const vec3_t point, int damage,
 	int mod, int hit_loc = HL_NONE);
 extern void NPC_Mark2_Pain(gentity_t* self, gentity_t* inflictor, gentity_t* other, const vec3_t point, int damage,
 	int mod, int hit_loc = HL_NONE);
@@ -683,7 +683,7 @@ extern void player_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacke
 	int hit_loc = HL_NONE);
 extern void ExplodeDeath_Wait(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod,
 	int d_flags = 0, int hit_loc = HL_NONE);
-extern void ExplodeDeath(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod,
+extern void ExplodeDeath(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int meansOfDeath,
 	int d_flags = 0, int hit_loc = HL_NONE);
 extern void func_usable_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod,
 	int d_flags = 0, int hit_loc = HL_NONE);
@@ -695,7 +695,7 @@ extern void laserTrapDelayedExplode(gentity_t* self, gentity_t* inflictor, genti
 	int d_flags = 0, int hit_loc = HL_NONE);
 extern void emplaced_gun_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod,
 	int d_flags = 0, int hit_loc = HL_NONE);
-extern void WP_ExplosiveDie(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod,
+extern void WP_ExplosiveDie(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int means_of_death,
 	int d_flags = 0, int hit_loc = HL_NONE);
 extern void ion_cannon_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod,
 	int d_flags = 0, int hit_loc = HL_NONE);

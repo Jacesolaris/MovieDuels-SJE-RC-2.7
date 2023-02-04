@@ -1427,10 +1427,10 @@ void Cvar_InfoStringBuffer(int bit, char* buff, int buffsize) {
 Cvar_CheckRange
 =====================
 */
-void Cvar_CheckRange(cvar_t* var, float min, float max, qboolean integral)
+void Cvar_CheckRange(cvar_t* var, float min_val, float max, qboolean integral)
 {
 	var->validate = qtrue;
-	var->min = min;
+	var->min = min_val;
 	var->max = max;
 	var->integral = integral;
 

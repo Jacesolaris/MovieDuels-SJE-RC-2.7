@@ -170,17 +170,17 @@ SV_UnlinkEntity
 
 ===============
 */
-void SV_UnlinkEntity(gentity_t* gEnt)
+void SV_UnlinkEntity(gentity_t* g_ent)
 {
 	// this should never be called with a freed entity
-	if (!gEnt->inuse)
+	if (!g_ent->inuse)
 	{
 		return;
 	}
 
-	svEntity_t* ent = SV_SvEntityForGentity(gEnt);
+	svEntity_t* ent = SV_SvEntityForGentity(g_ent);
 
-	gEnt->linked = qfalse;
+	g_ent->linked = qfalse;
 
 	worldSector_t* ws = ent->worldSector;
 	if (!ws)
@@ -215,90 +215,90 @@ SV_LinkEntity
 */
 constexpr auto MAX_TOTAL_ENT_LEAFS = 128;
 
-void SV_LinkEntity(gentity_t* gEnt)
+void SV_LinkEntity(gentity_t* g_ent)
 {
 	int leafs[MAX_TOTAL_ENT_LEAFS];
 	int i;
 	int lastLeaf;
 
 	// this should never be called with a freed entity
-	if (!gEnt->inuse)
+	if (!g_ent->inuse)
 	{
 		return;
 	}
 
-	svEntity_t* ent = SV_SvEntityForGentity(gEnt);
+	svEntity_t* ent = SV_SvEntityForGentity(g_ent);
 
 	if (ent->worldSector)
 	{
-		SV_UnlinkEntity(gEnt); // unlink from old position
+		SV_UnlinkEntity(g_ent); // unlink from old position
 	}
 
 	// encode the size into the entityState_t for client prediction
-	if (gEnt->bmodel)
+	if (g_ent->bmodel)
 	{
-		gEnt->s.solid = SOLID_BMODEL; // a solid_box will never create this value
+		g_ent->s.solid = SOLID_BMODEL; // a solid_box will never create this value
 	}
-	else if (gEnt->contents & (CONTENTS_SOLID | CONTENTS_BODY))
+	else if (g_ent->contents & (CONTENTS_SOLID | CONTENTS_BODY))
 	{
 		// assume that x/y are equal and symetric
-		i = gEnt->maxs[0];
+		i = g_ent->maxs[0];
 		if (i < 1)
 			i = 1;
 		if (i > 255)
 			i = 255;
 
 		// z is not symetric
-		int j = (-gEnt->mins[2]);
+		int j = (-g_ent->mins[2]);
 		if (j < 1)
 			j = 1;
 		if (j > 255)
 			j = 255;
 
 		// and z maxs can be negative...
-		int k = (gEnt->maxs[2] + 32);
+		int k = (g_ent->maxs[2] + 32);
 		if (k < 1)
 			k = 1;
 		if (k > 255)
 			k = 255;
 
-		gEnt->s.solid = (k << 16) | (j << 8) | i;
+		g_ent->s.solid = (k << 16) | (j << 8) | i;
 	}
 	else
 	{
-		gEnt->s.solid = 0;
+		g_ent->s.solid = 0;
 	}
 
 	// get the position
-	const float* origin = gEnt->currentOrigin;
-	const float* angles = gEnt->currentAngles;
+	const float* origin = g_ent->currentOrigin;
+	const float* angles = g_ent->currentAngles;
 
 	// set the abs box
-	if (gEnt->bmodel && (angles[0] || angles[1] || angles[2]))
+	if (g_ent->bmodel && (angles[0] || angles[1] || angles[2]))
 	{
 		// expand for rotation
-		const float max = RadiusFromBounds(gEnt->mins, gEnt->maxs);
+		const float max = RadiusFromBounds(g_ent->mins, g_ent->maxs);
 		for (int i1 = 0; i1 < 3; i1++)
 		{
-			gEnt->absmin[i1] = origin[i1] - max;
-			gEnt->absmax[i1] = origin[i1] + max;
+			g_ent->absmin[i1] = origin[i1] - max;
+			g_ent->absmax[i1] = origin[i1] + max;
 		}
 	}
 	else
 	{
 		// normal
-		VectorAdd(origin, gEnt->mins, gEnt->absmin);
-		VectorAdd(origin, gEnt->maxs, gEnt->absmax);
+		VectorAdd(origin, g_ent->mins, g_ent->absmin);
+		VectorAdd(origin, g_ent->maxs, g_ent->absmax);
 	}
 
 	// because movement is clipped an epsilon away from an actual edge,
 	// we must fully check even when bounding boxes don't quite touch
-	gEnt->absmin[0] -= 1;
-	gEnt->absmin[1] -= 1;
-	gEnt->absmin[2] -= 1;
-	gEnt->absmax[0] += 1;
-	gEnt->absmax[1] += 1;
-	gEnt->absmax[2] += 1;
+	g_ent->absmin[0] -= 1;
+	g_ent->absmin[1] -= 1;
+	g_ent->absmin[2] -= 1;
+	g_ent->absmax[0] += 1;
+	g_ent->absmax[1] += 1;
+	g_ent->absmax[2] += 1;
 
 	// link to PVS leafs
 	ent->numClusters = 0;
@@ -307,7 +307,7 @@ void SV_LinkEntity(gentity_t* gEnt)
 	ent->areanum2 = -1;
 
 	//get all leafs, including solids
-	const int num_leafs = CM_BoxLeafnums(gEnt->absmin, gEnt->absmax,
+	const int num_leafs = CM_BoxLeafnums(g_ent->absmin, g_ent->absmax,
 		leafs, MAX_TOTAL_ENT_LEAFS, &lastLeaf);
 
 	// if none of the leafs were inside the map, the
@@ -330,8 +330,8 @@ void SV_LinkEntity(gentity_t* gEnt)
 				if (ent->areanum2 != -1 && ent->areanum2 != area && sv.state == SS_LOADING)
 				{
 					Com_DPrintf("Object %i touching 3 areas at %f %f %f\n",
-						gEnt->s.number,
-						gEnt->absmin[0], gEnt->absmin[1], gEnt->absmin[2]);
+						g_ent->s.number,
+						g_ent->absmin[0], g_ent->absmin[1], g_ent->absmin[2]);
 				}
 				ent->areanum2 = area;
 			}
@@ -369,9 +369,9 @@ void SV_LinkEntity(gentity_t* gEnt)
 	{
 		if (node->axis == -1)
 			break;
-		if (gEnt->absmin[node->axis] > node->dist)
+		if (g_ent->absmin[node->axis] > node->dist)
 			node = node->children[0];
-		else if (gEnt->absmax[node->axis] < node->dist)
+		else if (g_ent->absmax[node->axis] < node->dist)
 			node = node->children[1];
 		else
 			break; // crosses the node
@@ -382,7 +382,7 @@ void SV_LinkEntity(gentity_t* gEnt)
 	ent->nextEntityInWorldSector = node->entities;
 	node->entities = ent;
 
-	gEnt->linked = qtrue;
+	g_ent->linked = qtrue;
 }
 
 /*

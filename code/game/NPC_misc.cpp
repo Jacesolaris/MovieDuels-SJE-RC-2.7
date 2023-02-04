@@ -29,22 +29,22 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 /*
 Debug_Printf
 */
-void Debug_Printf(const cvar_t* cv, const int debugLevel, char* fmt, ...)
+void Debug_Printf(const cvar_t* cv, const int debug_level, char* fmt, ...)
 {
 	char* color;
 	va_list argptr;
 	char msg[1024];
 
-	if (cv->value < debugLevel)
+	if (cv->value < debug_level)
 		return;
 
-	if (debugLevel == DEBUG_LEVEL_DETAIL)
+	if (debug_level == DEBUG_LEVEL_DETAIL)
 		color = S_COLOR_WHITE;
-	else if (debugLevel == DEBUG_LEVEL_INFO)
+	else if (debug_level == DEBUG_LEVEL_INFO)
 		color = S_COLOR_GREEN;
-	else if (debugLevel == DEBUG_LEVEL_WARNING)
+	else if (debug_level == DEBUG_LEVEL_WARNING)
 		color = S_COLOR_YELLOW;
-	else if (debugLevel == DEBUG_LEVEL_ERROR)
+	else if (debug_level == DEBUG_LEVEL_ERROR)
 		color = S_COLOR_RED;
 	else
 		color = S_COLOR_RED;

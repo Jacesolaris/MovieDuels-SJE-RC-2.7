@@ -419,6 +419,7 @@ void NPC_SetMiscDefaultData(gentity_t* ent)
 		}
 		ent->client->ps.stats[STAT_ARMOR] = 250; // start with full armor
 		ent->flags |= FL_NO_KNOCKBACK;
+		ent->NPC->scriptFlags = SCF_CHASE_ENEMIES | SCF_LOOK_FOR_ENEMIES | SCF_DONT_FLEE;
 	}
 
 	if (ent->spawnflags & 4096)

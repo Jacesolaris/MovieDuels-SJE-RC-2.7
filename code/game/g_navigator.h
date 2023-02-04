@@ -122,7 +122,7 @@ namespace NAV
 	bool FindPath(gentity_t* actor, gentity_t* target, float MaxDangerLevel = 1.0f);
 	bool FindPath(gentity_t* actor, const vec3_t& position, float MaxDangerLevel = 1.0f);
 
-	bool SafePathExists(const CVec3& start, const CVec3& stop, const CVec3& danger, float dangerDistSq);
+	bool SafePathExists(const CVec3& start_vec, const CVec3& stop_vec, const CVec3& danger, float dangerDistSq);
 
 	bool HasPath(const gentity_t* actor, TNodeHandle target = PT_NONE);
 	void ClearPath(const gentity_t* actor);

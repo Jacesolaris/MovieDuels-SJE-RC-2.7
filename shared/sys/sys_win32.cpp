@@ -517,19 +517,19 @@ char** Sys_ListFiles(const char* directory, const char* extension, char* filter,
 	return listCopy;
 }
 
-void Sys_FreeFileList(char** psList)
+void Sys_FreeFileList(char** ps_list)
 {
-	if (!psList)
+	if (!ps_list)
 	{
 		return;
 	}
 
-	for (int i = 0; psList[i]; i++)
+	for (int i = 0; ps_list[i]; i++)
 	{
-		Z_Free(psList[i]);
+		Z_Free(ps_list[i]);
 	}
 
-	Z_Free(psList);
+	Z_Free(ps_list);
 }
 
 /*

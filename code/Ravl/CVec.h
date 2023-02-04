@@ -649,8 +649,8 @@ public:
 	// (Start)
 	//
 	////////////////////////////////////////////////////////////////////////////////////
-	bool LineInCircle(const CVec4& Start, const CVec4& Stop, float Radius) const;
-	bool LineInCircle(const CVec4& Start, const CVec4& Stop, float Radius, CVec4& PointOnLine) const;
+	bool LineInCircle(const CVec4& a, const CVec4& b, float r) const;
+	bool LineInCircle(const CVec4& a, const CVec4& b, float r, CVec4& P) const;
 
 	////////////////////////////////////////////////////////////////////////////////////
 	// String Operations
@@ -1197,8 +1197,8 @@ public:
 	// (Start)
 	//
 	////////////////////////////////////////////////////////////////////////////////////
-	bool LineInCircle(const CVec3& Start, const CVec3& Stop, float Radius) const;
-	bool LineInCircle(const CVec3& Start, const CVec3& Stop, float Radius, CVec3& PointOnLine) const;
+	bool LineInCircle(const CVec3& a, const CVec3& b, float r) const;
+	bool LineInCircle(const CVec3& a, const CVec3& b, float r, CVec3& p) const;
 
 	////////////////////////////////////////////////////////////////////////////////////
 	// String Operations

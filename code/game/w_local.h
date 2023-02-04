@@ -22,7 +22,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #ifndef W_LOCAL_H
 #define W_LOCAL_H
-extern vec3_t forwardVec, vrightVec, up;
+extern vec3_t forward_vec, vright_vec, up;
 extern vec3_t muzzle;
 extern vec3_t muzzle2;
 
@@ -30,7 +30,7 @@ void WP_TraceSetStart(const gentity_t* ent, vec3_t start);
 gentity_t* create_missile(vec3_t org, vec3_t dir, float vel, int life, gentity_t* owner, qboolean alt_fire = qfalse);
 void WP_Stick(gentity_t* missile, const trace_t* trace, float fudge_distance = 0.0f);
 void WP_Explode(gentity_t* self);
-void WP_ExplosiveDie(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int meansOfDeath,
+void WP_ExplosiveDie(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int means_of_death,
 	int d_flags, int hit_loc);
 bool WP_MissileTargetHint(gentity_t* shooter, vec3_t start, vec3_t out);
 

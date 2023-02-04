@@ -1080,7 +1080,7 @@ void cgi_R_Font_DrawString(int ox, int oy, const char* text, const float* rgba, 
 	float scale = 1.0f);
 qboolean cgi_Language_IsAsian();
 qboolean cgi_Language_UsesSpaces();
-unsigned cgi_AnyLanguage_ReadCharFromString(const char* psText, int* iAdvanceCount,
+unsigned cgi_AnyLanguage_ReadCharFromString(const char* psText, int* pi_advance_count,
 	qboolean* pbIsTrailingPunctuation = nullptr);
 
 void cgi_R_SetRefractProp(float alpha, float stretch, qboolean prepost, qboolean negate);
@@ -1193,7 +1193,7 @@ void FX_CloneWeaponHitPlayer(gentity_t* hit, vec3_t origin, vec3_t normal, qbool
 void FX_CloneAltHitPlayer(vec3_t origin, vec3_t normal, qboolean humanoid);
 
 void FX_DisruptorMainShot(vec3_t start, vec3_t end);
-void FX_DisruptorAltShot(vec3_t start, vec3_t end, qboolean full);
+void FX_DisruptorAltShot(vec3_t start, vec3_t end, qboolean full_charge);
 void FX_DisruptorAltMiss(vec3_t origin, vec3_t normal);
 
 void FX_BowcasterHitWall(vec3_t origin, vec3_t normal);
@@ -1286,7 +1286,7 @@ void trap_CIN_SetExtents(int handle, int x, int y, int w, int h);
 void* cgi_Z_Malloc(int size, int tag);
 void cgi_Z_Free(void* ptr);
 
-int cgi_SP_GetStringTextString(const char* text, char* buf, int bufferlength);
+int cgi_SP_GetStringTextString(const char* text, char* buffer, int buffer_length);
 
 void cgi_UI_Menu_Reset();
 void cgi_UI_Menu_New(char* buf);

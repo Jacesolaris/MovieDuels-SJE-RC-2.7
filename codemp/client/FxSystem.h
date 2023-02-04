@@ -55,15 +55,15 @@ public:
 	int	GetFrameTime(void) const { return mFrameTime; }
 
 	void	ReInit(refdef_t* pRefdef);
-	void	AdjustTime(int time);
+	void	AdjustTime(int frame_time);
 
 	// These functions are wrapped and used by the fx system in case it makes things a bit more portable
 	static void	Print(const char* msg, ...);
 
 	// File handling
-	static int		OpenFile(const char* path, fileHandle_t* fh, int mode)
+	static int		OpenFile(const char* file, fileHandle_t* fh, int mode)
 	{
-		return FS_FOpenFileByMode(path, fh, FS_READ);
+		return FS_FOpenFileByMode(file, fh, FS_READ);
 	}
 
 	static int		ReadFile(void* data, int len, fileHandle_t fh)
@@ -84,10 +84,10 @@ public:
 		S_StartSound(origin, ENTITYNUM_NONE, CHAN_AUTO, sfxHandle);
 	}
 
-	static void	PlayLocalSound(sfxHandle_t sfxHandle, int entchannel)
+	static void	PlayLocalSound(sfxHandle_t sfx_handle, int entchannel)
 	{
 		//S_StartSound( origin, ENTITYNUM_NONE, CHAN_AUTO, sfxHandle, volume, radius );
-		S_StartLocalSound(sfxHandle, entchannel);
+		S_StartLocalSound(sfx_handle, entchannel);
 	}
 
 	static int		RegisterSound(const char* sound)

@@ -437,9 +437,9 @@ extern void G_SetSharedVehicleFunctions(vehicleInfo_t* pVehInfo);
 
 // Create/Allocate a new Animal Vehicle (initializing it as well).
 extern void G_CreateSpeederNPC(Vehicle_t** p_veh, const char* strType);
-extern void G_CreateAnimalNPC(Vehicle_t** p_veh, const char* strType);
+extern void G_CreateAnimalNPC(Vehicle_t** p_veh, const char* str_animal_type);
 extern void G_CreateFighterNPC(Vehicle_t** p_veh, const char* str_type);
-extern void G_CreateWalkerNPC(Vehicle_t** p_veh, const char* strType);
+extern void G_CreateWalkerNPC(Vehicle_t** p_veh, const char* str_animal_type);
 
 #define VEH_DEFAULT_SPEED_MAX		800.0f
 #define VEH_DEFAULT_ACCEL			10.0f

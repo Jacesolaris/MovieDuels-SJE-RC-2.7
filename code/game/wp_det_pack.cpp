@@ -62,16 +62,16 @@ static void WP_DropDetPack(gentity_t* self, vec3_t start)
 //---------------------------------------------------------
 {
 	// Chucking a new one
-	AngleVectors(self->client->ps.viewangles, forwardVec, vrightVec, up);
-	CalcMuzzlePoint(self, forwardVec, muzzle, 0);
-	VectorNormalize(forwardVec);
-	VectorMA(muzzle, -4, forwardVec, muzzle);
+	AngleVectors(self->client->ps.viewangles, forward_vec, vright_vec, up);
+	CalcMuzzlePoint(self, forward_vec, muzzle, 0);
+	VectorNormalize(forward_vec);
+	VectorMA(muzzle, -4, forward_vec, muzzle);
 
 	VectorCopy(muzzle, start);
 	WP_TraceSetStart(self, start);
 	//make sure our start point isn't on the other side of a wall
 
-	gentity_t* missile = create_missile(start, forwardVec, 300, 10000, self, qfalse);
+	gentity_t* missile = create_missile(start, forward_vec, 300, 10000, self, qfalse);
 
 	missile->fxID = G_EffectIndex("detpack/explosion");
 	// if we set an explosion effect, explode death can use that instead

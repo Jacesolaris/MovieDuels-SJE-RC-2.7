@@ -553,21 +553,21 @@ void Z_Label(const void* pvAddress, const char* psLabel)
 
 // Frees a block of memory...
 //
-int Z_Free(void* pvAddress)
+int Z_Free(void* pv_address)
 {
 	if (!TheZone.Stats.iCount)
 	{
 		//Com_Error(ERR_FATAL, "Z_Free(): Zone has been cleard already!");
-		Com_Printf("Z_Free(%x): Zone has been cleard already!\n", pvAddress);
+		Com_Printf("Z_Free(%x): Zone has been cleard already!\n", pv_address);
 		return -1;
 	}
 
-	zoneHeader_t* pMemory = static_cast<zoneHeader_t*>(pvAddress) - 1;
+	zoneHeader_t* pMemory = static_cast<zoneHeader_t*>(pv_address) - 1;
 
 #if 1	//debugging double free
 	if (pMemory->iMagic == INT_ID('F', 'R', 'E', 'E'))
 	{
-		Com_Error(ERR_FATAL, "Z_Free(%s): Block already-freed, or not allocated through Z_Malloc!", pvAddress);
+		Com_Error(ERR_FATAL, "Z_Free(%s): Block already-freed, or not allocated through Z_Malloc!", pv_address);
 	}
 #endif
 

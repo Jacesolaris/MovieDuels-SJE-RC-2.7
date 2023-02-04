@@ -32,7 +32,7 @@ void Sys_PlatformInit();
 void Sys_PlatformExit();
 qboolean Sys_GetPacket(netadr_t* net_from, msg_t* net_message);
 char* Sys_ConsoleInput();
-void Sys_QueEvent(int time, sysEventType_t type, int value, int value2, int ptrLength, void* ptr);
+void Sys_QueEvent(int ev_time, sysEventType_t ev_type, int value, int value2, int ptrLength, void* ptr);
 void Sys_SigHandler(int signal);
 #ifndef _WIN32
 void		Sys_AnsiColorPrint(const char* msg);

@@ -364,34 +364,34 @@ void SP_target_speaker(gentity_t* ent) {
 /*QUAKED target_laser (0 .5 .8) (-8 -8 -8) (8 8 8) START_ON
 When triggered, fires a laser.  You can either set a target or a direction.
 */
-void target_laser_think(gentity_t* self) {
+void target_laser_think(gentity_t* ent) {
 	vec3_t	end;
 	trace_t	tr;
 	vec3_t	point;
 
 	// if pointed at another entity, set movedir to point at it
-	if (self->enemy) {
-		VectorMA(self->enemy->s.origin, 0.5, self->enemy->r.mins, point);
-		VectorMA(point, 0.5, self->enemy->r.maxs, point);
-		VectorSubtract(point, self->s.origin, self->movedir);
-		VectorNormalize(self->movedir);
+	if (ent->enemy) {
+		VectorMA(ent->enemy->s.origin, 0.5, ent->enemy->r.mins, point);
+		VectorMA(point, 0.5, ent->enemy->r.maxs, point);
+		VectorSubtract(point, ent->s.origin, ent->movedir);
+		VectorNormalize(ent->movedir);
 	}
 
 	// fire forward and see what we hit
-	VectorMA(self->s.origin, 2048, self->movedir, end);
+	VectorMA(ent->s.origin, 2048, ent->movedir, end);
 
-	trap->Trace(&tr, self->s.origin, NULL, NULL, end, self->s.number, CONTENTS_SOLID | CONTENTS_BODY | CONTENTS_CORPSE, qfalse, 0, 0);
+	trap->Trace(&tr, ent->s.origin, NULL, NULL, end, ent->s.number, CONTENTS_SOLID | CONTENTS_BODY | CONTENTS_CORPSE, qfalse, 0, 0);
 
 	if (tr.entity_num) {
 		// hurt it if we can
-		G_Damage(&g_entities[tr.entity_num], self, self->activator, self->movedir,
-			tr.endpos, self->damage, DAMAGE_NO_KNOCKBACK, MOD_TARGET_LASER);
+		G_Damage(&g_entities[tr.entity_num], ent, ent->activator, ent->movedir,
+			tr.endpos, ent->damage, DAMAGE_NO_KNOCKBACK, MOD_TARGET_LASER);
 	}
 
-	VectorCopy(tr.endpos, self->s.origin2);
+	VectorCopy(tr.endpos, ent->s.origin2);
 
-	trap->LinkEntity((sharedEntity_t*)self);
-	self->nextthink = level.time + FRAMETIME;
+	trap->LinkEntity((sharedEntity_t*)ent);
+	ent->nextthink = level.time + FRAMETIME;
 }
 
 void target_laser_on(gentity_t* self)

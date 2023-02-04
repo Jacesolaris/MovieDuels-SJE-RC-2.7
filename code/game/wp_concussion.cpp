@@ -51,14 +51,14 @@ static void WP_FireConcussionAlt(gentity_t* ent)
 	if (ent->s.number >= MAX_CLIENTS)
 	{
 		vec3_t angles;
-		vectoangles(forwardVec, angles);
+		vectoangles(forward_vec, angles);
 		angles[PITCH] += Q_flrand(-1.0f, 1.0f) * (CONC_NPC_SPREAD + (6 - ent->NPC->currentAim) * 0.25f); //was 0.5f
 		angles[YAW] += Q_flrand(-1.0f, 1.0f) * (CONC_NPC_SPREAD + (6 - ent->NPC->currentAim) * 0.25f); //was 0.5f
-		AngleVectors(angles, forwardVec, vrightVec, up);
+		AngleVectors(angles, forward_vec, vright_vec, up);
 	}
 
 	//Shove us backwards for half a second
-	VectorMA(ent->client->ps.velocity, -200, forwardVec, ent->client->ps.velocity);
+	VectorMA(ent->client->ps.velocity, -200, forward_vec, ent->client->ps.velocity);
 	ent->client->ps.groundEntityNum = ENTITYNUM_NONE;
 
 	if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_TWENTYNINE)
@@ -116,7 +116,7 @@ static void WP_FireConcussionAlt(gentity_t* ent)
 	{
 		constexpr float shot_range = 8192;
 		vec3_t end;
-		VectorMA(start, shot_range, forwardVec, end);
+		VectorMA(start, shot_range, forward_vec, end);
 
 		//NOTE: if you want to be able to hit guys in emplaced guns, use "G2_COLLIDE, 10" instead of "G2_RETURNONHIT, 0"
 		//alternately, if you end up hitting an emplaced_gun that has a sitter, just redo this one trace with the "G2_COLLIDE, 10" to see if we it the sitter
@@ -195,12 +195,12 @@ static void WP_FireConcussionAlt(gentity_t* ent)
 					if (trace_ent && trace_ent->client && trace_ent->client->NPC_class == CLASS_GALAKMECH)
 					{
 						//hehe
-						G_Damage(trace_ent, ent, ent, forwardVec, tr.endpos, 10,
+						G_Damage(trace_ent, ent, ent, forward_vec, tr.endpos, 10,
 							DAMAGE_NO_KNOCKBACK | DAMAGE_NO_HIT_LOC,
 							MOD_CONC_ALT, hit_loc);
 						break;
 					}
-					G_Damage(trace_ent, ent, ent, forwardVec, tr.endpos, damage,
+					G_Damage(trace_ent, ent, ent, forward_vec, tr.endpos, damage,
 						DAMAGE_NO_KNOCKBACK | DAMAGE_NO_HIT_LOC,
 						MOD_CONC_ALT, hit_loc);
 
@@ -209,7 +209,7 @@ static void WP_FireConcussionAlt(gentity_t* ent)
 					{
 						//only if we hit a client
 						vec3_t push_dir;
-						VectorCopy(forwardVec, push_dir);
+						VectorCopy(forward_vec, push_dir);
 						if (push_dir[2] < 0.2f)
 						{
 							push_dir[2] = 0.2f;
@@ -281,13 +281,13 @@ static void WP_FireConcussionAlt(gentity_t* ent)
 		VectorMA(muzzle, dist, dir, spot);
 		AddSightEvent(ent, spot, 256, AEL_DISCOVERED, 50);
 		//FIXME: creates *way* too many effects, make it one effect somehow?
-		G_PlayEffect(G_EffectIndex("concussion/alt_ring"), spot, forwardVec);
+		G_PlayEffect(G_EffectIndex("concussion/alt_ring"), spot, forward_vec);
 	}
 	//FIXME: spawn a temp ent that continuously spawns sight alerts here?  And 1 sound alert to draw their attention?
-	VectorMA(start, shot_dist - 4, forwardVec, spot);
+	VectorMA(start, shot_dist - 4, forward_vec, spot);
 	AddSightEvent(ent, spot, 256, AEL_DISCOVERED, 50);
 
-	G_PlayEffect(G_EffectIndex("concussion/altmuzzle_flash"), muzzle, forwardVec);
+	G_PlayEffect(G_EffectIndex("concussion/altmuzzle_flash"), muzzle, forward_vec);
 }
 
 static void WP_FireConcussion(gentity_t* ent)
@@ -300,10 +300,10 @@ static void WP_FireConcussion(gentity_t* ent)
 	if (ent->s.number >= MAX_CLIENTS)
 	{
 		vec3_t angles;
-		vectoangles(forwardVec, angles);
+		vectoangles(forward_vec, angles);
 		angles[PITCH] += Q_flrand(-1.0f, 1.0f) * (CONC_NPC_SPREAD + (6 - ent->NPC->currentAim) * 0.25f); //was 0.5f
 		angles[YAW] += Q_flrand(-1.0f, 1.0f) * (CONC_NPC_SPREAD + (6 - ent->NPC->currentAim) * 0.25f); //was 0.5f
-		AngleVectors(angles, forwardVec, vrightVec, up);
+		AngleVectors(angles, forward_vec, vright_vec, up);
 	}
 
 	//hold us still for a bit
@@ -322,7 +322,7 @@ static void WP_FireConcussion(gentity_t* ent)
 	WP_TraceSetStart(ent, start);
 	//make sure our start point isn't on the other side of a wall
 
-	gentity_t* missile = create_missile(start, forwardVec, vel, 10000, ent, qfalse);
+	gentity_t* missile = create_missile(start, forward_vec, vel, 10000, ent, qfalse);
 
 	missile->classname = "conc_proj";
 	missile->s.weapon = WP_CONCUSSION;

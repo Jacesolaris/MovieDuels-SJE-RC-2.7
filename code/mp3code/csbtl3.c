@@ -49,11 +49,11 @@ void sbt_mono_L3(float* sample, short* pcm, int ch)
 }
 
 /*------------------------------------------------------------*/
-void sbt_dual_L3(float* sample, short* pcm, const int ch)
+void sbt_dual_L3(float* sample, short* pcm, const int n)
 {
 	int i;
 
-	if (ch == 0)
+	if (n == 0)
 	{
 		for (i = 0; i < 18; i++)
 		{

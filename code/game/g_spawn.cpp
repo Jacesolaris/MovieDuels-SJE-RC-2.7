@@ -1751,11 +1751,11 @@ void G_SubBSPSpawnEntitiesFromString(const char* entityString, vec3_t posOffset,
 	}
 }
 
-void G_SpawnEntitiesFromString(const char* entityString)
+void G_SpawnEntitiesFromString(const char* entity_string)
 {
 	const char* entities;
 
-	entities = entityString;
+	entities = entity_string;
 
 	// allow calls to G_Spawn*()
 	spawning = qtrue;

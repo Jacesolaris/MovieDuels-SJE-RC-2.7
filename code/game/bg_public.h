@@ -342,7 +342,7 @@ constexpr auto SETANIM_BLEND_DEFAULT = 100;
 
 void PM_SetAnim(const pmove_t* pm, int set_anim_parts, int anim, int set_anim_flags,
 	int blend_time = SETANIM_BLEND_DEFAULT);
-void PM_SetAnimFinal(int* torso_anim, int* legs_anim, int type, int anim, int priority, int* torso_anim_timer,
+void PM_SetAnimFinal(int* torso_anim, int* legs_anim, int set_anim_parts, int anim, int set_anim_flags, int* torso_anim_timer,
 	int* legs_anim_timer, gentity_t* gent, int blend_time = SETANIM_BLEND_DEFAULT);
 
 //===================================================================================

@@ -728,7 +728,7 @@ static qboolean GLimp_StartDriverAndSetMode(glconfig_t* glConfig, const windowDe
 	return qtrue;
 }
 
-window_t WIN_Init(const windowDesc_t* windowDesc, glconfig_t* glConfig)
+window_t WIN_Init(const windowDesc_t* window_desc, glconfig_t* glConfig)
 {
 	Cmd_AddCommand("modelist", R_ModeList_f);
 	Cmd_AddCommand("minimize", GLimp_Minimize);
@@ -757,7 +757,7 @@ window_t WIN_Init(const windowDesc_t* windowDesc, glconfig_t* glConfig)
 	Cvar_Get("r_availableModes", "", CVAR_ROM);
 
 	// Create the window and set up the context
-	if (!GLimp_StartDriverAndSetMode(glConfig, windowDesc, r_mode->integer,
+	if (!GLimp_StartDriverAndSetMode(glConfig, window_desc, r_mode->integer,
 		static_cast<qboolean>(r_fullscreen->integer),
 		static_cast<qboolean>(r_noborder->integer)))
 	{
@@ -765,7 +765,7 @@ window_t WIN_Init(const windowDesc_t* windowDesc, glconfig_t* glConfig)
 		{
 			Com_Printf("Setting r_mode %d failed, falling back on r_mode %d\n", r_mode->integer, R_MODE_FALLBACK);
 
-			if (!GLimp_StartDriverAndSetMode(glConfig, windowDesc, R_MODE_FALLBACK, qfalse, qfalse))
+			if (!GLimp_StartDriverAndSetMode(glConfig, window_desc, R_MODE_FALLBACK, qfalse, qfalse))
 			{
 				// Nothing worked, give up
 				Com_Error(ERR_FATAL, "GLimp_Init() - could not load OpenGL subsystem");
@@ -782,7 +782,7 @@ window_t WIN_Init(const windowDesc_t* windowDesc, glconfig_t* glConfig)
 	// window_t is only really useful for Windows if the renderer wants to create a D3D context.
 	window_t window = {};
 
-	window.api = windowDesc->api;
+	window.api = window_desc->api;
 
 #if defined(_WIN32)
 	SDL_SysWMinfo info;

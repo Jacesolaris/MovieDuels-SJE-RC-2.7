@@ -491,17 +491,17 @@ bool CVec4::PtInCircle(const CVec4& Circle, const float Radius) const
 // A
 //
 ////////////////////////////////////////////////////////////////////////////////////////
-bool CVec4::LineInCircle(const CVec4& A, const CVec4& B, const float r, CVec4& P) const
+bool CVec4::LineInCircle(const CVec4& a, const CVec4& b, const float r, CVec4& P) const
 {
 	P = *this;
-	const float Scale = P.ProjectToLine(A, B);
+	const float scale = P.ProjectToLine(a, b);
 
 	// If The Projected Position Is Not On The Line Segment,
 	// Check If It Is Within Radius Of Endpoints A and B.
 	//-------------------------------------------------------
-	if (Scale < 0 || Scale > 1)
+	if (scale < 0 || scale > 1)
 	{
-		return PtInCircle(A, r) || PtInCircle(B, r);
+		return PtInCircle(a, r) || PtInCircle(b, r);
 	}
 
 	// Otherwise, Check To See If P Is Within The Radius Of This Circle
@@ -512,17 +512,17 @@ bool CVec4::LineInCircle(const CVec4& A, const CVec4& B, const float r, CVec4& P
 ////////////////////////////////////////////////////////////////////////////////////////
 // Same As Test Above, Just Don't Bother Returning P
 ////////////////////////////////////////////////////////////////////////////////////////
-bool CVec4::LineInCircle(const CVec4& A, const CVec4& B, const float r) const
+bool CVec4::LineInCircle(const CVec4& a, const CVec4& b, const float r) const
 {
 	CVec4 P(*this);
-	const float Scale = P.ProjectToLine(A, B);
+	const float Scale = P.ProjectToLine(a, b);
 
 	// If The Projected Position Is Not On The Line Segment,
 	// Check If It Is Within Radius Of Endpoints A and B.
 	//-------------------------------------------------------
 	if (Scale < 0 || Scale > 1)
 	{
-		return PtInCircle(A, r) || PtInCircle(B, r);
+		return PtInCircle(a, r) || PtInCircle(b, r);
 	}
 
 	// Otherwise, Check To See If P Is Within The Radius Of This Circle
@@ -1018,38 +1018,38 @@ bool CVec3::PtInCircle(const CVec3& Circle, const float Radius) const
 // A
 //
 ////////////////////////////////////////////////////////////////////////////////////////
-bool CVec3::LineInCircle(const CVec3& A, const CVec3& B, const float r, CVec3& P) const
+bool CVec3::LineInCircle(const CVec3& a, const CVec3& b, const float r, CVec3& p) const
 {
-	P = *this;
-	const float Scale = P.ProjectToLine(A, B);
+	p = *this;
+	const float Scale = p.ProjectToLine(a, b);
 
 	// If The Projected Position Is Not On The Line Segment,
 	// Check If It Is Within Radius Of Endpoints A and B.
 	//-------------------------------------------------------
 	if (Scale < 0 || Scale > 1)
 	{
-		return PtInCircle(A, r) || PtInCircle(B, r);
+		return PtInCircle(a, r) || PtInCircle(b, r);
 	}
 
 	// Otherwise, Check To See If P Is Within The Radius Of This Circle
 	//------------------------------------------------------------------
-	return PtInCircle(P, r);
+	return PtInCircle(p, r);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // Same As Test Above, Just Don't Bother Returning P
 ////////////////////////////////////////////////////////////////////////////////////////
-bool CVec3::LineInCircle(const CVec3& A, const CVec3& B, const float r) const
+bool CVec3::LineInCircle(const CVec3& a, const CVec3& b, const float r) const
 {
 	CVec3 P(*this);
-	const float Scale = P.ProjectToLine(A, B);
+	const float Scale = P.ProjectToLine(a, b);
 
 	// If The Projected Position Is Not On The Line Segment,
 	// Check If It Is Within Radius Of Endpoints A and B.
 	//-------------------------------------------------------
 	if (Scale < 0 || Scale > 1)
 	{
-		return PtInCircle(A, r) || PtInCircle(B, r);
+		return PtInCircle(a, r) || PtInCircle(b, r);
 	}
 
 	// Otherwise, Check To See If P Is Within The Radius Of This Circle
