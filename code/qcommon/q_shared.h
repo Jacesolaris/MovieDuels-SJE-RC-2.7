@@ -2005,6 +2005,7 @@ public:
 	int ManualblockLastStartTime; //Blocking 3
 	int BoltblockStartTime; //Blocking 4
 	int ManualMBlockingTime; // MBlocking 1
+	int BoltstasisStartTime; //Blocking 6
 	int saberBlockingTime; // SaberBlockingTime 1
 	int damageTime;
 
@@ -2410,6 +2411,7 @@ public:
 		saved_game.write<int32_t>(ManualblockLastStartTime); //Blocking 3
 		saved_game.write<int32_t>(BoltblockStartTime); //Blocking 4
 		saved_game.write<int32_t>(ManualMBlockingTime); //MBlocking 1
+		saved_game.write<int32_t>(BoltstasisStartTime); //Blocking 6
 		saved_game.write<int32_t>(saberBlockingTime); //SaberBlockingTime 1
 		saved_game.write<int32_t>(damageTime);
 
@@ -2684,6 +2686,7 @@ public:
 		saved_game.read<int32_t>(ManualblockLastStartTime); //Blocking 3
 		saved_game.read<int32_t>(BoltblockStartTime); //Blocking 4
 		saved_game.read<int32_t>(ManualMBlockingTime); //MBlocking 1
+		saved_game.read<int32_t>(BoltstasisStartTime); //Blocking 6
 		saved_game.read<int32_t>(saberBlockingTime); //SaberBlockingTime 1
 		saved_game.read<int32_t>(damageTime);
 
@@ -2878,6 +2881,7 @@ using trajectory_t = struct
 	// !!!!!!!!!!! LOADSAVE-affecting struct !!!!!!!!!!
 	trType_t trType;
 	int trTime;
+	int BoltstasisStartTime;
 	int trDuration; // if non 0, trTime + trDuration = stop time
 	vec3_t trBase;
 	vec3_t trDelta; // velocity, etc
@@ -2887,6 +2891,7 @@ using trajectory_t = struct
 	{
 		saved_game.write<int32_t>(trType);
 		saved_game.write<int32_t>(trTime);
+		saved_game.write<int32_t>(BoltstasisStartTime);
 		saved_game.write<int32_t>(trDuration);
 		saved_game.write<float>(trBase);
 		saved_game.write<float>(trDelta);
@@ -2897,6 +2902,7 @@ using trajectory_t = struct
 	{
 		saved_game.read<int32_t>(trType);
 		saved_game.read<int32_t>(trTime);
+		saved_game.read<int32_t>(BoltstasisStartTime);
 		saved_game.read<int32_t>(trDuration);
 		saved_game.read<float>(trBase);
 		saved_game.read<float>(trDelta);
@@ -3016,6 +3022,7 @@ using entityState_t = struct entityState_s
 	int ManualblockLastStartTime; //Blocking 3
 	int BoltblockStartTime; //Blocking 4
 	int ManualMBlockingTime; // MBlocking 1
+	int BoltstasisStartTime; //Blocking 6
 	int saberBlockingTime; // SaberBlockingTime 1
 
 	int DodgeStartTime; //Dodging 1
@@ -3124,6 +3131,7 @@ using entityState_t = struct entityState_s
 		saved_game.write<int32_t>(ManualblockLastStartTime); //Blocking 3
 		saved_game.write<int32_t>(BoltblockStartTime); //Blocking 4
 		saved_game.write<int32_t>(ManualMBlockingTime); //MBlocking 1
+		saved_game.write<int32_t>(BoltstasisStartTime); //Blocking 6
 		saved_game.write<int32_t>(saberBlockingTime); //SaberBlockingTime 1
 
 		saved_game.write<int32_t>(DodgeStartTime); //Dodging 1
@@ -3243,6 +3251,7 @@ using entityState_t = struct entityState_s
 		saved_game.read<int32_t>(ManualblockLastStartTime); //Blocking 3
 		saved_game.read<int32_t>(BoltblockStartTime); //Blocking 4
 		saved_game.read<int32_t>(ManualMBlockingTime); //MBlocking 1
+		saved_game.read<int32_t>(BoltstasisStartTime); //Blocking 6
 		saved_game.read<int32_t>(saberBlockingTime); //SaberBlockingTime 1
 
 		saved_game.read<int32_t>(DodgeStartTime); //Dodging 1
@@ -3511,6 +3520,7 @@ using ManualBlockingFlag_e = enum
 	MBF_BLOCKWALKING,
 	MBF_ACCURATEMISSILEBLOCKING,
 	MBF_NPCBLOCKSTANCE,
+	MBF_MISSILESTASIS,
 };
 
 using communicatingflags_e = enum

@@ -87,6 +87,7 @@ extern void CG_SaberDoWeaponHitMarks(const gclient_t* client, const gentity_t* s
 	vec3_t uaxis, float size_time_scale);
 extern void G_AngerAlert(const gentity_t* self);
 extern qboolean PM_WalkingOrRunningAnim(int anim);
+extern void G_StasisMissile(gentity_t* ent, gentity_t* missile);
 extern void G_ReflectMissile_JKA(gentity_t* ent, gentity_t* missile, vec3_t forward);
 extern void G_ReflectMissileNPC(gentity_t* ent, gentity_t* missile, vec3_t forward);
 extern void G_ReflectMissileAuto(gentity_t* ent, gentity_t* missile, vec3_t forward);
@@ -36451,7 +36452,6 @@ void ForceStasis(gentity_t* self)
 		//Stasis the enemy!
 		AngleVectors(self->client->ps.viewangles, forward, nullptr, nullptr);
 		VectorNormalize(forward);
-		//trace_ent = &g_entities[tr.entity_num];
 
 		vec3_t center, mins, maxs, v;
 		const float reach = radius;
@@ -36480,10 +36480,7 @@ void ForceStasis(gentity_t* self)
 				continue;
 			if (!trace_ent->inuse)
 				continue;
-			if (!trace_ent->takedamage)
-				continue;
-			if (trace_ent->health <= 0) //no torturing corpses
-				continue;
+			
 			// find the distance from the edge of the bounding box
 			for (i = 0; i < 3; i++)
 			{
@@ -36526,8 +36523,8 @@ void ForceStasis(gentity_t* self)
 			}
 
 			//Now check and see if we can actually hit it
-			gi.trace(&tr, self->client->renderInfo.handLPoint, vec3_origin, vec3_origin, ent_org, self->s.number,
-				MASK_SHOT, G2_NOCOLLIDE, 0);
+			gi.trace(&tr, self->client->renderInfo.handLPoint, vec3_origin, vec3_origin, ent_org, self->s.number, MASK_SHOT, G2_NOCOLLIDE, 0);
+
 			if (tr.fraction < 1.0f && tr.entity_num != trace_ent->s.number)
 			{
 				//must have clear LOS
@@ -36536,8 +36533,31 @@ void ForceStasis(gentity_t* self)
 
 			// ok, we are within the radius, add us to the incoming list
 			forcestasis_anim(self);
-			G_AddVoiceEvent(trace_ent, Q_irand(EV_PUSHED1, EV_PUSHED3), 2000);
-			ForceStasisWide(self, trace_ent);
+			if (trace_ent->s.eType == ET_PLAYER)
+			{
+				G_AddVoiceEvent(trace_ent, Q_irand(EV_PUSHED1, EV_PUSHED3), 2000);
+			}
+
+			if (trace_ent->s.eType == ET_MISSILE && trace_ent->s.eType != TR_STATIONARY)
+			{
+				vec3_t dir2_me;
+				VectorSubtract(self->currentOrigin, trace_ent->currentOrigin, dir2_me);
+				const float missilemovement = DotProduct(trace_ent->s.pos.trDelta, dir2_me);
+
+				if (missilemovement >= 0)
+				{
+					G_StasisMissile(self, trace_ent);
+
+					if (!(self->client->ps.ManualBlockingFlags & 1 << MBF_MISSILESTASIS))
+					{
+						self->client->ps.ManualBlockingFlags |= 1 << MBF_MISSILESTASIS; // activate the function
+					}
+				}
+			}
+			else
+			{
+				ForceStasisWide(self, trace_ent);
+			}
 		}
 	}
 	else
@@ -37389,7 +37409,7 @@ void ForceGrasp(gentity_t* self)
 			G_SoundOnEnt(self, CHAN_BODY, "sound/weapons/force/grip.wav");
 		}
 	}
-}
+	}
 
 extern void WP_FireBlast(gentity_t* ent, int force_level);
 
@@ -38384,7 +38404,7 @@ void WP_ForcePowerStop(gentity_t* self, const forcePowers_t force_power)
 							gripVel = 500.0f;
 						}
 						VectorScale(grip_ent->client->ps.velocity, gripVel, grip_ent->client->ps.velocity);
-					}
+				}
 
 					//FIXME: they probably dropped their weapon, should we make them flee?  Or should AI handle no-weapon behavior?
 					//rww - RAGDOLL_BEGIN
@@ -38462,7 +38482,7 @@ void WP_ForcePowerStop(gentity_t* self, const forcePowers_t force_power)
 							}
 						}
 					}
-				}
+			}
 				else
 				{
 					grip_ent->s.eFlags &= ~EF_FORCE_GRIPPED;
@@ -38490,10 +38510,10 @@ void WP_ForcePowerStop(gentity_t* self, const forcePowers_t force_power)
 						grip_ent->s.pos.trTime = level.time;
 					}
 				}
-			}
+		}
 			self->s.loopSound = 0;
 			self->client->ps.forceGripEntityNum = ENTITYNUM_NONE;
-		}
+	}
 		if (self->client->ps.torsoAnim == BOTH_FORCEGRIP_HOLD)
 		{
 			NPC_SetAnim(self, SETANIM_BOTH, BOTH_FORCEGRIP_RELEASE, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
@@ -38695,7 +38715,7 @@ void WP_ForcePowerStop(gentity_t* self, const forcePowers_t force_power)
 							grip_vel = 500.0f;
 						}
 						VectorScale(grip_ent->client->ps.velocity, grip_vel, grip_ent->client->ps.velocity);
-					}
+				}
 
 					//FIXME: they probably dropped their weapon, should we make them flee?  Or should AI handle no-weapon behavior?
 					//rww - RAGDOLL_BEGIN
@@ -38773,7 +38793,7 @@ void WP_ForcePowerStop(gentity_t* self, const forcePowers_t force_power)
 							}
 						}
 					}
-				}
+			}
 				else
 				{
 					grip_ent->s.eFlags &= ~EF_FORCE_GRASPED;
@@ -38801,10 +38821,10 @@ void WP_ForcePowerStop(gentity_t* self, const forcePowers_t force_power)
 						grip_ent->s.pos.trTime = level.time;
 					}
 				}
-			}
+		}
 			self->s.loopSound = 0;
 			self->client->ps.forceGripEntityNum = ENTITYNUM_NONE;
-		}
+}
 		if (self->client->ps.torsoAnim == BOTH_FORCEGRIP_HOLD)
 		{
 			NPC_SetAnim(self, SETANIM_BOTH, BOTH_FORCEGRIP_RELEASE, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
@@ -38853,7 +38873,7 @@ void WP_ForcePowerStop(gentity_t* self, const forcePowers_t force_power)
 		break;
 	default:
 		break;
-	}
+}
 }
 
 void WP_ForceForceThrow(gentity_t* thrower)
@@ -39590,7 +39610,7 @@ static void wp_force_power_run(gentity_t* self, forcePowers_t force_power, userc
 					}
 				}
 			}
-		}
+	}
 	}
 
 	if (self->client->ps.forcePowersActive & 1 << FP_GRIP)
@@ -40561,7 +40581,7 @@ static void wp_force_power_run(gentity_t* self, forcePowers_t force_power, userc
 		break;
 	default:
 		break;
-	}
+}
 }
 
 void WP_CheckForcedPowers(gentity_t* self, usercmd_t* ucmd)

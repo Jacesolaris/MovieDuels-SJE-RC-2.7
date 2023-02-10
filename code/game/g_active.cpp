@@ -7777,18 +7777,18 @@ int clip_size(const int ammo)
 	return -1;
 }
 
-int magazine_size(const gentity_t* ent,const int ammo)
+int magazine_size(const gentity_t* ent, const int ammo)
 {
 	switch (ammo)
 	{
 	case AMMO_BLASTER:
+	{
+		if (ent->s.weapon == WP_DROIDEKA)
 		{
-			if (ent->s.weapon == WP_DROIDEKA)
-			{
-				return 150;
-			}
-			return 50;
+			return 150;
 		}
+		return 50;
+	}
 	case AMMO_POWERCELL:
 		return 50;
 	case AMMO_METAL_BOLTS:
@@ -7871,7 +7871,7 @@ void wp_reload_gun(gentity_t* ent)
 			{
 				if (ent->client->ps.ammo[AMMO_BLASTER] < clip_size(AMMO_BLASTER))
 				{
-					ent->client->ps.ammo[AMMO_BLASTER] += magazine_size(ent,AMMO_BLASTER);
+					ent->client->ps.ammo[AMMO_BLASTER] += magazine_size(ent, AMMO_BLASTER);
 
 					if (ent->s.weapon == WP_BRYAR_PISTOL ||
 						ent->s.weapon == WP_BLASTER_PISTOL ||
@@ -8785,6 +8785,27 @@ void ClientThink_real(gentity_t* ent, usercmd_t* ucmd)
 		client->ps.ManualBlockingFlags &= ~(1 << MBF_BLOCKING);
 		client->ps.ManualBlockingFlags &= ~(1 << MBF_PROJBLOCKING);
 		client->ps.ManualBlockingFlags &= ~(1 << MBF_MBLOCKING);
+	}
+
+	if (client->ps.ManualBlockingFlags & 1 << MBF_MISSILESTASIS)
+	{
+		// started function
+		if (client->ps.BoltstasisStartTime <= 0) //fresh start
+		{
+			// They just pressed block. Mark the time...
+			client->ps.BoltstasisStartTime = level.time; //start the timer
+		}
+		else if (client->ps.ManualBlockingFlags & 1 << MBF_MISSILESTASIS && level.time - client->ps.BoltstasisStartTime >= 3000) //3 sec
+		{
+			// Been holding for too long....let go.
+			client->ps.ManualBlockingFlags &= ~(1 << MBF_MISSILESTASIS);
+		}
+	}
+	else
+	{
+		// not doing it so reset
+		client->ps.BoltstasisStartTime = 0;
+		client->ps.ManualBlockingFlags &= ~(1 << MBF_MISSILESTASIS);
 	}
 
 	if (Manual_MeleeDodging(ent))

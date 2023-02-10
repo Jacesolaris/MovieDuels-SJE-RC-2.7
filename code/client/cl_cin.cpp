@@ -2053,19 +2053,13 @@ static void PlayCinematic(const char* arg, const char* s, const qboolean qb_in_g
 				bits |= CIN_silent; // knock out existing english track
 			}
 		}
-		//
-		////////////////////////////////////////////////////////////////////
-		float new_height = SCREEN_HEIGHT;
-		float offset = 0;
 
-		if (Cvar_VariableIntegerValue("r_ratiofix"))
-		{
-			float ratio = static_cast<float>(SCREEN_WIDTH * cls.glconfig.vidHeight) / static_cast<float>(SCREEN_HEIGHT *
-				cls.glconfig.vidWidth);
-			ratio = Com_Clamp(0.75f, 1.0f, ratio);
-			new_height = SCREEN_HEIGHT / ratio;
-			offset = (SCREEN_HEIGHT - SCREEN_HEIGHT / ratio) / 2.0f;
-		}
+
+		float ratio = static_cast<float>(SCREEN_WIDTH * cls.glconfig.vidHeight) / static_cast<float>(SCREEN_HEIGHT *
+			cls.glconfig.vidWidth);
+		ratio = Com_Clamp(0.75f, 1.0f, ratio);
+		const float new_height = SCREEN_HEIGHT / ratio;
+		const float offset = (SCREEN_HEIGHT - SCREEN_HEIGHT / ratio) / 2.0f;
 
 		CL_handle = CIN_PlayCinematic(arg, 0, offset, SCREEN_WIDTH, new_height, bits, ps_audio_file);
 		if (CL_handle >= 0)

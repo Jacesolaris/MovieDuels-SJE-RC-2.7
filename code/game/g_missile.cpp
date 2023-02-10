@@ -1255,6 +1255,169 @@ void G_BoltBlockMissile(gentity_t* ent, gentity_t* missile, vec3_t forward)
 	}
 }
 
+static qhandle_t stasisLoopSound = 0;
+gentity_t* tgt_list[MAX_GENTITIES];
+void G_StasisMissile(gentity_t* ent, gentity_t* missile)
+{
+	vec3_t	bounce_dir;
+	gentity_t* blocker = ent;
+	static qboolean registered = qfalse;
+
+	if (!registered)
+	{
+		stasisLoopSound = G_SoundIndex("sound/barrier/barrier_loop.wav");
+		registered = qtrue;
+	}
+
+	if (ent->owner)
+	{
+		blocker = ent->owner;
+	}
+	const qboolean missile_in_stasis = blocker->client->ps.ManualBlockingFlags & 1 << MBF_MISSILESTASIS ? qtrue : qfalse;
+
+	//save the original speed
+	const float stasisspeed = VectorNormalize(missile->s.pos.trDelta) / 50;
+	const float normalspeed = VectorNormalize(missile->s.pos.trDelta);
+
+	if (ent &&
+		blocker &&
+		blocker->client)
+	{
+		gentity_t* enemy;
+
+		if (blocker->enemy && Q_irand(0, 3))
+		{//toward current enemy 75% of the time
+			enemy = blocker->enemy;
+		}
+		else
+		{//find another enemy
+			enemy = jedi_find_enemy_in_cone(blocker, blocker->enemy, 0.3f);
+		}
+		if (enemy)
+		{
+			vec3_t	bullseye;
+			CalcEntitySpot(enemy, SPOT_CHEST, bullseye);
+			bullseye[0] += Q_irand(-4, 4);
+			bullseye[1] += Q_irand(-4, 4);
+			bullseye[2] += Q_irand(-16, 4);
+			VectorSubtract(bullseye, missile->currentOrigin, bounce_dir);
+			VectorNormalize(bounce_dir);
+
+			for (int i = 0; i < 3; i++)
+			{
+				bounce_dir[i] += Q_flrand(-0.1f, 0.1f);
+			}
+
+			VectorNormalize(bounce_dir);
+		}
+	}
+	VectorNormalize(bounce_dir);
+
+	if (missile_in_stasis)
+	{
+		VectorScale(bounce_dir, stasisspeed, missile->s.pos.trDelta);
+		missile->s.loopSound = stasisLoopSound;
+
+#ifdef _DEBUG
+		assert(!Q_isnan(missile->s.pos.trDelta[0]) && !Q_isnan(missile->s.pos.trDelta[1]) && !Q_isnan(missile->s.pos.trDelta[2]));
+#endif// _DEBUG
+		missile->s.pos.trTime = level.time - 10;		// move a bit on the very first frame
+		VectorCopy(missile->currentOrigin, missile->s.pos.trBase);
+		if (missile->s.weapon != WP_SABER)
+		{//you are mine, now!
+			if (!missile->lastEnemy)
+			{//remember who originally shot this missile
+				missile->lastEnemy = missile->owner;
+			}
+			missile->owner = blocker;
+		}
+		if (missile->s.weapon == WP_ROCKET_LAUNCHER || missile->s.weapon == WP_THERMAL)
+		{//stop homing
+			qboolean	blow = qfalse;
+			if (missile->delay > level.time)
+			{
+				const int count = G_RadiusList(missile->currentOrigin, 200, missile, qtrue, tgt_list);
+
+				for (int i = 0; i < count; i++)
+				{
+					if (tgt_list[i]->client && tgt_list[i]->health > 0 && missile->activator && tgt_list[i]->s.number != missile->activator->s.number)
+					{
+						blow = qtrue;
+						break;
+					}
+				}
+			}
+			else
+			{
+				// well, we must die now
+				blow = qtrue;
+			}
+
+			if (blow)
+			{
+				missile->e_ThinkFunc = thinkF_WP_flechette_alt_blow;
+				missile->nextthink = level.time + 2000;
+			}
+			else
+			{
+				//stop homing
+				missile->e_ThinkFunc = thinkF_NULL;
+			}
+		}
+	}
+	else
+	{
+		VectorScale(bounce_dir, normalspeed, missile->s.pos.trDelta);
+
+#ifdef _DEBUG
+		assert(!Q_isnan(missile->s.pos.trDelta[0]) && !Q_isnan(missile->s.pos.trDelta[1]) && !Q_isnan(missile->s.pos.trDelta[2]));
+#endif// _DEBUG
+		missile->s.pos.trTime = level.time - 10;		// move a bit on the very first frame
+		VectorCopy(missile->currentOrigin, missile->s.pos.trBase);
+		if (missile->s.weapon != WP_SABER)
+		{//you are mine, now!
+			if (!missile->lastEnemy)
+			{//remember who originally shot this missile
+				missile->lastEnemy = missile->owner;
+			}
+			missile->owner = blocker;
+		}
+		if (missile->s.weapon == WP_ROCKET_LAUNCHER || missile->s.weapon == WP_THERMAL)
+		{//stop homing
+			qboolean	blow = qfalse;
+			if (missile->delay > level.time)
+			{
+				const int count = G_RadiusList(missile->currentOrigin, 200, missile, qtrue, tgt_list);
+
+				for (int i = 0; i < count; i++)
+				{
+					if (tgt_list[i]->client && tgt_list[i]->health > 0 && missile->activator && tgt_list[i]->s.number != missile->activator->s.number)
+					{
+						blow = qtrue;
+						break;
+					}
+				}
+			}
+			else
+			{
+				// well, we must die now
+				blow = qtrue;
+			}
+
+			if (blow)
+			{
+				missile->e_ThinkFunc = thinkF_WP_flechette_alt_blow;
+				missile->nextthink = level.time + 2000;
+			}
+			else
+			{
+				//stop homing
+				missile->e_ThinkFunc = thinkF_NULL;
+			}
+		}
+	}
+}
+
 void G_ReflectMissile_JKA(gentity_t* ent, gentity_t* missile, vec3_t forward)
 {
 	vec3_t bounce_dir;
@@ -2516,7 +2679,6 @@ void G_MissileImpactJKA(gentity_t* ent, trace_t* trace, const int hit_loc = HL_N
 				{
 					VectorSubtract(ent->currentOrigin, other->currentOrigin, diff);
 					VectorNormalize(diff);
-					//G_ReflectMissile_JKA(other, ent, diff);
 					G_BoltBlockMissile(other, ent, diff);
 					if (d_JediAI->integer || d_blockinfo->integer || g_DebugSaberCombat->integer)
 					{
