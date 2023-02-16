@@ -2881,7 +2881,6 @@ using trajectory_t = struct
 	// !!!!!!!!!!! LOADSAVE-affecting struct !!!!!!!!!!
 	trType_t trType;
 	int trTime;
-	int BoltstasisStartTime;
 	int trDuration; // if non 0, trTime + trDuration = stop time
 	vec3_t trBase;
 	vec3_t trDelta; // velocity, etc
@@ -2891,7 +2890,6 @@ using trajectory_t = struct
 	{
 		saved_game.write<int32_t>(trType);
 		saved_game.write<int32_t>(trTime);
-		saved_game.write<int32_t>(BoltstasisStartTime);
 		saved_game.write<int32_t>(trDuration);
 		saved_game.write<float>(trBase);
 		saved_game.write<float>(trDelta);
@@ -2902,7 +2900,6 @@ using trajectory_t = struct
 	{
 		saved_game.read<int32_t>(trType);
 		saved_game.read<int32_t>(trTime);
-		saved_game.read<int32_t>(BoltstasisStartTime);
 		saved_game.read<int32_t>(trDuration);
 		saved_game.read<float>(trBase);
 		saved_game.read<float>(trDelta);

@@ -228,7 +228,7 @@ int G2API_GetSurfaceRenderStatus(CGhoul2Info* ghl_info, const char* surface_name
 
 // From tr_ghoul2.cpp
 void G2_ConstructGhoulSkeleton(CGhoul2Info_v& ghoul2, int frame_num, bool checkForNewOrigin, const vec3_t scale);
-void G2_GetBoltMatrixLow(CGhoul2Info& ghoul2, int boltNum, const vec3_t scale, mdxaBone_t& retMatrix);
+void G2_GetBoltMatrixLow(CGhoul2Info& ghoul2, int boltNum, const vec3_t scale, mdxaBone_t& ret_matrix);
 void G2_TimingModel(boneInfo_t& bone, int current_time, int num_frames_in_file, int& current_frame, int& new_frame, float& lerp);
 
 bool G2_SetupModelPointers(CGhoul2Info_v& ghoul2); // returns true if any model is properly set up

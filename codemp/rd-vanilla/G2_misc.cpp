@@ -172,7 +172,7 @@ CGoreSet::~CGoreSet()
 };
 #endif // _SOF2
 
-const mdxaBone_t& EvalBoneCache(int index, CBoneCache* boneCache);
+const mdxaBone_t& EvalBoneCache(int index, CBoneCache* bone_cache);
 class CTraceSurface
 {
 public:
@@ -374,7 +374,7 @@ int G2_DecideTraceLod(const CGhoul2Info& ghoul2, int use_lod)
 	return returnLod;
 }
 
-void R_TransformEachSurface(const mdxmSurface_t* surface, vec3_t scale, IHeapAllocator* g2_vert_space, size_t* TransformedVertsArray, CBoneCache* boneCache)
+void R_TransformEachSurface(const mdxmSurface_t* surface, vec3_t scale, IHeapAllocator* g2_vert_space, size_t* TransformedVertsArray, CBoneCache* bone_cache)
 {
 	int				 j, k;
 
@@ -416,7 +416,7 @@ void R_TransformEachSurface(const mdxmSurface_t* surface, vec3_t scale, IHeapAll
 				const int		i_bone_index = G2_GetVertBoneIndex(v, k);
 				const float	fBoneWeight = G2_GetVertBoneWeight(v, k, fTotalWeight, iNumWeights);
 
-				const mdxaBone_t& bone = EvalBoneCache(piBoneReferences[i_bone_index], boneCache);
+				const mdxaBone_t& bone = EvalBoneCache(piBoneReferences[i_bone_index], bone_cache);
 
 				tempVert[0] += fBoneWeight * (DotProduct(bone.matrix[0], v->vertCoords) + bone.matrix[0][3]);
 				tempVert[1] += fBoneWeight * (DotProduct(bone.matrix[1], v->vertCoords) + bone.matrix[1][3]);
@@ -459,7 +459,7 @@ void R_TransformEachSurface(const mdxmSurface_t* surface, vec3_t scale, IHeapAll
 				const int		i_bone_index = G2_GetVertBoneIndex(v, k);
 				const float	fBoneWeight = G2_GetVertBoneWeight(v, k, fTotalWeight, iNumWeights);
 
-				const mdxaBone_t& bone = EvalBoneCache(piBoneReferences[i_bone_index], boneCache);
+				const mdxaBone_t& bone = EvalBoneCache(piBoneReferences[i_bone_index], bone_cache);
 
 				tempVert[0] += fBoneWeight * (DotProduct(bone.matrix[0], v->vertCoords) + bone.matrix[0][3]);
 				tempVert[1] += fBoneWeight * (DotProduct(bone.matrix[1], v->vertCoords) + bone.matrix[1][3]);
@@ -484,7 +484,7 @@ void R_TransformEachSurface(const mdxmSurface_t* surface, vec3_t scale, IHeapAll
 }
 
 void G2_TransformSurfaces(int surface_num, surfaceInfo_v& rootSList,
-	CBoneCache* boneCache, const model_t* currentModel, int lod, vec3_t scale, IHeapAllocator* g2_vert_space, size_t* TransformedVertArray, bool secondTimeAround)
+	CBoneCache* bone_cache, const model_t* currentModel, int lod, vec3_t scale, IHeapAllocator* g2_vert_space, size_t* TransformedVertArray, bool secondTimeAround)
 {
 	assert(currentModel);
 	assert(currentModel->mdxm);
@@ -506,7 +506,7 @@ void G2_TransformSurfaces(int surface_num, surfaceInfo_v& rootSList,
 	// if this surface is not off, add it to the shader render list
 	if (!off_flags)
 	{
-		R_TransformEachSurface(surface, scale, g2_vert_space, TransformedVertArray, boneCache);
+		R_TransformEachSurface(surface, scale, g2_vert_space, TransformedVertArray, bone_cache);
 	}
 
 	// if we are turning off all descendants, then stop this recursion now
@@ -518,7 +518,7 @@ void G2_TransformSurfaces(int surface_num, surfaceInfo_v& rootSList,
 	// now recursively call for the children
 	for (int i = 0; i < surfInfo->numChildren; i++)
 	{
-		G2_TransformSurfaces(surfInfo->childIndexes[i], rootSList, boneCache, currentModel, lod, scale, g2_vert_space, TransformedVertArray, secondTimeAround);
+		G2_TransformSurfaces(surfInfo->childIndexes[i], rootSList, bone_cache, currentModel, lod, scale, g2_vert_space, TransformedVertArray, secondTimeAround);
 	}
 }
 

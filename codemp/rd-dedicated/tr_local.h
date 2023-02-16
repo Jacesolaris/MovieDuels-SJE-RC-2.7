@@ -1561,7 +1561,7 @@ public:
 #else
 	const int		ident;			// ident of this surface - required so the materials renderer knows what sort of surface this refers to
 #endif
-	CBoneCache* boneCache;
+	CBoneCache* bone_cache;
 	mdxmSurface_t* surfaceData;	// pointer to surface data loaded into file - only used by client renderer DO NOT USE IN GAME SIDE - if there is a vid restart this will be out of wack on the game
 #ifdef _G2_GORE
 	float* alternateTex;		// alternate texture coordinates.
@@ -1576,7 +1576,7 @@ public:
 	CRenderableSurface& operator= (const CRenderableSurface& src)
 	{
 		ident = src.ident;
-		boneCache = src.boneCache;
+		bone_cache = src.bone_cache;
 		surfaceData = src.surfaceData;
 		alternateTex = src.alternateTex;
 		goreChain = src.goreChain;
@@ -1587,7 +1587,7 @@ public:
 
 	CRenderableSurface() :
 		ident(SF_MDX),
-		boneCache(nullptr),
+		bone_cache(nullptr),
 #ifdef _G2_GORE
 		surfaceData(nullptr),
 		alternateTex(nullptr),
@@ -1601,7 +1601,7 @@ public:
 	void Init()
 	{
 		ident = SF_MDX;
-		boneCache = nullptr;
+		bone_cache = nullptr;
 		surfaceData = nullptr;
 		alternateTex = nullptr;
 		goreChain = nullptr;

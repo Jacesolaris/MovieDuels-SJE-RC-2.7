@@ -1277,7 +1277,7 @@ void G_StasisMissile(gentity_t* ent, gentity_t* missile)
 
 	//save the original speed
 	const float stasisspeed = VectorNormalize(missile->s.pos.trDelta) / 50;
-	const float normalspeed = VectorNormalize(missile->s.pos.trDelta);
+	const float normalspeed = VectorNormalize(missile->s.pos.trDelta) / 25;
 
 	if (ent &&
 		blocker &&
@@ -1331,6 +1331,7 @@ void G_StasisMissile(gentity_t* ent, gentity_t* missile)
 			}
 			missile->owner = blocker;
 		}
+
 		if (missile->s.weapon == WP_ROCKET_LAUNCHER || missile->s.weapon == WP_THERMAL)
 		{//stop homing
 			qboolean	blow = qfalse;

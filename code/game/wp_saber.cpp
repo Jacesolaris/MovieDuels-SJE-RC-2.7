@@ -26126,9 +26126,9 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 								&& push_list[x]->client->ps.saberEntityNum < ENTITYNUM_WORLD
 								&& !PM_InOnGroundAnim(&push_list[x]->client->ps))
 							{
-								vec3_t throwVec;
-								VectorScale(push_dir, 10.0f, throwVec);
-								WP_SaberLose(push_list[x], throwVec);
+								vec3_t throw_vec;
+								VectorScale(push_dir, 10.0f, throw_vec);
+								WP_SaberLose(push_list[x], throw_vec);
 								NPC_SetAnim(push_list[x], SETANIM_BOTH, BOTH_LOSE_SABER,
 									SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 								push_list[x]->client->ps.torsoAnimTimer += 500;
@@ -28419,7 +28419,7 @@ void ForceRepulseThrow(gentity_t* self, int charge_time)
 					else if (self->client->ps.forcePowerLevel[FP_REPULSE] > FORCE_LEVEL_2)
 					{
 						//super-hard push
-						knockback *= 2;
+						knockback *= 3;
 					}
 				}
 

@@ -197,7 +197,7 @@ CGoreSet::~CGoreSet()
 extern mdxaBone_t		worldMatrix;
 extern mdxaBone_t		worldMatrixInv;
 
-const mdxaBone_t& EvalBoneCache(int index, CBoneCache* boneCache);
+const mdxaBone_t& EvalBoneCache(int index, CBoneCache* bone_cache);
 class CTraceSurface
 {
 public:

@@ -3259,27 +3259,26 @@ static inline int G2_RagIndexForBoneNum(int bone_num)
 #endif
 
 extern mdxaBone_t worldMatrix;
-void G2_RagGetBoneBasePoseMatrixLow(const CGhoul2Info& ghoul2, int bone_num, const mdxaBone_t& boneMatrix,
-	mdxaBone_t& retMatrix, vec3_t scale);
+void G2_RagGetBoneBasePoseMatrixLow(const CGhoul2Info& ghoul2, int bone_num, const mdxaBone_t& bone_matrix,
+	mdxaBone_t& ret_matrix, vec3_t scale);
 void G2_RagGetAnimMatrix(CGhoul2Info& ghoul2, int bone_num, mdxaBone_t& matrix, int frame);
 
-static void G2_RagGetWorldAnimMatrix(CGhoul2Info& ghoul2, const boneInfo_t& bone, CRagDollUpdateParams* params,
-	mdxaBone_t& retMatrix)
+static void G2_RagGetWorldAnimMatrix(CGhoul2Info& ghoul2, const boneInfo_t& bone, CRagDollUpdateParams* params,	mdxaBone_t& ret_matrix)
 {
-	static mdxaBone_t trueBaseMatrix, baseBoneMatrix;
+	static mdxaBone_t true_base_matrix, base_bone_matrix;
 
 	//get matrix for the settleFrame to use as an ideal
-	G2_RagGetAnimMatrix(ghoul2, bone.boneNumber, trueBaseMatrix, params->settleFrame);
+	G2_RagGetAnimMatrix(ghoul2, bone.boneNumber, true_base_matrix, params->settleFrame);
 	assert(bone.hasAnimFrameMatrix == params->settleFrame);
 
 	G2_RagGetBoneBasePoseMatrixLow(ghoul2, bone.boneNumber,
-		trueBaseMatrix, baseBoneMatrix, params->scale);
+		true_base_matrix, base_bone_matrix, params->scale);
 
 	//Use params to multiply world coordinate/dir matrix into the
 	//bone matrix and give us a useable world position
-	Multiply_3x4Matrix(&retMatrix, &worldMatrix, &baseBoneMatrix);
+	Multiply_3x4Matrix(&ret_matrix, &worldMatrix, &base_bone_matrix);
 
-	assert(!Q_isnan(retMatrix.matrix[2][3]));
+	assert(!Q_isnan(ret_matrix.matrix[2][3]));
 }
 
 //get the current pelvis Z direction and the base anim matrix Z direction
@@ -3327,8 +3326,7 @@ static void G2_RagGetPelvisLumbarOffsets(CGhoul2Info& ghoul2, CRagDollUpdatePara
 	*/
 }
 
-static bool G2_RagDollSettlePositionNumeroTrois(CGhoul2Info_v& ghoul2_v,
-	CRagDollUpdateParams* params, const int cur_time)
+static bool G2_RagDollSettlePositionNumeroTrois(CGhoul2Info_v& ghoul2_v, CRagDollUpdateParams* params, const int cur_time)
 {
 	//now returns true if any bone was in solid, otherwise false
 	const int ignore_num = params->me;
@@ -3507,6 +3505,7 @@ static bool G2_RagDollSettlePositionNumeroTrois(CGhoul2Info_v& ghoul2_v,
 		{
 			static mdxaBone_t world_base_matrix;
 			G2_RagGetWorldAnimMatrix(ghoul2_v[0], bone, params, world_base_matrix);
+
 			G2API_GiveMeVectorFromMatrix(world_base_matrix, ORIGIN, base_pos);
 
 			if (broadsword_ragtobase->integer > 1)

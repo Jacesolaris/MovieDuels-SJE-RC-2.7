@@ -372,6 +372,6 @@ void		G2API_ClearSkinGore(CGhoul2Info_v& ghoul2);
 #endif // _SOF2
 
 int			G2API_Ghoul2Size(CGhoul2Info_v& ghoul2);
-void		RemoveBoneCache(CBoneCache* boneCache);
+void		RemoveBoneCache(CBoneCache* bone_cache);
 
 const char* G2API_GetModelName(CGhoul2Info_v& ghoul2, int model_index);

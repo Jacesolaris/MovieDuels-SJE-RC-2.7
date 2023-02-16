@@ -1143,8 +1143,8 @@ static bool G2_RagDollSetup(CGhoul2Info& ghoul2, int frame_num, bool resetOrigin
 
 void G2_GetBoneBasepose(CGhoul2Info& ghoul2, int bone_num, mdxaBone_t*& retBasepose, mdxaBone_t*& retBaseposeInv);
 int G2_GetBoneDependents(CGhoul2Info& ghoul2, int bone_num, int* temp_dependents, int max_dep);
-void G2_GetBoneMatrixLow(CGhoul2Info& ghoul2, int bone_num, const vec3_t scale, mdxaBone_t& retMatrix, mdxaBone_t*& retBasepose, mdxaBone_t*& retBaseposeInv);
-int G2_GetParentBoneMatrixLow(CGhoul2Info& ghoul2, int bone_num, const vec3_t scale, mdxaBone_t& retMatrix, mdxaBone_t*& retBasepose, mdxaBone_t*& retBaseposeInv);
+void G2_GetBoneMatrixLow(CGhoul2Info& ghoul2, int bone_num, const vec3_t scale, mdxaBone_t& ret_matrix, mdxaBone_t*& retBasepose, mdxaBone_t*& retBaseposeInv);
+int G2_GetParentBoneMatrixLow(CGhoul2Info& ghoul2, int bone_num, const vec3_t scale, mdxaBone_t& ret_matrix, mdxaBone_t*& retBasepose, mdxaBone_t*& retBaseposeInv);
 bool G2_WasBoneRendered(CGhoul2Info& ghoul2, int bone_num);
 
 #define MAX_BONES_RAG (256)
@@ -3104,10 +3104,10 @@ void G2_RagPrintMatrix(mdxaBone_t* mat)
 }
 #endif
 
-void G2_RagGetBoneBasePoseMatrixLow(CGhoul2Info& ghoul2, int bone_num, mdxaBone_t& boneMatrix, mdxaBone_t& retMatrix, vec3_t scale);
+void G2_RagGetBoneBasePoseMatrixLow(CGhoul2Info& ghoul2, int bone_num, mdxaBone_t& bone_matrix, mdxaBone_t& ret_matrix, vec3_t scale);
 void G2_RagGetAnimMatrix(CGhoul2Info& ghoul2, int bone_num, mdxaBone_t& matrix, int frame);
 
-static inline void G2_RagGetWorldAnimMatrix(CGhoul2Info& ghoul2, boneInfo_t& bone, CRagDollUpdateParams* params, mdxaBone_t& retMatrix)
+static inline void G2_RagGetWorldAnimMatrix(CGhoul2Info& ghoul2, boneInfo_t& bone, CRagDollUpdateParams* params, mdxaBone_t& ret_matrix)
 {
 	static mdxaBone_t trueBaseMatrix, baseBoneMatrix;
 
@@ -3120,15 +3120,15 @@ static inline void G2_RagGetWorldAnimMatrix(CGhoul2Info& ghoul2, boneInfo_t& bon
 
 	//Use params to multiply world coordinate/dir matrix into the
 	//bone matrix and give us a useable world position
-	Multiply_3x4Matrix(&retMatrix, &worldMatrix, &baseBoneMatrix);
+	Multiply_3x4Matrix(&ret_matrix, &worldMatrix, &baseBoneMatrix);
 
-	assert(!Q_isnan(retMatrix.matrix[2][3]));
+	assert(!Q_isnan(ret_matrix.matrix[2][3]));
 }
 
 //get the current pelvis Z direction and the base anim matrix Z direction
 //so they can be compared and used to offset -rww
-void G2_GetRagBoneMatrixLow(CGhoul2Info& ghoul2, int bone_num, mdxaBone_t& retMatrix);
-void G2_GetBoltMatrixLow(CGhoul2Info& ghoul2, int boltNum, const vec3_t scale, mdxaBone_t& retMatrix);
+void G2_GetRagBoneMatrixLow(CGhoul2Info& ghoul2, int bone_num, mdxaBone_t& ret_matrix);
+void G2_GetBoltMatrixLow(CGhoul2Info& ghoul2, int boltNum, const vec3_t scale, mdxaBone_t& ret_matrix);
 static inline void G2_RagGetPelvisLumbarOffsets(CGhoul2Info& ghoul2, CRagDollUpdateParams* params, vec3_t pos, vec3_t dir, vec3_t animPos, vec3_t animDir)
 {
 	static mdxaBone_t final;
