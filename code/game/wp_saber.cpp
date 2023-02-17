@@ -22819,7 +22819,6 @@ void ForceThrow_JKA(gentity_t* self, qboolean pull, qboolean fake)
 					else
 					{
 						VectorSubtract(push_target[x]->currentOrigin, self->currentOrigin, push_dir);
-						VectorSubtract(push_target[x]->currentOrigin, self->currentOrigin, push_dir);
 						knockback -= VectorNormalize(push_dir);
 
 						G_SoundOnEnt(push_target[x], CHAN_BODY, "sound/weapons/force/pushed.mp3");
@@ -24321,7 +24320,6 @@ void ForceThrow_MD(gentity_t* self, qboolean pull, qboolean fake) //MD Mode Push
 					}
 					else
 					{
-						VectorSubtract(push_target[x]->currentOrigin, self->currentOrigin, push_dir);
 						VectorSubtract(push_target[x]->currentOrigin, self->currentOrigin, push_dir);
 						knockback -= VectorNormalize(push_dir);
 
@@ -26186,7 +26184,6 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 						else
 						{
 							VectorSubtract(push_target[x]->currentOrigin, self->currentOrigin, push_dir);
-							VectorSubtract(push_target[x]->currentOrigin, self->currentOrigin, push_dir);
 							knockback -= VectorNormalize(push_dir);
 
 							G_SoundOnEnt(push_target[x], CHAN_BODY, "sound/weapons/force/pushed.mp3");
@@ -27270,7 +27267,6 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 						}
 						else
 						{
-							VectorSubtract(push_target[x]->currentOrigin, self->currentOrigin, push_dir);
 							VectorSubtract(push_target[x]->currentOrigin, self->currentOrigin, push_dir);
 							knockback -= VectorNormalize(push_dir);
 
