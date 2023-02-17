@@ -22069,7 +22069,7 @@ void ForceThrow_JKA(gentity_t* self, qboolean pull, qboolean fake)
 {
 	//shove things in front of you away
 	gentity_t* forward_ent = nullptr;
-	gentity_t* push_list[MAX_GENTITIES];
+	gentity_t* push_target[MAX_GENTITIES];
 	int num_listed_entities = 0;
 	int ent_count = 0;
 	int radius;
@@ -22213,9 +22213,9 @@ void ForceThrow_JKA(gentity_t* self, qboolean pull, qboolean fake)
 		//make sure this plays and that you cannot press fire for about 1 second after this
 		anim = BOTH_FORCEPUSH;
 
-		if (self->s.number >= MAX_CLIENTS && !G_ControlledByPlayer(self))
+		if (self->s.number >= MAX_CLIENTS && !G_ControlledByPlayer(self)) // npc push sounds
 		{
-			if (self->client->ps.forcePower < 30)
+			if (self->client->ps.forcePower < 50)
 			{
 				sound_index = G_SoundIndex("sound/weapons/force/pushlow.mp3");
 			}
@@ -22228,26 +22228,16 @@ void ForceThrow_JKA(gentity_t* self, qboolean pull, qboolean fake)
 		{
 			if (g_SerenityJediEngineMode->integer)
 			{
-				if (self->client->ps.forcePower < 30
-					|| PM_InKnockDown(&self->client->ps))
+				if (self->client->ps.forcePower < 30 || PM_InKnockDown(&self->client->ps))
 				{
 					sound_index = G_SoundIndex("sound/weapons/force/pushlow.mp3");
 				}
 				else
 				{
-					if (g_SerenityJediEngineMode->integer == 2 && self->client->ps.forcePowerLevel[FP_PUSH] >
-						FORCE_LEVEL_2)
+					if (self->client->ps.groundEntityNum == ENTITYNUM_NONE &&
+						self->client->ps.forcePower > 50)
 					{
-						if (self->client->ps.groundEntityNum == ENTITYNUM_NONE &&
-							self->client->ps.forcePower > 50 &&
-							self->client->ps.blockPoints > 90)
-						{
-							sound_index = G_SoundIndex("sound/weapons/force/pushhard.mp3");
-						}
-						else
-						{
-							sound_index = G_SoundIndex("sound/weapons/force/push_md.mp3");
-						}
+						sound_index = G_SoundIndex("sound/weapons/force/pushhard.mp3");
 					}
 					else
 					{
@@ -22350,7 +22340,7 @@ void ForceThrow_JKA(gentity_t* self, qboolean pull, qboolean fake)
 							|| self->targetname && Q_stricmp(forward_ent->NPC_targetname, self->targetname) == 0)
 						{
 							//anyone can push it or only 1 person can push it and it's me
-							push_list[0] = forward_ent;
+							push_target[0] = forward_ent;
 							ent_count = num_listed_entities = 1;
 						}
 					}
@@ -22507,7 +22497,7 @@ void ForceThrow_JKA(gentity_t* self, qboolean pull, qboolean fake)
 			}
 
 			// ok, we are within the radius, add us to the incoming list
-			push_list[ent_count] = ent;
+			push_target[ent_count] = ent;
 			ent_count++;
 		}
 	}
@@ -22517,46 +22507,46 @@ void ForceThrow_JKA(gentity_t* self, qboolean pull, qboolean fake)
 		int actual_cost;
 		for (int x = 0; x < ent_count; x++)
 		{
-			if (push_list[x]->client)
+			if (push_target[x]->client)
 			{
 				float knockback = pull ? 0 : 200;
 
 				//SIGH band-aid...
-				if (push_list[x]->s.number >= MAX_CLIENTS
+				if (push_target[x]->s.number >= MAX_CLIENTS
 					&& self->s.number < MAX_CLIENTS)
 				{
-					if (push_list[x]->client->ps.forcePowersActive & 1 << FP_GRIP
-						&& push_list[x]->client->ps.forceGripEntityNum == self->s.number)
+					if (push_target[x]->client->ps.forcePowersActive & 1 << FP_GRIP
+						&& push_target[x]->client->ps.forceGripEntityNum == self->s.number)
 					{
-						WP_ForcePowerStop(push_list[x], FP_GRIP);
+						WP_ForcePowerStop(push_target[x], FP_GRIP);
 					}
-					if (push_list[x]->client->ps.forcePowersActive & 1 << FP_GRASP
-						&& push_list[x]->client->ps.forceGripEntityNum == self->s.number)
+					if (push_target[x]->client->ps.forcePowersActive & 1 << FP_GRASP
+						&& push_target[x]->client->ps.forceGripEntityNum == self->s.number)
 					{
-						WP_ForcePowerStop(push_list[x], FP_GRASP);
+						WP_ForcePowerStop(push_target[x], FP_GRASP);
 					}
-					if (push_list[x]->client->ps.forcePowersActive & 1 << FP_DRAIN
-						&& push_list[x]->client->ps.forceDrainEntityNum == self->s.number)
+					if (push_target[x]->client->ps.forcePowersActive & 1 << FP_DRAIN
+						&& push_target[x]->client->ps.forceDrainEntityNum == self->s.number)
 					{
-						WP_ForcePowerStop(push_list[x], FP_DRAIN);
+						WP_ForcePowerStop(push_target[x], FP_DRAIN);
 					}
 				}
 
-				if (rosh_being_healed(push_list[x]))
+				if (rosh_being_healed(push_target[x]))
 				{
 					continue;
 				}
-				if (push_list[x]->client->NPC_class == CLASS_HAZARD_TROOPER
-					&& push_list[x]->health > 0)
+				if (push_target[x]->client->NPC_class == CLASS_HAZARD_TROOPER
+					&& push_target[x]->health > 0)
 				{
 					//living hazard troopers resist push/pull
-					WP_ForceThrowHazardTrooper(self, push_list[x], pull);
+					WP_ForceThrowHazardTrooper(self, push_target[x], pull);
 					continue;
 				}
-				if (fake && push_list[x]->client->NPC_class != CLASS_GUARD && !jedi_jedi_master_low(push_list[x]))
+				if (fake && push_target[x]->client->NPC_class != CLASS_GUARD && !jedi_jedi_master_low(push_target[x]))
 				{
 					//always resist
-					WP_ResistForcePush(push_list[x], self, qfalse);
+					WP_ResistForcePush(push_target[x], self, qfalse);
 					continue;
 				}
 				int power_level, power_use;
@@ -22570,15 +22560,15 @@ void ForceThrow_JKA(gentity_t* self, qboolean pull, qboolean fake)
 					power_level = self->client->ps.forcePowerLevel[FP_PUSH];
 					power_use = FP_PUSH;
 				}
-				int mod_power_level = WP_AbsorbConversion(push_list[x],
-					push_list[x]->client->ps.forcePowerLevel[FP_ABSORB],
+				int mod_power_level = WP_AbsorbConversion(push_target[x],
+					push_target[x]->client->ps.forcePowerLevel[FP_ABSORB],
 					power_use,
 					power_level,
 					forcePowerNeeded[self->client->ps.forcePowerLevel[
 						power_use]]);
-				if (push_list[x]->client->NPC_class == CLASS_ASSASSIN_DROID ||
-					push_list[x]->client->NPC_class == CLASS_HAZARD_TROOPER ||
-					push_list[x]->client->NPC_class == CLASS_DROIDEKA)
+				if (push_target[x]->client->NPC_class == CLASS_ASSASSIN_DROID ||
+					push_target[x]->client->NPC_class == CLASS_HAZARD_TROOPER ||
+					push_target[x]->client->NPC_class == CLASS_DROIDEKA)
 				{
 					mod_power_level = 0; // divides throw by 10
 				}
@@ -22586,95 +22576,92 @@ void ForceThrow_JKA(gentity_t* self, qboolean pull, qboolean fake)
 				//First, if this is the player we're push/pulling, see if he can counter it
 				if (mod_power_level != -1
 					&& !no_resist && !is_class_guard
-					&& InFront(self->currentOrigin, push_list[x]->client->renderInfo.eyePoint,
-						push_list[x]->client->ps.viewangles, 0.3f))
+					&& InFront(self->currentOrigin, push_target[x]->client->renderInfo.eyePoint,
+						push_target[x]->client->ps.viewangles, 0.3f))
 				{
 					//absorbed and I'm in front of them
 					//counter it
-					if (push_list[x]->client->ps.forcePowerLevel[FP_ABSORB] > FORCE_LEVEL_2)
+					if (push_target[x]->client->ps.forcePowerLevel[FP_ABSORB] > FORCE_LEVEL_2)
 					{
 						//no reaction at all
 					}
 					else
 					{
-						WP_ResistForcePush(push_list[x], self, qfalse);
-						push_list[x]->client->ps.saber_move = push_list[x]->client->ps.saberBounceMove = LS_READY;
+						WP_ResistForcePush(push_target[x], self, qfalse);
+						push_target[x]->client->ps.saber_move = push_target[x]->client->ps.saberBounceMove = LS_READY;
 						//don't finish whatever saber anim you may have been in
-						push_list[x]->client->ps.saberBlocked = BLOCKED_NONE;
+						push_target[x]->client->ps.saberBlocked = BLOCKED_NONE;
 					}
 					continue;
 				}
-				if (!push_list[x]->s.number && !is_class_guard)
+				if (!push_target[x]->s.number && !is_class_guard)
 				{
 					//player
-					if (!no_resist && !is_class_guard && (ShouldPlayerResistForceThrow(push_list[x], self, pull) ||
-						PlayerisResistingForceThrow(push_list[x], self))
-						&& push_list[x]->client->ps.saberFatigueChainCount < MISHAPLEVEL_HEAVY)
+					if (!no_resist && !is_class_guard && (ShouldPlayerResistForceThrow(push_target[x], self, pull) ||
+						PlayerisResistingForceThrow(push_target[x], self))
+						&& push_target[x]->client->ps.saberFatigueChainCount < MISHAPLEVEL_HEAVY)
 					{
-						WP_ResistForcePush(push_list[x], self, qfalse);
-						push_list[x]->client->ps.saber_move = push_list[x]->client->ps.saberBounceMove = LS_READY;
+						WP_ResistForcePush(push_target[x], self, qfalse);
+						push_target[x]->client->ps.saber_move = push_target[x]->client->ps.saberBounceMove = LS_READY;
 						//don't finish whatever saber anim you may have been in
-						push_list[x]->client->ps.saberBlocked = BLOCKED_NONE;
+						push_target[x]->client->ps.saberBlocked = BLOCKED_NONE;
 						continue;
 					}
 				}
-				else if (push_list[x]->client && jedi_waiting_ambush(push_list[x]))
+				else if (push_target[x]->client && jedi_waiting_ambush(push_target[x]))
 				{
-					WP_ForceKnockdown(push_list[x], self, pull, qtrue, qfalse);
-					sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
+					WP_ForceKnockdown(push_target[x], self, pull, qtrue, qfalse);
 					continue;
 				}
-				else if (PM_SaberInBrokenParry(push_list[x]->client->ps.saber_move))
+				else if (PM_SaberInBrokenParry(push_target[x]->client->ps.saber_move))
 				{
 					//do a knockdown if fairly close
-					WP_ForceKnockdown(push_list[x], self, pull, qtrue, qfalse);
-					sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
+					WP_ForceKnockdown(push_target[x], self, pull, qtrue, qfalse);
 					continue;
 				}
-				else if (push_list[x]->client->NPC_class == CLASS_GUARD || jedi_jedi_master_low(push_list[x]))
+				else if (push_target[x]->client->NPC_class == CLASS_GUARD || jedi_jedi_master_low(push_target[x]))
 				{
 					//do a knockdown hes a twat
-					WP_ForceKnockdown(push_list[x], self, pull, qtrue, qfalse);
-					sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
+					WP_ForceKnockdown(push_target[x], self, pull, qtrue, qfalse);
 					continue;
 				}
 
-				G_KnockOffVehicle(push_list[x], self, pull);
+				G_KnockOffVehicle(push_target[x], self, pull);
 
 				if (!pull
-					&& push_list[x]->client->ps.forceDrainEntityNum == self->s.number
+					&& push_target[x]->client->ps.forceDrainEntityNum == self->s.number
 					&& self->s.eFlags & EF_FORCE_DRAINED)
 				{
 					//stop them from draining me now, dammit!
-					WP_ForcePowerStop(push_list[x], FP_DRAIN);
+					WP_ForcePowerStop(push_target[x], FP_DRAIN);
 				}
 
 				//okay, everyone else (or player who couldn't resist it)...
-				if ((self->s.number == 0 && Q_irand(0, 2) || Q_irand(0, 2)) && push_list[x]->client && push_list[x]->
+				if ((self->s.number == 0 && Q_irand(0, 2) || Q_irand(0, 2)) && push_target[x]->client && push_target[x]->
 					health > 0 //a living client
-					&& push_list[x]->client->ps.weapon == WP_SABER //Jedi
-					&& push_list[x]->health > 0 //alive
-					&& push_list[x]->client->ps.forceRageRecoveryTime < level.time //not recovering from rage
+					&& push_target[x]->client->ps.weapon == WP_SABER //Jedi
+					&& push_target[x]->health > 0 //alive
+					&& push_target[x]->client->ps.forceRageRecoveryTime < level.time //not recovering from rage
 					&& (self->client->NPC_class != CLASS_DESANN && self->client->NPC_class != CLASS_SITHLORD && self->
 						client->NPC_class != CLASS_VADER && Q_stricmp("Yoda", self->NPC_type) || !Q_irand(0, 2))
 					//only 30% chance of resisting a Desann push
-					&& push_list[x]->client->ps.groundEntityNum != ENTITYNUM_NONE //on the ground
-					&& InFront(self->currentOrigin, push_list[x]->currentOrigin, push_list[x]->client->ps.viewangles,
+					&& push_target[x]->client->ps.groundEntityNum != ENTITYNUM_NONE //on the ground
+					&& InFront(self->currentOrigin, push_target[x]->currentOrigin, push_target[x]->client->ps.viewangles,
 						0.3f) //I'm in front of him
-					&& (push_list[x]->client->ps.powerups[PW_FORCE_PUSH] > level.time || //he's pushing too
-						push_list[x]->s.number != 0 && push_list[x]->client->ps.weaponTime < level.time))
+					&& (push_target[x]->client->ps.powerups[PW_FORCE_PUSH] > level.time || //he's pushing too
+						push_target[x]->s.number != 0 && push_target[x]->client->ps.weaponTime < level.time))
 				{
 					//Jedi don't get pushed, they resist as long as they aren't already attacking and are on the ground
-					if (push_list[x]->client->ps.saberLockTime > level.time)
+					if (push_target[x]->client->ps.saberLockTime > level.time)
 					{
 						//they're in a lock
-						if (push_list[x]->client->ps.saberLockEnemy != self->s.number)
+						if (push_target[x]->client->ps.saberLockEnemy != self->s.number)
 						{
 							//they're not in a lock with me
 							continue;
 						}
 						if (pull || self->client->ps.forcePowerLevel[FP_PUSH] < FORCE_LEVEL_3 ||
-							push_list[x]->client->ps.forcePowerLevel[FP_PUSH] > FORCE_LEVEL_2)
+							push_target[x]->client->ps.forcePowerLevel[FP_PUSH] > FORCE_LEVEL_2)
 						{
 							//they're in a lock with me, but my push is too weak
 							continue;
@@ -22686,10 +22673,9 @@ void ForceThrow_JKA(gentity_t* self, qboolean pull, qboolean fake)
 						{
 							self->client->ps.weaponTime = floor(self->client->ps.weaponTime * g_timescale->value);
 						}
-						sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
 					}
 					int resist_chance = Q_irand(0, 2);
-					if (push_list[x]->s.number >= MAX_CLIENTS)
+					if (push_target[x]->s.number >= MAX_CLIENTS)
 					{
 						//NPC
 						if (g_spskill->integer == 1)
@@ -22703,28 +22689,26 @@ void ForceThrow_JKA(gentity_t* self, qboolean pull, qboolean fake)
 						&& mod_power_level == -1
 						&& self->client->ps.forcePowerLevel[FP_PUSH] > FORCE_LEVEL_2
 						&& !resist_chance
-						&& push_list[x]->client->ps.forcePowerLevel[FP_PUSH] < FORCE_LEVEL_3)
+						&& push_target[x]->client->ps.forcePowerLevel[FP_PUSH] < FORCE_LEVEL_3)
 					{
 						//a level 3 push can even knock down a jedi
-						if (PM_InKnockDown(&push_list[x]->client->ps))
+						if (PM_InKnockDown(&push_target[x]->client->ps))
 						{
 							//can't knock them down again
 							continue;
 						}
-						WP_ForceKnockdown(push_list[x], self, pull, qfalse, qtrue);
-						sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
+						WP_ForceKnockdown(push_target[x], self, pull, qfalse, qtrue);
 					}
-					else if (push_list[x]->client->NPC_class == CLASS_GUARD || jedi_jedi_master_low(push_list[x]))
+					else if (push_target[x]->client->NPC_class == CLASS_GUARD || jedi_jedi_master_low(push_target[x]))
 					{
 						//do a knockdown hes a twat
-						WP_ForceKnockdown(push_list[x], self, pull, qtrue, qfalse);
-						sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
+						WP_ForceKnockdown(push_target[x], self, pull, qtrue, qfalse);
 					}
 					else
 					{
 						if (!is_class_guard)
 						{
-							WP_ResistForcePush(push_list[x], self, qfalse);
+							WP_ResistForcePush(push_target[x], self, qfalse);
 						}
 					}
 				}
@@ -22732,56 +22716,54 @@ void ForceThrow_JKA(gentity_t* self, qboolean pull, qboolean fake)
 				{
 					vec3_t push_dir;
 					//shove them
-					if (push_list[x]->NPC
-						&& push_list[x]->NPC->jumpState == JS_JUMPING)
+					if (push_target[x]->NPC
+						&& push_target[x]->NPC->jumpState == JS_JUMPING)
 					{
 						//don't interrupt a scripted jump
-						push_list[x]->forcePushTime = level.time + 600; // let the push effect last for 600 ms
+						push_target[x]->forcePushTime = level.time + 600; // let the push effect last for 600 ms
 						continue;
 					}
 
-					if (push_list[x]->s.number
-						&& (push_list[x]->message || push_list[x]->flags & FL_NO_KNOCKBACK))
+					if (push_target[x]->s.number
+						&& (push_target[x]->message || push_target[x]->flags & FL_NO_KNOCKBACK))
 					{
 						//an NPC who has a key
 						//don't push me... FIXME: maybe can pull the key off me?
-						WP_ForceKnockdown(push_list[x], self, pull, qfalse, qfalse);
-						sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
+						WP_ForceKnockdown(push_target[x], self, pull, qfalse, qfalse);
 						continue;
 					}
-					if (push_list[x]->client->NPC_class == CLASS_GUARD || jedi_jedi_master_low(push_list[x]))
+					if (push_target[x]->client->NPC_class == CLASS_GUARD || jedi_jedi_master_low(push_target[x]))
 					{
 						//do a knockdown hes a twat
-						WP_ForceKnockdown(push_list[x], self, pull, qtrue, qfalse);
-						sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
+						WP_ForceKnockdown(push_target[x], self, pull, qtrue, qfalse);
 						continue;
 					}
 					if (pull)
 					{
-						VectorSubtract(self->currentOrigin, push_list[x]->currentOrigin, push_dir);
+						VectorSubtract(self->currentOrigin, push_target[x]->currentOrigin, push_dir);
 						if (self->client->ps.forcePowerLevel[FP_PULL] >= FORCE_LEVEL_3
 							&& self->client->NPC_class == CLASS_KYLE
 							&& self->spawnflags & 1
 							&& TIMER_Done(self, "kyleTakesSaber")
-							&& push_list[x]->client
-							&& push_list[x]->client->ps.weapon == WP_SABER
-							&& !push_list[x]->client->ps.saberInFlight
-							&& push_list[x]->client->ps.saberEntityNum < ENTITYNUM_WORLD
-							&& !PM_InOnGroundAnim(&push_list[x]->client->ps))
+							&& push_target[x]->client
+							&& push_target[x]->client->ps.weapon == WP_SABER
+							&& !push_target[x]->client->ps.saberInFlight
+							&& push_target[x]->client->ps.saberEntityNum < ENTITYNUM_WORLD
+							&& !PM_InOnGroundAnim(&push_target[x]->client->ps))
 						{
 							vec3_t throw_vec;
 							VectorScale(push_dir, 10.0f, throw_vec);
-							WP_SaberLose(push_list[x], throw_vec);
-							NPC_SetAnim(push_list[x], SETANIM_BOTH, BOTH_LOSE_SABER,
+							WP_SaberLose(push_target[x], throw_vec);
+							NPC_SetAnim(push_target[x], SETANIM_BOTH, BOTH_LOSE_SABER,
 								SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
-							push_list[x]->client->ps.torsoAnimTimer += 500;
-							push_list[x]->client->ps.pm_time = push_list[x]->client->ps.weaponTime = push_list[x]->
+							push_target[x]->client->ps.torsoAnimTimer += 500;
+							push_target[x]->client->ps.pm_time = push_target[x]->client->ps.weaponTime = push_target[x]->
 								client->ps.torsoAnimTimer;
-							push_list[x]->client->ps.pm_flags |= PMF_TIME_KNOCKBACK;
-							push_list[x]->client->ps.saber_move = LS_NONE;
-							push_list[x]->aimDebounceTime = level.time + push_list[x]->client->ps.torsoAnimTimer;
-							VectorClear(push_list[x]->client->ps.velocity);
-							VectorClear(push_list[x]->client->ps.moveDir);
+							push_target[x]->client->ps.pm_flags |= PMF_TIME_KNOCKBACK;
+							push_target[x]->client->ps.saber_move = LS_NONE;
+							push_target[x]->aimDebounceTime = level.time + push_target[x]->client->ps.torsoAnimTimer;
+							VectorClear(push_target[x]->client->ps.velocity);
+							VectorClear(push_target[x]->client->ps.moveDir);
 							//Kyle will stand around for a bit, too...
 							self->client->ps.pm_time = self->client->ps.weaponTime = 2000;
 							self->client->ps.pm_flags |= PMF_TIME_KNOCKBACK;
@@ -22792,35 +22774,35 @@ void ForceThrow_JKA(gentity_t* self, qboolean pull, qboolean fake)
 							VectorClear(self->client->ps.moveDir);
 							continue;
 						}
-						if (push_list[x]->NPC
-							&& push_list[x]->NPC->scriptFlags & SCF_DONT_FLEE)
+						if (push_target[x]->NPC
+							&& push_target[x]->NPC->scriptFlags & SCF_DONT_FLEE)
 						{
 							//*SIGH*... if an NPC can't flee, they can't run after and pick up their weapon, do don't drop it
 						}
 						else if (self->client->ps.forcePowerLevel[FP_PULL] > FORCE_LEVEL_1
-							&& push_list[x]->client->NPC_class != CLASS_ROCKETTROOPER
+							&& push_target[x]->client->NPC_class != CLASS_ROCKETTROOPER
 							//rockettroopers never drop their weapon
-							&& push_list[x]->client->NPC_class != CLASS_VEHICLE
-							&& push_list[x]->client->NPC_class != CLASS_BOBAFETT
-							&& push_list[x]->client->NPC_class != CLASS_MANDALORIAN
-							&& push_list[x]->client->NPC_class != CLASS_JANGO
-							&& push_list[x]->client->NPC_class != CLASS_JANGODUAL
-							&& push_list[x]->client->NPC_class != CLASS_TUSKEN
-							&& push_list[x]->client->NPC_class != CLASS_HAZARD_TROOPER
-							&& push_list[x]->client->NPC_class != CLASS_ASSASSIN_DROID
-							&& push_list[x]->client->NPC_class != CLASS_DROIDEKA
-							&& push_list[x]->client->NPC_class != CLASS_SBD
-							&& push_list[x]->s.weapon != WP_SABER
-							&& push_list[x]->s.weapon != WP_MELEE
-							&& push_list[x]->s.weapon != WP_THERMAL
-							&& push_list[x]->s.weapon != WP_CONCUSSION)
+							&& push_target[x]->client->NPC_class != CLASS_VEHICLE
+							&& push_target[x]->client->NPC_class != CLASS_BOBAFETT
+							&& push_target[x]->client->NPC_class != CLASS_MANDALORIAN
+							&& push_target[x]->client->NPC_class != CLASS_JANGO
+							&& push_target[x]->client->NPC_class != CLASS_JANGODUAL
+							&& push_target[x]->client->NPC_class != CLASS_TUSKEN
+							&& push_target[x]->client->NPC_class != CLASS_HAZARD_TROOPER
+							&& push_target[x]->client->NPC_class != CLASS_ASSASSIN_DROID
+							&& push_target[x]->client->NPC_class != CLASS_DROIDEKA
+							&& push_target[x]->client->NPC_class != CLASS_SBD
+							&& push_target[x]->s.weapon != WP_SABER
+							&& push_target[x]->s.weapon != WP_MELEE
+							&& push_target[x]->s.weapon != WP_THERMAL
+							&& push_target[x]->s.weapon != WP_CONCUSSION)
 						{
 							//yank the weapon - NOTE: level 1 just knocks them down, not take weapon
-							if (InFront(self->currentOrigin, push_list[x]->currentOrigin,
-								push_list[x]->client->ps.viewangles, 0.0f))
+							if (InFront(self->currentOrigin, push_target[x]->currentOrigin,
+								push_target[x]->client->ps.viewangles, 0.0f))
 							{
 								//enemy has to be facing me, too...
-								WP_DropWeapon(push_list[x], push_dir);
+								WP_DropWeapon(push_target[x], push_dir);
 							}
 						}
 						knockback += VectorNormalize(push_dir);
@@ -22836,39 +22818,69 @@ void ForceThrow_JKA(gentity_t* self, qboolean pull, qboolean fake)
 					}
 					else
 					{
-						VectorSubtract(push_list[x]->currentOrigin, self->currentOrigin, push_dir);
+						VectorSubtract(push_target[x]->currentOrigin, self->currentOrigin, push_dir);
+						VectorSubtract(push_target[x]->currentOrigin, self->currentOrigin, push_dir);
 						knockback -= VectorNormalize(push_dir);
-						if (knockback < 100)
+
+						G_SoundOnEnt(push_target[x], CHAN_BODY, "sound/weapons/force/pushed.mp3");
+
+						if (knockback < 100) // if less than 100
 						{
-							knockback = 100;
+							knockback = 100; // minimum 100
 						}
+
 						//scale for push level
-						if (self->client->ps.forcePowerLevel[FP_PUSH] < FORCE_LEVEL_2)
+						if (self->client->ps.forcePowerLevel[FP_PUSH] < FORCE_LEVEL_2) // level 1 devide by 3
 						{
-							//maybe just knock them down
-							knockback /= 3;
+							if (self->s.weapon == WP_MELEE ||
+								self->s.weapon == WP_NONE ||
+								self->s.weapon == WP_SABER &&
+								!self->client->ps.SaberActive() &&
+								!PM_InKnockDown(&self->client->ps))
+							{
+								//maybe just knock them down
+								knockback /= 2;
+							}
+							else
+							{
+								//maybe just knock them down
+								knockback /= 3;
+							}
 						}
-						else if (self->client->ps.forcePowerLevel[FP_PUSH] > FORCE_LEVEL_2)
+						else if (self->client->ps.forcePowerLevel[FP_PUSH] == FORCE_LEVEL_2) // level 2
 						{
-							//super-hard push
-							sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
+							if (self->s.weapon == WP_MELEE ||
+								self->s.weapon == WP_NONE ||
+								self->s.weapon == WP_SABER &&
+								!self->client->ps.SaberActive() &&
+								!PM_InKnockDown(&self->client->ps))
+							{
+								knockback = 125;
+							}
+							else
+							{
+								knockback = 100;
+							}
 						}
-						else if (self->s.weapon == WP_MELEE ||
-							self->s.weapon == WP_NONE ||
-							self->s.weapon == WP_SABER &&
-							!self->client->ps.SaberActive() &&
-							!PM_InKnockDown(&self->client->ps) &&
-							self->client->ps.forcePowerLevel[FP_PUSH] > FORCE_LEVEL_2)
+						else if (self->client->ps.forcePowerLevel[FP_PUSH] > FORCE_LEVEL_2) // level 3 add sound
 						{
-							//super-hard push
-							knockback *= 3; //superpush
-							sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
-						}
-						else if (push_list[x]->client->NPC_class == CLASS_GUARD || jedi_jedi_master_low(push_list[x]))
-						{
-							//do a knockdown hes a twat
-							knockback *= 3; //superpush
-							sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
+							if (push_target[x]->client->NPC_class == CLASS_GUARD || jedi_jedi_master_low(push_target[x]))
+							{
+								//do a knockdown hes a twat
+								knockback *= 3; //superpush
+							}
+							if (self->s.weapon == WP_MELEE ||
+								self->s.weapon == WP_NONE ||
+								self->s.weapon == WP_SABER &&
+								!self->client->ps.SaberActive() &&
+								!PM_InKnockDown(&self->client->ps))
+							{
+								knockback *= 2; //superpush
+							}
+							else
+							{
+								knockback *= 1.5; //superpush
+							}
 						}
 					}
 
@@ -22888,67 +22900,63 @@ void ForceThrow_JKA(gentity_t* self, qboolean pull, qboolean fake)
 						}
 					}
 					//actually push/pull the enemy
-					G_Throw(push_list[x], push_dir, knockback);
+					G_Throw(push_target[x], push_dir, knockback);
 					//make it so they don't actually hurt me when pulled at me...
-					push_list[x]->forcePuller = self->s.number;
+					push_target[x]->forcePuller = self->s.number;
 
-					if (push_list[x]->client->ps.groundEntityNum != ENTITYNUM_NONE)
+					if (push_target[x]->client->ps.groundEntityNum != ENTITYNUM_NONE)
 					{
 						//if on the ground, make sure they get shoved up some
-						if (push_list[x]->client->ps.velocity[2] < knockback)
+						if (push_target[x]->client->ps.velocity[2] < knockback)
 						{
-							push_list[x]->client->ps.velocity[2] = knockback;
+							push_target[x]->client->ps.velocity[2] = knockback;
 						}
 					}
 
-					if (push_list[x]->health > 0)
+					if (push_target[x]->health > 0)
 					{
 						//target is still alive
-						if ((push_list[x]->s.number || cg.renderingThirdPerson && !cg.zoomMode)
+						if ((push_target[x]->s.number || cg.renderingThirdPerson && !cg.zoomMode)
 							//NPC or 3rd person player
-							&& (!pull && self->client->ps.forcePowerLevel[FP_PUSH] < FORCE_LEVEL_2 && push_list[x]->
+							&& (!pull && self->client->ps.forcePowerLevel[FP_PUSH] < FORCE_LEVEL_2 && push_target[x]->
 								client->ps.forcePowerLevel[FP_PUSH] < FORCE_LEVEL_1 //level 1 push
-								|| pull && self->client->ps.forcePowerLevel[FP_PULL] < FORCE_LEVEL_2 && push_list[x]->
+								|| pull && self->client->ps.forcePowerLevel[FP_PULL] < FORCE_LEVEL_2 && push_target[x]->
 								client->ps.forcePowerLevel[FP_PULL] < FORCE_LEVEL_1)) //level 1 pull
 						{
 							//NPC or third person player (without force push/pull skill), and force push/pull level is at 1
-							WP_ForceKnockdown(push_list[x], self, pull, static_cast<qboolean>(!pull && knockback > 150),
+							WP_ForceKnockdown(push_target[x], self, pull, static_cast<qboolean>(!pull && knockback > 150),
 								qfalse);
-							sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
 						}
-						else if (!push_list[x]->s.number)
+						else if (!push_target[x]->s.number)
 						{
 							//player, have to force an anim on him
-							WP_ForceKnockdown(push_list[x], self, pull, static_cast<qboolean>(!pull && knockback > 150),
+							WP_ForceKnockdown(push_target[x], self, pull, static_cast<qboolean>(!pull && knockback > 150),
 								qfalse);
-							sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
 						}
-						else if (push_list[x]->client->NPC_class == CLASS_GUARD || jedi_jedi_master_low(push_list[x]))
+						else if (push_target[x]->client->NPC_class == CLASS_GUARD || jedi_jedi_master_low(push_target[x]))
 						{
 							//do a knockdown hes a twat
-							WP_ForceKnockdown(push_list[x], self, pull, static_cast<qboolean>(!pull && knockback > 100),
+							WP_ForceKnockdown(push_target[x], self, pull, static_cast<qboolean>(!pull && knockback > 100),
 								qfalse);
-							sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
 						}
 						else
 						{
 							//NPC and force-push/pull at level 2 or higher
-							WP_ForceKnockdown(push_list[x], self, pull, static_cast<qboolean>(!pull && knockback > 100),
+							WP_ForceKnockdown(push_target[x], self, pull, static_cast<qboolean>(!pull && knockback > 100),
 								qfalse);
-							sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
 						}
 					}
-					push_list[x]->forcePushTime = level.time + 600; // let the push effect last for 600 ms
+					push_target[x]->forcePushTime = level.time + 600; // let the push effect last for 600 ms
 				}
 			}
 			else if (!fake)
 			{
 				//not a fake push/pull
-				if (push_list[x]->s.weapon == WP_SABER && push_list[x]->contents & CONTENTS_LIGHTSABER)
+				if (push_target[x]->s.weapon == WP_SABER && push_target[x]->contents & CONTENTS_LIGHTSABER)
 				{
 					//a thrown saber, just send it back
-					if (push_list[x]->owner && push_list[x]->owner->client && push_list[x]->owner->client->ps.
-						SaberActive() && push_list[x]->s.pos.trType == TR_LINEAR && push_list[x]->owner->client->ps.
+					if (push_target[x]->owner && push_target[x]->owner->client && push_target[x]->owner->client->ps.
+						SaberActive() && push_target[x]->s.pos.trType == TR_LINEAR && push_target[x]->owner->client->ps.
 						saberEntityState != SES_RETURNING)
 					{
 						//it's on and being controlled
@@ -22964,71 +22972,71 @@ void ForceThrow_JKA(gentity_t* self, qboolean pull, qboolean fake)
 							{
 								if (is_class_guard)
 								{
-									G_MissileBouncedoffSaber(self, push_list[x], right);
+									G_MissileBouncedoffSaber(self, push_target[x], right);
 								}
 								else
 								{
-									G_ReflectMissileNPC(self, push_list[x], right);
+									G_ReflectMissileNPC(self, push_target[x], right);
 								}
 							}
 							else
 							{
 								if (g_SerenityJediEngineMode->integer)
 								{
-									G_ReflectMissileAuto(self, push_list[x], right);
+									G_ReflectMissileAuto(self, push_target[x], right);
 								}
 								else
 								{
-									G_ReflectMissile_JKA(self, push_list[x], right);
+									G_ReflectMissile_JKA(self, push_target[x], right);
 								}
 							}
-							WP_SaberDrop(push_list[x]->owner, push_list[x]);
+							WP_SaberDrop(push_target[x]->owner, push_target[x]);
 						}
 						else
 						{
 							if (g_SerenityJediEngineMode->integer)
 							{
-								WP_SaberDrop(push_list[x]->owner, push_list[x]);
+								WP_SaberDrop(push_target[x]->owner, push_target[x]);
 							}
 							else
 							{
-								if (push_list[x]->owner->NPC && !G_ControlledByPlayer(push_list[x]->owner))
+								if (push_target[x]->owner->NPC && !G_ControlledByPlayer(push_target[x]->owner))
 								{
-									WP_SaberDrop(push_list[x]->owner, push_list[x]);
+									WP_SaberDrop(push_target[x]->owner, push_target[x]);
 								}
 								else
 								{
-									WP_SaberReturn(push_list[x]->owner, push_list[x]);
+									WP_SaberReturn(push_target[x]->owner, push_target[x]);
 								}
 							}
 						}
 						//different effect?
 					}
 				}
-				else if (push_list[x]->s.eType == ET_MISSILE
-					&& push_list[x]->s.pos.trType != TR_STATIONARY
-					&& (push_list[x]->s.pos.trType != TR_INTERPOLATE || push_list[x]->s.weapon != WP_THERMAL))
+				else if (push_target[x]->s.eType == ET_MISSILE
+					&& push_target[x]->s.pos.trType != TR_STATIONARY
+					&& (push_target[x]->s.pos.trType != TR_INTERPOLATE || push_target[x]->s.weapon != WP_THERMAL))
 					//rolling and stationary thermal detonators are dealt with below
 				{
 					vec3_t dir2_me;
-					VectorSubtract(self->currentOrigin, push_list[x]->currentOrigin, dir2_me);
-					float dot = DotProduct(push_list[x]->s.pos.trDelta, dir2_me);
+					VectorSubtract(self->currentOrigin, push_target[x]->currentOrigin, dir2_me);
+					float dot = DotProduct(push_target[x]->s.pos.trDelta, dir2_me);
 					if (pull)
 					{
 						//deflect rather than reflect?
 					}
 					else
 					{
-						if (push_list[x]->s.eFlags & EF_MISSILE_STICK)
+						if (push_target[x]->s.eFlags & EF_MISSILE_STICK)
 						{
 							//caught a sticky in-air
-							push_list[x]->s.eType = ET_MISSILE;
-							push_list[x]->s.eFlags &= ~EF_MISSILE_STICK;
-							push_list[x]->s.eFlags |= EF_BOUNCE_HALF;
-							push_list[x]->splashDamage /= 3;
-							push_list[x]->splashRadius /= 3;
-							push_list[x]->e_ThinkFunc = thinkF_WP_Explode;
-							push_list[x]->nextthink = level.time + Q_irand(500, 3000);
+							push_target[x]->s.eType = ET_MISSILE;
+							push_target[x]->s.eFlags &= ~EF_MISSILE_STICK;
+							push_target[x]->s.eFlags |= EF_BOUNCE_HALF;
+							push_target[x]->splashDamage /= 3;
+							push_target[x]->splashRadius /= 3;
+							push_target[x]->e_ThinkFunc = thinkF_WP_Explode;
+							push_target[x]->nextthink = level.time + Q_irand(500, 3000);
 						}
 						if (dot >= 0)
 						{
@@ -23037,39 +23045,39 @@ void ForceThrow_JKA(gentity_t* self, qboolean pull, qboolean fake)
 							{
 								if (is_class_guard)
 								{
-									G_MissileBouncedoffSaber(self, push_list[x], forward);
+									G_MissileBouncedoffSaber(self, push_target[x], forward);
 								}
 								else
 								{
-									G_ReflectMissileNPC(self, push_list[x], forward);
+									G_ReflectMissileNPC(self, push_target[x], forward);
 								}
 							}
 							else
 							{
 								if (g_SerenityJediEngineMode->integer)
 								{
-									G_ReflectMissileAuto(self, push_list[x], forward);
+									G_ReflectMissileAuto(self, push_target[x], forward);
 								}
 								else
 								{
-									G_ReflectMissile_JKA(self, push_list[x], forward);
+									G_ReflectMissile_JKA(self, push_target[x], forward);
 								}
 							}
 						}
 						else
 						{
-							VectorScale(push_list[x]->s.pos.trDelta, 1.25f, push_list[x]->s.pos.trDelta);
+							VectorScale(push_target[x]->s.pos.trDelta, 1.25f, push_target[x]->s.pos.trDelta);
 						}
 					}
-					if (push_list[x]->s.eType == ET_MISSILE
-						&& push_list[x]->s.weapon == WP_ROCKET_LAUNCHER
-						&& push_list[x]->damage < 60)
+					if (push_target[x]->s.eType == ET_MISSILE
+						&& push_target[x]->s.weapon == WP_ROCKET_LAUNCHER
+						&& push_target[x]->damage < 60)
 					{
 						//pushing away a rocket raises it's damage to the max for NPCs
-						push_list[x]->damage = 60;
+						push_target[x]->damage = 60;
 					}
 				}
-				else if (push_list[x]->svFlags & SVF_GLASS_BRUSH)
+				else if (push_target[x]->svFlags & SVF_GLASS_BRUSH)
 				{
 					//break the glass
 					trace_t trace;
@@ -23081,7 +23089,7 @@ void ForceThrow_JKA(gentity_t* self, qboolean pull, qboolean fake)
 					VectorMA(self->client->renderInfo.eyePoint, radius, forward, end);
 					gi.trace(&trace, self->client->renderInfo.eyePoint, vec3_origin, vec3_origin, end, self->s.number,
 						MASK_SHOT, static_cast<EG2_Collision>(0), 0);
-					if (trace.entity_num != push_list[x]->s.number || trace.fraction == 1.0 || trace.allsolid || trace.
+					if (trace.entity_num != push_target[x]->s.number || trace.fraction == 1.0 || trace.allsolid || trace.
 						startsolid)
 					{
 						//must be pointing right at it
@@ -23103,31 +23111,31 @@ void ForceThrow_JKA(gentity_t* self, qboolean pull, qboolean fake)
 					}
 					VectorScale(push_dir, damage, push_dir);
 
-					G_Damage(push_list[x], self, self, push_dir, trace.endpos, damage, 0, MOD_UNKNOWN);
+					G_Damage(push_target[x], self, self, push_dir, trace.endpos, damage, 0, MOD_UNKNOWN);
 				}
-				else if (!Q_stricmp("func_static", push_list[x]->classname))
+				else if (!Q_stricmp("func_static", push_target[x]->classname))
 				{
 					//force-usable func_static
-					if (!pull && push_list[x]->spawnflags & 1/*F_PUSH*/)
+					if (!pull && push_target[x]->spawnflags & 1/*F_PUSH*/)
 					{
-						if (push_list[x]->NPC_targetname == nullptr
-							|| self->targetname && Q_stricmp(push_list[x]->NPC_targetname, self->targetname) == 0)
+						if (push_target[x]->NPC_targetname == nullptr
+							|| self->targetname && Q_stricmp(push_target[x]->NPC_targetname, self->targetname) == 0)
 						{
 							//anyone can pull it or only 1 person can push it and it's me
-							GEntity_UseFunc(push_list[x], self, self);
+							GEntity_UseFunc(push_target[x], self, self);
 						}
 					}
-					else if (pull && push_list[x]->spawnflags & 2/*F_PULL*/)
+					else if (pull && push_target[x]->spawnflags & 2/*F_PULL*/)
 					{
-						if (push_list[x]->NPC_targetname == nullptr
-							|| self->targetname && Q_stricmp(push_list[x]->NPC_targetname, self->NPC_targetname) == 0)
+						if (push_target[x]->NPC_targetname == nullptr
+							|| self->targetname && Q_stricmp(push_target[x]->NPC_targetname, self->NPC_targetname) == 0)
 						{
 							//anyone can push it or only 1 person can push it and it's me
-							GEntity_UseFunc(push_list[x], self, self);
+							GEntity_UseFunc(push_target[x], self, self);
 						}
 					}
 				}
-				else if (!Q_stricmp("func_door", push_list[x]->classname) && push_list[x]->spawnflags & 2)
+				else if (!Q_stricmp("func_door", push_target[x]->classname) && push_target[x]->spawnflags & 2)
 				{
 					//push/pull the door
 					vec3_t pos1, pos2;
@@ -23137,43 +23145,43 @@ void ForceThrow_JKA(gentity_t* self, qboolean pull, qboolean fake)
 					VectorMA(self->client->renderInfo.eyePoint, radius, forward, end);
 					gi.trace(&tr, self->client->renderInfo.eyePoint, vec3_origin, vec3_origin, end, self->s.number,
 						MASK_SHOT, static_cast<EG2_Collision>(0), 0);
-					if (tr.entity_num != push_list[x]->s.number || tr.fraction == 1.0 || tr.allsolid || tr.startsolid)
+					if (tr.entity_num != push_target[x]->s.number || tr.fraction == 1.0 || tr.allsolid || tr.startsolid)
 					{
 						//must be pointing right at it
 						continue;
 					}
 
-					if (VectorCompare(vec3_origin, push_list[x]->s.origin))
+					if (VectorCompare(vec3_origin, push_target[x]->s.origin))
 					{
 						//does not have an origin brush, so pos1 & pos2 are relative to world origin, need to calc center
-						VectorSubtract(push_list[x]->absmax, push_list[x]->absmin, size);
-						VectorMA(push_list[x]->absmin, 0.5, size, center);
-						if (push_list[x]->spawnflags & 1 && push_list[x]->moverState == MOVER_POS1)
+						VectorSubtract(push_target[x]->absmax, push_target[x]->absmin, size);
+						VectorMA(push_target[x]->absmin, 0.5, size, center);
+						if (push_target[x]->spawnflags & 1 && push_target[x]->moverState == MOVER_POS1)
 						{
 							//if at pos1 and started open, make sure we get the center where it *started* because we're going to add back in the relative values pos1 and pos2
-							VectorSubtract(center, push_list[x]->pos1, center);
+							VectorSubtract(center, push_target[x]->pos1, center);
 						}
-						else if (!(push_list[x]->spawnflags & 1) && push_list[x]->moverState == MOVER_POS2)
+						else if (!(push_target[x]->spawnflags & 1) && push_target[x]->moverState == MOVER_POS2)
 						{
 							//if at pos2, make sure we get the center where it *started* because we're going to add back in the relative values pos1 and pos2
-							VectorSubtract(center, push_list[x]->pos2, center);
+							VectorSubtract(center, push_target[x]->pos2, center);
 						}
-						VectorAdd(center, push_list[x]->pos1, pos1);
-						VectorAdd(center, push_list[x]->pos2, pos2);
+						VectorAdd(center, push_target[x]->pos1, pos1);
+						VectorAdd(center, push_target[x]->pos2, pos2);
 					}
 					else
 					{
 						//actually has an origin, pos1 and pos2 are absolute
-						VectorCopy(push_list[x]->currentOrigin, center);
-						VectorCopy(push_list[x]->pos1, pos1);
-						VectorCopy(push_list[x]->pos2, pos2);
+						VectorCopy(push_target[x]->currentOrigin, center);
+						VectorCopy(push_target[x]->pos1, pos1);
+						VectorCopy(push_target[x]->pos2, pos2);
 					}
 
 					if (Distance(pos1, self->client->renderInfo.eyePoint) < Distance(
 						pos2, self->client->renderInfo.eyePoint))
 					{
 						//pos1 is closer
-						if (push_list[x]->moverState == MOVER_POS1)
+						if (push_target[x]->moverState == MOVER_POS1)
 						{
 							//at the closest pos
 							if (pull)
@@ -23182,7 +23190,7 @@ void ForceThrow_JKA(gentity_t* self, qboolean pull, qboolean fake)
 								continue;
 							}
 						}
-						else if (push_list[x]->moverState == MOVER_POS2)
+						else if (push_target[x]->moverState == MOVER_POS2)
 						{
 							//at farthest pos
 							if (!pull)
@@ -23195,7 +23203,7 @@ void ForceThrow_JKA(gentity_t* self, qboolean pull, qboolean fake)
 					else
 					{
 						//pos2 is closer
-						if (push_list[x]->moverState == MOVER_POS1)
+						if (push_target[x]->moverState == MOVER_POS1)
 						{
 							//at the farthest pos
 							if (!pull)
@@ -23204,7 +23212,7 @@ void ForceThrow_JKA(gentity_t* self, qboolean pull, qboolean fake)
 								continue;
 							}
 						}
-						else if (push_list[x]->moverState == MOVER_POS2)
+						else if (push_target[x]->moverState == MOVER_POS2)
 						{
 							//at closest pos
 							if (pull)
@@ -23214,11 +23222,11 @@ void ForceThrow_JKA(gentity_t* self, qboolean pull, qboolean fake)
 							}
 						}
 					}
-					GEntity_UseFunc(push_list[x], self, self);
+					GEntity_UseFunc(push_target[x], self, self);
 				}
-				else if (push_list[x]->s.eType == ET_MISSILE /*thermal resting on ground*/
-					|| push_list[x]->s.eType == ET_ITEM
-					|| push_list[x]->e_ThinkFunc == thinkF_G_RunObject || Q_stricmp("limb", push_list[x]->classname) ==
+				else if (push_target[x]->s.eType == ET_MISSILE /*thermal resting on ground*/
+					|| push_target[x]->s.eType == ET_ITEM
+					|| push_target[x]->e_ThinkFunc == thinkF_G_RunObject || Q_stricmp("limb", push_target[x]->classname) ==
 					0)
 				{
 					//general object, toss it
@@ -23228,43 +23236,43 @@ void ForceThrow_JKA(gentity_t* self, qboolean pull, qboolean fake)
 
 					if (pull)
 					{
-						if (push_list[x]->s.eType == ET_ITEM)
+						if (push_target[x]->s.eType == ET_ITEM)
 						{
 							//pull it to a little higher point
 							vec3_t adjustedOrg;
 							VectorCopy(self->currentOrigin, adjustedOrg);
 							adjustedOrg[2] += self->maxs[2] / 3;
-							VectorSubtract(adjustedOrg, push_list[x]->currentOrigin, push_dir);
+							VectorSubtract(adjustedOrg, push_target[x]->currentOrigin, push_dir);
 						}
 						else if (self->enemy //I have an enemy
-							//&& push_list[x]->s.eType != ET_ITEM //not an item
+							//&& push_target[x]->s.eType != ET_ITEM //not an item
 							&& self->client->ps.forcePowerLevel[FP_PUSH] > FORCE_LEVEL_2 //have push 3 or greater
-							&& InFront(push_list[x]->currentOrigin, self->currentOrigin, self->currentAngles, 0.25f)
+							&& InFront(push_target[x]->currentOrigin, self->currentOrigin, self->currentAngles, 0.25f)
 							//object is generally in front of me
 							&& InFront(self->enemy->currentOrigin, self->currentOrigin, self->currentAngles, 0.75f)
 							//enemy is pretty much right in front of me
-							&& !InFront(push_list[x]->currentOrigin, self->enemy->currentOrigin,
+							&& !InFront(push_target[x]->currentOrigin, self->enemy->currentOrigin,
 								self->enemy->currentAngles, -0.25f) //object is generally behind enemy
 							&& (self->NPC && (no_resist || is_class_guard || Q_irand(0, RANK_CAPTAIN) < self->NPC->rank)
 								//NPC with enough skill
 								|| self->s.number < MAX_CLIENTS))
 						{
 							//if I have an auto-enemy & he's in front of me, push it toward him!
-							VectorSubtract(self->enemy->currentOrigin, push_list[x]->currentOrigin, push_dir);
+							VectorSubtract(self->enemy->currentOrigin, push_target[x]->currentOrigin, push_dir);
 						}
 						else
 						{
-							VectorSubtract(self->currentOrigin, push_list[x]->currentOrigin, push_dir);
+							VectorSubtract(self->currentOrigin, push_target[x]->currentOrigin, push_dir);
 						}
 						knockback += VectorNormalize(push_dir);
 						if (knockback > 200)
 						{
 							knockback = 200;
 						}
-						if (push_list[x]->s.eType == ET_ITEM
-							&& push_list[x]->item
-							&& push_list[x]->item->giType == IT_HOLDABLE
-							&& push_list[x]->item->giTag == INV_SECURITY_KEY)
+						if (push_target[x]->s.eType == ET_ITEM
+							&& push_target[x]->item
+							&& push_target[x]->item->giType == IT_HOLDABLE
+							&& push_target[x]->item->giTag == INV_SECURITY_KEY)
 						{
 							//security keys are pulled with less enthusiasm
 							if (knockback > 100)
@@ -23280,24 +23288,24 @@ void ForceThrow_JKA(gentity_t* self, qboolean pull, qboolean fake)
 					else
 					{
 						if (self->enemy //I have an enemy
-							&& push_list[x]->s.eType != ET_ITEM //not an item
+							&& push_target[x]->s.eType != ET_ITEM //not an item
 							&& self->client->ps.forcePowerLevel[FP_PUSH] > FORCE_LEVEL_2 //have push 3 or greater
-							&& InFront(push_list[x]->currentOrigin, self->currentOrigin, self->currentAngles, 0.25f)
+							&& InFront(push_target[x]->currentOrigin, self->currentOrigin, self->currentAngles, 0.25f)
 							//object is generally in front of me
 							&& InFront(self->enemy->currentOrigin, self->currentOrigin, self->currentAngles, 0.75f)
 							//enemy is pretty much right in front of me
-							&& InFront(push_list[x]->currentOrigin, self->enemy->currentOrigin,
+							&& InFront(push_target[x]->currentOrigin, self->enemy->currentOrigin,
 								self->enemy->currentAngles, 0.25f) //object is generally in front of enemy
 							&& (self->NPC && (no_resist || is_class_guard || Q_irand(0, RANK_CAPTAIN) < self->NPC->rank)
 								//NPC with enough skill
 								|| self->s.number < MAX_CLIENTS))
 						{
 							//if I have an auto-enemy & he's in front of me, push it toward him!
-							VectorSubtract(self->enemy->currentOrigin, push_list[x]->currentOrigin, push_dir);
+							VectorSubtract(self->enemy->currentOrigin, push_target[x]->currentOrigin, push_dir);
 						}
 						else
 						{
-							VectorSubtract(push_list[x]->currentOrigin, self->currentOrigin, push_dir);
+							VectorSubtract(push_target[x]->currentOrigin, self->currentOrigin, push_dir);
 						}
 						knockback -= VectorNormalize(push_dir);
 						if (knockback < 100)
@@ -23305,18 +23313,18 @@ void ForceThrow_JKA(gentity_t* self, qboolean pull, qboolean fake)
 							knockback = 100;
 						}
 					}
-					VectorCopy(push_list[x]->currentOrigin, push_list[x]->s.pos.trBase);
-					push_list[x]->s.pos.trTime = level.time; // move a bit on the very first frame
-					if (push_list[x]->s.pos.trType != TR_INTERPOLATE)
+					VectorCopy(push_target[x]->currentOrigin, push_target[x]->s.pos.trBase);
+					push_target[x]->s.pos.trTime = level.time; // move a bit on the very first frame
+					if (push_target[x]->s.pos.trType != TR_INTERPOLATE)
 					{
 						//don't do this to rolling missiles
-						push_list[x]->s.pos.trType = TR_GRAVITY;
+						push_target[x]->s.pos.trType = TR_GRAVITY;
 					}
 
-					if (push_list[x]->e_ThinkFunc == thinkF_G_RunObject && push_list[x]->physicsBounce)
+					if (push_target[x]->e_ThinkFunc == thinkF_G_RunObject && push_target[x]->physicsBounce)
 					{
 						//it's a pushable misc_model_breakable, use it's mass instead of our one-size-fits-all mass
-						mass = push_list[x]->physicsBounce; //same as push_list[x]->mass, right?
+						mass = push_target[x]->physicsBounce; //same as push_target[x]->mass, right?
 					}
 					if (mass < 50)
 					{
@@ -23332,49 +23340,49 @@ void ForceThrow_JKA(gentity_t* self, qboolean pull, qboolean fake)
 					{
 						VectorScale(push_dir, g_knockback->value * knockback / mass, kvel);
 					}
-					VectorAdd(push_list[x]->s.pos.trDelta, kvel, push_list[x]->s.pos.trDelta);
+					VectorAdd(push_target[x]->s.pos.trDelta, kvel, push_target[x]->s.pos.trDelta);
 					if (g_gravity->value > 0)
 					{
-						if (push_list[x]->s.pos.trDelta[2] < knockback)
+						if (push_target[x]->s.pos.trDelta[2] < knockback)
 						{
-							push_list[x]->s.pos.trDelta[2] = knockback;
+							push_target[x]->s.pos.trDelta[2] = knockback;
 						}
 					}
 					//no trDuration?
-					if (push_list[x]->e_ThinkFunc != thinkF_G_RunObject)
+					if (push_target[x]->e_ThinkFunc != thinkF_G_RunObject)
 					{
 						//objects spin themselves?
-						push_list[x]->s.apos.trTime = level.time;
-						push_list[x]->s.apos.trType = TR_LINEAR;
-						VectorClear(push_list[x]->s.apos.trDelta);
-						push_list[x]->s.apos.trDelta[1] = Q_irand(-800, 800);
+						push_target[x]->s.apos.trTime = level.time;
+						push_target[x]->s.apos.trType = TR_LINEAR;
+						VectorClear(push_target[x]->s.apos.trDelta);
+						push_target[x]->s.apos.trDelta[1] = Q_irand(-800, 800);
 					}
 
-					if (Q_stricmp("limb", push_list[x]->classname) == 0)
+					if (Q_stricmp("limb", push_target[x]->classname) == 0)
 					{
 						//make sure it runs it's physics
-						push_list[x]->e_ThinkFunc = thinkF_LimbThink;
-						push_list[x]->nextthink = level.time + FRAMETIME;
+						push_target[x]->e_ThinkFunc = thinkF_LimbThink;
+						push_target[x]->nextthink = level.time + FRAMETIME;
 					}
-					push_list[x]->forcePushTime = level.time + 600; // let the push effect last for 600 ms
-					push_list[x]->forcePuller = self->s.number; //remember this regardless
-					if (push_list[x]->item && push_list[x]->item->giTag == INV_SECURITY_KEY)
+					push_target[x]->forcePushTime = level.time + 600; // let the push effect last for 600 ms
+					push_target[x]->forcePuller = self->s.number; //remember this regardless
+					if (push_target[x]->item && push_target[x]->item->giTag == INV_SECURITY_KEY)
 					{
-						AddSightEvent(player, push_list[x]->currentOrigin, 128, AEL_DISCOVERED);
+						AddSightEvent(player, push_target[x]->currentOrigin, 128, AEL_DISCOVERED);
 						//security keys are more important
 					}
 					else
 					{
-						AddSightEvent(player, push_list[x]->currentOrigin, 128, AEL_SUSPICIOUS);
+						AddSightEvent(player, push_target[x]->currentOrigin, 128, AEL_SUSPICIOUS);
 						//hmm... or should this always be discovered?
 					}
 				}
-				else if (push_list[x]->s.weapon == WP_TURRET
-					&& !Q_stricmp("PAS", push_list[x]->classname)
-					&& push_list[x]->s.apos.trType == TR_STATIONARY)
+				else if (push_target[x]->s.weapon == WP_TURRET
+					&& !Q_stricmp("PAS", push_target[x]->classname)
+					&& push_target[x]->s.apos.trType == TR_STATIONARY)
 				{
 					//a portable turret
-					WP_KnockdownTurret(push_list[x]);
+					WP_KnockdownTurret(push_target[x]);
 				}
 			}
 		}
@@ -23476,7 +23484,7 @@ void ForceThrow_MD(gentity_t* self, qboolean pull, qboolean fake) //MD Mode Push
 {
 	//shove things in front of you away
 	gentity_t* forward_ent = nullptr;
-	gentity_t* push_list[MAX_GENTITIES];
+	gentity_t* push_target[MAX_GENTITIES];
 	int num_listed_entities = 0;
 	int ent_count = 0;
 	int radius;
@@ -23664,9 +23672,9 @@ void ForceThrow_MD(gentity_t* self, qboolean pull, qboolean fake) //MD Mode Push
 			anim = BOTH_FORCEPUSH;
 		}
 
-		if (self->s.number >= MAX_CLIENTS && !G_ControlledByPlayer(self))
+		if (self->s.number >= MAX_CLIENTS && !G_ControlledByPlayer(self)) // npc push sounds
 		{
-			if (self->client->ps.forcePower < 30)
+			if (self->client->ps.forcePower < 50)
 			{
 				sound_index = G_SoundIndex("sound/weapons/force/pushlow.mp3");
 			}
@@ -23679,26 +23687,16 @@ void ForceThrow_MD(gentity_t* self, qboolean pull, qboolean fake) //MD Mode Push
 		{
 			if (g_SerenityJediEngineMode->integer)
 			{
-				if (self->client->ps.forcePower < 30
-					|| PM_InKnockDown(&self->client->ps))
+				if (self->client->ps.forcePower < 30 || PM_InKnockDown(&self->client->ps))
 				{
 					sound_index = G_SoundIndex("sound/weapons/force/pushlow.mp3");
 				}
 				else
 				{
-					if (g_SerenityJediEngineMode->integer == 2 && self->client->ps.forcePowerLevel[FP_PUSH] >
-						FORCE_LEVEL_2)
+					if (self->client->ps.groundEntityNum == ENTITYNUM_NONE &&
+						self->client->ps.forcePower > 50)
 					{
-						if (self->client->ps.groundEntityNum == ENTITYNUM_NONE &&
-							self->client->ps.forcePower > 50 &&
-							self->client->ps.blockPoints > 90)
-						{
-							sound_index = G_SoundIndex("sound/weapons/force/pushhard.mp3");
-						}
-						else
-						{
-							sound_index = G_SoundIndex("sound/weapons/force/push_md.mp3");
-						}
+						sound_index = G_SoundIndex("sound/weapons/force/pushhard.mp3");
 					}
 					else
 					{
@@ -23799,7 +23797,7 @@ void ForceThrow_MD(gentity_t* self, qboolean pull, qboolean fake) //MD Mode Push
 							|| self->targetname && Q_stricmp(forward_ent->NPC_targetname, self->targetname) == 0)
 						{
 							//anyone can push it or only 1 person can push it and it's me
-							push_list[0] = forward_ent;
+							push_target[0] = forward_ent;
 							ent_count = num_listed_entities = 1;
 						}
 					}
@@ -23956,7 +23954,7 @@ void ForceThrow_MD(gentity_t* self, qboolean pull, qboolean fake) //MD Mode Push
 			}
 
 			// ok, we are within the radius, add us to the incoming list
-			push_list[ent_count] = ent;
+			push_target[ent_count] = ent;
 			ent_count++;
 		}
 	}
@@ -23966,66 +23964,68 @@ void ForceThrow_MD(gentity_t* self, qboolean pull, qboolean fake) //MD Mode Push
 		int actual_cost;
 		for (int x = 0; x < ent_count; x++)
 		{
-			if (push_list[x]->client)
+			if (push_target[x]->client)
 			{
 				float knockback = pull ? 0 : 200;
 
 				//SIGH band-aid...
-				if (push_list[x]->s.number >= MAX_CLIENTS
+				if (push_target[x]->s.number >= MAX_CLIENTS
 					&& self->s.number < MAX_CLIENTS)
 				{
-					if (push_list[x]->client->ps.forcePowersActive & 1 << FP_GRIP
-						&& push_list[x]->client->ps.forceGripEntityNum == self->s.number)
+					if (push_target[x]->client->ps.forcePowersActive & 1 << FP_GRIP
+						&& push_target[x]->client->ps.forceGripEntityNum == self->s.number)
 					{
-						WP_ForcePowerStop(push_list[x], FP_GRIP);
+						WP_ForcePowerStop(push_target[x], FP_GRIP);
 					}
-					if (push_list[x]->client->ps.forcePowersActive & 1 << FP_GRASP
-						&& push_list[x]->client->ps.forceGripEntityNum == self->s.number)
+					if (push_target[x]->client->ps.forcePowersActive & 1 << FP_GRASP
+						&& push_target[x]->client->ps.forceGripEntityNum == self->s.number)
 					{
-						WP_ForcePowerStop(push_list[x], FP_GRASP);
+						WP_ForcePowerStop(push_target[x], FP_GRASP);
 					}
-					if (push_list[x]->client->ps.forcePowersActive & 1 << FP_DRAIN
-						&& push_list[x]->client->ps.forceDrainEntityNum == self->s.number)
+					if (push_target[x]->client->ps.forcePowersActive & 1 << FP_DRAIN
+						&& push_target[x]->client->ps.forceDrainEntityNum == self->s.number)
 					{
-						WP_ForcePowerStop(push_list[x], FP_DRAIN);
+						WP_ForcePowerStop(push_target[x], FP_DRAIN);
 					}
 				}
 
-				if (rosh_being_healed(push_list[x]))
+				if (rosh_being_healed(push_target[x]))
 				{
 					continue;
 				}
-				if (push_list[x]->client->NPC_class == CLASS_HAZARD_TROOPER
-					&& push_list[x]->health > 0)
+				if (push_target[x]->client->NPC_class == CLASS_HAZARD_TROOPER
+					&& push_target[x]->health > 0)
 				{
 					//living hazard troopers resist push/pull
-					WP_ForceThrowHazardTrooper(self, push_list[x], pull);
+					WP_ForceThrowHazardTrooper(self, push_target[x], pull);
 					continue;
 				}
 				if (fake && !is_class_guard)
 				{
 					//always resist
-					WP_ResistForcePush(push_list[x], self, qfalse);
+					WP_ResistForcePush(push_target[x], self, qfalse);
 					continue;
 				}
-				int power_level, powerUse;
+
+				int power_level, power_use;
+
 				if (pull)
 				{
 					power_level = self->client->ps.forcePowerLevel[FP_PULL];
-					powerUse = FP_PULL;
+					power_use = FP_PULL;
 				}
 				else
 				{
 					power_level = self->client->ps.forcePowerLevel[FP_PUSH];
-					powerUse = FP_PUSH;
+					power_use = FP_PUSH;
 				}
-				int mod_power_level = WP_AbsorbConversion(push_list[x],
-					push_list[x]->client->ps.forcePowerLevel[FP_ABSORB], powerUse,
+				int mod_power_level = WP_AbsorbConversion(push_target[x],
+					push_target[x]->client->ps.forcePowerLevel[FP_ABSORB], power_use,
 					power_level,
-					forcePowerNeeded[self->client->ps.forcePowerLevel[powerUse]]);
-				if (push_list[x]->client->NPC_class == CLASS_ASSASSIN_DROID ||
-					push_list[x]->client->NPC_class == CLASS_HAZARD_TROOPER ||
-					push_list[x]->client->NPC_class == CLASS_DROIDEKA)
+					forcePowerNeeded[self->client->ps.forcePowerLevel[power_use]]);
+				if (push_target[x]->client->NPC_class == CLASS_ASSASSIN_DROID ||
+					push_target[x]->client->NPC_class == CLASS_HAZARD_TROOPER ||
+					push_target[x]->client->NPC_class == CLASS_DROIDEKA)
 				{
 					mod_power_level = 0; // divides throw by 10
 				}
@@ -24033,128 +24033,125 @@ void ForceThrow_MD(gentity_t* self, qboolean pull, qboolean fake) //MD Mode Push
 				//First, if this is the player we're push/pulling, see if he can counter it
 				if (mod_power_level != -1
 					&& !no_resist && !is_class_guard
-					&& InFront(self->currentOrigin, push_list[x]->client->renderInfo.eyePoint,
-						push_list[x]->client->ps.viewangles, 0.3f))
+					&& InFront(self->currentOrigin, push_target[x]->client->renderInfo.eyePoint,
+						push_target[x]->client->ps.viewangles, 0.3f))
 				{
 					//absorbed and I'm in front of them
 					//counter it
-					if (push_list[x]->client->ps.forcePowerLevel[FP_ABSORB] > FORCE_LEVEL_2)
+					if (push_target[x]->client->ps.forcePowerLevel[FP_ABSORB] > FORCE_LEVEL_2)
 					{
 						//no reaction at all
 					}
 					else
 					{
-						WP_ResistForcePush(push_list[x], self, qfalse);
-						push_list[x]->client->ps.saber_move = push_list[x]->client->ps.saberBounceMove = LS_READY;
+						WP_ResistForcePush(push_target[x], self, qfalse);
+						push_target[x]->client->ps.saber_move = push_target[x]->client->ps.saberBounceMove = LS_READY;
 						//don't finish whatever saber anim you may have been in
-						push_list[x]->client->ps.saberBlocked = BLOCKED_NONE;
+						push_target[x]->client->ps.saberBlocked = BLOCKED_NONE;
 					}
 					continue;
 				}
-				if (!push_list[x]->s.number && !is_class_guard)
+				if (!push_target[x]->s.number && !is_class_guard)
 				{
 					//player
-					if (!no_resist && !is_class_guard && (ShouldPlayerResistForceThrow(push_list[x], self, pull) ||
-						PlayerisResistingForceThrow(push_list[x], self))
-						&& push_list[x]->client->ps.saberFatigueChainCount < MISHAPLEVEL_HEAVY)
+					if (!no_resist && !is_class_guard && (ShouldPlayerResistForceThrow(push_target[x], self, pull) ||
+						PlayerisResistingForceThrow(push_target[x], self))
+						&& push_target[x]->client->ps.saberFatigueChainCount < MISHAPLEVEL_HEAVY)
 					{
-						WP_ResistForcePush(push_list[x], self, qfalse);
-						push_list[x]->client->ps.saber_move = push_list[x]->client->ps.saberBounceMove = LS_READY;
+						WP_ResistForcePush(push_target[x], self, qfalse);
+						push_target[x]->client->ps.saber_move = push_target[x]->client->ps.saberBounceMove = LS_READY;
 						//don't finish whatever saber anim you may have been in
-						push_list[x]->client->ps.saberBlocked = BLOCKED_NONE;
+						push_target[x]->client->ps.saberBlocked = BLOCKED_NONE;
 						continue;
 					}
 				}
-				else if (push_list[x]->client && jedi_waiting_ambush(push_list[x]))
+				else if (push_target[x]->client && jedi_waiting_ambush(push_target[x]))
 				{
-					WP_ForceKnockdown(push_list[x], self, pull, qtrue, qfalse);
+					WP_ForceKnockdown(push_target[x], self, pull, qtrue, qfalse);
 					if (g_SerenityJediEngineMode->integer)
 					{
-						sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
 						if (pull)
 						{
 							//
 						}
 						else
 						{
-							PushDamage(self, push_list[x], tr.endpos, damage_level);
+							PushDamage(self, push_target[x], tr.endpos, damage_level);
 						}
 					}
 					continue;
 				}
-				else if (PM_SaberInBrokenParry(push_list[x]->client->ps.saber_move))
+				else if (PM_SaberInBrokenParry(push_target[x]->client->ps.saber_move))
 				{
 					//do a knockdown if fairly close
-					WP_ForceKnockdown(push_list[x], self, pull, qtrue, qfalse);
+					WP_ForceKnockdown(push_target[x], self, pull, qtrue, qfalse);
 					if (g_SerenityJediEngineMode->integer)
 					{
-						sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
 						if (pull)
 						{
 							//
 						}
 						else
 						{
-							PushDamage(self, push_list[x], tr.endpos, damage_level);
+							PushDamage(self, push_target[x], tr.endpos, damage_level);
 						}
 					}
 					continue;
 				}
-				else if (push_list[x]->client->NPC_class == CLASS_GUARD || jedi_jedi_master_low(push_list[x]))
+				else if (push_target[x]->client->NPC_class == CLASS_GUARD || jedi_jedi_master_low(push_target[x]))
 				{
 					//do a knockdown hes a twat
-					WP_ForceKnockdown(push_list[x], self, pull, qtrue, qfalse);
+					WP_ForceKnockdown(push_target[x], self, pull, qtrue, qfalse);
 					if (g_SerenityJediEngineMode->integer)
 					{
-						sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
 						if (pull)
 						{
 							//
 						}
 						else
 						{
-							PushDamage(self, push_list[x], tr.endpos, damage_level);
+							PushDamage(self, push_target[x], tr.endpos, damage_level);
 						}
 					}
 					continue;
 				}
 
-				G_KnockOffVehicle(push_list[x], self, pull);
+				G_KnockOffVehicle(push_target[x], self, pull);
 
 				if (!pull
-					&& push_list[x]->client->ps.forceDrainEntityNum == self->s.number
+					&& push_target[x]->client->ps.forceDrainEntityNum == self->s.number
 					&& self->s.eFlags & EF_FORCE_DRAINED)
 				{
 					//stop them from draining me now, dammit!
-					WP_ForcePowerStop(push_list[x], FP_DRAIN);
+					WP_ForcePowerStop(push_target[x], FP_DRAIN);
 				}
 
 				//okay, everyone else (or player who couldn't resist it)...
-				if ((self->s.number == 0 && Q_irand(0, 2) || Q_irand(0, 2)) && push_list[x]->client && push_list[x]->
+				if ((self->s.number == 0 && Q_irand(0, 2) || Q_irand(0, 2)) && push_target[x]->client && push_target[x]->
 					health > 0 //a living client
-					&& push_list[x]->client->ps.weapon == WP_SABER //Jedi
-					&& push_list[x]->health > 0 //alive
-					&& push_list[x]->client->ps.forceRageRecoveryTime < level.time //not recovering from rage
+					&& push_target[x]->client->ps.weapon == WP_SABER //Jedi
+					&& push_target[x]->health > 0 //alive
+					&& push_target[x]->client->ps.forceRageRecoveryTime < level.time //not recovering from rage
 					&& (self->client->NPC_class != CLASS_DESANN && self->client->NPC_class != CLASS_SITHLORD && self->
 						client->NPC_class != CLASS_VADER && Q_stricmp("Yoda", self->NPC_type) || !Q_irand(0, 2))
 					//only 30% chance of resisting a Desann push
-					&& push_list[x]->client->ps.groundEntityNum != ENTITYNUM_NONE //on the ground
-					&& InFront(self->currentOrigin, push_list[x]->currentOrigin, push_list[x]->client->ps.viewangles,
+					&& push_target[x]->client->ps.groundEntityNum != ENTITYNUM_NONE //on the ground
+					&& InFront(self->currentOrigin, push_target[x]->currentOrigin, push_target[x]->client->ps.viewangles,
 						0.3f) //I'm in front of him
-					&& (push_list[x]->client->ps.powerups[PW_FORCE_PUSH] > level.time || //he's pushing too
-						push_list[x]->s.number != 0 && push_list[x]->client->ps.weaponTime < level.time))
+					&& (push_target[x]->client->ps.powerups[PW_FORCE_PUSH] > level.time || //he's pushing too
+						push_target[x]->s.number != 0 && push_target[x]->client->ps.weaponTime < level.time))
 				{
 					//Jedi don't get pushed, they resist as long as they aren't already attacking and are on the ground
-					if (push_list[x]->client->ps.saberLockTime > level.time)
+					if (push_target[x]->client->ps.saberLockTime > level.time)
 					{
 						//they're in a lock
-						if (push_list[x]->client->ps.saberLockEnemy != self->s.number)
+						if (push_target[x]->client->ps.saberLockEnemy != self->s.number)
 						{
 							//they're not in a lock with me
 							continue;
 						}
 						if (pull || self->client->ps.forcePowerLevel[FP_PUSH] < FORCE_LEVEL_3 ||
-							push_list[x]->client->ps.forcePowerLevel[FP_PUSH] > FORCE_LEVEL_2)
+							push_target[x]->client->ps.forcePowerLevel[FP_PUSH] > FORCE_LEVEL_2)
 						{
 							//they're in a lock with me, but my push is too weak
 							continue;
@@ -24166,13 +24163,9 @@ void ForceThrow_MD(gentity_t* self, qboolean pull, qboolean fake) //MD Mode Push
 						{
 							self->client->ps.weaponTime = floor(self->client->ps.weaponTime * g_timescale->value);
 						}
-						if (g_SerenityJediEngineMode->integer)
-						{
-							sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
-						}
 					}
 					int resist_chance = Q_irand(0, 2);
-					if (push_list[x]->s.number >= MAX_CLIENTS)
+					if (push_target[x]->s.number >= MAX_CLIENTS)
 					{
 						//NPC
 						if (g_spskill->integer == 1)
@@ -24186,25 +24179,24 @@ void ForceThrow_MD(gentity_t* self, qboolean pull, qboolean fake) //MD Mode Push
 						&& mod_power_level == -1
 						&& self->client->ps.forcePowerLevel[FP_PUSH] > FORCE_LEVEL_2
 						&& !resist_chance
-						&& push_list[x]->client->ps.forcePowerLevel[FP_PUSH] < FORCE_LEVEL_3)
+						&& push_target[x]->client->ps.forcePowerLevel[FP_PUSH] < FORCE_LEVEL_3)
 					{
 						//a level 3 push can even knock down a jedi
-						if (PM_InKnockDown(&push_list[x]->client->ps))
+						if (PM_InKnockDown(&push_target[x]->client->ps))
 						{
 							//can't knock them down again
 							continue;
 						}
-						WP_ForceKnockdown(push_list[x], self, pull, qfalse, qtrue);
+						WP_ForceKnockdown(push_target[x], self, pull, qfalse, qtrue);
 						if (g_SerenityJediEngineMode->integer)
 						{
-							sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
 							if (pull)
 							{
 								//
 							}
 							else
 							{
-								PushDamage(self, push_list[x], tr.endpos, damage_level);
+								PushDamage(self, push_target[x], tr.endpos, damage_level);
 							}
 						}
 					}
@@ -24212,7 +24204,7 @@ void ForceThrow_MD(gentity_t* self, qboolean pull, qboolean fake) //MD Mode Push
 					{
 						if (!is_class_guard)
 						{
-							WP_ResistForcePush(push_list[x], self, qfalse);
+							WP_ResistForcePush(push_target[x], self, qfalse);
 						}
 					}
 				}
@@ -24220,60 +24212,59 @@ void ForceThrow_MD(gentity_t* self, qboolean pull, qboolean fake) //MD Mode Push
 				{
 					vec3_t push_dir;
 					//shove them
-					if (push_list[x]->NPC
-						&& push_list[x]->NPC->jumpState == JS_JUMPING)
+					if (push_target[x]->NPC
+						&& push_target[x]->NPC->jumpState == JS_JUMPING)
 					{
 						//don't interrupt a scripted jump
-						push_list[x]->forcePushTime = level.time + 600; // let the push effect last for 600 ms
+						push_target[x]->forcePushTime = level.time + 600; // let the push effect last for 600 ms
 						continue;
 					}
 
-					if (push_list[x]->s.number
-						&& (push_list[x]->message || push_list[x]->flags & FL_NO_KNOCKBACK))
+					if (push_target[x]->s.number
+						&& (push_target[x]->message || push_target[x]->flags & FL_NO_KNOCKBACK))
 					{
 						//an NPC who has a key
 						//don't push me... FIXME: maybe can pull the key off me?
-						WP_ForceKnockdown(push_list[x], self, pull, qfalse, qfalse);
+						WP_ForceKnockdown(push_target[x], self, pull, qfalse, qfalse);
 						if (g_SerenityJediEngineMode->integer)
 						{
-							sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
 							if (pull)
 							{
 								//
 							}
 							else
 							{
-								PushDamage(self, push_list[x], tr.endpos, damage_level);
+								PushDamage(self, push_target[x], tr.endpos, damage_level);
 							}
 						}
 						continue;
 					}
 					if (pull)
 					{
-						VectorSubtract(self->currentOrigin, push_list[x]->currentOrigin, push_dir);
+						VectorSubtract(self->currentOrigin, push_target[x]->currentOrigin, push_dir);
 						if (self->client->ps.forcePowerLevel[FP_PULL] >= FORCE_LEVEL_3
 							&& self->client->NPC_class == CLASS_KYLE
 							&& self->spawnflags & 1
 							&& TIMER_Done(self, "kyleTakesSaber")
-							&& push_list[x]->client
-							&& push_list[x]->client->ps.weapon == WP_SABER
-							&& !push_list[x]->client->ps.saberInFlight
-							&& push_list[x]->client->ps.saberEntityNum < ENTITYNUM_WORLD
-							&& !PM_InOnGroundAnim(&push_list[x]->client->ps))
+							&& push_target[x]->client
+							&& push_target[x]->client->ps.weapon == WP_SABER
+							&& !push_target[x]->client->ps.saberInFlight
+							&& push_target[x]->client->ps.saberEntityNum < ENTITYNUM_WORLD
+							&& !PM_InOnGroundAnim(&push_target[x]->client->ps))
 						{
 							vec3_t throw_vec;
 							VectorScale(push_dir, 10.0f, throw_vec);
-							WP_SaberLose(push_list[x], throw_vec);
-							NPC_SetAnim(push_list[x], SETANIM_BOTH, BOTH_LOSE_SABER,
+							WP_SaberLose(push_target[x], throw_vec);
+							NPC_SetAnim(push_target[x], SETANIM_BOTH, BOTH_LOSE_SABER,
 								SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
-							push_list[x]->client->ps.torsoAnimTimer += 500;
-							push_list[x]->client->ps.pm_time = push_list[x]->client->ps.weaponTime = push_list[x]->
+							push_target[x]->client->ps.torsoAnimTimer += 500;
+							push_target[x]->client->ps.pm_time = push_target[x]->client->ps.weaponTime = push_target[x]->
 								client->ps.torsoAnimTimer;
-							push_list[x]->client->ps.pm_flags |= PMF_TIME_KNOCKBACK;
-							push_list[x]->client->ps.saber_move = LS_NONE;
-							push_list[x]->aimDebounceTime = level.time + push_list[x]->client->ps.torsoAnimTimer;
-							VectorClear(push_list[x]->client->ps.velocity);
-							VectorClear(push_list[x]->client->ps.moveDir);
+							push_target[x]->client->ps.pm_flags |= PMF_TIME_KNOCKBACK;
+							push_target[x]->client->ps.saber_move = LS_NONE;
+							push_target[x]->aimDebounceTime = level.time + push_target[x]->client->ps.torsoAnimTimer;
+							VectorClear(push_target[x]->client->ps.velocity);
+							VectorClear(push_target[x]->client->ps.moveDir);
 							//Kyle will stand around for a bit, too...
 							self->client->ps.pm_time = self->client->ps.weaponTime = 2000;
 							self->client->ps.pm_flags |= PMF_TIME_KNOCKBACK;
@@ -24284,37 +24275,37 @@ void ForceThrow_MD(gentity_t* self, qboolean pull, qboolean fake) //MD Mode Push
 							VectorClear(self->client->ps.moveDir);
 							continue;
 						}
-						if (push_list[x]->NPC
-							&& push_list[x]->NPC->scriptFlags & SCF_DONT_FLEE)
+						if (push_target[x]->NPC
+							&& push_target[x]->NPC->scriptFlags & SCF_DONT_FLEE)
 						{
 							//*SIGH*... if an NPC can't flee, they can't run after and pick up their weapon, do don't drop it
 						}
 						else if (self->client->ps.forcePowerLevel[FP_PULL] > FORCE_LEVEL_1
-							&& push_list[x]->client->NPC_class != CLASS_ROCKETTROOPER
+							&& push_target[x]->client->NPC_class != CLASS_ROCKETTROOPER
 							//rockettroopers never drop their weapon
-							&& push_list[x]->client->NPC_class != CLASS_VEHICLE
-							&& push_list[x]->client->NPC_class != CLASS_BOBAFETT
-							&& push_list[x]->client->NPC_class != CLASS_MANDALORIAN
-							&& push_list[x]->client->NPC_class != CLASS_JANGO
-							&& push_list[x]->client->NPC_class != CLASS_JANGODUAL
-							&& push_list[x]->client->NPC_class != CLASS_TUSKEN
-							&& push_list[x]->client->NPC_class != CLASS_HAZARD_TROOPER
-							&& push_list[x]->client->NPC_class != CLASS_ASSASSIN_DROID
-							&& push_list[x]->client->NPC_class != CLASS_DROIDEKA
-							&& push_list[x]->client->NPC_class != CLASS_SBD
-							&& push_list[x]->s.weapon != WP_SABER
-							&& push_list[x]->s.weapon != WP_MELEE
-							&& push_list[x]->s.weapon != WP_THERMAL
-							&& push_list[x]->s.weapon != WP_CONCUSSION // so rax can't drop his
+							&& push_target[x]->client->NPC_class != CLASS_VEHICLE
+							&& push_target[x]->client->NPC_class != CLASS_BOBAFETT
+							&& push_target[x]->client->NPC_class != CLASS_MANDALORIAN
+							&& push_target[x]->client->NPC_class != CLASS_JANGO
+							&& push_target[x]->client->NPC_class != CLASS_JANGODUAL
+							&& push_target[x]->client->NPC_class != CLASS_TUSKEN
+							&& push_target[x]->client->NPC_class != CLASS_HAZARD_TROOPER
+							&& push_target[x]->client->NPC_class != CLASS_ASSASSIN_DROID
+							&& push_target[x]->client->NPC_class != CLASS_DROIDEKA
+							&& push_target[x]->client->NPC_class != CLASS_SBD
+							&& push_target[x]->s.weapon != WP_SABER
+							&& push_target[x]->s.weapon != WP_MELEE
+							&& push_target[x]->s.weapon != WP_THERMAL
+							&& push_target[x]->s.weapon != WP_CONCUSSION // so rax can't drop his
 							)
 						{
 							//yank the weapon - NOTE: level 1 just knocks them down, not take weapon
 							//FIXME: weapon yank anim if not a knockdown?
-							if (InFront(self->currentOrigin, push_list[x]->currentOrigin,
-								push_list[x]->client->ps.viewangles, 0.0f))
+							if (InFront(self->currentOrigin, push_target[x]->currentOrigin,
+								push_target[x]->client->ps.viewangles, 0.0f))
 							{
 								//enemy has to be facing me, too...
-								WP_DropWeapon(push_list[x], push_dir);
+								WP_DropWeapon(push_target[x], push_dir);
 							}
 						}
 						knockback += VectorNormalize(push_dir);
@@ -24330,46 +24321,68 @@ void ForceThrow_MD(gentity_t* self, qboolean pull, qboolean fake) //MD Mode Push
 					}
 					else
 					{
-						VectorSubtract(push_list[x]->currentOrigin, self->currentOrigin, push_dir);
+						VectorSubtract(push_target[x]->currentOrigin, self->currentOrigin, push_dir);
+						VectorSubtract(push_target[x]->currentOrigin, self->currentOrigin, push_dir);
 						knockback -= VectorNormalize(push_dir);
-						if (knockback < 200)
+
+						G_SoundOnEnt(push_target[x], CHAN_BODY, "sound/weapons/force/pushed.mp3");
+
+						if (knockback < 100) // if less than 100
 						{
-							knockback = 200;
+							knockback = 100; // minimum 100
 						}
+
 						//scale for push level
-						if (self->client->ps.forcePowerLevel[FP_PUSH] < FORCE_LEVEL_2)
+						if (self->client->ps.forcePowerLevel[FP_PUSH] < FORCE_LEVEL_2) // level 1 devide by 3
 						{
-							//maybe just knock them down
-							knockback /= 3;
-						}
-						else if (self->client->ps.forcePowerLevel[FP_PUSH] > FORCE_LEVEL_2)
-						{
-							//super-hard push
-							if (g_SerenityJediEngineMode->integer)
+							if (self->s.weapon == WP_MELEE ||
+								self->s.weapon == WP_NONE ||
+								self->s.weapon == WP_SABER &&
+								!self->client->ps.SaberActive() &&
+								!PM_InKnockDown(&self->client->ps))
 							{
-								sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
+								//maybe just knock them down
+								knockback /= 2;
+							}
+							else
+							{
+								//maybe just knock them down
+								knockback /= 3;
 							}
 						}
-						else if (self->s.weapon == WP_MELEE ||
-							self->s.weapon == WP_NONE ||
-							self->s.weapon == WP_SABER &&
-							!self->client->ps.SaberActive() &&
-							!PM_InKnockDown(&self->client->ps) &&
-							self->client->ps.forcePowerLevel[FP_PUSH] > FORCE_LEVEL_2)
+						else if (self->client->ps.forcePowerLevel[FP_PUSH] == FORCE_LEVEL_2) // level 2
 						{
-							//super-hard push
-							if (g_SerenityJediEngineMode->integer)
+							if (self->s.weapon == WP_MELEE ||
+								self->s.weapon == WP_NONE ||
+								self->s.weapon == WP_SABER &&
+								!self->client->ps.SaberActive() &&
+								!PM_InKnockDown(&self->client->ps))
 							{
+								knockback = 125;
+							}
+							else
+							{
+								knockback = 100;
+							}
+						}
+						else if (self->client->ps.forcePowerLevel[FP_PUSH] > FORCE_LEVEL_2) // level 3 add sound
+						{
+							if (push_target[x]->client->NPC_class == CLASS_GUARD || jedi_jedi_master_low(push_target[x]))
+							{
+								//do a knockdown hes a twat
 								knockback *= 3; //superpush
-								sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
-								if (pull)
-								{
-									//
-								}
-								else
-								{
-									PushDamage(self, push_list[x], tr.endpos, damage_level);
-								}
+							}
+							if (self->s.weapon == WP_MELEE ||
+								self->s.weapon == WP_NONE ||
+								self->s.weapon == WP_SABER &&
+								!self->client->ps.SaberActive() &&
+								!PM_InKnockDown(&self->client->ps))
+							{
+								knockback *= 4; //superpush
+							}
+							else
+							{
+								knockback *= 2; //superpush
 							}
 						}
 					}
@@ -24390,93 +24403,90 @@ void ForceThrow_MD(gentity_t* self, qboolean pull, qboolean fake) //MD Mode Push
 						}
 					}
 					//actually push/pull the enemy
-					G_Throw(push_list[x], push_dir, knockback);
+					G_Throw(push_target[x], push_dir, knockback);
 					//make it so they don't actually hurt me when pulled at me...
-					push_list[x]->forcePuller = self->s.number;
+					push_target[x]->forcePuller = self->s.number;
 
-					if (push_list[x]->client->ps.groundEntityNum != ENTITYNUM_NONE)
+					if (push_target[x]->client->ps.groundEntityNum != ENTITYNUM_NONE)
 					{
 						//if on the ground, make sure they get shoved up some
-						if (push_list[x]->client->ps.velocity[2] < knockback)
+						if (push_target[x]->client->ps.velocity[2] < knockback)
 						{
-							push_list[x]->client->ps.velocity[2] = knockback;
+							push_target[x]->client->ps.velocity[2] = knockback;
 						}
 					}
 
-					if (push_list[x]->health > 0)
+					if (push_target[x]->health > 0)
 					{
 						//target is still alive
-						if ((push_list[x]->s.number || cg.renderingThirdPerson && !cg.zoomMode)
+						if ((push_target[x]->s.number || cg.renderingThirdPerson && !cg.zoomMode)
 							//NPC or 3rd person player
-							&& (!pull && self->client->ps.forcePowerLevel[FP_PUSH] < FORCE_LEVEL_2 && push_list[x]->
+							&& (!pull && self->client->ps.forcePowerLevel[FP_PUSH] < FORCE_LEVEL_2 && push_target[x]->
 								client->ps.forcePowerLevel[FP_PUSH] < FORCE_LEVEL_1 //level 1 push
-								|| pull && self->client->ps.forcePowerLevel[FP_PULL] < FORCE_LEVEL_2 && push_list[x]->
+								|| pull && self->client->ps.forcePowerLevel[FP_PULL] < FORCE_LEVEL_2 && push_target[x]->
 								client->ps.forcePowerLevel[FP_PULL] < FORCE_LEVEL_1)) //level 1 pull
 						{
 							//NPC or third person player (without force push/pull skill), and force push/pull level is at 1
-							WP_ForceKnockdown(push_list[x], self, pull, static_cast<qboolean>(!pull && knockback > 150),
+							WP_ForceKnockdown(push_target[x], self, pull, static_cast<qboolean>(!pull && knockback > 150),
 								qfalse);
 							if (g_SerenityJediEngineMode->integer)
 							{
-								sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
 								if (pull)
 								{
 									//
 								}
 								else
 								{
-									PushDamage(self, push_list[x], tr.endpos, damage_level);
+									PushDamage(self, push_target[x], tr.endpos, damage_level);
 								}
 							}
 						}
-						else if (!push_list[x]->s.number)
+						else if (!push_target[x]->s.number)
 						{
 							//player, have to force an anim on him
-							WP_ForceKnockdown(push_list[x], self, pull, static_cast<qboolean>(!pull && knockback > 150),
+							WP_ForceKnockdown(push_target[x], self, pull, static_cast<qboolean>(!pull && knockback > 150),
 								qfalse);
 							if (g_SerenityJediEngineMode->integer)
 							{
-								sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
 								if (pull)
 								{
 									//
 								}
 								else
 								{
-									PushDamage(self, push_list[x], tr.endpos, damage_level);
+									PushDamage(self, push_target[x], tr.endpos, damage_level);
 								}
 							}
 						}
 						else
 						{
 							//NPC and force-push/pull at level 2 or higher
-							WP_ForceKnockdown(push_list[x], self, pull, static_cast<qboolean>(!pull && knockback > 100),
+							WP_ForceKnockdown(push_target[x], self, pull, static_cast<qboolean>(!pull && knockback > 100),
 								qfalse);
 							if (g_SerenityJediEngineMode->integer)
 							{
-								sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
 								if (pull)
 								{
 									//
 								}
 								else
 								{
-									PushDamage(self, push_list[x], tr.endpos, damage_level);
+									PushDamage(self, push_target[x], tr.endpos, damage_level);
 								}
 							}
 						}
 					}
-					push_list[x]->forcePushTime = level.time + 600; // let the push effect last for 600 ms
+					push_target[x]->forcePushTime = level.time + 600; // let the push effect last for 600 ms
 				}
 			}
 			else if (!fake)
 			{
 				//not a fake push/pull
-				if (push_list[x]->s.weapon == WP_SABER && push_list[x]->contents & CONTENTS_LIGHTSABER)
+				if (push_target[x]->s.weapon == WP_SABER && push_target[x]->contents & CONTENTS_LIGHTSABER)
 				{
 					//a thrown saber, just send it back
-					if (push_list[x]->owner && push_list[x]->owner->client && push_list[x]->owner->client->ps.
-						SaberActive() && push_list[x]->s.pos.trType == TR_LINEAR && push_list[x]->owner->client->ps.
+					if (push_target[x]->owner && push_target[x]->owner->client && push_target[x]->owner->client->ps.
+						SaberActive() && push_target[x]->s.pos.trType == TR_LINEAR && push_target[x]->owner->client->ps.
 						saberEntityState != SES_RETURNING)
 					{
 						//it's on and being controlled
@@ -24492,71 +24502,71 @@ void ForceThrow_MD(gentity_t* self, qboolean pull, qboolean fake) //MD Mode Push
 							{
 								if (is_class_guard)
 								{
-									G_MissileBouncedoffSaber(self, push_list[x], right);
+									G_MissileBouncedoffSaber(self, push_target[x], right);
 								}
 								else
 								{
-									G_ReflectMissileNPC(self, push_list[x], right);
+									G_ReflectMissileNPC(self, push_target[x], right);
 								}
 							}
 							else
 							{
 								if (g_SerenityJediEngineMode->integer)
 								{
-									G_ReflectMissileAuto(self, push_list[x], right);
+									G_ReflectMissileAuto(self, push_target[x], right);
 								}
 								else
 								{
-									G_ReflectMissile_JKA(self, push_list[x], right);
+									G_ReflectMissile_JKA(self, push_target[x], right);
 								}
 							}
-							WP_SaberDrop(push_list[x]->owner, push_list[x]);
+							WP_SaberDrop(push_target[x]->owner, push_target[x]);
 						}
 						else
 						{
 							if (g_SerenityJediEngineMode->integer)
 							{
-								WP_SaberDrop(push_list[x]->owner, push_list[x]);
+								WP_SaberDrop(push_target[x]->owner, push_target[x]);
 							}
 							else
 							{
-								if (push_list[x]->owner->NPC && !G_ControlledByPlayer(push_list[x]->owner))
+								if (push_target[x]->owner->NPC && !G_ControlledByPlayer(push_target[x]->owner))
 								{
-									WP_SaberDrop(push_list[x]->owner, push_list[x]);
+									WP_SaberDrop(push_target[x]->owner, push_target[x]);
 								}
 								else
 								{
-									WP_SaberReturn(push_list[x]->owner, push_list[x]);
+									WP_SaberReturn(push_target[x]->owner, push_target[x]);
 								}
 							}
 						}
 						//different effect?
 					}
 				}
-				else if (push_list[x]->s.eType == ET_MISSILE
-					&& push_list[x]->s.pos.trType != TR_STATIONARY
-					&& (push_list[x]->s.pos.trType != TR_INTERPOLATE || push_list[x]->s.weapon != WP_THERMAL))
+				else if (push_target[x]->s.eType == ET_MISSILE
+					&& push_target[x]->s.pos.trType != TR_STATIONARY
+					&& (push_target[x]->s.pos.trType != TR_INTERPOLATE || push_target[x]->s.weapon != WP_THERMAL))
 					//rolling and stationary thermal detonators are dealt with below
 				{
 					vec3_t dir2_me;
-					VectorSubtract(self->currentOrigin, push_list[x]->currentOrigin, dir2_me);
-					float dot = DotProduct(push_list[x]->s.pos.trDelta, dir2_me);
+					VectorSubtract(self->currentOrigin, push_target[x]->currentOrigin, dir2_me);
+					float dot = DotProduct(push_target[x]->s.pos.trDelta, dir2_me);
 					if (pull)
 					{
 						//deflect rather than reflect?
 					}
 					else
 					{
-						if (push_list[x]->s.eFlags & EF_MISSILE_STICK)
+						if (push_target[x]->s.eFlags & EF_MISSILE_STICK)
 						{
 							//caught a sticky in-air
-							push_list[x]->s.eType = ET_MISSILE;
-							push_list[x]->s.eFlags &= ~EF_MISSILE_STICK;
-							push_list[x]->s.eFlags |= EF_BOUNCE_HALF;
-							push_list[x]->splashDamage /= 3;
-							push_list[x]->splashRadius /= 3;
-							push_list[x]->e_ThinkFunc = thinkF_WP_Explode;
-							push_list[x]->nextthink = level.time + Q_irand(500, 3000);
+							push_target[x]->s.eType = ET_MISSILE;
+							push_target[x]->s.eFlags &= ~EF_MISSILE_STICK;
+							push_target[x]->s.eFlags |= EF_BOUNCE_HALF;
+							push_target[x]->splashDamage /= 3;
+							push_target[x]->splashRadius /= 3;
+							push_target[x]->e_ThinkFunc = thinkF_WP_Explode;
+							push_target[x]->nextthink = level.time + Q_irand(500, 3000);
 						}
 						if (dot >= 0)
 						{
@@ -24565,39 +24575,39 @@ void ForceThrow_MD(gentity_t* self, qboolean pull, qboolean fake) //MD Mode Push
 							{
 								if (is_class_guard)
 								{
-									G_MissileBouncedoffSaber(self, push_list[x], forward);
+									G_MissileBouncedoffSaber(self, push_target[x], forward);
 								}
 								else
 								{
-									G_ReflectMissileNPC(self, push_list[x], forward);
+									G_ReflectMissileNPC(self, push_target[x], forward);
 								}
 							}
 							else
 							{
 								if (g_SerenityJediEngineMode->integer)
 								{
-									G_ReflectMissileAuto(self, push_list[x], forward);
+									G_ReflectMissileAuto(self, push_target[x], forward);
 								}
 								else
 								{
-									G_ReflectMissile_JKA(self, push_list[x], forward);
+									G_ReflectMissile_JKA(self, push_target[x], forward);
 								}
 							}
 						}
 						else
 						{
-							VectorScale(push_list[x]->s.pos.trDelta, 1.25f, push_list[x]->s.pos.trDelta);
+							VectorScale(push_target[x]->s.pos.trDelta, 1.25f, push_target[x]->s.pos.trDelta);
 						}
 					}
-					if (push_list[x]->s.eType == ET_MISSILE
-						&& push_list[x]->s.weapon == WP_ROCKET_LAUNCHER
-						&& push_list[x]->damage < 60)
+					if (push_target[x]->s.eType == ET_MISSILE
+						&& push_target[x]->s.weapon == WP_ROCKET_LAUNCHER
+						&& push_target[x]->damage < 60)
 					{
 						//pushing away a rocket raises it's damage to the max for NPCs
-						push_list[x]->damage = 60;
+						push_target[x]->damage = 60;
 					}
 				}
-				else if (push_list[x]->svFlags & SVF_GLASS_BRUSH)
+				else if (push_target[x]->svFlags & SVF_GLASS_BRUSH)
 				{
 					//break the glass
 					trace_t trace;
@@ -24609,7 +24619,7 @@ void ForceThrow_MD(gentity_t* self, qboolean pull, qboolean fake) //MD Mode Push
 					VectorMA(self->client->renderInfo.eyePoint, radius, forward, end);
 					gi.trace(&trace, self->client->renderInfo.eyePoint, vec3_origin, vec3_origin, end, self->s.number,
 						MASK_SHOT, static_cast<EG2_Collision>(0), 0);
-					if (trace.entity_num != push_list[x]->s.number || trace.fraction == 1.0 || trace.allsolid || trace.
+					if (trace.entity_num != push_target[x]->s.number || trace.fraction == 1.0 || trace.allsolid || trace.
 						startsolid)
 					{
 						//must be pointing right at it
@@ -24631,31 +24641,31 @@ void ForceThrow_MD(gentity_t* self, qboolean pull, qboolean fake) //MD Mode Push
 					}
 					VectorScale(push_dir, damage, push_dir);
 
-					G_Damage(push_list[x], self, self, push_dir, trace.endpos, damage, 0, MOD_UNKNOWN);
+					G_Damage(push_target[x], self, self, push_dir, trace.endpos, damage, 0, MOD_UNKNOWN);
 				}
-				else if (!Q_stricmp("func_static", push_list[x]->classname))
+				else if (!Q_stricmp("func_static", push_target[x]->classname))
 				{
 					//force-usable func_static
-					if (!pull && push_list[x]->spawnflags & 1/*F_PUSH*/)
+					if (!pull && push_target[x]->spawnflags & 1/*F_PUSH*/)
 					{
-						if (push_list[x]->NPC_targetname == nullptr
-							|| self->targetname && Q_stricmp(push_list[x]->NPC_targetname, self->targetname) == 0)
+						if (push_target[x]->NPC_targetname == nullptr
+							|| self->targetname && Q_stricmp(push_target[x]->NPC_targetname, self->targetname) == 0)
 						{
 							//anyone can pull it or only 1 person can push it and it's me
-							GEntity_UseFunc(push_list[x], self, self);
+							GEntity_UseFunc(push_target[x], self, self);
 						}
 					}
-					else if (pull && push_list[x]->spawnflags & 2/*F_PULL*/)
+					else if (pull && push_target[x]->spawnflags & 2/*F_PULL*/)
 					{
-						if (push_list[x]->NPC_targetname == nullptr
-							|| self->targetname && Q_stricmp(push_list[x]->NPC_targetname, self->NPC_targetname) == 0)
+						if (push_target[x]->NPC_targetname == nullptr
+							|| self->targetname && Q_stricmp(push_target[x]->NPC_targetname, self->NPC_targetname) == 0)
 						{
 							//anyone can push it or only 1 person can push it and it's me
-							GEntity_UseFunc(push_list[x], self, self);
+							GEntity_UseFunc(push_target[x], self, self);
 						}
 					}
 				}
-				else if (!Q_stricmp("func_door", push_list[x]->classname) && push_list[x]->spawnflags & 2
+				else if (!Q_stricmp("func_door", push_target[x]->classname) && push_target[x]->spawnflags & 2
 					/*MOVER_FORCE_ACTIVATE*/)
 				{
 					//push/pull the door
@@ -24666,43 +24676,43 @@ void ForceThrow_MD(gentity_t* self, qboolean pull, qboolean fake) //MD Mode Push
 					VectorMA(self->client->renderInfo.eyePoint, radius, forward, end);
 					gi.trace(&tr, self->client->renderInfo.eyePoint, vec3_origin, vec3_origin, end, self->s.number,
 						MASK_SHOT, static_cast<EG2_Collision>(0), 0);
-					if (tr.entity_num != push_list[x]->s.number || tr.fraction == 1.0 || tr.allsolid || tr.startsolid)
+					if (tr.entity_num != push_target[x]->s.number || tr.fraction == 1.0 || tr.allsolid || tr.startsolid)
 					{
 						//must be pointing right at it
 						continue;
 					}
 
-					if (VectorCompare(vec3_origin, push_list[x]->s.origin))
+					if (VectorCompare(vec3_origin, push_target[x]->s.origin))
 					{
 						//does not have an origin brush, so pos1 & pos2 are relative to world origin, need to calc center
-						VectorSubtract(push_list[x]->absmax, push_list[x]->absmin, size);
-						VectorMA(push_list[x]->absmin, 0.5, size, center);
-						if (push_list[x]->spawnflags & 1 && push_list[x]->moverState == MOVER_POS1)
+						VectorSubtract(push_target[x]->absmax, push_target[x]->absmin, size);
+						VectorMA(push_target[x]->absmin, 0.5, size, center);
+						if (push_target[x]->spawnflags & 1 && push_target[x]->moverState == MOVER_POS1)
 						{
 							//if at pos1 and started open, make sure we get the center where it *started* because we're going to add back in the relative values pos1 and pos2
-							VectorSubtract(center, push_list[x]->pos1, center);
+							VectorSubtract(center, push_target[x]->pos1, center);
 						}
-						else if (!(push_list[x]->spawnflags & 1) && push_list[x]->moverState == MOVER_POS2)
+						else if (!(push_target[x]->spawnflags & 1) && push_target[x]->moverState == MOVER_POS2)
 						{
 							//if at pos2, make sure we get the center where it *started* because we're going to add back in the relative values pos1 and pos2
-							VectorSubtract(center, push_list[x]->pos2, center);
+							VectorSubtract(center, push_target[x]->pos2, center);
 						}
-						VectorAdd(center, push_list[x]->pos1, pos1);
-						VectorAdd(center, push_list[x]->pos2, pos2);
+						VectorAdd(center, push_target[x]->pos1, pos1);
+						VectorAdd(center, push_target[x]->pos2, pos2);
 					}
 					else
 					{
 						//actually has an origin, pos1 and pos2 are absolute
-						VectorCopy(push_list[x]->currentOrigin, center);
-						VectorCopy(push_list[x]->pos1, pos1);
-						VectorCopy(push_list[x]->pos2, pos2);
+						VectorCopy(push_target[x]->currentOrigin, center);
+						VectorCopy(push_target[x]->pos1, pos1);
+						VectorCopy(push_target[x]->pos2, pos2);
 					}
 
 					if (Distance(pos1, self->client->renderInfo.eyePoint) < Distance(
 						pos2, self->client->renderInfo.eyePoint))
 					{
 						//pos1 is closer
-						if (push_list[x]->moverState == MOVER_POS1)
+						if (push_target[x]->moverState == MOVER_POS1)
 						{
 							//at the closest pos
 							if (pull)
@@ -24711,7 +24721,7 @@ void ForceThrow_MD(gentity_t* self, qboolean pull, qboolean fake) //MD Mode Push
 								continue;
 							}
 						}
-						else if (push_list[x]->moverState == MOVER_POS2)
+						else if (push_target[x]->moverState == MOVER_POS2)
 						{
 							//at farthest pos
 							if (!pull)
@@ -24724,7 +24734,7 @@ void ForceThrow_MD(gentity_t* self, qboolean pull, qboolean fake) //MD Mode Push
 					else
 					{
 						//pos2 is closer
-						if (push_list[x]->moverState == MOVER_POS1)
+						if (push_target[x]->moverState == MOVER_POS1)
 						{
 							//at the farthest pos
 							if (!pull)
@@ -24733,7 +24743,7 @@ void ForceThrow_MD(gentity_t* self, qboolean pull, qboolean fake) //MD Mode Push
 								continue;
 							}
 						}
-						else if (push_list[x]->moverState == MOVER_POS2)
+						else if (push_target[x]->moverState == MOVER_POS2)
 						{
 							//at closest pos
 							if (pull)
@@ -24743,11 +24753,11 @@ void ForceThrow_MD(gentity_t* self, qboolean pull, qboolean fake) //MD Mode Push
 							}
 						}
 					}
-					GEntity_UseFunc(push_list[x], self, self);
+					GEntity_UseFunc(push_target[x], self, self);
 				}
-				else if (push_list[x]->s.eType == ET_MISSILE /*thermal resting on ground*/
-					|| push_list[x]->s.eType == ET_ITEM
-					|| push_list[x]->e_ThinkFunc == thinkF_G_RunObject || Q_stricmp("limb", push_list[x]->classname) ==
+				else if (push_target[x]->s.eType == ET_MISSILE /*thermal resting on ground*/
+					|| push_target[x]->s.eType == ET_ITEM
+					|| push_target[x]->e_ThinkFunc == thinkF_G_RunObject || Q_stricmp("limb", push_target[x]->classname) ==
 					0)
 				{
 					//general object, toss it
@@ -24757,22 +24767,22 @@ void ForceThrow_MD(gentity_t* self, qboolean pull, qboolean fake) //MD Mode Push
 
 					if (pull)
 					{
-						if (push_list[x]->s.eType == ET_ITEM)
+						if (push_target[x]->s.eType == ET_ITEM)
 						{
 							//pull it to a little higher point
 							vec3_t adjustedOrg;
 							VectorCopy(self->currentOrigin, adjustedOrg);
 							adjustedOrg[2] += self->maxs[2] / 3;
-							VectorSubtract(adjustedOrg, push_list[x]->currentOrigin, push_dir);
+							VectorSubtract(adjustedOrg, push_target[x]->currentOrigin, push_dir);
 						}
 						else if (self->enemy //I have an enemy
-							//&& push_list[x]->s.eType != ET_ITEM //not an item
+							//&& push_target[x]->s.eType != ET_ITEM //not an item
 							&& self->client->ps.forcePowerLevel[FP_PUSH] > FORCE_LEVEL_2 //have push 3 or greater
-							&& InFront(push_list[x]->currentOrigin, self->currentOrigin, self->currentAngles, 0.25f)
+							&& InFront(push_target[x]->currentOrigin, self->currentOrigin, self->currentAngles, 0.25f)
 							//object is generally in front of me
 							&& InFront(self->enemy->currentOrigin, self->currentOrigin, self->currentAngles, 0.75f)
 							//enemy is pretty much right in front of me
-							&& !InFront(push_list[x]->currentOrigin, self->enemy->currentOrigin,
+							&& !InFront(push_target[x]->currentOrigin, self->enemy->currentOrigin,
 								self->enemy->currentAngles, -0.25f) //object is generally behind enemy
 							//FIXME: check dist to enemy and clear LOS to enemy and clear Path between object and enemy?
 							&& (self->NPC && (no_resist || is_class_guard || Q_irand(0, RANK_CAPTAIN) < self->NPC->rank)
@@ -24780,21 +24790,21 @@ void ForceThrow_MD(gentity_t* self, qboolean pull, qboolean fake) //MD Mode Push
 								|| self->s.number < MAX_CLIENTS))
 						{
 							//if I have an auto-enemy & he's in front of me, push it toward him!
-							VectorSubtract(self->enemy->currentOrigin, push_list[x]->currentOrigin, push_dir);
+							VectorSubtract(self->enemy->currentOrigin, push_target[x]->currentOrigin, push_dir);
 						}
 						else
 						{
-							VectorSubtract(self->currentOrigin, push_list[x]->currentOrigin, push_dir);
+							VectorSubtract(self->currentOrigin, push_target[x]->currentOrigin, push_dir);
 						}
 						knockback += VectorNormalize(push_dir);
 						if (knockback > 200)
 						{
 							knockback = 200;
 						}
-						if (push_list[x]->s.eType == ET_ITEM
-							&& push_list[x]->item
-							&& push_list[x]->item->giType == IT_HOLDABLE
-							&& push_list[x]->item->giTag == INV_SECURITY_KEY)
+						if (push_target[x]->s.eType == ET_ITEM
+							&& push_target[x]->item
+							&& push_target[x]->item->giType == IT_HOLDABLE
+							&& push_target[x]->item->giTag == INV_SECURITY_KEY)
 						{
 							//security keys are pulled with less enthusiasm
 							if (knockback > 100)
@@ -24810,24 +24820,24 @@ void ForceThrow_MD(gentity_t* self, qboolean pull, qboolean fake) //MD Mode Push
 					else
 					{
 						if (self->enemy //I have an enemy
-							&& push_list[x]->s.eType != ET_ITEM //not an item
+							&& push_target[x]->s.eType != ET_ITEM //not an item
 							&& self->client->ps.forcePowerLevel[FP_PUSH] > FORCE_LEVEL_2 //have push 3 or greater
-							&& InFront(push_list[x]->currentOrigin, self->currentOrigin, self->currentAngles, 0.25f)
+							&& InFront(push_target[x]->currentOrigin, self->currentOrigin, self->currentAngles, 0.25f)
 							//object is generally in front of me
 							&& InFront(self->enemy->currentOrigin, self->currentOrigin, self->currentAngles, 0.75f)
 							//enemy is pretty much right in front of me
-							&& InFront(push_list[x]->currentOrigin, self->enemy->currentOrigin,
+							&& InFront(push_target[x]->currentOrigin, self->enemy->currentOrigin,
 								self->enemy->currentAngles, 0.25f) //object is generally in front of enemy
 							&& (self->NPC && (no_resist || is_class_guard || Q_irand(0, RANK_CAPTAIN) < self->NPC->rank)
 								//NPC with enough skill
 								|| self->s.number < MAX_CLIENTS))
 						{
 							//if I have an auto-enemy & he's in front of me, push it toward him!
-							VectorSubtract(self->enemy->currentOrigin, push_list[x]->currentOrigin, push_dir);
+							VectorSubtract(self->enemy->currentOrigin, push_target[x]->currentOrigin, push_dir);
 						}
 						else
 						{
-							VectorSubtract(push_list[x]->currentOrigin, self->currentOrigin, push_dir);
+							VectorSubtract(push_target[x]->currentOrigin, self->currentOrigin, push_dir);
 						}
 						knockback -= VectorNormalize(push_dir);
 						if (knockback < 100)
@@ -24836,18 +24846,18 @@ void ForceThrow_MD(gentity_t* self, qboolean pull, qboolean fake) //MD Mode Push
 						}
 					}
 					//FIXME: if pull a FL_FORCE_PULLABLE_ONLY, clear the flag, assuming it's no longer in solid?  or check?
-					VectorCopy(push_list[x]->currentOrigin, push_list[x]->s.pos.trBase);
-					push_list[x]->s.pos.trTime = level.time; // move a bit on the very first frame
-					if (push_list[x]->s.pos.trType != TR_INTERPOLATE)
+					VectorCopy(push_target[x]->currentOrigin, push_target[x]->s.pos.trBase);
+					push_target[x]->s.pos.trTime = level.time; // move a bit on the very first frame
+					if (push_target[x]->s.pos.trType != TR_INTERPOLATE)
 					{
 						//don't do this to rolling missiles
-						push_list[x]->s.pos.trType = TR_GRAVITY;
+						push_target[x]->s.pos.trType = TR_GRAVITY;
 					}
 
-					if (push_list[x]->e_ThinkFunc == thinkF_G_RunObject && push_list[x]->physicsBounce)
+					if (push_target[x]->e_ThinkFunc == thinkF_G_RunObject && push_target[x]->physicsBounce)
 					{
 						//it's a pushable misc_model_breakable, use it's mass instead of our one-size-fits-all mass
-						mass = push_list[x]->physicsBounce; //same as push_list[x]->mass, right?
+						mass = push_target[x]->physicsBounce; //same as push_target[x]->mass, right?
 					}
 					if (mass < 50)
 					{
@@ -24863,51 +24873,51 @@ void ForceThrow_MD(gentity_t* self, qboolean pull, qboolean fake) //MD Mode Push
 					{
 						VectorScale(push_dir, g_knockback->value * knockback / mass, kvel);
 					}
-					VectorAdd(push_list[x]->s.pos.trDelta, kvel, push_list[x]->s.pos.trDelta);
+					VectorAdd(push_target[x]->s.pos.trDelta, kvel, push_target[x]->s.pos.trDelta);
 					if (g_gravity->value > 0)
 					{
-						if (push_list[x]->s.pos.trDelta[2] < knockback)
+						if (push_target[x]->s.pos.trDelta[2] < knockback)
 						{
-							push_list[x]->s.pos.trDelta[2] = knockback;
+							push_target[x]->s.pos.trDelta[2] = knockback;
 						}
 					}
 					//no trDuration?
-					if (push_list[x]->e_ThinkFunc != thinkF_G_RunObject)
+					if (push_target[x]->e_ThinkFunc != thinkF_G_RunObject)
 					{
 						//objects spin themselves?
 						//spin it
 						//FIXME: messing with roll ruins the rotational center???
-						push_list[x]->s.apos.trTime = level.time;
-						push_list[x]->s.apos.trType = TR_LINEAR;
-						VectorClear(push_list[x]->s.apos.trDelta);
-						push_list[x]->s.apos.trDelta[1] = Q_irand(-800, 800);
+						push_target[x]->s.apos.trTime = level.time;
+						push_target[x]->s.apos.trType = TR_LINEAR;
+						VectorClear(push_target[x]->s.apos.trDelta);
+						push_target[x]->s.apos.trDelta[1] = Q_irand(-800, 800);
 					}
 
-					if (Q_stricmp("limb", push_list[x]->classname) == 0)
+					if (Q_stricmp("limb", push_target[x]->classname) == 0)
 					{
 						//make sure it runs it's physics
-						push_list[x]->e_ThinkFunc = thinkF_LimbThink;
-						push_list[x]->nextthink = level.time + FRAMETIME;
+						push_target[x]->e_ThinkFunc = thinkF_LimbThink;
+						push_target[x]->nextthink = level.time + FRAMETIME;
 					}
-					push_list[x]->forcePushTime = level.time + 600; // let the push effect last for 600 ms
-					push_list[x]->forcePuller = self->s.number; //remember this regardless
-					if (push_list[x]->item && push_list[x]->item->giTag == INV_SECURITY_KEY)
+					push_target[x]->forcePushTime = level.time + 600; // let the push effect last for 600 ms
+					push_target[x]->forcePuller = self->s.number; //remember this regardless
+					if (push_target[x]->item && push_target[x]->item->giTag == INV_SECURITY_KEY)
 					{
-						AddSightEvent(player, push_list[x]->currentOrigin, 128, AEL_DISCOVERED);
+						AddSightEvent(player, push_target[x]->currentOrigin, 128, AEL_DISCOVERED);
 						//security keys are more important
 					}
 					else
 					{
-						AddSightEvent(player, push_list[x]->currentOrigin, 128, AEL_SUSPICIOUS);
+						AddSightEvent(player, push_target[x]->currentOrigin, 128, AEL_SUSPICIOUS);
 						//hmm... or should this always be discovered?
 					}
 				}
-				else if (push_list[x]->s.weapon == WP_TURRET
-					&& !Q_stricmp("PAS", push_list[x]->classname)
-					&& push_list[x]->s.apos.trType == TR_STATIONARY)
+				else if (push_target[x]->s.weapon == WP_TURRET
+					&& !Q_stricmp("PAS", push_target[x]->classname)
+					&& push_target[x]->s.apos.trType == TR_STATIONARY)
 				{
 					//a portable turret
-					WP_KnockdownTurret(push_list[x]);
+					WP_KnockdownTurret(push_target[x]);
 				}
 			}
 		}
@@ -25012,7 +25022,7 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 	float dist;
 	gentity_t* ent, * forward_ent = nullptr;
 	gentity_t* entity_list[MAX_GENTITIES];
-	gentity_t* push_list[MAX_GENTITIES];
+	gentity_t* push_target[MAX_GENTITIES];
 	int num_listed_entities = 0;
 	vec3_t mins, maxs;
 	vec3_t v;
@@ -25190,9 +25200,9 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 			anim = BOTH_FORCEPUSH;
 		}
 
-		if (self->s.number >= MAX_CLIENTS && !G_ControlledByPlayer(self))
+		if (self->s.number >= MAX_CLIENTS && !G_ControlledByPlayer(self)) // npc push sounds
 		{
-			if (self->client->ps.forcePower < 30)
+			if (self->client->ps.forcePower < 50)
 			{
 				sound_index = G_SoundIndex("sound/weapons/force/pushlow.mp3");
 			}
@@ -25205,26 +25215,16 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 		{
 			if (g_SerenityJediEngineMode->integer)
 			{
-				if (self->client->ps.forcePower < 30
-					|| PM_InKnockDown(&self->client->ps))
+				if (self->client->ps.forcePower < 30 || PM_InKnockDown(&self->client->ps))
 				{
 					sound_index = G_SoundIndex("sound/weapons/force/pushlow.mp3");
 				}
 				else
 				{
-					if (g_SerenityJediEngineMode->integer == 2 && self->client->ps.forcePowerLevel[FP_PUSH] >
-						FORCE_LEVEL_2)
+					if (self->client->ps.groundEntityNum == ENTITYNUM_NONE &&
+						self->client->ps.forcePower > 50)
 					{
-						if (self->client->ps.groundEntityNum == ENTITYNUM_NONE &&
-							self->client->ps.forcePower > 50 &&
-							self->client->ps.blockPoints > 90)
-						{
-							sound_index = G_SoundIndex("sound/weapons/force/pushhard.mp3");
-						}
-						else
-						{
-							sound_index = G_SoundIndex("sound/weapons/force/push_md.mp3");
-						}
+						sound_index = G_SoundIndex("sound/weapons/force/pushhard.mp3");
 					}
 					else
 					{
@@ -25325,7 +25325,7 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 						|| self->targetname && Q_stricmp(forward_ent->NPC_targetname, self->targetname) == 0)
 					{
 						//anyone can push it or only 1 person can push it and it's me
-						push_list[0] = forward_ent;
+						push_target[0] = forward_ent;
 						ent_count = num_listed_entities = 1;
 					}
 				}
@@ -25479,7 +25479,7 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 					}
 
 					// ok, we are within the radius, add us to the incoming list
-					push_list[ent_count] = ent;
+					push_target[ent_count] = ent;
 					ent_count++;
 				}
 			}
@@ -25628,7 +25628,7 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 					}
 
 					// ok, we are within the radius, add us to the incoming list
-					push_list[ent_count] = ent;
+					push_target[ent_count] = ent;
 					ent_count++;
 				}
 			}
@@ -25757,7 +25757,7 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 				}
 
 				// ok, we are within the radius, add us to the incoming list
-				push_list[ent_count] = ent;
+				push_target[ent_count] = ent;
 				ent_count++;
 			}
 		}
@@ -25773,63 +25773,62 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 		{
 			for (int x = 0; x < ent_count; x++)
 			{
-				if (push_list[x]->client)
+				if (push_target[x]->client)
 				{
 					float knockback = pull ? 0 : 200;
 
 					//SIGH band-aid...
-					if (push_list[x]->s.number >= MAX_CLIENTS
+					if (push_target[x]->s.number >= MAX_CLIENTS
 						&& self->s.number < MAX_CLIENTS)
 					{
-						if (push_list[x]->client->ps.forcePowersActive & 1 << FP_GRIP
-							&& push_list[x]->client->ps.forceGripEntityNum == self->s.number)
+						if (push_target[x]->client->ps.forcePowersActive & 1 << FP_GRIP
+							&& push_target[x]->client->ps.forceGripEntityNum == self->s.number)
 						{
-							WP_ForcePowerStop(push_list[x], FP_GRIP);
+							WP_ForcePowerStop(push_target[x], FP_GRIP);
 						}
-						if (push_list[x]->client->ps.forcePowersActive & 1 << FP_GRASP
-							&& push_list[x]->client->ps.forceGripEntityNum == self->s.number)
+						if (push_target[x]->client->ps.forcePowersActive & 1 << FP_GRASP
+							&& push_target[x]->client->ps.forceGripEntityNum == self->s.number)
 						{
-							WP_ForcePowerStop(push_list[x], FP_GRASP);
+							WP_ForcePowerStop(push_target[x], FP_GRASP);
 						}
-						if (push_list[x]->client->ps.forcePowersActive & 1 << FP_DRAIN
-							&& push_list[x]->client->ps.forceDrainEntityNum == self->s.number)
+						if (push_target[x]->client->ps.forcePowersActive & 1 << FP_DRAIN
+							&& push_target[x]->client->ps.forceDrainEntityNum == self->s.number)
 						{
-							WP_ForcePowerStop(push_list[x], FP_DRAIN);
+							WP_ForcePowerStop(push_target[x], FP_DRAIN);
 						}
 					}
 
-					if (rosh_being_healed(push_list[x]))
+					if (rosh_being_healed(push_target[x]))
 					{
 						continue;
 					}
-					if (push_list[x]->client->NPC_class == CLASS_HAZARD_TROOPER
-						&& push_list[x]->health > 0)
+					if (push_target[x]->client->NPC_class == CLASS_HAZARD_TROOPER
+						&& push_target[x]->health > 0)
 					{
 						//living hazard troopers resist push/pull
-						WP_ForceThrowHazardTrooper(self, push_list[x], pull);
+						WP_ForceThrowHazardTrooper(self, push_target[x], pull);
 						continue;
 					}
 					if (fake && !is_class_guard)
 					{
 						//always resist
-						WP_ResistForcePush(push_list[x], self, qfalse);
+						WP_ResistForcePush(push_target[x], self, qfalse);
 						continue;
 					}
 
-					if (push_list[x]->client->NPC_class == CLASS_GUARD || jedi_jedi_master_low(push_list[x]))
+					if (push_target[x]->client->NPC_class == CLASS_GUARD || jedi_jedi_master_low(push_target[x]))
 					{
 						//do a knockdown hes a twat
-						WP_ForceKnockdown(push_list[x], self, pull, qtrue, qfalse);
+						WP_ForceKnockdown(push_target[x], self, pull, qtrue, qfalse);
 						if (g_SerenityJediEngineMode->integer)
 						{
-							sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
 							if (pull)
 							{
 								//
 							}
 							else
 							{
-								PushDamage(self, push_list[x], tr.endpos, damage_level);
+								PushDamage(self, push_target[x], tr.endpos, damage_level);
 							}
 						}
 						continue;
@@ -25847,17 +25846,17 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 						power_use = FP_PUSH;
 					}
 
-					int mod_power_level = WP_AbsorbConversion(push_list[x],
-						push_list[x]->client->ps.forcePowerLevel[FP_ABSORB],
+					int mod_power_level = WP_AbsorbConversion(push_target[x],
+						push_target[x]->client->ps.forcePowerLevel[FP_ABSORB],
 						power_use,
 						power_level,
 						forcePowerNeeded[self->client->ps.forcePowerLevel[
 							power_use]]);
 
-					if (push_list[x]->client->NPC_class == CLASS_ASSASSIN_DROID ||
-						push_list[x]->client->NPC_class == CLASS_DROIDEKA ||
-						//push_list[x]->client->NPC_class == CLASS_SBD ||
-						push_list[x]->client->NPC_class == CLASS_HAZARD_TROOPER)
+					if (push_target[x]->client->NPC_class == CLASS_ASSASSIN_DROID ||
+						push_target[x]->client->NPC_class == CLASS_DROIDEKA ||
+						//push_target[x]->client->NPC_class == CLASS_SBD ||
+						push_target[x]->client->NPC_class == CLASS_HAZARD_TROOPER)
 					{
 						mod_power_level = 0; // divides throw by 10
 					}
@@ -25865,12 +25864,12 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 					//First, if this is the player we're push/pulling, see if he can counter it
 					if (mod_power_level != -1
 						&& !no_resist && !is_class_guard
-						&& InFront(self->currentOrigin, push_list[x]->client->renderInfo.eyePoint,
-							push_list[x]->client->ps.viewangles, 0.3f))
+						&& InFront(self->currentOrigin, push_target[x]->client->renderInfo.eyePoint,
+							push_target[x]->client->ps.viewangles, 0.3f))
 					{
 						//absorbed and I'm in front of them
 						//counter it
-						if (push_list[x]->client->ps.forcePowerLevel[FP_ABSORB] > FORCE_LEVEL_2)
+						if (push_target[x]->client->ps.forcePowerLevel[FP_ABSORB] > FORCE_LEVEL_2)
 						{
 							//no reaction at all
 						}
@@ -25878,40 +25877,39 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 						{
 							if (!is_class_guard)
 							{
-								WP_ResistForcePush(push_list[x], self, qfalse);
+								WP_ResistForcePush(push_target[x], self, qfalse);
 							}
-							push_list[x]->client->ps.saber_move = push_list[x]->client->ps.saberBounceMove = LS_READY;
+							push_target[x]->client->ps.saber_move = push_target[x]->client->ps.saberBounceMove = LS_READY;
 							//don't finish whatever saber anim you may have been in
-							push_list[x]->client->ps.saberBlocked = BLOCKED_NONE;
+							push_target[x]->client->ps.saberBlocked = BLOCKED_NONE;
 						}
 						continue;
 					}
-					if (!push_list[x]->s.number && !is_class_guard)
+					if (!push_target[x]->s.number && !is_class_guard)
 					{
 						//player
-						if (!no_resist && !is_class_guard && (ShouldPlayerResistForceThrow(push_list[x], self, pull) ||
-							PlayerisResistingForceThrow(push_list[x], self))
-							&& push_list[x]->client->ps.saberFatigueChainCount < MISHAPLEVEL_HEAVY)
+						if (!no_resist && !is_class_guard && (ShouldPlayerResistForceThrow(push_target[x], self, pull) ||
+							PlayerisResistingForceThrow(push_target[x], self))
+							&& push_target[x]->client->ps.saberFatigueChainCount < MISHAPLEVEL_HEAVY)
 						{
-							WP_ResistForcePush(push_list[x], self, qfalse);
-							push_list[x]->client->ps.saber_move = push_list[x]->client->ps.saberBounceMove = LS_READY;
+							WP_ResistForcePush(push_target[x], self, qfalse);
+							push_target[x]->client->ps.saber_move = push_target[x]->client->ps.saberBounceMove = LS_READY;
 							//don't finish whatever saber anim you may have been in
-							push_list[x]->client->ps.saberBlocked = BLOCKED_NONE;
+							push_target[x]->client->ps.saberBlocked = BLOCKED_NONE;
 							continue;
 						}
 					}
-					else if (push_list[x]->client && jedi_waiting_ambush(push_list[x]))
+					else if (push_target[x]->client && jedi_waiting_ambush(push_target[x]))
 					{
-						WP_ForceKnockdown(push_list[x], self, pull, qtrue, qfalse);
+						WP_ForceKnockdown(push_target[x], self, pull, qtrue, qfalse);
 						if (g_SerenityJediEngineMode->integer)
 						{
-							sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
 							if (self->client->NPC_class == CLASS_GALEN
 								&& (self->s.weapon == WP_MELEE || self->s.weapon == WP_NONE || self->s.weapon ==
 									WP_SABER && !self->client->ps.SaberActive())
 								&& self->client->ps.groundEntityNum == ENTITYNUM_NONE)
 							{
-								RepulseDamage(self, push_list[x], tr.endpos, damage_level);
+								RepulseDamage(self, push_target[x], tr.endpos, damage_level);
 								knockback = 200;
 							}
 							else
@@ -25922,25 +25920,24 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 								}
 								else
 								{
-									PushDamage(self, push_list[x], tr.endpos, damage_level);
+									PushDamage(self, push_target[x], tr.endpos, damage_level);
 								}
 							}
 						}
 						continue;
 					}
-					else if (PM_SaberInBrokenParry(push_list[x]->client->ps.saber_move))
+					else if (PM_SaberInBrokenParry(push_target[x]->client->ps.saber_move))
 					{
 						//do a knockdown if fairly close
-						WP_ForceKnockdown(push_list[x], self, pull, qtrue, qfalse);
+						WP_ForceKnockdown(push_target[x], self, pull, qtrue, qfalse);
 						if (g_SerenityJediEngineMode->integer)
 						{
-							sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
 							if (self->client->NPC_class == CLASS_GALEN
 								&& (self->s.weapon == WP_MELEE || self->s.weapon == WP_NONE || self->s.weapon ==
 									WP_SABER && !self->client->ps.SaberActive())
 								&& self->client->ps.groundEntityNum == ENTITYNUM_NONE)
 							{
-								RepulseDamage(self, push_list[x], tr.endpos, damage_level);
+								RepulseDamage(self, push_target[x], tr.endpos, damage_level);
 								knockback = 200;
 							}
 							else
@@ -25951,49 +25948,49 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 								}
 								else
 								{
-									PushDamage(self, push_list[x], tr.endpos, damage_level);
+									PushDamage(self, push_target[x], tr.endpos, damage_level);
 								}
 							}
 						}
 						continue;
 					}
 
-					G_KnockOffVehicle(push_list[x], self, pull);
+					G_KnockOffVehicle(push_target[x], self, pull);
 
 					if (!pull
-						&& push_list[x]->client->ps.forceDrainEntityNum == self->s.number
+						&& push_target[x]->client->ps.forceDrainEntityNum == self->s.number
 						&& self->s.eFlags & EF_FORCE_DRAINED)
 					{
 						//stop them from draining me now, dammit!
-						WP_ForcePowerStop(push_list[x], FP_DRAIN);
+						WP_ForcePowerStop(push_target[x], FP_DRAIN);
 					}
 
 					//okay, everyone else (or player who couldn't resist it)...
-					if ((self->s.number == 0 && Q_irand(0, 2) || Q_irand(0, 2)) && push_list[x]->client && push_list[x]
+					if ((self->s.number == 0 && Q_irand(0, 2) || Q_irand(0, 2)) && push_target[x]->client && push_target[x]
 						->health > 0 //a living client
-						&& push_list[x]->client->ps.weapon == WP_SABER //Jedi
-						&& push_list[x]->health > 0 //alive
-						&& push_list[x]->client->ps.forceRageRecoveryTime < level.time //not recovering from rage
+						&& push_target[x]->client->ps.weapon == WP_SABER //Jedi
+						&& push_target[x]->health > 0 //alive
+						&& push_target[x]->client->ps.forceRageRecoveryTime < level.time //not recovering from rage
 						&& (self->client->NPC_class != CLASS_DESANN && self->client->NPC_class != CLASS_SITHLORD && self
 							->client->NPC_class != CLASS_VADER && Q_stricmp("Yoda", self->NPC_type) || !Q_irand(0, 2))
 						//only 30% chance of resisting a Desann push
-						&& push_list[x]->client->ps.groundEntityNum != ENTITYNUM_NONE //on the ground
-						&& InFront(self->currentOrigin, push_list[x]->currentOrigin,
-							push_list[x]->client->ps.viewangles, 0.3f) //I'm in front of him
-						&& (push_list[x]->client->ps.powerups[PW_FORCE_PUSH] > level.time || //he's pushing too
-							push_list[x]->s.number != 0 && push_list[x]->client->ps.weaponTime < level.time))
+						&& push_target[x]->client->ps.groundEntityNum != ENTITYNUM_NONE //on the ground
+						&& InFront(self->currentOrigin, push_target[x]->currentOrigin,
+							push_target[x]->client->ps.viewangles, 0.3f) //I'm in front of him
+						&& (push_target[x]->client->ps.powerups[PW_FORCE_PUSH] > level.time || //he's pushing too
+							push_target[x]->s.number != 0 && push_target[x]->client->ps.weaponTime < level.time))
 					{
 						//Jedi don't get pushed, they resist as long as they aren't already attacking and are on the ground
-						if (push_list[x]->client->ps.saberLockTime > level.time)
+						if (push_target[x]->client->ps.saberLockTime > level.time)
 						{
 							//they're in a lock
-							if (push_list[x]->client->ps.saberLockEnemy != self->s.number)
+							if (push_target[x]->client->ps.saberLockEnemy != self->s.number)
 							{
 								//they're not in a lock with me
 								continue;
 							}
 							if (pull || self->client->ps.forcePowerLevel[FP_PUSH] < FORCE_LEVEL_3 ||
-								push_list[x]->client->ps.forcePowerLevel[FP_PUSH] > FORCE_LEVEL_2)
+								push_target[x]->client->ps.forcePowerLevel[FP_PUSH] > FORCE_LEVEL_2)
 							{
 								//they're in a lock with me, but my push is too weak
 								continue;
@@ -26005,18 +26002,14 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 							{
 								self->client->ps.weaponTime = floor(self->client->ps.weaponTime * g_timescale->value);
 							}
-							if (g_SerenityJediEngineMode->integer)
-							{
-								sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
-							}
 						}
 						int resist_chance = Q_irand(0, 2);
-						if (!push_list[x]->s.number && (self->client->ps.ManualBlockingFlags & 1 << MBF_BLOCKING || self
+						if (!push_target[x]->s.number && (self->client->ps.ManualBlockingFlags & 1 << MBF_BLOCKING || self
 							->client->ps.ManualBlockingFlags & 1 << MBF_NPCBLOCKING))
 						{
 							resist_chance = 1;
 						}
-						else if (push_list[x]->s.number >= MAX_CLIENTS)
+						else if (push_target[x]->s.number >= MAX_CLIENTS)
 						{
 							//NPC
 							if (g_spskill->integer == 1)
@@ -26030,24 +26023,23 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 							&& mod_power_level == -1
 							&& self->client->ps.forcePowerLevel[FP_PUSH] > FORCE_LEVEL_2
 							&& !resist_chance
-							&& push_list[x]->client->ps.forcePowerLevel[FP_PUSH] < FORCE_LEVEL_3)
+							&& push_target[x]->client->ps.forcePowerLevel[FP_PUSH] < FORCE_LEVEL_3)
 						{
 							//a level 3 push can even knock down a jedi
-							if (PM_InKnockDown(&push_list[x]->client->ps))
+							if (PM_InKnockDown(&push_target[x]->client->ps))
 							{
 								//can't knock them down again
 								continue;
 							}
-							WP_ForceKnockdown(push_list[x], self, pull, qfalse, qtrue);
+							WP_ForceKnockdown(push_target[x], self, pull, qfalse, qtrue);
 							if (g_SerenityJediEngineMode->integer)
 							{
-								sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
 								if (self->client->NPC_class == CLASS_GALEN
 									&& (self->s.weapon == WP_MELEE || self->s.weapon == WP_NONE || self->s.weapon ==
 										WP_SABER && !self->client->ps.SaberActive())
 									&& self->client->ps.groundEntityNum == ENTITYNUM_NONE)
 								{
-									RepulseDamage(self, push_list[x], tr.endpos, damage_level);
+									RepulseDamage(self, push_target[x], tr.endpos, damage_level);
 									knockback = 200;
 								}
 								else
@@ -26058,7 +26050,7 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 									}
 									else
 									{
-										PushDamage(self, push_list[x], tr.endpos, damage_level);
+										PushDamage(self, push_target[x], tr.endpos, damage_level);
 									}
 								}
 							}
@@ -26067,7 +26059,7 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 						{
 							if (!is_class_guard)
 							{
-								WP_ResistForcePush(push_list[x], self, qfalse);
+								WP_ResistForcePush(push_target[x], self, qfalse);
 							}
 						}
 					}
@@ -26075,28 +26067,27 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 					{
 						vec3_t push_dir;
 						//shove them
-						if (push_list[x]->NPC
-							&& push_list[x]->NPC->jumpState == JS_JUMPING)
+						if (push_target[x]->NPC
+							&& push_target[x]->NPC->jumpState == JS_JUMPING)
 						{
 							//don't interrupt a scripted jump
-							push_list[x]->forcePushTime = level.time + 600; // let the push effect last for 600 ms
+							push_target[x]->forcePushTime = level.time + 600; // let the push effect last for 600 ms
 							continue;
 						}
 
-						if (push_list[x]->s.number
-							&& (push_list[x]->message || push_list[x]->flags & FL_NO_KNOCKBACK))
+						if (push_target[x]->s.number
+							&& (push_target[x]->message || push_target[x]->flags & FL_NO_KNOCKBACK))
 						{
 							//an NPC who has a key
-							WP_ForceKnockdown(push_list[x], self, pull, qfalse, qfalse);
+							WP_ForceKnockdown(push_target[x], self, pull, qfalse, qfalse);
 							if (g_SerenityJediEngineMode->integer)
 							{
-								sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
 								if (self->client->NPC_class == CLASS_GALEN
 									&& (self->s.weapon == WP_MELEE || self->s.weapon == WP_NONE || self->s.weapon ==
 										WP_SABER && !self->client->ps.SaberActive())
 									&& self->client->ps.groundEntityNum == ENTITYNUM_NONE)
 								{
-									RepulseDamage(self, push_list[x], tr.endpos, damage_level);
+									RepulseDamage(self, push_target[x], tr.endpos, damage_level);
 									knockback = 200;
 								}
 								else
@@ -26107,7 +26098,7 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 									}
 									else
 									{
-										PushDamage(self, push_list[x], tr.endpos, damage_level);
+										PushDamage(self, push_target[x], tr.endpos, damage_level);
 									}
 								}
 							}
@@ -26115,30 +26106,30 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 						}
 						if (pull)
 						{
-							VectorSubtract(self->currentOrigin, push_list[x]->currentOrigin, push_dir);
+							VectorSubtract(self->currentOrigin, push_target[x]->currentOrigin, push_dir);
 							if (self->client->ps.forcePowerLevel[FP_PULL] >= FORCE_LEVEL_3
 								&& self->client->NPC_class == CLASS_KYLE
 								&& self->spawnflags & 1
 								&& TIMER_Done(self, "kyleTakesSaber")
-								&& push_list[x]->client
-								&& push_list[x]->client->ps.weapon == WP_SABER
-								&& !push_list[x]->client->ps.saberInFlight
-								&& push_list[x]->client->ps.saberEntityNum < ENTITYNUM_WORLD
-								&& !PM_InOnGroundAnim(&push_list[x]->client->ps))
+								&& push_target[x]->client
+								&& push_target[x]->client->ps.weapon == WP_SABER
+								&& !push_target[x]->client->ps.saberInFlight
+								&& push_target[x]->client->ps.saberEntityNum < ENTITYNUM_WORLD
+								&& !PM_InOnGroundAnim(&push_target[x]->client->ps))
 							{
 								vec3_t throw_vec;
 								VectorScale(push_dir, 10.0f, throw_vec);
-								WP_SaberLose(push_list[x], throw_vec);
-								NPC_SetAnim(push_list[x], SETANIM_BOTH, BOTH_LOSE_SABER,
+								WP_SaberLose(push_target[x], throw_vec);
+								NPC_SetAnim(push_target[x], SETANIM_BOTH, BOTH_LOSE_SABER,
 									SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
-								push_list[x]->client->ps.torsoAnimTimer += 500;
-								push_list[x]->client->ps.pm_time = push_list[x]->client->ps.weaponTime = push_list[x]->
+								push_target[x]->client->ps.torsoAnimTimer += 500;
+								push_target[x]->client->ps.pm_time = push_target[x]->client->ps.weaponTime = push_target[x]->
 									client->ps.torsoAnimTimer;
-								push_list[x]->client->ps.pm_flags |= PMF_TIME_KNOCKBACK;
-								push_list[x]->client->ps.saber_move = LS_NONE;
-								push_list[x]->aimDebounceTime = level.time + push_list[x]->client->ps.torsoAnimTimer;
-								VectorClear(push_list[x]->client->ps.velocity);
-								VectorClear(push_list[x]->client->ps.moveDir);
+								push_target[x]->client->ps.pm_flags |= PMF_TIME_KNOCKBACK;
+								push_target[x]->client->ps.saber_move = LS_NONE;
+								push_target[x]->aimDebounceTime = level.time + push_target[x]->client->ps.torsoAnimTimer;
+								VectorClear(push_target[x]->client->ps.velocity);
+								VectorClear(push_target[x]->client->ps.moveDir);
 								//Kyle will stand around for a bit, too...
 								self->client->ps.pm_time = self->client->ps.weaponTime = 2000;
 								self->client->ps.pm_flags |= PMF_TIME_KNOCKBACK;
@@ -26150,35 +26141,35 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 								VectorClear(self->client->ps.moveDir);
 								continue;
 							}
-							if (push_list[x]->NPC
-								&& push_list[x]->NPC->scriptFlags & SCF_DONT_FLEE)
+							if (push_target[x]->NPC
+								&& push_target[x]->NPC->scriptFlags & SCF_DONT_FLEE)
 							{
 								//*SIGH*... if an NPC can't flee, they can't run after and pick up their weapon, do don't drop it
 							}
 							else if (self->client->ps.forcePowerLevel[FP_PULL] > FORCE_LEVEL_1
-								&& push_list[x]->client->NPC_class != CLASS_ROCKETTROOPER
+								&& push_target[x]->client->NPC_class != CLASS_ROCKETTROOPER
 								//rockettroopers never drop their weapon
-								&& push_list[x]->client->NPC_class != CLASS_VEHICLE
-								&& push_list[x]->client->NPC_class != CLASS_BOBAFETT
-								&& push_list[x]->client->NPC_class != CLASS_MANDALORIAN
-								&& push_list[x]->client->NPC_class != CLASS_JANGO
-								&& push_list[x]->client->NPC_class != CLASS_JANGODUAL
-								&& push_list[x]->client->NPC_class != CLASS_TUSKEN
-								&& push_list[x]->client->NPC_class != CLASS_HAZARD_TROOPER
-								&& push_list[x]->client->NPC_class != CLASS_ASSASSIN_DROID
-								&& push_list[x]->client->NPC_class != CLASS_DROIDEKA
-								&& push_list[x]->client->NPC_class != CLASS_SBD
-								&& push_list[x]->s.weapon != WP_SABER
-								&& push_list[x]->s.weapon != WP_MELEE
-								&& push_list[x]->s.weapon != WP_THERMAL
-								&& push_list[x]->s.weapon != WP_CONCUSSION)
+								&& push_target[x]->client->NPC_class != CLASS_VEHICLE
+								&& push_target[x]->client->NPC_class != CLASS_BOBAFETT
+								&& push_target[x]->client->NPC_class != CLASS_MANDALORIAN
+								&& push_target[x]->client->NPC_class != CLASS_JANGO
+								&& push_target[x]->client->NPC_class != CLASS_JANGODUAL
+								&& push_target[x]->client->NPC_class != CLASS_TUSKEN
+								&& push_target[x]->client->NPC_class != CLASS_HAZARD_TROOPER
+								&& push_target[x]->client->NPC_class != CLASS_ASSASSIN_DROID
+								&& push_target[x]->client->NPC_class != CLASS_DROIDEKA
+								&& push_target[x]->client->NPC_class != CLASS_SBD
+								&& push_target[x]->s.weapon != WP_SABER
+								&& push_target[x]->s.weapon != WP_MELEE
+								&& push_target[x]->s.weapon != WP_THERMAL
+								&& push_target[x]->s.weapon != WP_CONCUSSION)
 							{
 								//yank the weapon
-								if (InFront(self->currentOrigin, push_list[x]->currentOrigin,
-									push_list[x]->client->ps.viewangles, 0.0f))
+								if (InFront(self->currentOrigin, push_target[x]->currentOrigin,
+									push_target[x]->client->ps.viewangles, 0.0f))
 								{
 									//enemy has to be facing me, too...
-									WP_DropWeapon(push_list[x], push_dir);
+									WP_DropWeapon(push_target[x], push_dir);
 								}
 							}
 							knockback += VectorNormalize(push_dir);
@@ -26194,46 +26185,68 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 						}
 						else
 						{
-							VectorSubtract(push_list[x]->currentOrigin, self->currentOrigin, push_dir);
+							VectorSubtract(push_target[x]->currentOrigin, self->currentOrigin, push_dir);
+							VectorSubtract(push_target[x]->currentOrigin, self->currentOrigin, push_dir);
 							knockback -= VectorNormalize(push_dir);
-							if (knockback < 100)
+
+							G_SoundOnEnt(push_target[x], CHAN_BODY, "sound/weapons/force/pushed.mp3");
+
+							if (knockback < 100) // if less than 100
 							{
-								knockback = 100;
+								knockback = 100; // minimum 100
 							}
+
 							//scale for push level
-							if (self->client->ps.forcePowerLevel[FP_PUSH] < FORCE_LEVEL_2)
+							if (self->client->ps.forcePowerLevel[FP_PUSH] < FORCE_LEVEL_2) // level 1 devide by 3
 							{
-								//maybe just knock them down
-								knockback /= 3;
-							}
-							else if (self->client->ps.forcePowerLevel[FP_PUSH] > FORCE_LEVEL_2)
-							{
-								//super-hard push
-								if (g_SerenityJediEngineMode->integer)
+								if (self->s.weapon == WP_MELEE ||
+									self->s.weapon == WP_NONE ||
+									self->s.weapon == WP_SABER &&
+									!self->client->ps.SaberActive() &&
+									!PM_InKnockDown(&self->client->ps))
 								{
-									sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
+									//maybe just knock them down
+									knockback /= 2;
+								}
+								else
+								{
+									//maybe just knock them down
+									knockback /= 3;
 								}
 							}
-							else if (self->s.weapon == WP_MELEE ||
-								self->s.weapon == WP_NONE ||
-								self->s.weapon == WP_SABER &&
-								!self->client->ps.SaberActive() &&
-								!PM_InKnockDown(&self->client->ps) &&
-								self->client->ps.forcePowerLevel[FP_PUSH] > FORCE_LEVEL_2)
+							else if (self->client->ps.forcePowerLevel[FP_PUSH] == FORCE_LEVEL_2) // level 2
 							{
-								//super-hard push
-								if (g_SerenityJediEngineMode->integer)
+								if (self->s.weapon == WP_MELEE ||
+									self->s.weapon == WP_NONE ||
+									self->s.weapon == WP_SABER &&
+									!self->client->ps.SaberActive() &&
+									!PM_InKnockDown(&self->client->ps))
 								{
-									knockback *= 6; //superpush
-									sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
-									if (pull)
-									{
-										//
-									}
-									else
-									{
-										PushDamage(self, push_list[x], tr.endpos, damage_level);
-									}
+									knockback = 125;
+								}
+								else
+								{
+									knockback = 100;
+								}
+							}
+							else if (self->client->ps.forcePowerLevel[FP_PUSH] > FORCE_LEVEL_2) // level 3 add sound
+							{
+								if (push_target[x]->client->NPC_class == CLASS_GUARD || jedi_jedi_master_low(push_target[x]))
+								{
+									//do a knockdown hes a twat
+									knockback *= 3; //superpush
+								}
+								if (self->s.weapon == WP_MELEE ||
+									self->s.weapon == WP_NONE ||
+									self->s.weapon == WP_SABER &&
+									!self->client->ps.SaberActive() &&
+									!PM_InKnockDown(&self->client->ps))
+								{
+									knockback *= 4; //superpush
+								}
+								else
+								{
+									knockback *= 2; //superpush
 								}
 							}
 						}
@@ -26254,41 +26267,40 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 							}
 						}
 						//actually push/pull the enemy
-						G_Throw(push_list[x], push_dir, knockback);
+						G_Throw(push_target[x], push_dir, knockback);
 						//make it so they don't actually hurt me when pulled at me...
-						push_list[x]->forcePuller = self->s.number;
+						push_target[x]->forcePuller = self->s.number;
 
-						if (push_list[x]->client->ps.groundEntityNum != ENTITYNUM_NONE)
+						if (push_target[x]->client->ps.groundEntityNum != ENTITYNUM_NONE)
 						{
 							//if on the ground, make sure they get shoved up some
-							if (push_list[x]->client->ps.velocity[2] < knockback)
+							if (push_target[x]->client->ps.velocity[2] < knockback)
 							{
-								push_list[x]->client->ps.velocity[2] = knockback;
+								push_target[x]->client->ps.velocity[2] = knockback;
 							}
 						}
 
-						if (push_list[x]->health > 0)
+						if (push_target[x]->health > 0)
 						{
 							//target is still alive
-							if ((push_list[x]->s.number || cg.renderingThirdPerson && !cg.zoomMode)
+							if ((push_target[x]->s.number || cg.renderingThirdPerson && !cg.zoomMode)
 								//NPC or 3rd person player
-								&& (!pull && self->client->ps.forcePowerLevel[FP_PUSH] < FORCE_LEVEL_2 && push_list[x]->
+								&& (!pull && self->client->ps.forcePowerLevel[FP_PUSH] < FORCE_LEVEL_2 && push_target[x]->
 									client->ps.forcePowerLevel[FP_PUSH] < FORCE_LEVEL_1 //level 1 push
-									|| pull && self->client->ps.forcePowerLevel[FP_PULL] < FORCE_LEVEL_2 && push_list[x]
+									|| pull && self->client->ps.forcePowerLevel[FP_PULL] < FORCE_LEVEL_2 && push_target[x]
 									->client->ps.forcePowerLevel[FP_PULL] < FORCE_LEVEL_1)) //level 1 pull
 							{
 								//NPC or third person player (without force push/pull skill), and force push/pull level is at 1
-								WP_ForceKnockdown(push_list[x], self, pull,
+								WP_ForceKnockdown(push_target[x], self, pull,
 									static_cast<qboolean>(!pull && knockback > 150), qfalse);
 								if (g_SerenityJediEngineMode->integer)
 								{
-									sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
 									if (self->client->NPC_class == CLASS_GALEN
 										&& (self->s.weapon == WP_MELEE || self->s.weapon == WP_NONE || self->s.weapon ==
 											WP_SABER && !self->client->ps.SaberActive())
 										&& self->client->ps.groundEntityNum == ENTITYNUM_NONE)
 									{
-										RepulseDamage(self, push_list[x], tr.endpos, damage_level);
+										RepulseDamage(self, push_target[x], tr.endpos, damage_level);
 										knockback = 200;
 									}
 									else
@@ -26299,25 +26311,24 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 										}
 										else
 										{
-											PushDamage(self, push_list[x], tr.endpos, damage_level);
+											PushDamage(self, push_target[x], tr.endpos, damage_level);
 										}
 									}
 								}
 							}
-							else if (!push_list[x]->s.number)
+							else if (!push_target[x]->s.number)
 							{
 								//player, have to force an anim on him
-								WP_ForceKnockdown(push_list[x], self, pull,
+								WP_ForceKnockdown(push_target[x], self, pull,
 									static_cast<qboolean>(!pull && knockback > 150), qfalse);
 								if (g_SerenityJediEngineMode->integer)
 								{
-									sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
 									if (self->client->NPC_class == CLASS_GALEN
 										&& (self->s.weapon == WP_MELEE || self->s.weapon == WP_NONE || self->s.weapon ==
 											WP_SABER && !self->client->ps.SaberActive())
 										&& self->client->ps.groundEntityNum == ENTITYNUM_NONE)
 									{
-										RepulseDamage(self, push_list[x], tr.endpos, damage_level);
+										RepulseDamage(self, push_target[x], tr.endpos, damage_level);
 										knockback = 200;
 									}
 									else
@@ -26328,7 +26339,7 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 										}
 										else
 										{
-											PushDamage(self, push_list[x], tr.endpos, damage_level);
+											PushDamage(self, push_target[x], tr.endpos, damage_level);
 										}
 									}
 								}
@@ -26336,17 +26347,16 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 							else
 							{
 								//NPC and force-push/pull at level 2 or higher
-								WP_ForceKnockdown(push_list[x], self, pull,
+								WP_ForceKnockdown(push_target[x], self, pull,
 									static_cast<qboolean>(!pull && knockback > 100), qfalse);
 								if (g_SerenityJediEngineMode->integer)
 								{
-									sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
 									if (self->client->NPC_class == CLASS_GALEN
 										&& (self->s.weapon == WP_MELEE || self->s.weapon == WP_NONE || self->s.weapon ==
 											WP_SABER && !self->client->ps.SaberActive())
 										&& self->client->ps.groundEntityNum == ENTITYNUM_NONE)
 									{
-										RepulseDamage(self, push_list[x], tr.endpos, damage_level);
+										RepulseDamage(self, push_target[x], tr.endpos, damage_level);
 										knockback = 200;
 									}
 									else
@@ -26357,23 +26367,23 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 										}
 										else
 										{
-											PushDamage(self, push_list[x], tr.endpos, damage_level);
+											PushDamage(self, push_target[x], tr.endpos, damage_level);
 										}
 									}
 								}
 							}
 						}
-						push_list[x]->forcePushTime = level.time + 600; // let the push effect last for 600 ms
+						push_target[x]->forcePushTime = level.time + 600; // let the push effect last for 600 ms
 					}
 				}
 				else if (!fake)
 				{
 					//not a fake push/pull
-					if (push_list[x]->s.weapon == WP_SABER && push_list[x]->contents & CONTENTS_LIGHTSABER)
+					if (push_target[x]->s.weapon == WP_SABER && push_target[x]->contents & CONTENTS_LIGHTSABER)
 					{
 						//a thrown saber, just send it back
-						if (push_list[x]->owner && push_list[x]->owner->client && push_list[x]->owner->client->ps.
-							SaberActive() && push_list[x]->s.pos.trType == TR_LINEAR && push_list[x]->owner->client->ps.
+						if (push_target[x]->owner && push_target[x]->owner->client && push_target[x]->owner->client->ps.
+							SaberActive() && push_target[x]->s.pos.trType == TR_LINEAR && push_target[x]->owner->client->ps.
 							saberEntityState != SES_RETURNING)
 						{
 							//it's on and being controlled
@@ -26389,70 +26399,70 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 								{
 									if (is_class_guard)
 									{
-										G_MissileBouncedoffSaber(self, push_list[x], right);
+										G_MissileBouncedoffSaber(self, push_target[x], right);
 									}
 									else
 									{
-										G_ReflectMissileNPC(self, push_list[x], right);
+										G_ReflectMissileNPC(self, push_target[x], right);
 									}
 								}
 								else
 								{
 									if (g_SerenityJediEngineMode->integer)
 									{
-										G_ReflectMissileAuto(self, push_list[x], right);
+										G_ReflectMissileAuto(self, push_target[x], right);
 									}
 									else
 									{
-										G_ReflectMissile_JKA(self, push_list[x], right);
+										G_ReflectMissile_JKA(self, push_target[x], right);
 									}
 								}
-								WP_SaberDrop(push_list[x]->owner, push_list[x]);
+								WP_SaberDrop(push_target[x]->owner, push_target[x]);
 							}
 							else
 							{
 								if (g_SerenityJediEngineMode->integer)
 								{
-									WP_SaberDrop(push_list[x]->owner, push_list[x]);
+									WP_SaberDrop(push_target[x]->owner, push_target[x]);
 								}
 								else
 								{
-									if (push_list[x]->owner->NPC && !G_ControlledByPlayer(push_list[x]->owner))
+									if (push_target[x]->owner->NPC && !G_ControlledByPlayer(push_target[x]->owner))
 									{
-										WP_SaberDrop(push_list[x]->owner, push_list[x]);
+										WP_SaberDrop(push_target[x]->owner, push_target[x]);
 									}
 									else
 									{
-										WP_SaberReturn(push_list[x]->owner, push_list[x]);
+										WP_SaberReturn(push_target[x]->owner, push_target[x]);
 									}
 								}
 							}
 						}
 					}
-					else if (push_list[x]->s.eType == ET_MISSILE
-						&& push_list[x]->s.pos.trType != TR_STATIONARY
-						&& (push_list[x]->s.pos.trType != TR_INTERPOLATE || push_list[x]->s.weapon != WP_THERMAL))
+					else if (push_target[x]->s.eType == ET_MISSILE
+						&& push_target[x]->s.pos.trType != TR_STATIONARY
+						&& (push_target[x]->s.pos.trType != TR_INTERPOLATE || push_target[x]->s.weapon != WP_THERMAL))
 						//rolling and stationary thermal detonators are dealt with below
 					{
 						vec3_t dir2_me;
-						VectorSubtract(self->currentOrigin, push_list[x]->currentOrigin, dir2_me);
-						float dot = DotProduct(push_list[x]->s.pos.trDelta, dir2_me);
+						VectorSubtract(self->currentOrigin, push_target[x]->currentOrigin, dir2_me);
+						float dot = DotProduct(push_target[x]->s.pos.trDelta, dir2_me);
 						if (pull)
 						{
 							//deflect rather than reflect?
 						}
 						else
 						{
-							if (push_list[x]->s.eFlags & EF_MISSILE_STICK)
+							if (push_target[x]->s.eFlags & EF_MISSILE_STICK)
 							{
 								//caught a sticky in-air
-								push_list[x]->s.eType = ET_MISSILE;
-								push_list[x]->s.eFlags &= ~EF_MISSILE_STICK;
-								push_list[x]->s.eFlags |= EF_BOUNCE_HALF;
-								push_list[x]->splashDamage /= 3;
-								push_list[x]->splashRadius /= 3;
-								push_list[x]->e_ThinkFunc = thinkF_WP_Explode;
-								push_list[x]->nextthink = level.time + Q_irand(500, 3000);
+								push_target[x]->s.eType = ET_MISSILE;
+								push_target[x]->s.eFlags &= ~EF_MISSILE_STICK;
+								push_target[x]->s.eFlags |= EF_BOUNCE_HALF;
+								push_target[x]->splashDamage /= 3;
+								push_target[x]->splashRadius /= 3;
+								push_target[x]->e_ThinkFunc = thinkF_WP_Explode;
+								push_target[x]->nextthink = level.time + Q_irand(500, 3000);
 							}
 							if (dot >= 0)
 							{
@@ -26461,39 +26471,39 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 								{
 									if (is_class_guard)
 									{
-										G_MissileBouncedoffSaber(self, push_list[x], forward);
+										G_MissileBouncedoffSaber(self, push_target[x], forward);
 									}
 									else
 									{
-										G_ReflectMissileNPC(self, push_list[x], forward);
+										G_ReflectMissileNPC(self, push_target[x], forward);
 									}
 								}
 								else
 								{
 									if (g_SerenityJediEngineMode->integer)
 									{
-										G_ReflectMissileAuto(self, push_list[x], forward);
+										G_ReflectMissileAuto(self, push_target[x], forward);
 									}
 									else
 									{
-										G_ReflectMissile_JKA(self, push_list[x], forward);
+										G_ReflectMissile_JKA(self, push_target[x], forward);
 									}
 								}
 							}
 							else
 							{
-								VectorScale(push_list[x]->s.pos.trDelta, 1.25f, push_list[x]->s.pos.trDelta);
+								VectorScale(push_target[x]->s.pos.trDelta, 1.25f, push_target[x]->s.pos.trDelta);
 							}
 						}
-						if (push_list[x]->s.eType == ET_MISSILE
-							&& push_list[x]->s.weapon == WP_ROCKET_LAUNCHER
-							&& push_list[x]->damage < 60)
+						if (push_target[x]->s.eType == ET_MISSILE
+							&& push_target[x]->s.weapon == WP_ROCKET_LAUNCHER
+							&& push_target[x]->damage < 60)
 						{
 							//pushing away a rocket raises it's damage to the max for NPCs
-							push_list[x]->damage = 60;
+							push_target[x]->damage = 60;
 						}
 					}
-					else if (push_list[x]->svFlags & SVF_GLASS_BRUSH)
+					else if (push_target[x]->svFlags & SVF_GLASS_BRUSH)
 					{
 						//break the glass
 						trace_t trace;
@@ -26505,7 +26515,7 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 						VectorMA(self->client->renderInfo.eyePoint, radius, forward, end);
 						gi.trace(&trace, self->client->renderInfo.eyePoint, vec3_origin, vec3_origin, end,
 							self->s.number, MASK_SHOT, static_cast<EG2_Collision>(0), 0);
-						if (trace.entity_num != push_list[x]->s.number || trace.fraction == 1.0 || trace.allsolid ||
+						if (trace.entity_num != push_target[x]->s.number || trace.fraction == 1.0 || trace.allsolid ||
 							trace.startsolid)
 						{
 							//must be pointing right at it
@@ -26527,32 +26537,32 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 						}
 						VectorScale(push_dir, damage, push_dir);
 
-						G_Damage(push_list[x], self, self, push_dir, trace.endpos, damage, 0, MOD_UNKNOWN);
+						G_Damage(push_target[x], self, self, push_dir, trace.endpos, damage, 0, MOD_UNKNOWN);
 					}
-					else if (!Q_stricmp("func_static", push_list[x]->classname))
+					else if (!Q_stricmp("func_static", push_target[x]->classname))
 					{
 						//force-usable func_static
-						if (!pull && push_list[x]->spawnflags & 1/*F_PUSH*/)
+						if (!pull && push_target[x]->spawnflags & 1/*F_PUSH*/)
 						{
-							if (push_list[x]->NPC_targetname == nullptr
-								|| self->targetname && Q_stricmp(push_list[x]->NPC_targetname, self->targetname) == 0)
+							if (push_target[x]->NPC_targetname == nullptr
+								|| self->targetname && Q_stricmp(push_target[x]->NPC_targetname, self->targetname) == 0)
 							{
 								//anyone can pull it or only 1 person can push it and it's me
-								GEntity_UseFunc(push_list[x], self, self);
+								GEntity_UseFunc(push_target[x], self, self);
 							}
 						}
-						else if (pull && push_list[x]->spawnflags & 2/*F_PULL*/)
+						else if (pull && push_target[x]->spawnflags & 2/*F_PULL*/)
 						{
-							if (push_list[x]->NPC_targetname == nullptr
-								|| self->targetname && Q_stricmp(push_list[x]->NPC_targetname, self->NPC_targetname) ==
+							if (push_target[x]->NPC_targetname == nullptr
+								|| self->targetname && Q_stricmp(push_target[x]->NPC_targetname, self->NPC_targetname) ==
 								0)
 							{
 								//anyone can push it or only 1 person can push it and it's me
-								GEntity_UseFunc(push_list[x], self, self);
+								GEntity_UseFunc(push_target[x], self, self);
 							}
 						}
 					}
-					else if (!Q_stricmp("func_door", push_list[x]->classname) && push_list[x]->spawnflags & 2
+					else if (!Q_stricmp("func_door", push_target[x]->classname) && push_target[x]->spawnflags & 2
 						/*MOVER_FORCE_ACTIVATE*/)
 					{
 						//push/pull the door
@@ -26563,44 +26573,44 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 						VectorMA(self->client->renderInfo.eyePoint, radius, forward, end);
 						gi.trace(&tr, self->client->renderInfo.eyePoint, vec3_origin, vec3_origin, end, self->s.number,
 							MASK_SHOT, static_cast<EG2_Collision>(0), 0);
-						if (tr.entity_num != push_list[x]->s.number || tr.fraction == 1.0 || tr.allsolid || tr.
+						if (tr.entity_num != push_target[x]->s.number || tr.fraction == 1.0 || tr.allsolid || tr.
 							startsolid)
 						{
 							//must be pointing right at it
 							continue;
 						}
 
-						if (VectorCompare(vec3_origin, push_list[x]->s.origin))
+						if (VectorCompare(vec3_origin, push_target[x]->s.origin))
 						{
 							//does not have an origin brush, so pos1 & pos2 are relative to world origin, need to calc center
-							VectorSubtract(push_list[x]->absmax, push_list[x]->absmin, size);
-							VectorMA(push_list[x]->absmin, 0.5, size, center);
-							if (push_list[x]->spawnflags & 1 && push_list[x]->moverState == MOVER_POS1)
+							VectorSubtract(push_target[x]->absmax, push_target[x]->absmin, size);
+							VectorMA(push_target[x]->absmin, 0.5, size, center);
+							if (push_target[x]->spawnflags & 1 && push_target[x]->moverState == MOVER_POS1)
 							{
 								//if at pos1 and started open, make sure we get the center where it *started* because we're going to add back in the relative values pos1 and pos2
-								VectorSubtract(center, push_list[x]->pos1, center);
+								VectorSubtract(center, push_target[x]->pos1, center);
 							}
-							else if (!(push_list[x]->spawnflags & 1) && push_list[x]->moverState == MOVER_POS2)
+							else if (!(push_target[x]->spawnflags & 1) && push_target[x]->moverState == MOVER_POS2)
 							{
 								//if at pos2, make sure we get the center where it *started* because we're going to add back in the relative values pos1 and pos2
-								VectorSubtract(center, push_list[x]->pos2, center);
+								VectorSubtract(center, push_target[x]->pos2, center);
 							}
-							VectorAdd(center, push_list[x]->pos1, pos1);
-							VectorAdd(center, push_list[x]->pos2, pos2);
+							VectorAdd(center, push_target[x]->pos1, pos1);
+							VectorAdd(center, push_target[x]->pos2, pos2);
 						}
 						else
 						{
 							//actually has an origin, pos1 and pos2 are absolute
-							VectorCopy(push_list[x]->currentOrigin, center);
-							VectorCopy(push_list[x]->pos1, pos1);
-							VectorCopy(push_list[x]->pos2, pos2);
+							VectorCopy(push_target[x]->currentOrigin, center);
+							VectorCopy(push_target[x]->pos1, pos1);
+							VectorCopy(push_target[x]->pos2, pos2);
 						}
 
 						if (Distance(pos1, self->client->renderInfo.eyePoint) < Distance(
 							pos2, self->client->renderInfo.eyePoint))
 						{
 							//pos1 is closer
-							if (push_list[x]->moverState == MOVER_POS1)
+							if (push_target[x]->moverState == MOVER_POS1)
 							{
 								//at the closest pos
 								if (pull)
@@ -26609,7 +26619,7 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 									continue;
 								}
 							}
-							else if (push_list[x]->moverState == MOVER_POS2)
+							else if (push_target[x]->moverState == MOVER_POS2)
 							{
 								//at farthest pos
 								if (!pull)
@@ -26622,7 +26632,7 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 						else
 						{
 							//pos2 is closer
-							if (push_list[x]->moverState == MOVER_POS1)
+							if (push_target[x]->moverState == MOVER_POS1)
 							{
 								//at the farthest pos
 								if (!pull)
@@ -26631,7 +26641,7 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 									continue;
 								}
 							}
-							else if (push_list[x]->moverState == MOVER_POS2)
+							else if (push_target[x]->moverState == MOVER_POS2)
 							{
 								//at closest pos
 								if (pull)
@@ -26641,11 +26651,11 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 								}
 							}
 						}
-						GEntity_UseFunc(push_list[x], self, self);
+						GEntity_UseFunc(push_target[x], self, self);
 					}
-					else if (push_list[x]->s.eType == ET_MISSILE /*thermal resting on ground*/
-						|| push_list[x]->s.eType == ET_ITEM
-						|| push_list[x]->e_ThinkFunc == thinkF_G_RunObject || Q_stricmp("limb", push_list[x]->classname)
+					else if (push_target[x]->s.eType == ET_MISSILE /*thermal resting on ground*/
+						|| push_target[x]->s.eType == ET_ITEM
+						|| push_target[x]->e_ThinkFunc == thinkF_G_RunObject || Q_stricmp("limb", push_target[x]->classname)
 						== 0)
 					{
 						//general object, toss it
@@ -26655,41 +26665,41 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 
 						if (pull)
 						{
-							if (push_list[x]->s.eType == ET_ITEM)
+							if (push_target[x]->s.eType == ET_ITEM)
 							{
 								//pull it to a little higher point
 								vec3_t adjustedOrg;
 								VectorCopy(self->currentOrigin, adjustedOrg);
 								adjustedOrg[2] += self->maxs[2] / 3;
-								VectorSubtract(adjustedOrg, push_list[x]->currentOrigin, push_dir);
+								VectorSubtract(adjustedOrg, push_target[x]->currentOrigin, push_dir);
 							}
 							else if (self->enemy //I have an enemy
 								&& self->client->ps.forcePowerLevel[FP_PUSH] > FORCE_LEVEL_2 //have push 3 or greater
-								&& InFront(push_list[x]->currentOrigin, self->currentOrigin, self->currentAngles, 0.25f)
+								&& InFront(push_target[x]->currentOrigin, self->currentOrigin, self->currentAngles, 0.25f)
 								//object is generally in front of me
 								&& InFront(self->enemy->currentOrigin, self->currentOrigin, self->currentAngles, 0.75f)
 								//enemy is pretty much right in front of me
-								&& !InFront(push_list[x]->currentOrigin, self->enemy->currentOrigin,
+								&& !InFront(push_target[x]->currentOrigin, self->enemy->currentOrigin,
 									self->enemy->currentAngles, -0.25f) //object is generally behind enemy
 								&& (self->NPC && (no_resist || is_class_guard || Q_irand(0, RANK_CAPTAIN) < self->NPC->
 									rank) //NPC with enough skill
 									|| self->s.number < MAX_CLIENTS))
 							{
-								VectorSubtract(self->enemy->currentOrigin, push_list[x]->currentOrigin, push_dir);
+								VectorSubtract(self->enemy->currentOrigin, push_target[x]->currentOrigin, push_dir);
 							}
 							else
 							{
-								VectorSubtract(self->currentOrigin, push_list[x]->currentOrigin, push_dir);
+								VectorSubtract(self->currentOrigin, push_target[x]->currentOrigin, push_dir);
 							}
 							knockback += VectorNormalize(push_dir);
 							if (knockback > 200)
 							{
 								knockback = 200;
 							}
-							if (push_list[x]->s.eType == ET_ITEM
-								&& push_list[x]->item
-								&& push_list[x]->item->giType == IT_HOLDABLE
-								&& push_list[x]->item->giTag == INV_SECURITY_KEY)
+							if (push_target[x]->s.eType == ET_ITEM
+								&& push_target[x]->item
+								&& push_target[x]->item->giType == IT_HOLDABLE
+								&& push_target[x]->item->giTag == INV_SECURITY_KEY)
 							{
 								//security keys are pulled with less enthusiasm
 								if (knockback > 100)
@@ -26705,23 +26715,23 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 						else
 						{
 							if (self->enemy //I have an enemy
-								&& push_list[x]->s.eType != ET_ITEM //not an item
+								&& push_target[x]->s.eType != ET_ITEM //not an item
 								&& self->client->ps.forcePowerLevel[FP_PUSH] > FORCE_LEVEL_2 //have push 3 or greater
-								&& InFront(push_list[x]->currentOrigin, self->currentOrigin, self->currentAngles, 0.25f)
+								&& InFront(push_target[x]->currentOrigin, self->currentOrigin, self->currentAngles, 0.25f)
 								//object is generally in front of me
 								&& InFront(self->enemy->currentOrigin, self->currentOrigin, self->currentAngles, 0.75f)
 								//enemy is pretty much right in front of me
-								&& InFront(push_list[x]->currentOrigin, self->enemy->currentOrigin,
+								&& InFront(push_target[x]->currentOrigin, self->enemy->currentOrigin,
 									self->enemy->currentAngles, 0.25f) //object is generally in front of enemy
 								&& (self->NPC && (no_resist || is_class_guard || Q_irand(0, RANK_CAPTAIN) < self->NPC->
 									rank) //NPC with enough skill
 									|| self->s.number < MAX_CLIENTS))
 							{
-								VectorSubtract(self->enemy->currentOrigin, push_list[x]->currentOrigin, push_dir);
+								VectorSubtract(self->enemy->currentOrigin, push_target[x]->currentOrigin, push_dir);
 							}
 							else
 							{
-								VectorSubtract(push_list[x]->currentOrigin, self->currentOrigin, push_dir);
+								VectorSubtract(push_target[x]->currentOrigin, self->currentOrigin, push_dir);
 							}
 							knockback -= VectorNormalize(push_dir);
 							if (knockback < 100)
@@ -26729,18 +26739,18 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 								knockback = 100;
 							}
 						}
-						VectorCopy(push_list[x]->currentOrigin, push_list[x]->s.pos.trBase);
-						push_list[x]->s.pos.trTime = level.time; // move a bit on the very first frame
-						if (push_list[x]->s.pos.trType != TR_INTERPOLATE)
+						VectorCopy(push_target[x]->currentOrigin, push_target[x]->s.pos.trBase);
+						push_target[x]->s.pos.trTime = level.time; // move a bit on the very first frame
+						if (push_target[x]->s.pos.trType != TR_INTERPOLATE)
 						{
 							//don't do this to rolling missiles
-							push_list[x]->s.pos.trType = TR_GRAVITY;
+							push_target[x]->s.pos.trType = TR_GRAVITY;
 						}
 
-						if (push_list[x]->e_ThinkFunc == thinkF_G_RunObject && push_list[x]->physicsBounce)
+						if (push_target[x]->e_ThinkFunc == thinkF_G_RunObject && push_target[x]->physicsBounce)
 						{
 							//it's a pushable misc_model_breakable, use it's mass instead of our one-size-fits-all mass
-							mass = push_list[x]->physicsBounce; //same as push_list[x]->mass, right?
+							mass = push_target[x]->physicsBounce; //same as push_target[x]->mass, right?
 						}
 						if (mass < 50)
 						{
@@ -26756,49 +26766,49 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 						{
 							VectorScale(push_dir, g_knockback->value * knockback / mass, kvel);
 						}
-						VectorAdd(push_list[x]->s.pos.trDelta, kvel, push_list[x]->s.pos.trDelta);
+						VectorAdd(push_target[x]->s.pos.trDelta, kvel, push_target[x]->s.pos.trDelta);
 						if (g_gravity->value > 0)
 						{
-							if (push_list[x]->s.pos.trDelta[2] < knockback)
+							if (push_target[x]->s.pos.trDelta[2] < knockback)
 							{
-								push_list[x]->s.pos.trDelta[2] = knockback;
+								push_target[x]->s.pos.trDelta[2] = knockback;
 							}
 						}
 						//no trDuration?
-						if (push_list[x]->e_ThinkFunc != thinkF_G_RunObject)
+						if (push_target[x]->e_ThinkFunc != thinkF_G_RunObject)
 						{
 							//objects spin themselves?
-							push_list[x]->s.apos.trTime = level.time;
-							push_list[x]->s.apos.trType = TR_LINEAR;
-							VectorClear(push_list[x]->s.apos.trDelta);
-							push_list[x]->s.apos.trDelta[1] = Q_irand(-800, 800);
+							push_target[x]->s.apos.trTime = level.time;
+							push_target[x]->s.apos.trType = TR_LINEAR;
+							VectorClear(push_target[x]->s.apos.trDelta);
+							push_target[x]->s.apos.trDelta[1] = Q_irand(-800, 800);
 						}
 
-						if (Q_stricmp("limb", push_list[x]->classname) == 0)
+						if (Q_stricmp("limb", push_target[x]->classname) == 0)
 						{
 							//make sure it runs it's physics
-							push_list[x]->e_ThinkFunc = thinkF_LimbThink;
-							push_list[x]->nextthink = level.time + FRAMETIME;
+							push_target[x]->e_ThinkFunc = thinkF_LimbThink;
+							push_target[x]->nextthink = level.time + FRAMETIME;
 						}
-						push_list[x]->forcePushTime = level.time + 600; // let the push effect last for 600 ms
-						push_list[x]->forcePuller = self->s.number; //remember this regardless
-						if (push_list[x]->item && push_list[x]->item->giTag == INV_SECURITY_KEY)
+						push_target[x]->forcePushTime = level.time + 600; // let the push effect last for 600 ms
+						push_target[x]->forcePuller = self->s.number; //remember this regardless
+						if (push_target[x]->item && push_target[x]->item->giTag == INV_SECURITY_KEY)
 						{
-							AddSightEvent(player, push_list[x]->currentOrigin, 128, AEL_DISCOVERED);
+							AddSightEvent(player, push_target[x]->currentOrigin, 128, AEL_DISCOVERED);
 							//security keys are more important
 						}
 						else
 						{
-							AddSightEvent(player, push_list[x]->currentOrigin, 128, AEL_SUSPICIOUS);
+							AddSightEvent(player, push_target[x]->currentOrigin, 128, AEL_SUSPICIOUS);
 							//hmm... or should this always be discovered?
 						}
 					}
-					else if (push_list[x]->s.weapon == WP_TURRET
-						&& !Q_stricmp("PAS", push_list[x]->classname)
-						&& push_list[x]->s.apos.trType == TR_STATIONARY)
+					else if (push_target[x]->s.weapon == WP_TURRET
+						&& !Q_stricmp("PAS", push_target[x]->classname)
+						&& push_target[x]->s.apos.trType == TR_STATIONARY)
 					{
 						//a portable turret
-						WP_KnockdownTurret(push_list[x]);
+						WP_KnockdownTurret(push_target[x]);
 					}
 				}
 			}
@@ -26877,63 +26887,62 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 		{
 			for (int x = 0; x < ent_count; x++)
 			{
-				if (push_list[x]->client)
+				if (push_target[x]->client)
 				{
 					float knockback = pull ? 0 : 200;
 
 					//SIGH band-aid...
-					if (push_list[x]->s.number >= MAX_CLIENTS
+					if (push_target[x]->s.number >= MAX_CLIENTS
 						&& self->s.number < MAX_CLIENTS)
 					{
-						if (push_list[x]->client->ps.forcePowersActive & 1 << FP_GRIP
-							&& push_list[x]->client->ps.forceGripEntityNum == self->s.number)
+						if (push_target[x]->client->ps.forcePowersActive & 1 << FP_GRIP
+							&& push_target[x]->client->ps.forceGripEntityNum == self->s.number)
 						{
-							WP_ForcePowerStop(push_list[x], FP_GRIP);
+							WP_ForcePowerStop(push_target[x], FP_GRIP);
 						}
-						if (push_list[x]->client->ps.forcePowersActive & 1 << FP_GRASP
-							&& push_list[x]->client->ps.forceGripEntityNum == self->s.number)
+						if (push_target[x]->client->ps.forcePowersActive & 1 << FP_GRASP
+							&& push_target[x]->client->ps.forceGripEntityNum == self->s.number)
 						{
-							WP_ForcePowerStop(push_list[x], FP_GRASP);
+							WP_ForcePowerStop(push_target[x], FP_GRASP);
 						}
-						if (push_list[x]->client->ps.forcePowersActive & 1 << FP_DRAIN
-							&& push_list[x]->client->ps.forceDrainEntityNum == self->s.number)
+						if (push_target[x]->client->ps.forcePowersActive & 1 << FP_DRAIN
+							&& push_target[x]->client->ps.forceDrainEntityNum == self->s.number)
 						{
-							WP_ForcePowerStop(push_list[x], FP_DRAIN);
+							WP_ForcePowerStop(push_target[x], FP_DRAIN);
 						}
 					}
 
-					if (rosh_being_healed(push_list[x]))
+					if (rosh_being_healed(push_target[x]))
 					{
 						continue;
 					}
-					if (push_list[x]->client->NPC_class == CLASS_HAZARD_TROOPER
-						&& push_list[x]->health > 0)
+					if (push_target[x]->client->NPC_class == CLASS_HAZARD_TROOPER
+						&& push_target[x]->health > 0)
 					{
 						//living hazard troopers resist push/pull
-						WP_ForceThrowHazardTrooper(self, push_list[x], pull);
+						WP_ForceThrowHazardTrooper(self, push_target[x], pull);
 						continue;
 					}
 					if (fake && !is_class_guard)
 					{
 						//always resist
-						WP_ResistForcePush(push_list[x], self, qfalse);
+						WP_ResistForcePush(push_target[x], self, qfalse);
 						continue;
 					}
 
-					if (push_list[x]->client->NPC_class == CLASS_GUARD || jedi_jedi_master_low(push_list[x]))
+					if (push_target[x]->client->NPC_class == CLASS_GUARD || jedi_jedi_master_low(push_target[x]))
 					{
 						//do a knockdown hes a twat
-						WP_ForceKnockdown(push_list[x], self, pull, qtrue, qfalse);
+						WP_ForceKnockdown(push_target[x], self, pull, qtrue, qfalse);
 						if (g_SerenityJediEngineMode->integer)
 						{
-							sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
 							if (pull)
 							{
 								//
 							}
 							else
 							{
-								PushDamage(self, push_list[x], tr.endpos, damage_level);
+								PushDamage(self, push_target[x], tr.endpos, damage_level);
 							}
 						}
 						continue;
@@ -26951,17 +26960,17 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 						power_use = FP_PUSH;
 					}
 
-					int mod_power_level = WP_AbsorbConversion(push_list[x],
-						push_list[x]->client->ps.forcePowerLevel[FP_ABSORB],
+					int mod_power_level = WP_AbsorbConversion(push_target[x],
+						push_target[x]->client->ps.forcePowerLevel[FP_ABSORB],
 						power_use,
 						power_level,
 						forcePowerNeeded[self->client->ps.forcePowerLevel[
 							power_use]]);
 
-					if (push_list[x]->client->NPC_class == CLASS_ASSASSIN_DROID ||
-						push_list[x]->client->NPC_class == CLASS_DROIDEKA ||
-						//push_list[x]->client->NPC_class == CLASS_SBD ||
-						push_list[x]->client->NPC_class == CLASS_HAZARD_TROOPER)
+					if (push_target[x]->client->NPC_class == CLASS_ASSASSIN_DROID ||
+						push_target[x]->client->NPC_class == CLASS_DROIDEKA ||
+						//push_target[x]->client->NPC_class == CLASS_SBD ||
+						push_target[x]->client->NPC_class == CLASS_HAZARD_TROOPER)
 					{
 						mod_power_level = 0; // divides throw by 10
 					}
@@ -26969,129 +26978,126 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 					//First, if this is the player we're push/pulling, see if he can counter it
 					if (mod_power_level != -1
 						&& !no_resist && !is_class_guard
-						&& InFront(self->currentOrigin, push_list[x]->client->renderInfo.eyePoint,
-							push_list[x]->client->ps.viewangles, 0.3f))
+						&& InFront(self->currentOrigin, push_target[x]->client->renderInfo.eyePoint,
+							push_target[x]->client->ps.viewangles, 0.3f))
 					{
 						//absorbed and I'm in front of them
 						//counter it
-						if (push_list[x]->client->ps.forcePowerLevel[FP_ABSORB] > FORCE_LEVEL_2)
+						if (push_target[x]->client->ps.forcePowerLevel[FP_ABSORB] > FORCE_LEVEL_2)
 						{
 							//no reaction at all
 						}
 						else
 						{
-							WP_ResistForcePush(push_list[x], self, qfalse);
-							push_list[x]->client->ps.saber_move = push_list[x]->client->ps.saberBounceMove = LS_READY;
+							WP_ResistForcePush(push_target[x], self, qfalse);
+							push_target[x]->client->ps.saber_move = push_target[x]->client->ps.saberBounceMove = LS_READY;
 							//don't finish whatever saber anim you may have been in
-							push_list[x]->client->ps.saberBlocked = BLOCKED_NONE;
+							push_target[x]->client->ps.saberBlocked = BLOCKED_NONE;
 						}
 						continue;
 					}
-					if (!push_list[x]->s.number && !is_class_guard)
+					if (!push_target[x]->s.number && !is_class_guard)
 					{
 						//player
-						if (!no_resist && !is_class_guard && (ShouldPlayerResistForceThrow(push_list[x], self, pull) ||
-							PlayerisResistingForceThrow(push_list[x], self))
-							&& push_list[x]->client->ps.saberFatigueChainCount < MISHAPLEVEL_HEAVY)
+						if (!no_resist && !is_class_guard && (ShouldPlayerResistForceThrow(push_target[x], self, pull) ||
+							PlayerisResistingForceThrow(push_target[x], self))
+							&& push_target[x]->client->ps.saberFatigueChainCount < MISHAPLEVEL_HEAVY)
 						{
-							WP_ResistForcePush(push_list[x], self, qfalse);
-							push_list[x]->client->ps.saber_move = push_list[x]->client->ps.saberBounceMove = LS_READY;
+							WP_ResistForcePush(push_target[x], self, qfalse);
+							push_target[x]->client->ps.saber_move = push_target[x]->client->ps.saberBounceMove = LS_READY;
 							//don't finish whatever saber anim you may have been in
-							push_list[x]->client->ps.saberBlocked = BLOCKED_NONE;
+							push_target[x]->client->ps.saberBlocked = BLOCKED_NONE;
 							continue;
 						}
 					}
-					else if (push_list[x]->client && jedi_waiting_ambush(push_list[x]))
+					else if (push_target[x]->client && jedi_waiting_ambush(push_target[x]))
 					{
-						WP_ForceKnockdown(push_list[x], self, pull, qtrue, qfalse);
+						WP_ForceKnockdown(push_target[x], self, pull, qtrue, qfalse);
 						if (g_SerenityJediEngineMode->integer)
 						{
-							sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
 							if (pull)
 							{
 								//
 							}
 							else
 							{
-								PushDamage(self, push_list[x], tr.endpos, damage_level);
+								PushDamage(self, push_target[x], tr.endpos, damage_level);
 							}
 						}
 						continue;
 					}
-					else if (PM_SaberInBrokenParry(push_list[x]->client->ps.saber_move))
+					else if (PM_SaberInBrokenParry(push_target[x]->client->ps.saber_move))
 					{
 						//do a knockdown if fairly close
-						WP_ForceKnockdown(push_list[x], self, pull, qtrue, qfalse);
+						WP_ForceKnockdown(push_target[x], self, pull, qtrue, qfalse);
 						if (g_SerenityJediEngineMode->integer)
 						{
-							sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
 							if (pull)
 							{
 								//
 							}
 							else
 							{
-								PushDamage(self, push_list[x], tr.endpos, damage_level);
+								PushDamage(self, push_target[x], tr.endpos, damage_level);
 							}
 						}
 						continue;
 					}
-					else if (push_list[x]->client->NPC_class == CLASS_GUARD || jedi_jedi_master_low(push_list[x]))
+					else if (push_target[x]->client->NPC_class == CLASS_GUARD || jedi_jedi_master_low(push_target[x]))
 					{
 						//do a knockdown hes a twat
-						WP_ForceKnockdown(push_list[x], self, pull, qtrue, qfalse);
+						WP_ForceKnockdown(push_target[x], self, pull, qtrue, qfalse);
 						if (g_SerenityJediEngineMode->integer)
 						{
-							sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
 							if (pull)
 							{
 								//
 							}
 							else
 							{
-								PushDamage(self, push_list[x], tr.endpos, damage_level);
+								PushDamage(self, push_target[x], tr.endpos, damage_level);
 							}
 						}
 						continue;
 					}
 
-					G_KnockOffVehicle(push_list[x], self, pull);
+					G_KnockOffVehicle(push_target[x], self, pull);
 
 					if (!pull
-						&& push_list[x]->client->ps.forceDrainEntityNum == self->s.number
+						&& push_target[x]->client->ps.forceDrainEntityNum == self->s.number
 						&& self->s.eFlags & EF_FORCE_DRAINED)
 					{
 						//stop them from draining me now, dammit!
-						WP_ForcePowerStop(push_list[x], FP_DRAIN);
+						WP_ForcePowerStop(push_target[x], FP_DRAIN);
 					}
 
 					//okay, everyone else (or player who couldn't resist it)...
-					if ((self->s.number == 0 && Q_irand(0, 2) || Q_irand(0, 2)) && push_list[x]->client && push_list[x]
+					if ((self->s.number == 0 && Q_irand(0, 2) || Q_irand(0, 2)) && push_target[x]->client && push_target[x]
 						->health > 0 //a living client
-						&& push_list[x]->client->ps.weapon == WP_SABER //Jedi
-						&& push_list[x]->health > 0 //alive
-						&& push_list[x]->client->ps.forceRageRecoveryTime < level.time //not recovering from rage
+						&& push_target[x]->client->ps.weapon == WP_SABER //Jedi
+						&& push_target[x]->health > 0 //alive
+						&& push_target[x]->client->ps.forceRageRecoveryTime < level.time //not recovering from rage
 						&& (self->client->NPC_class != CLASS_DESANN && self->client->NPC_class != CLASS_SITHLORD && self
 							->client->NPC_class != CLASS_VADER && Q_stricmp("Yoda", self->NPC_type) || !Q_irand(0, 2))
 						//only 30% chance of resisting a Desann push
-						&& push_list[x]->client->ps.groundEntityNum != ENTITYNUM_NONE //on the ground
-						&& InFront(self->currentOrigin, push_list[x]->currentOrigin,
-							push_list[x]->client->ps.viewangles, 0.3f) //I'm in front of him
-						&& (push_list[x]->client->ps.powerups[PW_FORCE_PUSH] > level.time || //he's pushing too
-							push_list[x]->s.number != 0 && push_list[x]->client->ps.weaponTime < level.time))
+						&& push_target[x]->client->ps.groundEntityNum != ENTITYNUM_NONE //on the ground
+						&& InFront(self->currentOrigin, push_target[x]->currentOrigin,
+							push_target[x]->client->ps.viewangles, 0.3f) //I'm in front of him
+						&& (push_target[x]->client->ps.powerups[PW_FORCE_PUSH] > level.time || //he's pushing too
+							push_target[x]->s.number != 0 && push_target[x]->client->ps.weaponTime < level.time))
 						//not the player and not attacking (NPC jedi auto-defend against pushes)
 					{
 						//Jedi don't get pushed, they resist as long as they aren't already attacking and are on the ground
-						if (push_list[x]->client->ps.saberLockTime > level.time)
+						if (push_target[x]->client->ps.saberLockTime > level.time)
 						{
 							//they're in a lock
-							if (push_list[x]->client->ps.saberLockEnemy != self->s.number)
+							if (push_target[x]->client->ps.saberLockEnemy != self->s.number)
 							{
 								//they're not in a lock with me
 								continue;
 							}
 							if (pull || self->client->ps.forcePowerLevel[FP_PUSH] < FORCE_LEVEL_3 ||
-								push_list[x]->client->ps.forcePowerLevel[FP_PUSH] > FORCE_LEVEL_2)
+								push_target[x]->client->ps.forcePowerLevel[FP_PUSH] > FORCE_LEVEL_2)
 							{
 								//they're in a lock with me, but my push is too weak
 								continue;
@@ -27103,18 +27109,14 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 							{
 								self->client->ps.weaponTime = floor(self->client->ps.weaponTime * g_timescale->value);
 							}
-							if (g_SerenityJediEngineMode->integer)
-							{
-								sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
-							}
 						}
 						int resist_chance = Q_irand(0, 2);
-						if (!push_list[x]->s.number && (self->client->ps.ManualBlockingFlags & 1 << MBF_BLOCKING || self
+						if (!push_target[x]->s.number && (self->client->ps.ManualBlockingFlags & 1 << MBF_BLOCKING || self
 							->client->ps.ManualBlockingFlags & 1 << MBF_NPCBLOCKING))
 						{
 							resist_chance = 1;
 						}
-						else if (push_list[x]->s.number >= MAX_CLIENTS)
+						else if (push_target[x]->s.number >= MAX_CLIENTS)
 						{
 							//NPC
 							if (g_spskill->integer == 1)
@@ -27128,25 +27130,24 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 							&& mod_power_level == -1
 							&& self->client->ps.forcePowerLevel[FP_PUSH] > FORCE_LEVEL_2
 							&& !resist_chance
-							&& push_list[x]->client->ps.forcePowerLevel[FP_PUSH] < FORCE_LEVEL_3)
+							&& push_target[x]->client->ps.forcePowerLevel[FP_PUSH] < FORCE_LEVEL_3)
 						{
 							//a level 3 push can even knock down a jedi
-							if (PM_InKnockDown(&push_list[x]->client->ps))
+							if (PM_InKnockDown(&push_target[x]->client->ps))
 							{
 								//can't knock them down again
 								continue;
 							}
-							WP_ForceKnockdown(push_list[x], self, pull, qfalse, qtrue);
+							WP_ForceKnockdown(push_target[x], self, pull, qfalse, qtrue);
 							if (g_SerenityJediEngineMode->integer)
 							{
-								sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
 								if (pull)
 								{
 									//
 								}
 								else
 								{
-									PushDamage(self, push_list[x], tr.endpos, damage_level);
+									PushDamage(self, push_target[x], tr.endpos, damage_level);
 								}
 							}
 						}
@@ -27154,7 +27155,7 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 						{
 							if (!is_class_guard)
 							{
-								WP_ResistForcePush(push_list[x], self, qfalse);
+								WP_ResistForcePush(push_target[x], self, qfalse);
 							}
 						}
 					}
@@ -27162,59 +27163,58 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 					{
 						vec3_t push_dir;
 						//shove them
-						if (push_list[x]->NPC
-							&& push_list[x]->NPC->jumpState == JS_JUMPING)
+						if (push_target[x]->NPC
+							&& push_target[x]->NPC->jumpState == JS_JUMPING)
 						{
 							//don't interrupt a scripted jump
-							push_list[x]->forcePushTime = level.time + 600; // let the push effect last for 600 ms
+							push_target[x]->forcePushTime = level.time + 600; // let the push effect last for 600 ms
 							continue;
 						}
 
-						if (push_list[x]->s.number
-							&& (push_list[x]->message || push_list[x]->flags & FL_NO_KNOCKBACK))
+						if (push_target[x]->s.number
+							&& (push_target[x]->message || push_target[x]->flags & FL_NO_KNOCKBACK))
 						{
 							//an NPC who has a key
-							WP_ForceKnockdown(push_list[x], self, pull, qfalse, qfalse);
+							WP_ForceKnockdown(push_target[x], self, pull, qfalse, qfalse);
 							if (g_SerenityJediEngineMode->integer)
 							{
-								sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
 								if (pull)
 								{
 									//
 								}
 								else
 								{
-									PushDamage(self, push_list[x], tr.endpos, damage_level);
+									PushDamage(self, push_target[x], tr.endpos, damage_level);
 								}
 							}
 							continue;
 						}
 						if (pull)
 						{
-							VectorSubtract(self->currentOrigin, push_list[x]->currentOrigin, push_dir);
+							VectorSubtract(self->currentOrigin, push_target[x]->currentOrigin, push_dir);
 							if (self->client->ps.forcePowerLevel[FP_PULL] >= FORCE_LEVEL_3
 								&& self->client->NPC_class == CLASS_KYLE
 								&& self->spawnflags & 1
 								&& TIMER_Done(self, "kyleTakesSaber")
-								&& push_list[x]->client
-								&& push_list[x]->client->ps.weapon == WP_SABER
-								&& !push_list[x]->client->ps.saberInFlight
-								&& push_list[x]->client->ps.saberEntityNum < ENTITYNUM_WORLD
-								&& !PM_InOnGroundAnim(&push_list[x]->client->ps))
+								&& push_target[x]->client
+								&& push_target[x]->client->ps.weapon == WP_SABER
+								&& !push_target[x]->client->ps.saberInFlight
+								&& push_target[x]->client->ps.saberEntityNum < ENTITYNUM_WORLD
+								&& !PM_InOnGroundAnim(&push_target[x]->client->ps))
 							{
 								vec3_t throwVec;
 								VectorScale(push_dir, 10.0f, throwVec);
-								WP_SaberLose(push_list[x], throwVec);
-								NPC_SetAnim(push_list[x], SETANIM_BOTH, BOTH_LOSE_SABER,
+								WP_SaberLose(push_target[x], throwVec);
+								NPC_SetAnim(push_target[x], SETANIM_BOTH, BOTH_LOSE_SABER,
 									SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
-								push_list[x]->client->ps.torsoAnimTimer += 500;
-								push_list[x]->client->ps.pm_time = push_list[x]->client->ps.weaponTime = push_list[x]->
+								push_target[x]->client->ps.torsoAnimTimer += 500;
+								push_target[x]->client->ps.pm_time = push_target[x]->client->ps.weaponTime = push_target[x]->
 									client->ps.torsoAnimTimer;
-								push_list[x]->client->ps.pm_flags |= PMF_TIME_KNOCKBACK;
-								push_list[x]->client->ps.saber_move = LS_NONE;
-								push_list[x]->aimDebounceTime = level.time + push_list[x]->client->ps.torsoAnimTimer;
-								VectorClear(push_list[x]->client->ps.velocity);
-								VectorClear(push_list[x]->client->ps.moveDir);
+								push_target[x]->client->ps.pm_flags |= PMF_TIME_KNOCKBACK;
+								push_target[x]->client->ps.saber_move = LS_NONE;
+								push_target[x]->aimDebounceTime = level.time + push_target[x]->client->ps.torsoAnimTimer;
+								VectorClear(push_target[x]->client->ps.velocity);
+								VectorClear(push_target[x]->client->ps.moveDir);
 								//Kyle will stand around for a bit, too...
 								self->client->ps.pm_time = self->client->ps.weaponTime = 2000;
 								self->client->ps.pm_flags |= PMF_TIME_KNOCKBACK;
@@ -27226,35 +27226,35 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 								VectorClear(self->client->ps.moveDir);
 								continue;
 							}
-							if (push_list[x]->NPC
-								&& push_list[x]->NPC->scriptFlags & SCF_DONT_FLEE)
+							if (push_target[x]->NPC
+								&& push_target[x]->NPC->scriptFlags & SCF_DONT_FLEE)
 							{
 								//*SIGH*... if an NPC can't flee, they can't run after and pick up their weapon, do don't drop it
 							}
 							else if (self->client->ps.forcePowerLevel[FP_PULL] > FORCE_LEVEL_1
-								&& push_list[x]->client->NPC_class != CLASS_ROCKETTROOPER
+								&& push_target[x]->client->NPC_class != CLASS_ROCKETTROOPER
 								//rockettroopers never drop their weapon
-								&& push_list[x]->client->NPC_class != CLASS_VEHICLE
-								&& push_list[x]->client->NPC_class != CLASS_BOBAFETT
-								&& push_list[x]->client->NPC_class != CLASS_MANDALORIAN
-								&& push_list[x]->client->NPC_class != CLASS_JANGO
-								&& push_list[x]->client->NPC_class != CLASS_JANGODUAL
-								&& push_list[x]->client->NPC_class != CLASS_TUSKEN
-								&& push_list[x]->client->NPC_class != CLASS_HAZARD_TROOPER
-								&& push_list[x]->client->NPC_class != CLASS_ASSASSIN_DROID
-								&& push_list[x]->client->NPC_class != CLASS_DROIDEKA
-								&& push_list[x]->client->NPC_class != CLASS_SBD
-								&& push_list[x]->s.weapon != WP_SABER
-								&& push_list[x]->s.weapon != WP_MELEE
-								&& push_list[x]->s.weapon != WP_THERMAL
-								&& push_list[x]->s.weapon != WP_CONCUSSION)
+								&& push_target[x]->client->NPC_class != CLASS_VEHICLE
+								&& push_target[x]->client->NPC_class != CLASS_BOBAFETT
+								&& push_target[x]->client->NPC_class != CLASS_MANDALORIAN
+								&& push_target[x]->client->NPC_class != CLASS_JANGO
+								&& push_target[x]->client->NPC_class != CLASS_JANGODUAL
+								&& push_target[x]->client->NPC_class != CLASS_TUSKEN
+								&& push_target[x]->client->NPC_class != CLASS_HAZARD_TROOPER
+								&& push_target[x]->client->NPC_class != CLASS_ASSASSIN_DROID
+								&& push_target[x]->client->NPC_class != CLASS_DROIDEKA
+								&& push_target[x]->client->NPC_class != CLASS_SBD
+								&& push_target[x]->s.weapon != WP_SABER
+								&& push_target[x]->s.weapon != WP_MELEE
+								&& push_target[x]->s.weapon != WP_THERMAL
+								&& push_target[x]->s.weapon != WP_CONCUSSION)
 							{
 								//yank the weapon
-								if (InFront(self->currentOrigin, push_list[x]->currentOrigin,
-									push_list[x]->client->ps.viewangles, 0.0f))
+								if (InFront(self->currentOrigin, push_target[x]->currentOrigin,
+									push_target[x]->client->ps.viewangles, 0.0f))
 								{
 									//enemy has to be facing me, too...
-									WP_DropWeapon(push_list[x], push_dir);
+									WP_DropWeapon(push_target[x], push_dir);
 								}
 							}
 							knockback += VectorNormalize(push_dir);
@@ -27270,46 +27270,68 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 						}
 						else
 						{
-							VectorSubtract(push_list[x]->currentOrigin, self->currentOrigin, push_dir);
+							VectorSubtract(push_target[x]->currentOrigin, self->currentOrigin, push_dir);
+							VectorSubtract(push_target[x]->currentOrigin, self->currentOrigin, push_dir);
 							knockback -= VectorNormalize(push_dir);
-							if (knockback < 100)
+
+							G_SoundOnEnt(push_target[x], CHAN_BODY, "sound/weapons/force/pushed.mp3");
+
+							if (knockback < 100) // if less than 100
 							{
-								knockback = 100;
+								knockback = 100; // minimum 100
 							}
+
 							//scale for push level
-							if (self->client->ps.forcePowerLevel[FP_PUSH] < FORCE_LEVEL_2)
+							if (self->client->ps.forcePowerLevel[FP_PUSH] < FORCE_LEVEL_2) // level 1 devide by 3
 							{
-								//maybe just knock them down
-								knockback /= 3;
-							}
-							else if (self->client->ps.forcePowerLevel[FP_PUSH] > FORCE_LEVEL_2)
-							{
-								//super-hard push
-								if (g_SerenityJediEngineMode->integer)
+								if (self->s.weapon == WP_MELEE ||
+									self->s.weapon == WP_NONE ||
+									self->s.weapon == WP_SABER &&
+									!self->client->ps.SaberActive() &&
+									!PM_InKnockDown(&self->client->ps))
 								{
-									sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
+									//maybe just knock them down
+									knockback /= 2;
+								}
+								else
+								{
+									//maybe just knock them down
+									knockback /= 3;
 								}
 							}
-							else if (self->s.weapon == WP_MELEE ||
-								self->s.weapon == WP_NONE ||
-								self->s.weapon == WP_SABER &&
-								!self->client->ps.SaberActive() &&
-								!PM_InKnockDown(&self->client->ps) &&
-								self->client->ps.forcePowerLevel[FP_PUSH] > FORCE_LEVEL_2)
+							else if (self->client->ps.forcePowerLevel[FP_PUSH] == FORCE_LEVEL_2) // level 2
 							{
-								//super-hard push
-								if (g_SerenityJediEngineMode->integer)
+								if (self->s.weapon == WP_MELEE ||
+									self->s.weapon == WP_NONE ||
+									self->s.weapon == WP_SABER &&
+									!self->client->ps.SaberActive() &&
+									!PM_InKnockDown(&self->client->ps))
 								{
+									knockback = 125;
+								}
+								else
+								{
+									knockback = 100;
+								}
+							}
+							else if (self->client->ps.forcePowerLevel[FP_PUSH] > FORCE_LEVEL_2) // level 3 add sound
+							{
+								if (push_target[x]->client->NPC_class == CLASS_GUARD || jedi_jedi_master_low(push_target[x]))
+								{
+									//do a knockdown hes a twat
 									knockback *= 3; //superpush
-									sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
-									if (pull)
-									{
-										//
-									}
-									else
-									{
-										PushDamage(self, push_list[x], tr.endpos, damage_level);
-									}
+								}
+								if (self->s.weapon == WP_MELEE ||
+									self->s.weapon == WP_NONE ||
+									self->s.weapon == WP_SABER &&
+									!self->client->ps.SaberActive() &&
+									!PM_InKnockDown(&self->client->ps))
+								{
+									knockback *= 4; //superpush
+								}
+								else
+								{
+									knockback *= 2; //superpush
 								}
 							}
 						}
@@ -27330,93 +27352,89 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 							}
 						}
 						//actually push/pull the enemy
-						G_Throw(push_list[x], push_dir, knockback);
+						G_Throw(push_target[x], push_dir, knockback);
 						//make it so they don't actually hurt me when pulled at me...
-						push_list[x]->forcePuller = self->s.number;
+						push_target[x]->forcePuller = self->s.number;
 
-						if (push_list[x]->client->ps.groundEntityNum != ENTITYNUM_NONE)
+						if (push_target[x]->client->ps.groundEntityNum != ENTITYNUM_NONE)
 						{
 							//if on the ground, make sure they get shoved up some
-							if (push_list[x]->client->ps.velocity[2] < knockback)
+							if (push_target[x]->client->ps.velocity[2] < knockback)
 							{
-								push_list[x]->client->ps.velocity[2] = knockback;
+								push_target[x]->client->ps.velocity[2] = knockback;
 							}
 						}
 
-						if (push_list[x]->health > 0)
+						if (push_target[x]->health > 0)
 						{
 							//target is still alive
-							if ((push_list[x]->s.number || cg.renderingThirdPerson && !cg.zoomMode)
+							if ((push_target[x]->s.number || cg.renderingThirdPerson && !cg.zoomMode)
 								//NPC or 3rd person player
-								&& (!pull && self->client->ps.forcePowerLevel[FP_PUSH] < FORCE_LEVEL_2 && push_list[x]->
+								&& (!pull && self->client->ps.forcePowerLevel[FP_PUSH] < FORCE_LEVEL_2 && push_target[x]->
 									client->ps.forcePowerLevel[FP_PUSH] < FORCE_LEVEL_1 //level 1 push
-									|| pull && self->client->ps.forcePowerLevel[FP_PULL] < FORCE_LEVEL_2 && push_list[x]
+									|| pull && self->client->ps.forcePowerLevel[FP_PULL] < FORCE_LEVEL_2 && push_target[x]
 									->client->ps.forcePowerLevel[FP_PULL] < FORCE_LEVEL_1)) //level 1 pull
 							{
 								//NPC or third person player (without force push/pull skill), and force push/pull level is at 1
-								WP_ForceKnockdown(push_list[x], self, pull,
+								WP_ForceKnockdown(push_target[x], self, pull,
 									static_cast<qboolean>(!pull && knockback > 150), qfalse);
 								if (g_SerenityJediEngineMode->integer)
 								{
-									sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
 									if (pull)
 									{
 										//
 									}
 									else
 									{
-										PushDamage(self, push_list[x], tr.endpos, damage_level);
+										PushDamage(self, push_target[x], tr.endpos, damage_level);
 									}
 								}
 							}
-							else if (!push_list[x]->s.number)
+							else if (!push_target[x]->s.number)
 							{
 								//player, have to force an anim on him
-								WP_ForceKnockdown(push_list[x], self, pull,
+								WP_ForceKnockdown(push_target[x], self, pull,
 									static_cast<qboolean>(!pull && knockback > 150), qfalse);
 								if (g_SerenityJediEngineMode->integer)
 								{
-									sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
 									if (pull)
 									{
 										//
 									}
 									else
 									{
-										PushDamage(self, push_list[x], tr.endpos, damage_level);
+										PushDamage(self, push_target[x], tr.endpos, damage_level);
 									}
 								}
 							}
 							else
 							{
 								//NPC and force-push/pull at level 2 or higher
-								WP_ForceKnockdown(push_list[x], self, pull,
-									static_cast<qboolean>(!pull && knockback > 100), qfalse);
+								WP_ForceKnockdown(push_target[x], self, pull,static_cast<qboolean>(!pull && knockback > 100), qfalse);
 								if (g_SerenityJediEngineMode->integer)
 								{
-									sound_index = G_SoundIndex("sound/weapons/force/pushed.mp3");
 									if (pull)
 									{
 										//
 									}
 									else
 									{
-										PushDamage(self, push_list[x], tr.endpos, damage_level);
+										PushDamage(self, push_target[x], tr.endpos, damage_level);
 									}
 								}
 							}
 						}
-						push_list[x]->forcePushTime = level.time + 600; // let the push effect last for 600 ms
+						push_target[x]->forcePushTime = level.time + 600; // let the push effect last for 600 ms
 					}
 				}
 				else if (!fake)
 				{
 					//not a fake push/pull
-					if (push_list[x]->s.weapon == WP_SABER && push_list[x]->contents & CONTENTS_LIGHTSABER)
+					if (push_target[x]->s.weapon == WP_SABER && push_target[x]->contents & CONTENTS_LIGHTSABER)
 					{
 						//a thrown saber, just send it back
-						if (push_list[x]->owner && push_list[x]->owner->client && push_list[x]->owner->client->ps.
-							SaberActive() && push_list[x]->s.pos.trType == TR_LINEAR && push_list[x]->owner->client->ps.
+						if (push_target[x]->owner && push_target[x]->owner->client && push_target[x]->owner->client->ps.
+							SaberActive() && push_target[x]->s.pos.trType == TR_LINEAR && push_target[x]->owner->client->ps.
 							saberEntityState != SES_RETURNING)
 						{
 							//it's on and being controlled
@@ -27432,70 +27450,70 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 								{
 									if (is_class_guard)
 									{
-										G_MissileBouncedoffSaber(self, push_list[x], right);
+										G_MissileBouncedoffSaber(self, push_target[x], right);
 									}
 									else
 									{
-										G_ReflectMissileNPC(self, push_list[x], right);
+										G_ReflectMissileNPC(self, push_target[x], right);
 									}
 								}
 								else
 								{
 									if (g_SerenityJediEngineMode->integer)
 									{
-										G_ReflectMissileAuto(self, push_list[x], right);
+										G_ReflectMissileAuto(self, push_target[x], right);
 									}
 									else
 									{
-										G_ReflectMissile_JKA(self, push_list[x], right);
+										G_ReflectMissile_JKA(self, push_target[x], right);
 									}
 								}
-								WP_SaberDrop(push_list[x]->owner, push_list[x]);
+								WP_SaberDrop(push_target[x]->owner, push_target[x]);
 							}
 							else
 							{
 								if (g_SerenityJediEngineMode->integer)
 								{
-									WP_SaberDrop(push_list[x]->owner, push_list[x]);
+									WP_SaberDrop(push_target[x]->owner, push_target[x]);
 								}
 								else
 								{
-									if (push_list[x]->owner->NPC && !G_ControlledByPlayer(push_list[x]->owner))
+									if (push_target[x]->owner->NPC && !G_ControlledByPlayer(push_target[x]->owner))
 									{
-										WP_SaberDrop(push_list[x]->owner, push_list[x]);
+										WP_SaberDrop(push_target[x]->owner, push_target[x]);
 									}
 									else
 									{
-										WP_SaberReturn(push_list[x]->owner, push_list[x]);
+										WP_SaberReturn(push_target[x]->owner, push_target[x]);
 									}
 								}
 							}
 						}
 					}
-					else if (push_list[x]->s.eType == ET_MISSILE
-						&& push_list[x]->s.pos.trType != TR_STATIONARY
-						&& (push_list[x]->s.pos.trType != TR_INTERPOLATE || push_list[x]->s.weapon != WP_THERMAL))
+					else if (push_target[x]->s.eType == ET_MISSILE
+						&& push_target[x]->s.pos.trType != TR_STATIONARY
+						&& (push_target[x]->s.pos.trType != TR_INTERPOLATE || push_target[x]->s.weapon != WP_THERMAL))
 						//rolling and stationary thermal detonators are dealt with below
 					{
 						vec3_t dir2_me;
-						VectorSubtract(self->currentOrigin, push_list[x]->currentOrigin, dir2_me);
-						float dot = DotProduct(push_list[x]->s.pos.trDelta, dir2_me);
+						VectorSubtract(self->currentOrigin, push_target[x]->currentOrigin, dir2_me);
+						float dot = DotProduct(push_target[x]->s.pos.trDelta, dir2_me);
 						if (pull)
 						{
 							//deflect rather than reflect?
 						}
 						else
 						{
-							if (push_list[x]->s.eFlags & EF_MISSILE_STICK)
+							if (push_target[x]->s.eFlags & EF_MISSILE_STICK)
 							{
 								//caught a sticky in-air
-								push_list[x]->s.eType = ET_MISSILE;
-								push_list[x]->s.eFlags &= ~EF_MISSILE_STICK;
-								push_list[x]->s.eFlags |= EF_BOUNCE_HALF;
-								push_list[x]->splashDamage /= 3;
-								push_list[x]->splashRadius /= 3;
-								push_list[x]->e_ThinkFunc = thinkF_WP_Explode;
-								push_list[x]->nextthink = level.time + Q_irand(500, 3000);
+								push_target[x]->s.eType = ET_MISSILE;
+								push_target[x]->s.eFlags &= ~EF_MISSILE_STICK;
+								push_target[x]->s.eFlags |= EF_BOUNCE_HALF;
+								push_target[x]->splashDamage /= 3;
+								push_target[x]->splashRadius /= 3;
+								push_target[x]->e_ThinkFunc = thinkF_WP_Explode;
+								push_target[x]->nextthink = level.time + Q_irand(500, 3000);
 							}
 							if (dot >= 0)
 							{
@@ -27504,39 +27522,39 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 								{
 									if (is_class_guard)
 									{
-										G_MissileBouncedoffSaber(self, push_list[x], forward);
+										G_MissileBouncedoffSaber(self, push_target[x], forward);
 									}
 									else
 									{
-										G_ReflectMissileNPC(self, push_list[x], forward);
+										G_ReflectMissileNPC(self, push_target[x], forward);
 									}
 								}
 								else
 								{
 									if (g_SerenityJediEngineMode->integer)
 									{
-										G_ReflectMissileAuto(self, push_list[x], forward);
+										G_ReflectMissileAuto(self, push_target[x], forward);
 									}
 									else
 									{
-										G_ReflectMissile_JKA(self, push_list[x], forward);
+										G_ReflectMissile_JKA(self, push_target[x], forward);
 									}
 								}
 							}
 							else
 							{
-								VectorScale(push_list[x]->s.pos.trDelta, 1.25f, push_list[x]->s.pos.trDelta);
+								VectorScale(push_target[x]->s.pos.trDelta, 1.25f, push_target[x]->s.pos.trDelta);
 							}
 						}
-						if (push_list[x]->s.eType == ET_MISSILE
-							&& push_list[x]->s.weapon == WP_ROCKET_LAUNCHER
-							&& push_list[x]->damage < 60)
+						if (push_target[x]->s.eType == ET_MISSILE
+							&& push_target[x]->s.weapon == WP_ROCKET_LAUNCHER
+							&& push_target[x]->damage < 60)
 						{
 							//pushing away a rocket raises it's damage to the max for NPCs
-							push_list[x]->damage = 60;
+							push_target[x]->damage = 60;
 						}
 					}
-					else if (push_list[x]->svFlags & SVF_GLASS_BRUSH)
+					else if (push_target[x]->svFlags & SVF_GLASS_BRUSH)
 					{
 						//break the glass
 						trace_t trace;
@@ -27548,7 +27566,7 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 						VectorMA(self->client->renderInfo.eyePoint, radius, forward, end);
 						gi.trace(&trace, self->client->renderInfo.eyePoint, vec3_origin, vec3_origin, end,
 							self->s.number, MASK_SHOT, static_cast<EG2_Collision>(0), 0);
-						if (trace.entity_num != push_list[x]->s.number || trace.fraction == 1.0 || trace.allsolid ||
+						if (trace.entity_num != push_target[x]->s.number || trace.fraction == 1.0 || trace.allsolid ||
 							trace.startsolid)
 						{
 							//must be pointing right at it
@@ -27570,32 +27588,32 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 						}
 						VectorScale(push_dir, damage, push_dir);
 
-						G_Damage(push_list[x], self, self, push_dir, trace.endpos, damage, 0, MOD_UNKNOWN);
+						G_Damage(push_target[x], self, self, push_dir, trace.endpos, damage, 0, MOD_UNKNOWN);
 					}
-					else if (!Q_stricmp("func_static", push_list[x]->classname))
+					else if (!Q_stricmp("func_static", push_target[x]->classname))
 					{
 						//force-usable func_static
-						if (!pull && push_list[x]->spawnflags & 1)
+						if (!pull && push_target[x]->spawnflags & 1)
 						{
-							if (push_list[x]->NPC_targetname == nullptr
-								|| self->targetname && Q_stricmp(push_list[x]->NPC_targetname, self->targetname) == 0)
+							if (push_target[x]->NPC_targetname == nullptr
+								|| self->targetname && Q_stricmp(push_target[x]->NPC_targetname, self->targetname) == 0)
 							{
 								//anyone can pull it or only 1 person can push it and it's me
-								GEntity_UseFunc(push_list[x], self, self);
+								GEntity_UseFunc(push_target[x], self, self);
 							}
 						}
-						else if (pull && push_list[x]->spawnflags & 2)
+						else if (pull && push_target[x]->spawnflags & 2)
 						{
-							if (push_list[x]->NPC_targetname == nullptr
-								|| self->targetname && Q_stricmp(push_list[x]->NPC_targetname, self->NPC_targetname) ==
+							if (push_target[x]->NPC_targetname == nullptr
+								|| self->targetname && Q_stricmp(push_target[x]->NPC_targetname, self->NPC_targetname) ==
 								0)
 							{
 								//anyone can push it or only 1 person can push it and it's me
-								GEntity_UseFunc(push_list[x], self, self);
+								GEntity_UseFunc(push_target[x], self, self);
 							}
 						}
 					}
-					else if (!Q_stricmp("func_door", push_list[x]->classname) && push_list[x]->spawnflags & 2
+					else if (!Q_stricmp("func_door", push_target[x]->classname) && push_target[x]->spawnflags & 2
 						/*MOVER_FORCE_ACTIVATE*/)
 					{
 						//push/pull the door
@@ -27606,44 +27624,44 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 						VectorMA(self->client->renderInfo.eyePoint, radius, forward, end);
 						gi.trace(&tr, self->client->renderInfo.eyePoint, vec3_origin, vec3_origin, end, self->s.number,
 							MASK_SHOT, static_cast<EG2_Collision>(0), 0);
-						if (tr.entity_num != push_list[x]->s.number || tr.fraction == 1.0 || tr.allsolid || tr.
+						if (tr.entity_num != push_target[x]->s.number || tr.fraction == 1.0 || tr.allsolid || tr.
 							startsolid)
 						{
 							//must be pointing right at it
 							continue;
 						}
 
-						if (VectorCompare(vec3_origin, push_list[x]->s.origin))
+						if (VectorCompare(vec3_origin, push_target[x]->s.origin))
 						{
 							//does not have an origin brush, so pos1 & pos2 are relative to world origin, need to calc center
-							VectorSubtract(push_list[x]->absmax, push_list[x]->absmin, size);
-							VectorMA(push_list[x]->absmin, 0.5, size, center);
-							if (push_list[x]->spawnflags & 1 && push_list[x]->moverState == MOVER_POS1)
+							VectorSubtract(push_target[x]->absmax, push_target[x]->absmin, size);
+							VectorMA(push_target[x]->absmin, 0.5, size, center);
+							if (push_target[x]->spawnflags & 1 && push_target[x]->moverState == MOVER_POS1)
 							{
 								//if at pos1 and started open, make sure we get the center where it *started* because we're going to add back in the relative values pos1 and pos2
-								VectorSubtract(center, push_list[x]->pos1, center);
+								VectorSubtract(center, push_target[x]->pos1, center);
 							}
-							else if (!(push_list[x]->spawnflags & 1) && push_list[x]->moverState == MOVER_POS2)
+							else if (!(push_target[x]->spawnflags & 1) && push_target[x]->moverState == MOVER_POS2)
 							{
 								//if at pos2, make sure we get the center where it *started* because we're going to add back in the relative values pos1 and pos2
-								VectorSubtract(center, push_list[x]->pos2, center);
+								VectorSubtract(center, push_target[x]->pos2, center);
 							}
-							VectorAdd(center, push_list[x]->pos1, pos1);
-							VectorAdd(center, push_list[x]->pos2, pos2);
+							VectorAdd(center, push_target[x]->pos1, pos1);
+							VectorAdd(center, push_target[x]->pos2, pos2);
 						}
 						else
 						{
 							//actually has an origin, pos1 and pos2 are absolute
-							VectorCopy(push_list[x]->currentOrigin, center);
-							VectorCopy(push_list[x]->pos1, pos1);
-							VectorCopy(push_list[x]->pos2, pos2);
+							VectorCopy(push_target[x]->currentOrigin, center);
+							VectorCopy(push_target[x]->pos1, pos1);
+							VectorCopy(push_target[x]->pos2, pos2);
 						}
 
 						if (Distance(pos1, self->client->renderInfo.eyePoint) < Distance(
 							pos2, self->client->renderInfo.eyePoint))
 						{
 							//pos1 is closer
-							if (push_list[x]->moverState == MOVER_POS1)
+							if (push_target[x]->moverState == MOVER_POS1)
 							{
 								//at the closest pos
 								if (pull)
@@ -27652,7 +27670,7 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 									continue;
 								}
 							}
-							else if (push_list[x]->moverState == MOVER_POS2)
+							else if (push_target[x]->moverState == MOVER_POS2)
 							{
 								//at farthest pos
 								if (!pull)
@@ -27665,7 +27683,7 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 						else
 						{
 							//pos2 is closer
-							if (push_list[x]->moverState == MOVER_POS1)
+							if (push_target[x]->moverState == MOVER_POS1)
 							{
 								//at the farthest pos
 								if (!pull)
@@ -27674,7 +27692,7 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 									continue;
 								}
 							}
-							else if (push_list[x]->moverState == MOVER_POS2)
+							else if (push_target[x]->moverState == MOVER_POS2)
 							{
 								//at closest pos
 								if (pull)
@@ -27684,11 +27702,11 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 								}
 							}
 						}
-						GEntity_UseFunc(push_list[x], self, self);
+						GEntity_UseFunc(push_target[x], self, self);
 					}
-					else if (push_list[x]->s.eType == ET_MISSILE /*thermal resting on ground*/
-						|| push_list[x]->s.eType == ET_ITEM
-						|| push_list[x]->e_ThinkFunc == thinkF_G_RunObject || Q_stricmp("limb", push_list[x]->classname)
+					else if (push_target[x]->s.eType == ET_MISSILE /*thermal resting on ground*/
+						|| push_target[x]->s.eType == ET_ITEM
+						|| push_target[x]->e_ThinkFunc == thinkF_G_RunObject || Q_stricmp("limb", push_target[x]->classname)
 						== 0)
 					{
 						//general object, toss it
@@ -27698,41 +27716,41 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 
 						if (pull)
 						{
-							if (push_list[x]->s.eType == ET_ITEM)
+							if (push_target[x]->s.eType == ET_ITEM)
 							{
 								//pull it to a little higher point
 								vec3_t adjustedOrg;
 								VectorCopy(self->currentOrigin, adjustedOrg);
 								adjustedOrg[2] += self->maxs[2] / 3;
-								VectorSubtract(adjustedOrg, push_list[x]->currentOrigin, push_dir);
+								VectorSubtract(adjustedOrg, push_target[x]->currentOrigin, push_dir);
 							}
 							else if (self->enemy //I have an enemy
 								&& self->client->ps.forcePowerLevel[FP_PUSH] > FORCE_LEVEL_2 //have push 3 or greater
-								&& InFront(push_list[x]->currentOrigin, self->currentOrigin, self->currentAngles, 0.25f)
+								&& InFront(push_target[x]->currentOrigin, self->currentOrigin, self->currentAngles, 0.25f)
 								//object is generally in front of me
 								&& InFront(self->enemy->currentOrigin, self->currentOrigin, self->currentAngles, 0.75f)
 								//enemy is pretty much right in front of me
-								&& !InFront(push_list[x]->currentOrigin, self->enemy->currentOrigin,
+								&& !InFront(push_target[x]->currentOrigin, self->enemy->currentOrigin,
 									self->enemy->currentAngles, -0.25f) //object is generally behind enemy
 								&& (self->NPC && (no_resist || is_class_guard || Q_irand(0, RANK_CAPTAIN) < self->NPC->
 									rank) //NPC with enough skill
 									|| self->s.number < MAX_CLIENTS))
 							{
-								VectorSubtract(self->enemy->currentOrigin, push_list[x]->currentOrigin, push_dir);
+								VectorSubtract(self->enemy->currentOrigin, push_target[x]->currentOrigin, push_dir);
 							}
 							else
 							{
-								VectorSubtract(self->currentOrigin, push_list[x]->currentOrigin, push_dir);
+								VectorSubtract(self->currentOrigin, push_target[x]->currentOrigin, push_dir);
 							}
 							knockback += VectorNormalize(push_dir);
 							if (knockback > 200)
 							{
 								knockback = 200;
 							}
-							if (push_list[x]->s.eType == ET_ITEM
-								&& push_list[x]->item
-								&& push_list[x]->item->giType == IT_HOLDABLE
-								&& push_list[x]->item->giTag == INV_SECURITY_KEY)
+							if (push_target[x]->s.eType == ET_ITEM
+								&& push_target[x]->item
+								&& push_target[x]->item->giType == IT_HOLDABLE
+								&& push_target[x]->item->giTag == INV_SECURITY_KEY)
 							{
 								//security keys are pulled with less enthusiasm
 								if (knockback > 100)
@@ -27748,23 +27766,23 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 						else
 						{
 							if (self->enemy //I have an enemy
-								&& push_list[x]->s.eType != ET_ITEM //not an item
+								&& push_target[x]->s.eType != ET_ITEM //not an item
 								&& self->client->ps.forcePowerLevel[FP_PUSH] > FORCE_LEVEL_2 //have push 3 or greater
-								&& InFront(push_list[x]->currentOrigin, self->currentOrigin, self->currentAngles, 0.25f)
+								&& InFront(push_target[x]->currentOrigin, self->currentOrigin, self->currentAngles, 0.25f)
 								//object is generally in front of me
 								&& InFront(self->enemy->currentOrigin, self->currentOrigin, self->currentAngles, 0.75f)
 								//enemy is pretty much right in front of me
-								&& InFront(push_list[x]->currentOrigin, self->enemy->currentOrigin,
+								&& InFront(push_target[x]->currentOrigin, self->enemy->currentOrigin,
 									self->enemy->currentAngles, 0.25f) //object is generally in front of enemy
 								&& (self->NPC && (no_resist || is_class_guard || Q_irand(0, RANK_CAPTAIN) < self->NPC->
 									rank) //NPC with enough skill
 									|| self->s.number < MAX_CLIENTS))
 							{
-								VectorSubtract(self->enemy->currentOrigin, push_list[x]->currentOrigin, push_dir);
+								VectorSubtract(self->enemy->currentOrigin, push_target[x]->currentOrigin, push_dir);
 							}
 							else
 							{
-								VectorSubtract(push_list[x]->currentOrigin, self->currentOrigin, push_dir);
+								VectorSubtract(push_target[x]->currentOrigin, self->currentOrigin, push_dir);
 							}
 							knockback -= VectorNormalize(push_dir);
 							if (knockback < 100)
@@ -27773,18 +27791,18 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 							}
 						}
 						//FIXME: if pull a FL_FORCE_PULLABLE_ONLY, clear the flag, assuming it's no longer in solid?  or check?
-						VectorCopy(push_list[x]->currentOrigin, push_list[x]->s.pos.trBase);
-						push_list[x]->s.pos.trTime = level.time; // move a bit on the very first frame
-						if (push_list[x]->s.pos.trType != TR_INTERPOLATE)
+						VectorCopy(push_target[x]->currentOrigin, push_target[x]->s.pos.trBase);
+						push_target[x]->s.pos.trTime = level.time; // move a bit on the very first frame
+						if (push_target[x]->s.pos.trType != TR_INTERPOLATE)
 						{
 							//don't do this to rolling missiles
-							push_list[x]->s.pos.trType = TR_GRAVITY;
+							push_target[x]->s.pos.trType = TR_GRAVITY;
 						}
 
-						if (push_list[x]->e_ThinkFunc == thinkF_G_RunObject && push_list[x]->physicsBounce)
+						if (push_target[x]->e_ThinkFunc == thinkF_G_RunObject && push_target[x]->physicsBounce)
 						{
 							//it's a pushable misc_model_breakable, use it's mass instead of our one-size-fits-all mass
-							mass = push_list[x]->physicsBounce; //same as push_list[x]->mass, right?
+							mass = push_target[x]->physicsBounce; //same as push_target[x]->mass, right?
 						}
 						if (mass < 50)
 						{
@@ -27800,49 +27818,49 @@ void ForceRepulse(gentity_t* self, qboolean pull, qboolean fake)
 						{
 							VectorScale(push_dir, g_knockback->value * knockback / mass, kvel);
 						}
-						VectorAdd(push_list[x]->s.pos.trDelta, kvel, push_list[x]->s.pos.trDelta);
+						VectorAdd(push_target[x]->s.pos.trDelta, kvel, push_target[x]->s.pos.trDelta);
 						if (g_gravity->value > 0)
 						{
-							if (push_list[x]->s.pos.trDelta[2] < knockback)
+							if (push_target[x]->s.pos.trDelta[2] < knockback)
 							{
-								push_list[x]->s.pos.trDelta[2] = knockback;
+								push_target[x]->s.pos.trDelta[2] = knockback;
 							}
 						}
 						//no trDuration?
-						if (push_list[x]->e_ThinkFunc != thinkF_G_RunObject)
+						if (push_target[x]->e_ThinkFunc != thinkF_G_RunObject)
 						{
 							//objects spin themselves?
-							push_list[x]->s.apos.trTime = level.time;
-							push_list[x]->s.apos.trType = TR_LINEAR;
-							VectorClear(push_list[x]->s.apos.trDelta);
-							push_list[x]->s.apos.trDelta[1] = Q_irand(-800, 800);
+							push_target[x]->s.apos.trTime = level.time;
+							push_target[x]->s.apos.trType = TR_LINEAR;
+							VectorClear(push_target[x]->s.apos.trDelta);
+							push_target[x]->s.apos.trDelta[1] = Q_irand(-800, 800);
 						}
 
-						if (Q_stricmp("limb", push_list[x]->classname) == 0)
+						if (Q_stricmp("limb", push_target[x]->classname) == 0)
 						{
 							//make sure it runs it's physics
-							push_list[x]->e_ThinkFunc = thinkF_LimbThink;
-							push_list[x]->nextthink = level.time + FRAMETIME;
+							push_target[x]->e_ThinkFunc = thinkF_LimbThink;
+							push_target[x]->nextthink = level.time + FRAMETIME;
 						}
-						push_list[x]->forcePushTime = level.time + 600; // let the push effect last for 600 ms
-						push_list[x]->forcePuller = self->s.number; //remember this regardless
-						if (push_list[x]->item && push_list[x]->item->giTag == INV_SECURITY_KEY)
+						push_target[x]->forcePushTime = level.time + 600; // let the push effect last for 600 ms
+						push_target[x]->forcePuller = self->s.number; //remember this regardless
+						if (push_target[x]->item && push_target[x]->item->giTag == INV_SECURITY_KEY)
 						{
-							AddSightEvent(player, push_list[x]->currentOrigin, 128, AEL_DISCOVERED);
+							AddSightEvent(player, push_target[x]->currentOrigin, 128, AEL_DISCOVERED);
 							//security keys are more important
 						}
 						else
 						{
-							AddSightEvent(player, push_list[x]->currentOrigin, 128, AEL_SUSPICIOUS);
+							AddSightEvent(player, push_target[x]->currentOrigin, 128, AEL_SUSPICIOUS);
 							//hmm... or should this always be discovered?
 						}
 					}
-					else if (push_list[x]->s.weapon == WP_TURRET
-						&& !Q_stricmp("PAS", push_list[x]->classname)
-						&& push_list[x]->s.apos.trType == TR_STATIONARY)
+					else if (push_target[x]->s.weapon == WP_TURRET
+						&& !Q_stricmp("PAS", push_target[x]->classname)
+						&& push_target[x]->s.apos.trType == TR_STATIONARY)
 					{
 						//a portable turret
-						WP_KnockdownTurret(push_list[x]);
+						WP_KnockdownTurret(push_target[x]);
 					}
 				}
 			}
@@ -27964,7 +27982,7 @@ void ForceRepulseThrow(gentity_t* self, int charge_time)
 {
 	//shove things around you away
 	qboolean fake = qfalse;
-	gentity_t* push_list[MAX_GENTITIES];
+	gentity_t* push_target[MAX_GENTITIES];
 	int num_listed_entities = 0;
 	int ent_count = 0;
 	int radius;
@@ -28175,51 +28193,51 @@ void ForceRepulseThrow(gentity_t* self, int charge_time)
 			}
 
 			// ok, we are within the radius, add us to the incoming list
-			push_list[ent_count] = ent;
+			push_target[ent_count] = ent;
 			ent_count++;
 		}
 	}
 
 	for (int x = 0; x < ent_count; x++)
 	{
-		if (push_list[x]->client)
+		if (push_target[x]->client)
 		{
 			//SIGH band-aid...
-			if (push_list[x]->s.number >= MAX_CLIENTS
+			if (push_target[x]->s.number >= MAX_CLIENTS
 				&& self->s.number < MAX_CLIENTS)
 			{
-				if (push_list[x]->client->ps.forcePowersActive & 1 << FP_GRIP
-					&& push_list[x]->client->ps.forceGripEntityNum == self->s.number)
+				if (push_target[x]->client->ps.forcePowersActive & 1 << FP_GRIP
+					&& push_target[x]->client->ps.forceGripEntityNum == self->s.number)
 				{
-					WP_ForcePowerStop(push_list[x], FP_GRIP);
+					WP_ForcePowerStop(push_target[x], FP_GRIP);
 				}
-				if (push_list[x]->client->ps.forcePowersActive & 1 << FP_GRASP
-					&& push_list[x]->client->ps.forceGripEntityNum == self->s.number)
+				if (push_target[x]->client->ps.forcePowersActive & 1 << FP_GRASP
+					&& push_target[x]->client->ps.forceGripEntityNum == self->s.number)
 				{
-					WP_ForcePowerStop(push_list[x], FP_GRASP);
+					WP_ForcePowerStop(push_target[x], FP_GRASP);
 				}
-				if (push_list[x]->client->ps.forcePowersActive & 1 << FP_DRAIN
-					&& push_list[x]->client->ps.forceDrainEntityNum == self->s.number)
+				if (push_target[x]->client->ps.forcePowersActive & 1 << FP_DRAIN
+					&& push_target[x]->client->ps.forceDrainEntityNum == self->s.number)
 				{
-					WP_ForcePowerStop(push_list[x], FP_DRAIN);
+					WP_ForcePowerStop(push_target[x], FP_DRAIN);
 				}
 			}
 
-			if (rosh_being_healed(push_list[x]))
+			if (rosh_being_healed(push_target[x]))
 			{
 				continue;
 			}
-			if (push_list[x]->client->NPC_class == CLASS_HAZARD_TROOPER
-				&& push_list[x]->health > 0)
+			if (push_target[x]->client->NPC_class == CLASS_HAZARD_TROOPER
+				&& push_target[x]->health > 0)
 			{
 				//living hazard troopers resist push/pull
-				WP_ForceThrowHazardTrooper(self, push_list[x], qfalse);
+				WP_ForceThrowHazardTrooper(self, push_target[x], qfalse);
 				continue;
 			}
 			if (fake && !is_class_guard)
 			{
 				//always resist
-				WP_ResistForcePush(push_list[x], self, qfalse);
+				WP_ResistForcePush(push_target[x], self, qfalse);
 				continue;
 			}
 
@@ -28227,12 +28245,12 @@ void ForceRepulseThrow(gentity_t* self, int charge_time)
 			power_level = self->client->ps.forcePowerLevel[FP_REPULSE];
 			powerUse = FP_REPULSE;
 
-			int mod_power_level = WP_AbsorbConversion(push_list[x], push_list[x]->client->ps.forcePowerLevel[FP_ABSORB],
+			int mod_power_level = WP_AbsorbConversion(push_target[x], push_target[x]->client->ps.forcePowerLevel[FP_ABSORB],
 				powerUse, power_level,
 				forcePowerNeeded[self->client->ps.forcePowerLevel[powerUse]]);
-			if (push_list[x]->client->NPC_class == CLASS_ASSASSIN_DROID ||
-				push_list[x]->client->NPC_class == CLASS_HAZARD_TROOPER ||
-				push_list[x]->client->NPC_class == CLASS_DROIDEKA)
+			if (push_target[x]->client->NPC_class == CLASS_ASSASSIN_DROID ||
+				push_target[x]->client->NPC_class == CLASS_HAZARD_TROOPER ||
+				push_target[x]->client->NPC_class == CLASS_DROIDEKA)
 			{
 				mod_power_level = 0; // divides throw by 10
 			}
@@ -28240,84 +28258,84 @@ void ForceRepulseThrow(gentity_t* self, int charge_time)
 			//First, if this is the player we're push/pulling, see if he can counter it
 			if (mod_power_level != -1
 				&& !is_class_guard
-				&& InFront(self->currentOrigin, push_list[x]->client->renderInfo.eyePoint,
-					push_list[x]->client->ps.viewangles, 0.3f))
+				&& InFront(self->currentOrigin, push_target[x]->client->renderInfo.eyePoint,
+					push_target[x]->client->ps.viewangles, 0.3f))
 			{
 				//absorbed and I'm in front of them
 				//counter it
-				if (push_list[x]->client->ps.forcePowerLevel[FP_ABSORB] > FORCE_LEVEL_2)
+				if (push_target[x]->client->ps.forcePowerLevel[FP_ABSORB] > FORCE_LEVEL_2)
 				{
 					//no reaction at all
 				}
 				else
 				{
-					WP_ResistForcePush(push_list[x], self, qfalse);
-					push_list[x]->client->ps.saber_move = push_list[x]->client->ps.saberBounceMove = LS_READY;
+					WP_ResistForcePush(push_target[x], self, qfalse);
+					push_target[x]->client->ps.saber_move = push_target[x]->client->ps.saberBounceMove = LS_READY;
 					//don't finish whatever saber anim you may have been in
-					push_list[x]->client->ps.saberBlocked = BLOCKED_NONE;
+					push_target[x]->client->ps.saberBlocked = BLOCKED_NONE;
 				}
 				continue;
 			}
-			if (!push_list[x]->s.number && !is_class_guard)
+			if (!push_target[x]->s.number && !is_class_guard)
 			{
 				//player
-				if (ShouldPlayerResistForceThrow(push_list[x], self, qfalse))
+				if (ShouldPlayerResistForceThrow(push_target[x], self, qfalse))
 				{
-					WP_ResistForcePush(push_list[x], self, qfalse);
-					push_list[x]->client->ps.saber_move = push_list[x]->client->ps.saberBounceMove = LS_READY;
+					WP_ResistForcePush(push_target[x], self, qfalse);
+					push_target[x]->client->ps.saber_move = push_target[x]->client->ps.saberBounceMove = LS_READY;
 					//don't finish whatever saber anim you may have been in
-					push_list[x]->client->ps.saberBlocked = BLOCKED_NONE;
+					push_target[x]->client->ps.saberBlocked = BLOCKED_NONE;
 					continue;
 				}
 			}
-			else if (push_list[x]->client && jedi_waiting_ambush(push_list[x]))
+			else if (push_target[x]->client && jedi_waiting_ambush(push_target[x]))
 			{
-				WP_ForceKnockdown(push_list[x], self, qfalse, qtrue, qfalse);
-				ForceRepulseDamage(self, push_list[x], tr.endpos, damage_level);
+				WP_ForceKnockdown(push_target[x], self, qfalse, qtrue, qfalse);
+				ForceRepulseDamage(self, push_target[x], tr.endpos, damage_level);
 				continue;
 			}
-			else if (push_list[x]->client->NPC_class == CLASS_GUARD || jedi_jedi_master_low(push_list[x]))
+			else if (push_target[x]->client->NPC_class == CLASS_GUARD || jedi_jedi_master_low(push_target[x]))
 			{
-				WP_ForceKnockdown(push_list[x], self, qfalse, qtrue, qfalse);
-				ForceRepulseDamage(self, push_list[x], tr.endpos, damage_level);
+				WP_ForceKnockdown(push_target[x], self, qfalse, qtrue, qfalse);
+				ForceRepulseDamage(self, push_target[x], tr.endpos, damage_level);
 				continue;
 			}
 
-			G_KnockOffVehicle(push_list[x], self, qfalse);
+			G_KnockOffVehicle(push_target[x], self, qfalse);
 
-			if (push_list[x]->client->ps.forceDrainEntityNum == self->s.number
+			if (push_target[x]->client->ps.forceDrainEntityNum == self->s.number
 				&& self->s.eFlags & EF_FORCE_DRAINED)
 			{
 				//stop them from draining me now, dammit!
-				WP_ForcePowerStop(push_list[x], FP_DRAIN);
+				WP_ForcePowerStop(push_target[x], FP_DRAIN);
 			}
 
 			//okay, everyone else (or player who couldn't resist it)...
-			if ((self->s.number == 0 && Q_irand(0, 2) || Q_irand(0, 2)) && push_list[x]->client && push_list[x]->health
+			if ((self->s.number == 0 && Q_irand(0, 2) || Q_irand(0, 2)) && push_target[x]->client && push_target[x]->health
 				> 0 //a living client
-				&& push_list[x]->client->ps.weapon == WP_SABER //Jedi
-				&& push_list[x]->health > 0 //alive
-				&& push_list[x]->client->ps.forceRageRecoveryTime < level.time //not recovering from rage
+				&& push_target[x]->client->ps.weapon == WP_SABER //Jedi
+				&& push_target[x]->health > 0 //alive
+				&& push_target[x]->client->ps.forceRageRecoveryTime < level.time //not recovering from rage
 				&& (self->client->NPC_class != CLASS_DESANN && Q_stricmp("Yoda", self->NPC_type) || !Q_irand(0, 2))
 				//only 30% chance of resisting a Desann push
-				&& push_list[x]->client->ps.groundEntityNum != ENTITYNUM_NONE //on the ground
-				&& InFront(self->currentOrigin, push_list[x]->currentOrigin, push_list[x]->client->ps.viewangles,
+				&& push_target[x]->client->ps.groundEntityNum != ENTITYNUM_NONE //on the ground
+				&& InFront(self->currentOrigin, push_target[x]->currentOrigin, push_target[x]->client->ps.viewangles,
 					0.3f) //I'm in front of him
-				&& (push_list[x]->client->ps.powerups[PW_FORCE_PUSH] > level.time || //he's pushing too
-					push_list[x]->s.number != 0 && push_list[x]->client->ps.weaponTime < level.time))
+				&& (push_target[x]->client->ps.powerups[PW_FORCE_PUSH] > level.time || //he's pushing too
+					push_target[x]->s.number != 0 && push_target[x]->client->ps.weaponTime < level.time))
 				//not the player and not attacking (NPC jedi auto-defend against pushes)
 			{
 				//Jedi don't get pushed, they resist as long as they aren't already attacking and are on the ground
-				if (push_list[x]->client->ps.saberLockTime > level.time)
+				if (push_target[x]->client->ps.saberLockTime > level.time)
 				{
 					//they're in a lock
-					if (push_list[x]->client->ps.saberLockEnemy != self->s.number)
+					if (push_target[x]->client->ps.saberLockEnemy != self->s.number)
 					{
 						//they're not in a lock with me
 						continue;
 					}
 					if (self->client->ps.forcePowerLevel[FP_REPULSE] < FORCE_LEVEL_3 ||
-						push_list[x]->client->ps.forcePowerLevel[FP_PUSH] > FORCE_LEVEL_2)
+						push_target[x]->client->ps.forcePowerLevel[FP_PUSH] > FORCE_LEVEL_2)
 					{
 						//they're in a lock with me, but my push is too weak
 						continue;
@@ -28331,7 +28349,7 @@ void ForceRepulseThrow(gentity_t* self, int charge_time)
 					}
 				}
 				int resist_chance = Q_irand(0, 2);
-				if (push_list[x]->s.number >= MAX_CLIENTS)
+				if (push_target[x]->s.number >= MAX_CLIENTS)
 				{
 					//NPC
 					if (g_spskill->integer == 1)
@@ -28343,33 +28361,33 @@ void ForceRepulseThrow(gentity_t* self, int charge_time)
 				if (is_class_guard || mod_power_level == -1
 					&& self->client->ps.forcePowerLevel[FP_REPULSE] > FORCE_LEVEL_2
 					&& !resist_chance
-					&& push_list[x]->client->ps.forcePowerLevel[FP_PUSH] < FORCE_LEVEL_3)
+					&& push_target[x]->client->ps.forcePowerLevel[FP_PUSH] < FORCE_LEVEL_3)
 				{
 					//a level 3 push can even knock down a jedi
-					if (PM_InKnockDown(&push_list[x]->client->ps))
+					if (PM_InKnockDown(&push_target[x]->client->ps))
 					{
 						//can't knock them down again
 						continue;
 					}
-					WP_ForceKnockdown(push_list[x], self, qfalse, qfalse, qtrue);
-					ForceRepulseDamage(self, push_list[x], tr.endpos, damage_level);
+					WP_ForceKnockdown(push_target[x], self, qfalse, qfalse, qtrue);
+					ForceRepulseDamage(self, push_target[x], tr.endpos, damage_level);
 				}
-				else if (push_list[x]->client->NPC_class == CLASS_GUARD || jedi_jedi_master_low(push_list[x]))
+				else if (push_target[x]->client->NPC_class == CLASS_GUARD || jedi_jedi_master_low(push_target[x]))
 				{
 					//do a knockdown hes a twat
-					if (PM_InKnockDown(&push_list[x]->client->ps))
+					if (PM_InKnockDown(&push_target[x]->client->ps))
 					{
 						//can't knock them down again
 						continue;
 					}
-					WP_ForceKnockdown(push_list[x], self, qfalse, qfalse, qtrue);
-					ForceRepulseDamage(self, push_list[x], tr.endpos, damage_level);
+					WP_ForceKnockdown(push_target[x], self, qfalse, qfalse, qtrue);
+					ForceRepulseDamage(self, push_target[x], tr.endpos, damage_level);
 				}
 				else
 				{
 					if (!is_class_guard)
 					{
-						WP_ResistForcePush(push_list[x], self, qfalse);
+						WP_ResistForcePush(push_target[x], self, qfalse);
 					}
 				}
 			}
@@ -28379,32 +28397,32 @@ void ForceRepulseThrow(gentity_t* self, int charge_time)
 				vec3_t push_dir;
 				//UGH: FIXME: for enemy jedi, they should probably always do force pull 3, and not your weapon (if player?)!
 				//shove them
-				if (push_list[x]->NPC
-					&& push_list[x]->NPC->jumpState == JS_JUMPING)
+				if (push_target[x]->NPC
+					&& push_target[x]->NPC->jumpState == JS_JUMPING)
 				{
 					//don't interrupt a scripted jump
-					push_list[x]->forcePushTime = level.time + 600; // let the push effect last for 600 ms
+					push_target[x]->forcePushTime = level.time + 600; // let the push effect last for 600 ms
 					continue;
 				}
 
-				if (push_list[x]->s.number
-					&& (push_list[x]->message || push_list[x]->flags & FL_NO_KNOCKBACK))
+				if (push_target[x]->s.number
+					&& (push_target[x]->message || push_target[x]->flags & FL_NO_KNOCKBACK))
 				{
 					//an NPC who has a key
 					//don't push me... FIXME: maybe can pull the key off me?
-					WP_ForceKnockdown(push_list[x], self, qfalse, qfalse, qfalse);
-					ForceRepulseDamage(self, push_list[x], tr.endpos, damage_level);
+					WP_ForceKnockdown(push_target[x], self, qfalse, qfalse, qfalse);
+					ForceRepulseDamage(self, push_target[x], tr.endpos, damage_level);
 					continue;
 				}
-				if (push_list[x]->client->NPC_class == CLASS_GUARD || jedi_jedi_master_low(push_list[x]))
+				if (push_target[x]->client->NPC_class == CLASS_GUARD || jedi_jedi_master_low(push_target[x]))
 				{
 					//do a knockdown hes a twat
-					WP_ForceKnockdown(push_list[x], self, qfalse, qfalse, qfalse);
-					ForceRepulseDamage(self, push_list[x], tr.endpos, damage_level);
+					WP_ForceKnockdown(push_target[x], self, qfalse, qfalse, qfalse);
+					ForceRepulseDamage(self, push_target[x], tr.endpos, damage_level);
 					continue;
 				}
 				{
-					VectorSubtract(push_list[x]->currentOrigin, self->currentOrigin, push_dir);
+					VectorSubtract(push_target[x]->currentOrigin, self->currentOrigin, push_dir);
 					knockback -= VectorNormalize(push_dir);
 					if (knockback < 100)
 					{
@@ -28439,60 +28457,60 @@ void ForceRepulseThrow(gentity_t* self, int charge_time)
 					}
 				}
 				//actually push/pull the enemy
-				G_Throw(push_list[x], push_dir, knockback);
+				G_Throw(push_target[x], push_dir, knockback);
 				//make it so they don't actually hurt me when pulled at me...
-				push_list[x]->forcePuller = self->s.number;
+				push_target[x]->forcePuller = self->s.number;
 
-				if (push_list[x]->client->ps.groundEntityNum != ENTITYNUM_NONE)
+				if (push_target[x]->client->ps.groundEntityNum != ENTITYNUM_NONE)
 				{
 					//if on the ground, make sure they get shoved up some
-					if (push_list[x]->client->ps.velocity[2] < knockback)
+					if (push_target[x]->client->ps.velocity[2] < knockback)
 					{
-						push_list[x]->client->ps.velocity[2] = knockback;
+						push_target[x]->client->ps.velocity[2] = knockback;
 					}
 				}
 
-				if (push_list[x]->health > 0)
+				if (push_target[x]->health > 0)
 				{
 					//target is still alive
-					if ((push_list[x]->s.number || cg.renderingThirdPerson && !cg.zoomMode) //NPC or 3rd person player
-						&& (self->client->ps.forcePowerLevel[FP_REPULSE] < FORCE_LEVEL_2 && push_list[x]->client->ps.
+					if ((push_target[x]->s.number || cg.renderingThirdPerson && !cg.zoomMode) //NPC or 3rd person player
+						&& (self->client->ps.forcePowerLevel[FP_REPULSE] < FORCE_LEVEL_2 && push_target[x]->client->ps.
 							forcePowerLevel[FP_PUSH] < FORCE_LEVEL_1))
 					{
 						//NPC or third person player (without force push/pull skill), and force push/pull level is at 1
-						WP_ForceKnockdown(push_list[x], self, qfalse, static_cast<qboolean>(knockback > 150), qfalse);
-						ForceRepulseDamage(self, push_list[x], tr.endpos, damage_level);
+						WP_ForceKnockdown(push_target[x], self, qfalse, static_cast<qboolean>(knockback > 150), qfalse);
+						ForceRepulseDamage(self, push_target[x], tr.endpos, damage_level);
 					}
-					else if (!push_list[x]->s.number)
+					else if (!push_target[x]->s.number)
 					{
 						//player, have to force an anim on him
-						WP_ForceKnockdown(push_list[x], self, qfalse, static_cast<qboolean>(knockback > 150), qfalse);
-						ForceRepulseDamage(self, push_list[x], tr.endpos, damage_level);
+						WP_ForceKnockdown(push_target[x], self, qfalse, static_cast<qboolean>(knockback > 150), qfalse);
+						ForceRepulseDamage(self, push_target[x], tr.endpos, damage_level);
 					}
-					else if (push_list[x]->client->NPC_class == CLASS_GUARD || jedi_jedi_master_low(push_list[x]))
+					else if (push_target[x]->client->NPC_class == CLASS_GUARD || jedi_jedi_master_low(push_target[x]))
 					{
 						//do a knockdown hes a twat
-						WP_ForceKnockdown(push_list[x], self, qfalse, static_cast<qboolean>(knockback > 150), qfalse);
-						ForceRepulseDamage(self, push_list[x], tr.endpos, damage_level);
+						WP_ForceKnockdown(push_target[x], self, qfalse, static_cast<qboolean>(knockback > 150), qfalse);
+						ForceRepulseDamage(self, push_target[x], tr.endpos, damage_level);
 					}
 					else
 					{
 						//NPC and force-push/pull at level 2 or higher
-						WP_ForceKnockdown(push_list[x], self, qfalse, static_cast<qboolean>(knockback > 100), qfalse);
-						ForceRepulseDamage(self, push_list[x], tr.endpos, damage_level);
+						WP_ForceKnockdown(push_target[x], self, qfalse, static_cast<qboolean>(knockback > 100), qfalse);
+						ForceRepulseDamage(self, push_target[x], tr.endpos, damage_level);
 					}
 				}
-				push_list[x]->forcePushTime = level.time + 600; // let the push effect last for 600 ms
+				push_target[x]->forcePushTime = level.time + 600; // let the push effect last for 600 ms
 			}
 		}
 		else if (!fake)
 		{
 			//not a fake push/pull
-			if (push_list[x]->s.weapon == WP_SABER && push_list[x]->contents & CONTENTS_LIGHTSABER)
+			if (push_target[x]->s.weapon == WP_SABER && push_target[x]->contents & CONTENTS_LIGHTSABER)
 			{
 				//a thrown saber, just send it back
-				if (push_list[x]->owner && push_list[x]->owner->client && push_list[x]->owner->client->ps.SaberActive()
-					&& push_list[x]->s.pos.trType == TR_LINEAR && push_list[x]->owner->client->ps.saberEntityState !=
+				if (push_target[x]->owner && push_target[x]->owner->client && push_target[x]->owner->client->ps.SaberActive()
+					&& push_target[x]->s.pos.trType == TR_LINEAR && push_target[x]->owner->client->ps.saberEntityState !=
 					SES_RETURNING)
 				{
 					//it's on and being controlled
@@ -28508,65 +28526,65 @@ void ForceRepulseThrow(gentity_t* self, int charge_time)
 						{
 							if (is_class_guard)
 							{
-								G_MissileBouncedoffSaber(self, push_list[x], right);
+								G_MissileBouncedoffSaber(self, push_target[x], right);
 							}
 							else
 							{
-								G_ReflectMissileNPC(self, push_list[x], right);
+								G_ReflectMissileNPC(self, push_target[x], right);
 							}
 						}
 						else
 						{
 							if (g_SerenityJediEngineMode->integer)
 							{
-								G_ReflectMissileAuto(self, push_list[x], right);
+								G_ReflectMissileAuto(self, push_target[x], right);
 							}
 							else
 							{
-								G_ReflectMissile_JKA(self, push_list[x], right);
+								G_ReflectMissile_JKA(self, push_target[x], right);
 							}
 						}
-						WP_SaberDrop(push_list[x]->owner, push_list[x]);
+						WP_SaberDrop(push_target[x]->owner, push_target[x]);
 					}
 					else
 					{
 						if (g_SerenityJediEngineMode->integer)
 						{
-							WP_SaberDrop(push_list[x]->owner, push_list[x]);
+							WP_SaberDrop(push_target[x]->owner, push_target[x]);
 						}
 						else
 						{
-							if (push_list[x]->owner->NPC && !G_ControlledByPlayer(push_list[x]->owner))
+							if (push_target[x]->owner->NPC && !G_ControlledByPlayer(push_target[x]->owner))
 							{
-								WP_SaberDrop(push_list[x]->owner, push_list[x]);
+								WP_SaberDrop(push_target[x]->owner, push_target[x]);
 							}
 							else
 							{
-								WP_SaberReturn(push_list[x]->owner, push_list[x]);
+								WP_SaberReturn(push_target[x]->owner, push_target[x]);
 							}
 						}
 					}
 				}
 			}
-			else if (push_list[x]->s.eType == ET_MISSILE
-				&& push_list[x]->s.pos.trType != TR_STATIONARY
-				&& (push_list[x]->s.pos.trType != TR_INTERPOLATE || push_list[x]->s.weapon != WP_THERMAL))
+			else if (push_target[x]->s.eType == ET_MISSILE
+				&& push_target[x]->s.pos.trType != TR_STATIONARY
+				&& (push_target[x]->s.pos.trType != TR_INTERPOLATE || push_target[x]->s.weapon != WP_THERMAL))
 				//rolling and stationary thermal detonators are dealt with below
 			{
 				vec3_t dir2_me;
-				VectorSubtract(self->currentOrigin, push_list[x]->currentOrigin, dir2_me);
-				float dot = DotProduct(push_list[x]->s.pos.trDelta, dir2_me);
+				VectorSubtract(self->currentOrigin, push_target[x]->currentOrigin, dir2_me);
+				float dot = DotProduct(push_target[x]->s.pos.trDelta, dir2_me);
 
-				if (push_list[x]->s.eFlags & EF_MISSILE_STICK)
+				if (push_target[x]->s.eFlags & EF_MISSILE_STICK)
 				{
 					//caught a sticky in-air
-					push_list[x]->s.eType = ET_MISSILE;
-					push_list[x]->s.eFlags &= ~EF_MISSILE_STICK;
-					push_list[x]->s.eFlags |= EF_BOUNCE_HALF;
-					push_list[x]->splashDamage /= 3;
-					push_list[x]->splashRadius /= 3;
-					push_list[x]->e_ThinkFunc = thinkF_WP_Explode;
-					push_list[x]->nextthink = level.time + Q_irand(500, 3000);
+					push_target[x]->s.eType = ET_MISSILE;
+					push_target[x]->s.eFlags &= ~EF_MISSILE_STICK;
+					push_target[x]->s.eFlags |= EF_BOUNCE_HALF;
+					push_target[x]->splashDamage /= 3;
+					push_target[x]->splashRadius /= 3;
+					push_target[x]->e_ThinkFunc = thinkF_WP_Explode;
+					push_target[x]->nextthink = level.time + Q_irand(500, 3000);
 				}
 				if (dot >= 0)
 				{
@@ -28575,39 +28593,39 @@ void ForceRepulseThrow(gentity_t* self, int charge_time)
 					{
 						if (is_class_guard)
 						{
-							G_MissileBouncedoffSaber(self, push_list[x], forward);
+							G_MissileBouncedoffSaber(self, push_target[x], forward);
 						}
 						else
 						{
-							G_ReflectMissileNPC(self, push_list[x], forward);
+							G_ReflectMissileNPC(self, push_target[x], forward);
 						}
 					}
 					else
 					{
 						if (g_SerenityJediEngineMode->integer)
 						{
-							G_ReflectMissileAuto(self, push_list[x], forward);
+							G_ReflectMissileAuto(self, push_target[x], forward);
 						}
 						else
 						{
-							G_ReflectMissile_JKA(self, push_list[x], forward);
+							G_ReflectMissile_JKA(self, push_target[x], forward);
 						}
 					}
 				}
 				else
 				{
-					VectorScale(push_list[x]->s.pos.trDelta, 1.25f, push_list[x]->s.pos.trDelta);
+					VectorScale(push_target[x]->s.pos.trDelta, 1.25f, push_target[x]->s.pos.trDelta);
 				}
 
-				if (push_list[x]->s.eType == ET_MISSILE
-					&& push_list[x]->s.weapon == WP_ROCKET_LAUNCHER
-					&& push_list[x]->damage < 60)
+				if (push_target[x]->s.eType == ET_MISSILE
+					&& push_target[x]->s.weapon == WP_ROCKET_LAUNCHER
+					&& push_target[x]->damage < 60)
 				{
 					//pushing away a rocket raises it's damage to the max for NPCs
-					push_list[x]->damage = 60;
+					push_target[x]->damage = 60;
 				}
 			}
-			else if (push_list[x]->svFlags & SVF_GLASS_BRUSH)
+			else if (push_target[x]->svFlags & SVF_GLASS_BRUSH)
 			{
 				vec3_t end;
 				//break the glass
@@ -28620,7 +28638,7 @@ void ForceRepulseThrow(gentity_t* self, int charge_time)
 				VectorMA(self->client->renderInfo.eyePoint, radius, forward, end);
 				gi.trace(&trace, self->client->renderInfo.eyePoint, vec3_origin, vec3_origin, end, self->s.number,
 					MASK_SHOT, static_cast<EG2_Collision>(0), 0);
-				if (trace.entity_num != push_list[x]->s.number || trace.fraction == 1.0 || trace.allsolid || trace.
+				if (trace.entity_num != push_target[x]->s.number || trace.fraction == 1.0 || trace.allsolid || trace.
 					startsolid)
 				{
 					//must be pointing right at it
@@ -28636,11 +28654,11 @@ void ForceRepulseThrow(gentity_t* self, int charge_time)
 				}
 				VectorScale(push_dir, damage, push_dir);
 
-				G_Damage(push_list[x], self, self, push_dir, trace.endpos, damage, 0, MOD_UNKNOWN);
+				G_Damage(push_target[x], self, self, push_dir, trace.endpos, damage, 0, MOD_UNKNOWN);
 			}
-			else if (push_list[x]->s.eType == ET_MISSILE /*thermal resting on ground*/
-				|| push_list[x]->s.eType == ET_ITEM
-				|| push_list[x]->e_ThinkFunc == thinkF_G_RunObject || Q_stricmp("limb", push_list[x]->classname) == 0)
+			else if (push_target[x]->s.eType == ET_MISSILE /*thermal resting on ground*/
+				|| push_target[x]->s.eType == ET_ITEM
+				|| push_target[x]->e_ThinkFunc == thinkF_G_RunObject || Q_stricmp("limb", push_target[x]->classname) == 0)
 			{
 				//general object, toss it
 				vec3_t push_dir, kvel;
@@ -28648,24 +28666,24 @@ void ForceRepulseThrow(gentity_t* self, int charge_time)
 				float mass = 200;
 
 				if (self->enemy //I have an enemy
-					&& push_list[x]->s.eType != ET_ITEM //not an item
+					&& push_target[x]->s.eType != ET_ITEM //not an item
 					&& self->client->ps.forcePowerLevel[FP_REPULSE] > FORCE_LEVEL_2 //have push 3 or greater
-					&& InFront(push_list[x]->currentOrigin, self->currentOrigin, self->currentAngles, 0.25f)
+					&& InFront(push_target[x]->currentOrigin, self->currentOrigin, self->currentAngles, 0.25f)
 					//object is generally in front of me
 					&& InFront(self->enemy->currentOrigin, self->currentOrigin, self->currentAngles, 0.75f)
 					//enemy is pretty much right in front of me
-					&& InFront(push_list[x]->currentOrigin, self->enemy->currentOrigin, self->enemy->currentAngles,
+					&& InFront(push_target[x]->currentOrigin, self->enemy->currentOrigin, self->enemy->currentAngles,
 						0.25f) //object is generally in front of enemy
 					//FIXME: check dist to enemy and clear LOS to enemy and clear Path between object and enemy?
 					&& (self->NPC && Q_irand(is_class_guard, RANK_CAPTAIN) < self->NPC->rank //NPC with enough skill
 						|| self->s.number < MAX_CLIENTS))
 				{
 					//if I have an auto-enemy & he's in front of me, push it toward him!
-					VectorSubtract(self->enemy->currentOrigin, push_list[x]->currentOrigin, push_dir);
+					VectorSubtract(self->enemy->currentOrigin, push_target[x]->currentOrigin, push_dir);
 				}
 				else
 				{
-					VectorSubtract(push_list[x]->currentOrigin, self->currentOrigin, push_dir);
+					VectorSubtract(push_target[x]->currentOrigin, self->currentOrigin, push_dir);
 				}
 				knockback -= VectorNormalize(push_dir);
 				if (knockback < 100)
@@ -28674,18 +28692,18 @@ void ForceRepulseThrow(gentity_t* self, int charge_time)
 				}
 
 				//FIXME: if pull a FL_FORCE_PULLABLE_ONLY, clear the flag, assuming it's no longer in solid?  or check?
-				VectorCopy(push_list[x]->currentOrigin, push_list[x]->s.pos.trBase);
-				push_list[x]->s.pos.trTime = level.time; // move a bit on the very first frame
-				if (push_list[x]->s.pos.trType != TR_INTERPOLATE)
+				VectorCopy(push_target[x]->currentOrigin, push_target[x]->s.pos.trBase);
+				push_target[x]->s.pos.trTime = level.time; // move a bit on the very first frame
+				if (push_target[x]->s.pos.trType != TR_INTERPOLATE)
 				{
 					//don't do this to rolling missiles
-					push_list[x]->s.pos.trType = TR_GRAVITY;
+					push_target[x]->s.pos.trType = TR_GRAVITY;
 				}
 
-				if (push_list[x]->e_ThinkFunc == thinkF_G_RunObject && push_list[x]->physicsBounce)
+				if (push_target[x]->e_ThinkFunc == thinkF_G_RunObject && push_target[x]->physicsBounce)
 				{
 					//it's a pushable misc_model_breakable, use it's mass instead of our one-size-fits-all mass
-					mass = push_list[x]->physicsBounce; //same as push_list[x]->mass, right?
+					mass = push_target[x]->physicsBounce; //same as push_target[x]->mass, right?
 				}
 				if (mass < 50)
 				{
@@ -28701,51 +28719,51 @@ void ForceRepulseThrow(gentity_t* self, int charge_time)
 				{
 					VectorScale(push_dir, g_knockback->value * knockback / mass, kvel);
 				}
-				VectorAdd(push_list[x]->s.pos.trDelta, kvel, push_list[x]->s.pos.trDelta);
+				VectorAdd(push_target[x]->s.pos.trDelta, kvel, push_target[x]->s.pos.trDelta);
 				if (g_gravity->value > 0)
 				{
-					if (push_list[x]->s.pos.trDelta[2] < knockback)
+					if (push_target[x]->s.pos.trDelta[2] < knockback)
 					{
-						push_list[x]->s.pos.trDelta[2] = knockback;
+						push_target[x]->s.pos.trDelta[2] = knockback;
 					}
 				}
 				//no trDuration?
-				if (push_list[x]->e_ThinkFunc != thinkF_G_RunObject)
+				if (push_target[x]->e_ThinkFunc != thinkF_G_RunObject)
 				{
 					//objects spin themselves?
 					//spin it
 					//FIXME: messing with roll ruins the rotational center???
-					push_list[x]->s.apos.trTime = level.time;
-					push_list[x]->s.apos.trType = TR_LINEAR;
-					VectorClear(push_list[x]->s.apos.trDelta);
-					push_list[x]->s.apos.trDelta[1] = Q_irand(-800, 800);
+					push_target[x]->s.apos.trTime = level.time;
+					push_target[x]->s.apos.trType = TR_LINEAR;
+					VectorClear(push_target[x]->s.apos.trDelta);
+					push_target[x]->s.apos.trDelta[1] = Q_irand(-800, 800);
 				}
 
-				if (Q_stricmp("limb", push_list[x]->classname) == 0)
+				if (Q_stricmp("limb", push_target[x]->classname) == 0)
 				{
 					//make sure it runs it's physics
-					push_list[x]->e_ThinkFunc = thinkF_LimbThink;
-					push_list[x]->nextthink = level.time + FRAMETIME;
+					push_target[x]->e_ThinkFunc = thinkF_LimbThink;
+					push_target[x]->nextthink = level.time + FRAMETIME;
 				}
-				push_list[x]->forcePushTime = level.time + 600; // let the push effect last for 600 ms
-				push_list[x]->forcePuller = self->s.number; //remember this regardless
-				if (push_list[x]->item && push_list[x]->item->giTag == INV_SECURITY_KEY)
+				push_target[x]->forcePushTime = level.time + 600; // let the push effect last for 600 ms
+				push_target[x]->forcePuller = self->s.number; //remember this regardless
+				if (push_target[x]->item && push_target[x]->item->giTag == INV_SECURITY_KEY)
 				{
-					AddSightEvent(player, push_list[x]->currentOrigin, 128, AEL_DISCOVERED);
+					AddSightEvent(player, push_target[x]->currentOrigin, 128, AEL_DISCOVERED);
 					//security keys are more important
 				}
 				else
 				{
-					AddSightEvent(player, push_list[x]->currentOrigin, 128, AEL_SUSPICIOUS);
+					AddSightEvent(player, push_target[x]->currentOrigin, 128, AEL_SUSPICIOUS);
 					//hmm... or should this always be discovered?
 				}
 			}
-			else if (push_list[x]->s.weapon == WP_TURRET
-				&& !Q_stricmp("PAS", push_list[x]->classname)
-				&& push_list[x]->s.apos.trType == TR_STATIONARY)
+			else if (push_target[x]->s.weapon == WP_TURRET
+				&& !Q_stricmp("PAS", push_target[x]->classname)
+				&& push_target[x]->s.apos.trType == TR_STATIONARY)
 			{
 				//a portable turret
-				WP_KnockdownTurret(push_list[x]);
+				WP_KnockdownTurret(push_target[x]);
 			}
 		}
 	}
@@ -29109,7 +29127,6 @@ void ForceSpeedDash(gentity_t* self)
 	{
 		NPC_SetAnim(self, SETANIM_BOTH, BOTH_FORCEINAIR1, SETANIM_AFLAG_PACE);
 	}
-
 	G_Sound(self, G_SoundIndex("sound/weapons/force/dash.wav"));
 	CG_PlayEffectBolted("misc/breath.efx", self->playerModel, self->headBolt, self->s.number, self->currentOrigin);
 }
@@ -30118,7 +30135,7 @@ void ForceGrip(gentity_t* self)
 			G_SoundOnEnt(self, CHAN_BODY, "sound/weapons/force/grip.wav");
 		}
 	}
-}
+	}
 
 qboolean ForceLightningCheck2Handed(const gentity_t* self)
 {
@@ -36480,7 +36497,7 @@ void ForceStasis(gentity_t* self)
 				continue;
 			if (!trace_ent->inuse)
 				continue;
-			
+
 			// find the distance from the edge of the bounding box
 			for (i = 0; i < 3; i++)
 			{
@@ -38402,7 +38419,7 @@ void WP_ForcePowerStop(gentity_t* self, const forcePowers_t force_power)
 						if (gripVel > 500.0f)
 						{
 							gripVel = 500.0f;
-						}
+					}
 						VectorScale(grip_ent->client->ps.velocity, gripVel, grip_ent->client->ps.velocity);
 				}
 
@@ -38713,7 +38730,7 @@ void WP_ForcePowerStop(gentity_t* self, const forcePowers_t force_power)
 						if (grip_vel > 500.0f)
 						{
 							grip_vel = 500.0f;
-						}
+					}
 						VectorScale(grip_ent->client->ps.velocity, grip_vel, grip_ent->client->ps.velocity);
 				}
 
@@ -39144,7 +39161,7 @@ static void wp_force_power_run(gentity_t* self, forcePowers_t force_power, userc
 				//invalid or freed ent
 				WP_ForcePowerStop(self, FP_GRIP);
 				return;
-			}
+	}
 #ifndef JK2_RAGDOLL_GRIPNOHEALTH
 			if (grip_ent->health <= 0 && grip_ent->takedamage)
 			{//either invalid ent, or dead ent
@@ -39611,7 +39628,7 @@ static void wp_force_power_run(gentity_t* self, forcePowers_t force_power, userc
 				}
 			}
 	}
-	}
+}
 
 	if (self->client->ps.forcePowersActive & 1 << FP_GRIP)
 	{
@@ -39997,7 +40014,7 @@ static void wp_force_power_run(gentity_t* self, forcePowers_t force_power, userc
 				//invalid or freed ent
 				WP_ForcePowerStop(self, FP_GRASP);
 				return;
-			}
+	}
 #ifndef JK2_RAGDOLL_GRIPNOHEALTH
 			if (grip_ent->health <= 0 && grip_ent->takedamage)
 			{//either invalid ent, or dead ent

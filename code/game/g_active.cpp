@@ -9017,7 +9017,7 @@ void ClientThink_real(gentity_t* ent, usercmd_t* ucmd)
 				}
 			}
 		}
-		else if (IsPressingDashButton(ent)
+		else if (IsPressingDashButton(ent) 
 			&& !PM_KickMove(ent->client->ps.saber_move)
 			&& !PM_SaberInAttack(ent->client->ps.saber_move))
 		{
