@@ -21,9 +21,6 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 */
 
 // Bowcaster Weapon
-
-#include "cg_headers.h"
-
 #include "cg_media.h"
 #include "FxScheduler.h"
 

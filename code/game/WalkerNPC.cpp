@@ -375,7 +375,7 @@ static void ProcessOrientCommands(Vehicle_t* p_veh)
 static void AnimateVehicle(Vehicle_t* p_veh)
 {
 	animNumber_t anim;
-	int iFlags, iBlend;
+	int i_flags, i_blend;
 	auto parent = p_veh->m_pParentEntity;
 
 	// We're dead (boarding is reused here so I don't have to make another variable :-).
@@ -384,7 +384,7 @@ static void AnimateVehicle(Vehicle_t* p_veh)
 		if (p_veh->m_iBoarding != -999) // Animate the death just once!
 		{
 			p_veh->m_iBoarding = -999;
-			iFlags = SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD;
+			i_flags = SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD;
 
 			// FIXME! Why do you keep repeating over and over!!?!?!? Bastard!
 			//Vehicle_SetAnim( parent, SETANIM_LEGS, BOTH_VT_DEATH1, iFlags, iBlend );
@@ -408,15 +408,15 @@ static void AnimateVehicle(Vehicle_t* p_veh)
 
 	// Percentage of maximum speed relative to current speed.
 	//float fSpeed = VectorLength( client->ps.velocity );
-	const float fSpeedPercToMax = parent->client->ps.speed / p_veh->m_pVehicleInfo->speedMax;
+	const float f_speed_perc_to_max = parent->client->ps.speed / p_veh->m_pVehicleInfo->speedMax;
 
 	// If we're moving...
-	if (fSpeedPercToMax > 0.0f) //fSpeedPercToMax >= 0.85f )
+	if (f_speed_perc_to_max > 0.0f) //fSpeedPercToMax >= 0.85f )
 	{
 		//float fYawDelta;
 
-		iBlend = 300;
-		iFlags = SETANIM_FLAG_OVERRIDE;
+		i_blend = 300;
+		i_flags = SETANIM_FLAG_OVERRIDE;
 		//fYawDelta = p_veh->m_vPrevOrientation[YAW] - p_veh->m_vOrientation[YAW];
 
 		// NOTE: Mikes suggestion for fixing the stuttering walk (left/right) is to maintain the
@@ -424,56 +424,32 @@ static void AnimateVehicle(Vehicle_t* p_veh)
 		// stuff so good luck to him :-p AReis
 
 		// If we're walking (or our speed is less than .275%)...
-		if (p_veh->m_ucmd.buttons & BUTTON_WALKING || fSpeedPercToMax < 0.275f)
+		if (p_veh->m_ucmd.buttons & BUTTON_WALKING || f_speed_perc_to_max < 0.275f)
 		{
-			// Make them lean if we're turning.
-			/*if ( fYawDelta < -0.0001f )
-			{
-				Anim = BOTH_VT_WALK_FWD_L;
-			}
-			else if ( fYawDelta > 0.0001 )
-			{
-				Anim = BOTH_VT_WALK_FWD_R;
-			}
-			else*/
-			{
-				anim = BOTH_WALK1;
-			}
+			anim = BOTH_WALK1;
 		}
 		// otherwise we're running.
 		else
 		{
-			// Make them lean if we're turning.
-			/*if ( fYawDelta < -0.0001f )
-			{
-				Anim = BOTH_VT_RUN_FWD_L;
-			}
-			else if ( fYawDelta > 0.0001 )
-			{
-				Anim = BOTH_VT_RUN_FWD_R;
-			}
-			else*/
-			{
-				anim = BOTH_RUN1;
-			}
+			anim = BOTH_RUN1;
 		}
 	}
 	else
 	{
 		// Going in reverse...
-		if (fSpeedPercToMax < -0.018f)
+		if (f_speed_perc_to_max < -0.018f)
 		{
-			iFlags = SETANIM_FLAG_NORMAL;
+			i_flags = SETANIM_FLAG_NORMAL;
 			anim = BOTH_WALKBACK1;
-			iBlend = 500;
+			i_blend = 500;
 		}
 		else
 		{
 			//int iChance = Q_irand( 0, 20000 );
 
 			// Every once in a while buck or do a different idle...
-			iFlags = SETANIM_FLAG_NORMAL | SETANIM_FLAG_RESTART | SETANIM_FLAG_HOLD;
-			iBlend = 600;
+			i_flags = SETANIM_FLAG_NORMAL | SETANIM_FLAG_RESTART | SETANIM_FLAG_HOLD;
+			i_blend = 600;
 #ifdef _JK2MP
 			if (parent->client->ps.m_iVehicleNum)
 #else
@@ -491,7 +467,7 @@ static void AnimateVehicle(Vehicle_t* p_veh)
 		}
 	}
 
-	Vehicle_SetAnim(parent, SETANIM_LEGS, anim, iFlags, iBlend);
+	Vehicle_SetAnim(parent, SETANIM_LEGS, anim, i_flags, i_blend);
 }
 
 //rwwFIXMEFIXME: This is all going to have to be predicted I think, or it will feel awful

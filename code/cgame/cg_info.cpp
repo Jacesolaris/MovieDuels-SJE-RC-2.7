@@ -232,6 +232,7 @@ static void ObjectivePrint_Line(const int color, const int objectIndex, int& mis
 	if (objectIndex == T3_BOUNTY_OBJ1)
 	{
 		y = objectiveStartingYpos + iYPixelsPerLine * missionYcnt;
+
 		if (obj_graphics[1])
 		{
 			y += OBJ_GRAPHIC_SIZE + 4;

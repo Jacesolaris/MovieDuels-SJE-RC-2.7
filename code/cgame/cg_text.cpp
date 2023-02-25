@@ -722,28 +722,28 @@ void CG_DrawCenterString()
 
 		// this is kind of unpleasant when dealing with MBCS, but...
 		//
-		const char* psString = start;
-		int iOutIndex = 0;
+		const char* ps_string = start;
+		int i_out_index = 0;
 		for (unsigned int l = 0; l < sizeof linebuffer - 1; l++)
 		{
 			int i_advance_count;
-			const unsigned int ui_letter = cgi_AnyLanguage_ReadCharFromString(psString, &i_advance_count);
-			psString += i_advance_count;
+			const unsigned int ui_letter = cgi_AnyLanguage_ReadCharFromString(ps_string, &i_advance_count);
+			ps_string += i_advance_count;
 			if (!ui_letter || ui_letter == '\n')
 			{
 				break;
 			}
 			if (ui_letter > 255)
 			{
-				linebuffer[iOutIndex++] = ui_letter >> 8;
-				linebuffer[iOutIndex++] = ui_letter & 0xFF;
+				linebuffer[i_out_index++] = ui_letter >> 8;
+				linebuffer[i_out_index++] = ui_letter & 0xFF;
 			}
 			else
 			{
-				linebuffer[iOutIndex++] = ui_letter & 0xFF;
+				linebuffer[i_out_index++] = ui_letter & 0xFF;
 			}
 		}
-		linebuffer[iOutIndex++] = '\0';
+		linebuffer[i_out_index++] = '\0';
 
 		const int w = cgi_R_Font_StrLenPixels(linebuffer, cgs.media.qhFontMedium, 1.0f);
 

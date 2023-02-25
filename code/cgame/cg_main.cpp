@@ -4605,8 +4605,6 @@ void CG_DrawInventorySelect()
 
 void cg_draw_inventory_select_side()
 {
-	char text[1024] = { 0 };
-
 	// don't display if dead
 	if (cg.predicted_player_state.stats[STAT_HEALTH] <= 0
 		|| cg.snap->ps.viewEntity > 0 && cg.snap->ps.viewEntity < ENTITYNUM_WORLD)
